@@ -68,7 +68,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
-import org.wordpress.android.ui.PagePostCreationSources;
+import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -389,10 +389,10 @@ public class WPMainActivity extends AppCompatActivity implements
             mViewModel.getCreateAction().observe(this, createAction -> {
                 switch (createAction) {
                     case CREATE_NEW_POST:
-                        handleNewPostAction(PagePostCreationSources.POST_FROM_MY_SITE);
+                        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
                         break;
                     case CREATE_NEW_PAGE:
-                        handleNewPageAction(PagePostCreationSources.PAGE_FROM_MY_SITE);
+                        handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
                         break;
                 }
 
@@ -706,10 +706,10 @@ public class WPMainActivity extends AppCompatActivity implements
     // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
-        handleNewPostAction(PagePostCreationSources.POST_FROM_NAV_BAR);
+        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR);
     }
 
-    private void handleNewPageAction(PagePostCreationSources source) {
+    private void handleNewPageAction(PagePostCreationSourcesDetail source) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
@@ -723,7 +723,7 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
-    public void handleNewPostAction(PagePostCreationSources source) {
+    public void handleNewPostAction(PagePostCreationSourcesDetail source) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);

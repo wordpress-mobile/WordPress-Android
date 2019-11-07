@@ -497,7 +497,7 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             boolean isPromo,
-            PagePostCreationSources source
+            PagePostCreationSourcesDetail source
     ) {
         addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source);
     }
@@ -507,7 +507,7 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             boolean isPromo,
-            PagePostCreationSources source
+            PagePostCreationSourcesDetail source
     ) {
         if (site == null) {
             return;
@@ -565,7 +565,7 @@ public class ActivityLauncher {
     public static void addNewPageForResult(
             @NonNull Activity activity,
             @NonNull SiteModel site,
-            @NonNull PagePostCreationSources source
+            @NonNull PagePostCreationSourcesDetail source
     ) {
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
@@ -578,7 +578,7 @@ public class ActivityLauncher {
     public static void addNewPageForResult(
             @NonNull Fragment fragment,
             @NonNull SiteModel site,
-            @NonNull PagePostCreationSources source) {
+            @NonNull PagePostCreationSourcesDetail source) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
