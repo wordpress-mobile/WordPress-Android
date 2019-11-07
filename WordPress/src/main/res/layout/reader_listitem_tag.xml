@@ -32,6 +32,8 @@
         android:id="@+id/btn_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/min_touch_target_sz"
+        android:minWidth="@dimen/min_touch_target_sz"
         android:layout_gravity="center_vertical"
         android:background="?android:selectableItemBackground"
         android:padding="@dimen/margin_small"
