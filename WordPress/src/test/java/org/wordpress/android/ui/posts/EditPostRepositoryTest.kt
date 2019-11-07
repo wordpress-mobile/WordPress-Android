@@ -50,9 +50,11 @@ class EditPostRepositoryTest {
     fun `reads post for undo correctly`() {
         val post = PostModel()
 
-        editPostRepository.postForUndo = post
+        editPostRepository.setPost(post)
 
-        assertThat(editPostRepository.postForUndo).isEqualTo(post)
+        editPostRepository.saveForUndo()
+
+        assertThat(editPostRepository.getPostForUndo()).isEqualTo(post)
     }
 
     @Test
