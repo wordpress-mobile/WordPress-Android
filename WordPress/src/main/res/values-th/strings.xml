@@ -166,11 +166,11 @@ Language: th
     <string name="my_site_btn_view_site">ดูเว็บไซต์</string>
     <string name="my_site_btn_view_admin">ดูผู้ควบคุม</string>
     <string name="my_site_header_publish">เผยแพร่</string>
-    <string name="my_site_header_look_and_feel">หน้าตาและสัมผัส (Look and Feel)</string>
+    <string name="my_site_header_design">หน้าตาและสัมผัส (Look and Feel)</string>
     <string name="my_site_btn_site_settings">ตั้งค่า</string>
-    <string name="my_site_btn_blog_posts">เรื่องบล็อก</string>
+    <string name="my_site_btn_posts">เรื่องบล็อก</string>
     <string name="reader_label_new_posts_subtitle">แตะเพื่อแสดงมัน</string>
-    <string name="my_site_header_configuration">การปรับแต่ง</string>
+    <string name="my_site_header_manage">การปรับแต่ง</string>
     <string name="select_all">เลือกทั้งหมด</string>
     <string name="hide">ซ่อน</string>
     <string name="show">แสดง</string>

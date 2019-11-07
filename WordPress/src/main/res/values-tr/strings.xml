@@ -933,7 +933,7 @@ Language: tr
     <string name="plugin_byline">%s tarafından</string>
     <string name="change_photo">Fotoğrafı değiştir</string>
     <string name="plugin_fetch_error">Eklentiler yüklenemedi</string>
-    <string name="my_site_btn_site_pages">Site sayfaları</string>
+    <string name="my_site_btn_pages">Site sayfaları</string>
     <string name="site_settings_tags_hint">Sitenizin etiketlerini yönetin</string>
     <string name="dlg_saving_tag">Kaydediliyor</string>
     <string name="dlg_deleting_tag">Siliniyor</string>
@@ -1728,11 +1728,11 @@ Language: tr
     <string name="my_site_btn_view_site">Siteyi göster</string>
     <string name="my_site_btn_view_admin">Yöneticiyi görüntüle</string>
     <string name="my_site_header_publish">Yayımla</string>
-    <string name="my_site_header_look_and_feel">Genel görünüm</string>
+    <string name="my_site_header_design">Genel görünüm</string>
     <string name="my_site_btn_site_settings">Ayarlar</string>
-    <string name="my_site_btn_blog_posts">Blog yazıları</string>
+    <string name="my_site_btn_posts">Blog yazıları</string>
     <string name="reader_label_new_posts_subtitle">Göstermek için dokunun</string>
-    <string name="my_site_header_configuration">Yapılandırma</string>
+    <string name="my_site_header_manage">Yapılandırma</string>
     <string name="select_all">Tümünü seç</string>
     <string name="hide">Gizle</string>
     <string name="show">Göster</string>

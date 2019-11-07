@@ -933,7 +933,7 @@ Language: ar
     <string name="plugin_byline">بواسطة %s</string>
     <string name="change_photo">تغيير الصورة</string>
     <string name="plugin_fetch_error">تعذر تحميل الإضافات</string>
-    <string name="my_site_btn_site_pages">صفحات الموقع</string>
+    <string name="my_site_btn_pages">صفحات الموقع</string>
     <string name="site_settings_tags_hint">إدارة علامات موقعك</string>
     <string name="dlg_saving_tag">جاري الحفظ</string>
     <string name="dlg_deleting_tag">جاري الحذف</string>
@@ -1728,11 +1728,11 @@ Language: ar
     <string name="my_site_btn_view_site">عرض الموقع</string>
     <string name="my_site_btn_view_admin">عرض المسؤول</string>
     <string name="my_site_header_publish">نشر</string>
-    <string name="my_site_header_look_and_feel">الشكل والطابع</string>
+    <string name="my_site_header_design">الشكل والطابع</string>
     <string name="my_site_btn_site_settings">الإعدادات</string>
-    <string name="my_site_btn_blog_posts">مقالات المدونة</string>
+    <string name="my_site_btn_posts">مقالات المدونة</string>
     <string name="reader_label_new_posts_subtitle">انقر لعرضها</string>
-    <string name="my_site_header_configuration">التكوين</string>
+    <string name="my_site_header_manage">التكوين</string>
     <string name="select_all">اختيار الكل</string>
     <string name="hide">إخفاء</string>
     <string name="show">إظهار</string>

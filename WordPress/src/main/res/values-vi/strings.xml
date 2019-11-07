@@ -377,11 +377,11 @@ Language: vi_VN
     <string name="my_site_btn_view_site">Xem Site</string>
     <string name="my_site_btn_view_admin">Xem Admin</string>
     <string name="my_site_header_publish">Xuất bản</string>
-    <string name="my_site_header_look_and_feel">Nhìn và Cảm nhận</string>
+    <string name="my_site_header_design">Nhìn và Cảm nhận</string>
     <string name="my_site_btn_site_settings">Thiết đặt</string>
-    <string name="my_site_btn_blog_posts">Bài viết Blog</string>
+    <string name="my_site_btn_posts">Bài viết Blog</string>
     <string name="reader_label_new_posts_subtitle">Chạm để hiện chúng</string>
-    <string name="my_site_header_configuration">Cấu hình</string>
+    <string name="my_site_header_manage">Cấu hình</string>
     <string name="select_all">Chọn tất cả</string>
     <string name="hide">Ẩn</string>
     <string name="show">Hiện</string>

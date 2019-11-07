@@ -887,7 +887,7 @@ Language: id
     <string name="plugin_installed">Terpasang</string>
     <string name="plugin_installed_version">Versi %s telah diinstal</string>
     <string name="plugin_fetch_error">Tidak dapat memuat plugin</string>
-    <string name="my_site_btn_site_pages">Halaman Situs</string>
+    <string name="my_site_btn_pages">Halaman Situs</string>
     <string name="site_settings_tags_hint">Kelola tag situs Anda</string>
     <string name="dlg_saving_tag">Menyimpan</string>
     <string name="dlg_deleting_tag">Menghapus</string>
@@ -1664,11 +1664,11 @@ Language: id
     <string name="my_site_btn_view_site">Tampilkan Situs</string>
     <string name="my_site_btn_view_admin">Tampilkan Admin</string>
     <string name="my_site_header_publish">Terbitkan</string>
-    <string name="my_site_header_look_and_feel">Tampilan dan Nuansa</string>
+    <string name="my_site_header_design">Tampilan dan Nuansa</string>
     <string name="my_site_btn_site_settings">Pengaturan</string>
-    <string name="my_site_btn_blog_posts">Pos Blog</string>
+    <string name="my_site_btn_posts">Pos Blog</string>
     <string name="reader_label_new_posts_subtitle">Ketuk untuk menampilkannya</string>
-    <string name="my_site_header_configuration">Konfigurasi</string>
+    <string name="my_site_header_manage">Konfigurasi</string>
     <string name="select_all">Pilih semua</string>
     <string name="hide">Sembunyikan</string>
     <string name="show">Tampilkan</string>

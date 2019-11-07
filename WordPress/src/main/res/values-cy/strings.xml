@@ -402,12 +402,12 @@ Language: cy_GB
     <string name="my_site_btn_switch_site">Newid Gwefan</string>
     <string name="my_site_btn_view_admin">Gweld Gweinyddu</string>
     <string name="my_site_btn_view_site">Gweld Gwefan</string>
-    <string name="my_site_header_look_and_feel">Golwg a Theimlad</string>
+    <string name="my_site_header_design">Golwg a Theimlad</string>
     <string name="my_site_header_publish">Cyhoeddi</string>
-    <string name="my_site_btn_blog_posts">Cofnodion Blog</string>
+    <string name="my_site_btn_posts">Cofnodion Blog</string>
     <string name="my_site_btn_site_settings">Gosodiadau</string>
     <string name="reader_label_new_posts_subtitle">Tapio i\'w dangos</string>
-    <string name="my_site_header_configuration">Ffurfweddiad</string>
+    <string name="my_site_header_manage">Ffurfweddiad</string>
     <string name="deselect_all">Dad-ddewis y cyfan</string>
     <string name="show">Dangos</string>
     <string name="hide">Cuddio</string>

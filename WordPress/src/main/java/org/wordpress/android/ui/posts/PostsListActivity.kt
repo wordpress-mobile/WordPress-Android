@@ -144,7 +144,7 @@ class PostsListActivity : AppCompatActivity(),
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        title = getString(R.string.my_site_btn_blog_posts)
+        title = getString(R.string.my_site_btn_posts)
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }

@@ -933,7 +933,7 @@ Language: fr
     <string name="plugin_byline">par %s</string>
     <string name="change_photo">Changer la photo</string>
     <string name="plugin_fetch_error">Impossible de charger les extensions</string>
-    <string name="my_site_btn_site_pages">Pages du site</string>
+    <string name="my_site_btn_pages">Pages du site</string>
     <string name="site_settings_tags_hint">Gérez les étiquettes de votre site</string>
     <string name="dlg_saving_tag">Enregistrement</string>
     <string name="dlg_deleting_tag">Suppression</string>
@@ -1728,11 +1728,11 @@ Language: fr
     <string name="my_site_btn_view_site">Afficher le site</string>
     <string name="my_site_btn_view_admin">Afficher l\'Admin</string>
     <string name="my_site_header_publish">Publier</string>
-    <string name="my_site_header_look_and_feel">Personnaliser</string>
+    <string name="my_site_header_design">Personnaliser</string>
     <string name="my_site_btn_site_settings">Réglages</string>
-    <string name="my_site_btn_blog_posts">Articles</string>
+    <string name="my_site_btn_posts">Articles</string>
     <string name="reader_label_new_posts_subtitle">Touchez pour les afficher</string>
-    <string name="my_site_header_configuration">Configuration</string>
+    <string name="my_site_header_manage">Configuration</string>
     <string name="select_all">Tout selectionner</string>
     <string name="hide">Cacher</string>
     <string name="show">Montrer</string>

@@ -911,7 +911,7 @@ Language: he_IL
     <string name="plugin_byline">מאת %s</string>
     <string name="change_photo">שינוי התמונה</string>
     <string name="plugin_fetch_error">לא ניתן לטעון את התוספים</string>
-    <string name="my_site_btn_site_pages">עמודי האתר</string>
+    <string name="my_site_btn_pages">עמודי האתר</string>
     <string name="site_settings_tags_hint">ניהול התגיות באתר שלך</string>
     <string name="dlg_saving_tag">שומר</string>
     <string name="dlg_deleting_tag">מוחק</string>
@@ -1699,11 +1699,11 @@ Language: he_IL
     <string name="my_site_btn_view_site">הצגת אתר</string>
     <string name="my_site_btn_view_admin">הצגת מנהל מערכת</string>
     <string name="my_site_header_publish">פרסום</string>
-    <string name="my_site_header_look_and_feel">סגנון</string>
+    <string name="my_site_header_design">סגנון</string>
     <string name="my_site_btn_site_settings">הגדרות</string>
-    <string name="my_site_btn_blog_posts">פוסטים בבלוג</string>
+    <string name="my_site_btn_posts">פוסטים בבלוג</string>
     <string name="reader_label_new_posts_subtitle">יש ללחוץ כדי להציג</string>
-    <string name="my_site_header_configuration">הגדרות תצורה</string>
+    <string name="my_site_header_manage">הגדרות תצורה</string>
     <string name="select_all">בחר הכל</string>
     <string name="hide">הסתר</string>
     <string name="show">הצג</string>

@@ -51,10 +51,10 @@ Language: gd_GB
     <string name="my_site_btn_view_site">Seall an làrach agam</string>
     <string name="site_picker_title">Tagh làrach</string>
     <string name="my_site_header_publish">Foillsich</string>
-    <string name="my_site_header_look_and_feel">Coltas</string>
+    <string name="my_site_header_design">Coltas</string>
     <string name="my_site_btn_site_settings">Roghainnean</string>
-    <string name="my_site_btn_blog_posts">Puist bloga</string>
-    <string name="my_site_header_configuration">Rèiteachadh</string>
+    <string name="my_site_btn_posts">Puist bloga</string>
+    <string name="my_site_header_manage">Rèiteachadh</string>
     <string name="reader_label_new_posts_subtitle">Thoir gnogag gus an sealltainn</string>
     <string name="select_all">Tagh na h-uile</string>
     <string name="hide">Falaich</string>

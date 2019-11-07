@@ -933,7 +933,7 @@ Language: ru
     <string name="plugin_byline">от автора %s</string>
     <string name="change_photo">Изменить фото</string>
     <string name="plugin_fetch_error">Невозможно загрузить  плагины</string>
-    <string name="my_site_btn_site_pages">Страницы сайта</string>
+    <string name="my_site_btn_pages">Страницы сайта</string>
     <string name="site_settings_tags_hint">Управлять метками сайта</string>
     <string name="dlg_saving_tag">Сохранение</string>
     <string name="dlg_deleting_tag">Удаление</string>
@@ -1728,11 +1728,11 @@ Language: ru
     <string name="my_site_btn_view_site">Просмотреть веб-сайт</string>
     <string name="my_site_btn_view_admin">Перейти в консоль сайта</string>
     <string name="my_site_header_publish">Публикация</string>
-    <string name="my_site_header_look_and_feel">Внешний вид</string>
+    <string name="my_site_header_design">Внешний вид</string>
     <string name="my_site_btn_site_settings">Настройки</string>
-    <string name="my_site_btn_blog_posts">Записи в блоге</string>
+    <string name="my_site_btn_posts">Записи в блоге</string>
     <string name="reader_label_new_posts_subtitle">Нажмите, чтобы показать записи.</string>
-    <string name="my_site_header_configuration">Конфигурация</string>
+    <string name="my_site_header_manage">Конфигурация</string>
     <string name="select_all">Выделить все</string>
     <string name="hide">Скрыть</string>
     <string name="show">Показать</string>

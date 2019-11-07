@@ -933,7 +933,7 @@ Language: sv_SE
     <string name="plugin_byline">av %s</string>
     <string name="change_photo">Byt foto</string>
     <string name="plugin_fetch_error">Kan inte läsa in tillägg</string>
-    <string name="my_site_btn_site_pages">Webbplatssidor</string>
+    <string name="my_site_btn_pages">Webbplatssidor</string>
     <string name="site_settings_tags_hint">Hantera etiketterna för din webbplats</string>
     <string name="dlg_saving_tag">Sparar</string>
     <string name="dlg_deleting_tag">Raderar</string>
@@ -1728,11 +1728,11 @@ Language: sv_SE
     <string name="my_site_btn_view_site">Visa webbplats</string>
     <string name="my_site_btn_view_admin">Visa admin</string>
     <string name="my_site_header_publish">Publicera</string>
-    <string name="my_site_header_look_and_feel">Utseende och känsla</string>
+    <string name="my_site_header_design">Utseende och känsla</string>
     <string name="my_site_btn_site_settings">Inställningar </string>
-    <string name="my_site_btn_blog_posts">Blogginlägg</string>
+    <string name="my_site_btn_posts">Blogginlägg</string>
     <string name="reader_label_new_posts_subtitle">Knacka för att visa dem</string>
-    <string name="my_site_header_configuration">Konfiguration</string>
+    <string name="my_site_header_manage">Konfiguration</string>
     <string name="select_all">Välj alla</string>
     <string name="hide">Dölj</string>
     <string name="show">Visa</string>

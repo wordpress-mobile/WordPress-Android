@@ -933,7 +933,7 @@ Language: pl
     <string name="plugin_byline">przez %s</string>
     <string name="change_photo">Zmień zdjęcie</string>
     <string name="plugin_fetch_error">Nie można było wczytać wtyczek</string>
-    <string name="my_site_btn_site_pages">Strony witryny</string>
+    <string name="my_site_btn_pages">Strony witryny</string>
     <string name="site_settings_tags_hint">Zarządzaj tagami swojej witryny</string>
     <string name="dlg_saving_tag">Zapisywanie</string>
     <string name="dlg_deleting_tag">Usuwanie</string>
@@ -1728,11 +1728,11 @@ Language: pl
     <string name="my_site_btn_view_site">Zobacz witrynę</string>
     <string name="my_site_btn_view_admin">Przejdź do kokpitu</string>
     <string name="my_site_header_publish">Opublikuj</string>
-    <string name="my_site_header_look_and_feel">Wygląd</string>
+    <string name="my_site_header_design">Wygląd</string>
     <string name="my_site_btn_site_settings">Ustawienia</string>
-    <string name="my_site_btn_blog_posts">Wpisy na blogu</string>
+    <string name="my_site_btn_posts">Wpisy na blogu</string>
     <string name="reader_label_new_posts_subtitle">Stuknij aby je pokazać</string>
-    <string name="my_site_header_configuration">Konfiguracja</string>
+    <string name="my_site_header_manage">Konfiguracja</string>
     <string name="select_all">Wybierz wszystko</string>
     <string name="hide">Ukryj</string>
     <string name="show">Pokaż</string>

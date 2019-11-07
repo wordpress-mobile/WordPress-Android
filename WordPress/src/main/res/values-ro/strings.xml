@@ -933,7 +933,7 @@ Language: ro
     <string name="plugin_byline">de %s</string>
     <string name="change_photo">Schimbă fotografia</string>
     <string name="plugin_fetch_error">Nu pot încărca module</string>
-    <string name="my_site_btn_site_pages">Pagini sit</string>
+    <string name="my_site_btn_pages">Pagini sit</string>
     <string name="site_settings_tags_hint">Administrează-ți etichetele sitului</string>
     <string name="dlg_saving_tag">Salvez</string>
     <string name="dlg_deleting_tag">Șterg</string>
@@ -1728,11 +1728,11 @@ Language: ro
     <string name="my_site_btn_view_site">Vezi sit</string>
     <string name="my_site_btn_view_admin">Vezi administrator</string>
     <string name="my_site_header_publish">Publicare</string>
-    <string name="my_site_header_look_and_feel">Aspect și afect</string>
+    <string name="my_site_header_design">Aspect și afect</string>
     <string name="my_site_btn_site_settings">Setări</string>
-    <string name="my_site_btn_blog_posts">Articole blog</string>
+    <string name="my_site_btn_posts">Articole blog</string>
     <string name="reader_label_new_posts_subtitle">Atinge pentru a le arăta</string>
-    <string name="my_site_header_configuration">Configurare</string>
+    <string name="my_site_header_manage">Configurare</string>
     <string name="select_all">Selectează tot</string>
     <string name="hide">Ascunde</string>
     <string name="show">Arată</string>

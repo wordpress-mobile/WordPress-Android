@@ -1742,11 +1742,11 @@
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
-    <string name="my_site_header_configuration">Configuration</string>
-    <string name="my_site_header_look_and_feel">Look and Feel</string>
-    <string name="my_site_header_publish">Publish</string>
-    <string name="my_site_btn_site_pages">Site Pages</string>
-    <string name="my_site_btn_blog_posts">Blog Posts</string>
+    <string name="my_site_header_manage">Manage</string>
+    <string name="my_site_header_design">Design</string>
+    <string name="my_site_header_publish">Site</string>
+    <string name="my_site_btn_pages">Pages</string>
+    <string name="my_site_btn_posts">Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
     <string name="my_site_btn_site_settings">Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>

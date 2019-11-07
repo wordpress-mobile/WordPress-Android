@@ -227,7 +227,7 @@
             android:name=".ui.pages.PagesActivity"
             android:theme="@style/Calypso.NoActionBar"
             android:launchMode="singleTop"
-            android:label="@string/my_site_btn_site_pages" />
+            android:label="@string/my_site_btn_pages" />
         <activity
             android:name=".ui.pages.PageParentActivity"
             android:theme="@style/Calypso.NoActionBar"

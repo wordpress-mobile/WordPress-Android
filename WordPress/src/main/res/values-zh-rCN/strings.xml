@@ -858,7 +858,7 @@ Language: zh_CN
     <string name="plugin_version">版本 %s</string>
     <string name="plugin_byline">作者：%s</string>
     <string name="change_photo">更改照片</string>
-    <string name="my_site_btn_site_pages">站点页面</string>
+    <string name="my_site_btn_pages">站点页面</string>
     <string name="site_settings_tags_hint">管理站点标签</string>
     <string name="dlg_saving_tag">正在保存</string>
     <string name="dlg_deleting_tag">正在删除</string>
@@ -1640,11 +1640,11 @@ Language: zh_CN
     <string name="my_site_btn_view_site">查看站点</string>
     <string name="my_site_btn_view_admin">查看管理员</string>
     <string name="my_site_header_publish">发布</string>
-    <string name="my_site_header_look_and_feel">外观</string>
+    <string name="my_site_header_design">外观</string>
     <string name="my_site_btn_site_settings">设置</string>
-    <string name="my_site_btn_blog_posts">博客文章</string>
+    <string name="my_site_btn_posts">博客文章</string>
     <string name="reader_label_new_posts_subtitle">轻点以显示文章</string>
-    <string name="my_site_header_configuration">配置</string>
+    <string name="my_site_header_manage">配置</string>
     <string name="select_all">选择全部</string>
     <string name="hide">隐藏</string>
     <string name="show">显示</string>

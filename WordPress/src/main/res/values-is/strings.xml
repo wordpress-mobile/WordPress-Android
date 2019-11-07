@@ -438,11 +438,11 @@ Language: is
     <string name="my_site_btn_view_site">Skoða vef</string>
     <string name="my_site_btn_view_admin">Skoða stjórnborð</string>
     <string name="my_site_header_publish">Birta</string>
-    <string name="my_site_header_look_and_feel">Útlit og áferð</string>
+    <string name="my_site_header_design">Útlit og áferð</string>
     <string name="my_site_btn_site_settings">Stillingar</string>
-    <string name="my_site_btn_blog_posts">Færslur</string>
+    <string name="my_site_btn_posts">Færslur</string>
     <string name="reader_label_new_posts_subtitle">Ýttu til þess að birta þær</string>
-    <string name="my_site_header_configuration">Stillingar</string>
+    <string name="my_site_header_manage">Stillingar</string>
     <string name="select_all">Velja allar</string>
     <string name="hide">Hylja</string>
     <string name="show">Sýna</string>

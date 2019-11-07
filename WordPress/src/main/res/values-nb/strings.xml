@@ -905,7 +905,7 @@ Language: nb_NO
     <string name="plugin_byline">av %s</string>
     <string name="change_photo">Endre bilde</string>
     <string name="plugin_fetch_error">Kan ikke laste utvidelser</string>
-    <string name="my_site_btn_site_pages">Sider på nettstedet</string>
+    <string name="my_site_btn_pages">Sider på nettstedet</string>
     <string name="site_settings_tags_hint">Behandle stikkord på nettstedet</string>
     <string name="dlg_saving_tag">Lagrer</string>
     <string name="dlg_deleting_tag">Sletter</string>
@@ -1696,11 +1696,11 @@ Language: nb_NO
     <string name="my_site_btn_view_site">Vis nettsted</string>
     <string name="my_site_btn_view_admin">Vis admin-området</string>
     <string name="my_site_header_publish">Publiser</string>
-    <string name="my_site_header_look_and_feel">Se og kjenn</string>
+    <string name="my_site_header_design">Se og kjenn</string>
     <string name="my_site_btn_site_settings">Innstillinger</string>
-    <string name="my_site_btn_blog_posts">Blogginnlegg</string>
+    <string name="my_site_btn_posts">Blogginnlegg</string>
     <string name="reader_label_new_posts_subtitle">Trykk for å vise dem</string>
-    <string name="my_site_header_configuration">Oppsett</string>
+    <string name="my_site_header_manage">Oppsett</string>
     <string name="select_all">Velg alle</string>
     <string name="hide">Skjul</string>
     <string name="show">Vis</string>

@@ -928,7 +928,7 @@ Language: ja_JP
     <string name="plugin_byline">作成者: %s</string>
     <string name="change_photo">写真を変更</string>
     <string name="plugin_fetch_error">プラグインを読み込めませんでした</string>
-    <string name="my_site_btn_site_pages">サイトページ</string>
+    <string name="my_site_btn_pages">サイトページ</string>
     <string name="site_settings_tags_hint">サイトのタグを管理</string>
     <string name="dlg_saving_tag">保存中</string>
     <string name="dlg_deleting_tag">削除中</string>
@@ -1722,11 +1722,11 @@ Language: ja_JP
     <string name="my_site_btn_view_site">サイトを表示</string>
     <string name="my_site_btn_view_admin">管理画面表示</string>
     <string name="my_site_header_publish">公開</string>
-    <string name="my_site_header_look_and_feel">外観</string>
+    <string name="my_site_header_design">外観</string>
     <string name="my_site_btn_site_settings">設定</string>
-    <string name="my_site_btn_blog_posts">ブログ投稿</string>
+    <string name="my_site_btn_posts">ブログ投稿</string>
     <string name="reader_label_new_posts_subtitle">タップして表示</string>
-    <string name="my_site_header_configuration">設定</string>
+    <string name="my_site_header_manage">設定</string>
     <string name="select_all">すべて選択</string>
     <string name="hide">隠す</string>
     <string name="show">表示</string>

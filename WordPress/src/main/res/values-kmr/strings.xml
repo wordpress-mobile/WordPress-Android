@@ -871,7 +871,7 @@ Language: ku_TR
     <string name="plugin_byline">ji aliye %s</string>
     <string name="change_photo">Wêne biguherîne</string>
     <string name="plugin_fetch_error">Pêvek nehatin barkirin</string>
-    <string name="my_site_btn_site_pages">Rûpelên Malperê</string>
+    <string name="my_site_btn_pages">Rûpelên Malperê</string>
     <string name="site_settings_tags_hint">Etîketên malpera xwe bi rê ve bibe</string>
     <string name="dlg_saving_tag">Tê tomarkirin</string>
     <string name="dlg_deleting_tag">Tê jêbirin</string>
@@ -1666,11 +1666,11 @@ Language: ku_TR
     <string name="my_site_btn_view_site">Malperê Bîbîne</string>
     <string name="my_site_btn_view_admin">Revebir Bibîne</string>
     <string name="my_site_header_publish">Biweşîne</string>
-    <string name="my_site_header_look_and_feel">Xuyanî û Şêwaz</string>
+    <string name="my_site_header_design">Xuyanî û Şêwaz</string>
     <string name="my_site_btn_site_settings">Sazkarî</string>
-    <string name="my_site_btn_blog_posts">Şandiyên Blogê</string>
+    <string name="my_site_btn_posts">Şandiyên Blogê</string>
     <string name="reader_label_new_posts_subtitle">Bo nîşandanê bitepîne</string>
-    <string name="my_site_header_configuration">Pevsazî</string>
+    <string name="my_site_header_manage">Pevsazî</string>
     <string name="select_all">Teva bijêre</string>
     <string name="hide">Veşêre</string>
     <string name="show">Nîşan bide</string>

@@ -933,7 +933,7 @@ Language: ko_KR
     <string name="plugin_byline">제작자: %s</string>
     <string name="change_photo">사진 변경</string>
     <string name="plugin_fetch_error">플러그인을 로드할 수 없음</string>
-    <string name="my_site_btn_site_pages">사이트 페이지</string>
+    <string name="my_site_btn_pages">사이트 페이지</string>
     <string name="site_settings_tags_hint">사이트의 태그 관리</string>
     <string name="dlg_saving_tag">저장 중</string>
     <string name="dlg_deleting_tag">삭제 중</string>
@@ -1728,11 +1728,11 @@ Language: ko_KR
     <string name="my_site_btn_view_site">사이트 보기</string>
     <string name="my_site_btn_view_admin">관리자 보기</string>
     <string name="my_site_header_publish">게시</string>
-    <string name="my_site_header_look_and_feel">모양과 느낌</string>
+    <string name="my_site_header_design">모양과 느낌</string>
     <string name="my_site_btn_site_settings">설정</string>
-    <string name="my_site_btn_blog_posts">블로그 글</string>
+    <string name="my_site_btn_posts">블로그 글</string>
     <string name="reader_label_new_posts_subtitle">눌러서 표시</string>
-    <string name="my_site_header_configuration">설정</string>
+    <string name="my_site_header_manage">설정</string>
     <string name="select_all">모두 선택</string>
     <string name="hide">숨기기</string>
     <string name="show">표시</string>

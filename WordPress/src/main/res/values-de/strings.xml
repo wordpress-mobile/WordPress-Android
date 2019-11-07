@@ -933,7 +933,7 @@ Language: de
     <string name="plugin_byline">von %s</string>
     <string name="change_photo">Foto ändern</string>
     <string name="plugin_fetch_error">Plugins konnten nicht geladen werden</string>
-    <string name="my_site_btn_site_pages">Seiten</string>
+    <string name="my_site_btn_pages">Seiten</string>
     <string name="site_settings_tags_hint">Verwalte deine Website-Schlagwörter</string>
     <string name="dlg_saving_tag">Wird gespeichert …</string>
     <string name="dlg_deleting_tag">Wird gelöscht …</string>
@@ -1728,11 +1728,11 @@ Language: de
     <string name="my_site_btn_view_site">Website ansehen</string>
     <string name="my_site_btn_view_admin">Admin aufrufen</string>
     <string name="my_site_header_publish">Veröffentlichen</string>
-    <string name="my_site_header_look_and_feel">Erscheinungsbild</string>
+    <string name="my_site_header_design">Erscheinungsbild</string>
     <string name="my_site_btn_site_settings">Einstellungen</string>
-    <string name="my_site_btn_blog_posts">Blogbeiträge</string>
+    <string name="my_site_btn_posts">Blogbeiträge</string>
     <string name="reader_label_new_posts_subtitle">Berühren zum Anzeigen</string>
-    <string name="my_site_header_configuration">Einrichtung</string>
+    <string name="my_site_header_manage">Einrichtung</string>
     <string name="select_all">Alle auswählen</string>
     <string name="hide">Ausblenden</string>
     <string name="show">Anzeigen</string>

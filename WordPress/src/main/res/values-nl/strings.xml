@@ -805,7 +805,7 @@ Language: nl
     <string name="plugin_byline">door %s</string>
     <string name="change_photo">Wijzig foto</string>
     <string name="plugin_fetch_error">Niet mogelijk om plugins te laden</string>
-    <string name="my_site_btn_site_pages">Site pagina\'s</string>
+    <string name="my_site_btn_pages">Site pagina\'s</string>
     <string name="site_settings_tags_hint">Beheer de tags van je site</string>
     <string name="dlg_saving_tag">Opslaan</string>
     <string name="dlg_deleting_tag">Verwijderen</string>
@@ -1594,11 +1594,11 @@ Language: nl
     <string name="my_site_btn_view_site">Bekijk site</string>
     <string name="my_site_btn_view_admin">Beheer bekijken</string>
     <string name="my_site_header_publish">Publiceren</string>
-    <string name="my_site_header_look_and_feel">Look and feel</string>
+    <string name="my_site_header_design">Look and feel</string>
     <string name="my_site_btn_site_settings">Instellingen</string>
-    <string name="my_site_btn_blog_posts">Blogberichten</string>
+    <string name="my_site_btn_posts">Blogberichten</string>
     <string name="reader_label_new_posts_subtitle">Tik om ze te tonen</string>
-    <string name="my_site_header_configuration">Configuratie</string>
+    <string name="my_site_header_manage">Configuratie</string>
     <string name="select_all">Alles selecteren</string>
     <string name="hide">Verbergen</string>
     <string name="show">Tonen</string>

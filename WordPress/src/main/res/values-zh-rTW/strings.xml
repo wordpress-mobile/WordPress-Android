@@ -905,7 +905,7 @@ Language: zh_TW
     <string name="plugin_byline">由 %s 提供</string>
     <string name="change_photo">變更照片</string>
     <string name="plugin_fetch_error">無法載入外掛程式</string>
-    <string name="my_site_btn_site_pages">網站頁面</string>
+    <string name="my_site_btn_pages">網站頁面</string>
     <string name="site_settings_tags_hint">管理你的網站標籤</string>
     <string name="dlg_saving_tag">儲存中</string>
     <string name="dlg_deleting_tag">正在刪除</string>
@@ -1682,11 +1682,11 @@ Language: zh_TW
     <string name="my_site_btn_view_site">檢視網站</string>
     <string name="my_site_btn_view_admin">檢視管理員</string>
     <string name="my_site_header_publish">發表</string>
-    <string name="my_site_header_look_and_feel">外觀和風格</string>
+    <string name="my_site_header_design">外觀和風格</string>
     <string name="my_site_btn_site_settings">設定</string>
-    <string name="my_site_btn_blog_posts">網誌文章</string>
+    <string name="my_site_btn_posts">網誌文章</string>
     <string name="reader_label_new_posts_subtitle">點選以顯示</string>
-    <string name="my_site_header_configuration">組態</string>
+    <string name="my_site_header_manage">組態</string>
     <string name="select_all">全部選取</string>
     <string name="hide">隱藏</string>
     <string name="show">顯示</string>

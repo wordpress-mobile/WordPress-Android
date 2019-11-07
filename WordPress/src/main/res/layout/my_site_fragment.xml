@@ -432,7 +432,7 @@
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_pages_text_view"
                         style="@style/MySiteListRowTextView"
-                        android:text="@string/my_site_btn_site_pages"/>
+                        android:text="@string/my_site_btn_pages"/>
 
                 </LinearLayout>
 
@@ -454,7 +454,7 @@
                         <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/my_site_blog_posts_text_view"
                             style="@style/MySiteListRowTextView"
-                            android:text="@string/my_site_btn_blog_posts"/>
+                            android:text="@string/my_site_btn_posts"/>
 
                     </LinearLayout>
 
@@ -500,7 +500,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_look_and_feel_header"
                     style="@style/MySiteListHeader"
-                    android:text="@string/my_site_header_look_and_feel">
+                    android:text="@string/my_site_header_design">
                 </org.wordpress.android.widgets.WPTextView>
 
                 <!--Themes-->
@@ -525,7 +525,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_configuration_header"
                     style="@style/MySiteListHeader"
-                    android:text="@string/my_site_header_configuration">
+                    android:text="@string/my_site_header_manage">
                 </org.wordpress.android.widgets.WPTextView>
 
                 <!--People-->
