@@ -20,6 +20,7 @@ def xml_parse(xml_file):
     root = None
     ns_map = {} # prefix -> ns_uri
     xml_parser = ET.XMLParser(target=CustomTreeBuilder())
+    logging.debug('Parsing %s' % xml_file)
     for event, element in ET.iterparse(xml_file, ['start-ns', 'start', 'end'], parser=xml_parser):
         if event == 'start-ns':
             ns_map[element[0]] = element[1]
@@ -59,6 +60,7 @@ def add_section(tree_root, insertion_point_index, section_name, new_elements):
     string_names = [element.attrib['name'] for element in tree_root if 'name' in element.attrib]
     string_names_dict = dict.fromkeys(string_names, 1)
     # insert all elements which name attribute is not already present in tree
+    logging.debug('Filling section %s' % section_name)
     for new_element in new_elements:
         if 'name' in new_element.attrib and new_element.attrib['name'] in string_names_dict:
             logging.debug('Skipping %s, name already exists in main xml' % format_element( new_element ) )
@@ -100,7 +102,6 @@ def main():
     merge_strings(
         './WordPress/src/main/res/values/strings.xml',
         [
-            { 'name': 'Login', 'file': './libs/login/WordPressLoginFlow/src/main/res/values/strings.xml' },
             { 'name': 'Gutenberg Native', 'file': './libs/gutenberg-mobile/bundle/android/strings.xml' },
         ]
     )
