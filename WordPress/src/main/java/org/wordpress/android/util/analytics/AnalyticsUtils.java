@@ -73,7 +73,8 @@ public class AnalyticsUtils {
     public enum BlockEditorEnabledSource {
         VIA_SITE_SETTINGS,
         ON_SITE_CREATION,
-        ON_BLOCK_POST_OPENING;
+        ON_BLOCK_POST_OPENING,
+        ON_PROGRESSIVE_ROLLOUT;
 
         public Map<String, Object> asPropertyMap() {
             Map<String, Object> properties = new HashMap<>();
