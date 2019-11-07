@@ -52,10 +52,11 @@ public class SiteUtils {
         // Check if the user has been "randomly" selected to enter the rollout group.
         //
         // For self hosted sites, there are often one or two users, and the user id is probably 0, 1 in these cases.
-        // If we exclude low ids, we won't get an not an homogeneous distribution over self hosted and WordPress.com users,
-        // but the purpose of this is to do a progressive rollout, not an necessarily an homogeneous rollout.
+        // If we exclude low ids, we won't get an not an homogeneous distribution over self hosted and WordPress.com
+        // users, but the purpose of this is to do a progressive rollout, not an necessarily an homogeneous rollout.
         //
-        // To exclude ids 0 and 1, to rollout for 10% users, we'll use a test like `id % 100 >= 90` instead of `id % 100 < 10`.
+        // To exclude ids 0 and 1, to rollout for 10% users,
+        // we'll use a test like `id % 100 >= 90` instead of `id % 100 < 10`.
         if (accountStore.getAccount().getUserId() % 100 >= (100 - GB_ROLLOUT_PERCENTAGE)) {
             // We want to make sure to enable Gutenberg only on the sites they didn't opt-out.
             for (SiteModel site : siteStore.getSites()) {
