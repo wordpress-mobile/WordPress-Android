@@ -76,6 +76,8 @@ public class AppSettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
+        setRetainInstance(true);
+
         addPreferencesFromResource(R.xml.app_settings);
 
         findPreference(getString(R.string.pref_key_send_usage)).setOnPreferenceChangeListener(
@@ -302,6 +304,10 @@ public class AppSettingsFragment extends PreferenceFragment
             AppPrefs.setStripImageLocation((Boolean) newValue);
         } else if (preference == mAppThemePreference) {
             AppThemeUtils.Companion.setAppTheme(getActivity(), (String) newValue);
+            // restart activity to make sure changes are applied to PreferenceScreen
+            Intent refresh = new Intent(getActivity(), getActivity().getClass());
+            startActivity(refresh);
+            getActivity().finish();
         }
         return true;
     }
