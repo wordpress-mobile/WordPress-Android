@@ -11,7 +11,6 @@ import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.inject.Inject
-import kotlin.concurrent.read
 import kotlin.concurrent.write
 
 class EditPostRepository
@@ -86,12 +85,11 @@ class EditPostRepository
     fun hasLocation() = post!!.hasLocation()
 
     fun hasPost() = post != null
-    fun getPost() = lock.read { post }
-    fun setPost(post: PostModel?) {
-        lock.write {
-            this.post = post
-        }
+    fun getPost() = post
+    fun setPost(post: PostModel?) = lock.write {
+        this.post = post
     }
+
     fun getPostForUndo() = postForUndo
 
     fun hasStatus(status: PostStatus): Boolean {
@@ -99,10 +97,10 @@ class EditPostRepository
     }
 
     fun getPendingMediaForPost(): Set<MediaModel> =
-        UploadService.getPendingMediaForPost(post)
+            UploadService.getPendingMediaForPost(post)
 
     fun getPendingOrInProgressMediaUploadsForPost(): List<MediaModel> =
-        UploadService.getPendingOrInProgressMediaUploadsForPost(post)
+            UploadService.getPendingOrInProgressMediaUploadsForPost(post)
 
     fun updatePublishDateIfShouldBePublishedImmediately(post: PostModel) {
         if (postUtils.shouldPublishImmediately(fromPost(post), post.dateCreated)) {
