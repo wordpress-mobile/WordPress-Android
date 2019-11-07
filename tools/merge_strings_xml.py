@@ -96,6 +96,8 @@ def merge_strings(main_xml, extra_sections):
         new_elements = list(section_tree.getroot())
         insertion_point_index = find_and_empty_section(main_root, section_name)
         add_section(main_root, insertion_point_index, section_name, new_elements)
+    # make sure xml file ends with a newline
+    main_root.tail = '\n'
     xml_output_tree.write(main_xml, encoding='utf-8', xml_declaration=True)
 
 def main():
