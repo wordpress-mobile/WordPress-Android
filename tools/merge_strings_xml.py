@@ -84,7 +84,7 @@ def find_and_empty_section(tree_root, section_name):
             return start_index + 1
         if removing:
             tree_root.remove(resource_element)
-    logging.debug('Adding a new section ' % section_name)
+    logging.debug('Adding a new section %s' % section_name)
     return start_index
 
 def merge_strings(main_xml, extra_sections):
