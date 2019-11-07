@@ -1,5 +1,0 @@
-13.4 :
-* Ajout de la prévisualisation à distance pour les publications et les pages.
-*Les publications mises à la poubelle restent à la poubelle. Elles doivent être restaurées avant de les modifier ou de les prévisualiser.
-* Corrigé : Le fait de cliquer "Publier" sur une publication privée la publier effectivement de manière privée, et certains problèmes de modification de liens ont été résolus.
-* Les modifications non sauvegardées des publications et des pages sont automatiquement sauvegardées.

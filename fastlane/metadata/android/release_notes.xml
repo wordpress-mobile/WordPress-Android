@@ -1,127 +1,71 @@
 <ar>
-13.4:
-* تمت إضافة دعم المعاينة عن بُعد للمقالات والصفحات.
-* تظل المقالات الموضوعة في سلة المهملات في سلة المهملات. لا بد من استعادتها قبل التحرير أو المعاينة.
-* تم إصلاح ما يلي: يؤدي النقر على "نشر" حول مقالة خاصة إلى نشر مقالتك بشكل موثوق الآن على أنها خاصة، وتم حل بعض مشكلات تحرير الرابط.
-* تُنسخ التغييرات غير المحفوظة على المقالات والصفحات نسخًا احتياطيًا تلقائيًا.
+13.5:
+* محرِّر المكوِّنات: أصلحنا المشكلة التي تفيد بإضافة تحديد الوسائط المتعددة مكوِّن صورة أو فيديوهات واحد فقط. ثمَّة مكوِّن "الوسائط والنص"، وأضفنا خيار هدف الرابط (مفتوح في علامة تبويب جديدة) إلى مكوِّن الصور.
 </ar>
 <de-DE>
-13.4:
-* Die externe Vorschau wird nun für Beiträge und Seiten unterstützt.
-* In den Papierkorb verschobene Beiträge bleiben dort. Zur Bearbeitung oder Ansicht einer Vorschau müssen sie zuerst wiederhergestellt werden.
-* Behoben: Durch Klicken auf „Veröffentlichen“ bei einem privaten Beitrag wird der Beitrag nun zuverlässig privat veröffentlicht. Dabei wurden Probleme bei der Linkbearbeitung gelöst.
-* Nicht gespeicherte Änderungen an Beiträgen und Seiten werden automatisch gesichert.
+13.5:
+* Block-Editor: Wir haben eine Fehler behoben, bei dem die Auswahl mehrerer Medien nur einen Bild- oder Videoblock hinzugefügt hat. Es gibt einen neuen Block „Medien und Text“, und wir haben die Option „Ziel verlinken (In neuem Tab öffnen)“ zum Bildblock hinzugefügt.
 </de-DE>
 <en-US>
-13.4:
-* Added Remote Preview support for posts and pages.
-* Trashed posts stay trashed. They must be restored before editing or previewing.
-* Fixed: Clicking on “Publish” on a private post now reliably publishes the post as private, some link editing issues resolved.
-* Unsaved changes to posts and pages are automatically backed up.
+13.5:
+* Block Editor: We fixed an issue when multiple media selection added only one image or video block. There’s a new “Media & Text” block and we’ve added a Link Target (Open in new tab) option to the Image Block.
 </en-US>
 <es-ES>
-13.4:
-* Añadida compatibilidad de vista previa remota para entradas y páginas.
-* Las entradas de la papelera se quedan en la papelera. Deben ser restauradas antes de editar o previsualizar.
-* Corregido: Ahora, al hacer clic en «Publicar» en una entrada privada, la entrada se publica con seguridad como privada; resueltos algunos problemas de edición de enlaces.
-* Los cambios no guardados en entradas y páginas se guardan automáticamente en una copia de seguridad.
+13.5:
+* Editor de bloques: hemos corregido un problema cuando una selección múltiple de medios añade solo un bloque de imagen o vídeo. Hay un nuevo bloque de «Medios y texto» y hemos añadido al bloque de imágenes una opción de enlace de destino (se abre en una nueva pestaña).
 </es-ES>
 <fr-CA>
-13.4 :
-* Ajout de la prévisualisation à distance pour les publications et les pages.
-*Les publications mises à la poubelle restent à la poubelle. Elles doivent être restaurées avant de les modifier ou de les prévisualiser.
-* Corrigé : Le fait de cliquer "Publier" sur une publication privée la publier effectivement de manière privée, et certains problèmes de modification de liens ont été résolus.
-* Les modifications non sauvegardées des publications et des pages sont automatiquement sauvegardées.
+13.5 :
+* Éditeur de blocs : nous avons résolu un problème dans lequel la sélection de plusieurs éléments multimédias n'ajoutait qu'une seule image ou un seul bloc vidéo. Un nouveau bloc « Média & Texte » est disponible et nous avons ajouté une option Cible du lien (Ouvrir dans le nouvel onglet) au Bloc d'image.
 </fr-CA>
 <fr-FR>
-13.4 :
-* Ajout de la prévisualisation à distance pour les publications et les pages.
-*Les publications mises à la poubelle restent à la poubelle. Elles doivent être restaurées avant de les modifier ou de les prévisualiser.
-* Corrigé : Le fait de cliquer "Publier" sur une publication privée la publier effectivement de manière privée, et certains problèmes de modification de liens ont été résolus.
-* Les modifications non sauvegardées des publications et des pages sont automatiquement sauvegardées.
+13.5 :
+* Éditeur de blocs : nous avons résolu un problème dans lequel la sélection de plusieurs éléments multimédias n'ajoutait qu'une seule image ou un seul bloc vidéo. Un nouveau bloc « Média & Texte » est disponible et nous avons ajouté une option Cible du lien (Ouvrir dans le nouvel onglet) au Bloc d'image.
 </fr-FR>
 <iw-IL>
-13.4:
-- הוספנו תמיכה בתצוגה מקדימה בעמדות עבודה מרוחקות לפוסטים ולעמודים.
-* פוסטים שהועברו לפח נשארים בפח. עליך לשחזר את הפריטים לפני עריכה או יצירה של תצוגה מקדימה.
-* בעיות שתוקנו: לחיצה על "פרסום" בפוסט פרטי כעת מפרסמת באופן מהימן את הפוסט כפרטי. בנוסף, תיקנו כמה מהבעיות בעריכת הקישורים.
-* שינויים שלא נשמרו לפוסטים ולעמודים מגובים באופן אוטומטי.
+13.5:
+* עורך הבלוקים: תיקנו בעיה שגרמה להוספה של בלוק אחד בלבד של תמונה או וידאו כאשר נבחרו פרטי מדיה רבים. יש בלוק 'מדיה וטקסט' חדש והסופנו אפשרות של 'קישור ליעד (נפתח בלשונית חדשה)' בבלוק התמונה.
 </iw-IL>
 <id>
-13.4:
-* Menambahkan dukungan Pratinjau Jarak Jauh untuk pos dan halaman.
-* Pos yang dibuang tetap ada di sampah. Pos tersebut harus dipulihkan untuk dapat disunting atau dipratinjau.
-* Perbaikan: Mengklik “Publikasikan” pada pos pribadi kini secara akurat memublikasikan pos sebagai pribadi, beberapa masalah penyuntingan tautan telah diperbaiki.
-* Perubahan yang tidak tersimpan pada pos dan halaman akan otomatis dicadangkan.
+13.5:
+* Penyunting Blok: Kami memperbaiki masalah ketika pemilihan beberapa media hanya menambahkan satu blok gambar atau video. Ada blok “Media & Teks” baru dan kami menambahkan pilihan Target Tautan (Buka di tab baru) ke Blok Gambar.
 </id>
 <it-IT>
-13.4:
-* Aggiunto supporto per l'anteprima da remoto per articoli e pagine.
-* Gli articoli nel cestino restano nel cestino. Devono essere ripristinati prima della modifica o dell'anteprima.
-* Correzione: facendo clic su "Pubblica" su un articolo privato, ora l'articolo viene correttamente pubblicato come privato; risolti alcuni problemi di modifica dei link.
-* Backup automatico delle modifiche non salvate ad articoli e pagine.
+13.5:
+* Editor dei blocchi: abbiamo corretto un problema per cui veniva aggiunto un solo blocco di immagine o video quando si selezionavano più contenuti multimediali. C'è un nuovo blocco "Media e testo" e abbiamo aggiunto un'opzione Destinazione link (Apri in una nuova scheda) al blocco Immagine.
 </it-IT>
 <ja-JP>
-13.4:
-* 投稿とページの「リモートプレビュー」サポートを追加しました。
-* ゴミ箱に移動済みの投稿は、そのままゴミ箱に残ります。編集したり、プレビューするには、元に戻す必要があります。
-* 修正済み事項として、非公開の投稿の「公開」をクリックすることによって、投稿を確実に非公開で公開できるようになりました。リンク編集に関するいくつかの問題を解消しました。
-* 投稿とページの保存されていない変更を自動的にバックアップします。
+13.5:
+* ブロックエディター :複数のメディアを選択したときに、画像または動画のブロックが1つしか追加されない問題を修正しました。「メディアとテキスト」ブロックが新しくなり、画像ブロックに「リンクターゲット」 (新しいタブで開く) オプションが追加されました。
 </ja-JP>
 <ko-KR>
-13.4:
-* 글 및 페이지에 대한 원격 미리보기 지원이 추가되었습니다.
-* 휴지통으로 이동한 글은 계속 휴지통에 있습니다. 편집 또는 미리보기 전에 복원해야 합니다.
-* 수정 사항: 이제 비공개 글에서 “발행”을 클릭하면 글이 안정적으로 비공개로 발행되고, 일부 링크 편집 문제가 해결되었습니다.
-* 글 및 페이지에 저장되지 않은 변경 사항은 자동으로 백업됩니다.
+13.5:
+* 블록 편집기: 여러 미디어를 선택하면 한 개의 이미지 또는 비디오 블록만 추가되는 문제가 해결되었습니다. 새로운 “미디어 및 텍스트” 블록이 있으며 이미지 블록에 링크 대상(새 탭에서 열기) 옵션을 추가했습니다.
 </ko-KR>
 <nl-NL>
-13.4:
-* Voorbeeldweergave op afstand toegevoegd voor berichten en pagina's.
-* Verwijderde berichten blijven in de prullenbak. Ze moeten voor de voorbeeldweergave of het bewerken worden hersteld.
-* Opgelost: Klikken op Publiceren bij een privébericht zorgt er nu voor dat het bericht daadwerkelijk privé is, en enkele problemen met linkbewerking zijn opgelost.
-* Er worden automatisch back-ups gemaakt van niet-opgeslagen wijzigingen in berichten en pagina's.
+13.5:
+* Blokeditor: We hebben een probleem opgelost waarbij het selecteren van meerdere media slechts één afbeelding- of videoblok toevoegde. Er is een nieuw 'Media en tekst'-blok en we hebben een optie voor linkverwijzing (Openen in nieuw tabblad) toegevoegd aan het afbeeldingsblok.
 </nl-NL>
 <pt-BR>
-13.4:
-* Adicionamos visualização remota a posts e páginas
-* Posts enviados para a lixeira continuarão nela. É necessário restaurá-los antes de editar ou visualizar.
-* Correções: ao clicar em "Publicar" em um post privado, agora ele é publicado como privado. Também corrigimos alguns problemas com links de edição.
-* Agora criamos um backup das alterações não salvas em posts e páginas.
+Editor de blocos: Corrigimos um problema quando várias tinha várias mídias selecionadas adicionava apenas uma imagem ou bloco de vídeo. Há um novo bloco "Mídia e texto" e adicionamos uma opção destino do link (Abrir em nova guia) ao Bloco de imagens.
 </pt-BR>
 <ru-RU>
-13.4:
-* Поддержка удаленного просмотра для страниц и записей.
-* Записи удаленные в корзину должны быть восстановлены из неё перед просмотром или редактированием.
-* Исправлена - публикация личной записи будет публиковать запись как личную, также исправлены некоторые проблемы с редактированием ссылок.
-* Автоматическое резервное копирование несохраненных изменений в записях и на страницах.
-
+13.5:
+* Редактор блоков: исправлена проблема с множественным выбором медиафайлов (добавлялось только одно изображение или блок видео). Добавлен новый блок "Медиа и текст", а также возможность указывать цель ссылки (открыть в новой вкладке) для блока изображения.
 </ru-RU>
 <sv-SE>
-13.4:
-* Lagt till stöd för fjärrförhandsvisning av inlägg och sidor.
-* Kastade inlägg stannar kvar i papperskorgen. Man måste återställa dem innan man kan redigera eller förhandsvisa dem.
-* Rättat: När man klickar på ”Publicera” för ett privat inlägg kommer det verkligen att publiceras privat. Dessutom har några problem med redigering av länkar rättats.
-* Osparade ändringar i inlägg och sidor sparas automatiskt i en reservkopia.
+13.5:
+* Blockredigeraren: Vi har korrigerat ett problem där endast ett bildblock eller videoblock lades till trots att flera mediafiler var valda. Det finns en ny blocktyp ”Media och Text” och vi har lagt till ett alternativ för länkmål (öppna i ny flik) i bildblocket.
 </sv-SE>
 <tr-TR>
-13.4:
-* İletiler ve sayfalar için Uzaktan Önizleme desteği eklendi.
-* Çöpe atılan iletiler çöpte kalır. Düzenleme veya önizlemeden önce geri getirilmeleri gerekir.
-* Düzeltildi: Özel bir iletide “Yayınla” öğesine tıklamak artık iletiyi güvenilir bir biçimde özel olarak yayınlar, bazı bağlantı düzenleme sorunları düzeltildi.
-* İleti ve sayfalardaki kaydedilmeyen değişiklikler otomatik olarak yedeklenir.
+13.5:
+* Blok Düzenleyici: Bir video yada gösel bloğuna birden fazla medya seçimi seçimi yapıldığında oluşan bir sorunu çözdük. Yeni bir “Ortam ve metin” bloğu var ve görsel bloğuna bir bağlantı hedefi (Yeni sekmede aç) seçeneği ekledik.
 </tr-TR>
 <zh-CN>
-13.4：
-* 新增了对文章和页面的远程预览支持。
-* 已放入回收站的文章依旧在回收站中。这些文章必须先进行还原，才能进行编辑或预览。
-* 已修复：现在，在私密文章中点击“发布”按钮，即可放心地将文章发布为私密文章，某些链接编辑问题也得到了解决。
-* 系统会自动备份文章和页面中未保存的更改。
+13.5：
+* 区块编辑器：我们修复了选择了多个媒体文件但仅添加一张图片或一个视频区块的问题。推出新的“媒体文件和文本”区块，而且我们已经为“图片”区块添加“链接目标”（在新标签页中打开）选项。
 </zh-CN>
 <zh-TW>
-13.4：
-* 為文章和頁面新增「遠端預覽」支援。
-* 移至垃圾桶的文章會一直留在垃圾桶。若要編輯或預覽，必須先還原這些文章。
-* 修正內容：現在按一下私密文章上的「發表」，將能確實以私密狀態發表文章，部分連結編輯問題也已獲得解決。
-* 文章和頁面未儲存的變更都會自動備份。
+13.5：
+* 區塊編輯器：我們修正了多種媒體選項只能新增一個圖片或視訊區塊的問題。有一個新的「媒體和文字」區塊，我們已將「連結目標」(在新分頁中開啟) 選項新增至圖片區塊。
 </zh-TW>

@@ -1,5 +1,0 @@
-13.4:
-* Die externe Vorschau wird nun für Beiträge und Seiten unterstützt.
-* In den Papierkorb verschobene Beiträge bleiben dort. Zur Bearbeitung oder Ansicht einer Vorschau müssen sie zuerst wiederhergestellt werden.
-* Behoben: Durch Klicken auf „Veröffentlichen“ bei einem privaten Beitrag wird der Beitrag nun zuverlässig privat veröffentlicht. Dabei wurden Probleme bei der Linkbearbeitung gelöst.
-* Nicht gespeicherte Änderungen an Beiträgen und Seiten werden automatisch gesichert.

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-17 00:54:59+0000
+Translation-Revision-Date: 2019-10-31 02:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="pick_media">Tambahkan gambar atau video</string>
     <string name="error_post_not_submitted_retrying">Kami tidak dapat mengirim pos ini untuk ditinjau, namun kami akan mencoba lagi nanti. </string>
     <string name="error_post_not_scheduled_retrying">Kami tidak dapat menjadwalkan pos ini, namun kami akan mencoba lagi nanti.</string>
     <string name="error_post_not_published_retrying_private">Kami tidak dapat memublikasikan pos pribadi ini, namun kami akan mencoba lagi nanti.</string>
@@ -1453,9 +1454,6 @@ Language: id
     <string name="error_refresh_comments_showing_older">Komentar tidak dapat disegarkan pada saat ini - menunjukkan komentar lama</string>
     <string name="post_settings_set_featured_image">Atur Gambar Andalan</string>
     <string name="post_settings_featured_image">Gambar Andalan</string>
-    <string name="editor_content_placeholder">Editor Visual diaktifkan</string>
-    <string name="editor_page_title_placeholder">Judul Halaman</string>
-    <string name="editor_post_title_placeholder">Judul Kiriman</string>
     <string name="email_address">Alamat email</string>
     <string name="dlg_sure_to_delete_comments">Hapus komentar ini secara permanen?</string>
     <string name="dlg_sure_to_delete_comment">Hapus komentar ini secara permanen?</string>
@@ -1847,7 +1845,6 @@ Language: id
     <string name="reader_empty_posts_in_tag_updating">Mengambil pos…</string>
     <string name="cant_share_no_visible_blog">Anda tidak bisa berbagi ke WordPress tanpa satupun blog yang terlihat oleh publik</string>
     <string name="comment_spammed">Komentar ditandai sebagai spam</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Balas</string>
     <string name="reader_likes_multi">%,d orang menyukai ini</string>
     <string name="reader_likes_you_and_multi">Anda dan %,d lainnya menyukai ini</string>

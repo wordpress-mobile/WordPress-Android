@@ -784,9 +784,6 @@ Language: el_GR
     <string name="error_refresh_comments_showing_older">Δεν ήταν δυνατή η ανανέωση των σχολίων αυτή τη στιγμή - εμφάνιση παλαιότερων σχολίων</string>
     <string name="post_settings_set_featured_image">Ορισμός προβαλλόμενης εικόνας</string>
     <string name="post_settings_featured_image">Προβαλλόμενη Εικόνα</string>
-    <string name="editor_content_placeholder">Μοιραστείτε την ιστορία σας εδώ…</string>
-    <string name="editor_page_title_placeholder">Τίτλος Σελίδας</string>
-    <string name="editor_post_title_placeholder">Τίτλος Άρθρου</string>
     <string name="email_address">Διεύθυνση email</string>
     <string name="dlg_sure_to_delete_comments">Να διαγραφούν οριστικά αυτά τα σχόλια;</string>
     <string name="dlg_sure_to_delete_comment">Οριστική διαγραφή αυτού του σχολίου;</string>
@@ -1182,7 +1179,6 @@ Language: el_GR
     <string name="reader_empty_posts_in_tag_updating">Γίνεται λήψη άρθρων…</string>
     <string name="cant_share_no_visible_blog">Δε μπορείτε να μοιραστείτε στο WordPress χωρίς ένα ορατό ιστολόγιο</string>
     <string name="comment_spammed">Το σχόλιο αυτό έχει σημειωθεί ως ανεπιθύμητο</string>
-    <string name="video">Βίντεο</string>
     <string name="reader_label_reply">Απάντηση</string>
     <string name="reader_likes_multi">Αυτό αρέσει σε %,d ανθρώπους</string>
     <string name="reader_likes_you_and_multi">Αυτό αρέσει σε εσάς και σε άλλους %,d</string>
