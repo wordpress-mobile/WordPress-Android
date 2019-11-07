@@ -21,6 +21,10 @@ public class EncryptionUtils {
     static final int XCHACHA20POLY1305_ABYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_abytes();
     static final int BASE64_ENCODE_FLAGS = Base64.DEFAULT;
 
+    static final short XCHACHA20POLY1305_TAG_FINAL = 
+            (short) NaCl.sodium().crypto_secretstream_xchacha20poly1305_tag_final();
+    static final short XCHACHA20POLY1305_TAG_0 = (short) 0;
+
     static final String PUBLIC_KEY_BASE64 = "K0y2oQ++gEN00S4CbCH3IYoBIxVF6H86Wz4wi2t2C3M=";
     static final String KEYED_WITH = "v1";
 
@@ -75,7 +79,7 @@ public class EncryptionUtils {
                 logLineBytes.length,
                 ad,
                 0,
-                (short) 0);
+                XCHACHA20POLY1305_TAG_0);
 
             encryptedLogLinesJson.put(Base64.encodeToString(encryptedLogLine, BASE64_ENCODE_FLAGS));
         }
@@ -92,7 +96,7 @@ public class EncryptionUtils {
             0,
             ad,
             0,
-            (short) NaCl.sodium().crypto_secretstream_xchacha20poly1305_tag_final());
+            XCHACHA20POLY1305_TAG_FINAL);
 
         encryptedLogLinesJson.put(Base64.encodeToString(encryptedLogLine, BASE64_ENCODE_FLAGS));
 
