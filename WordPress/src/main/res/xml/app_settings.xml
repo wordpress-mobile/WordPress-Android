@@ -10,6 +10,16 @@
         android:layout="@layout/wp_preference_layout"
         android:title="@string/interface_language"/>
 
+    <ListPreference
+        android:key="@string/pref_key_app_theme"
+        android:layout="@layout/wp_preference_layout"
+        android:title="@string/app_theme"
+        android:defaultValue="@string/app_theme_entry_value_default"
+        android:summary="%s"
+        android:dialogTitle="@string/app_theme_dialog_title"
+        android:entries="@array/app_theme_entries"
+        android:entryValues="@array/app_theme_entry_values" />
+
     <PreferenceScreen
         android:id="@+id/pref_privacy_settings"
         android:key="@string/pref_key_privacy_settings"
