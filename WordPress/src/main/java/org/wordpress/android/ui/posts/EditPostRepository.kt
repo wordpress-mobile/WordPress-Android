@@ -20,13 +20,7 @@ class EditPostRepository
     private val postUtils: PostUtilsWrapper
 ) {
     private var post: PostModel? = null
-    var postForUndo: PostModel? = null
-        get() = lock.read { field }
-        set(value) {
-            lock.write {
-                field = value
-            }
-        }
+    private var postForUndo: PostModel? = null
     private var postSnapshotWhenEditorOpened: PostModel? = null
     val id: Int
         get() = post!!.id
@@ -93,23 +87,22 @@ class EditPostRepository
 
     fun hasPost() = post != null
     fun getPost() = lock.read { post }
-    fun setPost(post: PostModel) {
+    fun setPost(post: PostModel?) {
         lock.write {
             this.post = post
         }
     }
+    fun getPostForUndo() = postForUndo
 
     fun hasStatus(status: PostStatus): Boolean {
         return post?.status == status.toString()
     }
 
-    fun getPendingMediaForPost(): Set<MediaModel> = readFromPost {
-        UploadService.getPendingMediaForPost(this)
-    }
+    fun getPendingMediaForPost(): Set<MediaModel> =
+        UploadService.getPendingMediaForPost(post)
 
-    fun getPendingOrInProgressMediaUploadsForPost(): List<MediaModel> = readFromPost {
-        UploadService.getPendingOrInProgressMediaUploadsForPost(this)
-    }
+    fun getPendingOrInProgressMediaUploadsForPost(): List<MediaModel> =
+        UploadService.getPendingOrInProgressMediaUploadsForPost(post)
 
     fun updatePublishDateIfShouldBePublishedImmediately(post: PostModel) {
         if (postUtils.shouldPublishImmediately(fromPost(post), post.dateCreated)) {
@@ -132,9 +125,9 @@ class EditPostRepository
     }
 
     fun isSnapshotDifferent(): Boolean =
-            lock.read { postSnapshotWhenEditorOpened == null || post != postSnapshotWhenEditorOpened }
+            postSnapshotWhenEditorOpened == null || post != postSnapshotWhenEditorOpened
 
-    fun hasSnapshot() = lock.read { postSnapshotWhenEditorOpened != null }
+    fun hasSnapshot() = postSnapshotWhenEditorOpened != null
 
     fun updateStatusFromSnapshot(post: PostModel) {
         // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
@@ -148,7 +141,6 @@ class EditPostRepository
 
     fun postHasEdits() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post)
 
-    private fun <Y> readFromPost(action: PostModel.() -> Y) = lock.read { post!!.action() }
     fun updateStatus(status: PostStatus) {
         updateInTransaction {
             it.status = status.toString()
