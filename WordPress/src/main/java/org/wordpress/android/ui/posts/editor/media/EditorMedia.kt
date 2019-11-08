@@ -29,7 +29,6 @@ import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiS
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMultipleMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
@@ -148,12 +147,12 @@ class EditorMedia @Inject constructor(
                 .also { AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW) }
     }
 
-    fun onPhotoPickerMediaChosen(uriList: MutableList<Uri>) {
-        val containsAtLeastOneImage = uriList.any { MediaUtils.isVideo(it.toString()) }
-        if (containsAtLeastOneImage) {
-            advertiseImageOptimisationAndAddMedia(uriList)
-        } else {
+    fun onPhotoPickerMediaChosen(uriList: List<Uri>) {
+        val onlyVideos = uriList.all { mediaUtilsWrapper.isVideo(it.toString()) }
+        if (onlyVideos) {
             addNewMediaItemsToEditorAsync(uriList, false)
+        } else {
+            advertiseImageOptimisationAndAddMedia(uriList)
         }
     }
     // endregion
