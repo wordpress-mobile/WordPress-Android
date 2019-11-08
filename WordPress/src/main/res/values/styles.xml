@@ -59,6 +59,11 @@
         <!-- We need to keep this here so we can override it in values-vXY -->
     </style>
 
+     <style name="WordPress.NoActionBar" parent="WordPress">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="NumberPickerTheme" parent="WordPress">
         <item name="colorControlNormal">@color/transparent</item>
         <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
@@ -149,7 +154,12 @@
 
     <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="titleTextColor">?attr/colorOnPrimary</item>
-        <item name="android:background">@color/primary_50</item>
+        <item name="android:background">?attr/wpColorAppBar</item>
+    </style>
+
+    <style name="WordPress.ActionBar" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="colorControlActivated">@android:color/transparent</item>
+        <item name="android:textColorSecondary">?attr/colorOnPrimarySurface</item>
     </style>
 
     <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">

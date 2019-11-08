@@ -501,7 +501,7 @@
         <activity
             android:name=".ui.main.SitePickerActivity"
             android:label="@string/site_picker_title"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <activity
             android:name=".ui.photopicker.PhotoPickerActivity"
