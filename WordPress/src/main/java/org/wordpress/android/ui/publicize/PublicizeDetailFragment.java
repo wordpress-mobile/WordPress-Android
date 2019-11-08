@@ -122,6 +122,10 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
             TextView txtDescription = (TextView) mServiceCardView.findViewById(R.id.text_description);
             txtDescription.setText(description);
 
+            // Hide the Learn More button by default as at the moment it is only used for the Facebook warning below.
+            TextView learnMoreButton = (TextView) mServiceCardView.findViewById(R.id.learn_more_button);
+            learnMoreButton.setVisibility(View.GONE);
+
             if (isFacebook()) {
                 showFacebookWarning();
             }
