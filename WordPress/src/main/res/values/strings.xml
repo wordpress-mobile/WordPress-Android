@@ -1555,6 +1555,9 @@
     <!-- title shown for untitled posts and blogs -->
     <string name="reader_untitled_post">(Untitled)</string>
 
+    <!-- accessibility announcement when list loads -->
+    <string name="reader_acessibility_list_loaded">"The list has loaded with %1$d items."</string>
+
     <!-- activity titles -->
     <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
