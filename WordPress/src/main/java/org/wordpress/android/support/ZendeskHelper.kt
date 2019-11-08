@@ -3,7 +3,6 @@ package org.wordpress.android.support
 import android.content.Context
 import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
-import android.util.Log
 import androidx.preference.PreferenceManager
 import com.zendesk.logger.Logger
 import com.zendesk.service.ErrorResponse
