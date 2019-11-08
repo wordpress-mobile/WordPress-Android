@@ -440,7 +440,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 newPostSetup();
             } else {
-                mEditPostRepository.setPost(mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID)));
+                mEditPostRepository.loadPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
                 // Load post from extra)s
 
                 if (mEditPostRepository.hasPost()) {
@@ -484,12 +484,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
             // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
             if (savedInstanceState.containsKey(STATE_KEY_POST_REMOTE_ID)) {
-                mEditPostRepository.setPost(
-                        mPostStore.getPostByRemotePostId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID), mSite));
+                mEditPostRepository.loadPostByRemotePostId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID), mSite);
                 initializePostObject();
             } else if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
-                mEditPostRepository
-                        .setPost(mPostStore.getPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID)));
+                mEditPostRepository.loadPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID));
                 initializePostObject();
             }
 
@@ -3256,11 +3254,8 @@ public class EditPostActivity extends AppCompatActivity implements
             if (event.isError()) {
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
-            mEditPostRepository.setPost(mPostStore.getPostByLocalPostId(mEditPostRepository.getId()));
-            mEditPostRepository.updateInTransaction(postModel -> {
-                handleRemoteAutoSave(event.isError(), postModel);
-                return true;
-            });
+            mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
+            mEditPostRepository.replaceInTransaction(postModel -> handleRemoteAutoSave(event.isError(), postModel));
         }
     }
 
@@ -3276,8 +3271,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW;
     }
 
-    private void updatePostOnSuccessfulUpload(PostModel post) {
-        mEditPostRepository.setPost(post);
+    private void updateOnSuccessfulUpload() {
         mIsNewPost = false;
         invalidateOptionsMenu();
     }
@@ -3286,12 +3280,13 @@ public class EditPostActivity extends AppCompatActivity implements
         return mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR;
     }
 
-    private void handleRemoteAutoSave(boolean isError, PostModel post) {
+    @Nullable
+    private PostModel handleRemoteAutoSave(boolean isError, PostModel post) {
         // We are in the process of remote previewing a post from the editor
         if (!isError && isUploadingPostForPreview()) {
             // We were uploading post for preview and we got no error:
             // update post status and preview it in the internal browser
-            updatePostOnSuccessfulUpload(post);
+            updateOnSuccessfulUpload();
             ActivityLauncher.previewPostOrPageForResult(
                     EditPostActivity.this,
                     mSite,
@@ -3307,6 +3302,7 @@ public class EditPostActivity extends AppCompatActivity implements
             UploadUtils.showSnackbarError(findViewById(R.id.editor_activity),
                     getString(R.string.remote_preview_operation_error));
         }
+        return post;
     }
 
     @SuppressWarnings("unused")
@@ -3320,10 +3316,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
                         event.isError() ? event.error.message : null, getSite(), mDispatcher);
                 if (!event.isError()) {
-                    updatePostOnSuccessfulUpload(post);
+                    mEditPostRepository.setInTransaction(() -> {
+                        updateOnSuccessfulUpload();
+                        return post;
+                    });
                 }
             } else {
-                handleRemoteAutoSave(event.isError(), post);
+                mEditPostRepository.setInTransaction(() -> handleRemoteAutoSave(event.isError(), post));
             }
         }
     }

@@ -8,10 +8,12 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import java.util.TimeZone
@@ -19,18 +21,19 @@ import java.util.TimeZone
 @RunWith(MockitoJUnitRunner::class)
 class EditPostRepositoryTest {
     @Mock lateinit var localeManager: LocaleManagerWrapper
+    @Mock lateinit var postStore: PostStore
     @Mock lateinit var postUtils: PostUtilsWrapper
     private lateinit var editPostRepository: EditPostRepository
     @Before
     fun setUp() {
-        editPostRepository = EditPostRepository(localeManager, postUtils)
+        editPostRepository = EditPostRepository(localeManager, postStore, postUtils)
     }
 
     @Test
     fun `reads post correctly`() {
         val post = PostModel()
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()).isEqualTo(post)
         assertThat(editPostRepository.hasPost()).isTrue()
@@ -50,7 +53,7 @@ class EditPostRepositoryTest {
     fun `reads post for undo correctly`() {
         val post = PostModel()
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         editPostRepository.saveForUndo()
 
@@ -63,7 +66,7 @@ class EditPostRepositoryTest {
         val id = 10
         post.id = id
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.id).isEqualTo(id)
         assertThat(editPostRepository.id).isEqualTo(id)
@@ -75,7 +78,7 @@ class EditPostRepositoryTest {
         val localSiteId = 10
         post.localSiteId = localSiteId
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.localSiteId).isEqualTo(localSiteId)
         assertThat(editPostRepository.localSiteId).isEqualTo(localSiteId)
@@ -87,7 +90,7 @@ class EditPostRepositoryTest {
         val remotePostId = 10L
         post.remotePostId = remotePostId
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.remotePostId).isEqualTo(remotePostId)
         assertThat(editPostRepository.remotePostId).isEqualTo(remotePostId)
@@ -99,7 +102,7 @@ class EditPostRepositoryTest {
         val title = "title"
         post.title = title
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.title).isEqualTo(title)
         assertThat(editPostRepository.title).isEqualTo(title)
@@ -111,7 +114,7 @@ class EditPostRepositoryTest {
         val autoSaveTitle = "autoSaveTitle"
         post.autoSaveTitle = autoSaveTitle
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.autoSaveTitle).isEqualTo(autoSaveTitle)
         assertThat(editPostRepository.autoSaveTitle).isEqualTo(autoSaveTitle)
@@ -123,7 +126,7 @@ class EditPostRepositoryTest {
         val content = "content"
         post.content = content
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.content).isEqualTo(content)
         assertThat(editPostRepository.content).isEqualTo(content)
@@ -135,7 +138,7 @@ class EditPostRepositoryTest {
         val autoSaveContent = "autoSaveContent"
         post.autoSaveContent = autoSaveContent
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.autoSaveContent).isEqualTo(autoSaveContent)
         assertThat(editPostRepository.autoSaveContent).isEqualTo(autoSaveContent)
@@ -147,7 +150,7 @@ class EditPostRepositoryTest {
         val excerpt = "excerpt"
         post.excerpt = excerpt
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.excerpt).isEqualTo(excerpt)
         assertThat(editPostRepository.excerpt).isEqualTo(excerpt)
@@ -159,7 +162,7 @@ class EditPostRepositoryTest {
         val autoSaveExcerpt = "autoSaveExcerpt"
         post.autoSaveExcerpt = autoSaveExcerpt
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.autoSaveExcerpt).isEqualTo(autoSaveExcerpt)
         assertThat(editPostRepository.autoSaveExcerpt).isEqualTo(autoSaveExcerpt)
@@ -171,7 +174,7 @@ class EditPostRepositoryTest {
         val password = "password"
         post.password = password
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.password).isEqualTo(password)
         assertThat(editPostRepository.password).isEqualTo(password)
@@ -183,7 +186,7 @@ class EditPostRepositoryTest {
         val status = DRAFT
         post.status = status.toString()
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.status).isEqualTo(status.toString())
         assertThat(editPostRepository.status).isEqualTo(status)
@@ -195,7 +198,7 @@ class EditPostRepositoryTest {
         val isPage = true
         post.setIsPage(isPage)
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.isPage).isEqualTo(isPage)
         assertThat(editPostRepository.isPage).isEqualTo(isPage)
@@ -207,7 +210,7 @@ class EditPostRepositoryTest {
         val isLocalDraft = true
         post.setIsLocalDraft(isLocalDraft)
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.isLocalDraft).isEqualTo(isLocalDraft)
         assertThat(editPostRepository.isLocalDraft).isEqualTo(isLocalDraft)
@@ -219,7 +222,7 @@ class EditPostRepositoryTest {
         val isLocallyChanged = true
         post.setIsLocallyChanged(isLocallyChanged)
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.isLocallyChanged).isEqualTo(isLocallyChanged)
         assertThat(editPostRepository.isLocallyChanged).isEqualTo(isLocallyChanged)
@@ -231,7 +234,7 @@ class EditPostRepositoryTest {
         val featuredImageId = 10L
         post.featuredImageId = featuredImageId
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.featuredImageId).isEqualTo(featuredImageId)
         assertThat(editPostRepository.featuredImageId).isEqualTo(featuredImageId)
@@ -243,7 +246,7 @@ class EditPostRepositoryTest {
         val dateCreated = "2019-05-05T14:33:20+0000"
         post.dateCreated = dateCreated
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.dateCreated).isEqualTo(dateCreated)
         assertThat(editPostRepository.dateCreated).isEqualTo(dateCreated)
@@ -255,7 +258,7 @@ class EditPostRepositoryTest {
         val changesConfirmedContentHashcode = 10
         post.changesConfirmedContentHashcode = changesConfirmedContentHashcode
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.changesConfirmedContentHashcode).isEqualTo(
                 changesConfirmedContentHashcode
@@ -271,7 +274,7 @@ class EditPostRepositoryTest {
         val postFormat = "format"
         post.postFormat = postFormat
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.postFormat).isEqualTo(postFormat)
         assertThat(editPostRepository.postFormat).isEqualTo(postFormat)
@@ -283,7 +286,7 @@ class EditPostRepositoryTest {
         val slug = "slug"
         post.slug = slug
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.slug).isEqualTo(slug)
         assertThat(editPostRepository.slug).isEqualTo(slug)
@@ -295,7 +298,7 @@ class EditPostRepositoryTest {
         val link = "link"
         post.link = link
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.link).isEqualTo(link)
         assertThat(editPostRepository.link).isEqualTo(link)
@@ -307,7 +310,7 @@ class EditPostRepositoryTest {
         val location = PostLocation(20.0, 30.0)
         post.location = location
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         assertThat(editPostRepository.getPost()!!.location).isEqualTo(location)
         assertThat(editPostRepository.location).isEqualTo(location)
@@ -327,7 +330,7 @@ class EditPostRepositoryTest {
 
         post.status = DRAFT.toString()
         post.dateCreated = dateCreated
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
         whenever(postUtils.shouldPublishImmediately(DRAFT, dateCreated)).thenReturn(true)
 
         editPostRepository.updatePublishDateIfShouldBePublishedImmediately(post)
@@ -346,7 +349,7 @@ class EditPostRepositoryTest {
 
         post.status = PUBLISHED.toString()
         post.dateCreated = dateCreated
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
         whenever(postUtils.shouldPublishImmediately(PUBLISHED, dateCreated)).thenReturn(false)
 
         editPostRepository.updatePublishDateIfShouldBePublishedImmediately(post)
@@ -359,7 +362,7 @@ class EditPostRepositoryTest {
     fun `is not publishable when isPublishable(post) is false`() {
         val post = PostModel()
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         whenever(postUtils.isPublishable(post)).thenReturn(false)
 
@@ -370,7 +373,7 @@ class EditPostRepositoryTest {
     fun `is publishable when isPublishable(post) is true`() {
         val post = PostModel()
 
-        editPostRepository.setPost(post)
+        editPostRepository.setInTransaction { post }
 
         whenever(postUtils.isPublishable(post)).thenReturn(true)
 
@@ -386,13 +389,13 @@ class EditPostRepositoryTest {
         val secondPostId = 2
         secondPost.id = secondPostId
 
-        editPostRepository.setPost(firstPost)
+        editPostRepository.setInTransaction { firstPost }
 
         assertThat(editPostRepository.getPost()).isEqualTo(firstPost)
 
         editPostRepository.saveForUndo()
 
-        editPostRepository.setPost(secondPost)
+        editPostRepository.setInTransaction { secondPost }
 
         assertThat(editPostRepository.getPost()).isEqualTo(secondPost)
 
@@ -407,7 +410,7 @@ class EditPostRepositoryTest {
         val firstPostId = 1
         firstPost.id = firstPostId
 
-        editPostRepository.setPost(firstPost)
+        editPostRepository.setInTransaction { firstPost }
 
         assertThat(editPostRepository.getPost()).isEqualTo(firstPost)
 
@@ -425,7 +428,7 @@ class EditPostRepositoryTest {
         val secondPostId = 2
         secondPost.id = secondPostId
 
-        editPostRepository.setPost(firstPost)
+        editPostRepository.setInTransaction { firstPost }
 
         assertThat(editPostRepository.getPost()).isEqualTo(firstPost)
 
@@ -433,7 +436,7 @@ class EditPostRepositoryTest {
 
         assertThat(editPostRepository.isSnapshotDifferent()).isFalse()
 
-        editPostRepository.setPost(secondPost)
+        editPostRepository.setInTransaction { secondPost }
 
         assertThat(editPostRepository.isSnapshotDifferent()).isTrue()
     }
@@ -447,16 +450,39 @@ class EditPostRepositoryTest {
         val secondPostStatus = PENDING
         secondPost.status = secondPostStatus.toString()
 
-        editPostRepository.setPost(firstPost)
+        editPostRepository.setInTransaction { firstPost }
 
         editPostRepository.saveSnapshot()
 
-        editPostRepository.setPost(secondPost)
+        editPostRepository.setInTransaction { secondPost }
 
         assertThat(editPostRepository.status).isEqualTo(PENDING)
 
         editPostRepository.updateStatusFromSnapshot(secondPost)
 
         assertThat(editPostRepository.status).isEqualTo(PUBLISHED)
+    }
+
+    @Test
+    fun `loads post from store by local id`() {
+        val id = 1
+        val post = PostModel()
+        whenever(postStore.getPostByLocalPostId(id)).thenReturn(post)
+
+        editPostRepository.loadPostByLocalPostId(id)
+
+        assertThat(editPostRepository.getPost()).isEqualTo(post)
+    }
+
+    @Test
+    fun `loads post from store by remote id`() {
+        val remoteId = 2L
+        val post = PostModel()
+        val site = SiteModel()
+        whenever(postStore.getPostByRemotePostId(remoteId, site)).thenReturn(post)
+
+        editPostRepository.loadPostByRemotePostId(remoteId, site)
+
+        assertThat(editPostRepository.getPost()).isEqualTo(post)
     }
 }
