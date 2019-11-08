@@ -2262,25 +2262,6 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorFragment.appendMediaFiles(mediaMap);
     }
 
-    private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
-        @Override
-        protected Spanned doInBackground(String... params) {
-            if (params.length < 1 || mPost == null) {
-                return null;
-            }
-
-            String content = StringUtils.notNullStr(params[0]);
-            return WPHtml.fromHtml(content, EditPostActivity.this, mPost, getMaximumThumbnailWidthForEditor());
-        }
-
-        @Override
-        protected void onPostExecute(Spanned spanned) {
-            if (spanned != null) {
-                mEditorFragment.setContent(spanned);
-            }
-        }
-    }
-
     private String getUploadErrorHtml(String mediaId, String path) {
         return String.format(Locale.US,
                 "<span id=\"img_container_%s\" class=\"img_container failed\" data-failed=\"%s\">"
