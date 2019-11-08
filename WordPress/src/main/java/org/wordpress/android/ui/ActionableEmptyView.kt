@@ -144,6 +144,6 @@ class ActionableEmptyView : LinearLayout {
             subtitle.text
         }
 
-        announceForAccessibility(String.format("%s... %s", title.text, subTitle))
+        announceForAccessibility("${title.text}.$subTitle")
     }
 }
