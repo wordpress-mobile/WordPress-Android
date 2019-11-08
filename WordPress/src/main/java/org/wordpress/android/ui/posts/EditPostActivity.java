@@ -1991,7 +1991,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
                     // otherwise we'd have an incorrect value
                     // also re-set the published date in case it was SCHEDULED and they want to publish NOW
-                    if (mEditPostRepository.getStatus() == PostStatus.SCHEDULED) {
+                    if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
                         postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
                     }
                     postModel.setStatus(PostStatus.PUBLISHED.toString());
@@ -3295,7 +3295,7 @@ public class EditPostActivity extends AppCompatActivity implements
             ActivityLauncher.previewPostOrPageForResult(
                     EditPostActivity.this,
                     mSite,
-                    mEditPostRepository.getPost(),
+                    post,
                     mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
                             ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
                             : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
