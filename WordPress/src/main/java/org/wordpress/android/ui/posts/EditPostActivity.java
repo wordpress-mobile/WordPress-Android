@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -115,15 +113,15 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
-import org.wordpress.android.ui.posts.editor.media.EditorMedia;
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
-import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
-import org.wordpress.android.ui.posts.editor.media.EditorMediaPostData;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
+import org.wordpress.android.ui.posts.editor.media.EditorMedia;
+import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
+import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
+import org.wordpress.android.ui.posts.editor.media.EditorMediaPostData;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -185,6 +183,9 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
@@ -2510,7 +2511,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
                     if (data.hasExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS)) {
                         long[] mediaIds = data.getLongArrayExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS);
-                        mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
+                        mEditorMedia
+                                .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
                     }
                     break;
                 case RequestCodes.GIPHY_PICKER:
