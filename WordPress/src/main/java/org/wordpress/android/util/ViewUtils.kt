@@ -16,7 +16,6 @@ fun View.redirectContextClickToLongPressListener() {
     }
 }
 
-
 fun View.expandTouchTargetArea(dps: Int, heightOnly: Boolean = false) {
     val pixels = DisplayUtils.dpToPx(context, dps)
     val parent = this.parent as View
