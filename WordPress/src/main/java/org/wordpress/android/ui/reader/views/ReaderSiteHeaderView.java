@@ -22,6 +22,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.PhotonUtils.Quality;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -45,6 +46,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private OnBlogInfoLoadedListener mBlogInfoListener;
     private OnFollowListener mFollowListener;
 
+    private static final int FOLLOW_BUTTON_EXTRA_DPS = 32;
+
     @Inject AccountStore mAccountStore;
     @Inject ImageManager mImageManager;
 
@@ -66,6 +69,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_site_header_view, this);
         mFollowButton = view.findViewById(R.id.follow_button);
+        ViewUtilsKt.expandTouchTargetArea(mFollowButton, FOLLOW_BUTTON_EXTRA_DPS, false);
     }
 
     public void setOnFollowListener(OnFollowListener listener) {
