@@ -52,6 +52,7 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.ArrayList;
@@ -75,6 +76,8 @@ public class ReaderSubsActivity extends AppCompatActivity
     private static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
 
     private static final int NUM_TABS = 3;
+
+    private static final int ADD_BUTTON_EXTRA_DPS = 24;
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_FOLLOWED_BLOGS = 1;
@@ -141,6 +144,8 @@ public class ReaderSubsActivity extends AppCompatActivity
                 addCurrentEntry();
             }
         });
+
+        ViewUtilsKt.expandTouchTargetArea(mBtnAdd, ADD_BUTTON_EXTRA_DPS, false);
 
         if (savedInstanceState == null) {
             // return to the page the user was on the last time they viewed this activity
