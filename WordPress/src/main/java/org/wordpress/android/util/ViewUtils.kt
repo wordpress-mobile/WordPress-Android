@@ -34,4 +34,3 @@ fun View.expandTouchTargetArea(dps: Int, heightOnly: Boolean = false) {
         parent.touchDelegate = TouchDelegate(touchTargetRect, this)
     }
 }
-
