@@ -66,6 +66,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -121,6 +122,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final long ITEM_ID_NEWS_CARD = -3L;
 
     private static final int NEWS_CARD_POSITION = 0;
+
+    private static final int LAYOUT_DISCOVER_EXTRA_DPS = 16;
+    private static final int LAYOUT_VISIT_EXTRA_DPS = 12;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -236,6 +240,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             ViewGroup postHeaderView = itemView.findViewById(R.id.layout_post_header);
             mFollowButton = postHeaderView.findViewById(R.id.follow_button);
+
+            ViewUtilsKt.expandTouchTargetArea(mLayoutDiscover, LAYOUT_DISCOVER_EXTRA_DPS, true);
+            ViewUtilsKt.expandTouchTargetArea(mVisit, LAYOUT_VISIT_EXTRA_DPS, false);
 
             // show post in internal browser when "visit" is clicked
             View.OnClickListener visitListener = new View.OnClickListener() {
