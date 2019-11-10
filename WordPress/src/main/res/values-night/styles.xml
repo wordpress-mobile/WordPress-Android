@@ -36,10 +36,6 @@
         <item name="actionMenuTextColor">@color/primary_disabled_selector</item>
     </style>
 
-    <style name="ActionButtonOverflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:tint">?attr/colorPrimary</item>
-    </style>
-
     <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="subtitleTextStyle">@style/WordPress.ActionMode.SubtitleTextStyle</item>
         <item name="titleTextStyle">@style/WordPress.ActionMode.TitleTextStyle</item>
