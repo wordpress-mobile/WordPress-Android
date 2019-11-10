@@ -33,7 +33,7 @@
 
         <item name="actionModeStyle">@style/WordPress.ActionMode</item>
         <item name="actionModeCloseButtonStyle">@style/WordPress.ActionMode.CloseButton</item>
-        <item name="actionMenuTextColor">@color/action_mode_menu_text_color</item>
+        <item name="actionMenuTextColor">@color/primary_disabled_selector</item>
     </style>
 
     <style name="ActionButtonOverflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
