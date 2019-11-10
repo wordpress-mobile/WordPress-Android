@@ -30,6 +30,10 @@
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorAppBar">@color/primary</item>
 
+        <item name="actionOverflowMenuStyle">
+            @style/Widget.MaterialComponents.PopupMenu.Overflow
+        </item>
+
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
@@ -154,6 +158,7 @@
     <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="titleTextColor">?attr/colorOnPrimary</item>
         <item name="android:background">?attr/wpColorAppBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <style name="WordPress.ActionBar" parent="ThemeOverlay.AppCompat.Dark">
