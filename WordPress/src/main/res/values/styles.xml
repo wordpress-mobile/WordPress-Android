@@ -157,7 +157,6 @@
     </style>
 
     <style name="WordPress.ActionBar" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="colorControlActivated">@android:color/transparent</item>
         <item name="android:textColorSecondary">?attr/colorOnPrimarySurface</item>
     </style>
 

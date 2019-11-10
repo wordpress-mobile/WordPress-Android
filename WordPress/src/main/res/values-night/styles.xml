@@ -60,6 +60,7 @@
 
     <style name="WordPress.ActionMode.Theme" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:textColorSecondary">?attr/colorPrimary</item>
+        <item name="colorControlActivated">@android:color/transparent</item>
     </style>
 
     <style name="WordPress" parent="Base.Wordpress">
