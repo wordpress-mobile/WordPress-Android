@@ -30,6 +30,36 @@
         <item name="android:windowContentOverlay">@null</item>
 
         <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
+
+        <item name="actionModeStyle">@style/WordPress.ActionMode</item>
+        <item name="actionModeCloseButtonStyle">@style/WordPress.ActionMode.CloseButton</item>
+        <item name="actionMenuTextColor">@color/action_mode_menu_text_color</item>
+    </style>
+
+    <style name="ActionButtonOverflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">?attr/colorPrimary</item>
+    </style>
+
+    <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="subtitleTextStyle">@style/WordPress.ActionMode.SubtitleTextStyle</item>
+        <item name="titleTextStyle">@style/WordPress.ActionMode.TitleTextStyle</item>
+        <item name="theme">@style/WordPress.ActionMode.Theme</item>
+    </style>
+
+    <style name="WordPress.ActionMode.TitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="WordPress.ActionMode.SubtitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="WordPress.ActionMode.CloseButton" parent="Widget.AppCompat.Light.ActionButton.CloseMode">
+        <item name="tint">?attr/colorPrimary</item>
+    </style>
+
+    <style name="WordPress.ActionMode.Theme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:textColorSecondary">?attr/colorPrimary</item>
     </style>
 
     <style name="WordPress" parent="Base.Wordpress">
