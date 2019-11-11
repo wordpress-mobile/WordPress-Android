@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-17 01:27:17+0000
+Translation-Revision-Date: 2019-10-28 19:04:14+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="pick_media">Bild oder Video hinzufügen</string>
     <string name="error_post_not_submitted_retrying">Wir konnten diesen Beitrag nicht zur Überprüfung einreichen, aber wir werden es später erneut versuchen.</string>
     <string name="error_post_not_scheduled_retrying">Wir konnten diesen Beitrag nicht planen, aber wir werden es später noch einmal versuchen.</string>
     <string name="error_post_not_published_retrying_private">Wir konnten diesen privaten Beitrag nicht veröffentlichen, aber wir werden es später erneut versuchen.</string>
@@ -1513,9 +1514,6 @@ Language: de
     <string name="error_refresh_comments_showing_older">Die Kommentare konnten nicht aktualisiert werden. Es werden ältere Kommentare angezeigt.</string>
     <string name="post_settings_set_featured_image">Beitragsbild festlegen</string>
     <string name="post_settings_featured_image">Beitragsbild</string>
-    <string name="editor_content_placeholder">Teile deine Geschichte hier …</string>
-    <string name="editor_page_title_placeholder">Seitentitel</string>
-    <string name="editor_post_title_placeholder">Beitragstitel</string>
     <string name="email_address">E-Mail-Adresse</string>
     <string name="dlg_sure_to_delete_comments">Möchtest du diese Kommentare dauerhaft löschen?</string>
     <string name="dlg_sure_to_delete_comment">Möchtest du diesen Kommentar dauerhaft löschen?</string>
@@ -1913,7 +1911,6 @@ Language: de
     <string name="reader_empty_posts_in_tag_updating">Beiträge werden abgerufen…</string>
     <string name="cant_share_no_visible_blog">Du kannst nicht auf WordPress teilen ohne einen sichtbaren Blog</string>
     <string name="comment_spammed">Kommentar als Spam markiert</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Antworten</string>
     <string name="reader_likes_multi">%d Leuten gefällt dies</string>
     <string name="reader_likes_you_and_multi">Dir und %,d anderen gefällt dies</string>

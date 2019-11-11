@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-16 00:55:15+0000
+Translation-Revision-Date: 2019-10-25 06:49:27+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="pick_media">Ajouter une image ou une vidéo</string>
     <string name="error_post_not_submitted_retrying">Nous n\'avons pas pu soumettre cet article pour révision, mais nous réessayerons plus tard. </string>
     <string name="error_post_not_scheduled_retrying">Nous n\'avons pas pu planifier la publication de cet article, mais nous réessayerons plus tard.</string>
     <string name="error_post_not_published_retrying_private">Nous n\'avons pas pu publier cet article privé, mais nous réessayerons plus tard.</string>
@@ -1513,9 +1514,6 @@ Language: fr
     <string name="error_refresh_comments_showing_older">Les commentaires ne peuvent pas être actualisés en ce moment - affichage des commentaires plus anciens</string>
     <string name="post_settings_set_featured_image">Définir une image mise à la une</string>
     <string name="post_settings_featured_image">Image à la une</string>
-    <string name="editor_content_placeholder">Partagez ici votre histoire…</string>
-    <string name="editor_page_title_placeholder">Titre de la page</string>
-    <string name="editor_post_title_placeholder">Titre de l\'article</string>
     <string name="email_address">Adresse de messagerie</string>
     <string name="dlg_sure_to_delete_comments">Supprimer définitivement ces commentaires ?</string>
     <string name="dlg_sure_to_delete_comment">Supprimer définitivement ce commentaire ? </string>
@@ -1913,7 +1911,6 @@ Language: fr
     <string name="reader_empty_posts_in_tag_updating">Récupération des articles…</string>
     <string name="cant_share_no_visible_blog">Vous ne pouvez pas partager vers WordPress sans avoir publié au moins un blog.</string>
     <string name="comment_spammed">Commentaire marqué comme indésirable</string>
-    <string name="video">Vidéo</string>
     <string name="reader_label_reply">Répondre</string>
     <string name="reader_likes_multi">%,d personnes aiment ça</string>
     <string name="reader_likes_you_and_multi">Vous et %,d personnes aiment ça</string>

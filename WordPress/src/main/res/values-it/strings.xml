@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-16 00:55:17+0000
+Translation-Revision-Date: 2019-10-30 00:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="pick_media">Aggiungi immagine o video</string>
     <string name="error_post_not_submitted_retrying">Impossibile inviare questo articolo per la revisione, riproveremo più tardi. </string>
     <string name="error_post_not_scheduled_retrying">Impossibile pianificare questo articolo, riproveremo più tardi.</string>
     <string name="error_post_not_published_retrying_private">Impossibile pubblicare questo articolo privato, riproveremo più tardi.</string>
@@ -1512,9 +1513,6 @@ Language: it
     <string name="error_refresh_comments_showing_older">Impossibile aggiornare i commenti in questo momento, vengono visualizzati i commenti precedenti</string>
     <string name="post_settings_set_featured_image">Imposta Immagine in Evidenza</string>
     <string name="post_settings_featured_image">Immagine in evidenza</string>
-    <string name="editor_content_placeholder">Condividi la tua storia qui…</string>
-    <string name="editor_page_title_placeholder">Titolo della pagina</string>
-    <string name="editor_post_title_placeholder">Titolo dell\'articolo</string>
     <string name="email_address">Indirizzo email</string>
     <string name="dlg_sure_to_delete_comments">Eliminare in modo permanente questi commenti?</string>
     <string name="dlg_sure_to_delete_comment">Eliminare in modo permanente questo commento?</string>
@@ -1912,7 +1910,6 @@ Language: it
     <string name="reader_empty_posts_in_tag_updating">Recupero post in corso…</string>
     <string name="cant_share_no_visible_blog">Non è possibile condividere su WordPress senza un blog visibile</string>
     <string name="comment_spammed">Commento contrassegnato come spam</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Rispondi</string>
     <string name="reader_likes_multi">Piace a %,d persone</string>
     <string name="reader_likes_you_and_multi">Piace a te e ad altri %,d</string>

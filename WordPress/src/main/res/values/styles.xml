@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="WordPress" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Base.Wordpress" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Material theme -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
@@ -37,6 +37,10 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
         <item name="homeAsUpIndicator">@drawable/ic_arrow_left_white_24dp</item>
+    </style>
+
+    <style name="WordPress" parent="Base.Wordpress">
+        <!-- We need to keep this here so we can override it in values-vXY -->
     </style>
 
     <style name="NumberPickerTheme" parent="WordPress">
@@ -1041,6 +1045,17 @@
 
     <style name="LoginEpilogueSitesList">
         <item name="colorControlHighlight">@android:color/transparent</item>
+    </style>
+
+    <!-- DialogPreference custom title style -->
+    <style name="DialogPreference"/>
+    <style name="DialogPreference.CustomTitle">
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
+        <item name="android:gravity">start|center_vertical</item>
     </style>
 
 </resources>
