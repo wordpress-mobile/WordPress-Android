@@ -30,7 +30,6 @@ public class EncryptionUtils {
             "messages": []                      // the stream elements, base-64 encoded
         }
     */
-
     public static String encryptStringData(final String publicKeyBase64,
                                            final String stringData,
                                            final String delimiter) throws JSONException {
@@ -73,7 +72,7 @@ public class EncryptionUtils {
 
         encryptionDataJson.put("messages", encryptedElementsJson);
 
-        return encryptionDataJson.toString(4);
+        return encryptionDataJson.toString();
     }
 
     private static String getBoxSealEncryptedBase64String(final String publicKeyBase64,
