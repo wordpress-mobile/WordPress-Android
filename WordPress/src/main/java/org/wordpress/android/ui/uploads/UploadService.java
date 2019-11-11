@@ -1002,7 +1002,7 @@ public class UploadService extends Service {
                                 new PostEvents.PostUploadCanceled(postModel));
                     } else {
                         // Do not re-enqueue a post that has already failed
-                        if (post.getId() == updatedPost.getId() && isError != null && isError && mUploadStore
+                        if (isError != null && isError && post.getId() == updatedPost.getId() && mUploadStore
                                 .isFailedPost(post)) {
                             continue;
                         }
