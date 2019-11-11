@@ -448,7 +448,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         (PostEditorAnalyticsSession) extras.getSerializable(STATE_KEY_EDITOR_SESSION_DATA);
             }
         } else {
-            mEditorMedia.setDroppedMediaUris(savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS));
+            mEditorMedia.setDroppedMediaUris(savedInstanceState.getParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS));
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             updatePostLoadingAndDialogState(PostLoadingState.fromInt(
                     savedInstanceState.getInt(STATE_KEY_POST_LOADING_STATE, 0)));
