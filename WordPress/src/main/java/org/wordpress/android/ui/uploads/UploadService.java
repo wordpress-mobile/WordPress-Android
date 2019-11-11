@@ -975,7 +975,7 @@ public class UploadService extends Service {
         for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
             if (PostUtils.isPostCurrentlyBeingEdited(postModel)) {
                 // don't touch a Post that is being currently open in the Editor.
-                break;
+                continue;
             }
 
             if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
@@ -1002,7 +1002,8 @@ public class UploadService extends Service {
                                 new PostEvents.PostUploadCanceled(postModel));
                     } else {
                         // Do not re-enqueue a post that has already failed
-                        if (isError != null && isError && mUploadStore.isFailedPost(post)) {
+                        if (post.getId() == updatedPost.getId() && isError != null && isError && mUploadStore
+                                .isFailedPost(post)) {
                             continue;
                         }
                         // TODO Should do some extra validation here
