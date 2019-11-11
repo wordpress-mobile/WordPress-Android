@@ -84,7 +84,15 @@ class BaseListUseCase(
         loadData(true, forced)
     }
 
-    suspend fun onParamChanged(param: UseCaseParam) {
+    suspend fun onSiteChanged() {
+        if (this.statsTypes.value.isNullOrEmpty()) {
+            refreshTypes()
+        } else {
+            onParamChanged(UseCaseParam.Site)
+        }
+    }
+
+    private suspend fun onParamChanged(param: UseCaseParam) {
         statsTypes.value?.forEach { type ->
             useCases.find { it.type == type }
                     ?.let { block ->
