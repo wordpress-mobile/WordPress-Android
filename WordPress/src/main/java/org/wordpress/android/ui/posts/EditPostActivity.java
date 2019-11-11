@@ -34,6 +34,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
+import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -119,6 +120,7 @@ import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
+import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -316,6 +318,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject RemotePreviewLogicHelper mRemotePreviewLogicHelper;
     @Inject ProgressDialogHelper mProgressDialogHelper;
     @Inject FeaturedImageHelper mFeaturedImageHelper;
+    @Inject ReactNativeRequestHandler mReactNativeRequestHandler;
 
     private SiteModel mSite;
 
@@ -3207,6 +3210,13 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onAddStockMediaClicked(boolean allowMultipleSelection) {
         onPhotoPickerIconClicked(PhotoPickerIcon.STOCK_MEDIA, allowMultipleSelection);
+    }
+
+    @Override
+    public void onPerformFetch(String path, Consumer<String> onResult, Consumer<String> onError) {
+        if (mSite != null) {
+            mReactNativeRequestHandler.performGetRequest(path, mSite, onResult, onError);
+        }
     }
 
     @Override
