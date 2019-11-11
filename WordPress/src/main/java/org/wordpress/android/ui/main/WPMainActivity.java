@@ -68,6 +68,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
+import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -388,10 +389,10 @@ public class WPMainActivity extends AppCompatActivity implements
             mViewModel.getCreateAction().observe(this, createAction -> {
                 switch (createAction) {
                     case CREATE_NEW_POST:
-                        handleNewPostAction();
+                        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
                         break;
                     case CREATE_NEW_PAGE:
-                        handleNewPageAction();
+                        handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
                         break;
                 }
 
@@ -705,10 +706,10 @@ public class WPMainActivity extends AppCompatActivity implements
     // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
-        handleNewPostAction();
+        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR);
     }
 
-    private void handleNewPageAction() {
+    private void handleNewPageAction(PagePostCreationSourcesDetail source) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
@@ -718,11 +719,11 @@ public class WPMainActivity extends AppCompatActivity implements
         SiteModel site = getSelectedSite();
         if (site != null) {
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            ActivityLauncher.addNewPageForResult(this, site);
+            ActivityLauncher.addNewPageForResult(this, site, source);
         }
     }
 
-    public void handleNewPostAction() {
+    public void handleNewPostAction(PagePostCreationSourcesDetail source) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
@@ -739,7 +740,7 @@ public class WPMainActivity extends AppCompatActivity implements
             }
         }
 
-        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false);
+        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
     }
 
     private void updateTitle() {
