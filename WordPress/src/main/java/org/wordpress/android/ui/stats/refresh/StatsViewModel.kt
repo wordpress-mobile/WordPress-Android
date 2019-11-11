@@ -175,7 +175,9 @@ class StatsViewModel
 
     fun onSiteChanged() {
         loadData {
-            listUseCases.values.forEach { it.onSiteChanged() }
+            listUseCases.values.forEach {
+                it.refreshData(true)
+            }
         }
     }
 
