@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.reactnative
+package org.wordpress.android.fluxc.network.rest.wpapi.reactnative
 
 import com.android.volley.RequestQueue
 import com.google.gson.JsonElement
