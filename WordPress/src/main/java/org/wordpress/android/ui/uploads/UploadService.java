@@ -988,8 +988,8 @@ public class UploadService extends Service {
                         if (!isAllFailedMediaUserDeleted(failedMedia)) {
                             SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
                             String message = UploadUtils
-                                    .getErrorMessage(this, postModel.isPage(), getString(R.string.error_generic_error), true
-                                    );
+                                    .getErrorMessage(this, postModel.isPage(), getString(R.string.error_generic_error),
+                                            true);
                             mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message, 0);
                         }
 
