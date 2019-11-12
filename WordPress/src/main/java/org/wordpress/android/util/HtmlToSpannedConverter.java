@@ -31,7 +31,6 @@ import org.ccil.cowan.tagsoup.Parser;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
-import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.WPImageSpan;
