@@ -2400,7 +2400,11 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
-        private boolean defaultTagFoundAndAdded(Map<String, TagInfo> defaultTagInfos, ReaderTag tag, Map<String, ReaderTag> defaultTags) {
+        private boolean defaultTagFoundAndAdded(
+                Map<String, TagInfo> defaultTagInfos,
+                ReaderTag tag,
+                Map<String, ReaderTag> defaultTags
+        ) {
             boolean foundAndAdded = false;
 
             for (String key : defaultTagInfos.keySet()) {

@@ -151,7 +151,7 @@ public class ReaderUpdateLogic {
                 // manually insert Bookmark tag, as server doesn't support bookmarking yet
                 serverTopics.add(
                         new ReaderTag(
-                                "", 
+                                "",
                                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
                                 ? mContext.getString(R.string.reader_save_for_later_display_name) : "",
                                 mContext.getString(R.string.reader_save_for_later_title),
