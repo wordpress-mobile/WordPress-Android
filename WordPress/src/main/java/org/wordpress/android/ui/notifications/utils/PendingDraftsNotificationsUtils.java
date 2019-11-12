@@ -5,8 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import org.wordpress.android.push.GCMMessageService;
-import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.push.NotificationPushIds;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.util.DateTimeUtils;
