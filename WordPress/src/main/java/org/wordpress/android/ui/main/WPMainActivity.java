@@ -183,7 +183,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject QuickStartStore mQuickStartStore;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
-	@Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
