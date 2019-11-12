@@ -63,6 +63,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
+import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -78,6 +79,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
@@ -123,6 +125,7 @@ import javax.inject.Inject;
 import static androidx.lifecycle.Lifecycle.State.STARTED;
 import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS;
+import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 
 /**
@@ -179,7 +182,8 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject NewsManager mNewsManager;
     @Inject QuickStartStore mQuickStartStore;
     @Inject UploadActionUseCase mUploadActionUseCase;
-    @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject SystemNotificationsTracker mSystemNotificationsTracker;
+	@Inject ViewModelProvider.Factory mViewModelFactory;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -248,6 +252,11 @@ public class WPMainActivity extends AppCompatActivity implements
             }
 
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+                NotificationType notificationType =
+                        (NotificationType) getIntent().getSerializableExtra(ARG_NOTIFICATION_TYPE);
+                if (notificationType != null) {
+                    mSystemNotificationsTracker.trackTappedNotification(notificationType);
+                }
                 // open note detail if activity called from a push
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
                         false));

@@ -920,6 +920,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_received_processing_start";
             case NOTIFICATION_RECEIVED_PROCESSING_END:
                 return "notifications_received_processing_end";
+            case NOTIFICATION_SHOWN:
+                return "notification_shown";
+            case NOTIFICATION_TAPPED:
+                return "notification_tapped";
+            case NOTIFICATION_DISMISSED:
+                return "notification_dismissed";
             case OPENED_POSTS:
                 return "site_menu_opened";
             case OPENED_PAGES:
