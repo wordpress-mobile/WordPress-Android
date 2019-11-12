@@ -550,13 +550,13 @@ class UploadActionUseCaseTest {
             changesConfirmed: Boolean = false,
             autoSaveModified: String? = null
         ): PostModel = PostModel().apply {
-            this.status = status
+            this.setStatus(status)
             this.setIsLocalDraft(isLocalDraft)
             this.setIsLocallyChanged(isLocallyChanged)
-            this.dateLocallyChanged = dateLocallyChanged
-            this.autoSaveModified = autoSaveModified
+            this.setDateLocallyChanged(dateLocallyChanged)
+            this.setAutoSaveModified(autoSaveModified)
             if (changesConfirmed) {
-                this.changesConfirmedContentHashcode = this.contentHashcode()
+                this.setChangesConfirmedContentHashcode(this.contentHashcode())
             }
         }
 

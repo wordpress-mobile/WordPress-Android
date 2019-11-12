@@ -27,7 +27,7 @@ class HistoryViewModelTest {
     @get:Rule val rule = InstantTaskExecutorRule()
 
     private val defaultPost = PostModel().apply {
-        id = 1_569
+        setId(1_569)
     }
     private val postStore = mock<PostStore> {
         on { getPostByLocalPostId(eq(defaultPost.id)) } doReturn defaultPost
