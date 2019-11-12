@@ -95,6 +95,7 @@ public class NotificationsProcessingService extends Service {
     @Inject SiteStore mSiteStore;
     @Inject CommentStore mCommentStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
+    @Inject GCMMessageHandler mGCMMessageHandler;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -171,12 +172,9 @@ public class NotificationsProcessingService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Offload to a separate thread.
 
-        mQuickActionProcessor = new QuickActionProcessor(this, mSystemNotificationsTracker, intent, startId);
-        new Thread(new Runnable() {
-            public void run() {
-                mQuickActionProcessor.process();
-            }
-        }).start();
+        mQuickActionProcessor =
+                new QuickActionProcessor(this, mSystemNotificationsTracker, mGCMMessageHandler, intent, startId);
+        new Thread(() -> mQuickActionProcessor.process()).start();
 
         return START_NOT_STICKY;
     }
@@ -194,11 +192,13 @@ public class NotificationsProcessingService extends Service {
         private final Context mContext;
         private final Intent mIntent;
 
-        QuickActionProcessor(Context ctx, SystemNotificationsTracker notificationsTracker, Intent intent, int taskId) {
+        QuickActionProcessor(Context ctx, SystemNotificationsTracker notificationsTracker,
+                             GCMMessageHandler gcmMessageHandler, Intent intent, int taskId) {
             mContext = ctx;
             mSystemNotificationsTracker = notificationsTracker;
             mIntent = intent;
             mTaskId = taskId;
+            this.mGCMMessageHandler = gcmMessageHandler;
         }
 
         public void process() {
