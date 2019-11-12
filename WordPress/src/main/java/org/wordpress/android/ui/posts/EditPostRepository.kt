@@ -149,10 +149,14 @@ class EditPostRepository
     }
 
     fun loadPostByLocalPostId(postId: Int) {
-        setInTransaction { postStore.getPostByLocalPostId(postId) }
+        lock.write {
+            post = postStore.getPostByLocalPostId(postId)
+        }
     }
 
     fun loadPostByRemotePostId(remotePostId: Long, site: SiteModel) {
-        setInTransaction { postStore.getPostByRemotePostId(remotePostId, site) }
+        lock.write {
+            post = postStore.getPostByRemotePostId(remotePostId, site)
+        }
     }
 }
