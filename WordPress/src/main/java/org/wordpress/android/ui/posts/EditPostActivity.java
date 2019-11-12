@@ -769,6 +769,9 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment) mEditorFragment).disableContentLogOnCrashes();
         }
+
+        if (mReactNativeRequestHandler != null) mReactNativeRequestHandler.destroy();
+
         super.onDestroy();
     }
 

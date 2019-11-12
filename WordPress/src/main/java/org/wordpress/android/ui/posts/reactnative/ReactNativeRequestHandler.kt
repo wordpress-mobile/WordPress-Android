@@ -2,7 +2,9 @@ package org.wordpress.android.ui.posts.reactnative
 
 import androidx.core.util.Consumer
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse
@@ -16,20 +18,32 @@ import javax.inject.Named
 class ReactNativeRequestHandler @Inject constructor(
     private val reactNativeStore: ReactNativeStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
-) {
+) : CoroutineScope {
+    override val coroutineContext = bgDispatcher + Job()
+
     fun performGetRequest(
         pathWithParams: String,
         mSite: SiteModel,
         onSuccess: Consumer<String>,
         onError: Consumer<String>
     ) {
-        GlobalScope.launch(bgDispatcher) {
+        launch {
             if (mSite.isUsingWpComRestApi) {
                 performGetRequestForWPComSite(pathWithParams, mSite.siteId, onSuccess::accept, onError::accept)
             } else {
                 performGetRequestForSelfHostedSite(pathWithParams, mSite.url, onSuccess::accept, onError::accept)
             }
         }
+    }
+
+    /**
+     * A given instance of this class may not be used after [destroy] is called because:
+     *     (1) this class's coroutineContext has a single job instance that is created on initialization;
+     *     (2) calling `destroy()` cancels that job; and
+     *     (3) jobs cannot be reused once cancelled.
+     */
+    fun destroy() {
+        coroutineContext[Job]!!.cancel()
     }
 
     private suspend fun performGetRequestForWPComSite(
