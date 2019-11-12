@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-10 23:48:24+0000
+Translation-Revision-Date: 2019-10-25 05:28:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+    <string name="pick_media">Add image or video</string>
     <string name="error_post_not_submitted_retrying">We couldn\'t submit this post for review, but we\'ll try again later. </string>
     <string name="error_post_not_scheduled_retrying">We couldn\'t schedule this post, but we\'ll try again later.</string>
     <string name="error_post_not_published_retrying_private">We couldn\'t publish this private post, but we\'ll try again later.</string>
@@ -1513,9 +1514,6 @@ Language: en_AU
     <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
     <string name="post_settings_set_featured_image">Set Featured Image</string>
     <string name="post_settings_featured_image">Featured Image</string>
-    <string name="editor_content_placeholder">Share your story here…</string>
-    <string name="editor_page_title_placeholder">Page Title</string>
-    <string name="editor_post_title_placeholder">Post Title</string>
     <string name="email_address">Email address</string>
     <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
     <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
@@ -1913,7 +1911,6 @@ Language: en_AU
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="comment_spammed">Comment marked as spam</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Reply</string>
     <string name="reader_likes_multi">%,d people like this</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>

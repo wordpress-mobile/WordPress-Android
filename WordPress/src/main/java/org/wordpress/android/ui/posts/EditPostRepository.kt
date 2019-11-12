@@ -3,10 +3,12 @@ package org.wordpress.android.ui.posts
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.fromPost
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -17,6 +19,7 @@ import kotlin.concurrent.write
 class EditPostRepository
 @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
+    private val postStore: PostStore,
     private val postUtils: PostUtilsWrapper
 ) {
     private var post: PostModel? = null
@@ -88,9 +91,6 @@ class EditPostRepository
     fun hasPost() = post != null
     fun getPost(): PostImmutableModel? = post
     fun getEditablePost() = post
-    fun setPost(post: PostModel?) = lock.write {
-        this.post = post
-    }
 
     fun getPostForUndo() = postForUndo
 
@@ -146,5 +146,13 @@ class EditPostRepository
             it.setStatus(status.toString())
             true
         }
+    }
+
+    fun loadPostByLocalPostId(postId: Int) {
+        setInTransaction { postStore.getPostByLocalPostId(postId) }
+    }
+
+    fun loadPostByRemotePostId(remotePostId: Long, site: SiteModel) {
+        setInTransaction { postStore.getPostByRemotePostId(remotePostId, site) }
     }
 }

@@ -16,9 +16,11 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import java.util.Date
+import java.util.Locale
 
 private const val HOUR_IN_MILLISECONDS = 3600000L
 
@@ -26,15 +28,17 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaStore: MediaStore
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var pagesViewModel: PagesViewModel
+    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var viewModel: PageListViewModel
     private val site = SiteModel()
     private val pageListState = MutableLiveData<PageListState>()
     @Before
     fun setUp() {
-        viewModel = PageListViewModel(mediaStore, dispatcher, Dispatchers.Unconfined)
+        viewModel = PageListViewModel(mediaStore, dispatcher, localeManagerWrapper, Dispatchers.Unconfined)
 
         whenever(pagesViewModel.arePageActionsEnabled).thenReturn(false)
         whenever(pagesViewModel.site).thenReturn(site)
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.getDefault())
         site.id = 10
         pageListState.value = PageListState.DONE
     }
@@ -158,8 +162,37 @@ class PageListViewModelTest : BaseUnitTest() {
         assertDivider(pageItems[100])
     }
 
-    private fun buildPageModel(id: Int, date: Date, parent: PageModel? = null): PageModel {
-        val title = if (id < 10) "Title 0$id" else "Title $id"
+    @Test
+    fun `sorts pages ignoring case`() {
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+
+        viewModel.pages.observeForever { result.add(it) }
+
+        val firstPage = buildPageModel(0, pageTitle = "ab")
+        val secondPage = buildPageModel(0, pageTitle = "Ac")
+
+        val pageModels = mutableListOf<PageModel>()
+        pageModels += secondPage
+        pageModels += firstPage
+        pages.value = pageModels
+
+        assertThat(result).hasSize(1)
+        assertThat((result[0].first[0] as PublishedPage).title).isEqualTo(firstPage.title)
+        assertThat((result[0].first[1] as PublishedPage).title).isEqualTo(secondPage.title)
+    }
+
+    private fun buildPageModel(
+        id: Int,
+        date: Date = Date(0),
+        parent: PageModel? = null,
+        pageTitle: String? = null
+    ): PageModel {
+        val title = pageTitle ?: if (id < 10) "Title 0$id" else "Title $id"
         return PageModel(site, id, title, PageStatus.PUBLISHED, date, false, id.toLong(), parent, id.toLong())
     }
 

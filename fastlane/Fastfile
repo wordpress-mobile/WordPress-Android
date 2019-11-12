@@ -205,7 +205,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, flavor:"Vanilla")
+    build_bundle(version: version, flavor:"Vanilla", buildType: "release")
   end
 
   #####################################################################################
@@ -250,7 +250,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     # Create the file names
     version=android_get_alpha_version()
-    build_bundle(version: version, flavor:"Zalpha")
+    build_bundle(version: version, flavor:"Zalpha", buildType: "release")
   end
 
   #####################################################################################
@@ -272,7 +272,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, flavor:"Vanilla")
+    build_bundle(version: version, flavor:"Vanilla", buildType: "release")
   end
 
   #####################################################################################
@@ -359,10 +359,13 @@ ENV["HAS_ALPHA_VERSION"]="true"
     version=options[:version]
     name="wpandroid-#{version["name"]}.aab"
     apk_name="wpandroid-#{version["name"]}-universal.apk"
-    aab_file="WordPress.aab"
+    aab_file="org.wordpress.android-#{options[:flavor]}-#{options[:buildType]}.aab"
     output_dir="WordPress/build/outputs/bundle/"
     build_dir="build/"
     logfile_path="#{build_dir}build.log"
+
+    # Intermediate Variables
+    bundle_path = "#{output_dir}#{options[:flavor]}Release/#{aab_file}"
 
     # Build
     Dir.chdir("..") do
@@ -375,7 +378,10 @@ ENV["HAS_ALPHA_VERSION"]="true"
       UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
       sh("echo \"Building #{version["name"]} / #{version["code"]} - #{aab_file}...\" >> #{logfile_path}")
       sh("./gradlew bundle#{options[:flavor]}Release >> #{logfile_path} 2>&1")
-      sh("cp -v #{output_dir}#{options[:flavor]}Release/#{aab_file} #{build_dir}#{name} | tee -a #{logfile_path}")
+
+      UI.crash!("Unable to find a bundle at #{bundle_path}") unless File.file?(bundle_path)
+
+      sh("cp -v #{bundle_path} #{build_dir}#{name} | tee -a #{logfile_path}")
       UI.message("Bundle ready: #{name}")
       sh("echo \"Bundle ready: #{name}\" >> #{logfile_path}")
       extract_universal_apk(bundle_path:"#{build_dir}#{name}", apk_path:"#{build_dir}#{apk_name}")

@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostUtilsWrapper;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -82,6 +83,7 @@ public class UploadService extends Service {
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
     @Inject UploadStore mUploadStore;
+    @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject PostUtilsWrapper mPostUtilsWrapper;
 
     @Override
@@ -98,7 +100,7 @@ public class UploadService extends Service {
         }
 
         if (mPostUploadNotifier == null) {
-            mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this);
+            mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this, mSystemNotificationsTracker);
         }
 
         if (mPostUploadHandler == null) {

@@ -55,8 +55,9 @@ public class PostUtils {
 
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
     private static final int SRC_ATTRIBUTE_LENGTH_PLUS_ONE = 5;
-    private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s} -->";
+    private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s";
     private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
+    private static final String GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:media-text {\"mediaId\":%s";
 
     public static Map<String, Object> addPostTypeToAnalyticsProperties(PostImmutableModel post,
                                                                        Map<String, Object> properties) {
@@ -415,6 +416,11 @@ public class PostUtils {
                 String oldImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, localMediaId);
                 String newImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, mediaFile.getMediaId());
                 postContent = postContent.replace(oldImgBlockHeader, newImgBlockHeader);
+
+                String oldMediaTextBlockHeader = String.format(GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER, localMediaId);
+                String newMediaTextBlockHeader = String.format(GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER,
+                        mediaFile.getMediaId());
+                postContent = postContent.replace(oldMediaTextBlockHeader, newMediaTextBlockHeader);
 
                 // replace class wp-image-id with serverMediaId, and url_holder with remoteUrl
                 String oldImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, localMediaId);

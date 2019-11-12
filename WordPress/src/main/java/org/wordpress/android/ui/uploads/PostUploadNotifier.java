@@ -20,9 +20,12 @@ import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.push.NotificationType;
+import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
@@ -38,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 
 class PostUploadNotifier {
@@ -45,6 +49,7 @@ class PostUploadNotifier {
     private final UploadService mService;
 
     private final NotificationManager mNotificationManager;
+    private final SystemNotificationsTracker mSystemNotificationsTracker;
     private final NotificationCompat.Builder mNotificationBuilder;
 
     private static final int BASE_MEDIA_ERROR_NOTIFICATION_ID = 72000;
@@ -72,10 +77,11 @@ class PostUploadNotifier {
         final List<PostImmutableModel> mUploadedPostsCounted = new ArrayList<>();
     }
 
-    PostUploadNotifier(Context context, UploadService service) {
+    PostUploadNotifier(Context context, UploadService service, SystemNotificationsTracker systemNotificationsTracker) {
         // Add the uploader to the notification bar
         mContext = context;
         mService = service;
+        mSystemNotificationsTracker = systemNotificationsTracker;
         sNotificationData = new NotificationData();
         mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                                                                               Context.NOTIFICATION_SERVICE);
@@ -127,7 +133,7 @@ class PostUploadNotifier {
             mService.startForeground(sNotificationData.mNotificationId, mNotificationBuilder.build());
         } else {
             // service was already started, let's just modify the notification
-            doNotify(sNotificationData.mNotificationId, mNotificationBuilder.build());
+            doNotify(sNotificationData.mNotificationId, mNotificationBuilder.build(), null);
         }
     }
 
@@ -333,9 +339,15 @@ class PostUploadNotifier {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(notificationMessage));
         notificationBuilder.setOnlyAlertOnce(true);
         notificationBuilder.setAutoCancel(true);
-
         long notificationId = getNotificationIdForPost(post);
+
+        NotificationType notificationType = NotificationType.POST_UPLOAD_SUCCESS;
+        notificationBuilder.setDeleteIntent(NotificationsProcessingService
+                .getPendingIntentForNotificationDismiss(mContext, (int) notificationId,
+                        notificationType));
+
         Intent notificationIntent = getNotificationIntent(post, site, notificationId);
+        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
 
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
                                                                     (int) notificationId,
@@ -363,7 +375,7 @@ class PostUploadNotifier {
                                           pendingIntent);
         }
 
-        doNotify(notificationId, notificationBuilder.build());
+        doNotify(notificationId, notificationBuilder.build(), notificationType);
     }
 
     void updateNotificationSuccessForMedia(@NonNull List<MediaModel> mediaList, @NonNull SiteModel site) {
@@ -390,6 +402,8 @@ class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
         notificationIntent.setAction(String.valueOf(notificationId));
+        NotificationType notificationType = NotificationType.MEDIA_UPLOAD_SUCCESS;
+        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
                                                                 (int) notificationId,
@@ -408,6 +422,9 @@ class PostUploadNotifier {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setOnlyAlertOnce(true);
         notificationBuilder.setAutoCancel(true);
+        notificationBuilder.setDeleteIntent(NotificationsProcessingService
+                .getPendingIntentForNotificationDismiss(mContext, (int) notificationId,
+                        notificationType));
 
         // Add WRITE POST action - only if there is media we can insert in the Post
         if (mediaList != null && !mediaList.isEmpty()) {
@@ -428,7 +445,7 @@ class PostUploadNotifier {
                                           actionPendingIntent);
         }
 
-        doNotify(notificationId, notificationBuilder.build());
+        doNotify(notificationId, notificationBuilder.build(), notificationType);
     }
 
     public static long getNotificationIdForPost(PostImmutableModel post) {
@@ -478,6 +495,8 @@ class PostUploadNotifier {
         long notificationId = getNotificationIdForPost(post);
         Intent notificationIntent = getNotificationIntent(post, site, notificationId);
         notificationIntent.setAction(String.valueOf(notificationId));
+        NotificationType notificationType = NotificationType.POST_UPLOAD_ERROR;
+        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
                                                                 (int) notificationId,
@@ -497,6 +516,9 @@ class PostUploadNotifier {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
         notificationBuilder.setOnlyAlertOnce(true);
+        notificationBuilder.setDeleteIntent(NotificationsProcessingService
+                .getPendingIntentForNotificationDismiss(mContext, (int) notificationId,
+                        notificationType));
 
         // Add RETRY action - only available on Aztec
         if (AppPrefs.isAztecEditorEnabled()) {
@@ -511,7 +533,7 @@ class PostUploadNotifier {
 
         EventBus.getDefault().postSticky(new UploadService.UploadErrorEvent(post, snackbarMessage));
 
-        doNotify(notificationId, notificationBuilder.build());
+        doNotify(notificationId, notificationBuilder.build(), notificationType);
     }
 
     @NonNull
@@ -548,6 +570,8 @@ class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
         notificationIntent.setAction(String.valueOf(notificationId));
+        NotificationType notificationType = NotificationType.MEDIA_UPLOAD_ERROR;
+        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
                                                                 (int) notificationId,
@@ -567,6 +591,9 @@ class PostUploadNotifier {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
         notificationBuilder.setOnlyAlertOnce(true);
+        notificationBuilder.setDeleteIntent(NotificationsProcessingService
+                .getPendingIntentForNotificationDismiss(mContext, (int) notificationId,
+                        notificationType));
 
         // Add RETRY action - only if there is media to retry
         if (mediaList != null && !mediaList.isEmpty()) {
@@ -581,7 +608,7 @@ class PostUploadNotifier {
         }
 
         EventBus.getDefault().postSticky(new UploadService.UploadErrorEvent(mediaList, snackbarMessage));
-        doNotify(notificationId, notificationBuilder.build());
+        doNotify(notificationId, notificationBuilder.build(), notificationType);
     }
 
     private String buildErrorMessageMixed(int overrideMediaNotUploadedCount) {
@@ -760,7 +787,7 @@ class PostUploadNotifier {
         }
 
         mNotificationBuilder.setProgress(100, (int) Math.ceil(getCurrentOverallProgress() * 100), false);
-        doNotify(sNotificationData.mNotificationId, mNotificationBuilder.build());
+        doNotify(sNotificationData.mNotificationId, mNotificationBuilder.build(), null);
     }
 
     private void setProgressForMediaItem(int mediaId, float progress) {
@@ -790,9 +817,12 @@ class PostUploadNotifier {
         return currentMediaProgress;
     }
 
-    private synchronized void doNotify(long id, Notification notification) {
+    private synchronized void doNotify(long id, Notification notification, NotificationType notificationType) {
         try {
             mNotificationManager.notify((int) id, notification);
+            if (notificationType != null) {
+                mSystemNotificationsTracker.trackShownNotification(notificationType);
+            }
         } catch (RuntimeException runtimeException) {
             CrashLoggingUtils.logException(runtimeException, AppLog.T.UTILS, "See issue #2858 / #3966");
             AppLog.d(AppLog.T.POSTS, "See issue #2858 / #3966; notify failed with:" + runtimeException);

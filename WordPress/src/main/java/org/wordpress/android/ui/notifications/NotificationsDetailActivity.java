@@ -355,12 +355,18 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             // automattchers are handled by note.isCommentType() above
             boolean isPost = (note.getSiteId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
             if (isPost) {
-                fragment = ReaderPostDetailFragment.newInstance(note.getSiteId(), note.getPostId());
+                fragment = ReaderPostDetailFragment.Companion.newInstance(
+                        note.getSiteId(),
+                        note.getPostId()
+                );
             } else {
                 fragment = NotificationsDetailListFragment.newInstance(note.getId());
             }
         } else if (note.isNewPostType()) {
-            fragment = ReaderPostDetailFragment.newInstance(note.getSiteId(), note.getPostId());
+            fragment = ReaderPostDetailFragment.Companion.newInstance(
+                    note.getSiteId(),
+                    note.getPostId()
+            );
         } else {
             fragment = NotificationsDetailListFragment.newInstance(note.getId());
         }
