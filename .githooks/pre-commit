@@ -1,7 +1,0 @@
-#!/bin/sh
-
-git diff --cached --name-only | if grep --quiet -E "(strings.xml$|libs/gutenberg-mobile)"
-then
-	python tools/merge_strings_xml.py
-fi
-
