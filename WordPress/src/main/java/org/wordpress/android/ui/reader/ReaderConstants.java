@@ -47,6 +47,7 @@ public class ReaderConstants {
     static final String ARG_IS_RELATED_POST = "is_related_post";
     static final String ARG_SEARCH_QUERY = "search_query";
     static final String ARG_VIDEO_URL = "video_url";
+    static final String ARG_IS_MAIN_READER = "is_main_reader";
 
     static final String KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway";
     static final String KEY_ALREADY_UPDATED = "already_updated";
