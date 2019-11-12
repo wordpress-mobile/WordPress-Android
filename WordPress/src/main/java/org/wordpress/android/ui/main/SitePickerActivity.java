@@ -19,7 +19,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -44,6 +43,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
@@ -76,9 +76,8 @@ public class SitePickerActivity extends AppCompatActivity
     private static final String KEY_LAST_SEARCH = "last_search";
     private static final String KEY_REFRESHING = "refreshing_sites";
 
-    private ActionableEmptyView mActionableEmptyView;
     private SitePickerAdapter mAdapter;
-    private RecyclerView mRecycleView;
+    private EmptyViewRecyclerView mRecycleView;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ActionMode mActionMode;
     private MenuItem mMenuEdit;
@@ -107,7 +106,6 @@ public class SitePickerActivity extends AppCompatActivity
         restoreSavedInstanceState(savedInstanceState);
         setupActionBar();
         setupRecycleView();
-        setupEmptyView();
 
         initSwipeToRefreshHelper(findViewById(android.R.id.content));
         if (savedInstanceState != null) {
@@ -286,11 +284,10 @@ public class SitePickerActivity extends AppCompatActivity
         mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mRecycleView.setItemAnimator(null);
         mRecycleView.setAdapter(getAdapter());
-    }
 
-    private void setupEmptyView() {
-        mActionableEmptyView = findViewById(R.id.actionable_empty_view);
-        mActionableEmptyView.updateLayoutForSearch(true, 0);
+        ActionableEmptyView actionableEmptyView = findViewById(R.id.actionable_empty_view);
+        actionableEmptyView.updateLayoutForSearch(true, 0);
+        mRecycleView.setEmptyView(actionableEmptyView);
     }
 
     private void restoreSavedInstanceState(Bundle savedInstanceState) {
@@ -441,8 +438,6 @@ public class SitePickerActivity extends AppCompatActivity
                     mMenuEdit.setVisible(false);
                     mMenuAdd.setVisible(false);
 
-                    mSearchView.setOnQueryTextListener(null);
-                    setQueryIfInSearch();
                     mSearchView.setOnQueryTextListener(SitePickerActivity.this);
                 }
 
@@ -451,18 +446,20 @@ public class SitePickerActivity extends AppCompatActivity
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                mActionableEmptyView.setVisibility(View.GONE);
                 disableSearchMode();
                 mSearchView.setOnQueryTextListener(null);
                 return true;
             }
         });
+
+        setQueryIfInSearch();
     }
 
     private void setQueryIfInSearch() {
         if (getAdapter().getIsInSearchMode()) {
             mMenuSearch.expandActionView();
-            mSearchView.setQuery(getAdapter().getLastSearch(), false);
+            mSearchView.setOnQueryTextListener(SitePickerActivity.this);
+            mSearchView.setQuery(getAdapter().getLastSearch(), true);
         }
     }
 
@@ -535,13 +532,8 @@ public class SitePickerActivity extends AppCompatActivity
         if (getAdapter().getIsInSearchMode()) {
             getAdapter().setLastSearch(s);
             getAdapter().searchSites(s);
-            updateEmptyViewVisibility();
         }
         return true;
-    }
-
-    private void updateEmptyViewVisibility() {
-        mActionableEmptyView.setVisibility(getAdapter().getItemCount() > 0 ? View.GONE : View.VISIBLE);
     }
 
     public void showProgress(boolean show) {
