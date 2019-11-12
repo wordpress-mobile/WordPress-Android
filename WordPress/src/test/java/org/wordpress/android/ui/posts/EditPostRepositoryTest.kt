@@ -64,7 +64,7 @@ class EditPostRepositoryTest {
     fun `reads id correctly`() {
         val post = PostModel()
         val id = 10
-        post.id = id
+        post.setId(id)
 
         editPostRepository.setInTransaction { post }
 
@@ -76,7 +76,7 @@ class EditPostRepositoryTest {
     fun `reads localSiteId correctly`() {
         val post = PostModel()
         val localSiteId = 10
-        post.localSiteId = localSiteId
+        post.setLocalSiteId(localSiteId)
 
         editPostRepository.setInTransaction { post }
 
@@ -88,7 +88,7 @@ class EditPostRepositoryTest {
     fun `reads remotePostId correctly`() {
         val post = PostModel()
         val remotePostId = 10L
-        post.remotePostId = remotePostId
+        post.setRemotePostId(remotePostId)
 
         editPostRepository.setInTransaction { post }
 
@@ -100,7 +100,7 @@ class EditPostRepositoryTest {
     fun `reads title correctly`() {
         val post = PostModel()
         val title = "title"
-        post.title = title
+        post.setTitle(title)
 
         editPostRepository.setInTransaction { post }
 
@@ -112,7 +112,7 @@ class EditPostRepositoryTest {
     fun `reads autoSaveTitle correctly`() {
         val post = PostModel()
         val autoSaveTitle = "autoSaveTitle"
-        post.autoSaveTitle = autoSaveTitle
+        post.setAutoSaveTitle(autoSaveTitle)
 
         editPostRepository.setInTransaction { post }
 
@@ -124,7 +124,7 @@ class EditPostRepositoryTest {
     fun `reads content correctly`() {
         val post = PostModel()
         val content = "content"
-        post.content = content
+        post.setContent(content)
 
         editPostRepository.setInTransaction { post }
 
@@ -136,7 +136,7 @@ class EditPostRepositoryTest {
     fun `reads autoSaveContent correctly`() {
         val post = PostModel()
         val autoSaveContent = "autoSaveContent"
-        post.autoSaveContent = autoSaveContent
+        post.setAutoSaveContent(autoSaveContent)
 
         editPostRepository.setInTransaction { post }
 
@@ -148,7 +148,7 @@ class EditPostRepositoryTest {
     fun `reads excerpt correctly`() {
         val post = PostModel()
         val excerpt = "excerpt"
-        post.excerpt = excerpt
+        post.setExcerpt(excerpt)
 
         editPostRepository.setInTransaction { post }
 
@@ -160,7 +160,7 @@ class EditPostRepositoryTest {
     fun `reads autoSaveExcerpt correctly`() {
         val post = PostModel()
         val autoSaveExcerpt = "autoSaveExcerpt"
-        post.autoSaveExcerpt = autoSaveExcerpt
+        post.setAutoSaveExcerpt(autoSaveExcerpt)
 
         editPostRepository.setInTransaction { post }
 
@@ -172,7 +172,7 @@ class EditPostRepositoryTest {
     fun `reads password correctly`() {
         val post = PostModel()
         val password = "password"
-        post.password = password
+        post.setPassword(password)
 
         editPostRepository.setInTransaction { post }
 
@@ -184,7 +184,7 @@ class EditPostRepositoryTest {
     fun `reads status correctly`() {
         val post = PostModel()
         val status = DRAFT
-        post.status = status.toString()
+        post.setStatus(status.toString())
 
         editPostRepository.setInTransaction { post }
 
@@ -232,7 +232,7 @@ class EditPostRepositoryTest {
     fun `reads featuredImageId correctly`() {
         val post = PostModel()
         val featuredImageId = 10L
-        post.featuredImageId = featuredImageId
+        post.setFeaturedImageId(featuredImageId)
 
         editPostRepository.setInTransaction { post }
 
@@ -244,7 +244,7 @@ class EditPostRepositoryTest {
     fun `reads dateCreated correctly`() {
         val post = PostModel()
         val dateCreated = "2019-05-05T14:33:20+0000"
-        post.dateCreated = dateCreated
+        post.setDateCreated(dateCreated)
 
         editPostRepository.setInTransaction { post }
 
@@ -256,7 +256,7 @@ class EditPostRepositoryTest {
     fun `reads changesConfirmedContentHashcode correctly`() {
         val post = PostModel()
         val changesConfirmedContentHashcode = 10
-        post.changesConfirmedContentHashcode = changesConfirmedContentHashcode
+        post.setChangesConfirmedContentHashcode(changesConfirmedContentHashcode)
 
         editPostRepository.setInTransaction { post }
 
@@ -272,7 +272,7 @@ class EditPostRepositoryTest {
     fun `reads postFormat correctly`() {
         val post = PostModel()
         val postFormat = "format"
-        post.postFormat = postFormat
+        post.setPostFormat(postFormat)
 
         editPostRepository.setInTransaction { post }
 
@@ -284,7 +284,7 @@ class EditPostRepositoryTest {
     fun `reads slug correctly`() {
         val post = PostModel()
         val slug = "slug"
-        post.slug = slug
+        post.setSlug(slug)
 
         editPostRepository.setInTransaction { post }
 
@@ -296,7 +296,7 @@ class EditPostRepositoryTest {
     fun `reads link correctly`() {
         val post = PostModel()
         val link = "link"
-        post.link = link
+        post.setLink(link)
 
         editPostRepository.setInTransaction { post }
 
@@ -308,7 +308,7 @@ class EditPostRepositoryTest {
     fun `reads location correctly`() {
         val post = PostModel()
         val location = PostLocation(20.0, 30.0)
-        post.location = location
+        post.setLocation(location)
 
         editPostRepository.setInTransaction { post }
 
@@ -328,8 +328,8 @@ class EditPostRepositoryTest {
 
         whenever(localeManager.getCurrentCalendar()).thenReturn(calendar)
 
-        post.status = DRAFT.toString()
-        post.dateCreated = dateCreated
+        post.setStatus(DRAFT.toString())
+        post.setDateCreated(dateCreated)
         editPostRepository.setInTransaction { post }
         whenever(postUtils.shouldPublishImmediately(DRAFT, dateCreated)).thenReturn(true)
 
@@ -347,8 +347,8 @@ class EditPostRepositoryTest {
         calendar.timeInMillis = 1572000000000
         calendar.timeZone = TimeZone.getTimeZone("UTC")
 
-        post.status = PUBLISHED.toString()
-        post.dateCreated = dateCreated
+        post.setStatus(PUBLISHED.toString())
+        post.setDateCreated(dateCreated)
         editPostRepository.setInTransaction { post }
         whenever(postUtils.shouldPublishImmediately(PUBLISHED, dateCreated)).thenReturn(false)
 
@@ -384,10 +384,10 @@ class EditPostRepositoryTest {
     fun `test undo`() {
         val firstPost = PostModel()
         val firstPostId = 1
-        firstPost.id = firstPostId
+        firstPost.setId(firstPostId)
         val secondPost = PostModel()
         val secondPostId = 2
-        secondPost.id = secondPostId
+        secondPost.setId(secondPostId)
 
         editPostRepository.setInTransaction { firstPost }
 
@@ -408,7 +408,7 @@ class EditPostRepositoryTest {
     fun `saves snapshot`() {
         val firstPost = PostModel()
         val firstPostId = 1
-        firstPost.id = firstPostId
+        firstPost.setId(firstPostId)
 
         editPostRepository.setInTransaction { firstPost }
 
@@ -423,10 +423,10 @@ class EditPostRepositoryTest {
     fun `snapshot is different when original post is changes`() {
         val firstPost = PostModel()
         val firstPostId = 1
-        firstPost.id = firstPostId
+        firstPost.setId(firstPostId)
         val secondPost = PostModel()
         val secondPostId = 2
-        secondPost.id = secondPostId
+        secondPost.setId(secondPostId)
 
         editPostRepository.setInTransaction { firstPost }
 
@@ -445,10 +445,10 @@ class EditPostRepositoryTest {
     fun `updates status from snapshot`() {
         val firstPost = PostModel()
         val firstPostStatus = PUBLISHED
-        firstPost.status = firstPostStatus.toString()
+        firstPost.setStatus(firstPostStatus.toString())
         val secondPost = PostModel()
         val secondPostStatus = PENDING
-        secondPost.status = secondPostStatus.toString()
+        secondPost.setStatus(secondPostStatus.toString())
 
         editPostRepository.setInTransaction { firstPost }
 

@@ -51,7 +51,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
@@ -405,7 +405,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         SiteModel site = getSite();
-        PostModel post = getEditPostRepository().getPost();
+        PostImmutableModel post = getEditPostRepository().getPost();
         if (site == null || post == null) {
             AppLog.w(T.POSTS, "Unexpected state: Post or Site is null.");
             return false;
@@ -428,7 +428,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    private void retryFeaturedImageUpload(@NonNull SiteModel site, @NonNull PostModel post) {
+    private void retryFeaturedImageUpload(@NonNull SiteModel site, @NonNull PostImmutableModel post) {
         MediaModel mediaModel =
                 mFeaturedImageHelper.retryFeaturedImageUpload(site, post);
         if (mediaModel == null) {
@@ -795,7 +795,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateCategoriesTextView() {
-        PostModel post = getEditPostRepository().getPost();
+        PostImmutableModel post = getEditPostRepository().getPost();
         if (post == null || getSite() == null) {
             // Since this method can get called after a callback, we have to make sure we have the post and site
             return;
@@ -915,7 +915,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void updateFeaturedImageView() {
         Context context = getContext();
-        PostModel post = getEditPostRepository().getPost();
+        PostImmutableModel post = getEditPostRepository().getPost();
         SiteModel site = getSite();
         if (!isAdded() || post == null || site == null || context == null) {
             return;

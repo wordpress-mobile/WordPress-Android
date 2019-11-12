@@ -10,7 +10,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
@@ -99,7 +99,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return hasInProgressMediaUploadsForPost(postId) || hasPendingMediaUploadsForPost(postId);
     }
 
-    static MediaModel getPendingOrInProgressFeaturedImageUploadForPost(PostModel postModel) {
+    static MediaModel getPendingOrInProgressFeaturedImageUploadForPost(PostImmutableModel postModel) {
         if (postModel == null) {
             return null;
         }
@@ -113,7 +113,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return null;
     }
 
-    public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
+    public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostImmutableModel postModel) {
         if (postModel == null) {
             return Collections.emptyList();
         }

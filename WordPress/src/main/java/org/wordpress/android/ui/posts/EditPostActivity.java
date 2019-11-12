@@ -74,6 +74,7 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -353,8 +354,8 @@ public class EditPostActivity extends AppCompatActivity implements
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
     }
 
-    private void createPostEditorAnalyticsSessionTracker(boolean showGutenbergEditor, PostModel post, SiteModel site,
-                                                         boolean isNewPost) {
+    private void createPostEditorAnalyticsSessionTracker(boolean showGutenbergEditor, PostImmutableModel post,
+                                                         SiteModel site, boolean isNewPost) {
         if (mPostEditorAnalyticsSession == null) {
             mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
                     showGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
@@ -1121,7 +1122,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private RemotePreviewLogicHelper.RemotePreviewHelperFunctions getEditPostActivityStrategyFunctions() {
         return new RemotePreviewLogicHelper.RemotePreviewHelperFunctions() {
             @Override
-            public boolean notifyUploadInProgress(@NotNull PostModel post) {
+            public boolean notifyUploadInProgress(@NotNull PostImmutableModel post) {
                 if (UploadService.hasInProgressMediaUploadsForPost(post)) {
                     ToastUtils.showToast(EditPostActivity.this,
                             getString(R.string.editor_toast_uploading_please_wait), Duration.SHORT);
@@ -1133,7 +1134,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
             @Nullable
             @Override
-            public PostModel updatePostIfNeeded() {
+            public PostImmutableModel updatePostIfNeeded() {
                 updatePostObject();
                 return mEditPostRepository.getPost();
             }
@@ -1145,7 +1146,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             @Override
-            public void startUploading(boolean isRemoteAutoSave, @Nullable PostModel post) {
+            public void startUploading(boolean isRemoteAutoSave, @Nullable PostImmutableModel post) {
                 if (isRemoteAutoSave) {
                     updatePostLoadingAndDialogState(PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW, post);
                     savePostAndOptionallyFinish(false, true);
@@ -1326,7 +1327,7 @@ public class EditPostActivity extends AppCompatActivity implements
         fillContentEditorFields();
     }
 
-    private void setPreviewingInEditorSticky(boolean enable, @Nullable PostModel post) {
+    private void setPreviewingInEditorSticky(boolean enable, @Nullable PostImmutableModel post) {
         if (enable) {
             if (post != null) {
                 EventBus.getDefault().postSticky(
@@ -1341,7 +1342,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void managePostLoadingStateTransitions(PostLoadingState postLoadingState, @Nullable PostModel post) {
+    private void managePostLoadingStateTransitions(PostLoadingState postLoadingState,
+                                                   @Nullable PostImmutableModel post) {
         switch (postLoadingState) {
             case NONE:
                 setPreviewingInEditorSticky(false, post);
@@ -1362,7 +1364,7 @@ public class EditPostActivity extends AppCompatActivity implements
         updatePostLoadingAndDialogState(postLoadingState, null);
     }
 
-    private void updatePostLoadingAndDialogState(PostLoadingState postLoadingState, @Nullable PostModel post) {
+    private void updatePostLoadingAndDialogState(PostLoadingState postLoadingState, @Nullable PostImmutableModel post) {
         // We need only transitions, so...
         if (mPostLoadingState == postLoadingState) return;
 
@@ -1749,7 +1751,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private synchronized void savePostToDb() {
-        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mEditPostRepository.getPost()));
+        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mEditPostRepository.getEditablePost()));
 
         if (mShowAztecEditor) {
             // update the list of uploading ids
@@ -1892,7 +1894,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 //
                 // See `PostListUploadStatusTracker` and `PostListItemUiStateHelper.createUploadUiState` for how
                 // the Post List determines what label to use.
-                mDispatcher.dispatch(UploadActionBuilder.newCancelPostAction(mEditPostRepository.getPost()));
+                mDispatcher.dispatch(UploadActionBuilder.newCancelPostAction(mEditPostRepository.getEditablePost()));
 
                 // now set the pending notification alarm to be triggered in the next day, week, and month
                 PendingDraftsNotificationsUtils
@@ -2097,7 +2099,7 @@ public class EditPostActivity extends AppCompatActivity implements
             } else {
                 // discard post if new & empty
                 if (isDiscardable()) {
-                    mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getPost()));
+                    mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
                 }
                 removePostOpenInEditorStickyEvent();
                 if (doFinish) {
@@ -2852,7 +2854,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             // Passed mediaId is incorrect: cancel all uploads for this post
             ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
-            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(mEditPostRepository.getPost()));
+            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(mEditPostRepository.getEditablePost()));
         }
     }
 
@@ -3257,7 +3259,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
                             : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
                                                        );
-            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mEditPostRepository.getPost());
+            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, post);
         } else if (isError || isRemoteAutoSaveError()) {
             // We got an error from the uploading or from the remote auto save of a post: show snackbar error
             updatePostLoadingAndDialogState(PostLoadingState.NONE);
