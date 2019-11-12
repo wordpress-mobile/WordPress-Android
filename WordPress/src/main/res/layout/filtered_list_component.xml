@@ -38,7 +38,6 @@
             android:layout_width="match_parent"
             app:tabGravity="fill"
             app:tabIndicatorColor="@android:color/white"
-            app:tabIndicatorAnimationDuration="0"
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@android:color/white"
             app:tabTextColor="@android:color/white"
