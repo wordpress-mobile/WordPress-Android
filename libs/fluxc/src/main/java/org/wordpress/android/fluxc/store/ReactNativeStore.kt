@@ -38,9 +38,20 @@ class ReactNativeStore
 sealed class ReactNativeFetchResponse {
     class Success(val result: JsonElement) : ReactNativeFetchResponse()
     class Error(networkError: BaseNetworkError) : ReactNativeFetchResponse() {
-        val error = networkError.volleyError?.message
-                ?: (networkError as? WPComGsonNetworkError)?.apiError
-                ?: networkError.message
-                ?: "Unknown ${networkError.javaClass.simpleName}"
+        val error: String
+
+        init {
+            val volleyError = networkError.volleyError?.message
+            val wpComError = (networkError as? WPComGsonNetworkError)?.apiError
+            val baseError = networkError.message
+            val errorType = networkError.type?.toString()
+            error = when {
+                volleyError?.isNotBlank() == true -> volleyError
+                wpComError?.isNotBlank() == true -> wpComError
+                baseError?.isNotBlank() == true -> baseError
+                errorType?.isNotBlank() == true -> errorType
+                else -> "Unknown ${networkError.javaClass.simpleName} Error"
+            }
+        }
     }
 }
