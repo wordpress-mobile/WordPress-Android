@@ -362,8 +362,8 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">You\'re currently using the block editor to create new posts. Want to use the classic editor by default? Head to Site Settings.</string>
-    <string name="dialog_gutenberg_informative_description_page">You\'re currently using the block editor to create new pages. Want to use the classic editor by default? Head to Site Settings.</string>
+    <string name="dialog_gutenberg_informative_description_post">You\’re now using the block editor for new posts \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_page">You\’re now using the block editor for new pages \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -1157,6 +1157,16 @@
     <string name="notification_settings_followed_dialog_email_posts_weekly">Weekly</string>
     <string name="notification_settings_followed_dialog_email_comments">Email me new comments</string>
     <string name="notification_settings_followed_dialog_title">Notifications</string>
+
+    <string name="notifications_tab_dialog_master_status_on">Notifications for this site</string>
+    <string name="notifications_tab_dialog_master_status_off">Notifications for this site</string>
+    <string name="notifications_tab_dialog_master_hint_on">Disable notifications display on notifications tab for this site</string>
+    <string name="notifications_tab_dialog_master_hint_off">Enable notifications display on notifications tab for this site</string>
+    <string name="notifications_tab_dialog_master_off_title">To see notifications on notifications tab for this site, turn Notifications for this site on.</string>
+    <string name="notifications_tab_dialog_master_off_message">Turning Notifications for this site off will disable notifications display on notifications tab for this site. You can fine-tune which kind of notification you see after turning Notifications for this site on.</string>
+
+    <string name="master_switch_default_title_on">On</string>
+    <string name="master_switch_default_title_off">Off</string>
 
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
@@ -2140,7 +2150,6 @@
     <!-- Editor: Errors -->
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode
         in this state. Remove all failed uploads and continue?</string>
-    <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state.</string>
@@ -2376,6 +2385,7 @@
     <string name="show_more_desc">show more</string>
     <string name="open_external_link_desc">Open external link</string>
     <string name="notification_settings_switch_desc">Notifications</string>
+    <string name="notifications_tab_dialog_switch_desc">Notifications</string>
     <string name="navigate_up_desc">navigate up</string>
     <string name="fab_add_tag_desc">Create Tag</string>
     <string name="fab_create_desc">create</string>

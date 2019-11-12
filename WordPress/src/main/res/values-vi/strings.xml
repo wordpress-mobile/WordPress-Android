@@ -167,9 +167,6 @@ Language: vi_VN
     <string name="pending_email_change_snackbar">Kích liên kết xác thực trong email đã gửi tới %1$s để xác nhận địa chỉ mới của bạn</string>
     <string name="editor_toast_uploading_please_wait">Hiện tại bạn đang tải lên media. Vui lòng chờ đến khi việc này hoàn thành.</string>
     <string name="error_refresh_comments_showing_older">Các bình luận không thể làm mới tại thời điểm này - hiện các bình luận cũ hơn</string>
-    <string name="editor_content_placeholder">Chia sẻ câu chuyện của bạn ở đây</string>
-    <string name="editor_page_title_placeholder">Tiêu đề Trang</string>
-    <string name="editor_post_title_placeholder">Tiêu đề Bài viết</string>
     <string name="email_address">Địa chỉ email</string>
     <string name="dlg_sure_to_delete_comments">Xóa vĩnh viễn những bình luận này?</string>
     <string name="dlg_sure_to_delete_comment">Xóa vĩnh viễn bình luận này?</string>
@@ -548,7 +545,6 @@ Language: vi_VN
     <string name="reader_empty_posts_in_tag_updating">Đang tìm nạp bài viết…</string>
     <string name="cant_share_no_visible_blog">Bạn không thể chia sẻ cho WordPress mà không có một blog hiện hữu</string>
     <string name="comment_spammed">Bình luận được đánh dấu như spam</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Trả lời</string>
     <string name="reader_toast_err_get_post">Không thể lấy bài viết này</string>
     <string name="pick_video">Chọn video</string>

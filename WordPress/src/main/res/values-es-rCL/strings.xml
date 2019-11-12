@@ -1265,9 +1265,6 @@ Language: es_CL
     <string name="error_refresh_comments_showing_older">No se pueden actualizar los comentarios en este momento - mostrando comentarios anteriores</string>
     <string name="post_settings_set_featured_image">Establecer Imagen Destacada</string>
     <string name="post_settings_featured_image">Imagen Destacada</string>
-    <string name="editor_content_placeholder">Comparte tu historia aquí…</string>
-    <string name="editor_page_title_placeholder">Título de la Página</string>
-    <string name="editor_post_title_placeholder">Título de la Entrada</string>
     <string name="email_address">Dirección de correo</string>
     <string name="dlg_sure_to_delete_comments">¿Eliminar permanentemente estos comentarios?</string>
     <string name="dlg_sure_to_delete_comment">¿Eliminar permanentemente este comentario?</string>
@@ -1665,7 +1662,6 @@ Language: es_CL
     <string name="reader_empty_posts_in_tag_updating">Recuperando entradas…</string>
     <string name="cant_share_no_visible_blog">No puedes compartir en WordPress sin un blog visible</string>
     <string name="comment_spammed">Comentado marcado como spam</string>
-    <string name="video">Vídeo</string>
     <string name="reader_label_reply">Responder</string>
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>
     <string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>

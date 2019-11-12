@@ -524,9 +524,6 @@ Language: ms
     <string name="error_refresh_comments_showing_older">Ulasan tidak dapat disegarkan buat masa ini - tunjukkan ulasan terdahulu</string>
     <string name="post_settings_set_featured_image">Tetapkan Imej Terencana</string>
     <string name="post_settings_featured_image">Imej Terencana</string>
-    <string name="editor_content_placeholder">Kongsikan cerita anda di sini…</string>
-    <string name="editor_page_title_placeholder">Tajuk Halaman</string>
-    <string name="editor_post_title_placeholder">Tajuk Kiriman</string>
     <string name="email_address">Alamat emel</string>
     <string name="dlg_sure_to_delete_comments">Hapuskan ulasan ini secara kekal?</string>
     <string name="dlg_sure_to_delete_comment">Hapuskan ulasan ini secara kekal?</string>
@@ -896,7 +893,6 @@ Language: ms
     <string name="reader_empty_posts_in_tag_updating">Mengambil kiriman…</string>
     <string name="cant_share_no_visible_blog">Anda tidak boleh berkongsi ke WordPress tanpa blog yang kelihatan</string>
     <string name="comment_spammed">Ulasan ditanda sebagai spam</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Balas</string>
     <string name="reader_likes_multi">%,d orang sukakanya</string>
     <string name="reader_likes_you_and_multi">Anda dan %,d yang lain sukakannya</string>

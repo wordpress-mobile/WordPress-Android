@@ -1512,9 +1512,6 @@ Language: sq_AL
     <string name="error_refresh_comments_showing_older">Komentet s’u freskuan dot këtë herë - po shfaqen komente më të vjetër</string>
     <string name="post_settings_set_featured_image">Vëre Si Figurë të Zgjedhur</string>
     <string name="post_settings_featured_image">Figurë e Zgjedhur</string>
-    <string name="editor_content_placeholder">Ndajeni shembullin tuaj me ta…</string>
-    <string name="editor_page_title_placeholder">Titull Faqeje</string>
-    <string name="editor_post_title_placeholder">Titull Postimi</string>
     <string name="email_address">Adresë email</string>
     <string name="dlg_sure_to_delete_comments">Të fshihen përgjithmonë këto komente?</string>
     <string name="dlg_sure_to_delete_comment">Të fshihet përgjithmonë ky koment?</string>
@@ -1912,7 +1909,6 @@ Language: sq_AL
     <string name="reader_empty_posts_in_tag_updating">Po sillen postime…</string>
     <string name="cant_share_no_visible_blog">S’mund të ndani me të tjerët në WordPress pa një blog të dukshëm</string>
     <string name="comment_spammed">Komenti u shënua si i padëshiruar</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Përgjigjjuni</string>
     <string name="reader_likes_multi">Kjo u pëlqen %,d personave</string>
     <string name="reader_likes_you_and_multi">Këtë e pëlqeni ju dhe %,d të tjerë</string>

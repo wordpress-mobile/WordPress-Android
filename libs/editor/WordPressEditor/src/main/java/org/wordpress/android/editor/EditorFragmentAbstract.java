@@ -188,6 +188,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         String onAuthHeaderRequested(String url);
         void onTrackableEvent(TrackableEvent event);
         void onHtmlModeToggledInToolbar();
+        void onAddStockMediaClicked(boolean allowMultipleSelection);
     }
 
     /**

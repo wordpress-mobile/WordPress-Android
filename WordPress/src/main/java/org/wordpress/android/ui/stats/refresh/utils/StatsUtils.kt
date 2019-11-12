@@ -7,10 +7,10 @@ import java.util.TreeMap
 private val SUFFIXES = TreeMap(mapOf(
         1_000L to "k",
         1_000_000L to "M",
-        1_000_000_000L to "G",
+        1_000_000_000L to "B",
         1_000_000_000_000L to "T",
-        1_000_000_000_000_000L to "P",
-        1_000_000_000_000_000_000L to "E"
+        1_000_000_000_000_000L to "Qa",
+        1_000_000_000_000_000_000L to "Qi"
 ))
 
 const val ONE_THOUSAND = 1000

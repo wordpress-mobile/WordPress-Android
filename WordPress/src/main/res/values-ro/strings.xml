@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-11 16:38:25+0000
+Translation-Revision-Date: 2019-10-25 06:27:21+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="pick_media">Adaugă imagine sau video</string>
     <string name="error_post_not_submitted_retrying">Nu am putut trimite acest articol pentru verificare, dar vom încerca din nou mai târziu.</string>
     <string name="error_post_not_scheduled_retrying">Nu am putut programa acest articol, dar vom încerca din nou mai târziu.</string>
     <string name="error_post_not_published_retrying_private">Nu am putut publica acest articol privat, dar vom încerca din nou mai târziu.</string>
@@ -1513,9 +1514,6 @@ Language: ro
     <string name="error_refresh_comments_showing_older">Comentariile nu pot fi reîmprospătate acum - sunt arătate comentarii mai vechi</string>
     <string name="post_settings_set_featured_image">Setează imaginea reprezentativă</string>
     <string name="post_settings_featured_image">Imagine reprezentativă</string>
-    <string name="editor_content_placeholder">Partajează aici povestea ta…</string>
-    <string name="editor_page_title_placeholder">Titlu pagină</string>
-    <string name="editor_post_title_placeholder">Titlu articol</string>
     <string name="email_address">Adresă email</string>
     <string name="dlg_sure_to_delete_comments">Șterg permanent aceste comentarii?</string>
     <string name="dlg_sure_to_delete_comment">Șterg permanent acest comentariu?</string>
@@ -1913,7 +1911,6 @@ Language: ro
     <string name="reader_empty_posts_in_tag_updating">Se aduc articole…</string>
     <string name="cant_share_no_visible_blog">Nu poți partaja pe WordPress fără ca blogul să fie vizibil</string>
     <string name="comment_spammed">Comentariu marcat ca spam</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Răspunde</string>
     <string name="reader_likes_multi">%,d persoane apreciază asta</string>
     <string name="reader_likes_you_and_multi">Tu și alții %,d apreciați asta</string>
