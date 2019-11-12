@@ -32,7 +32,6 @@ class OptimizeMediaUseCase @Inject constructor(
             uriList
                     .map { async { optimizeMediaAndTrackEvent(it, freshlyTaken, site) } }
                     .map { it.await() }
-                    .toList()
                     .let {
                         OptimizeMediaResult(
                                 optimizedMediaUris = it.filterNotNull(),
