@@ -14,8 +14,12 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.CollapseFullScreenDialogContent
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.CollapseFullScreenDialogController
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
 
@@ -55,9 +59,28 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
             reply.setText(it.getString(EXTRA_REPLY))
             reply.setSelection(it.getInt(EXTRA_SELECTION_START), it.getInt(EXTRA_SELECTION_END))
             viewModel.init()
+
+            setupSuggestionServiceAndAdapter(it.getSerializable(EXTRA_SITE_MODEL) as SiteModel, reply)
         }
 
         return layout
+    }
+
+    private fun setupSuggestionServiceAndAdapter(mSite: SiteModel, reply: SuggestionAutoCompleteText) {
+        if (!isAdded || mSite == null || !SiteUtils.isAccessedViaWPComRest(mSite)) {
+            return
+        }
+        val mSuggestionServiceConnectionManager = SuggestionServiceConnectionManager(
+                activity,
+                mSite.siteId
+        )
+        val mSuggestionAdapter = SuggestionUtils.setupSuggestions(
+                mSite, activity,
+                mSuggestionServiceConnectionManager
+        )
+        if (mSuggestionAdapter != null) {
+            reply.setAdapter(mSuggestionAdapter)
+        }
     }
 
     override fun onCollapseClicked(controller: CollapseFullScreenDialogController): Boolean {
@@ -95,12 +118,14 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
         private const val EXTRA_REPLY = "EXTRA_REPLY"
         private const val EXTRA_SELECTION_START = "EXTRA_SELECTION_START"
         private const val EXTRA_SELECTION_END = "EXTRA_SELECTION_END"
+        private const val EXTRA_SITE_MODEL = "EXTRA_SITE_MODEL"
 
-        fun newBundle(reply: String, selectionStart: Int, selectionEnd: Int): Bundle {
+        fun newBundle(reply: String, selectionStart: Int, selectionEnd: Int, mSite: SiteModel): Bundle {
             val bundle = Bundle()
             bundle.putString(EXTRA_REPLY, reply)
             bundle.putInt(EXTRA_SELECTION_START, selectionStart)
             bundle.putInt(EXTRA_SELECTION_END, selectionEnd)
+            bundle.putSerializable(EXTRA_SITE_MODEL, mSite)
             return bundle
         }
     }
