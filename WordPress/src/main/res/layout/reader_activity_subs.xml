@@ -54,10 +54,10 @@
         <EditText
             android:textSize="@dimen/text_sz_medium"
             android:textAlignment="viewStart"
-            android:gravity="start"
             android:id="@+id/edit_add"
             style="@style/ReaderEditText.Topic"
             android:layout_width="0dp"
+            android:minHeight="@dimen/min_touch_target_sz"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/reader_hint_add_tag_or_url" />
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
-            android:padding="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_medium"
             android:contentDescription="@string/add"
             android:src="@drawable/ic_reader_follow_white_24dp"
             android:tint="@color/primary_40" />
