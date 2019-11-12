@@ -3259,7 +3259,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
                             : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
                                                        );
-            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mEditPostRepository.getPost());
+            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, post);
         } else if (isError || isRemoteAutoSaveError()) {
             // We got an error from the uploading or from the remote auto save of a post: show snackbar error
             updatePostLoadingAndDialogState(PostLoadingState.NONE);
