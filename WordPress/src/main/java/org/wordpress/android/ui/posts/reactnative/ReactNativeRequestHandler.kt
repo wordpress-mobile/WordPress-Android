@@ -4,7 +4,6 @@ import androidx.core.util.Consumer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse
@@ -17,6 +16,7 @@ import javax.inject.Named
 
 class ReactNativeRequestHandler @Inject constructor(
     private val reactNativeStore: ReactNativeStore,
+    private val urlUtil: ReactNativeUrlUtil,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     override val coroutineContext = bgDispatcher + Job()
@@ -52,7 +52,7 @@ class ReactNativeRequestHandler @Inject constructor(
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
     ) {
-        parseUrlAndParamsForWPCom(pathWithParams, wpComSiteId)?.let { (url, params) ->
+        urlUtil.parseUrlAndParamsForWPCom(pathWithParams, wpComSiteId)?.let { (url, params) ->
             val response = reactNativeStore.performWPComRequest(url, params)
             handleResponse(response, onSuccess, onError)
         }
@@ -64,7 +64,7 @@ class ReactNativeRequestHandler @Inject constructor(
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
     ) {
-        parseUrlAndParamsForWPOrg(pathWithParams, siteUrl)?.let { (url, params) ->
+        urlUtil.parseUrlAndParamsForWPOrg(pathWithParams, siteUrl)?.let { (url, params) ->
             val response = reactNativeStore.performWPAPIRequest(url, params)
             handleResponse(response, onSuccess, onError)
         }

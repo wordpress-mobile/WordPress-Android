@@ -1,12 +1,20 @@
 package org.wordpress.android.ui.posts.reactnative
 
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 private const val INPUT_PATH = "/wp/v2/media/54?context=edit&_locale=user"
 private val INPUT_PATH_PARAM_MAP = mapOf("context" to "edit", "_locale" to "user")
 
-class ReactNativeUrlHandlerTest {
+class ReactNativeUrlUtilTest {
+    private lateinit var subject: ReactNativeUrlUtil
+
+    @Before
+    fun setUp() {
+        subject = ReactNativeUrlUtil()
+    }
+
     @Test
     fun `successfully generates url and query params for WPcom`() {
         val siteId = 555L
@@ -14,7 +22,7 @@ class ReactNativeUrlHandlerTest {
         val expectedUrl = "https://public-api.wordpress.com/wp/v2/sites/$siteId/media/54"
         val expected = Pair(expectedUrl, INPUT_PATH_PARAM_MAP)
 
-        assertEquals(expected, parseUrlAndParamsForWPCom(INPUT_PATH, siteId))
+        assertEquals(expected, subject.parseUrlAndParamsForWPCom(INPUT_PATH, siteId))
     }
 
     @Test
@@ -25,6 +33,6 @@ class ReactNativeUrlHandlerTest {
         val expectedParams = INPUT_PATH_PARAM_MAP.plus("context" to "view")
         val expected = Pair(expectedUrl, expectedParams)
 
-        assertEquals(expected, parseUrlAndParamsForWPOrg(INPUT_PATH, siteUrl))
+        assertEquals(expected, subject.parseUrlAndParamsForWPOrg(INPUT_PATH, siteUrl))
     }
 }
