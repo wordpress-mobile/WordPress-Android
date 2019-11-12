@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class ReaderTag implements Serializable, FilterCriteria {
     public static final String FOLLOWING_PATH = "/read/following";
+    public static final String LIKED_PATH = "/read/liked";
     public static final String DISCOVER_PATH = String.format(Locale.US, "read/sites/%d/posts",
             ReaderConstants.DISCOVER_SITE_ID);
 
@@ -76,7 +77,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return StringUtils.notNullStr(mTagDisplayName);
     }
 
-    private void setTagDisplayName(String displayName) {
+    public void setTagDisplayName(String displayName) {
         this.mTagDisplayName = StringUtils.notNullStr(displayName);
     }
 
@@ -154,7 +155,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     public boolean isPostsILike() {
-        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/liked");
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(LIKED_PATH);
     }
 
     public boolean isFollowedSites() {
