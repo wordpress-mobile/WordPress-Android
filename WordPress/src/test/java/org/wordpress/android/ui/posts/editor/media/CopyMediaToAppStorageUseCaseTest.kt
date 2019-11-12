@@ -1,27 +1,23 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test
 import org.wordpress.android.util.MediaUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 @UseExperimental(InternalCoroutinesApi::class)
-class CopyMediaToAppStorageUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     @Test
     fun `do NOT copy files which are present in media store`() = test {
         // Arrange

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts.editor.media
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argThat
@@ -10,10 +9,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
@@ -22,10 +21,7 @@ import org.wordpress.android.test
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
-class RetryFailedMediaUploadUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
     @Test
     fun `Loads all failed media from db`() = test {
         // Arrange

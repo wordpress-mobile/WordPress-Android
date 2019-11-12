@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts.editor.media
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
@@ -11,20 +10,17 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.posts.editor.EditorTracker
 
 @RunWith(MockitoJUnitRunner::class)
 @UseExperimental(InternalCoroutinesApi::class)
-class AddExistingMediaToPostUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class AddExistingMediaToPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `addMediaToEditor called on all models returned from loadMediaByRemoteId`() = test {
         // Arrange

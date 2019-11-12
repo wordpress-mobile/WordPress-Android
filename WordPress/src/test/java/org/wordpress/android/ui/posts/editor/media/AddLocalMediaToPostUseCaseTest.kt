@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
@@ -10,11 +9,11 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.inOrder
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
 import org.wordpress.android.fluxc.model.SiteModel
@@ -25,10 +24,7 @@ import org.wordpress.android.ui.posts.editor.media.OptimizeMediaUseCase.Optimize
 
 @RunWith(MockitoJUnitRunner::class)
 @UseExperimental(InternalCoroutinesApi::class)
-class AddLocalMediaToPostUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `addNewMediaToEditorAsync returns true on success`() = test {
         // Arrange

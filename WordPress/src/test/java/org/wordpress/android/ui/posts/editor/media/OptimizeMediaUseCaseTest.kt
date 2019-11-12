@@ -1,15 +1,14 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
@@ -18,10 +17,7 @@ import org.wordpress.android.util.MediaUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 @UseExperimental(InternalCoroutinesApi::class)
-class OptimizeMediaUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class OptimizeMediaUseCaseTest : BaseUnitTest() {
     @Test
     fun `Uri filtered out when getRealPathFromURI returns null`() = test {
         // Arrange

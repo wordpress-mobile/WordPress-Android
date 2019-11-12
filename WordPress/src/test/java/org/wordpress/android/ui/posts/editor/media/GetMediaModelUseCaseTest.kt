@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
@@ -9,10 +8,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -25,10 +24,7 @@ import java.io.File
 
 @RunWith(MockitoJUnitRunner::class)
 @UseExperimental(InternalCoroutinesApi::class)
-class GetMediaModelUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class GetMediaModelUseCaseTest : BaseUnitTest() {
     @Test
     fun `loadMediaByLocalId loads models from db and returns them`() = test {
         // Arrange
