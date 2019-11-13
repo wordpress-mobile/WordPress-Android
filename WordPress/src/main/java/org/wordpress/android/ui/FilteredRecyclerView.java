@@ -105,6 +105,8 @@ public class FilteredRecyclerView extends RelativeLayout {
             int position = mFilteredPagerAdapter.getItemPosition(filter);
             if (position > -1 && position != mViewPager.getCurrentItem()) {
                 mViewPager.setCurrentItem(position);
+            } else if (position > -1 && position == mViewPager.getCurrentItem()) {
+                mSelectingRememberedFilterOnCreate = false;
             }
         } else {
             int position = mSpinnerAdapter.getIndexOfCriteria(filter);
@@ -286,23 +288,27 @@ public class FilteredRecyclerView extends RelativeLayout {
 
     private void initFilterAdapter() {
         if (mUseTabsForFiltering) {
-            mFilteredPagerAdapter = new FilteredPagerAdapter(getContext(), mRecyclerView, mFilterCriteriaOptions);
+            if (mFilteredPagerAdapter == null) {
+                mFilteredPagerAdapter = new FilteredPagerAdapter(mRecyclerView, mFilterCriteriaOptions);
 
-            mSelectingRememberedFilterOnCreate = true;
+                mSelectingRememberedFilterOnCreate = true;
 
-            mViewPager.setAdapter(mFilteredPagerAdapter);
-            mTabLayout.setupWithViewPager(mViewPager);
-            mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
-                @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                }
+                mViewPager.setAdapter(mFilteredPagerAdapter);
+                mTabLayout.setupWithViewPager(mViewPager);
+                mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
+                    @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    }
 
-                @Override public void onPageSelected(int position) {
-                    manageFilterSelection(position);
-                }
+                    @Override public void onPageSelected(int position) {
+                        manageFilterSelection(position);
+                    }
 
-                @Override public void onPageScrollStateChanged(int state) {
-                }
-            });
+                    @Override public void onPageScrollStateChanged(int state) {
+                    }
+                });
+            } else {
+                mFilteredPagerAdapter.updateFiltersIfNeeded(mFilterCriteriaOptions);
+            }
         } else {
             mSpinnerAdapter = new SpinnerAdapter(getContext(),
                     mFilterCriteriaOptions, mSpinnerItemView, mSpinnerDropDownItemView);
@@ -603,16 +609,39 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     class FilteredPagerAdapter extends PagerAdapter {
-        Context mContext;
-        RecyclerView mRecyclerView;
-        List<FilterCriteria> mFilterCriteria;
+        private RecyclerView mRecyclerView;
+        private List<FilterCriteria> mFilterCriteria;
 
-        FilteredPagerAdapter(Context context, RecyclerView recyclerView, List<FilterCriteria> filterCriteria) {
-            mContext = context;
+        FilteredPagerAdapter(RecyclerView recyclerView, List<FilterCriteria> filterCriteria) {
             mRecyclerView = recyclerView;
             mFilterCriteria = filterCriteria;
         }
 
+
+        private boolean datasetChanged(List<FilterCriteria> filterCriteriaOptions) {
+            boolean isChanged = false;
+
+            if (mFilterCriteria.size() != filterCriteriaOptions.size()) {
+                isChanged = true;
+            } else {
+                for (int index = 0; index < mFilterCriteria.size(); index++) {
+                    if (!mFilterCriteria.get(index).equals(filterCriteriaOptions.get(index))) {
+                        isChanged = true;
+                        break;
+                    }
+                }
+            }
+
+            return isChanged;
+        }
+
+        public void updateFiltersIfNeeded(List<FilterCriteria> filterCriteriaOptions) {
+            if (datasetChanged(filterCriteriaOptions)) {
+                mFilterCriteria = filterCriteriaOptions;
+                mSelectingRememberedFilterOnCreate = true;
+                notifyDataSetChanged();
+            }
+        }
 
         public FilterCriteria getFilterAtPosition(int position) {
             return mFilterCriteria.get(position);
