@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
@@ -152,7 +151,6 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -2171,7 +2169,12 @@ public class EditPostActivity extends AppCompatActivity implements
                         setGutenbergEnabledIfNeeded();
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
-                        return GutenbergEditorFragment.newInstance("", "", mIsNewPost, wpcomLocaleSlug);
+                        boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
+                        return GutenbergEditorFragment.newInstance("",
+                                "",
+                                mIsNewPost,
+                                wpcomLocaleSlug,
+                                supportsStockPhotos);
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
@@ -2233,34 +2236,6 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
     public static final String NEW_MEDIA_POST_EXTRA_IDS = "NEW_MEDIA_POST_EXTRA_IDS";
     private String mMediaCapturePath = "";
-    private int mMaxThumbWidth = 0;
-
-    private int getMaximumThumbnailWidthForEditor() {
-        if (mMaxThumbWidth == 0) {
-            mMaxThumbWidth = EditorMediaUtils.getMaximumThumbnailSizeForEditor(this);
-        }
-        return mMaxThumbWidth;
-    }
-
-    private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
-        @Override
-        protected Spanned doInBackground(String... params) {
-            if (params.length < 1 || !mEditPostRepository.hasPost()) {
-                return null;
-            }
-
-            String content = StringUtils.notNullStr(params[0]);
-            return WPHtml.fromHtml(content, EditPostActivity.this, mEditPostRepository.getPost(),
-                    getMaximumThumbnailWidthForEditor());
-        }
-
-        @Override
-        protected void onPostExecute(Spanned spanned) {
-            if (spanned != null) {
-                mEditorFragment.setContent(spanned);
-            }
-        }
-    }
 
     private String getUploadErrorHtml(String mediaId, String path) {
         return String.format(Locale.US,

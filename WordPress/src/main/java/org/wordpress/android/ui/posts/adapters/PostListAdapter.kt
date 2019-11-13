@@ -98,7 +98,8 @@ class PostListAdapter(
                 "If we are presenting LoadingViewHolder, the item has to be of type LoadingItem " +
                         "for position: $position"
             }
-            holder.onBind((item as LoadingItem))
+            // getItem returns the item, or NULL, if a null placeholder is at the specified position.
+            item?.let { holder.onBind((item as LoadingItem)) }
         }
     }
 
