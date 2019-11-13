@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.5.1'
     }
 }
 
@@ -32,7 +32,7 @@ android {
 
 dependencies {
     implementation ('org.wordpress:utils:1.20.3') {
-        exclude group: "com.mcxiaoke.volley"
+        exclude group: "com.android.volley"
     }
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
@@ -51,7 +51,7 @@ dependencies {
             exclude group: "org.wordpress", module: "utils"
         }
     } else {
-        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:9f07b031646dd3e6021d4b8e0a35647c9109ff27") {
+        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:1.5.1-beta-4") {
             exclude group: "com.android.support"
             exclude group: "org.wordpress", module: "utils"
         }
@@ -72,7 +72,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.27.0'
     testImplementation 'androidx.arch.core:core-testing:2.0.1'
-    testImplementation 'org.robolectric:robolectric:3.6.1'
+    testImplementation 'org.robolectric:robolectric:4.3'
     testImplementation 'org.assertj:assertj-core:3.11.1'
 }
 
