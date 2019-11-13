@@ -5,6 +5,7 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.view.TouchDelegate
 import android.view.View
+import androidx.annotation.DimenRes
 
 fun View.setVisible(visible: Boolean) {
     this.visibility = if (visible) View.VISIBLE else View.GONE
@@ -16,8 +17,8 @@ fun View.redirectContextClickToLongPressListener() {
     }
 }
 
-fun View.expandTouchTargetArea(dps: Int, heightOnly: Boolean = false) {
-    val pixels = DisplayUtils.dpToPx(context, dps)
+fun View.expandTouchTargetArea(@DimenRes dimenRes: Int, heightOnly: Boolean = false) {
+    val pixels = context.resources.getDimensionPixelSize(dimenRes)
     val parent = this.parent as View
 
     parent.post {

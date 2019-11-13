@@ -123,10 +123,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final int NEWS_CARD_POSITION = 0;
 
-    private static final int LAYOUT_DISCOVER_EXTRA_DPS = 16;
-    private static final int LAYOUT_VISIT_EXTRA_DPS = 12;
-    private static final int IMAGE_MORE_EXTRA_DPS = 12;
-
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
@@ -242,9 +238,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ViewGroup postHeaderView = itemView.findViewById(R.id.layout_post_header);
             mFollowButton = postHeaderView.findViewById(R.id.follow_button);
 
-            ViewUtilsKt.expandTouchTargetArea(mLayoutDiscover, LAYOUT_DISCOVER_EXTRA_DPS, true);
-            ViewUtilsKt.expandTouchTargetArea(mVisit, LAYOUT_VISIT_EXTRA_DPS, false);
-            ViewUtilsKt.expandTouchTargetArea(mImgMore, IMAGE_MORE_EXTRA_DPS, false);
+            ViewUtilsKt.expandTouchTargetArea(mLayoutDiscover, R.dimen.reader_discover_layout_extra_padding, true);
+            ViewUtilsKt.expandTouchTargetArea(mVisit, R.dimen.reader_visit_layout_extra_padding, false);
+            ViewUtilsKt.expandTouchTargetArea(mImgMore, R.dimen.reader_more_image_extra_padding, false);
 
             // show post in internal browser when "visit" is clicked
             View.OnClickListener visitListener = new View.OnClickListener() {

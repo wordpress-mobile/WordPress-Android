@@ -37,8 +37,6 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     private TagDeletedListener mTagDeletedListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
 
-    private static final int REMOVE_BUTTON_EXTRA_DPS = 12;
-
     public ReaderTagAdapter(Context context) {
         super();
         setHasStableIds(true);
@@ -139,7 +137,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             mTxtTagName = (TextView) view.findViewById(R.id.text_topic);
             mBtnRemove = (ImageButton) view.findViewById(R.id.btn_remove);
             ReaderUtils.setBackgroundToRoundRipple(mBtnRemove);
-            ViewUtilsKt.expandTouchTargetArea(mBtnRemove, REMOVE_BUTTON_EXTRA_DPS, false);
+            ViewUtilsKt.expandTouchTargetArea(mBtnRemove, R.dimen.reader_remove_button_extra_padding, false);
         }
     }
 

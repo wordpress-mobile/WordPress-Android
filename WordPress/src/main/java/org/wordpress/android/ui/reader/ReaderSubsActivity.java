@@ -77,8 +77,6 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     private static final int NUM_TABS = 3;
 
-    private static final int ADD_BUTTON_EXTRA_DPS = 24;
-
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_FOLLOWED_BLOGS = 1;
     private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
@@ -145,7 +143,7 @@ public class ReaderSubsActivity extends AppCompatActivity
             }
         });
 
-        ViewUtilsKt.expandTouchTargetArea(mBtnAdd, ADD_BUTTON_EXTRA_DPS, false);
+        ViewUtilsKt.expandTouchTargetArea(mBtnAdd, R.dimen.reader_add_button_extra_padding, false);
 
         if (savedInstanceState == null) {
             // return to the page the user was on the last time they viewed this activity

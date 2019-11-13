@@ -46,8 +46,6 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private OnBlogInfoLoadedListener mBlogInfoListener;
     private OnFollowListener mFollowListener;
 
-    private static final int FOLLOW_BUTTON_EXTRA_DPS = 32;
-
     @Inject AccountStore mAccountStore;
     @Inject ImageManager mImageManager;
 
@@ -69,7 +67,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_site_header_view, this);
         mFollowButton = view.findViewById(R.id.follow_button);
-        ViewUtilsKt.expandTouchTargetArea(mFollowButton, FOLLOW_BUTTON_EXTRA_DPS, false);
+        ViewUtilsKt.expandTouchTargetArea(mFollowButton, R.dimen.reader_follow_button_extra_padding, false);
     }
 
     public void setOnFollowListener(OnFollowListener listener) {
