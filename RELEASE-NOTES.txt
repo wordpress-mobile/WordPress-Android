@@ -1,5 +1,6 @@
 13.7
 -----
+* Fixed time displayed on Post Conflict Detected and Unpublished Revision dialogs
  
 13.6
 -----
