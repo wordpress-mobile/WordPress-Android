@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.ContextThemeWrapper;
@@ -148,7 +147,6 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -2265,25 +2263,6 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
         mEditorFragment.appendMediaFiles(mediaMap);
-    }
-
-    private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
-        @Override
-        protected Spanned doInBackground(String... params) {
-            if (params.length < 1 || mPost == null) {
-                return null;
-            }
-
-            String content = StringUtils.notNullStr(params[0]);
-            return WPHtml.fromHtml(content, EditPostActivity.this, mPost, getMaximumThumbnailWidthForEditor());
-        }
-
-        @Override
-        protected void onPostExecute(Spanned spanned) {
-            if (spanned != null) {
-                mEditorFragment.setContent(spanned);
-            }
-        }
     }
 
     private String getUploadErrorHtml(String mediaId, String path) {
