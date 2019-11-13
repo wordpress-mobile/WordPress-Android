@@ -555,8 +555,7 @@ public class MySiteFragment extends Fragment implements
         mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken(),
-                        mAccountStore.getAccount().getUserName());
+                SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken());
             }
         });
 
