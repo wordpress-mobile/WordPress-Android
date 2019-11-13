@@ -19,6 +19,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
@@ -568,14 +569,14 @@ public class ActivityLauncher {
     /*
      * Load the post preview as an authenticated URL so stats aren't bumped
      */
-    public static void browsePostOrPage(Context context, SiteModel site, PostModel post) {
+    public static void browsePostOrPage(Context context, SiteModel site, PostImmutableModel post) {
         browsePostOrPageEx(context, site, post, RemotePreviewType.NOT_A_REMOTE_PREVIEW);
     }
 
     public static void previewPostOrPageForResult(
             Activity activity,
             SiteModel site,
-            PostModel post,
+            PostImmutableModel post,
             RemotePreviewType remotePreviewType
     ) {
         browsePostOrPageEx(activity, site, post, remotePreviewType);
@@ -584,7 +585,7 @@ public class ActivityLauncher {
     private static void browsePostOrPageEx(
             Context context,
             SiteModel site,
-            PostModel post,
+            PostImmutableModel post,
             RemotePreviewType remotePreviewType) {
         if (site == null || post == null || TextUtils.isEmpty(post.getLink())) {
             return;

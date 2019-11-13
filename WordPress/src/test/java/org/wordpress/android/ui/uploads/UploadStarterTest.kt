@@ -326,7 +326,7 @@ class UploadStarterTest {
 
         val twoDaysInSeconds = 60 * 60 * 24 * 2
         val twoDaysAgo = (Date().time / 1000) - twoDaysInSeconds
-        postModel.dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(twoDaysAgo)
+        postModel.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(twoDaysAgo))
 
         // When
         createUploadStarter().queueUploadFromSite(siteModel)
@@ -348,7 +348,7 @@ class UploadStarterTest {
 
         val twoDaysInSeconds = 60 * 60 * 24 * 2
         val twoDaysAgo = (Date().time / 1000) - twoDaysInSeconds
-        postModel.dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(twoDaysAgo + 99)
+        postModel.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(twoDaysAgo + 99))
 
         // When
         createUploadStarter().queueUploadFromSite(siteModel)
@@ -410,8 +410,12 @@ class UploadStarterTest {
         defaultSetup(siteModel, postModel)
 
         // Set autosaveModified to a newer date than dateLocallyChanged to indicate the changes were remotely-auto-saved
-        postModel.autoSaveModified = DateTimeUtils.iso8601FromTimestamp(
-                DateTimeUtils.timestampFromIso8601(postModel.dateLocallyChanged) + 99
+        postModel.setAutoSaveModified(
+                DateTimeUtils.iso8601FromTimestamp(
+                        DateTimeUtils.timestampFromIso8601(
+                                postModel.dateLocallyChanged
+                        ) + 99
+                )
         )
 
         // When
@@ -498,11 +502,11 @@ class UploadStarterTest {
         }
 
         fun createLocallyChangedPostModel(postStatus: PostStatus = DRAFT) = PostModel().apply {
-            id = Random.nextInt()
-            title = UUID.randomUUID().toString()
-            status = postStatus.toString()
+            setId(Random.nextInt())
+            setTitle(UUID.randomUUID().toString())
+            setStatus(postStatus.toString())
             setIsLocallyChanged(true)
-            dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(Date().time / 1000)
+            setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(Date().time / 1000))
         }
 
         fun createSiteModel(isWpCom: Boolean = true) = SiteModel().apply {
