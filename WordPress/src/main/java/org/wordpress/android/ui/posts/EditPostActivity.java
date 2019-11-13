@@ -3247,7 +3247,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         ArrayList<MediaModel> failedMediaList = new ArrayList<>();
         for (String mediaId : failedMediaIds) {
-            failedMediaList.add(mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)));
+            MediaModel media = mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId));
+            if (media != null) {
+                failedMediaList.add(media);
+            }
         }
 
         if (!failedMediaList.isEmpty()) {
