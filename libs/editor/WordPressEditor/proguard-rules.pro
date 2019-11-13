@@ -15,10 +15,3 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
-###### Main resource class - begin
--keep class org.wordpress.android.R
--keep class org.wordpress.android.R$* {
-    <fields>;
-}
-###### Main resource class - end
