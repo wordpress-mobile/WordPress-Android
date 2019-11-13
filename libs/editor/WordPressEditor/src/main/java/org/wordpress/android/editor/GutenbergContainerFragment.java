@@ -50,7 +50,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnAuthHeaderRequestedListener onAuthHeaderRequestedListener,
                                   OnImageFullscreenPreviewListener onImageFullscreenPreviewListener) {
         mWPAndroidGlueCode.attachToContainer(viewGroup, onMediaLibraryButtonListener, onReattachQueryListener,
-                onEditorMountListener, onEditorAutosaveListener, onAuthHeaderRequestedListener, onImageFullscreenPreviewListener);
+                onEditorMountListener, onEditorAutosaveListener, onAuthHeaderRequestedListener,
+                onImageFullscreenPreviewListener);
     }
 
     @Override

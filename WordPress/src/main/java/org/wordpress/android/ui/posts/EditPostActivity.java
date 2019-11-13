@@ -1681,7 +1681,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
 
-    @Override public void onImagePreviewRequested(int mediaId, String mediaSource) {
+    @Override public void onImagePreviewRequested(String mediaSource) {
         MediaPreviewActivity.showPreview(this, null, mediaSource);
     }
 

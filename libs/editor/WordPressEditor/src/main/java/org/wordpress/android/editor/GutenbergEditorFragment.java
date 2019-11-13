@@ -330,8 +330,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
                 new OnImageFullscreenPreviewListener() {
-                    @Override public void onImageFullscreenPreviewClicked(int mediaId, String mediaSource) {
-                        mEditorImagePreviewListener.onImagePreviewRequested(mediaId, mediaSource);
+                    @Override public void onImageFullscreenPreviewClicked(String mediaSource) {
+                        mEditorImagePreviewListener.onImagePreviewRequested(mediaSource);
                     }
                 });
 
