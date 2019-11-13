@@ -17,7 +17,8 @@ public class EncryptionUtils {
 
     static final short XCHACHA20POLY1305_TAG_FINAL = 
             (short) NaCl.sodium().crypto_secretstream_xchacha20poly1305_tag_final();
-    static final short XCHACHA20POLY1305_TAG_0 = (short) 0;
+    static final short XCHACHA20POLY1305_TAG_MESSAGE = 
+            (short) NaCl.sodium().crypto_secretstream_xchacha20poly1305_tag_message();
 
     static final String KEYED_WITH = "v1";
 
@@ -31,8 +32,7 @@ public class EncryptionUtils {
         }
     */
     public static String encryptStringData(final String publicKeyBase64,
-                                           final String stringData,
-                                           final String delimiter) throws JSONException {
+                                           final String stringData) throws JSONException {
         JSONObject encryptionDataJson = new JSONObject();
         encryptionDataJson.put("keyedWith", KEYED_WITH);
 
@@ -51,16 +51,18 @@ public class EncryptionUtils {
         final String headerBase64 = initSecretStreamXchacha20poly1305(state, key);
         encryptionDataJson.put("header", headerBase64);
 
-        String[] splitStringData = stringData.split(delimiter);
+        String[] splitStringData = stringData.split("\n"); // break up the data by line
         JSONArray encryptedElementsJson = new JSONArray();
-  
-
-        for (String element : splitStringData) {
-            element = element + delimiter; // Add delimiter back to the end of the line
+        for (int i = 0; i < splitStringData.length; ++i) {
+            String element = splitStringData[i];
+            // Add newline back to the end of each line but the last
+            if (i < splitStringData.length - 1) {
+                element = element + "\n";
+            }
             String encryptedElementBase64 = getSecretStreamXchacha20poly1305EncryptedBase64String(
                     state,
                     element,
-                    XCHACHA20POLY1305_TAG_0);
+                    XCHACHA20POLY1305_TAG_MESSAGE);
             encryptedElementsJson.put(encryptedElementBase64);
         }
 

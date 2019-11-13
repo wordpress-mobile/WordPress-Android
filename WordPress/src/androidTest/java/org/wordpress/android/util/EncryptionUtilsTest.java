@@ -26,7 +26,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class EncryptionUtilsTest {
     // test data
-    static final String TEST_DELIMITER = "\n";
     static final String TEST_LOG_STRING = "WordPress - 13.5 - Version code: 789\n"
             + "Android device name: Google Android SDK built for x86\n\n"
             + "01 - [Nov-11 03:04 UTILS] WordPress.onCreate\n"
@@ -65,7 +64,7 @@ public class EncryptionUtilsTest {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        assertEquals(response, TEST_LOG_STRING + TEST_DELIMITER);
+                        assertEquals(response, TEST_LOG_STRING);
                         countDownLatch.countDown();
                     }
                 },
@@ -103,8 +102,7 @@ public class EncryptionUtilsTest {
         try {
             final String encryptionDataJson = EncryptionUtils.encryptStringData(
                     publicKeyBase64,
-                    TEST_LOG_STRING,
-                    TEST_DELIMITER);
+                    TEST_LOG_STRING);
 
             return encryptionDataJson;
         } catch (JSONException e) {
