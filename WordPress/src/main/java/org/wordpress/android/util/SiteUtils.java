@@ -39,6 +39,11 @@ public class SiteUtils {
     public static void migrateAppWideMobileEditorPreferenceToRemote(final AccountStore accountStore,
                                                                     final SiteStore siteStore,
                                                                     final Dispatcher dispatcher) {
+        // Skip if the user is not signed in
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)) {
+            return;
+        }
+
         // In a later version we might override mobile_editor setting if it's set to `aztec` and show a specific notice
         // for these users ("We made a lot of progress on the block editor and we think it's now better than
         // the classic editor, we switched it on, but you can change the configuration in your Site Settings").
@@ -58,17 +63,21 @@ public class SiteUtils {
         // To exclude ids 0 and 1, to rollout for 10% users,
         // we'll use a test like `id % 100 >= 90` instead of `id % 100 < 10`.
         if (accountStore.getAccount().getUserId() % 100 >= (100 - GB_ROLLOUT_PERCENTAGE)) {
-            // We want to make sure to enable Gutenberg only on the sites they didn't opt-out.
+            if (atLeastOneSiteHasAztecEnabled(siteStore)) {
+                // If the user has opt-ed out from at least one of their site, then exclude them from the cohort
+                return;
+            }
+
+            // Force the dialog to be shown on updated sites
             for (SiteModel site : siteStore.getSites()) {
                 if (TextUtils.isEmpty(site.getMobileEditor())) {
-                    // Enable Gutenberg
-                    enableBlockEditor(dispatcher, site);
-                    AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, site,
-                            BlockEditorEnabledSource.ON_PROGRESSIVE_ROLLOUT.asPropertyMap());
-                    // Show the info popup when the user creates a new post for the first time on this site
                     AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(site.getUrl(), true);
                 }
             }
+
+            // Enable Gutenberg for all sites using a single network call
+            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
+                    new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
 
             // After enabling Gutenberg on these sites, we consider the user entered the rollout group
             AppPrefs.setUserInGutenbergRolloutGroup();
@@ -86,6 +95,16 @@ public class SiteUtils {
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.AZTEC_EDITOR_NAME)));
         }
+    }
+
+    private static boolean atLeastOneSiteHasAztecEnabled(final SiteStore siteStore) {
+        // We want to make sure to enable Gutenberg only on the sites they didn't opt-out.
+        for (SiteModel site : siteStore.getSites()) {
+            if (TextUtils.equals(site.getMobileEditor(), AZTEC_EDITOR_NAME)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean enableBlockEditorOnSiteCreation(Dispatcher dispatcher, SiteStore siteStore,

@@ -609,11 +609,11 @@ public class AppPrefs {
     }
 
     public static boolean isUserInGutenbergRolloutGroup() {
-        return getBoolean(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS, false);
+        return getBoolean(DeletablePrefKey.USER_IN_GUTENBERG_ROLLOUT_GROUP, false);
     }
 
     public static void setUserInGutenbergRolloutGroup() {
-        setBoolean(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS, true);
+        setBoolean(DeletablePrefKey.USER_IN_GUTENBERG_ROLLOUT_GROUP, true);
     }
 
     public static void removeAppWideEditorPreference() {
