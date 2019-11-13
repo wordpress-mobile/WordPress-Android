@@ -44,12 +44,16 @@ class ReactNativeUrlUtil @Inject constructor() {
 
     private fun parsePathAndParams(pathWithParams: String): Pair<String, Map<String, String>>? =
             try {
-                val (path, params) = pathWithParams.split("?")
-                val paramMap = params.split("&").map {
-                    val (key, value) = it.split("=")
-                    key to value
-                }.toMap()
-                Pair(path, paramMap)
+                if (pathWithParams.contains("?")) {
+                    val (path, params) = pathWithParams.split("?")
+                    val paramsMap = params.split("&").map {
+                        val (key, value) = it.split("=")
+                        key to value
+                    }.toMap()
+                    Pair(path, paramsMap)
+                } else {
+                    Pair(pathWithParams, emptyMap())
+                }
             } catch (e: IndexOutOfBoundsException) {
                 AppLog.e(EDITOR, e)
                 null

@@ -4,8 +4,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-private const val INPUT_PATH = "/wp/v2/media/54?context=edit&_locale=user"
-private val INPUT_PATH_PARAM_MAP = mapOf("context" to "edit", "_locale" to "user")
+private const val INPUT_PATH = "/wp/v2/media/54"
+private const val INPUT_QUERY_PARAMS = "?context=edit&_locale=user"
+private val INPUT_QUERY_PARAMS_MAP = mapOf("context" to "edit", "_locale" to "user")
 
 class ReactNativeUrlUtilTest {
     private lateinit var subject: ReactNativeUrlUtil
@@ -20,7 +21,17 @@ class ReactNativeUrlUtilTest {
         val siteId = 555L
 
         val expectedUrl = "https://public-api.wordpress.com/wp/v2/sites/$siteId/media/54"
-        val expected = Pair(expectedUrl, INPUT_PATH_PARAM_MAP)
+        val expected = Pair(expectedUrl, INPUT_QUERY_PARAMS_MAP)
+
+        assertEquals(expected, subject.parseUrlAndParamsForWPCom(INPUT_PATH + INPUT_QUERY_PARAMS, siteId))
+    }
+
+    @Test
+    fun `successfully generates url missing query params for WPcom`() {
+        val siteId = 555L
+
+        val expectedUrl = "https://public-api.wordpress.com/wp/v2/sites/$siteId/media/54"
+        val expected = Pair(expectedUrl, emptyMap<String, String>())
 
         assertEquals(expected, subject.parseUrlAndParamsForWPCom(INPUT_PATH, siteId))
     }
@@ -30,8 +41,20 @@ class ReactNativeUrlUtilTest {
         val siteUrl = "https://jurassic.ninja"
 
         val expectedUrl = "$siteUrl/wp-json/wp/v2/media/54"
-        val expectedParams = INPUT_PATH_PARAM_MAP.plus("context" to "view")
+
+        // changes context from edit to view
+        val expectedParams = INPUT_QUERY_PARAMS_MAP.plus("context" to "view")
+
         val expected = Pair(expectedUrl, expectedParams)
+        assertEquals(expected, subject.parseUrlAndParamsForWPOrg(INPUT_PATH + INPUT_QUERY_PARAMS, siteUrl))
+    }
+
+    @Test
+    fun `successfully generates url missing query params for WPorg`() {
+        val siteUrl = "https://jurassic.ninja"
+
+        val expectedUrl = "$siteUrl/wp-json/wp/v2/media/54"
+        val expected = Pair(expectedUrl, emptyMap<String, String>())
 
         assertEquals(expected, subject.parseUrlAndParamsForWPOrg(INPUT_PATH, siteUrl))
     }
