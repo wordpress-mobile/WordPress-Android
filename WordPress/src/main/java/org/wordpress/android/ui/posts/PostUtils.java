@@ -43,7 +43,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -479,10 +478,12 @@ public class PostUtils {
     public static String getConflictedPostCustomStringForDialog(PostModel post) {
         Context context = WordPress.getContext();
         String firstPart = context.getString(R.string.dialog_confirm_load_remote_post_body);
+        String lastModified =
+                TextUtils.isEmpty(post.getDateLocallyChanged()) ? post.getLastModified() : post.getDateLocallyChanged();
         String secondPart =
                 String.format(context.getString(R.string.dialog_confirm_load_remote_post_body_2),
                         getFormattedDateForLastModified(
-                                context, DateTimeUtils.timestampFromIso8601Millis(post.getLastModified())),
+                                context, DateTimeUtils.timestampFromIso8601Millis(lastModified)),
                         getFormattedDateForLastModified(
                                 context, DateTimeUtils.timestampFromIso8601Millis(post.getRemoteLastModified())));
         return firstPart + secondPart;
@@ -516,10 +517,8 @@ public class PostUtils {
                 DateFormat.SHORT,
                 LocaleManager.getSafeLocale(context));
 
-
-        // The timezone on the website is at GMT
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        dateFormat.setTimeZone(Calendar.getInstance().getTimeZone());
+        timeFormat.setTimeZone(Calendar.getInstance().getTimeZone());
 
         return dateFormat.format(date) + " @ " + timeFormat.format(date);
     }
