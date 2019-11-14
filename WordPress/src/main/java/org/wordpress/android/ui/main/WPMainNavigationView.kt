@@ -354,7 +354,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         private fun createFragment(position: Int): Fragment? {
             val fragment: Fragment = when (pages().getOrNull(position)) {
                 MY_SITE -> MySiteFragment.newInstance()
-                READER -> ReaderPostListFragment.newInstance()
+                READER -> ReaderPostListFragment.newInstance(true)
                 ME -> MeFragment.newInstance()
                 NOTIFS -> NotificationsListFragment.newInstance()
                 else -> return null
