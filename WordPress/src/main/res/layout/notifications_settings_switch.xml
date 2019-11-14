@@ -9,6 +9,7 @@
         android:id="@+id/row_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:minHeight="@dimen/min_touch_target_sz"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
