@@ -121,7 +121,6 @@ import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
-import org.wordpress.android.ui.posts.editor.media.EditorMediaPostData;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -3334,9 +3333,8 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
     }
 
-    @Override
-    public @NonNull EditorMediaPostData editorMediaPostData() {
-        return new EditorMediaPostData(mEditPostRepository.getId(), mEditPostRepository.getRemotePostId());
+    @NotNull @Override public PostImmutableModel getImmutablePost() {
+        return Objects.requireNonNull(mEditPostRepository.getPost());
     }
 
     @Override

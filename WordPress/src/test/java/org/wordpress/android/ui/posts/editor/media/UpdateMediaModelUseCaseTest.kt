@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.action.MediaAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
+import org.wordpress.android.fluxc.model.PostImmutableModel
 
 @RunWith(MockitoJUnitRunner::class)
 class UpdateMediaModelUseCaseTest {
@@ -80,9 +81,9 @@ class UpdateMediaModelUseCaseTest {
         }
 
         fun createPostData(localId: Int = LOCAL_ID, remoteId: Long = REMOTE_ID) =
-                mock<EditorMediaPostData> {
+                mock<PostImmutableModel> {
                     on { remotePostId }.thenReturn(remoteId)
-                    on { localPostId }.thenReturn(localId)
+                    on { id }.thenReturn(localId)
                 }
 
         fun createMediaModel(uploadState: MediaUploadState = MediaUploadState.QUEUED) =
