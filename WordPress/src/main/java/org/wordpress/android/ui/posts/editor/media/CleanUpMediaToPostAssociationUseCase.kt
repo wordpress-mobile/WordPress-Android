@@ -53,9 +53,16 @@ class CleanUpMediaToPostAssociationUseCase @Inject constructor(
                     }
                     .toSet()
                     .let { mediaToDeleteAssociationFor ->
-                        if(mediaToDeleteAssociationFor.isNotEmpty()) {
-                            val clearMediaPayload = ClearMediaPayload(post, mediaToDeleteAssociationFor)
-                            dispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload))
+                        if (mediaToDeleteAssociationFor.isNotEmpty()) {
+                            val clearMediaPayload = ClearMediaPayload(
+                                    post,
+                                    mediaToDeleteAssociationFor
+                            )
+                            dispatcher.dispatch(
+                                    UploadActionBuilder.newClearMediaForPostAction(
+                                            clearMediaPayload
+                                    )
+                            )
                         }
                     }
         }

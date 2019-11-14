@@ -57,7 +57,7 @@ class CleanUpMediaToPostAssociationUseCaseTest(
         val captor = argumentCaptor<Action<ClearMediaPayload>>()
         verify(dispatcher).dispatch(captor.capture())
         assertThat(captor.firstValue.payload.media)
-                .isEqualTo(setOf(mediaList[0],mediaList[1],mediaList[2]))
+                .isEqualTo(setOf(mediaList[0], mediaList[1], mediaList[2]))
     }
 
     @Test
@@ -105,7 +105,7 @@ class CleanUpMediaToPostAssociationUseCaseTest(
         val captor = argumentCaptor<Action<ClearMediaPayload>>()
         verify(dispatcher).dispatch(captor.capture())
         assertThat(captor.firstValue.payload.media)
-                .isEqualTo(setOf(mediaList[1],mediaList[2]))
+                .isEqualTo(setOf(mediaList[1], mediaList[2]))
     }
 
     private fun createUseCase(
