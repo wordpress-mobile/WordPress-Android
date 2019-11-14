@@ -1,30 +1,31 @@
 package org.wordpress.android.util;
 
-import android.content.Context;
+import android.util.Base64;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
 import org.json.JSONException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.HashMap;
-import java.util.Map;
+import org.libsodium.jni.NaCl;
 
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class EncryptionUtilsTest {
+    byte[] mPublicKey;
+    byte[] mSecretKey;
+
+    static final int BOX_PUBLIC_KEY_BYTES = NaCl.sodium().crypto_box_publickeybytes();
+    static final int BOX_SECRET_KEY_BYTES = NaCl.sodium().crypto_box_secretkeybytes();
+
+    static final int BASE64_DECODE_FLAGS = Base64.DEFAULT;
+
     // test data
     static final String TEST_LOG_STRING = "WordPress - 13.5 - Version code: 789\n"
             + "Android device name: Google Android SDK built for x86\n\n"
@@ -43,71 +44,145 @@ public class EncryptionUtilsTest {
             + "    at com.android.volley.NetworkDispatcher.processRequest(NetworkDispatcher.java:111)\n"
             + "    at com.android.volley.NetworkDispatcher.run(NetworkDispatcher.java:90)\n";
 
-    // for endpoint test
-    static final String END_POINT_TEST_PUBLIC_KEY = "K0y2oQ++gEN00S4CbCH3IYoBIxVF6H86Wz4wi2t2C3M=";
-    static final String END_POINT_TEST_URL = "https://log-encryption-testing.herokuapp.com";
-
-    @Test
-    public void testEncryptionResultIsValidWithTestEndpointDecryption() {
-        final Context context = ApplicationProvider.getApplicationContext();
-
-        final String encryptionDataJson = getEncryptionDataJson(END_POINT_TEST_PUBLIC_KEY);
-        if (encryptionDataJson == null) {
-            fail("unable to encrypt test data");
-        }
-
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-        StringRequest postRequest = new StringRequest(
-                Method.POST,
-                END_POINT_TEST_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        assertEquals(response, TEST_LOG_STRING);
-                        countDownLatch.countDown();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        fail("PostRequest failed with error: " + error.toString());
-                        countDownLatch.countDown();
-                    }
-                }
-        ) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/x-www-form-urlencoded");
-                return headers;
-            }
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                return encryptionDataJson.getBytes();
-            }
-        };
-
-        postRequest.setShouldCache(false);
-        Volley.newRequestQueue(context).add(postRequest);
-
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            fail("CountDownLatch await interrupted for post request: " + e.toString());
-        }
+    @Before
+    public void setup() {
+        mPublicKey = new byte[BOX_PUBLIC_KEY_BYTES];
+        mSecretKey = new byte[BOX_SECRET_KEY_BYTES];
+        NaCl.sodium().crypto_box_keypair(mPublicKey, mSecretKey);
     }
 
-    private String getEncryptionDataJson(String publicKeyBase64) {
-        try {
-            final String encryptionDataJson = EncryptionUtils.encryptStringData(
-                    publicKeyBase64,
-                    TEST_LOG_STRING);
+    @Test
+    public void testLogStringEncryptionResultIsValid() {
+        final JSONObject encryptionDataJson = getEncryptionDataJson(mPublicKey, TEST_LOG_STRING);
+        assertNotNull(encryptionDataJson);
 
-            return encryptionDataJson;
+        /*
+            Expected Contents for JSON:
+            {
+            "keyedWith": "v1",
+            "encryptedKey": "$key_as_base_64",  // The encrypted AES key
+            "header": "base_64_encoded_header", // The xchacha20poly1305 stream header
+            "messages": []                      // the stream elements, base-64 encoded
+            }
+        */
+
+        final byte[] dataSpecificKey = getDataSpecificKey(encryptionDataJson);
+        assertNotNull(dataSpecificKey);
+
+        final byte[] header = getHeader(encryptionDataJson);
+        assertNotNull(header);
+
+        final byte[] state = new byte[EncryptionUtils.XCHACHA20POLY1305_STATEBYTES];
+        final int initPullReturnCode = NaCl.sodium().crypto_secretstream_xchacha20poly1305_init_pull(
+                state,
+                header,
+                dataSpecificKey);
+        assertEquals(initPullReturnCode, 0);
+
+        String decryptedDataString = "";
+        final byte[][] encryptedLines = getEncryptedLines(encryptionDataJson);
+        assertNotNull(encryptedLines);
+        for (int i = 0; i < encryptedLines.length; ++i) {
+            final String decryptedLine = getDecryptedString(state, encryptedLines[i]);
+            if (decryptedLine == null) {
+                // expecting null for the final line in the encryption data
+                assertEquals(encryptedLines.length - 1, i);
+                break;
+            }
+
+            decryptedDataString = decryptedDataString + decryptedLine;
+        }
+
+        assertEquals(TEST_LOG_STRING, decryptedDataString);
+    }
+
+    private JSONObject getEncryptionDataJson(final byte[] publicKey, final String data) {
+        try {
+            final String encryptionDataJsonString = EncryptionUtils.encryptStringData(
+                    Base64.encodeToString(publicKey, Base64.DEFAULT),
+                    data);
+
+            return new JSONObject(encryptionDataJsonString);
         } catch (JSONException e) {
             fail("encryptStringData failed with JSONException: " + e.toString());
         }
+        return null;
+    }
+
+    private byte[] getDataSpecificKey(final JSONObject encryptionDataJson) {
+        try {
+            final byte[] decryptedKey = new byte[EncryptionUtils.XCHACHA20POLY1305_KEYBYTES];
+            final String encryptedKeyBase64 = encryptionDataJson.getString("encryptedKey");
+            final byte[] encryptedKey = Base64.decode(encryptedKeyBase64, BASE64_DECODE_FLAGS);
+            final int returnCode = NaCl.sodium().crypto_box_seal_open(
+                    decryptedKey,
+                    encryptedKey,
+                    EncryptionUtils.XCHACHA20POLY1305_KEYBYTES + EncryptionUtils.BOX_SEALBYTES,
+                    mPublicKey,
+                    mSecretKey);
+            assertEquals(returnCode, 0);
+
+            return decryptedKey;
+        } catch (JSONException e) {
+            fail("failed to get encryptedKey from encrypted data JSON");
+        }
+
+        return null;
+    }
+
+    private byte[] getHeader(final JSONObject encryptionDataJson) {
+        try {
+            final String headerBase64 = encryptionDataJson.getString("header");
+            return Base64.decode(headerBase64, BASE64_DECODE_FLAGS);
+        } catch (JSONException e) {
+            fail("failed to get header from encrypted data JSON");
+        }
+        return null;
+    }
+
+    private byte[][] getEncryptedLines(final JSONObject encryptionDataJson) {
+        try {
+            final JSONArray messages = encryptionDataJson.getJSONArray("messages");
+
+            final int messagesLength = messages.length();
+            final byte[][] encryptedLines = new byte[messagesLength][];
+            for (int i = 0; i < messagesLength; ++i) {
+                final String messageBase64 = messages.getString(i);
+                encryptedLines[i] = Base64.decode(messageBase64, BASE64_DECODE_FLAGS);
+            }
+            return encryptedLines;
+        } catch (JSONException e) {
+            fail("failed to get messages from encrypted data JSON");
+        }
+
+        return null;
+    }
+
+    private String getDecryptedString(final byte[] state, final byte[] encryptedLine) {
+        final byte[] tag = new byte[1];
+        final int decryptedLineLength = encryptedLine.length - EncryptionUtils.XCHACHA20POLY1305_ABYTES;
+        final byte[] decryptedLine = new byte[decryptedLineLength];
+        final byte[] ad = new byte[0];
+        final int[] len = new int[0];
+        final int returnCode = NaCl.sodium().crypto_secretstream_xchacha20poly1305_pull(
+                state,
+                decryptedLine,
+                len,
+                tag,
+                encryptedLine,
+                encryptedLine.length,
+                ad,
+                0);
+        assertEquals(returnCode, 0);
+
+        final int encryptionTag = tag[0];
+        if (encryptionTag == EncryptionUtils.XCHACHA20POLY1305_TAG_MESSAGE) {
+            return new String(decryptedLine);
+        } else if (encryptionTag == EncryptionUtils.XCHACHA20POLY1305_TAG_FINAL) {
+            return null;
+        }
+
+        fail("message decryption failed, unexpected tag.");
         return null;
     }
 }

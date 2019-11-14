@@ -8,17 +8,20 @@ import org.json.JSONObject;
 import org.libsodium.jni.NaCl;
 
 public class EncryptionUtils {
-    static final int BOX_SEALBYTES = NaCl.sodium().crypto_box_sealbytes();
-    static final int XCHACHA20POLY1305_KEYBYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_keybytes();
-    static final int XCHACHA20POLY1305_STATEBYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_statebytes();
-    static final int XCHACHA20POLY1305_HEADERBYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_headerbytes();
-    static final int XCHACHA20POLY1305_ABYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_abytes();
-    static final int BASE64_ENCODE_FLAGS = Base64.DEFAULT;
+    public static final int BOX_SEALBYTES = NaCl.sodium().crypto_box_sealbytes();
+    public static final int XCHACHA20POLY1305_ABYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_abytes();
+    public static final int XCHACHA20POLY1305_KEYBYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_keybytes();
+    public static final int XCHACHA20POLY1305_STATEBYTES = 
+            NaCl.sodium().crypto_secretstream_xchacha20poly1305_statebytes();
 
-    static final short XCHACHA20POLY1305_TAG_FINAL = 
+    public static final short XCHACHA20POLY1305_TAG_FINAL = 
             (short) NaCl.sodium().crypto_secretstream_xchacha20poly1305_tag_final();
-    static final short XCHACHA20POLY1305_TAG_MESSAGE = 
+    public static final short XCHACHA20POLY1305_TAG_MESSAGE = 
             (short) NaCl.sodium().crypto_secretstream_xchacha20poly1305_tag_message();
+
+    static final int XCHACHA20POLY1305_HEADERBYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_headerbytes();
+
+    static final int BASE64_ENCODE_FLAGS = Base64.DEFAULT;
 
     static final String KEYED_WITH = "v1";
 
@@ -37,7 +40,7 @@ public class EncryptionUtils {
         encryptionDataJson.put("keyedWith", KEYED_WITH);
 
         // Create data-specific key
-        byte[] key = new byte[XCHACHA20POLY1305_KEYBYTES];
+        final byte[] key = new byte[XCHACHA20POLY1305_KEYBYTES];
         NaCl.sodium().crypto_secretstream_xchacha20poly1305_keygen(key);
 
         final String encryptedKeyBase64 = getBoxSealEncryptedBase64String(
@@ -46,20 +49,17 @@ public class EncryptionUtils {
                 XCHACHA20POLY1305_KEYBYTES);
         encryptionDataJson.put("encryptedKey", encryptedKeyBase64);
 
-        byte[] state = new byte[XCHACHA20POLY1305_STATEBYTES];
+        final byte[] state = new byte[XCHACHA20POLY1305_STATEBYTES];
 
         final String headerBase64 = initSecretStreamXchacha20poly1305(state, key);
         encryptionDataJson.put("header", headerBase64);
 
-        String[] splitStringData = stringData.split("\n"); // break up the data by line
+        final String[] splitStringData = stringData.split("\n"); // break up the data by line
         JSONArray encryptedElementsJson = new JSONArray();
         for (int i = 0; i < splitStringData.length; ++i) {
             String element = splitStringData[i];
-            // Add newline back to the end of each line but the last
-            if (i < splitStringData.length - 1) {
-                element = element + "\n";
-            }
-            String encryptedElementBase64 = getSecretStreamXchacha20poly1305EncryptedBase64String(
+            element = element + "\n";
+            final String encryptedElementBase64 = getSecretStreamXchacha20poly1305EncryptedBase64String(
                     state,
                     element,
                     XCHACHA20POLY1305_TAG_MESSAGE);
@@ -80,27 +80,27 @@ public class EncryptionUtils {
     private static String getBoxSealEncryptedBase64String(final String publicKeyBase64,
                                                           final byte[] data,
                                                           final int dataSize) {
-        byte[] encryptedData = new byte[dataSize + BOX_SEALBYTES];
-        byte[] publicKeyBytes = Base64.decode(publicKeyBase64, Base64.DEFAULT);
+        final byte[] encryptedData = new byte[dataSize + BOX_SEALBYTES];
+        final byte[] publicKeyBytes = Base64.decode(publicKeyBase64, Base64.DEFAULT);
         NaCl.sodium().crypto_box_seal(encryptedData, data, dataSize, publicKeyBytes);
         return Base64.encodeToString(encryptedData, BASE64_ENCODE_FLAGS);
     }
 
     private static String initSecretStreamXchacha20poly1305(byte[] state, final byte[] key) {
-        byte[] header = new byte[XCHACHA20POLY1305_HEADERBYTES];
+        final byte[] header = new byte[XCHACHA20POLY1305_HEADERBYTES];
         NaCl.sodium().crypto_secretstream_xchacha20poly1305_init_push(state, header, key);
 
         return Base64.encodeToString(header, BASE64_ENCODE_FLAGS);
     }
 
-    private static String getSecretStreamXchacha20poly1305EncryptedBase64String(byte[] state,
+    private static String getSecretStreamXchacha20poly1305EncryptedBase64String(final byte[] state,
                                                                                 final String data,
                                                                                 final short tag) {
-        int[] clen = new int[0];
-        byte[] ad = new byte[0];
+        final int[] clen = new int[0];
+        final byte[] ad = new byte[0];
 
-        byte[] dataBytes = data.getBytes();
-        byte[] encryptedData = new byte[dataBytes.length + XCHACHA20POLY1305_ABYTES];
+        final byte[] dataBytes = data.getBytes();
+        final byte[] encryptedData = new byte[dataBytes.length + XCHACHA20POLY1305_ABYTES];
 
         NaCl.sodium().crypto_secretstream_xchacha20poly1305_push(
                 state,
