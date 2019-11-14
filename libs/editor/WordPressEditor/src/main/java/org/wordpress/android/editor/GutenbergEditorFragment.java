@@ -65,6 +65,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
+    private static final String ARG_SUPPORT_STOCK_PHOTOS = "param_support_stock_photos";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -95,13 +96,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
                                                       boolean isNewPost,
-                                                      String localeSlug) {
+                                                      String localeSlug,
+                                                      boolean supportStockPhotos) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
         args.putString(ARG_PARAM_CONTENT, content);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putString(ARG_LOCALE_SLUG, localeSlug);
+        args.putBoolean(ARG_SUPPORT_STOCK_PHOTOS, supportStockPhotos);
         fragment.setArguments(args);
         return fragment;
     }
@@ -367,10 +370,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private ArrayList<MediaOption> initOtherMediaImageOptions() {
         ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
 
-        String packageName = getActivity().getApplication().getPackageName();
-        int stockMediaResourceId = getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
+        boolean supportStockPhotos = getArguments().getBoolean(ARG_SUPPORT_STOCK_PHOTOS);
+        if (supportStockPhotos) {
+            String packageName = getActivity().getApplication().getPackageName();
+            int stockMediaResourceId = getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
 
-        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
+            otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
+        }
 
         return otherMediaOptions;
     }
