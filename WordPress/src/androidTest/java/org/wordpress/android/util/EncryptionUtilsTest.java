@@ -27,6 +27,7 @@ public class EncryptionUtilsTest {
     static final int BASE64_DECODE_FLAGS = Base64.DEFAULT;
 
     // test data
+    static final String TEST_EMPTY_STRING = "";
     static final String TEST_LOG_STRING = "WordPress - 13.5 - Version code: 789\n"
             + "Android device name: Google Android SDK built for x86\n\n"
             + "01 - [Nov-11 03:04 UTILS] WordPress.onCreate\n"
@@ -43,7 +44,12 @@ public class EncryptionUtilsTest {
             + "    at com.android.volley.NetworkDispatcher.processRequest(NetworkDispatcher.java:131)\n"
             + "    at com.android.volley.NetworkDispatcher.processRequest(NetworkDispatcher.java:111)\n"
             + "    at com.android.volley.NetworkDispatcher.run(NetworkDispatcher.java:90)\n";
-    static final String TEST_EMPTY_STRING = "";
+    static final String TEST_CHAR_SAMPLE = "!\"#$%&' ()*+,- ./{|}~[\\]^_`: ;<=>?Ⓟ @︼︽︾⑳₡\n"
+            + "¢£¤¥¦§¨©ª«¬®¯ °±²ɇɈɉɊɋɌɎɏɐɑɒɓɔ ɕɖɗɘəɚ⤚▓⤜⤝⤞⤟ⰙⰚⰛⰜ⭑⬤⭒‰ ꕢ ꕣꕤ ꕥ￥￦ \n"
+            + "❌ ⛱⛲⛳⛰⛴⛵ ⚡⏰⏱⏲⭐ ✋☕⛩⛺⛪✨ ⚽ ⛄⏳\n"
+            + " ḛḜḝḞṶṷṸẂ ẃ ẄẅẆ ᾃᾄᾅ ᾆ Ṥṥ  ȊȋȌ ȍ Ȏȏ ȐṦṧåæçèéêë ì í ΔƟΘ\n"
+            + "㥯㥰㥱㥲㥳㥴㥵 㥶㥷㥸㥹㥺 俋 俌 俍 俎 俏 俐 俑 俒 俓㞢㞣㞤㞥㞦㞧㞨쨜 쨝쨠쨦걵걷 걸걹걺ﾓﾔﾕ ﾖﾗﾘﾙ\n"
+            + " ﵑﵓﵔ ﵕﵗ ﵘ  ﯿ ﰀﰁﰂ ﰃ ﮁﮂﮃﮄﮅᎹᏪ Ⴥჭᡴᠦᡀ\n";
 
     @Before
     public void setup() {
@@ -53,13 +59,18 @@ public class EncryptionUtilsTest {
     }
 
     @Test
+    public void testEmptyStringEncryptionResultIsValid() {
+        testEncryption(TEST_EMPTY_STRING);
+    }
+
+    @Test
     public void testLogStringEncryptionResultIsValid() {
         testEncryption(TEST_LOG_STRING);
     }
 
     @Test
-    public void testEmptyStringEncryptionResultIsValid() {
-        testEncryption(TEST_EMPTY_STRING);
+    public void testCharacterSampleEncryptionResultIsValid() {
+        testEncryption(TEST_CHAR_SAMPLE);
     }
 
     private void testEncryption(final String testString) {
