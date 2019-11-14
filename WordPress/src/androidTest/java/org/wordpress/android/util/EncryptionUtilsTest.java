@@ -43,6 +43,7 @@ public class EncryptionUtilsTest {
             + "    at com.android.volley.NetworkDispatcher.processRequest(NetworkDispatcher.java:131)\n"
             + "    at com.android.volley.NetworkDispatcher.processRequest(NetworkDispatcher.java:111)\n"
             + "    at com.android.volley.NetworkDispatcher.run(NetworkDispatcher.java:90)\n";
+    static final String TEST_EMPTY_STRING = "";
 
     @Before
     public void setup() {
@@ -53,7 +54,16 @@ public class EncryptionUtilsTest {
 
     @Test
     public void testLogStringEncryptionResultIsValid() {
-        final JSONObject encryptionDataJson = getEncryptionDataJson(mPublicKey, TEST_LOG_STRING);
+        testEncryption(TEST_LOG_STRING);
+    }
+
+    @Test
+    public void testEmptyStringEncryptionResultIsValid() {
+        testEncryption(TEST_EMPTY_STRING);
+    }
+
+    private void testEncryption(final String testString) {
+        final JSONObject encryptionDataJson = getEncryptionDataJson(mPublicKey, testString);
         assertNotNull(encryptionDataJson);
 
         /*
@@ -93,9 +103,8 @@ public class EncryptionUtilsTest {
             decryptedDataString = decryptedDataString + decryptedLine;
         }
 
-        assertEquals(TEST_LOG_STRING, decryptedDataString);
+        assertEquals(testString, decryptedDataString);
     }
-
     private JSONObject getEncryptionDataJson(final byte[] publicKey, final String data) {
         try {
             final String encryptionDataJsonString = EncryptionUtils.encryptStringData(

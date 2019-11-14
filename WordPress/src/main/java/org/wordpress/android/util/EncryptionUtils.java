@@ -54,16 +54,19 @@ public class EncryptionUtils {
         final String headerBase64 = initSecretStreamXchacha20poly1305(state, key);
         encryptionDataJson.put("header", headerBase64);
 
-        final String[] splitStringData = stringData.split("\n"); // break up the data by line
         JSONArray encryptedElementsJson = new JSONArray();
-        for (int i = 0; i < splitStringData.length; ++i) {
-            String element = splitStringData[i];
-            element = element + "\n";
-            final String encryptedElementBase64 = getSecretStreamXchacha20poly1305EncryptedBase64String(
-                    state,
-                    element,
-                    XCHACHA20POLY1305_TAG_MESSAGE);
-            encryptedElementsJson.put(encryptedElementBase64);
+        if (!stringData.isEmpty()) {
+            final String[] splitStringData = stringData.split("\n"); // break up the data by line
+            
+            for (int i = 0; i < splitStringData.length; ++i) {
+                String element = splitStringData[i];
+                element = element + "\n";
+                final String encryptedElementBase64 = getSecretStreamXchacha20poly1305EncryptedBase64String(
+                        state,
+                        element,
+                        XCHACHA20POLY1305_TAG_MESSAGE);
+                encryptedElementsJson.put(encryptedElementBase64);
+            }
         }
 
         final String encryptedDataBase64 = getSecretStreamXchacha20poly1305EncryptedBase64String(
