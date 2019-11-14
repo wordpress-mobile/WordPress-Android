@@ -162,7 +162,7 @@ public class ReaderPostListFragment extends Fragment
     private MenuItem mSettingsMenuItem;
     private MenuItem mSearchMenuItem;
 
-    private boolean mIsMainReader = false;
+    private boolean mIsTopLevel = false;
     private BottomNavController mBottomNavController;
 
     private ReaderTag mCurrentTag;
@@ -237,12 +237,12 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    public static ReaderPostListFragment newInstance(boolean isMainReader) {
+    public static ReaderPostListFragment newInstance(boolean isTopLevel) {
         ReaderTag tag = AppPrefs.getReaderTag();
         if (tag == null) {
             tag = ReaderUtils.getDefaultTag();
         }
-        return newInstanceForTag(tag, ReaderPostListType.TAG_FOLLOWED, isMainReader);
+        return newInstanceForTag(tag, ReaderPostListType.TAG_FOLLOWED, isTopLevel);
     }
 
     /*
@@ -252,13 +252,13 @@ public class ReaderPostListFragment extends Fragment
         return newInstanceForTag(tag, listType, false);
     }
 
-    static ReaderPostListFragment newInstanceForTag(ReaderTag tag, ReaderPostListType listType, boolean isMainReader) {
+    static ReaderPostListFragment newInstanceForTag(ReaderTag tag, ReaderPostListType listType, boolean isTopLevel) {
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
         args.putSerializable(ReaderConstants.ARG_TAG, tag);
         args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, listType);
-        args.putBoolean(ReaderConstants.ARG_IS_MAIN_READER, isMainReader);
+        args.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, isTopLevel);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -317,8 +317,8 @@ public class ReaderPostListFragment extends Fragment
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
 
-            if (args.containsKey(ReaderConstants.ARG_IS_MAIN_READER)) {
-                mIsMainReader = args.getBoolean(ReaderConstants.ARG_IS_MAIN_READER);
+            if (args.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
+                mIsTopLevel = args.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL);
             }
 
             mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
@@ -357,8 +357,8 @@ public class ReaderPostListFragment extends Fragment
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
                 mTagPreviewHistory.restoreInstance(savedInstanceState);
             }
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_IS_MAIN_READER)) {
-                mIsMainReader = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_MAIN_READER);
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
+                mIsTopLevel = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL);
             }
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mSiteSearchRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION);
@@ -600,7 +600,7 @@ public class ReaderPostListFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_IS_REFRESHING, mRecyclerView.isRefreshing());
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
-        outState.putBoolean(ReaderConstants.ARG_IS_MAIN_READER, mIsMainReader);
+        outState.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, mIsTopLevel);
         outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
 
         if (isSearchTabsShowing()) {
@@ -727,7 +727,7 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, android.R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
 
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             mRecyclerView.setToolbarTitle(
                     R.string.reader_screen_title,
                     getResources().getDimensionPixelSize(R.dimen.margin_extra_large)
@@ -843,7 +843,7 @@ public class ReaderPostListFragment extends Fragment
                 // return to the followed tag that was showing prior to searching
                 resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
 
-                if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
+                if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
                     mRecyclerView.setTabLayoutVisibility(true);
                 }
 
