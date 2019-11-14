@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.wordpress.android.editor.AztecEditorFragment
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
@@ -15,6 +14,7 @@ import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Success
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -27,7 +27,8 @@ class EditPostViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
-    private val aztecEditorWrapper: AztecEditorWrapper
+    private val aztecEditorWrapper: AztecEditorWrapper,
+    private val localeManagerWrapper: LocaleManagerWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var mDebounceCounter = 0
     var mediaInsertedOnCreation: Boolean = false
@@ -60,7 +61,7 @@ class EditPostViewModel
 
             if (showAztecEditor) {
                 // update the list of uploading ids
-                mediaMarkedUploadingOnStartIds = AztecEditorFragment.getMediaMarkedUploadingInPostContent(
+                mediaMarkedUploadingOnStartIds = aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
                         context,
                         postModel.content
                 )
@@ -94,20 +95,16 @@ class EditPostViewModel
                 // only makes sense to change the publish date and locally changed date if the Post was actually changed
                 if (postTitleOrContentChanged) {
                     mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel)
+                    val timeInMillis = localeManagerWrapper.getCurrentCalendar().timeInMillis
                     postModel
                             .setDateLocallyChanged(
-                                    DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000)
+                                    DateTimeUtils.iso8601FromTimestamp(timeInMillis / 1000)
                             )
                 }
 
                 Success(postTitleOrContentChanged)
             } ?: Error
         }
-    }
-
-    sealed class UpdateResult {
-        object Error : UpdateResult()
-        data class Success(val postTitleOrContentChanged: Boolean) : UpdateResult()
     }
 
     /**
@@ -147,8 +144,9 @@ class EditPostViewModel
 
         if (!editedPost.isLocalDraft && (titleChanged || contentChanged || statusChanged)) {
             editedPost.setIsLocallyChanged(true)
+            val timeInMillis = localeManagerWrapper.getCurrentCalendar().timeInMillis
             editedPost
-                    .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000))
+                    .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(timeInMillis / 1000))
         }
 
         return titleChanged || contentChanged
@@ -175,5 +173,10 @@ class EditPostViewModel
         )
 
         return mediaMarkedUploadingOnStartIds != currentUploadingMedia.sorted()
+    }
+
+    sealed class UpdateResult {
+        object Error : UpdateResult()
+        data class Success(val postTitleOrContentChanged: Boolean) : UpdateResult()
     }
 }
