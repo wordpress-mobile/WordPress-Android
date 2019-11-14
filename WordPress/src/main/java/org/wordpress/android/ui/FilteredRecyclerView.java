@@ -647,8 +647,9 @@ public class FilteredRecyclerView extends RelativeLayout {
             return mFilterCriteria.get(position);
         }
 
-        @Override public int getItemPosition(@NonNull Object object) {
-            if (object != null && mFilterCriteria != null) {
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            if (mFilterCriteria != null) {
                 for (int i = 0; i < mFilterCriteria.size(); i++) {
                     FilterCriteria criteria = mFilterCriteria.get(i);
                     if (criteria != null && criteria.equals(object)) {
@@ -659,15 +660,19 @@ public class FilteredRecyclerView extends RelativeLayout {
             return -1;
         }
 
-        @Override public int getCount() {
+        @Override
+        public int getCount() {
             return mFilterCriteria.size();
         }
 
-        @Override public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return view == object;
         }
 
-        @Nullable @Override public CharSequence getPageTitle(int position) {
+        @Override
+        @Nullable
+        public CharSequence getPageTitle(int position) {
             return mFilterCriteria.get(position).getLabel();
         }
 
