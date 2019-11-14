@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -171,8 +171,8 @@ public class ReaderPostListFragment extends Fragment
     private MenuItem mSearchMenuItem;
 
     private View mSubFilterComponent;
-    private ImageButton mSettingsButton;
-    private ImageButton mSubFiltersListButton;
+    private ImageView mSettingsButton;
+    private View mSubFiltersListButton;
     private TextView mSubFilterTitle;
     private SubfilterBottomSheetFragment mBottomSheet;
 
@@ -898,7 +898,7 @@ public class ReaderPostListFragment extends Fragment
                 showSettings();
             });
 
-            mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_list_button);
+            mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
             mSubFiltersListButton.setOnClickListener(v -> {
                 mBottomSheet = new SubfilterBottomSheetFragment();
                 mBottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
@@ -916,10 +916,15 @@ public class ReaderPostListFragment extends Fragment
 
     private boolean isFollowing() {
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
-            return mCurrentTag != null
-                   && !mCurrentTag.isBookmarked()
-                   && !mCurrentTag.isDiscover()
-                   && !mCurrentTag.isPostsILike();
+            if (mRecyclerView != null && mRecyclerView.getCurrentFilter() == null) {
+                // we are initializing now: return true to gt the subfiltering first init
+                return true;
+            } else if (mRecyclerView != null && mRecyclerView.getCurrentFilter() instanceof ReaderTag) {
+                ReaderTag filter = (ReaderTag) mRecyclerView.getCurrentFilter();
+                return filter.isFollowedSites();
+            } else {
+                return false;
+            }
         } else {
             return mCurrentTag != null && mCurrentTag.isFollowedSites();
         }
@@ -1005,7 +1010,7 @@ public class ReaderPostListFragment extends Fragment
 
 
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
-                    if (mCurrentTag.isFollowedSites()) {
+                    if (isFollowing()) {
                         setCurrentSubfilter(mViewModel.getCurrentSubfilterValue(), false);
                     } else {
                         // return to the followed tag that was showing prior to searching
@@ -1622,6 +1627,10 @@ public class ReaderPostListFragment extends Fragment
         }
 
         setCurrentTag(tag, BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader);
+        mViewModel.setSubfiltersVisibility(
+                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
+                && mIsMainReader
+                && tag.isFollowedSites());
     }
 
     /*
@@ -1924,9 +1933,9 @@ public class ReaderPostListFragment extends Fragment
         }
 
         getPostAdapter().setCurrentTag(mCurrentTag);
+        mViewModel.setSubfiltersVisibility(isFollowing());
         hideNewPostsBar();
         showLoadingProgress(false);
-
         updateCurrentTagIfTime();
     }
 

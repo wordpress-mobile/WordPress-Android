@@ -85,9 +85,6 @@ class ReaderPostListViewModel @Inject constructor(
                 _newsItemSourceMediator.value = null
             }
         }
-
-        _shouldShowSubFilters.postValue((tag?.let { !it.isDiscover && !it.isPostsILike && !it.isBookmarked })
-                ?: false)
     }
 
     fun onNewsCardDismissed(item: NewsItem) {
