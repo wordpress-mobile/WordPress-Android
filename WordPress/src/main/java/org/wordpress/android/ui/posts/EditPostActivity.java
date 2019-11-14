@@ -92,7 +92,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
-import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -618,48 +617,7 @@ public class EditPostActivity extends AppCompatActivity implements
             EventBus.getDefault().postSticky(new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(),
                     mEditPostRepository.getId()));
 
-            // run this purge in the background to not delay Editor initialization
-            new Thread(this::purgeMediaToPostAssociationsIfNotInPostAnymore).start();
-        }
-    }
-
-    private void purgeMediaToPostAssociationsIfNotInPostAnymore() {
-        boolean useAztec = AppPrefs.isAztecEditorEnabled();
-        boolean useGutenberg = AppPrefs.isGutenbergEditorEnabled();
-
-        ArrayList<MediaModel> allMedia = new ArrayList<>();
-        allMedia.addAll(mUploadStore.getFailedMediaForPost(mEditPostRepository.getPost()));
-        allMedia.addAll(mUploadStore.getCompletedMediaForPost(mEditPostRepository.getPost()));
-        allMedia.addAll(mUploadStore.getUploadingMediaForPost(mEditPostRepository.getPost()));
-
-        if (!allMedia.isEmpty()) {
-            HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
-            for (MediaModel media : allMedia) {
-                if (useAztec) {
-                    if (!AztecEditorFragment.isMediaInPostBody(this,
-                            mEditPostRepository.getContent(), String.valueOf(media.getId()))) {
-                        // don't delete featured image uploads
-                        if (!media.getMarkedLocallyAsFeatured()) {
-                            mediaToDeleteAssociationFor.add(media);
-                        }
-                    }
-                } else if (useGutenberg) {
-                    if (!PostUtils.isMediaInGutenbergPostBody(
-                            mEditPostRepository.getContent(), String.valueOf(media.getId()))) {
-                        // don't delete featured image uploads
-                        if (!media.getMarkedLocallyAsFeatured()) {
-                            mediaToDeleteAssociationFor.add(media);
-                        }
-                    }
-                }
-            }
-
-            if (!mediaToDeleteAssociationFor.isEmpty()) {
-                // also remove the association of Media-to-Post for this post
-                ClearMediaPayload clearMediaPayload =
-                        new ClearMediaPayload(mEditPostRepository.getPost(), mediaToDeleteAssociationFor);
-                mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
-            }
+            mEditorMedia.purgeMediaToPostAssociationsIfNotInPostAnymoreAsync();
         }
     }
 
