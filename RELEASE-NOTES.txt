@@ -4,6 +4,7 @@
 * Block editor: Show new-block-indicator when no blocks at all and when at the last block
 * Block editor: Use existing links in the clipboard to prefill url field when inserting new link
 * Block editor: Media & Text block alignment options
+* Block editor: Images clickable for fullscreen preview
  
 13.6
 -----
