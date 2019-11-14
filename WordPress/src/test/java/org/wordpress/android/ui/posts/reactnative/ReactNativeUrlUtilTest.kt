@@ -1,13 +1,20 @@
 package org.wordpress.android.ui.posts.reactnative
 
+import android.os.Build
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import org.wordpress.android.TestApplication
 
 private const val INPUT_PATH = "/wp/v2/media/54"
 private const val INPUT_QUERY_PARAMS = "?context=edit&_locale=user"
 private val INPUT_QUERY_PARAMS_MAP = mapOf("context" to "edit", "_locale" to "user")
 
+@Config(application = TestApplication::class, sdk = [Build.VERSION_CODES.LOLLIPOP])
+@RunWith(RobolectricTestRunner::class)
 class ReactNativeUrlUtilTest {
     private lateinit var subject: ReactNativeUrlUtil
 

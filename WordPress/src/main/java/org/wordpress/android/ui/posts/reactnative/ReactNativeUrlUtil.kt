@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.posts.reactnative
 
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.EDITOR
-import java.lang.IndexOutOfBoundsException
+import android.net.Uri
 import javax.inject.Inject
 
 private const val WPCOM_ENDPOINT = "https://public-api.wordpress.com"
@@ -42,20 +40,11 @@ class ReactNativeUrlUtil @Inject constructor() {
                 }
             }
 
-    private fun parsePathAndParams(pathWithParams: String): Pair<String, Map<String, String>>? =
-            try {
-                if (pathWithParams.contains("?")) {
-                    val (path, params) = pathWithParams.split("?")
-                    val paramsMap = params.split("&").map {
-                        val (key, value) = it.split("=")
-                        key to value
-                    }.toMap()
-                    Pair(path, paramsMap)
-                } else {
-                    Pair(pathWithParams, emptyMap())
-                }
-            } catch (e: IndexOutOfBoundsException) {
-                AppLog.e(EDITOR, e)
-                null
-            }
+    private fun parsePathAndParams(pathWithParams: String): Pair<String, Map<String, String>> {
+        val uri = Uri.parse(pathWithParams)
+        val paramMap = uri.queryParameterNames.map { name ->
+            name to uri.getQueryParameter(name)
+        }.toMap()
+        return Pair(uri.path, paramMap)
+    }
 }
