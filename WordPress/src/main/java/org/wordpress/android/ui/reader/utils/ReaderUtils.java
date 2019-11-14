@@ -13,14 +13,22 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ReaderUtils {
     public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
@@ -229,5 +237,81 @@ public class ReaderUtils {
         String trimQuery = query != null ? query.trim() : "";
         String slug = ReaderUtils.sanitizeWithDashes(trimQuery);
         return new ReaderTag(slug, trimQuery, trimQuery, null, ReaderTagType.SEARCH);
+    }
+
+    public static Map<String, TagInfo> getDefaultTagInfo() {
+        // Note that the following is the desired order in the tabs
+        // (see usage in prependDefaults)
+        Map<String, TagInfo> defaultTagInfo = new LinkedHashMap<>();
+
+        defaultTagInfo.put(ReaderConstants.KEY_FOLLOWING, new TagInfo(ReaderTagType.DEFAULT, ReaderTag.FOLLOWING_PATH));
+        defaultTagInfo.put(ReaderConstants.KEY_DISCOVER, new TagInfo(ReaderTagType.DEFAULT, ReaderTag.DISCOVER_PATH));
+        defaultTagInfo.put(ReaderConstants.KEY_LIKES, new TagInfo(ReaderTagType.DEFAULT, ReaderTag.LIKED_PATH));
+        defaultTagInfo.put(ReaderConstants.KEY_SAVED, new TagInfo(ReaderTagType.BOOKMARKED, ""));
+
+        return defaultTagInfo;
+    }
+
+    private static boolean putIfAbsentDone(Map<String, ReaderTag> defaultTags, String key, ReaderTag tag) {
+        boolean insertionDone = false;
+
+        if (defaultTags.get(key) == null) {
+            defaultTags.put(key, tag);
+            insertionDone = true;
+        }
+
+        return insertionDone;
+    }
+
+    private static void prependDefaults(
+            Map<String, ReaderTag> defaultTags,
+            ReaderTagList orderedTagList,
+            Map<String, TagInfo> defaultTagInfo
+    ) {
+        if (defaultTags.isEmpty()) return;
+
+        List<String> reverseOrderedKeys = new ArrayList<>(defaultTagInfo.keySet());
+        Collections.reverse(reverseOrderedKeys);
+
+        for (String key : reverseOrderedKeys) {
+            if (defaultTags.containsKey(key)) {
+                ReaderTag tag = defaultTags.get(key);
+
+                orderedTagList.add(0, tag);
+            }
+        }
+    }
+
+    private static boolean defaultTagFoundAndAdded(
+            Map<String, TagInfo> defaultTagInfos,
+            ReaderTag tag,
+            Map<String, ReaderTag> defaultTags
+    ) {
+        boolean foundAndAdded = false;
+
+        for (String key : defaultTagInfos.keySet()) {
+            if (defaultTagInfos.get(key).isDesiredTag(tag)) {
+                if (putIfAbsentDone(defaultTags, key, tag)) {
+                    foundAndAdded = true;
+                }
+                break;
+            }
+        }
+
+        return foundAndAdded;
+    }
+
+    public static ReaderTagList getOrderedTagsList(ReaderTagList tagList, Map<String, TagInfo> defaultTagInfos) {
+        ReaderTagList orderedTagList = new ReaderTagList();
+        Map<String, ReaderTag> defaultTags = new HashMap<>();
+
+        for (ReaderTag tag : tagList) {
+            if (defaultTagFoundAndAdded(defaultTagInfos, tag, defaultTags)) continue;
+
+            orderedTagList.add(tag);
+        }
+        prependDefaults(defaultTags, orderedTagList, defaultTagInfos);
+
+        return orderedTagList;
     }
 }

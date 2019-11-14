@@ -123,11 +123,9 @@ import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -2340,100 +2338,6 @@ public class ReaderPostListFragment extends Fragment
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
 
-        private static final String KEY_FOLLOWING = "following";
-        private static final String KEY_DISCOVER = "discover";
-        private static final String KEY_LIKES = "likes";
-        private static final String KEY_SAVED = "saved";
-
-        private class TagInfo {
-            private ReaderTagType mTagType;
-            private String mEndPoint;
-
-            public boolean isDesiredTag(@NonNull ReaderTag tag) {
-                return tag.tagType == mTagType && (mEndPoint.isEmpty() || tag.getEndpoint().endsWith(mEndPoint));
-            }
-
-            TagInfo(ReaderTagType type, @Nullable String endPoint) {
-                mTagType = type;
-                mEndPoint = StringUtils.notNullStr(endPoint);
-            }
-        }
-        private Map<String, TagInfo> getDefaultTagInfo() {
-            // Note that the following is the desired order in the tabs
-            // (see usage in prependDefaults)
-            Map<String, TagInfo> defaultTagInfo = new LinkedHashMap<>();
-
-            defaultTagInfo.put(KEY_FOLLOWING, new TagInfo(ReaderTagType.DEFAULT, ReaderTag.FOLLOWING_PATH));
-            defaultTagInfo.put(KEY_DISCOVER, new TagInfo(ReaderTagType.DEFAULT, ReaderTag.DISCOVER_PATH));
-            defaultTagInfo.put(KEY_LIKES, new TagInfo(ReaderTagType.DEFAULT, ReaderTag.LIKED_PATH));
-            defaultTagInfo.put(KEY_SAVED, new TagInfo(ReaderTagType.BOOKMARKED, null));
-
-            return defaultTagInfo;
-        }
-
-        private boolean putIfAbsentDone(Map<String, ReaderTag> defaultTags, String key, ReaderTag tag) {
-            boolean insertionDone = false;
-
-            if (defaultTags.get(key) == null) {
-                defaultTags.put(key, tag);
-                insertionDone = true;
-            }
-
-            return insertionDone;
-        }
-        private void prependDefaults(
-                Map<String, ReaderTag> defaultTags,
-                ReaderTagList orderedTagList,
-                Map<String, TagInfo> defaultTagInfo
-        ) {
-            if (defaultTags.isEmpty()) return;
-
-            List<String> reverseOrderedKeys = new ArrayList<>(defaultTagInfo.keySet());
-            Collections.reverse(reverseOrderedKeys);
-
-            for (String key : reverseOrderedKeys) {
-                if (defaultTags.containsKey(key)) {
-                    ReaderTag tag = defaultTags.get(key);
-
-                    orderedTagList.add(0, tag);
-                }
-            }
-        }
-
-        private boolean defaultTagFoundAndAdded(
-                Map<String, TagInfo> defaultTagInfos,
-                ReaderTag tag,
-                Map<String, ReaderTag> defaultTags
-        ) {
-            boolean foundAndAdded = false;
-
-            for (String key : defaultTagInfos.keySet()) {
-                if (defaultTagInfos.get(key).isDesiredTag(tag)) {
-                    if (putIfAbsentDone(defaultTags, key, tag)) {
-                        foundAndAdded = true;
-                    }
-                    break;
-                }
-            }
-
-            return foundAndAdded;
-        }
-
-        private ReaderTagList getOrderedTagsList(ReaderTagList tagList) {
-            Map<String, TagInfo> defaultTagInfos = getDefaultTagInfo();
-            ReaderTagList orderedTagList = new ReaderTagList();
-            Map<String, ReaderTag> defaultTags = new HashMap<>();
-
-            for (ReaderTag tag : tagList) {
-                if (defaultTagFoundAndAdded(defaultTagInfos, tag, defaultTags)) continue;
-
-                orderedTagList.add(tag);
-            }
-            prependDefaults(defaultTags, orderedTagList, defaultTagInfos);
-
-            return orderedTagList;
-        }
-
         LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
             mFilterCriteriaLoaderListener = listener;
         }
@@ -2446,7 +2350,7 @@ public class ReaderPostListFragment extends Fragment
             tagList.addAll(ReaderTagTable.getBookmarkTags());
 
             return (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader)
-                    ? getOrderedTagsList(tagList) : tagList;
+                    ? ReaderUtils.getOrderedTagsList(tagList, ReaderUtils.getDefaultTagInfo()) : tagList;
         }
 
         @Override
