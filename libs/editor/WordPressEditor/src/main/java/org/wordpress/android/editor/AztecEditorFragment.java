@@ -131,6 +131,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    private static final String AZTEC_EDITOR_NAME = "aztec";
     private static final String ATTR_TAPPED_MEDIA_PREDICATE = "tapped_media_predicate";
 
     private static final String ATTR_ALIGN = "align";
@@ -556,6 +557,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return;
         }
         mTitle.setText(text);
+    }
+
+    @NonNull @Override public String getEditorName() {
+        return AZTEC_EDITOR_NAME;
     }
 
     @Override

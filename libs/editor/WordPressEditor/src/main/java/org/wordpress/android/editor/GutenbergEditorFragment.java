@@ -60,6 +60,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener {
+    private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
@@ -682,6 +683,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 Thread.currentThread().interrupt();
             }
         });
+    }
+
+    @NonNull @Override public String getEditorName() {
+        return GUTENBERG_EDITOR_NAME;
     }
 
     @Override
