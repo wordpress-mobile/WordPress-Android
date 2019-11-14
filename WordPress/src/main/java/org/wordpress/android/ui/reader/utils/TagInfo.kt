@@ -3,7 +3,7 @@ package org.wordpress.android.ui.reader.utils
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 
-class TagInfo (
+class TagInfo(
     val tagType: ReaderTagType,
     private val endPoint: String
 ) {
