@@ -89,8 +89,8 @@ platform :android do
 
     screenshot_options = {
       output_directory: "fastlane/metadata/android",
-      app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk",
-      tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk",
+      app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk",
+      tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk",
       use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
       reinstall_app: false,
       clear_previous_screenshots: should_clear_previous_screenshots,
