@@ -1555,6 +1555,9 @@
     <!-- title shown for untitled posts and blogs -->
     <string name="reader_untitled_post">(Untitled)</string>
 
+    <!-- accessibility announcement when list loads -->
+    <string name="reader_acessibility_list_loaded">"The list has loaded with %1$d items."</string>
+
     <!-- activity titles -->
     <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
@@ -1689,6 +1692,7 @@
     <string name="reader_empty_posts_liked_description">Posts that you like will appear here</string>
     <string name="reader_empty_saved_posts_title">No posts saved — yet!</string>
     <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
+    <string name="reader_empty_saved_posts_content_description">Tap the Add to Save Posts button to save a post to your list.</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This site is empty</string>
     <string name="reader_empty_search_title">No results found</string>
