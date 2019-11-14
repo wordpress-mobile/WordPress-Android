@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -65,6 +66,11 @@ public class SiteUtils {
         if (accountStore.getAccount().getUserId() % 100 >= (100 - GB_ROLLOUT_PERCENTAGE)) {
             if (atLeastOneSiteHasAztecEnabled(siteStore)) {
                 // If the user has opt-ed out from at least one of their site, then exclude them from the cohort
+                return;
+            }
+
+            if (!NetworkUtils.isNetworkAvailable(WordPress.getContext())) {
+                // If the network is not available, abort. We can't update the remote setting.
                 return;
             }
 
