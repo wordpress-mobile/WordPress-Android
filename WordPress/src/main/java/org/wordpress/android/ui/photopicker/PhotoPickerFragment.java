@@ -289,13 +289,16 @@ public class PhotoPickerFragment extends Fragment {
                 }
             });
 
-            MenuItem itemGiphy = popup.getMenu().add(R.string.photo_picker_giphy);
-            itemGiphy.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override public boolean onMenuItemClick(MenuItem item) {
-                    doIconClicked(PhotoPickerIcon.GIPHY);
-                    return true;
-                }
-            });
+            // The Giphy Picker does not support picking a single image only.
+            if (!mBrowserType.isSingleImagePicker()) {
+                MenuItem itemGiphy = popup.getMenu().add(R.string.photo_picker_giphy);
+                itemGiphy.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override public boolean onMenuItemClick(MenuItem item) {
+                        doIconClicked(PhotoPickerIcon.GIPHY);
+                        return true;
+                    }
+                });
+            }
         }
 
         popup.show();
