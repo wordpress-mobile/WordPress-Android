@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-10 16:16:58+0000
+Translation-Revision-Date: 2019-10-25 09:52:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="pick_media">Lägg till bild eller video</string>
     <string name="error_post_not_submitted_retrying">Det gick inte att skicka detta inlägg för granskning, men vi försöker igen senare.</string>
     <string name="error_post_not_scheduled_retrying">Det gick inte att schemalägga detta inlägg, men vi försöker igen senare.</string>
     <string name="error_post_not_published_retrying_private">Det gick inte att publicera detta privata inlägg, men vi försöker igen senare.</string>
@@ -1513,9 +1514,6 @@ Language: sv_SE
     <string name="error_refresh_comments_showing_older">Kommentarer kan inte uppdateras just nu – visar äldre kommentarer</string>
     <string name="post_settings_set_featured_image">Ange utvald bild</string>
     <string name="post_settings_featured_image">Utvald bild</string>
-    <string name="editor_content_placeholder">Berätta din historia här…</string>
-    <string name="editor_page_title_placeholder">Sidans rubrik</string>
-    <string name="editor_post_title_placeholder">Inläggets rubrik</string>
     <string name="email_address">E-postadress</string>
     <string name="dlg_sure_to_delete_comments">Radera dessa kommentarer premanent?</string>
     <string name="dlg_sure_to_delete_comment">Radera denna kommentar premanent?</string>
@@ -1913,7 +1911,6 @@ Language: sv_SE
     <string name="reader_empty_posts_in_tag_updating">Hämtar inlägg…</string>
     <string name="cant_share_no_visible_blog">Du kan inte dela på WordPress utan att ha en synlig blogg</string>
     <string name="comment_spammed">Kommentar markerad som skräppost</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Svara</string>
     <string name="reader_likes_multi">%,d gillar detta</string>
     <string name="reader_likes_you_and_multi">Du och %,d andra gillar detta</string>

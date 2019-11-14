@@ -239,9 +239,6 @@ Language: is
     <string name="pending_email_change_snackbar">Smelltu á staðfestingartengil í tölvupósti sem sendur var á %1$s til þess að staðfesta nýja netfangið þitt</string>
     <string name="editor_toast_uploading_please_wait">Þú ert að hala upp skrá eins og er. Vinsamlegast bíðið þangað til því er lokið.</string>
     <string name="error_refresh_comments_showing_older">Ekki var hægt að endurfríska athugasemdir í þetta sinn - birti eldri athugasemdir</string>
-    <string name="editor_content_placeholder">Deildu sögunni þinni hér…</string>
-    <string name="editor_page_title_placeholder">Titill síðu</string>
-    <string name="editor_post_title_placeholder">Titill</string>
     <string name="email_address">Netfang</string>
     <string name="dlg_sure_to_delete_comments">Eyða þessum athugasemdum endanlega?</string>
     <string name="dlg_sure_to_delete_comment">Eyða þessari athugasemd endanlega?</string>
@@ -605,7 +602,6 @@ Language: is
     <string name="reader_empty_posts_in_tag_updating">Sæki færslur…</string>
     <string name="cant_share_no_visible_blog">Þú getur ekki deilt með WordPress án þess að hafa sýnilegt blogg</string>
     <string name="comment_spammed">Athugasemd merkt sem amapóstur</string>
-    <string name="video">Myndband</string>
     <string name="reader_label_reply">Svara</string>
     <string name="reader_likes_multi">%,d manns líkar þetta</string>
     <string name="reader_likes_you_and_multi">Þú og %,d öðrum líkar þetta</string>

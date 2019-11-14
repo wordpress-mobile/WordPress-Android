@@ -1,12 +1,23 @@
+13.7
+-----
+* Block editor: Include block title in Unsupported block's UI
+* Block editor: Show new-block-indicator when no blocks at all and when at the last block
+* Block editor: Use existing links in the clipboard to prefill url field when inserting new link
+* Block editor: Media & Text block alignment options
+ 
 13.6
 -----
+ * Change navigation bar color to white on Android 8.1+
 * Pages ordering is case insensitive now
+* Block Editor: Add support for pexels images
+* Block Editor: Add left, center, and right image alignment controls
  
 13.5
 -----
  * Block Editor: Fix issue when multiple media selection adds only one image or video block.
  * Block Editor: Add Link Target (Open in new tab) to Image Block.
  * Block Editor: New block "Media & Text".
+ * Block Editor: Fix issue where the block inserter layout wasn't correct after device rotation.
  
 13.4
 -----

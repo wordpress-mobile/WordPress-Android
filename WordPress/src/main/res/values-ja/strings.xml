@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-17 00:54:59+0000
+Translation-Revision-Date: 2019-10-31 00:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="pick_media">画像または動画を追加</string>
     <string name="error_post_not_submitted_retrying">このレビュー投稿を送信できませんでした。後ほど再度実行します。</string>
     <string name="error_post_not_scheduled_retrying">この投稿を予約投稿にできませんでした。後ほど再度実行します。</string>
     <string name="error_post_not_published_retrying_private">この非公開の投稿を公開できませんでした。後ほど再度実行します。</string>
@@ -1507,9 +1508,6 @@ Language: ja_JP
     <string name="error_refresh_comments_showing_older">現在、コメントを更新することができないため、古いコメントが表示されます。</string>
     <string name="post_settings_set_featured_image">アイキャッチ画像を設定</string>
     <string name="post_settings_featured_image">アイキャッチ画像</string>
-    <string name="editor_content_placeholder">こちらでストーリーを共有してください…</string>
-    <string name="editor_page_title_placeholder">ページタイトル</string>
-    <string name="editor_post_title_placeholder">投稿タイトル</string>
     <string name="email_address">メールアドレス</string>
     <string name="dlg_sure_to_delete_comments">これらのコメントを完全に削除しますか ?</string>
     <string name="dlg_sure_to_delete_comment">このコメントを完全に削除しますか ?</string>
@@ -1907,7 +1905,6 @@ Language: ja_JP
     <string name="reader_empty_posts_in_tag_updating">投稿を取得中…</string>
     <string name="cant_share_no_visible_blog">公開ブログがないため WordPress で共有できません</string>
     <string name="comment_spammed">コメントをスパムとしてマークしました</string>
-    <string name="video">動画</string>
     <string name="reader_label_reply">返信</string>
     <string name="reader_likes_multi">%,d 人が「いいね」しています。</string>
     <string name="reader_likes_you_and_multi">あなたと%,d人が「いいね」をしています。</string>
