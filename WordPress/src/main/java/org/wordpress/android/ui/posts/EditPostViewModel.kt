@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Success
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.viewmodel.Event
@@ -24,7 +26,8 @@ private const val MAX_UNSAVED_POSTS = 50
 class EditPostViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val dispatcher: Dispatcher
+    private val dispatcher: Dispatcher,
+    private val aztecEditorWrapper: AztecEditorWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var mDebounceCounter = 0
     var mediaInsertedOnCreation: Boolean = false
@@ -72,10 +75,10 @@ class EditPostViewModel
         mEditPostRepository: EditPostRepository,
         updatedTitle: String,
         getUpdatedContent: ((String) -> String?)
-    ): Boolean {
+    ): UpdateResult {
         if (!mEditPostRepository.hasPost()) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.")
-            return false
+            return Error
         }
         return mEditPostRepository.updateInTransaction { postModel ->
             getUpdatedContent(postModel.content)?.let { updatedContent ->
@@ -97,9 +100,14 @@ class EditPostViewModel
                             )
                 }
 
-                postTitleOrContentChanged
-            } ?: false
+                Success(postTitleOrContentChanged)
+            } ?: Error
         }
+    }
+
+    sealed class UpdateResult {
+        object Error : UpdateResult()
+        data class Success(val postTitleOrContentChanged: Boolean) : UpdateResult()
     }
 
     /**
@@ -161,7 +169,7 @@ class EditPostViewModel
         if (!showAztecEditor) {
             return false
         }
-        val currentUploadingMedia = AztecEditorFragment.getMediaMarkedUploadingInPostContent(
+        val currentUploadingMedia = aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
                 context,
                 newContent
         )

@@ -111,6 +111,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
@@ -1558,7 +1559,7 @@ public class EditPostActivity extends AppCompatActivity implements
             return false;
         }
         try {
-            return mViewModel
+            UpdateResult updateResult = mViewModel
                     .updatePostObject(this, mShowAztecEditor, mEditPostRepository, (String) mEditorFragment.getTitle(),
                             oldContent -> {
                                 try {
@@ -1567,6 +1568,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                     return null;
                                 }
                             });
+            return updateResult instanceof UpdateResult.Success;
         } catch (EditorFragmentNotAddedException e) {
             AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
             return false;
