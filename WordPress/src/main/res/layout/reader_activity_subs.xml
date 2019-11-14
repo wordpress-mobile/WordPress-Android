@@ -63,7 +63,7 @@
 
         <ImageButton
             android:id="@+id/btn_add"
-            android:padding="24dp"
+            android:padding="@dimen/margin_extra_medium_large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"

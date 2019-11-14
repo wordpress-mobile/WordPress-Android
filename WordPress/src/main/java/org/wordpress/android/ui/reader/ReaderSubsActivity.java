@@ -52,7 +52,6 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.ArrayList;
@@ -142,8 +141,6 @@ public class ReaderSubsActivity extends AppCompatActivity
                 addCurrentEntry();
             }
         });
-
-        ViewUtilsKt.expandTouchTargetArea(mBtnAdd, R.dimen.reader_add_button_extra_padding, false);
 
         if (savedInstanceState == null) {
             // return to the page the user was on the last time they viewed this activity
