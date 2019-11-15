@@ -3,18 +3,21 @@ package org.wordpress.android.ui.posts.editor
 import android.content.Context
 import android.net.Uri
 import dagger.Reusable
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
 
 @Reusable
-class EditorTracker @Inject constructor(private val context: Context) {
+class EditorTracker @Inject constructor(
+    private val context: Context,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+) {
     /**
      * Analytics about media from device
      *
@@ -103,6 +106,6 @@ class EditorTracker @Inject constructor(private val context: Context) {
             TrackableEvent.UNDO_TAPPED -> Stat.EDITOR_TAPPED_UNDO
         }
 
-        AnalyticsTracker.track(currentStat, mapOf("editor" to editorName))
+        analyticsTrackerWrapper.track(currentStat, mapOf("editor" to editorName))
     }
 }
