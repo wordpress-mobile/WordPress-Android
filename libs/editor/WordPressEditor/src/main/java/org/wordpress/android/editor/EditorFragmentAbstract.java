@@ -85,6 +85,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
 
     protected EditorFragmentListener mEditorFragmentListener;
     protected EditorDragAndDropListener mEditorDragAndDropListener;
+    protected EditorImagePreviewListener mEditorImagePreviewListener;
     protected boolean mFeaturedImageSupported;
     protected long mFeaturedImageId;
     protected String mBlogSettingMaxImageWidth;

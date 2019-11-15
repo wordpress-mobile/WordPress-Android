@@ -1,5 +1,11 @@
 13.7
 -----
+* Block editor: Include block title in Unsupported block's UI
+* Block editor: Show new-block-indicator when no blocks at all and when at the last block
+* Block editor: Use existing links in the clipboard to prefill url field when inserting new link
+* Block editor: Media & Text block alignment options
+* Block editor: Images clickable for fullscreen preview
+* Fixed time displayed on Post Conflict Detected and Unpublished Revision dialogs
  
 13.6
 -----
@@ -14,6 +20,7 @@
  * Block Editor: Add Link Target (Open in new tab) to Image Block.
  * Block Editor: New block "Media & Text".
  * Block Editor: Fix issue where the block inserter layout wasn't correct after device rotation.
+ * Fix crash when fast-scrolling on Blog Posts screen
  
 13.4
 -----
