@@ -590,7 +590,6 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         return result;
     }
 
-    @Override
     public @Nullable JSONArray getJsonCustomFields() {
         if (mCustomFields == null) {
             return null;
