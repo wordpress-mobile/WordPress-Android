@@ -8,7 +8,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;

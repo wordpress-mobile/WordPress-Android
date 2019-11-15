@@ -16,15 +16,18 @@ import org.wordpress.android.ui.news.NewsManager
 import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Divider
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SectionTitle
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
+import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -47,6 +50,9 @@ class ReaderPostListViewModel @Inject constructor(
 
     private val _shouldShowSubFilters = MutableLiveData<Boolean>()
     val shouldShowSubFilters: LiveData<Boolean> = _shouldShowSubFilters
+
+    private val _currentTagInfo = SingleLiveEvent<CurrentTagInfo>()
+    val currentTagInfo: LiveData<CurrentTagInfo> = _currentTagInfo
 
     /**
      * First tag for which the card was shown.
@@ -195,6 +201,50 @@ class ReaderPostListViewModel @Inject constructor(
                         onClickAction = ::onSubfilterClicked,
                         isSelected = true
                 ))
+    }
+
+    fun setCurrentSubfilter(
+        subfilterListItem: SubfilterListItem,
+        requestNewerPosts: Boolean
+    ) {
+        when (subfilterListItem.type) {
+            SubfilterListItem.ItemType.SECTION_TITLE,
+            SubfilterListItem.ItemType.DIVIDER -> {
+                // nop
+            }
+            SubfilterListItem.ItemType.SITE_ALL -> _currentTagInfo.value = (CurrentTagInfo(
+                    ReaderUtils.getDefaultTag(),
+                    ReaderPostListType.TAG_FOLLOWED,
+                    0,
+                    0,
+                    requestNewerPosts,
+                    subfilterListItem.label
+            ))
+            SubfilterListItem.ItemType.SITE -> {
+                val currentFeedId = (subfilterListItem as Site).blog.feedId
+                val currentBlogId = if (subfilterListItem.blog.hasFeedUrl())
+                    currentFeedId
+                else
+                    subfilterListItem.blog.blogId
+
+                _currentTagInfo.value = (CurrentTagInfo(
+                        null,
+                        ReaderPostListType.BLOG_PREVIEW,
+                        currentBlogId,
+                        currentFeedId,
+                        requestNewerPosts,
+                        subfilterListItem.label
+                ))
+            }
+            SubfilterListItem.ItemType.TAG -> _currentTagInfo.value = (CurrentTagInfo(
+                    (subfilterListItem as Tag).tag,
+                    ReaderPostListType.TAG_FOLLOWED,
+                    0,
+                    0,
+                    requestNewerPosts,
+                    subfilterListItem.label
+            ))
+        }
     }
 
     override fun onCleared() {

@@ -104,10 +104,8 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.Up
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem;
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.viewmodels.CurrentTagInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.utils.UiHelpers;
@@ -399,12 +397,31 @@ public class ReaderPostListFragment extends Fragment
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
                 )) {
-                    setCurrentSubfilter(subfilterListItem, true);
+                    mViewModel.setCurrentSubfilter(subfilterListItem, true);
                 }
             });
 
             mViewModel.getShouldShowSubFilters().observe(getActivity(), show -> {
                 mSubFilterComponent.setVisibility(show ? View.VISIBLE : View.GONE);
+            });
+
+            mViewModel.getCurrentTagInfo().observe(getActivity(), currentTagInfo -> {
+                if (currentTagInfo != null) {
+                    changeCurrentTagInfo(currentTagInfo);
+
+                    if (mBottomSheet != null) {
+                        mBottomSheet.dismiss();
+                        mBottomSheet = null;
+                    }
+                    if (currentTagInfo.getLabel() != null) {
+                        mSubFilterTitle.setText(
+                                mUiHelpers.getTextOfUiString(
+                                        requireActivity(),
+                                        currentTagInfo.getLabel()
+                                )
+                        );
+                    }
+                }
             });
         }
 
@@ -419,73 +436,17 @@ public class ReaderPostListFragment extends Fragment
         );
     }
 
-    private void setCurrentSubfilter(SubfilterListItem subfilterListItem, boolean requestNewerPosts) {
-        switch (subfilterListItem.getType()) {
-            case SECTION_TITLE:
-            case DIVIDER:
-                // nop
-                break;
-            case SITE_ALL:
-                changeCurrentTagInfo(
-                        ReaderUtils.getDefaultTag(),
-                        ReaderPostListType.TAG_FOLLOWED,
-                        0,
-                        0,
-                        requestNewerPosts
-                );
-
-                break;
-            case SITE:
-                long currentFeedId = ((Site) subfilterListItem).getBlog().feedId;
-                long currentBlogId = ((Site) subfilterListItem).getBlog().hasFeedUrl()
-                        ? currentFeedId : ((Site) subfilterListItem).getBlog().blogId;
-
-                changeCurrentTagInfo(
-                        null,
-                        ReaderPostListType.BLOG_PREVIEW,
-                        currentBlogId,
-                        currentFeedId,
-                        requestNewerPosts
-                );
-
-                break;
-            case TAG:
-                changeCurrentTagInfo(
-                        ((Tag) subfilterListItem).getTag(),
-                        ReaderPostListType.TAG_FOLLOWED,
-                        0,
-                        0,
-                        requestNewerPosts);
-
-                break;
+    private void changeCurrentTagInfo(CurrentTagInfo currentTagInfo) {
+        if (currentTagInfo.getTag() != null) {
+            mCurrentTag = currentTagInfo.getTag();
         }
 
-        if (mBottomSheet != null) {
-            mBottomSheet.dismiss();
-            mBottomSheet = null;
-        }
-        if (subfilterListItem.getLabel() != null) {
-            mSubFilterTitle.setText(mUiHelpers.getTextOfUiString(requireActivity(), subfilterListItem.getLabel()));
-        }
-    }
-
-    private void changeCurrentTagInfo(
-            @Nullable ReaderTag tag,
-            ReaderPostListType listType,
-            long blogId,
-            long feedId,
-            boolean requestNewerPosts
-    ) {
-        if (tag != null) {
-            mCurrentTag = tag;
-        }
-
-        mPostListType = listType;
-        mCurrentBlogId = blogId;
-        mCurrentFeedId = feedId;
+        mPostListType = currentTagInfo.getListType();
+        mCurrentBlogId = currentTagInfo.getBlogId();
+        mCurrentFeedId = currentTagInfo.getFeedId();
 
         resetPostAdapter(mPostListType);
-        if (requestNewerPosts) {
+        if (currentTagInfo.getRequestNewerPosts()) {
             updatePosts(false);
         }
     }
@@ -1011,7 +972,7 @@ public class ReaderPostListFragment extends Fragment
                             BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                             mRecyclerView)
                     ) {
-                        setCurrentSubfilter(mViewModel.getCurrentSubfilterValue(), false);
+                        mViewModel.setCurrentSubfilter(mViewModel.getCurrentSubfilterValue(), false);
                     } else {
                         // return to the followed tag that was showing prior to searching
                         resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
@@ -1908,9 +1869,16 @@ public class ReaderPostListFragment extends Fragment
 
         if (manageSubfilter) {
             if (mCurrentTag.isFollowedSites()) {
-                setCurrentSubfilter(mViewModel.getCurrentSubfilterValue(), false);
+                mViewModel.setCurrentSubfilter(mViewModel.getCurrentSubfilterValue(), false);
             } else {
-                changeCurrentTagInfo(tag, ReaderPostListType.TAG_FOLLOWED, 0, 0, false);
+                changeCurrentTagInfo(new CurrentTagInfo(
+                        tag,
+                        ReaderPostListType.TAG_FOLLOWED,
+                        0,
+                        0,
+                        false,
+                        null)
+                );
             }
         }
 
