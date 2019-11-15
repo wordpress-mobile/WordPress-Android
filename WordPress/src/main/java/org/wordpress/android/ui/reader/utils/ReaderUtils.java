@@ -8,12 +8,14 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.PhotonUtils;
@@ -229,5 +231,43 @@ public class ReaderUtils {
         String trimQuery = query != null ? query.trim() : "";
         String slug = ReaderUtils.sanitizeWithDashes(trimQuery);
         return new ReaderTag(slug, trimQuery, trimQuery, null, ReaderTagType.SEARCH);
+    }
+
+    public static boolean isFollowing(
+            ReaderTag currentTag,
+            boolean isTopLevelReader,
+            FilteredRecyclerView recyclerView
+    ) {
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && isTopLevelReader) {
+            if (currentTag != null
+                &&
+                (currentTag.isDiscover() || currentTag.isPostsILike() || currentTag.isBookmarked())) {
+                return false;
+            } else if (recyclerView != null && recyclerView.getCurrentFilter() == null) {
+                // we are initializing now: return true to gt the subfiltering first init
+                return currentTag != null && currentTag.isFollowedSites();
+            } else if (recyclerView != null && recyclerView.getCurrentFilter() instanceof ReaderTag) {
+                ReaderTag filter = (ReaderTag) recyclerView.getCurrentFilter();
+                return filter.isFollowedSites();
+            } else {
+                return false;
+            }
+        } else {
+            return currentTag != null && currentTag.isFollowedSites();
+        }
+    }
+
+    public static boolean isValidTagForSharedPrefs(
+            ReaderTag tag,
+            boolean isTopLevelReader,
+            FilteredRecyclerView recyclerView
+    ) {
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && isTopLevelReader) {
+            return (recyclerView != null && recyclerView.isValidFilter(tag))
+                   ||
+                   (tag.isFollowedSites() || tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked());
+        } else {
+            return true;
+        }
     }
 }

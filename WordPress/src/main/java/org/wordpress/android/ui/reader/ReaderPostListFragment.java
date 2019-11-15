@@ -396,7 +396,7 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
             mViewModel.getCurrentSubFilter().observe(getActivity(), subfilterListItem -> {
-                if (isFollowing()) {
+                if (ReaderUtils.isFollowing(mCurrentTag, mIsMainReader, mRecyclerView)) {
                     setCurrentSubfilter(subfilterListItem, true);
                 }
             });
@@ -406,7 +406,11 @@ public class ReaderPostListFragment extends Fragment
             });
         }
 
-        mViewModel.start(mCurrentTag, isFollowing() && BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader);
+        mViewModel.start(
+                mCurrentTag,
+                ReaderUtils.isFollowing(mCurrentTag, mIsMainReader, mRecyclerView)
+                && BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader
+        );
     }
 
     private void setCurrentSubfilter(SubfilterListItem subfilterListItem, boolean requestNewerPosts) {
@@ -809,7 +813,7 @@ public class ReaderPostListFragment extends Fragment
                 if (hasCurrentTag()) {
                     ReaderTag tag = getCurrentTag();
 
-                    if (isValidTagForSharedPrefs(tag)) {
+                    if (ReaderUtils.isValidTagForSharedPrefs(tag, mIsMainReader, mRecyclerView)) {
                         return tag;
                     } else {
                         return ReaderUtils.getDefaultTag();
@@ -912,26 +916,6 @@ public class ReaderPostListFragment extends Fragment
         ReaderActivityLauncher.showReaderSubs(getActivity());
     }
 
-    private boolean isFollowing() {
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
-            if (mCurrentTag != null
-                &&
-                (mCurrentTag.isDiscover() || mCurrentTag.isPostsILike() || mCurrentTag.isBookmarked())) {
-                return false;
-            } else if (mRecyclerView != null && mRecyclerView.getCurrentFilter() == null) {
-                // we are initializing now: return true to gt the subfiltering first init
-                return mCurrentTag != null && mCurrentTag.isFollowedSites();
-            } else if (mRecyclerView != null && mRecyclerView.getCurrentFilter() instanceof ReaderTag) {
-                ReaderTag filter = (ReaderTag) mRecyclerView.getCurrentFilter();
-                return filter.isFollowedSites();
-            } else {
-                return false;
-            }
-        } else {
-            return mCurrentTag != null && mCurrentTag.isFollowedSites();
-        }
-    }
-
     /*
      * adds a menu to the recycler's toolbar containing settings & search items - only called
      * for followed tags
@@ -1012,7 +996,7 @@ public class ReaderPostListFragment extends Fragment
 
 
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
-                    if (isFollowing()) {
+                    if (ReaderUtils.isFollowing(mCurrentTag, mIsMainReader, mRecyclerView)) {
                         setCurrentSubfilter(mViewModel.getCurrentSubfilterValue(), false);
                     } else {
                         // return to the followed tag that was showing prior to searching
@@ -1020,7 +1004,9 @@ public class ReaderPostListFragment extends Fragment
                     }
 
                     mRecyclerView.setTabLayoutVisibility(true);
-                    mViewModel.setSubfiltersVisibility(isFollowing());
+                    mViewModel.setSubfiltersVisibility(
+                            ReaderUtils.isFollowing(mCurrentTag, mIsMainReader, mRecyclerView)
+                    );
                 } else {
                     // return to the followed tag that was showing prior to searching
                     resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
@@ -1431,7 +1417,7 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
             totalMargin += getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
-            if (isFollowing()) {
+            if (ReaderUtils.isFollowing(mCurrentTag, mIsMainReader, mRecyclerView)) {
                 totalMargin += mSubFilterComponent.getHeight();
             }
         }
@@ -1888,16 +1874,6 @@ public class ReaderPostListFragment extends Fragment
         setCurrentTag(tag, false);
     }
 
-    private boolean isValidTagForSharedPrefs(ReaderTag tag) {
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
-            return (mRecyclerView != null && mRecyclerView.isValidFilter(tag))
-                   ||
-                   (tag.isFollowedSites() || tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked());
-        } else {
-            return true;
-        }
-    }
-
     private void setCurrentTag(final ReaderTag tag, boolean manageSubfilter) {
         if (tag == null) {
             return;
@@ -1925,7 +1901,7 @@ public class ReaderPostListFragment extends Fragment
         switch (getPostListType()) {
             case TAG_FOLLOWED:
                 // remember this as the current tag if viewing followed tag
-                if (isValidTagForSharedPrefs(tag)) {
+                if (ReaderUtils.isValidTagForSharedPrefs(tag, mIsMainReader, mRecyclerView)) {
                     AppPrefs.setReaderTag(tag);
                 }
                 break;
@@ -1941,7 +1917,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         getPostAdapter().setCurrentTag(mCurrentTag);
-        mViewModel.setSubfiltersVisibility(isFollowing());
+        mViewModel.setSubfiltersVisibility(ReaderUtils.isFollowing(mCurrentTag, mIsMainReader, mRecyclerView));
         hideNewPostsBar();
         showLoadingProgress(false);
         updateCurrentTagIfTime();
