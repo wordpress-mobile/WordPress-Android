@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.model
 
-import org.json.JSONArray
 import org.json.JSONObject
 import org.wordpress.android.fluxc.model.post.PostLocation
 
@@ -48,7 +47,6 @@ interface PostImmutableModel {
     val hasCapabilityEditPost: Boolean
     val hasCapabilityDeletePost: Boolean
     val dateLocallyChanged: String
-    val jsonCustomFields: JSONArray?
 
     fun hasFeaturedImage(): Boolean
 
