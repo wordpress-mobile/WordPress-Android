@@ -24,7 +24,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
@@ -317,7 +316,10 @@ public class FilteredRecyclerView extends RelativeLayout {
                     }
                 });
             } else {
-                mFilteredPagerAdapter.updateFiltersIfNeeded(mFilterCriteriaOptions);
+                if (mFilteredPagerAdapter.datasetChanged(mFilterCriteriaOptions)) {
+                    mSelectingRememberedFilterOnCreate = true;
+                    mFilteredPagerAdapter.updateFilters(mFilterCriteriaOptions);
+                }
             }
         } else {
             mSpinnerAdapter = new SpinnerAdapter(getContext(),
@@ -616,90 +618,6 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         View child = mRecyclerView.getLayoutManager().getChildAt(0);
         return (child != null && mRecyclerView.getLayoutManager().getPosition(child) == 0);
-    }
-
-    class FilteredPagerAdapter extends PagerAdapter {
-        private RecyclerView mRecyclerView;
-        private List<FilterCriteria> mFilterCriteria;
-
-        FilteredPagerAdapter(RecyclerView recyclerView, List<FilterCriteria> filterCriteria) {
-            mRecyclerView = recyclerView;
-            mFilterCriteria = filterCriteria;
-        }
-
-
-        private boolean datasetChanged(List<FilterCriteria> filterCriteriaOptions) {
-            boolean isChanged = false;
-
-            if (mFilterCriteria.size() != filterCriteriaOptions.size()) {
-                isChanged = true;
-            } else {
-                for (int index = 0; index < mFilterCriteria.size(); index++) {
-                    if (!mFilterCriteria.get(index).equals(filterCriteriaOptions.get(index))) {
-                        isChanged = true;
-                        break;
-                    }
-                }
-            }
-
-            return isChanged;
-        }
-
-        public void updateFiltersIfNeeded(List<FilterCriteria> filterCriteriaOptions) {
-            if (datasetChanged(filterCriteriaOptions)) {
-                mFilterCriteria = filterCriteriaOptions;
-                mSelectingRememberedFilterOnCreate = true;
-                notifyDataSetChanged();
-            }
-        }
-
-        public FilterCriteria getFilterAtPosition(int position) {
-            return mFilterCriteria.get(position);
-        }
-
-        @Override public int getItemPosition(@NonNull Object object) {
-            if (object != null && mFilterCriteria != null) {
-                for (int i = 0; i < mFilterCriteria.size(); i++) {
-                    FilterCriteria criteria = mFilterCriteria.get(i);
-                    if (criteria != null && criteria.equals(object)) {
-                        return i;
-                    }
-                }
-            }
-            return -1;
-        }
-
-        @Override public int getCount() {
-            return mFilterCriteria.size();
-        }
-
-        @Override public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
-        }
-
-        @Nullable @Override public CharSequence getPageTitle(int position) {
-            return mFilterCriteria.get(position).getLabel();
-        }
-
-        @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            if (mRecyclerView != null && mRecyclerView.getParent() != container) {
-                container.addView(mRecyclerView);
-            } else {
-                AppLog.d(
-                        mTAG,
-                        "FilteredPagerAdapter - Calling instantiateItem at " + position + " without adding the view."
-                );
-            }
-
-            // Return the page
-            return mRecyclerView;
-        }
-
-        @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
-        }
     }
 
     /**
