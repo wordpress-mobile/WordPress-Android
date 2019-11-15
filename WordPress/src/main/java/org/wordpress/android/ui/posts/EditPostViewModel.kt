@@ -13,7 +13,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Success
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -28,7 +28,8 @@ class EditPostViewModel
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
     private val aztecEditorWrapper: AztecEditorWrapper,
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val dateTimeUtils: DateTimeUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var mDebounceCounter = 0
     var mediaInsertedOnCreation: Boolean = false
@@ -95,10 +96,10 @@ class EditPostViewModel
                 // only makes sense to change the publish date and locally changed date if the Post was actually changed
                 if (postTitleOrContentChanged) {
                     mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel)
-                    val timeInMillis = localeManagerWrapper.getCurrentCalendar().timeInMillis
+                    val currentTime = localeManagerWrapper.getCurrentCalendar()
                     postModel
                             .setDateLocallyChanged(
-                                    DateTimeUtils.iso8601FromTimestamp(timeInMillis / 1000)
+                                    dateTimeUtils.iso8601FromCalendar(currentTime)
                             )
                 }
 
@@ -144,9 +145,9 @@ class EditPostViewModel
 
         if (!editedPost.isLocalDraft && (titleChanged || contentChanged || statusChanged)) {
             editedPost.setIsLocallyChanged(true)
-            val timeInMillis = localeManagerWrapper.getCurrentCalendar().timeInMillis
+            val currentTime = localeManagerWrapper.getCurrentCalendar()
             editedPost
-                    .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(timeInMillis / 1000))
+                    .setDateLocallyChanged(dateTimeUtils.iso8601FromCalendar(currentTime))
         }
 
         return titleChanged || contentChanged

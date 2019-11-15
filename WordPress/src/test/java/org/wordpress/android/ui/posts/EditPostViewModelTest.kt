@@ -16,8 +16,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
 import java.util.Calendar
@@ -27,6 +27,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var aztecEditorWrapper: AztecEditorWrapper
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     @Mock lateinit var context: Context
     @Mock lateinit var postRepository: EditPostRepository
 
@@ -46,7 +47,13 @@ class EditPostViewModelTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        viewModel = EditPostViewModel(TEST_DISPATCHER, dispatcher, aztecEditorWrapper, localeManagerWrapper)
+        viewModel = EditPostViewModel(
+                TEST_DISPATCHER,
+                dispatcher,
+                aztecEditorWrapper,
+                localeManagerWrapper,
+                dateTimeUtilsWrapper
+        )
         transactionCaptor = argumentCaptor()
         updateResultCaptor = argumentCaptor()
         actionCaptor = argumentCaptor()
@@ -119,7 +126,7 @@ class EditPostViewModelTest : BaseUnitTest() {
 
     @Test
     fun `isCurrentMediaMarkedUploadingDifferentToOriginal is false on non-Aztec editor`() {
-        val result = viewModel.isCurrentMediaMarkedUploadingDifferentToOriginal(context, false, "");
+        val result = viewModel.isCurrentMediaMarkedUploadingDifferentToOriginal(context, false, "")
 
         assertThat(result).isFalse()
     }
@@ -256,7 +263,12 @@ class EditPostViewModelTest : BaseUnitTest() {
     @Test
     fun `updates post date when media list has changed`() {
         viewModel.mediaMarkedUploadingOnStartIds = listOf("A")
-        whenever(aztecEditorWrapper.getMediaMarkedUploadingInPostContent(context, content)).thenReturn(listOf("B"))
+        whenever(
+                aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
+                        context,
+                        content
+                )
+        ).thenReturn(listOf("B"))
         whenever(postRepository.hasPost()).thenReturn(true)
 
         viewModel.updatePostObject(context, true, postRepository, title) { content }
@@ -290,5 +302,6 @@ class EditPostViewModelTest : BaseUnitTest() {
         now.set(2019, 10, 10, 10, 10, 0)
         now.timeZone = TimeZone.getTimeZone("UTC")
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(now)
+        whenever(dateTimeUtilsWrapper.iso8601FromCalendar(now)).thenReturn(currentTime)
     }
 }
