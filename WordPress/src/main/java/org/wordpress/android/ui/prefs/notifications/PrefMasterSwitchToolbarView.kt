@@ -66,6 +66,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     private var titleOff: String? = null
     private var titleOn: String? = null
     private var viewStyle: PrefMasterSwitchToolbarViewStyle? = null
+    private var titleContentDescription: String? = null
 
     val isMasterChecked: Boolean
         get() = masterSwitch.isChecked
@@ -103,7 +104,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
                 val titleOff = typedArray.getString(R.styleable.PrefMasterSwitchToolbarView_masterTitleOff)
                 val hintOn = typedArray.getString(R.styleable.PrefMasterSwitchToolbarView_masterHintOn)
                 val hintOff = typedArray.getString(R.styleable.PrefMasterSwitchToolbarView_masterHintOff)
-                val titleContentDescription = typedArray
+                titleContentDescription = typedArray
                         .getString(R.styleable.PrefMasterSwitchToolbarView_masterContentDescription)
                 val contentInsetStart = resources.getDimensionPixelSize(
                         typedArray.getResourceId(
@@ -127,7 +128,6 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
                 setTitleOff(titleOff)
                 setHintOn(hintOn)
                 setHintOff(hintOff)
-                setToolbarTitleContentDescription(titleContentDescription)
                 setContentOffset(contentInsetStart)
                 setMasterOffsetEnd(masterOffsetEnd)
 
@@ -149,7 +149,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    fun setToolbarTitleContentDescription(titleContentDescription: String?) {
+    fun setToolbarTitleContentDescription() {
         titleContentDescription?.let {
             for (i in 0 until toolbarSwitch.childCount) {
                 if (toolbarSwitch.getChildAt(i) is TextView) {
@@ -194,6 +194,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         setChecked(checkMaster)
         setToolbarTitle(checkMaster)
         toolbarSwitch.visibility = View.VISIBLE
+        setToolbarTitleContentDescription()
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
