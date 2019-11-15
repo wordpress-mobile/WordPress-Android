@@ -229,7 +229,7 @@ public class PostUtils {
                                     && newPost.getTagNameList().containsAll(oldPost.getTagNameList())
                                     && oldPost.getCategoryIdList().containsAll(newPost.getCategoryIdList())
                                     && newPost.getCategoryIdList().containsAll(oldPost.getCategoryIdList())
-                                    && PostLocation.equals(oldPost.getLocation(), newPost.getLocation())
+                                    && oldPost.getLocation().equals(newPost.getLocation())
                                     && oldPost.getChangesConfirmedContentHashcode() == newPost
                 .getChangesConfirmedContentHashcode()
         );
