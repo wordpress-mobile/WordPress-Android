@@ -1890,14 +1890,9 @@ public class ReaderPostListFragment extends Fragment
 
     private boolean isValidTagForSharedPrefs(ReaderTag tag) {
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
-            if ((mRecyclerView != null && mRecyclerView.isValidFilter(tag))
-                ||
-                (tag.isFollowedSites() || tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked())
-            ) {
-                return true;
-            } else {
-                return false;
-            }
+            return (mRecyclerView != null && mRecyclerView.isValidFilter(tag))
+                   ||
+                   (tag.isFollowedSites() || tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked());
         } else {
             return true;
         }
