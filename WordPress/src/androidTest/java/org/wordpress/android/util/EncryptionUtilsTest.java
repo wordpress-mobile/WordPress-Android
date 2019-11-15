@@ -182,17 +182,18 @@ public class EncryptionUtilsTest {
         final byte[] tag = new byte[1];
         final int decryptedLineLength = encryptedLine.length - EncryptionUtils.XCHACHA20POLY1305_ABYTES;
         final byte[] decryptedLine = new byte[decryptedLineLength];
-        final byte[] ad = new byte[0];
-        final int[] len = new int[0];
+        final byte[] additionalData = new byte[0]; // opting not to use this value
+        final int additionalDataLength = 0;
+        final int[] decryptedLineLengthOutput = new int[0]; // opting not to get this value
         final int returnCode = NaCl.sodium().crypto_secretstream_xchacha20poly1305_pull(
                 state,
                 decryptedLine,
-                len,
+                decryptedLineLengthOutput,
                 tag,
                 encryptedLine,
                 encryptedLine.length,
-                ad,
-                0);
+                additionalData,
+                additionalDataLength);
         assertEquals(returnCode, 0);
 
         final int encryptionTag = tag[0];

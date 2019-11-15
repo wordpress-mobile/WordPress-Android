@@ -99,8 +99,9 @@ public class EncryptionUtils {
     private static String getSecretStreamXchacha20poly1305EncryptedBase64String(final byte[] state,
                                                                                 final String data,
                                                                                 final short tag) {
-        final int[] clen = new int[0];
-        final byte[] ad = new byte[0];
+        final int[] encryptedDataLengthOutput = new int[0]; // opting not to get this value
+        final byte[] additionalData = new byte[0]; // opting not to use this value
+        final int additionalDataLength = 0;
 
         final byte[] dataBytes = data.getBytes();
         final byte[] encryptedData = new byte[dataBytes.length + XCHACHA20POLY1305_ABYTES];
@@ -108,11 +109,11 @@ public class EncryptionUtils {
         NaCl.sodium().crypto_secretstream_xchacha20poly1305_push(
                 state,
                 encryptedData,
-                clen,
+                encryptedDataLengthOutput,
                 dataBytes,
                 dataBytes.length,
-                ad,
-                0,
+                additionalData,
+                additionalDataLength,
                 tag);
 
         return Base64.encodeToString(encryptedData, BASE64_ENCODE_FLAGS);
