@@ -322,13 +322,13 @@ public class ReaderUtils {
             boolean isTopLevelReader,
             FilteredRecyclerView recyclerView
     ) {
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && isTopLevelReader) {
+        if (isTopLevelReader) {
             if (currentTag != null
                 &&
                 (currentTag.isDiscover() || currentTag.isPostsILike() || currentTag.isBookmarked())) {
                 return false;
             } else if (recyclerView != null && recyclerView.getCurrentFilter() == null) {
-                // we are initializing now: return true to gt the subfiltering first init
+                // we are initializing now: return true to get the subfiltering first init
                 return currentTag != null && currentTag.isFollowedSites();
             } else if (recyclerView != null && recyclerView.getCurrentFilter() instanceof ReaderTag) {
                 ReaderTag filter = (ReaderTag) recyclerView.getCurrentFilter();
@@ -346,7 +346,7 @@ public class ReaderUtils {
             boolean isTopLevelReader,
             FilteredRecyclerView recyclerView
     ) {
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && isTopLevelReader) {
+        if (isTopLevelReader) {
             return (recyclerView != null && recyclerView.isValidFilter(tag))
                    ||
                    (tag.isFollowedSites() || tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked());

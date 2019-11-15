@@ -394,7 +394,11 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             mViewModel.getCurrentSubFilter().observe(getActivity(), subfilterListItem -> {
-                if (ReaderUtils.isFollowing(mCurrentTag, mIsTopLevel, mRecyclerView)) {
+                if (ReaderUtils.isFollowing(
+                        mCurrentTag,
+                        BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
+                        mRecyclerView
+                )) {
                     setCurrentSubfilter(subfilterListItem, true);
                 }
             });
@@ -406,7 +410,11 @@ public class ReaderPostListFragment extends Fragment
 
         mViewModel.start(
                 mCurrentTag,
-                ReaderUtils.isFollowing(mCurrentTag, mIsTopLevel, mRecyclerView)
+                ReaderUtils.isFollowing(
+                        mCurrentTag,
+                        BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
+                        mRecyclerView
+                )
                 && BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel
         );
     }
@@ -811,7 +819,11 @@ public class ReaderPostListFragment extends Fragment
                 if (hasCurrentTag()) {
                     ReaderTag tag = getCurrentTag();
 
-                    if (ReaderUtils.isValidTagForSharedPrefs(tag, mIsTopLevel, mRecyclerView)) {
+                    if (ReaderUtils.isValidTagForSharedPrefs(
+                            tag,
+                            BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
+                            mRecyclerView)
+                    ) {
                         return tag;
                     } else {
                         return ReaderUtils.getDefaultTag();
@@ -994,7 +1006,11 @@ public class ReaderPostListFragment extends Fragment
 
 
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-                    if (ReaderUtils.isFollowing(mCurrentTag, mIsTopLevel, mRecyclerView)) {
+                    if (ReaderUtils.isFollowing(
+                            mCurrentTag,
+                            BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
+                            mRecyclerView)
+                    ) {
                         setCurrentSubfilter(mViewModel.getCurrentSubfilterValue(), false);
                     } else {
                         // return to the followed tag that was showing prior to searching
@@ -1415,7 +1431,11 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             totalMargin += getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
-            if (ReaderUtils.isFollowing(mCurrentTag, mIsTopLevel, mRecyclerView)) {
+            if (ReaderUtils.isFollowing(
+                    mCurrentTag,
+                    BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
+                    mRecyclerView)
+            ) {
                 totalMargin += mSubFilterComponent.getHeight();
             }
         }
@@ -1899,7 +1919,11 @@ public class ReaderPostListFragment extends Fragment
         switch (getPostListType()) {
             case TAG_FOLLOWED:
                 // remember this as the current tag if viewing followed tag
-                if (ReaderUtils.isValidTagForSharedPrefs(tag, mIsTopLevel, mRecyclerView)) {
+                if (ReaderUtils.isValidTagForSharedPrefs(
+                        tag,
+                        BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
+                        mRecyclerView)
+                ) {
                     AppPrefs.setReaderTag(tag);
                 }
                 break;
@@ -1915,7 +1939,10 @@ public class ReaderPostListFragment extends Fragment
         }
 
         getPostAdapter().setCurrentTag(mCurrentTag);
-        mViewModel.setSubfiltersVisibility(ReaderUtils.isFollowing(mCurrentTag, mIsTopLevel, mRecyclerView));
+        mViewModel.setSubfiltersVisibility(BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && ReaderUtils.isFollowing(
+                mCurrentTag,
+                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
+                mRecyclerView));
         hideNewPostsBar();
         showLoadingProgress(false);
         updateCurrentTagIfTime();

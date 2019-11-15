@@ -1,17 +1,27 @@
 package org.wordpress.android.ui.reader.utils
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
+import org.wordpress.android.models.ReaderTagType.CUSTOM_LIST
 import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
+import org.wordpress.android.ui.FilteredRecyclerView
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderUtilsTest {
+    @Mock lateinit var currentTag: ReaderTag
+    @Mock lateinit var filteredRecyclerView: FilteredRecyclerView
+
     private fun getShuffledTagList(): ReaderTagList {
         val tagList = ReaderTagList()
         tagList.addAll(listOf(
@@ -47,5 +57,45 @@ class ReaderUtilsTest {
         val shuffledList = getShuffledTagList()
         val orederList = ReaderUtils.getOrderedTagsList(shuffledList, ReaderUtils.getDefaultTagInfo())
         assertThat(orederList).isEqualTo(getExpectedTagList())
+    }
+
+    @Test
+    fun `isFollowing is based on currentTag status if is not top level reader`() {
+        whenever(currentTag.isFollowedSites).thenReturn(true)
+        assertThat(ReaderUtils.isFollowing(currentTag, false, null)).isEqualTo(true)
+        whenever(currentTag.isFollowedSites).thenReturn(false)
+        assertThat(ReaderUtils.isFollowing(currentTag, false, null)).isEqualTo(false)
+    }
+
+    @Test
+    fun `isFollowing is based on FilteredRecyclerView when is top level reader`() {
+        whenever(currentTag.isFollowedSites).thenReturn(true)
+        whenever(filteredRecyclerView.currentFilter).thenReturn(currentTag)
+        var result = ReaderUtils.isFollowing(currentTag, true, filteredRecyclerView)
+        assertThat(result).isEqualTo(true)
+
+        whenever(currentTag.isFollowedSites).thenReturn(false)
+        whenever(filteredRecyclerView.currentFilter).thenReturn(currentTag)
+        result = ReaderUtils.isFollowing(currentTag, true, filteredRecyclerView)
+        assertThat(result).isEqualTo(false)
+    }
+
+    @Test
+    fun `isValidTagForSharedPrefs is based on isValidFilter when is top level reader`() {
+        whenever(filteredRecyclerView.isValidFilter(any())).thenReturn(true)
+        assertThat(
+                ReaderUtils.isValidTagForSharedPrefs(
+                        ReaderTag("", "", "", "", CUSTOM_LIST),
+                        true,
+                        filteredRecyclerView)
+        ).isEqualTo(true)
+
+        whenever(filteredRecyclerView.isValidFilter(any())).thenReturn(false)
+        assertThat(
+                ReaderUtils.isValidTagForSharedPrefs(
+                        ReaderTag("", "", "", "", CUSTOM_LIST),
+                        true,
+                        filteredRecyclerView)
+        ).isEqualTo(false)
     }
 }
