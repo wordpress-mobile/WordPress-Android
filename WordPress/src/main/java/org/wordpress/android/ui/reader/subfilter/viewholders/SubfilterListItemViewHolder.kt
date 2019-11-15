@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
@@ -23,8 +24,7 @@ open class SubfilterListItemViewHolder(
         val itemText: TextView? = this.itemView.findViewById(R.id.item_title)
         itemText?.let {
             if (filter.isSelected) {
-                @Suppress("DEPRECATION")
-                it.setTextColor(parent.resources.getColor(R.color.primary))
+                it.setTextColor(ContextCompat.getColor(parent.context, R.color.primary))
             }
         }
 

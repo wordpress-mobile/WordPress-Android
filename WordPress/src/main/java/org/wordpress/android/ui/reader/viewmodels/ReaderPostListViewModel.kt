@@ -57,7 +57,7 @@ class ReaderPostListViewModel @Inject constructor(
     /**
      * Tag may be null for Blog previews for instance.
      */
-    fun start(tag: ReaderTag?) {
+    fun start(tag: ReaderTag?, shouldShowSubfilter: Boolean) {
         if (isStarted) {
             return
         }
@@ -66,6 +66,7 @@ class ReaderPostListViewModel @Inject constructor(
             newsManager.pull()
 
             _currentSubFilter.value = getCurrentSubfilterValue()
+            _shouldShowSubFilters.value = shouldShowSubfilter
         }
         isStarted = true
     }
@@ -165,17 +166,7 @@ class ReaderPostListViewModel @Inject constructor(
             it
         })
 
-        when (filter) {
-            is SectionTitle,
-            Divider -> {
-                // nop
-            }
-            is SiteAll,
-            is Site,
-            is Tag -> {
-                _currentSubFilter.postValue(filter)
-            }
-        }
+        _currentSubFilter.postValue(filter)
     }
 
     fun setSubfiltersVisibility(show: Boolean) = _shouldShowSubFilters.postValue(show)

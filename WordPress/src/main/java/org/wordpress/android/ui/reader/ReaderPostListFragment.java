@@ -406,7 +406,7 @@ public class ReaderPostListFragment extends Fragment
             });
         }
 
-        mViewModel.start(mCurrentTag);
+        mViewModel.start(mCurrentTag, isFollowing() && BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader);
     }
 
     private void setCurrentSubfilter(SubfilterListItem subfilterListItem, boolean requestNewerPosts) {
@@ -469,6 +469,7 @@ public class ReaderPostListFragment extends Fragment
         if (tag != null) {
             mCurrentTag = tag;
         }
+
         mPostListType = listType;
         mCurrentBlogId = blogId;
         mCurrentFeedId = feedId;
@@ -806,15 +807,12 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public FilterCriteria onRecallSelection() {
                 if (hasCurrentTag()) {
-                    if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
-                        ReaderTag tag = getCurrentTag();
-                        if (!tag.isDiscover() && !tag.isPostsILike() && !tag.isBookmarked()) {
-                            return ReaderUtils.getDefaultTag();
-                        } else {
-                            return tag;
-                        }
+                    ReaderTag tag = getCurrentTag();
+
+                    if (isValidTagForSharedPrefs(tag)) {
+                        return tag;
                     } else {
-                        return getCurrentTag();
+                        return ReaderUtils.getDefaultTag();
                     }
                 } else {
                     AppLog.w(T.READER, "reader post list > no current tag in onRecallSelection");
@@ -916,9 +914,13 @@ public class ReaderPostListFragment extends Fragment
 
     private boolean isFollowing() {
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
-            if (mRecyclerView != null && mRecyclerView.getCurrentFilter() == null) {
+            if (mCurrentTag != null
+                &&
+                (mCurrentTag.isDiscover() || mCurrentTag.isPostsILike() || mCurrentTag.isBookmarked())) {
+                return false;
+            } else if (mRecyclerView != null && mRecyclerView.getCurrentFilter() == null) {
                 // we are initializing now: return true to gt the subfiltering first init
-                return true;
+                return mCurrentTag != null && mCurrentTag.isFollowedSites();
             } else if (mRecyclerView != null && mRecyclerView.getCurrentFilter() instanceof ReaderTag) {
                 ReaderTag filter = (ReaderTag) mRecyclerView.getCurrentFilter();
                 return filter.isFollowedSites();
@@ -1886,6 +1888,21 @@ public class ReaderPostListFragment extends Fragment
         setCurrentTag(tag, false);
     }
 
+    private boolean isValidTagForSharedPrefs(ReaderTag tag) {
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
+            if ((mRecyclerView != null && mRecyclerView.isValidFilter(tag))
+                ||
+                (tag.isFollowedSites() || tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked())
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     private void setCurrentTag(final ReaderTag tag, boolean manageSubfilter) {
         if (tag == null) {
             return;
@@ -1913,11 +1930,7 @@ public class ReaderPostListFragment extends Fragment
         switch (getPostListType()) {
             case TAG_FOLLOWED:
                 // remember this as the current tag if viewing followed tag
-                if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader) {
-                    if (tag.isFollowedSites() || tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked()) {
-                        AppPrefs.setReaderTag(tag);
-                    }
-                } else {
+                if (isValidTagForSharedPrefs(tag)) {
                     AppPrefs.setReaderTag(tag);
                 }
                 break;
