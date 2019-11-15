@@ -86,6 +86,7 @@ public class InstallationReferrerServiceLogic {
                             mReferrerClient.endConnection();
                         } catch (RemoteException | IllegalStateException e) {
                             e.printStackTrace();
+                            CrashLoggingUtils.logException(e, T.UTILS);
                             AppLog.e(T.UTILS, "installation referrer: " + e.getClass().getSimpleName() + " occurred");
                         }
                         break;
