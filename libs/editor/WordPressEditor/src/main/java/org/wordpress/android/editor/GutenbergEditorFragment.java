@@ -685,7 +685,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         });
     }
 
-    @NonNull @Override public String getEditorName() {
+    @NonNull
+    @Override
+    public String getEditorName() {
         return GUTENBERG_EDITOR_NAME;
     }
 

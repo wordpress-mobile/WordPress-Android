@@ -559,7 +559,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mTitle.setText(text);
     }
 
-    @NonNull @Override public String getEditorName() {
+    @NonNull
+    @Override
+    public String getEditorName() {
         return AZTEC_EDITOR_NAME;
     }
 
