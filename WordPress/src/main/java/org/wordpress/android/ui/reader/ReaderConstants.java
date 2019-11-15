@@ -73,4 +73,9 @@ public class ReaderConstants {
     public static final String JSON_TAG_DISPLAY_NAME = "tag_display_name";
     public static final String JSON_TAG_SLUG = "slug";
     public static final String JSON_TAG_URL = "URL";
+
+    public static final String KEY_FOLLOWING = "following";
+    public static final String KEY_DISCOVER = "discover";
+    public static final String KEY_LIKES = "likes";
+    public static final String KEY_SAVED = "saved";
 }

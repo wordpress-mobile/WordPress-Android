@@ -2348,7 +2348,9 @@ public class ReaderPostListFragment extends Fragment
             tagList.addAll(ReaderTagTable.getCustomListTags());
             tagList.addAll(ReaderTagTable.getFollowedTags());
             tagList.addAll(ReaderTagTable.getBookmarkTags());
-            return tagList;
+
+            return (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsMainReader)
+                    ? ReaderUtils.getOrderedTagsList(tagList, ReaderUtils.getDefaultTagInfo()) : tagList;
         }
 
         @Override

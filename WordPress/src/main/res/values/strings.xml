@@ -1549,6 +1549,11 @@
       reader strings
     -->
     <string name="reader_save_for_later_title">Saved posts</string>
+    <string name="reader_save_for_later_display_name">Saved</string>
+    <string name="reader_discover_display_name">Discover</string>
+    <string name="reader_my_likes_display_name">Likes</string>
+    <string name="reader_following_display_name">Following</string>
+    
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="timespan_now">now</string>
 

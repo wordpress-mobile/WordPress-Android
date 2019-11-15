@@ -8,6 +8,7 @@ import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -116,6 +117,18 @@ public class ReaderUpdateLogic {
         WordPress.getRestClientUtilsV1_2().get("read/menu", params, null, listener, errorListener);
     }
 
+    private void updateServerTopicsDisplayName(ReaderTagList serverTopics) {
+        for (ReaderTag tag : serverTopics) {
+            if (tag.isFollowedSites()) {
+                tag.setTagDisplayName(mContext.getString(R.string.reader_following_display_name));
+            } else if (tag.isDiscover()) {
+                tag.setTagDisplayName(mContext.getString(R.string.reader_discover_display_name));
+            } else if (tag.isPostsILike()) {
+                tag.setTagDisplayName(mContext.getString(R.string.reader_my_likes_display_name));
+            }
+        }
+    }
+
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
         new Thread() {
             @Override
@@ -124,6 +137,11 @@ public class ReaderUpdateLogic {
                 // reader since user won't have any followed tags
                 ReaderTagList serverTopics = new ReaderTagList();
                 serverTopics.addAll(parseTags(jsonObject, "default", ReaderTagType.DEFAULT));
+
+                if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                    updateServerTopicsDisplayName(serverTopics);
+                }
+
                 if (!mAccountStore.hasAccessToken()) {
                     serverTopics.addAll(parseTags(jsonObject, "recommended", ReaderTagType.FOLLOWED));
                 } else {
@@ -131,9 +149,16 @@ public class ReaderUpdateLogic {
                 }
 
                 // manually insert Bookmark tag, as server doesn't support bookmarking yet
-                serverTopics.add(new ReaderTag("", "",
-                        mContext.getString(R.string.reader_save_for_later_title), "",
-                        ReaderTagType.BOOKMARKED));
+                serverTopics.add(
+                        new ReaderTag(
+                                "",
+                                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
+                                ? mContext.getString(R.string.reader_save_for_later_display_name) : "",
+                                mContext.getString(R.string.reader_save_for_later_title),
+                                "",
+                                ReaderTagType.BOOKMARKED
+                        )
+                );
 
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
