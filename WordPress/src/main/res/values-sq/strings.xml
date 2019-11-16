@@ -116,8 +116,6 @@ Language: sq_AL
     <string name="stats_bar_chart_content_description">Grafik parjesh të sajtit.</string>
     <string name="stats_loading_card">Po ngarkohen të dhënat e kartës së përzgjedhur</string>
     <string name="site_settings_editor">Përpunues</string>
-    <string name="dialog_gutenberg_informative_description_page">Për krijim faqesh të reja, po përdorni përpunuesin me blloqe. Doni të përdoret përpunuesi klasik, si parazgjedhje? Kaloni te Rregullime Sajti.</string>
-    <string name="dialog_gutenberg_informative_description_post">Për krijim postimesh të reja, po përdorni përpunuesin me blloqe. Doni të përdoret përpunuesi klasik, si parazgjedhje? Kaloni te Rregullime Sajti.</string>
     <string name="description_expand">Zgjeroje</string>
     <string name="description_collapse">Tkurre</string>
     <string name="editor_retry_failed_uploads">Riprovoni ngarkimin</string>
