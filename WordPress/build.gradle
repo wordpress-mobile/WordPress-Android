@@ -297,6 +297,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+
+    implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:2.0.1'
 }
 
 configurations.all {
