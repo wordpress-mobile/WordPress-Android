@@ -1,2 +1,0 @@
-13.5 :
-* Éditeur de blocs : nous avons résolu un problème dans lequel la sélection de plusieurs éléments multimédias n'ajoutait qu'une seule image ou un seul bloc vidéo. Un nouveau bloc « Média & Texte » est disponible et nous avons ajouté une option Cible du lien (Ouvrir dans le nouvel onglet) au Bloc d'image.
