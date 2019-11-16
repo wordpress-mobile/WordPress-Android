@@ -1220,7 +1220,6 @@
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -2579,29 +2578,6 @@
     <string name="app_rating_rate_now">Rate now</string>
     <string name="app_rating_rate_later">Later</string>
     <string name="app_rating_rate_never">No thanks</string>
-
-    <!-- Gutenberg mobile strings -->
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101" tools:ignore="UnusedResources">Link inserted</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214" tools:ignore="UnusedResources">Add URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136" tools:ignore="UnusedResources">Link Text</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138" tools:ignore="UnusedResources">Add Link Text</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152" tools:ignore="UnusedResources">Remove Link</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128" tools:ignore="UnusedResources">Start writing…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196" tools:ignore="UnusedResources">Choose from device</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197" tools:ignore="UnusedResources">Take a Photo</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198" tools:ignore="UnusedResources">WordPress Media Library</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273" tools:ignore="UnusedResources">Alt Text</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280" tools:ignore="UnusedResources">Clear All Settings</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374" translatable="false" tools:ignore="UnusedResources">@string/editor_failed_to_insert_media_tap_for_options</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26" tools:ignore="UnusedResources">CHOOSE IMAGE</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27" tools:ignore="UnusedResources">Paste URL</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21" tools:ignore="UnusedResources">Unsupported Block</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23" tools:ignore="UnusedResources">Unsupported block type.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27" tools:ignore="UnusedResources">Unsupported</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48" tools:ignore="UnusedResources">Move block up</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55" tools:ignore="UnusedResources">Move block down</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66" tools:ignore="UnusedResources">Remove content</string>
 
     <string name="description_collapse">Collapse</string>
     <string name="description_expand">Expand</string>
