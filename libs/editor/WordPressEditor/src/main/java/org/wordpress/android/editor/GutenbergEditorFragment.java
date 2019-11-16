@@ -139,7 +139,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         defaultLocaleConfiguration.setLocale(defaultLocale);
         Context localizedContextDefault = getActivity()
                 .createConfigurationContext(defaultLocaleConfiguration);
-        Resources defaultResources = localizedContextDefault.getResources();
+        Resources englishResources = localizedContextDefault.getResources();
 
         // Strings are only being translated in the WordPress package
         // thus we need to get a reference of the R class for this package
@@ -176,10 +176,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
             // Add the mapping english => [ translated ] to the bundle if both string are not empty
             String currentResourceString = currentResources.getString(resourceId);
-            String defaultResourceString = defaultResources.getString(resourceId);
-            if (currentResourceString.length() > 0 && defaultResourceString.length() > 0) {
+            String englishResourceString = englishResources.getString(resourceId);
+            if (currentResourceString.length() > 0 && englishResourceString.length() > 0) {
                 translations.putStringArrayList(
-                        defaultResourceString,
+                        englishResourceString,
                         new ArrayList<>(Arrays.asList(currentResourceString))
                 );
             }
@@ -209,10 +209,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
             // Add the mapping english => [ singular, plural ] to the bundle
             String[] currentResourceStrings = currentResources.getStringArray(resourceId);
-            String defaultResourceString = defaultResources.getString(resourceId);
-            if (currentResourceStrings.length > 1 && defaultResourceString.length() > 0) {
+            String[] englishResourceStrings = englishResources.getStringArray(resourceId);
+            if (currentResourceStrings.length > 1 && englishResourceStrings.length > 0) {
                 translations.putStringArrayList(
-                        defaultResourceString,
+                        englishResourceStrings[0],
                         new ArrayList<>(Arrays.asList(currentResourceStrings))
                 );
             }
