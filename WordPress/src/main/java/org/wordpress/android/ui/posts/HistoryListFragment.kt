@@ -45,7 +45,7 @@ class HistoryListFragment : Fragment() {
     }
 
     interface HistoryItemClickInterface {
-        fun onHistoryItemClicked(revision: Revision, revisions: ArrayList<Revision>)
+        fun onHistoryItemClicked(revision: Revision, revisions: List<Revision>)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -147,9 +147,12 @@ class HistoryListFragment : Fragment() {
             }
         })
 
-        viewModel.showDialog.observe(this, Observer {
-            if (it is Revision && activity is HistoryItemClickInterface) {
-                (activity as HistoryItemClickInterface).onHistoryItemClicked(it, viewModel.revisionsList)
+        viewModel.showDialog.observe(this, Observer { showDialogItem ->
+            if (showDialogItem.historyListItem is Revision && activity is HistoryItemClickInterface) {
+                (activity as HistoryItemClickInterface).onHistoryItemClicked(
+                        showDialogItem.historyListItem,
+                        showDialogItem.revisionsList
+                )
             }
         })
 
