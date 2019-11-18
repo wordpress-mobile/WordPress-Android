@@ -71,7 +71,6 @@ class GiphyPickerDataSource(
             return
         }
 
-
         callback.onResult(emptyList(), startPosition, 0)
     }
 
