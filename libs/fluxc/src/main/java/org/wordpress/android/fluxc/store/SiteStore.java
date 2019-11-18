@@ -1075,8 +1075,8 @@ public class SiteStore extends Store {
     /**
      * Returns the number of sites of any kind in the store.
      */
-    public long getSitesCount() {
-        return WellSql.select(SiteModel.class).count();
+    public int getSitesCount() {
+        return (int) WellSql.select(SiteModel.class).count();
     }
 
     /**
@@ -1197,8 +1197,8 @@ public class SiteStore extends Store {
     /**
      * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
      */
-    public long getVisibleSitesCount() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).count();
+    public int getVisibleSitesCount() {
+        return (int) SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).count();
     }
 
     /**
