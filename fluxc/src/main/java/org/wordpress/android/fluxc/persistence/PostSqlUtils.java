@@ -262,17 +262,17 @@ public class PostSqlUtils {
                 .equals(PostModelTable.IS_LOCAL_DRAFT, true)
                 .or()
                 .equals(PostModelTable.IS_LOCALLY_CHANGED, true)
-                .endGroup().endGroup().endWhere().getAsCursor().getCount() > 0;
+                .endGroup().endGroup().endWhere().exists();
     }
 
-    public int getNumLocalChanges() {
+    public long getNumLocalChanges() {
         return WellSql.select(PostModel.class)
                 .where().beginGroup()
                 .equals(PostModelTable.IS_LOCAL_DRAFT, true)
                 .or()
                 .equals(PostModelTable.IS_LOCALLY_CHANGED, true)
                 .endGroup().endWhere()
-                .getAsCursor().getCount();
+                .count();
     }
 
     public int updatePostsAutoSave(SiteModel site, final PostRemoteAutoSaveModel autoSaveModel) {
@@ -295,14 +295,14 @@ public class PostSqlUtils {
     }
 
     public void insertOrUpdateLocalRevision(LocalRevisionModel revision, List<LocalDiffModel> diffs) {
-        int localRevisionModels =
+        boolean hasLocalRevisionModels =
                 WellSql.select(LocalRevisionModel.class)
                         .where().beginGroup()
                         .equals(LocalRevisionModelTable.REVISION_ID, revision.getRevisionId())
                         .equals(LocalRevisionModelTable.POST_ID, revision.getPostId())
                         .equals(LocalRevisionModelTable.SITE_ID, revision.getSiteId())
-                        .endGroup().endWhere().getAsCursor().getCount();
-        if (localRevisionModels > 0) {
+                        .endGroup().endWhere().exists();
+        if (hasLocalRevisionModels) {
             WellSql.update(LocalRevisionModel.class)
                     .where().beginGroup()
                     .equals(LocalRevisionModelTable.REVISION_ID, revision.getRevisionId())

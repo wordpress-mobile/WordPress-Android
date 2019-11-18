@@ -1082,8 +1082,8 @@ public class SiteStore extends Store {
     /**
      * Returns the number of sites of any kind in the store.
      */
-    public int getSitesCount() {
-        return getSitesCursor().getCount();
+    public long getSitesCount() {
+        return WellSql.select(SiteModel.class).count();
     }
 
     /**
@@ -1108,7 +1108,7 @@ public class SiteStore extends Store {
      * Checks whether the store contains a site matching the given (local) id.
      */
     public boolean hasSiteWithLocalId(int id) {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).getAsCursor().getCount() > 0;
+        return SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).exists();
     }
 
     /**
@@ -1129,8 +1129,8 @@ public class SiteStore extends Store {
      * Returns the number of sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected
      * via WPCom REST API).
      */
-    public int getSitesAccessedViaWPComRestCount() {
-        return SiteSqlUtils.getSitesAccessedViaWPComRest().getAsCursor().getCount();
+    public long getSitesAccessedViaWPComRestCount() {
+        return SiteSqlUtils.getSitesAccessedViaWPComRest().count();
     }
 
     /**
@@ -1144,8 +1144,8 @@ public class SiteStore extends Store {
     /**
      * Returns the number of .COM sites in the store.
      */
-    public int getWPComSitesCount() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).getAsCursor().getCount();
+    public long getWPComSitesCount() {
+        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).count();
     }
 
     /**
@@ -1182,8 +1182,8 @@ public class SiteStore extends Store {
     /**
      * Returns the number of sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
-    public int getSitesAccessedViaXMLRPCCount() {
-        return SiteSqlUtils.getSitesAccessedViaXMLRPC().getAsCursor().getCount();
+    public long getSitesAccessedViaXMLRPCCount() {
+        return SiteSqlUtils.getSitesAccessedViaXMLRPC().count();
     }
 
     /**
@@ -1204,8 +1204,8 @@ public class SiteStore extends Store {
     /**
      * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
      */
-    public int getVisibleSitesCount() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).getAsCursor().getCount();
+    public long getVisibleSitesCount() {
+        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).count();
     }
 
     /**
@@ -1218,8 +1218,8 @@ public class SiteStore extends Store {
     /**
      * Returns the number of visible .COM sites.
      */
-    public int getVisibleSitesAccessedViaWPComCount() {
-        return SiteSqlUtils.getVisibleSitesAccessedViaWPCom().getAsCursor().getCount();
+    public long getVisibleSitesAccessedViaWPComCount() {
+        return SiteSqlUtils.getVisibleSitesAccessedViaWPCom().count();
     }
 
     /**
@@ -1232,7 +1232,7 @@ public class SiteStore extends Store {
                       .equals(SiteModelTable.IS_WPCOM, true)
                       .equals(SiteModelTable.IS_VISIBLE, true)
                       .endGroup().endWhere()
-                      .getAsCursor().getCount() > 0;
+                      .exists();
     }
 
     /**
