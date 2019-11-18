@@ -1,2 +1,0 @@
-13.5:
-* Blokeditor: We hebben een probleem opgelost waarbij het selecteren van meerdere media slechts één afbeelding- of videoblok toevoegde. Er is een nieuw 'Media en tekst'-blok en we hebben een optie voor linkverwijzing (Openen in nieuw tabblad) toegevoegd aan het afbeeldingsblok.

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-25 06:49:27+0000
+Translation-Revision-Date: 2019-11-06 07:36:58+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Notifications</string>
+    <string name="master_switch_default_title_off">Off</string>
+    <string name="master_switch_default_title_on">On</string>
+    <string name="notifications_tab_dialog_master_off_message">Désactiver les notifications pour ce site désactivera l\'affichage des notifications sur l\'onglet Notifications pour ce site. Vous pouvez affiner le type de notification que vous voyez après avoir activé les notifications pour ce site.</string>
+    <string name="notifications_tab_dialog_master_off_title">Pour voir les notifications sur l\'onglet Notifications pour ce site, activez les notifications pour ce site.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Activer l\'affichage des notifications sur l\'onglet des notifications pour ce site</string>
+    <string name="notifications_tab_dialog_master_hint_on">Désactiver l\'affichage des notifications sur l\'onglet des notifications pour ce site</string>
+    <string name="notifications_tab_dialog_master_status_off">Notifications pour ce site</string>
+    <string name="notifications_tab_dialog_master_status_on">Notifications pour ce site</string>
+    <string name="dialog_gutenberg_informative_description_page">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouvelles pages u2014 c’est super ! Si vous revenir à l’éditeur classique, allez à « Mon site » > « Réglages du site ».</string>
+    <string name="dialog_gutenberg_informative_description_post">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouveaux articles u2014  – c’est super ! Si vous revenir à l’éditeur classique, allez à « Mon site » > « Réglages du site ».</string>
     <string name="pick_media">Ajouter une image ou une vidéo</string>
     <string name="error_post_not_submitted_retrying">Nous n\'avons pas pu soumettre cet article pour révision, mais nous réessayerons plus tard. </string>
     <string name="error_post_not_scheduled_retrying">Nous n\'avons pas pu planifier la publication de cet article, mais nous réessayerons plus tard.</string>
@@ -117,8 +128,6 @@ Language: fr
     <string name="stats_bar_chart_content_description">Graphique des vues du site.</string>
     <string name="stats_loading_card">Chargement des données de la carte sélectionnée</string>
     <string name="site_settings_editor">Éditeur</string>
-    <string name="dialog_gutenberg_informative_description_page">Vous utilisez actuellement l’éditeur de bloc pour créer de nouvelles pages. Souhaitez-vous utiliser l’éditeur classique par défaut ? Accédez aux Paramètres du site.</string>
-    <string name="dialog_gutenberg_informative_description_post">Vous utilisez actuellement l’éditeur de bloc pour créer de nouveaux articles. Souhaitez-vous utiliser l’éditeur classique par défaut ? Accédez aux Paramètres du site.</string>
     <string name="description_expand">Déplier</string>
     <string name="description_collapse">Replier</string>
     <string name="editor_retry_failed_uploads">Retenter le téléversement</string>

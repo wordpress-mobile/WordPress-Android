@@ -1,71 +1,117 @@
 <ar>
-13.5:
-* محرِّر المكوِّنات: أصلحنا المشكلة التي تفيد بإضافة تحديد الوسائط المتعددة مكوِّن صورة أو فيديوهات واحد فقط. ثمَّة مكوِّن "الوسائط والنص"، وأضفنا خيار هدف الرابط (مفتوح في علامة تبويب جديدة) إلى مكوِّن الصور.
+13.6:
+- قمنا بتحديث لون شريط التنقل إلى اللون الأبيض على نظام التشغيل Android 8.1 والإصدارات الأحدث منه.
+- تم إصلاح الأخطاء الواردة في ترتيب قائمة الصفحات، لذا ستظهر الصفحات دائمًا بترتيب أبجدي.
+- تحديثات محرِّر المكوّنات: تمت إضافة دعم للصور وخيارات محاذاة الصورة في Pexels.
+
 </ar>
 <de-DE>
-13.5:
-* Block-Editor: Wir haben eine Fehler behoben, bei dem die Auswahl mehrerer Medien nur einen Bild- oder Videoblock hinzugefügt hat. Es gibt einen neuen Block „Medien und Text“, und wir haben die Option „Ziel verlinken (In neuem Tab öffnen)“ zum Bildblock hinzugefügt.
+13.6:
+- Wir haben die Farbe der Navigationsleiste in Android 8.1 oder höher auf Weiß aktualisiert.
+- Ein Fehler beim Sortieren von Seiten wurden behoben, sodass Seiten stets in alphabetischer Reihenfolge angezeigt werden.
+- Updates im Block-Editor: Support für Pexels-Bilder und Optionen zum Ausrichten von Bildern hinzugefügt.
+
 </de-DE>
 <en-US>
-13.5:
-* Block Editor: We fixed an issue when multiple media selection added only one image or video block. There’s a new “Media & Text” block and we’ve added a Link Target (Open in new tab) option to the Image Block.
+13.6:
+- We updated the navigation bar color to white on Android 8.1 and higher.
+- Bugs in page list ordering are fixed, so pages always appear in alphabetical order.
+- Block editor updates: Added support for Pexels images and image alignment options.
+
 </en-US>
 <es-ES>
-13.5:
-* Editor de bloques: hemos corregido un problema cuando una selección múltiple de medios añade solo un bloque de imagen o vídeo. Hay un nuevo bloque de «Medios y texto» y hemos añadido al bloque de imágenes una opción de enlace de destino (se abre en una nueva pestaña).
+13.6:
+- Hemos actualizado el color de la barra de navegación a blanco en Android 8.1 y superior.
+- Los fallos en el orden de la lista de páginas han sido corregidos, por lo que las páginas siempre aparecen en orden alfabético.
+- Actualizaciones del editor de bloques: Añadida compatibilidad para imágenes de Pexels y opciones de alineación de imágenes.
 </es-ES>
 <fr-CA>
-13.5 :
-* Éditeur de blocs : nous avons résolu un problème dans lequel la sélection de plusieurs éléments multimédias n'ajoutait qu'une seule image ou un seul bloc vidéo. Un nouveau bloc « Média & Texte » est disponible et nous avons ajouté une option Cible du lien (Ouvrir dans le nouvel onglet) au Bloc d'image.
+13.6:
+- We updated the navigation bar color to white on Android 8.1 and higher.
+- Bugs in page list ordering are fixed, so pages always appear in alphabetical order.
+- Block editor updates: Added support for Pexels images and image alignment options.
+
 </fr-CA>
 <fr-FR>
-13.5 :
-* Éditeur de blocs : nous avons résolu un problème dans lequel la sélection de plusieurs éléments multimédias n'ajoutait qu'une seule image ou un seul bloc vidéo. Un nouveau bloc « Média & Texte » est disponible et nous avons ajouté une option Cible du lien (Ouvrir dans le nouvel onglet) au Bloc d'image.
+13.6:
+- We updated the navigation bar color to white on Android 8.1 and higher.
+- Bugs in page list ordering are fixed, so pages always appear in alphabetical order.
+- Block editor updates: Added support for Pexels images and image alignment options.
+
 </fr-FR>
 <iw-IL>
-13.5:
-* עורך הבלוקים: תיקנו בעיה שגרמה להוספה של בלוק אחד בלבד של תמונה או וידאו כאשר נבחרו פרטי מדיה רבים. יש בלוק 'מדיה וטקסט' חדש והסופנו אפשרות של 'קישור ליעד (נפתח בלשונית חדשה)' בבלוק התמונה.
+13.6:
+- שינינו את הצבע של סרגל הניווט ללבן ב-Android 8.1 ומעלה.
+- תוקנו הבאגים בסידור רשימת העמודים כך שהעמודים תמיד יופיעו בסדר אלפביתי.
+- עדכונים בעורך הבלוקים: הוספנו תמיכה בתמונות Pexels ובאפשרויות יישור תמונה.
+
 </iw-IL>
 <id>
-13.5:
-* Penyunting Blok: Kami memperbaiki masalah ketika pemilihan beberapa media hanya menambahkan satu blok gambar atau video. Ada blok “Media & Teks” baru dan kami menambahkan pilihan Target Tautan (Buka di tab baru) ke Blok Gambar.
+13.6:
+- Kami memperbarui warna bilah navigasi menjadi putih di Android 8.1 dan yang lebih tinggi.
+- Bug di pengurutan daftar halaman telah diperbaiki, sehingga halaman selalu ditampilkan dalam urutan alfabet.
+* Pembaruan penyunting blok: Dukungan yang ditambahkan untuk gambar Pexels dan pilihan penyelarasan gambar.
+
 </id>
 <it-IT>
-13.5:
-* Editor dei blocchi: abbiamo corretto un problema per cui veniva aggiunto un solo blocco di immagine o video quando si selezionavano più contenuti multimediali. C'è un nuovo blocco "Media e testo" e abbiamo aggiunto un'opzione Destinazione link (Apri in una nuova scheda) al blocco Immagine.
+13.6:
+- Abbiamo aggiornato il colore della barra di navigazione al bianco su Android 8.1 e versioni successione.
+- I bug nell'ordinamento dell'elenco di pagine sono stati risolti, quindi le pagine saranno sempre visualizzate in ordine alfabetico.
+* Aggiornamenti all'editor dei blocchi: aggiunto supporto per immagini Pexels e opzioni per l'allineamento delle immagini.
+
 </it-IT>
 <ja-JP>
-13.5:
-* ブロックエディター :複数のメディアを選択したときに、画像または動画のブロックが1つしか追加されない問題を修正しました。「メディアとテキスト」ブロックが新しくなり、画像ブロックに「リンクターゲット」 (新しいタブで開く) オプションが追加されました。
+13.6:
+- Android 8.1以降で、ナビゲーションバーの色が白に変更されました。
+- ページリストの順序についてのバグが修正され、ページが常にアルファベット順に表示されるようになりました。
+- ブロックエディターの更新 :Pexels 画像対応となり、画像の配置オプションが追加されました。
+
 </ja-JP>
 <ko-KR>
-13.5:
-* 블록 편집기: 여러 미디어를 선택하면 한 개의 이미지 또는 비디오 블록만 추가되는 문제가 해결되었습니다. 새로운 “미디어 및 텍스트” 블록이 있으며 이미지 블록에 링크 대상(새 탭에서 열기) 옵션을 추가했습니다.
+13.6:
+- Android 8.1 이상에서 탐색 표시줄 색을 흰색으로 업데이트했습니다.
+- 페이지 목록 순서의 버그가 수정되어 페이지가 항상 알파벳순으로 표시됩니다.
+- 블록 편집기 업데이트: Pexels 이미지 및 이미지 정렬 옵션에 대한 지원이 추가되었습니다.
+
 </ko-KR>
 <nl-NL>
-13.5:
-* Blokeditor: We hebben een probleem opgelost waarbij het selecteren van meerdere media slechts één afbeelding- of videoblok toevoegde. Er is een nieuw 'Media en tekst'-blok en we hebben een optie voor linkverwijzing (Openen in nieuw tabblad) toegevoegd aan het afbeeldingsblok.
+13.6:
+- We hebben de kleur van de navigatiebalk op Android 8.1 en hoger bijgewerkt naar wit.
+- Bugs die voor problemen zorgden met de sortering van de paginalijst zijn verwijderd, zodat pagina's altijd in alfabetische volgorde worden weergegeven.
+* Updates van de blokeditor: Ondersteuning voor Pexels-afbeeldingen en opties voor uitlijning van afbeeldingen toegevoegd.
+
 </nl-NL>
-<pt-BR>
-Editor de blocos: Corrigimos um problema quando várias tinha várias mídias selecionadas adicionava apenas uma imagem ou bloco de vídeo. Há um novo bloco "Mídia e texto" e adicionamos uma opção destino do link (Abrir em nova guia) ao Bloco de imagens.
-</pt-BR>
 <ru-RU>
-13.5:
-* Редактор блоков: исправлена проблема с множественным выбором медиафайлов (добавлялось только одно изображение или блок видео). Добавлен новый блок "Медиа и текст", а также возможность указывать цель ссылки (открыть в новой вкладке) для блока изображения.
+13.6:
+- Цвет панели навигации изменен на белый для Android 8.1 и выше
+- Исправлена ошибка отображения списка страниц, теперь они всегда будут упорядочены по алфавиту.
+- Обновление редактора блоков: Поддержка изображений с Pexels и возможности выравнивания изображений.
+
 </ru-RU>
 <sv-SE>
-13.5:
-* Blockredigeraren: Vi har korrigerat ett problem där endast ett bildblock eller videoblock lades till trots att flera mediafiler var valda. Det finns en ny blocktyp ”Media och Text” och vi har lagt till ett alternativ för länkmål (öppna i ny flik) i bildblocket.
+13.6:
+- Vi har uppdaterat navigationslisten färg till vitt i Android 8.1 och senare.
+- Fel i sorteringen av listan med sidor har rättats så att sidorna alltid ska visas i bokstavsordning.
+- Uppdateringar av blockredigeraren: Stöd för Pexels-bilder och justering av bilder i sidled.
+
 </sv-SE>
 <tr-TR>
-13.5:
-* Blok Düzenleyici: Bir video yada gösel bloğuna birden fazla medya seçimi seçimi yapıldığında oluşan bir sorunu çözdük. Yeni bir “Ortam ve metin” bloğu var ve görsel bloğuna bir bağlantı hedefi (Yeni sekmede aç) seçeneği ekledik.
+13.6:
+- Gezinti çubuğunun rengini Android 8.1 ve üzeri sürümlerde beyaza dönüştürdük.
+- Sayfa listesindeki hatalar düzeltildi, bu yüzden sayfalar her zaman alfabetik sırada görünüyor.
+- Block düzenleyici güncellemeleri: Pexels görselleri ve görüntü hizalama seçenekleri için destek eklendi.
 </tr-TR>
 <zh-CN>
-13.5：
-* 区块编辑器：我们修复了选择了多个媒体文件但仅添加一张图片或一个视频区块的问题。推出新的“媒体文件和文本”区块，而且我们已经为“图片”区块添加“链接目标”（在新标签页中打开）选项。
+13.6：
+- 在 Android 8.1 及更高版本中，我们已将导航栏颜色更新为白色。
+- 修复了页面列表排序中的错误，因此页面始终按字母顺序显示。
+- 更新了区块编辑器：增加了对 Pexels 图片和图片对齐选项的支持。
+
 </zh-CN>
 <zh-TW>
-13.5：
-* 區塊編輯器：我們修正了多種媒體選項只能新增一個圖片或視訊區塊的問題。有一個新的「媒體和文字」區塊，我們已將「連結目標」(在新分頁中開啟) 選項新增至圖片區塊。
+13.6：
+- 我們已將 Android 8.1 與更新版本的導覽列顏色改成白色。
+- 頁面清單排序的錯誤已經修正，現在頁面將一律依字母順序顯示。
+* 區塊編輯器更新：新增對 Pexels 圖片和圖片對齊選項的支援。
+
 </zh-TW>
