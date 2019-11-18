@@ -954,30 +954,38 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon, boolean allowMultipleSelection) {
         mEditorPhotoPicker.hidePhotoPicker();
-        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
-        switch (icon) {
-            case ANDROID_CAPTURE_PHOTO:
-                launchCamera();
-                break;
-            case ANDROID_CAPTURE_VIDEO:
-                launchVideoCamera();
-                break;
-            case ANDROID_CHOOSE_PHOTO:
-                launchPictureLibrary();
-                break;
-            case ANDROID_CHOOSE_VIDEO:
-                launchVideoLibrary();
-                break;
-            case WP_MEDIA:
-                ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
-                break;
-            case STOCK_MEDIA:
-                ActivityLauncher.showStockMediaPickerForResult(
-                        this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
-                break;
-            case GIPHY:
-                ActivityLauncher.showGiphyPickerForResult(this, mSite, RequestCodes.GIPHY_PICKER);
-                break;
+        if (!icon.requiresUploadPermission() || WPMediaUtils.currentUserCanUploadMedia(mSite)) {
+            mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
+            switch (icon) {
+                case ANDROID_CAPTURE_PHOTO:
+                    launchCamera();
+                    break;
+                case ANDROID_CAPTURE_VIDEO:
+                    launchVideoCamera();
+                    break;
+                case ANDROID_CHOOSE_PHOTO_OR_VIDEO:
+                    WPMediaUtils.launchMediaLibrary(this, allowMultipleSelection);
+                    break;
+                case ANDROID_CHOOSE_PHOTO:
+                    launchPictureLibrary();
+                    break;
+                case ANDROID_CHOOSE_VIDEO:
+                    launchVideoLibrary();
+                    break;
+                case WP_MEDIA:
+                    ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+                    break;
+                case STOCK_MEDIA:
+                    ActivityLauncher.showStockMediaPickerForResult(
+                            this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
+                    break;
+                case GIPHY:
+                    ActivityLauncher.showGiphyPickerForResult(this, mSite, RequestCodes.GIPHY_PICKER);
+                    break;
+            }
+        } else {
+            WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_error_no_permission_upload,
+                            Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -2733,8 +2741,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
-        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
-        WPMediaUtils.launchMediaLibrary(this, allowMultipleSelection);
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO, allowMultipleSelection);
     }
 
     @Override
