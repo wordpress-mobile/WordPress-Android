@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-25 06:27:21+0000
+Translation-Revision-Date: 2019-11-06 07:49:44+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Notificări</string>
+    <string name="master_switch_default_title_off">Oprite</string>
+    <string name="master_switch_default_title_on">Pornite</string>
+    <string name="notifications_tab_dialog_master_off_message">Pornirea notificărilor pentru acest sit va dezactiva afișarea notificărilor în fila notificări pentru acest sit. După pornirea notificărilor pentru acest sit, poți ajusta ce fel de notificări vrei să vezi.</string>
+    <string name="notifications_tab_dialog_master_off_title">Pentru a vedea notificările în fila notificări pentru acest sit, pornește notificările pe sit.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Activează afișarea notificărilor în fila notificări pentru acest sit</string>
+    <string name="notifications_tab_dialog_master_hint_on">Dezactivează afișarea notificărilor în fila notificări pentru acest sit</string>
+    <string name="notifications_tab_dialog_master_status_off">Notificări pentru acest sit</string>
+    <string name="notifications_tab_dialog_master_status_on">Notificări pentru acest sit</string>
+    <string name="dialog_gutenberg_informative_description_page">Acum folosești editorul de blocuri pentru pagini noi - foarte bine! Dacă vrei să treci la editorul clasic, mergi la „Situl meu” > „Setări sit”.</string>
+    <string name="dialog_gutenberg_informative_description_post">Acum folosești editorul de blocuri pentru articole noi - foarte bine! Dacă vrei să treci la editorul clasic, mergi la „Situl meu” > „Setări sit”.</string>
     <string name="pick_media">Adaugă imagine sau video</string>
     <string name="error_post_not_submitted_retrying">Nu am putut trimite acest articol pentru verificare, dar vom încerca din nou mai târziu.</string>
     <string name="error_post_not_scheduled_retrying">Nu am putut programa acest articol, dar vom încerca din nou mai târziu.</string>
@@ -117,8 +128,6 @@ Language: ro
     <string name="stats_bar_chart_content_description">Grafice pentru vizualizările sitului.</string>
     <string name="stats_loading_card">Încarc datele pentru cartușul selectat</string>
     <string name="site_settings_editor">Editor</string>
-    <string name="dialog_gutenberg_informative_description_page">În prezent, folosești editorul de blocuri pentru a crea pagini noi. Vrei să folosești implicit editorul clasic? Mergi la Setări sit.</string>
-    <string name="dialog_gutenberg_informative_description_post">În prezent, folosești editorul de blocuri pentru a crea articole noi. Vrei să folosești implicit editorul clasic? Mergi la Setări sit.</string>
     <string name="description_expand">Extinde</string>
     <string name="description_collapse">Restrânge</string>
     <string name="editor_retry_failed_uploads">Reîncearcă încărcarea</string>
