@@ -22,10 +22,6 @@ public class MediaSqlUtils {
         return getAllSiteMediaQuery(siteModel).getAsModel();
     }
 
-    public static WellCursor<MediaModel> getAllSiteMediaAsCursor(SiteModel siteModel) {
-        return getAllSiteMediaQuery(siteModel).getAsCursor();
-    }
-
     public static List<MediaModel> getMediaWithStates(SiteModel site, List<String> uploadStates) {
         return getMediaWithStatesQuery(site, uploadStates).getAsModel();
     }
@@ -97,10 +93,6 @@ public class MediaSqlUtils {
         return getSiteMediaWithIdsQuery(siteModel, mediaIds).getAsModel();
     }
 
-    public static WellCursor<MediaModel> getSiteMediaWithIdsAsCursor(SiteModel siteModel, List<Long> mediaIds) {
-        return getSiteMediaWithIdsQuery(siteModel, mediaIds).getAsCursor();
-    }
-
     private static SelectQuery<MediaModel> getSiteMediaWithIdsQuery(SiteModel siteModel, List<Long> mediaIds) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
@@ -142,11 +134,6 @@ public class MediaSqlUtils {
         return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, MediaUtils.MIME_TYPE_APPLICATION).getAsModel();
     }
 
-    public static WellCursor<MediaModel> searchSiteMediaAsCursor(SiteModel siteModel,
-                                                                 String searchTerm) {
-        return searchSiteMediaQuery(siteModel, searchTerm).getAsCursor();
-    }
-
     private static SelectQuery<MediaModel> searchSiteMediaQuery(SiteModel siteModel,
                                                                 String searchTerm) {
         return WellSql.select(MediaModel.class)
@@ -182,20 +169,12 @@ public class MediaSqlUtils {
         return getSiteImagesQuery(siteModel).getAsModel();
     }
 
-    public static WellCursor<MediaModel> getSiteImagesAsCursor(SiteModel siteModel) {
-        return getSiteImagesQuery(siteModel).getAsCursor();
-    }
-
     private static SelectQuery<MediaModel> getSiteImagesQuery(SiteModel siteModel) {
         return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_IMAGE);
     }
 
     public static List<MediaModel> getSiteImagesExcluding(SiteModel siteModel, List<Long> filter) {
         return getSiteImagesExcludingQuery(siteModel, filter).getAsModel();
-    }
-
-    public static WellCursor<MediaModel> getSiteImagesExcludingAsCursor(SiteModel siteModel, List<Long> filter) {
-        return getSiteImagesExcludingQuery(siteModel, filter).getAsCursor();
     }
 
     public static List<MediaModel> getSiteVideos(SiteModel siteModel) {
@@ -247,10 +226,6 @@ public class MediaSqlUtils {
 
     public static List<MediaModel> matchSiteMedia(SiteModel siteModel, String column, Object value) {
         return matchSiteMediaQuery(siteModel, column, value).getAsModel();
-    }
-
-    public static WellCursor<MediaModel> matchSiteMediaAsCursor(SiteModel siteModel, String column, Object value) {
-        return matchSiteMediaQuery(siteModel, column, value).getAsCursor();
     }
 
     private static SelectQuery<MediaModel> matchSiteMediaQuery(SiteModel siteModel, String column, Object value) {

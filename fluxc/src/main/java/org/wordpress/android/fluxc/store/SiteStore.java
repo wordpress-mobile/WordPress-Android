@@ -1073,13 +1073,6 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Returns all sites in the store as a {@link Cursor}.
-     */
-    public Cursor getSitesCursor() {
-        return WellSql.select(SiteModel.class).getAsCursor();
-    }
-
-    /**
      * Returns the number of sites of any kind in the store.
      */
     public long getSitesCount() {
