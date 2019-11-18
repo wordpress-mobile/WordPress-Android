@@ -271,7 +271,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                             .newBundle(mEditComment.getText().toString(),
                                     mEditComment.getSelectionStart(),
                                     mEditComment.getSelectionEnd(),
-                                    mSite);
+                                    mBlogId
+                            );
 
                     new Builder(ReaderCommentListActivity.this)
                         .setTitle(R.string.comment)

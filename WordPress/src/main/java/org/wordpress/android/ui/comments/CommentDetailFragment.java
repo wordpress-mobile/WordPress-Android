@@ -322,7 +322,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                             mEditReply.getText().toString(),
                             mEditReply.getSelectionStart(),
                             mEditReply.getSelectionEnd(),
-                            mSite
+                            mSite.getSiteId()
                                                        );
 
                     new Builder(requireContext())
