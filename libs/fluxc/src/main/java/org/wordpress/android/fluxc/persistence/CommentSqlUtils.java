@@ -127,11 +127,11 @@ public class CommentSqlUtils {
                 .getAsModel();
     }
 
-    public static long getCommentsCountForSite(SiteModel site, CommentStatus... statuses) {
+    public static int getCommentsCountForSite(SiteModel site, CommentStatus... statuses) {
         if (site == null) {
             return 0;
         }
 
-        return getCommentsQueryForSite(site, statuses).count();
+        return (int) getCommentsQueryForSite(site, statuses).count();
     }
 }

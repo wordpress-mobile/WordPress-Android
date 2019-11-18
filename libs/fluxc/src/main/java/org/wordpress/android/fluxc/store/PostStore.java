@@ -564,7 +564,7 @@ public class PostStore extends Store {
     /**
      * returns the total number of posts with local changes across all sites
      */
-    public long getNumLocalChanges() {
+    public int getNumLocalChanges() {
         return mPostSqlUtils.getNumLocalChanges();
     }
 
