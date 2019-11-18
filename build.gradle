@@ -106,6 +106,5 @@ buildScan {
 
 ext {
     daggerVersion = '2.22.1'
-    // FIXME update to FluxC release
-    fluxCVersion = 'd058757009410e19dfbf86cb0a6895d90b97cf43'
+    fluxCVersion = '1.5.3-beta-1'
 }
