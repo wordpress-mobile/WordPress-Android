@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -80,6 +81,7 @@ public class UploadService extends Service {
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
     @Inject UploadStore mUploadStore;
+    @Inject SystemNotificationsTracker mSystemNotificationsTracker;
 
     @Override
     public void onCreate() {
@@ -95,7 +97,7 @@ public class UploadService extends Service {
         }
 
         if (mPostUploadNotifier == null) {
-            mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this);
+            mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this, mSystemNotificationsTracker);
         }
 
         if (mPostUploadHandler == null) {
@@ -973,7 +975,7 @@ public class UploadService extends Service {
         for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
             if (PostUtils.isPostCurrentlyBeingEdited(postModel)) {
                 // don't touch a Post that is being currently open in the Editor.
-                break;
+                continue;
             }
 
             if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
@@ -1000,7 +1002,8 @@ public class UploadService extends Service {
                                 new PostEvents.PostUploadCanceled(postModel));
                     } else {
                         // Do not re-enqueue a post that has already failed
-                        if (isError != null && isError && mUploadStore.isFailedPost(post)) {
+                        if (isError != null && isError && post.getId() == updatedPost.getId() && mUploadStore
+                                .isFailedPost(post)) {
                             continue;
                         }
                         // TODO Should do some extra validation here

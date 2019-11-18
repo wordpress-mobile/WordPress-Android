@@ -1312,6 +1312,8 @@ public class ReaderPostListFragment extends Fragment
         mActionableEmptyView.image.setVisibility(View.VISIBLE);
         mActionableEmptyView.title.setText(R.string.reader_empty_saved_posts_title);
         mActionableEmptyView.subtitle.setText(ssb);
+        mActionableEmptyView.subtitle
+                .setContentDescription(getString(R.string.reader_empty_saved_posts_content_description));
         mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
         mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_followed);
         mActionableEmptyView.button.setVisibility(View.VISIBLE);
@@ -1375,6 +1377,7 @@ public class ReaderPostListFragment extends Fragment
     private void showEmptyView() {
         if (isAdded()) {
             mActionableEmptyView.setVisibility(View.VISIBLE);
+            mActionableEmptyView.announceEmptyStateForAccessibility();
         }
     }
 
@@ -1429,6 +1432,7 @@ public class ReaderPostListFragment extends Fragment
                 }
             } else {
                 hideEmptyView();
+                announceListStateForAccessibility();
                 if (mRestorePosition > 0) {
                     AppLog.d(T.READER, "reader post list > restoring position");
                     mRecyclerView.scrollRecycleViewToPosition(mRestorePosition);
@@ -1470,6 +1474,13 @@ public class ReaderPostListFragment extends Fragment
                     }
                 }
             };
+
+    private void announceListStateForAccessibility() {
+        if (getView() != null) {
+            getView().announceForAccessibility(getString(R.string.reader_acessibility_list_loaded,
+                    getPostAdapter().getItemCount()));
+        }
+    }
 
     private void showBookmarksSavedLocallyDialog() {
         mBookmarksSavedLocallyDialog = new AlertDialog.Builder(getActivity())
@@ -2306,7 +2317,6 @@ public class ReaderPostListFragment extends Fragment
     public static void resetLastUpdateDate() {
         mLastAutoUpdateDt = null;
     }
-
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
 
