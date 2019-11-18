@@ -1122,8 +1122,8 @@ public class SiteStore extends Store {
      * Returns the number of sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected
      * via WPCom REST API).
      */
-    public long getSitesAccessedViaWPComRestCount() {
-        return SiteSqlUtils.getSitesAccessedViaWPComRest().count();
+    public int getSitesAccessedViaWPComRestCount() {
+        return (int) SiteSqlUtils.getSitesAccessedViaWPComRest().count();
     }
 
     /**
@@ -1137,8 +1137,8 @@ public class SiteStore extends Store {
     /**
      * Returns the number of .COM sites in the store.
      */
-    public long getWPComSitesCount() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).count();
+    public int getWPComSitesCount() {
+        return (int) SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).count();
     }
 
     /**
@@ -1175,8 +1175,8 @@ public class SiteStore extends Store {
     /**
      * Returns the number of sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
-    public long getSitesAccessedViaXMLRPCCount() {
-        return SiteSqlUtils.getSitesAccessedViaXMLRPC().count();
+    public int getSitesAccessedViaXMLRPCCount() {
+        return (int) SiteSqlUtils.getSitesAccessedViaXMLRPC().count();
     }
 
     /**
@@ -1211,8 +1211,8 @@ public class SiteStore extends Store {
     /**
      * Returns the number of visible .COM sites.
      */
-    public long getVisibleSitesAccessedViaWPComCount() {
-        return SiteSqlUtils.getVisibleSitesAccessedViaWPCom().count();
+    public int getVisibleSitesAccessedViaWPComCount() {
+        return (int) SiteSqlUtils.getVisibleSitesAccessedViaWPCom().count();
     }
 
     /**
