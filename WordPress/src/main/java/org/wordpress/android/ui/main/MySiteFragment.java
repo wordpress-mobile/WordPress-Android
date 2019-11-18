@@ -619,7 +619,10 @@ public class MySiteFragment extends Fragment implements
 
     private void viewPages() {
         requestNextStepOfActiveQuickStartTask();
-        ActivityLauncher.viewCurrentBlogPages(requireActivity(), getSelectedSite());
+        SiteModel selectedSite = getSelectedSite();
+        if (selectedSite != null) {
+            ActivityLauncher.viewCurrentBlogPages(requireActivity(), selectedSite);
+        }
     }
 
     private void viewStats() {

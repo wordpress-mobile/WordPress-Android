@@ -243,6 +243,7 @@
     <string name="page_parent_changed">Page parent has been changed</string>
 
     <!-- posts tab -->
+    <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="untitled">Untitled</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="local_draft">Local draft</string>
