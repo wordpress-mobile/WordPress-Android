@@ -197,7 +197,7 @@ public class CommentStore extends Store {
         return CommentSqlUtils.getCommentsForSite(site, order, statuses);
     }
 
-    public long getNumberOfCommentsForSite(SiteModel site, CommentStatus... statuses) {
+    public int getNumberOfCommentsForSite(SiteModel site, CommentStatus... statuses) {
         return CommentSqlUtils.getCommentsCountForSite(site, statuses);
     }
 

@@ -265,14 +265,14 @@ public class PostSqlUtils {
                 .endGroup().endGroup().endWhere().exists();
     }
 
-    public long getNumLocalChanges() {
-        return WellSql.select(PostModel.class)
-                .where().beginGroup()
-                .equals(PostModelTable.IS_LOCAL_DRAFT, true)
-                .or()
-                .equals(PostModelTable.IS_LOCALLY_CHANGED, true)
-                .endGroup().endWhere()
-                .count();
+    public int getNumLocalChanges() {
+        return (int) WellSql.select(PostModel.class)
+                            .where().beginGroup()
+                            .equals(PostModelTable.IS_LOCAL_DRAFT, true)
+                            .or()
+                            .equals(PostModelTable.IS_LOCALLY_CHANGED, true)
+                            .endGroup().endWhere()
+                            .count();
     }
 
     public int updatePostsAutoSave(SiteModel site, final PostRemoteAutoSaveModel autoSaveModel) {
