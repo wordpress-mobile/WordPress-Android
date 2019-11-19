@@ -151,7 +151,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
             Window window = getWindow();
             window.setStatusBarColor(getColor(R.color.white));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.getDecorView().setSystemUiVisibility(
+                    window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
 
