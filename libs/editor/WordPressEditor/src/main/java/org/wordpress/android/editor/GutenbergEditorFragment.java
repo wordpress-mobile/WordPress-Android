@@ -178,14 +178,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 continue;
             }
 
-            // Add the mapping english => [ translated ] to the bundle if both string are not empty
-            String currentResourceString = currentResources.getString(resourceId);
-            String englishResourceString = englishResources.getString(resourceId);
-            if (currentResourceString.length() > 0 && englishResourceString.length() > 0) {
-                translations.putStringArrayList(
-                        englishResourceString,
-                        new ArrayList<>(Arrays.asList(currentResourceString))
-                );
+            try {
+                // Add the mapping english => [ translated ] to the bundle if both string are not empty
+                String currentResourceString = currentResources.getString(resourceId);
+                String englishResourceString = englishResources.getString(resourceId);
+                if (currentResourceString.length() > 0 && englishResourceString.length() > 0) {
+                    translations.putStringArrayList(
+                            englishResourceString,
+                            new ArrayList<>(Arrays.asList(currentResourceString))
+                    );
+                }
+            } catch (Resources.NotFoundException rnfe) {
+                AppLog.e(T.EDITOR, rnfe);
             }
         }
 
@@ -211,14 +215,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 continue;
             }
 
-            // Add the mapping english => [ singular, plural ] to the bundle
-            String[] currentResourceStrings = currentResources.getStringArray(resourceId);
-            String[] englishResourceStrings = englishResources.getStringArray(resourceId);
-            if (currentResourceStrings.length > 1 && englishResourceStrings.length > 0) {
-                translations.putStringArrayList(
-                        englishResourceStrings[0],
-                        new ArrayList<>(Arrays.asList(currentResourceStrings))
-                );
+            try {
+                // Add the mapping english => [ singular, plural ] to the bundle
+                String[] currentResourceStrings = currentResources.getStringArray(resourceId);
+                String[] englishResourceStrings = englishResources.getStringArray(resourceId);
+                if (currentResourceStrings.length > 1 && englishResourceStrings.length > 0) {
+                    translations.putStringArrayList(
+                            englishResourceStrings[0],
+                            new ArrayList<>(Arrays.asList(currentResourceStrings))
+                    );
+                }
+            } catch (Resources.NotFoundException rnfe) {
+                AppLog.e(T.EDITOR, rnfe);
             }
         }
 
