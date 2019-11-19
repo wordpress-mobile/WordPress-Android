@@ -1,2 +1,0 @@
-13.5:
-* Editor de bloques: hemos corregido un problema cuando una selección múltiple de medios añade solo un bloque de imagen o vídeo. Hay un nuevo bloque de «Medios y texto» y hemos añadido al bloque de imágenes una opción de enlace de destino (se abre en una nueva pestaña).

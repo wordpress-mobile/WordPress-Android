@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-29 05:56:40+0000
+Translation-Revision-Date: 2019-11-06 07:36:59+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Powiadomienia</string>
+    <string name="master_switch_default_title_off">Wyłączone</string>
+    <string name="master_switch_default_title_on">Włączone</string>
+    <string name="notifications_tab_dialog_master_off_message">Wyłączenie powiadomień dla tej witryny spowoduje zatrzymanie powiadomień w zakładce powiadomienia. Możesz określić jaki typ powiadomień chcesz otrzymywać po włączeniu powiadomień dla tej witryny.</string>
+    <string name="notifications_tab_dialog_master_off_title">Aby zobaczyć zakładkę powiadomień dla tej witryny, włącz powiadomienia dla tej witryny.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Włącz ekran powiadomień na zakładce powiadomień dla tej witryny</string>
+    <string name="notifications_tab_dialog_master_hint_on">Wyłącz ekran powiadomień na zakładce powiadomień dla tej witryny</string>
+    <string name="notifications_tab_dialog_master_status_off">Powiadomienia dla tej witryny</string>
+    <string name="notifications_tab_dialog_master_status_on">Powiadomienia dla tej witryny</string>
+    <string name="dialog_gutenberg_informative_description_page">Dla nowych stron używasz aktualnie edytora blokowego - super! Jeśli chciał(a)byś zmienić na edytor klasysczny przejdź do ekranu \"Moja Witryna\' > \'Ustawienia witryny\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">Dla nowych wpisów używasz aktualnie edytora blokowego - super! Jeśli chciał(a)byś zmienić na edytor klasysczny przejdź do ekranu \"Moja Witryna\' > \'Ustawienia witryny\'.</string>
     <string name="pick_media">Dodaj zdjęcie lub film</string>
     <string name="error_post_not_submitted_retrying">Nie można było przesłać tego wpisu do przeglądu, ale spróbujemy później</string>
     <string name="error_post_not_scheduled_retrying">Nie można było zaplanować daty opublikowania tego wpisu, ale spróbujemy później.</string>
@@ -117,8 +128,6 @@ Language: pl
     <string name="stats_bar_chart_content_description">Wykresy wyświetleń witryny.</string>
     <string name="stats_loading_card">Wczytywanie wybranych danych</string>
     <string name="site_settings_editor">Edytor</string>
-    <string name="dialog_gutenberg_informative_description_page">Aktualnie korzystasz z edytora blokowego do tworzenia nowych stron. Czy chcesz przejść na edytor klasyczny? Przejdź do Ustawień Witryny.</string>
-    <string name="dialog_gutenberg_informative_description_post">Aktualnie korzystasz z edytora blokowego do tworzenia nowych wpisów. Czy chcesz przejść na edytor klasyczny? Przejdź do Ustawień Witryny.</string>
     <string name="description_expand">Rozwiń</string>
     <string name="description_collapse">Zwiń</string>
     <string name="editor_retry_failed_uploads">Prześlij ponownie</string>
