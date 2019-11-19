@@ -1,2 +1,0 @@
-13.5:
-* Block-Editor: Wir haben eine Fehler behoben, bei dem die Auswahl mehrerer Medien nur einen Bild- oder Videoblock hinzugefügt hat. Es gibt einen neuen Block „Medien und Text“, und wir haben die Option „Ziel verlinken (In neuem Tab öffnen)“ zum Bildblock hinzugefügt.

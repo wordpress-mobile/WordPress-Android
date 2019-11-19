@@ -66,6 +66,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -236,6 +237,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             ViewGroup postHeaderView = itemView.findViewById(R.id.layout_post_header);
             mFollowButton = postHeaderView.findViewById(R.id.follow_button);
+
+            ViewUtilsKt.expandTouchTargetArea(mLayoutDiscover, R.dimen.reader_discover_layout_extra_padding, true);
+            ViewUtilsKt.expandTouchTargetArea(mVisit, R.dimen.reader_visit_layout_extra_padding, false);
+            ViewUtilsKt.expandTouchTargetArea(mImgMore, R.dimen.reader_more_image_extra_padding, false);
 
             // show post in internal browser when "visit" is clicked
             View.OnClickListener visitListener = new View.OnClickListener() {

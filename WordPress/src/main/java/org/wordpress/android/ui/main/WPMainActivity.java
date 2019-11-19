@@ -57,6 +57,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
@@ -174,6 +175,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject QuickStartStore mQuickStartStore;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
+    @Inject GCMMessageHandler mGCMMessageHandler;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -445,7 +447,7 @@ public class WPMainActivity extends AppCompatActivity implements
         }
 
         if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
-            GCMMessageService.remove2FANotification(this);
+            mGCMMessageHandler.remove2FANotification(this);
 
             NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(
                     getIntent(),
@@ -482,10 +484,10 @@ public class WPMainActivity extends AppCompatActivity implements
 
         // it could be that a notification has been tapped but has been removed by the time we reach
         // here. It's ok to compare to <=1 as it could be zero then.
-        if (GCMMessageService.getNotificationsCount() <= 1) {
+        if (mGCMMessageHandler.getNotificationsCount() <= 1) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
-                GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
+                mGCMMessageHandler.bumpPushNotificationsTappedAnalytics(noteId);
                 // if voice reply is enabled in a wearable, it will come through the remoteInput
                 // extra EXTRA_VOICE_OR_INLINE_REPLY
                 String voiceReply = null;
@@ -516,10 +518,10 @@ public class WPMainActivity extends AppCompatActivity implements
             }
         } else {
             // mark all tapped here
-            GCMMessageService.bumpPushNotificationsTappedAllAnalytics();
+            mGCMMessageHandler.bumpPushNotificationsTappedAllAnalytics();
         }
 
-        GCMMessageService.removeAllNotifications(this);
+        mGCMMessageHandler.removeAllNotifications(this);
     }
 
     /**
@@ -575,7 +577,7 @@ public class WPMainActivity extends AppCompatActivity implements
         if (currentPageType == PageType.NOTIFS) {
             // if we are presenting the notifications list, it's safe to clear any outstanding
             // notifications
-            GCMMessageService.removeAllNotifications(this);
+            mGCMMessageHandler.removeAllNotifications(this);
         }
 
         announceTitleForAccessibility(currentPageType);

@@ -45,6 +45,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequeste
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
@@ -330,6 +331,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override public String onAuthHeaderRequested(String url) {
                         return mEditorFragmentListener.onAuthHeaderRequested(url);
                     }
+                },
+                new OnImageFullscreenPreviewListener() {
+                    @Override public void onImageFullscreenPreviewClicked(String mediaUrl) {
+                        mEditorImagePreviewListener.onImagePreviewRequested(mediaUrl);
+                    }
                 });
 
         // request dependency injection. Do this after setting min/max dimensions
@@ -531,6 +537,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mEditorDragAndDropListener = (EditorDragAndDropListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EditorDragAndDropListener");
+        }
+
+        try {
+            mEditorImagePreviewListener = (EditorImagePreviewListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement EditorImagePreviewListener");
         }
     }
 

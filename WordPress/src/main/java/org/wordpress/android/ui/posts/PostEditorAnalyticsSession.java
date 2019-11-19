@@ -2,7 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -51,7 +51,7 @@ public class PostEditorAnalyticsSession implements Serializable {
         PUBLISH
     }
 
-    PostEditorAnalyticsSession(Editor editor, PostModel post, SiteModel site, boolean isNewPost) {
+    PostEditorAnalyticsSession(Editor editor, PostImmutableModel post, SiteModel site, boolean isNewPost) {
         // fill in which the current Editor is
         mCurrentEditor = editor;
 

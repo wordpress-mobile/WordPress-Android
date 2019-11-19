@@ -23,6 +23,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 
 import java.lang.ref.WeakReference;
 
@@ -136,6 +137,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             mTxtTagName = (TextView) view.findViewById(R.id.text_topic);
             mBtnRemove = (ImageButton) view.findViewById(R.id.btn_remove);
             ReaderUtils.setBackgroundToRoundRipple(mBtnRemove);
+            ViewUtilsKt.expandTouchTargetArea(mBtnRemove, R.dimen.reader_remove_button_extra_padding, false);
         }
     }
 
