@@ -460,7 +460,7 @@ class ReaderPostDetailFragment : Fragment(),
                         dispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload))
                         ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true)
                     }
-                    .show()
+                    .addToSequencer()
         }
     }
 
@@ -573,7 +573,7 @@ class ReaderPostDetailFragment : Fragment(),
                             .track(READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE)
                     ActivityLauncher.viewSavedPostsListInReader(activity)
                 }
-                .show()
+                .addToSequencer()
     }
 
     /*
@@ -902,8 +902,7 @@ class ReaderPostDetailFragment : Fragment(),
             WPSnackbar.make(
                     view!!, R.string.reader_snackbar_err_cannot_like_post_logged_out,
                     Snackbar.LENGTH_INDEFINITE
-            )
-                    .setAction(R.string.sign_in, mSignInClickListener).show()
+            ).setAction(R.string.sign_in, mSignInClickListener).show()
             return
         }
 

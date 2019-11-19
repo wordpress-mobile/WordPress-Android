@@ -284,7 +284,7 @@ class PostsListActivity : AppCompatActivity(),
                     super.onDismissed(transientBottomBar, event)
                 }
             })
-            snackBar.show()
+            snackBar.addToSequencer()
         }
     }
 

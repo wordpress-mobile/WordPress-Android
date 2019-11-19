@@ -113,11 +113,11 @@ class StatsFragment : DaggerFragment() {
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
                 if (holder.buttonTitleRes == null) {
-                    WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                    WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).addToSequencer()
                 } else {
                     val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
                     snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
-                    snackbar.show()
+                    snackbar.addToSequencer()
                 }
             }
         })

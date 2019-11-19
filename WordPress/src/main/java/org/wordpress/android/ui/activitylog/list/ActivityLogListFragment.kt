@@ -109,7 +109,7 @@ class ActivityLogListFragment : Fragment() {
         viewModel.showSnackbarMessage.observe(this, Observer { message ->
             val parent: View? = activity?.findViewById(android.R.id.content)
             if (message != null && parent != null) {
-                WPSnackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
+                WPSnackbar.make(parent, message, Snackbar.LENGTH_LONG).addToSequencer()
             }
         })
 

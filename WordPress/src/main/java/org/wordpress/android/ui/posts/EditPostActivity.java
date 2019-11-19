@@ -583,7 +583,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (messageHolder != null) {
                 WPSnackbar
                         .make(findViewById(R.id.editor_activity), messageHolder.getMessageRes(), Snackbar.LENGTH_SHORT)
-                        .show();
+                        .addToSequencer();
             }
         });
         mEditorMedia.getToastMessage().observe(this, event -> {
@@ -1795,7 +1795,7 @@ public class EditPostActivity extends AppCompatActivity implements
                       mEditPostRepository.undo();
                       refreshEditorContent();
                   })
-                  .show();
+                  .addToSequencer();
 
         updatePostLoadingAndDialogState(PostLoadingState.NONE);
     }

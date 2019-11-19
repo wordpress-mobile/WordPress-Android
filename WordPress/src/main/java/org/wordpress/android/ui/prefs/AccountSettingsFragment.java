@@ -375,7 +375,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
             if (username != null) {
                 WPSnackbar.make(getView(),
                         String.format(getString(R.string.settings_username_changer_toast_content), username),
-                        Snackbar.LENGTH_LONG).show();
+                        Snackbar.LENGTH_LONG).addToSequencer();
                 mUsernamePreference.setSummary(username);
             }
         }
