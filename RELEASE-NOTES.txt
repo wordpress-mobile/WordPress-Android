@@ -7,6 +7,7 @@
 * Block editor: Images clickable for fullscreen preview
 * Fixed time displayed on Post Conflict Detected and Unpublished Revision dialogs
 * Block editor: Fix issue when removing image/page break block crashes the app
+* Removed support for Giphy
  
 13.6
 -----

@@ -99,7 +99,6 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
-import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -976,9 +975,6 @@ public class EditPostActivity extends AppCompatActivity implements
             case STOCK_MEDIA:
                 ActivityLauncher.showStockMediaPickerForResult(
                         this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
-                break;
-            case GIPHY:
-                ActivityLauncher.showGiphyPickerForResult(this, mSite, RequestCodes.GIPHY_PICKER);
                 break;
         }
     }
@@ -2516,12 +2512,6 @@ public class EditPostActivity extends AppCompatActivity implements
                         long[] mediaIds = data.getLongArrayExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS);
                         mEditorMedia
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
-                    }
-                    break;
-                case RequestCodes.GIPHY_PICKER:
-                    if (data.hasExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                        int[] localIds = data.getIntArrayExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
-                        mEditorMedia.addMediaFromGiphyToPostAsync(localIds);
                     }
                     break;
                 case RequestCodes.HISTORY_DETAIL:

@@ -36,7 +36,6 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
-import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -148,17 +147,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, StockMediaPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(StockMediaPickerActivity.KEY_REQUEST_CODE, requestCode);
-
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    public static void showGiphyPickerForResult(Activity activity, @NonNull SiteModel site, int requestCode) {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("from", activity.getClass().getSimpleName());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_ACCESSED, properties);
-
-        Intent intent = new Intent(activity, GiphyPickerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
 
         activity.startActivityForResult(intent, requestCode);
     }

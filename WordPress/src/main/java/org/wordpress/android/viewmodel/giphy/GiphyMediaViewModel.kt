@@ -2,7 +2,6 @@ package org.wordpress.android.viewmodel.giphy
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
-import com.giphy.sdk.core.models.Media
 
 /**
  * A data-representation of [GiphyMediaViewHolder]
