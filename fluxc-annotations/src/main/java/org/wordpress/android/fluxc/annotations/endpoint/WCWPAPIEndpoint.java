@@ -7,6 +7,8 @@ public class WCWPAPIEndpoint {
 
     private static final String WC_PREFIX_V4 = "wc/v4";
 
+    private static final String WC_PREFIX_V4_ANALYTICS = "wc-analytics";
+
     private final String mEndpoint;
 
     public WCWPAPIEndpoint(String endpoint) {
@@ -35,5 +37,9 @@ public class WCWPAPIEndpoint {
 
     public String getPathV4() {
         return "/" + WC_PREFIX_V4 + mEndpoint;
+    }
+
+    public String getPathV4Analytics() {
+        return "/" + WC_PREFIX_V4_ANALYTICS + mEndpoint;
     }
 }
