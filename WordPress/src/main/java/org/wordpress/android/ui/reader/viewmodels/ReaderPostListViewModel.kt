@@ -51,8 +51,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val _shouldShowSubFilters = MutableLiveData<Boolean>()
     val shouldShowSubFilters: LiveData<Boolean> = _shouldShowSubFilters
 
-    private val _currentTagInfo = SingleLiveEvent<CurrentTagInfo>()
-    val currentTagInfo: LiveData<CurrentTagInfo> = _currentTagInfo
+    private val _readerModeInfo = SingleLiveEvent<ReaderModeInfo>()
+    val readerModeInfo: LiveData<ReaderModeInfo> = _readerModeInfo
 
     /**
      * First tag for which the card was shown.
@@ -203,7 +203,7 @@ class ReaderPostListViewModel @Inject constructor(
                 ))
     }
 
-    fun setCurrentSubfilter(
+    fun applySubfilter(
         subfilterListItem: SubfilterListItem,
         requestNewerPosts: Boolean
     ) {
@@ -212,7 +212,7 @@ class ReaderPostListViewModel @Inject constructor(
             SubfilterListItem.ItemType.DIVIDER -> {
                 // nop
             }
-            SubfilterListItem.ItemType.SITE_ALL -> _currentTagInfo.value = (CurrentTagInfo(
+            SubfilterListItem.ItemType.SITE_ALL -> _readerModeInfo.value = (ReaderModeInfo(
                     ReaderUtils.getDefaultTag(),
                     ReaderPostListType.TAG_FOLLOWED,
                     0,
@@ -227,7 +227,7 @@ class ReaderPostListViewModel @Inject constructor(
                 else
                     subfilterListItem.blog.blogId
 
-                _currentTagInfo.value = (CurrentTagInfo(
+                _readerModeInfo.value = (ReaderModeInfo(
                         null,
                         ReaderPostListType.BLOG_PREVIEW,
                         currentBlogId,
@@ -236,7 +236,7 @@ class ReaderPostListViewModel @Inject constructor(
                         subfilterListItem.label
                 ))
             }
-            SubfilterListItem.ItemType.TAG -> _currentTagInfo.value = (CurrentTagInfo(
+            SubfilterListItem.ItemType.TAG -> _readerModeInfo.value = (ReaderModeInfo(
                     (subfilterListItem as Tag).tag,
                     ReaderPostListType.TAG_FOLLOWED,
                     0,

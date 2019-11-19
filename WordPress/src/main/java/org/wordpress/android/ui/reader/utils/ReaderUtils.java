@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 public class ReaderUtils {
     public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
         return getResizedImageUrl(imageUrl, width, height, isPrivate, PhotonUtils.Quality.MEDIUM);
@@ -340,17 +342,33 @@ public class ReaderUtils {
         }
     }
 
-    public static boolean isValidTagForSharedPrefs(
+    public static ReaderTag getValidTagForSharedPrefs(
             ReaderTag tag,
             boolean isTopLevelReader,
             FilteredRecyclerView recyclerView
     ) {
+        ReaderTag validTag = tag;
+
         if (isTopLevelReader) {
-            return (recyclerView != null && recyclerView.isValidFilter(tag))
-                   ||
-                   (tag.isFollowedSites() || tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked());
-        } else {
-            return true;
+            if (tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked()
+                    ||
+                (recyclerView != null && recyclerView.isValidFilter(tag))
+            ) {
+                validTag = tag;
+            } else {
+                if (isFollowing(tag, isTopLevelReader, recyclerView)) {
+                    validTag = ReaderUtils.getDefaultTag();
+
+                    ReaderUtils.getDefaultTag();
+                    // it's possible the default tag won't exist if the user just changed the app's
+                    // language, in which case default to the first tag in the table
+                    if (!ReaderTagTable.tagExists(tag)) {
+                        validTag = ReaderTagTable.getFirstTag();
+                    }
+                }
+            }
         }
+
+        return validTag;
     }
 }

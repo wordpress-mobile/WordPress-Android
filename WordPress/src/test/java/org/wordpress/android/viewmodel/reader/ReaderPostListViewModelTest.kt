@@ -179,7 +179,6 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun verifySetDefaultSubfilter() {
-        val tag = ReaderTag("", "", "", "", BOOKMARKED)
         var item: SubfilterListItem? = null
         viewModel.setDefaultSubfilter()
 

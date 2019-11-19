@@ -105,7 +105,7 @@ import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarte
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.reader.viewmodels.CurrentTagInfo;
+import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.utils.UiHelpers;
@@ -397,7 +397,7 @@ public class ReaderPostListFragment extends Fragment
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
                 )) {
-                    mViewModel.setCurrentSubfilter(subfilterListItem, true);
+                  mViewModel.applySubfilter(subfilterListItem, true);
                 }
             });
 
@@ -405,19 +405,19 @@ public class ReaderPostListFragment extends Fragment
                 mSubFilterComponent.setVisibility(show ? View.VISIBLE : View.GONE);
             });
 
-            mViewModel.getCurrentTagInfo().observe(getActivity(), currentTagInfo -> {
-                if (currentTagInfo != null) {
-                    changeCurrentTagInfo(currentTagInfo);
+            mViewModel.getReaderModeInfo().observe(getActivity(), readerModeInfo -> {
+                if (readerModeInfo != null) {
+                    changeReaderMode(readerModeInfo);
 
                     if (mBottomSheet != null) {
                         mBottomSheet.dismiss();
                         mBottomSheet = null;
                     }
-                    if (currentTagInfo.getLabel() != null) {
+                    if (readerModeInfo.getLabel() != null) {
                         mSubFilterTitle.setText(
                                 mUiHelpers.getTextOfUiString(
                                         requireActivity(),
-                                        currentTagInfo.getLabel()
+                                        readerModeInfo.getLabel()
                                 )
                         );
                     }
@@ -436,17 +436,17 @@ public class ReaderPostListFragment extends Fragment
         );
     }
 
-    private void changeCurrentTagInfo(CurrentTagInfo currentTagInfo) {
-        if (currentTagInfo.getTag() != null) {
-            mCurrentTag = currentTagInfo.getTag();
+    private void changeReaderMode(ReaderModeInfo readerModeInfo) {
+        if (readerModeInfo.getTag() != null) {
+            mCurrentTag = readerModeInfo.getTag();
         }
 
-        mPostListType = currentTagInfo.getListType();
-        mCurrentBlogId = currentTagInfo.getBlogId();
-        mCurrentFeedId = currentTagInfo.getFeedId();
+        mPostListType = readerModeInfo.getListType();
+        mCurrentBlogId = readerModeInfo.getBlogId();
+        mCurrentFeedId = readerModeInfo.getFeedId();
 
         resetPostAdapter(mPostListType);
-        if (currentTagInfo.getRequestNewerPosts()) {
+        if (readerModeInfo.getRequestNewerPosts()) {
             updatePosts(false);
         }
     }
@@ -486,7 +486,7 @@ public class ReaderPostListFragment extends Fragment
             ReaderTag readerTag = AppPrefs.getReaderTag();
 
             if (discoverTag != null && discoverTag.equals(readerTag)) {
-                setCurrentTag(readerTag);
+                setCurrentTag(readerTag, true);
                 updateCurrentTag();
             } else if (discoverTag == null) {
                 AppLog.w(T.READER, "Discover tag not found; ReaderTagTable returned null");
@@ -778,17 +778,12 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public FilterCriteria onRecallSelection() {
                 if (hasCurrentTag()) {
-                    ReaderTag tag = getCurrentTag();
-
-                    if (ReaderUtils.isValidTagForSharedPrefs(
-                            tag,
+                    ReaderTag tag = ReaderUtils.getValidTagForSharedPrefs(
+                            getCurrentTag(),
                             BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
-                            mRecyclerView)
-                    ) {
-                        return tag;
-                    } else {
-                        return ReaderUtils.getDefaultTag();
-                    }
+                            mRecyclerView);
+
+                    return tag;
                 } else {
                     AppLog.w(T.READER, "reader post list > no current tag in onRecallSelection");
                     return ReaderUtils.getDefaultTag();
@@ -972,7 +967,7 @@ public class ReaderPostListFragment extends Fragment
                             BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                             mRecyclerView)
                     ) {
-                        mViewModel.setCurrentSubfilter(mViewModel.getCurrentSubfilterValue(), false);
+                        mViewModel.applySubfilter(mViewModel.getCurrentSubfilterValue(), false);
                     } else {
                         // return to the followed tag that was showing prior to searching
                         resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
@@ -1869,9 +1864,9 @@ public class ReaderPostListFragment extends Fragment
 
         if (manageSubfilter) {
             if (mCurrentTag.isFollowedSites()) {
-                mViewModel.setCurrentSubfilter(mViewModel.getCurrentSubfilterValue(), false);
+                mViewModel.applySubfilter(mViewModel.getCurrentSubfilterValue(), false);
             } else {
-                changeCurrentTagInfo(new CurrentTagInfo(
+                changeReaderMode(new ReaderModeInfo(
                         tag,
                         ReaderPostListType.TAG_FOLLOWED,
                         0,
@@ -1884,21 +1879,25 @@ public class ReaderPostListFragment extends Fragment
 
         mViewModel.onTagChanged(mCurrentTag);
 
+        ReaderTag validTag = ReaderUtils.getValidTagForSharedPrefs(
+                tag,
+                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
+                mRecyclerView
+        );
+
         switch (getPostListType()) {
             case TAG_FOLLOWED:
                 // remember this as the current tag if viewing followed tag
-                if (ReaderUtils.isValidTagForSharedPrefs(
-                        tag,
-                        BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
-                        mRecyclerView)
-                ) {
-                    AppPrefs.setReaderTag(tag);
-                }
+                AppPrefs.setReaderTag(validTag);
+
                 break;
             case TAG_PREVIEW:
                 mTagPreviewHistory.push(tag.getTagSlug());
                 break;
             case BLOG_PREVIEW:
+                if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
+                    AppPrefs.setReaderTag(validTag);
+                }
                 // noop
                 break;
             case SEARCH_RESULTS:
