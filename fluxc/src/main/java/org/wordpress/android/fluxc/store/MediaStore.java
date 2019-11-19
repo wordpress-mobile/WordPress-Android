@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
@@ -621,16 +621,16 @@ public class MediaStore extends Store {
         return MediaSqlUtils.searchSiteDocuments(siteModel, searchTerm);
     }
 
-    public MediaModel getMediaForPostWithPath(PostModel postModel, String filePath) {
+    public MediaModel getMediaForPostWithPath(PostImmutableModel postModel, String filePath) {
         List<MediaModel> media = MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.FILE_PATH, filePath);
         return media.size() > 0 ? media.get(0) : null;
     }
 
-    public List<MediaModel> getMediaForPost(PostModel postModel) {
+    public List<MediaModel> getMediaForPost(PostImmutableModel postModel) {
         return MediaSqlUtils.matchPostMedia(postModel.getId());
     }
 
-    public List<MediaModel> getMediaForPostWithState(PostModel postModel, MediaUploadState expectedState) {
+    public List<MediaModel> getMediaForPostWithState(PostImmutableModel postModel, MediaUploadState expectedState) {
         return MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE,
                 expectedState);
     }
