@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.TaxonomyAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
@@ -246,14 +246,14 @@ public class TaxonomyStore extends Store {
     /**
      * Returns all the categories for the given post as a {@link TermModel} list.
      */
-    public List<TermModel> getCategoriesForPost(PostModel post, SiteModel site) {
+    public List<TermModel> getCategoriesForPost(PostImmutableModel post, SiteModel site) {
         return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getCategoryIdList(), site, DEFAULT_TAXONOMY_CATEGORY);
     }
 
     /**
      * Returns all the tags for the given post as a {@link TermModel} list.
      */
-    public List<TermModel> getTagsForPost(PostModel post, SiteModel site) {
+    public List<TermModel> getTagsForPost(PostImmutableModel post, SiteModel site) {
         return TaxonomySqlUtils.getTermsFromRemoteNameList(post.getTagNameList(), site, DEFAULT_TAXONOMY_TAG);
     }
 

@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.model.post;
 
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.Date;
@@ -60,7 +60,7 @@ public enum PostStatus {
         }
     }
 
-    public static synchronized PostStatus fromPost(PostModel post) {
+    public static synchronized PostStatus fromPost(PostImmutableModel post) {
         String value = post.getStatus();
         long dateCreatedGMT = 0;
 
