@@ -57,20 +57,17 @@ class EditPostViewModel
         postRepository: EditPostRepository,
         showAztecEditor: Boolean
     ) {
-        postRepository.updateInTransaction { postModel ->
-            if (postRepository.postHasChangesFromDb(postModel)) {
-                postRepository.saveDbSnapshot(postModel)
-                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postModel))
+        if (postRepository.postHasChangesFromDb()) {
+            postRepository.saveDbSnapshot()
+            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postRepository.getEditablePost()))
 
-                if (showAztecEditor) {
-                    // update the list of uploading ids
-                    mediaMarkedUploadingOnStartIds = aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
-                            context,
-                            postModel.content
-                    )
-                }
+            if (showAztecEditor) {
+                // update the list of uploading ids
+                mediaMarkedUploadingOnStartIds = aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
+                        context,
+                        postRepository.content
+                )
             }
-            false
         }
     }
 

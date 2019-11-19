@@ -121,11 +121,11 @@ class EditPostRepository
         this.post = postForUndo?.clone()
     }
 
-    fun postHasChangesFromDb(post: PostModel): Boolean =
+    fun postHasChangesFromDb(): Boolean =
             postSnapshotForDb == null || post != postSnapshotForDb
 
-    fun saveDbSnapshot(post: PostModel) {
-        postSnapshotForDb = post.clone()
+    fun saveDbSnapshot() {
+        postSnapshotForDb = post?.clone()
     }
 
     fun saveInitialSnapshot() {

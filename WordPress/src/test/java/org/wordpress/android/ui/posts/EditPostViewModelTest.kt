@@ -63,6 +63,8 @@ class EditPostViewModelTest : BaseUnitTest() {
         postModel.setTitle(title)
         postModel.setContent(content)
         postModel.setStatus(postStatus)
+        whenever(postRepository.getEditablePost()).thenReturn(postModel)
+        whenever(postRepository.content).thenReturn(content)
     }
 
     @Test
@@ -99,50 +101,38 @@ class EditPostViewModelTest : BaseUnitTest() {
         ).thenReturn(
                 mediaIDs
         )
-        whenever(postRepository.postHasChangesFromDb(postModel)).thenReturn(true)
+        whenever(postRepository.postHasChangesFromDb()).thenReturn(true)
 
         viewModel.savePostToDb(context, postRepository, true)
-
-        verify(postRepository).updateInTransaction(transactionCaptor.capture())
-
-        transactionCaptor.firstValue.invoke(postModel)
 
         verify(dispatcher).dispatch(actionCaptor.capture())
         assertThat(actionCaptor.firstValue.type).isEqualTo(PostAction.UPDATE_POST)
         assertThat(actionCaptor.firstValue.payload).isEqualTo(postModel)
         assertThat(viewModel.mediaMarkedUploadingOnStartIds).isEqualTo(mediaIDs)
-        verify(postRepository).saveDbSnapshot(postModel)
+        verify(postRepository).saveDbSnapshot()
     }
 
     @Test
     fun `saves post to DB and does not update media IDs for non-Aztec editor`() {
-        whenever(postRepository.postHasChangesFromDb(postModel)).thenReturn(true)
+        whenever(postRepository.postHasChangesFromDb()).thenReturn(true)
 
         viewModel.savePostToDb(context, postRepository, false)
-
-        verify(postRepository).updateInTransaction(transactionCaptor.capture())
-
-        transactionCaptor.firstValue.invoke(postModel)
 
         verify(dispatcher).dispatch(actionCaptor.capture())
         assertThat(actionCaptor.firstValue.type).isEqualTo(PostAction.UPDATE_POST)
         assertThat(actionCaptor.firstValue.payload).isEqualTo(postModel)
         assertThat(viewModel.mediaMarkedUploadingOnStartIds).isEmpty()
-        verify(postRepository).saveDbSnapshot(postModel)
+        verify(postRepository).saveDbSnapshot()
     }
 
     @Test
     fun `does not save the post with no change`() {
-        whenever(postRepository.postHasChangesFromDb(postModel)).thenReturn(false)
+        whenever(postRepository.postHasChangesFromDb()).thenReturn(false)
 
         viewModel.savePostToDb(context, postRepository, false)
 
-        verify(postRepository).updateInTransaction(transactionCaptor.capture())
-
-        transactionCaptor.firstValue.invoke(postModel)
-
         verify(dispatcher, never()).dispatch(any())
-        verify(postRepository, never()).saveDbSnapshot(postModel)
+        verify(postRepository, never()).saveDbSnapshot()
     }
 
     @Test
