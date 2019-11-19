@@ -16,6 +16,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -49,9 +50,10 @@ public class UploadUtils {
      * Returns a post-type specific error message string.
      */
     static @NonNull
-    String getErrorMessage(Context context, PostModel post, String errorMessage, boolean isMediaError) {
+    String getErrorMessage(Context context, boolean isPage, String errorMessage,
+                           boolean isMediaError) {
         String baseErrorString;
-        if (post.isPage()) {
+        if (isPage) {
             if (isMediaError) {
                 baseErrorString = context.getString(R.string.error_upload_page_media_param);
             } else {
@@ -293,7 +295,7 @@ public class UploadUtils {
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
         if (NetworkUtils.isNetworkAvailable(activity)) {
-            UploadService.uploadPost(activity, post, isFirstTimePublish);
+            UploadService.uploadPost(activity, post.getId(), isFirstTimePublish);
         }
         PostUtils.trackSavePostAnalytics(post, site);
     }
@@ -465,7 +467,7 @@ public class UploadUtils {
         throw new RuntimeException("This code should be unreachable. Missing case in switch statement.");
     }
 
-    public static boolean postLocalChangesAlreadyRemoteAutoSaved(PostModel post) {
+    public static boolean postLocalChangesAlreadyRemoteAutoSaved(PostImmutableModel post) {
         return !TextUtils.isEmpty(post.getAutoSaveModified())
                && DateTimeUtils.dateFromIso8601(post.getDateLocallyChanged())
                                .before(DateTimeUtils.dateFromIso8601(post.getAutoSaveModified()));

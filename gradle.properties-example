@@ -24,7 +24,6 @@ wp.app_license_key = wordpress
 wp.zendesk.app_id=wordpress
 wp.zendesk.domain=https://www.google.com/
 wp.zendesk.oauth_client_id=wordpress
-wp.giphy.api_key=wordpress
 wp.reset_db_on_downgrade = false
 wp.sentry.dsn=https://00000000000000000000000000000000@sentry.io/00000000
 

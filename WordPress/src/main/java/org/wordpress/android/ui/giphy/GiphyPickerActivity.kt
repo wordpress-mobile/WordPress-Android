@@ -36,6 +36,8 @@ import javax.inject.Inject
 
 /**
  * Allows searching of gifs from Giphy
+ *
+ * Important: Giphy is currently disabled everywhere. We are planning to replace it with a different service provider.
  */
 class GiphyPickerActivity : AppCompatActivity() {
     /**

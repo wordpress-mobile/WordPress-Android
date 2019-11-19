@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.DataSource
 import androidx.paging.DataSource.Factory
-import com.giphy.sdk.core.network.api.GPHApiClient
-import org.wordpress.android.BuildConfig
 import javax.inject.Inject
 
 /**
@@ -19,13 +17,6 @@ import javax.inject.Inject
  * 3. The new [GiphyPickerDataSource] will start another paged API request
  */
 class GiphyPickerDataSourceFactory @Inject constructor() : Factory<Int, GiphyMediaViewModel>() {
-    /**
-     * The Giphy API client
-     *
-     * The API key should be set in a `wp.giphy.api_key` setting in `gradle.properties`.
-     */
-    private val apiClient: GPHApiClient by lazy { GPHApiClient(BuildConfig.GIPHY_API_KEY) }
-
     /**
      * The active search query.
      *
@@ -61,7 +52,7 @@ class GiphyPickerDataSourceFactory @Inject constructor() : Factory<Int, GiphyMed
     fun retryAllFailedRangeLoads() = dataSource.value?.retryAllFailedRangeLoads()
 
     override fun create(): DataSource<Int, GiphyMediaViewModel> {
-        val dataSource = GiphyPickerDataSource(apiClient, searchQuery)
+        val dataSource = GiphyPickerDataSource(searchQuery)
         this.dataSource.postValue(dataSource)
         return dataSource
     }

@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.push.NotificationPushIds;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.util.DateTimeUtils;
@@ -19,8 +18,8 @@ public class PendingDraftsNotificationsUtils {
      * Starts since the last time the post was updated for one day, one week, and one month
      * only if these periods have not passed yet.
      */
-    public static void scheduleNextNotifications(Context context, PostModel post) {
-        if (post == null || context == null) {
+    public static void scheduleNextNotifications(Context context, int postId, String dateLocallyChanged) {
+        if (context == null) {
             return;
         }
             /*
@@ -38,19 +37,18 @@ public class PendingDraftsNotificationsUtils {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        Intent intent = getNotificationsPendingDraftReceiverIntent(context, post.getId());
+        Intent intent = getNotificationsPendingDraftReceiverIntent(context, postId);
 
         long now = System.currentTimeMillis();
         long oneDayAgo = now - NotificationsPendingDraftsReceiver.ONE_DAY;
         long oneWeekAgo = now - NotificationsPendingDraftsReceiver.ONE_WEEK;
         long oneMonthAgo = now - NotificationsPendingDraftsReceiver.ONE_MONTH;
 
-        long dateLastUpdated = DateTimeUtils.timestampFromIso8601(post.getDateLocallyChanged());
+        long dateLastUpdated = DateTimeUtils.timestampFromIso8601(dateLocallyChanged);
 
         // set alarms for one day + one week + one month if just over a day but less than a week,
         // set alarms for a week and another for a month, if over a week but less than a month
         // set alarm for a month for anything further than a month
-        int postId = post.getId();
         if (dateLastUpdated > oneDayAgo) {
             // last updated is within a 24 hour timeframe
             PendingIntent alarmIntentOneDay = getOneDayAlarmIntent(context, intent, postId);
