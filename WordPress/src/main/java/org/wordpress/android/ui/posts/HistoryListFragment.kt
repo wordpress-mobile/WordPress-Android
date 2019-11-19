@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,7 @@ class HistoryListFragment : Fragment() {
     }
 
     interface HistoryItemClickInterface {
-        fun onHistoryItemClicked(revision: Revision, revisions: ArrayList<Revision>)
+        fun onHistoryItemClicked(revision: Revision, revisions: List<Revision>)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,6 +62,13 @@ class HistoryListFragment : Fragment() {
         (checkNotNull(activity).application as WordPress).component()?.inject(this)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        check(activity is HistoryItemClickInterface) {
+            "Parent activity has to implement HistoryItemClickInterface"
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -119,36 +127,41 @@ class HistoryListFragment : Fragment() {
         })
 
         viewModel.listStatus.observe(this, Observer { listStatus ->
-            if (isAdded && view != null) {
-                swipeToRefreshHelper.isRefreshing = listStatus == HistoryListStatus.FETCHING
-            }
-            when (listStatus) {
-                HistoryListStatus.DONE -> {
-                    updatePostOrPageEmptyView()
+            listStatus?.let {
+                if (isAdded && view != null) {
+                    swipeToRefreshHelper.isRefreshing = listStatus == HistoryListStatus.FETCHING
                 }
-                HistoryListStatus.FETCHING -> {
-                    actionable_empty_view.title.setText(R.string.history_fetching_revisions)
-                    actionable_empty_view.subtitle.visibility = View.GONE
-                    actionable_empty_view.button.visibility = View.GONE
-                }
-                HistoryListStatus.NO_NETWORK -> {
-                    actionable_empty_view.title.setText(R.string.no_network_title)
-                    actionable_empty_view.subtitle.setText(R.string.no_network_message)
-                    actionable_empty_view.subtitle.visibility = View.VISIBLE
-                    actionable_empty_view.button.visibility = View.VISIBLE
-                }
-                HistoryListStatus.ERROR -> {
-                    actionable_empty_view.title.setText(R.string.no_network_title)
-                    actionable_empty_view.subtitle.setText(R.string.error_generic_network)
-                    actionable_empty_view.subtitle.visibility = View.VISIBLE
-                    actionable_empty_view.button.visibility = View.VISIBLE
+                when (listStatus) {
+                    HistoryListStatus.DONE -> {
+                        updatePostOrPageEmptyView()
+                    }
+                    HistoryListStatus.FETCHING -> {
+                        actionable_empty_view.title.setText(R.string.history_fetching_revisions)
+                        actionable_empty_view.subtitle.visibility = View.GONE
+                        actionable_empty_view.button.visibility = View.GONE
+                    }
+                    HistoryListStatus.NO_NETWORK -> {
+                        actionable_empty_view.title.setText(R.string.no_network_title)
+                        actionable_empty_view.subtitle.setText(R.string.no_network_message)
+                        actionable_empty_view.subtitle.visibility = View.VISIBLE
+                        actionable_empty_view.button.visibility = View.VISIBLE
+                    }
+                    HistoryListStatus.ERROR -> {
+                        actionable_empty_view.title.setText(R.string.no_network_title)
+                        actionable_empty_view.subtitle.setText(R.string.error_generic_network)
+                        actionable_empty_view.subtitle.visibility = View.VISIBLE
+                        actionable_empty_view.button.visibility = View.VISIBLE
+                    }
                 }
             }
         })
 
-        viewModel.showDialog.observe(this, Observer {
-            if (it is Revision && activity is HistoryItemClickInterface) {
-                (activity as HistoryItemClickInterface).onHistoryItemClicked(it, viewModel.revisionsList)
+        viewModel.showDialog.observe(this, Observer { showDialogItem ->
+            if (showDialogItem != null && showDialogItem.historyListItem is Revision) {
+                (activity as HistoryItemClickInterface).onHistoryItemClicked(
+                        showDialogItem.historyListItem,
+                        showDialogItem.revisionsList
+                )
             }
         })
 
