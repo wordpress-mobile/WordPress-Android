@@ -1,1 +1,0 @@
-Editor de blocos: Corrigimos um problema quando várias tinha várias mídias selecionadas adicionava apenas uma imagem ou bloco de vídeo. Há um novo bloco "Mídia e texto" e adicionamos uma opção destino do link (Abrir em nova guia) ao Bloco de imagens.

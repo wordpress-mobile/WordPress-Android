@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-30 00:54:10+0000
+Translation-Revision-Date: 2019-11-13 00:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Meldingen</string>
+    <string name="master_switch_default_title_off">Uit</string>
+    <string name="master_switch_default_title_on">Aan</string>
+    <string name="notifications_tab_dialog_master_off_message">Door meldingen voor deze site uit te schakelen, worden meldingen op het meldingentabblad van deze site uitgeschakeld. Je kunt zelf bepalen welke soorten meldingen moeten worden weergegeven nadat je meldingen voor deze site inschakelt.</string>
+    <string name="notifications_tab_dialog_master_off_title">Om meldingen op het meldingentabblad voor deze site te bekijken, moet je meldingen voor deze site inschakelen.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Weergave van meldingen op het meldingentabblad van deze site inschakelen</string>
+    <string name="notifications_tab_dialog_master_hint_on">Weergave van meldingen op het meldingentabblad van deze site uitschakelen</string>
+    <string name="notifications_tab_dialog_master_status_off">Meldingen voor deze site</string>
+    <string name="notifications_tab_dialog_master_status_on">Meldingen voor deze site</string>
+    <string name="dialog_gutenberg_informative_description_page">Je gebruikt nu de blokeditor voor nieuwe pagina\'s. Geweldig! Als je toch liever de klassieke editor gebruikt, ga dan naar \'Mijn site\' > \'Site-instellingen\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">Je gebruikt nu de blokeditor voor nieuwe berichten. Geweldig! Als je toch liever de klassieke editor gebruikt, ga dan naar \'Mijn site\' > \'Site-instellingen\'.</string>
     <string name="pick_media">Afbeelding of video toevoegen</string>
     <string name="error_post_not_submitted_retrying">We konden dit bericht niet inzenden voor beoordeling, maar we proberen het later nog eens. </string>
     <string name="error_post_not_scheduled_retrying">We konden dit bericht niet inplannen, maar we proberen het later nog eens.</string>
@@ -117,8 +128,6 @@ Language: nl
     <string name="stats_bar_chart_content_description">Grafiek van siteweergaven</string>
     <string name="stats_loading_card">Geselecteerde kaartgegevens aan het laden</string>
     <string name="site_settings_editor">Editor</string>
-    <string name="dialog_gutenberg_informative_description_page">Momenteel gebruik je de blokeditor om nieuwe pagina’s aan te maken. Wil je standaard de klassieke editor gebruiken? Ga naar site-instellingen</string>
-    <string name="dialog_gutenberg_informative_description_post">Momenteel gebruik je de blokeditor om nieuwe berichten aan te maken. Wil je standaard de klassieke editor gebruiken? Ga naar site-instellingen</string>
     <string name="description_expand">Uitklappen</string>
     <string name="description_collapse">Inklappen</string>
     <string name="editor_retry_failed_uploads">Upload opnieuw proberen</string>

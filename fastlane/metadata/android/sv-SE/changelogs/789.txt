@@ -1,2 +1,0 @@
-13.5:
-* Blockredigeraren: Vi har korrigerat ett problem där endast ett bildblock eller videoblock lades till trots att flera mediafiler var valda. Det finns en ny blocktyp ”Media och Text” och vi har lagt till ett alternativ för länkmål (öppna i ny flik) i bildblocket.
