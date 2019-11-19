@@ -140,7 +140,7 @@ class EditPostViewModel
                     showAztecEditor,
                     editedPost.content
             ) -> contentChanged = true
-            else -> contentChanged = editedPost.content.compareTo(content) != 0
+            else -> contentChanged = editedPost.content != content
         }
         if (contentChanged) {
             editedPost.setContent(content)
