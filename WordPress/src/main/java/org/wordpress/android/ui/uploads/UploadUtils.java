@@ -247,35 +247,40 @@ public class UploadUtils {
 
     private static void showSnackbarError(View view, String message, int buttonTitleRes,
                                           View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
+        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
+                  .setAction(buttonTitleRes, onClickListener).addToSequencer();
     }
 
     public static void showSnackbarError(View view, String message) {
-        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).show();
+        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).addToSequencer();
     }
 
     private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
                                      View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
+        WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
+                  .setAction(buttonTitleRes, onClickListener).addToSequencer();
     }
 
     public static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
-                                                  View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
+                                                 View.OnClickListener onClickListener) {
+        WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
+                  .setAction(buttonTitleRes, onClickListener).addToSequencer();
     }
 
     private static void showSnackbarSuccessAction(View view, String message, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
+       WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
+                 .setAction(buttonTitleRes, onClickListener).addToSequencer();
     }
 
     public static void showSnackbarSuccessActionOrange(View view, int messageRes, int buttonTitleRes,
-                                                  View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).setAction(buttonTitleRes, onClickListener).show();
+                                                       View.OnClickListener onClickListener) {
+        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
+                  .setAction(buttonTitleRes, onClickListener).addToSequencer();
     }
 
     public static void showSnackbar(View view, int messageRes) {
-        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).show();
+        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).addToSequencer();
     }
 
     public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher) {
