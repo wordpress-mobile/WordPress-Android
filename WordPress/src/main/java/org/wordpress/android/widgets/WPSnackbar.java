@@ -15,7 +15,11 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.snackbar.Snackbar.SnackbarLayout;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AccessibilityUtils;
+import org.wordpress.android.util.SnackbarSequencer;
+
+import javax.inject.Inject;
 
 /**
  * {@link Snackbar} with custom colors and layout mimicking the updated design pattern defined in the Material Design
@@ -25,8 +29,13 @@ import org.wordpress.android.util.AccessibilityUtils;
 public class WPSnackbar {
     private Snackbar mSnackbar;
     private View mContentView;
+    @Inject SnackbarSequencer mSnackbarSequencer;
+    private long mCreationTimeStamp;
+    private CharSequence mText;
 
     private WPSnackbar(@NonNull View view, @NonNull CharSequence text, int duration) {
+        ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
+
         mSnackbar = Snackbar.make(view, "", // CHECKSTYLE IGNORE
                 AccessibilityUtils.getSnackbarDuration(view.getContext(), duration));
 
@@ -50,6 +59,8 @@ public class WPSnackbar {
 
         TextView message = mContentView.findViewById(R.id.message);
 
+        mText = text;
+
         // Hide message view when text is empty.
         if (TextUtils.isEmpty(text)) {
             message.setVisibility(View.GONE);
@@ -59,6 +70,8 @@ public class WPSnackbar {
         }
 
         snackbarLayout.addView(mContentView, 0);
+
+        mCreationTimeStamp = System.currentTimeMillis();
     }
 
     public WPSnackbar addCallback(Snackbar.Callback callback) {
@@ -74,6 +87,18 @@ public class WPSnackbar {
 
     public boolean isShowing() {
         return mSnackbar != null && mSnackbar.isShown();
+    }
+
+    public void addToSequencer() {
+        mSnackbarSequencer.enqueueSnackbar(this);
+    }
+
+    public long getTimeStamp() {
+        return mCreationTimeStamp;
+    }
+
+    public int getDuration() {
+        return mSnackbar.getDuration();
     }
 
     public static WPSnackbar make(@NonNull View view, @NonNull CharSequence text, int duration) {
@@ -121,5 +146,9 @@ public class WPSnackbar {
 
     public void show() {
         mSnackbar.show();
+    }
+
+    public @NonNull CharSequence getMessage() {
+        return mText != null ? mText : "";
     }
 }
