@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -16,6 +16,7 @@ class TodayWidgetListViewModel
 @Inject constructor(
     private val siteStore: SiteStore,
     private val todayInsightsStore: TodayInsightsStore,
+    private val statsUtils: StatsUtils,
     private val resourceProvider: ResourceProvider
 ) {
     private var siteId: Int? = null
@@ -64,25 +65,25 @@ class TodayWidgetListViewModel
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_views),
-                        domainModel.views.toFormattedString(ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.views, ONE_THOUSAND)
                 ),
                 TodayItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_visitors),
-                        domainModel.visitors.toFormattedString(ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.visitors, ONE_THOUSAND)
                 ),
                 TodayItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.likes),
-                        domainModel.likes.toFormattedString(ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.likes, ONE_THOUSAND)
                 ),
                 TodayItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_comments),
-                        domainModel.comments.toFormattedString(ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.comments, ONE_THOUSAND)
                 )
         )
     }

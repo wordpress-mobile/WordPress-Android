@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider.BlockItemUiModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -27,6 +28,7 @@ class AllTimeWidgetBlockListViewModelTest {
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var allTimeStore: AllTimeInsightsStore
     @Mock private lateinit var resourceProvider: ResourceProvider
+    @Mock private lateinit var statsUtils: StatsUtils
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var context: Context
     @Mock private lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
@@ -36,8 +38,15 @@ class AllTimeWidgetBlockListViewModelTest {
     private val color = Color.LIGHT
     @Before
     fun setUp() {
-        viewModel = AllTimeWidgetBlockListViewModel(siteStore, allTimeStore, resourceProvider, allTimeWidgetUpdater)
+        viewModel = AllTimeWidgetBlockListViewModel(
+                siteStore,
+                allTimeStore,
+                resourceProvider,
+                statsUtils,
+                allTimeWidgetUpdater
+        )
         viewModel.start(siteId, color, appWidgetId)
+        whenever(statsUtils.toFormattedString(any<Int>(), any(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
