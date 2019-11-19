@@ -219,7 +219,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 // Add the mapping english => [ singular, plural ] to the bundle
                 String[] currentResourceStrings = currentResources.getStringArray(resourceId);
                 String[] englishResourceStrings = englishResources.getStringArray(resourceId);
-                if (currentResourceStrings.length > 1 && englishResourceStrings.length > 0) {
+                if (currentResourceStrings.length > 0 && englishResourceStrings.length > 0) {
                     translations.putStringArrayList(
                             englishResourceStrings[0],
                             new ArrayList<>(Arrays.asList(currentResourceStrings))
