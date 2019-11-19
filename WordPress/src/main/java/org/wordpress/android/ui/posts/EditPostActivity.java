@@ -60,6 +60,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentNotAdde
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorImageMetaData;
+import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorImageSettingsListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
@@ -104,6 +105,7 @@ import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
@@ -124,7 +126,6 @@ import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
-import org.wordpress.android.ui.posts.editor.media.EditorMediaPostData;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -194,6 +195,7 @@ import kotlin.jvm.functions.Function0;
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
+        EditorImagePreviewListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
         OnRequestPermissionsResultCallback,
@@ -1676,6 +1678,11 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onImageSettingsRequested(EditorImageMetaData editorImageMetaData) {
         MediaSettingsActivity.showForResult(this, mSite, editorImageMetaData);
+    }
+
+
+    @Override public void onImagePreviewRequested(String mediaUrl) {
+        MediaPreviewActivity.showPreview(this, null, mediaUrl);
     }
 
     @Override
@@ -3269,9 +3276,8 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
     }
 
-    @Override
-    public @NonNull EditorMediaPostData editorMediaPostData() {
-        return new EditorMediaPostData(mEditPostRepository.getId(), mEditPostRepository.getRemotePostId());
+    @NotNull @Override public PostImmutableModel getImmutablePost() {
+        return Objects.requireNonNull(mEditPostRepository.getPost());
     }
 
     @Override

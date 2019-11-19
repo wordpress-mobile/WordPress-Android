@@ -85,7 +85,7 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         mediaModels.forEach {
             updateMediaModelUseCase.updateMediaModel(
                     it,
-                    editorMediaListener.editorMediaPostData(),
+                    editorMediaListener.getImmutablePost(),
                     QUEUED
             )
         }
