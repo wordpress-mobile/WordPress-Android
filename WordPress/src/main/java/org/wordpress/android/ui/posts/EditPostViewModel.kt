@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Success
 import org.wordpress.android.util.AppLog
@@ -75,36 +76,40 @@ class EditPostViewModel
         context: Context,
         mShowAztecEditor: Boolean,
         mEditPostRepository: EditPostRepository,
-        updatedTitle: String,
-        getUpdatedContent: ((String) -> String?)
+        getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor)
     ): UpdateResult {
         if (!mEditPostRepository.hasPost()) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.")
             return Error
         }
         return mEditPostRepository.updateInTransaction { postModel ->
-            getUpdatedContent(postModel.content)?.let { updatedContent ->
-                val postTitleOrContentChanged = updatePostContentNewEditor(
-                        context,
-                        mShowAztecEditor,
-                        mEditPostRepository,
-                        postModel,
-                        updatedTitle,
-                        updatedContent
-                )
+            when (val updateFromEditor = getUpdatedTitleAndContent(postModel.content)) {
+                is PostFields -> {
+                    val postTitleOrContentChanged = updatePostContentNewEditor(
+                            context,
+                            mShowAztecEditor,
+                            mEditPostRepository,
+                            postModel,
+                            updateFromEditor.title,
+                            updateFromEditor.content
+                    )
 
-                // only makes sense to change the publish date and locally changed date if the Post was actually changed
-                if (postTitleOrContentChanged) {
-                    mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel)
-                    val currentTime = localeManagerWrapper.getCurrentCalendar()
-                    postModel
-                            .setDateLocallyChanged(
-                                    dateTimeUtils.iso8601FromCalendar(currentTime)
-                            )
+                    // only makes sense to change the publish date and locally changed date if the Post was actually changed
+                    if (postTitleOrContentChanged) {
+                        mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(
+                                postModel
+                        )
+                        val currentTime = localeManagerWrapper.getCurrentCalendar()
+                        postModel
+                                .setDateLocallyChanged(
+                                        dateTimeUtils.iso8601FromCalendar(currentTime)
+                                )
+                    }
+
+                    Success(postTitleOrContentChanged)
                 }
-
-                Success(postTitleOrContentChanged)
-            } ?: Error
+                is UpdateFromEditor.Failed -> Error
+            }
         }
     }
 
@@ -179,5 +184,10 @@ class EditPostViewModel
     sealed class UpdateResult {
         object Error : UpdateResult()
         data class Success(val postTitleOrContentChanged: Boolean) : UpdateResult()
+    }
+
+    sealed class UpdateFromEditor {
+        data class PostFields(val title: String, val content: String) : UpdateFromEditor()
+        data class Failed(val exception: Exception) : UpdateFromEditor()
     }
 }

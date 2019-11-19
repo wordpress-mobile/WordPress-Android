@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -191,7 +193,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `does not update post object with no change`() {
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository, title) { content }
+        viewModel.updatePostObject(context, true, postRepository) { PostFields(title, content) }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 
@@ -204,7 +206,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `returns update error when post is missing`() {
         whenever(postRepository.hasPost()).thenReturn(false)
 
-        val result = viewModel.updatePostObject(context, true, postRepository, title) { content }
+        val result = viewModel.updatePostObject(context, true, postRepository) { PostFields(title, content) }
 
         assertThat(result).isEqualTo(UpdateResult.Error)
     }
@@ -213,7 +215,11 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `returns update error when get content function returns null`() {
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository, title) { null }
+        viewModel.updatePostObject(context, true, postRepository) {
+            UpdateFromEditor.Failed(
+                    RuntimeException("Not found")
+            )
+        }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 
@@ -226,7 +232,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `updates post title and date locally changed when title has changed`() {
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository, updatedTitle) { content }
+        viewModel.updatePostObject(context, true, postRepository) { PostFields(updatedTitle, content) }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 
@@ -242,7 +248,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `updates post content and date locally changed when content has changed`() {
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository, title) { updatedContent }
+        viewModel.updatePostObject(context, true, postRepository) { PostFields(title, updatedContent) }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 
@@ -259,7 +265,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         viewModel.mediaInsertedOnCreation = true
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository, title) { content }
+        viewModel.updatePostObject(context, true, postRepository) { PostFields(title, content) }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 
@@ -282,7 +288,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         ).thenReturn(listOf("B"))
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository, title) { content }
+        viewModel.updatePostObject(context, true, postRepository) { PostFields(title, content) }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 
@@ -298,7 +304,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         whenever(postRepository.hasStatusChangedFromInitialSnapshot(postStatus)).thenReturn(true)
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository, title) { content }
+        viewModel.updatePostObject(context, true, postRepository) { PostFields(title, content) }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 

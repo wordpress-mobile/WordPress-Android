@@ -113,6 +113,8 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor;
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields;
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
@@ -189,6 +191,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
+import kotlin.Pair;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
@@ -1558,21 +1561,19 @@ public class EditPostActivity extends AppCompatActivity implements
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
             return false;
         }
-        try {
-            UpdateResult updateResult = mViewModel
-                    .updatePostObject(this, mShowAztecEditor, mEditPostRepository, (String) mEditorFragment.getTitle(),
-                            oldContent -> {
-                                try {
-                                    return (String) mEditorFragment.getContent(oldContent);
-                                } catch (EditorFragmentNotAddedException e) {
-                                    return null;
-                                }
-                            });
-            return updateResult instanceof UpdateResult.Success;
-        } catch (EditorFragmentNotAddedException e) {
-            AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-            return false;
-        }
+        UpdateResult updateResult = mViewModel
+                .updatePostObject(this, mShowAztecEditor, mEditPostRepository,
+                        oldContent -> {
+                            try {
+                                String title = (String) mEditorFragment.getTitle();
+                                String content = (String) mEditorFragment.getContent(oldContent);
+                                return new PostFields(title, content);
+                            } catch (EditorFragmentNotAddedException e) {
+                                AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+                                return new UpdateFromEditor.Failed(e);
+                            }
+                        });
+        return updateResult instanceof UpdateResult.Success;
     }
 
     private void savePostAsync(final AfterSavePostListener listener) {
