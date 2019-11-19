@@ -38,6 +38,7 @@ class EditorPhotoPicker(
     private var photoPickerContainer: View? = null
     private var photoPickerFragment: PhotoPickerFragment? = null
     private var photoPickerOrientation = Configuration.ORIENTATION_UNDEFINED
+    var allowMultipleSelection: Boolean = false
 
     /*
      * loads the photo picker fragment, which is hidden until the user taps the media icon

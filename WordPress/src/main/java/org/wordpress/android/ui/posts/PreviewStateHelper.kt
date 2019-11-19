@@ -2,7 +2,7 @@ package org.wordpress.android.ui.posts
 
 import androidx.fragment.app.FragmentActivity
 import dagger.Reusable
-import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
@@ -39,7 +39,7 @@ class PreviewStateHelper @Inject constructor() {
         activity: FragmentActivity,
         action: PostListAction.PreviewPost
     ) = object : RemotePreviewLogicHelper.RemotePreviewHelperFunctions {
-        override fun notifyUploadInProgress(post: PostModel): Boolean {
+        override fun notifyUploadInProgress(post: PostImmutableModel): Boolean {
             return if (UploadService.hasInProgressMediaUploadsForPost(post)) {
                 action.showToast.invoke(action.messageMediaUploading)
                 true
@@ -48,14 +48,14 @@ class PreviewStateHelper @Inject constructor() {
             }
         }
 
-        override fun startUploading(isRemoteAutoSave: Boolean, post: PostModel) {
+        override fun startUploading(isRemoteAutoSave: Boolean, post: PostImmutableModel) {
             if (isRemoteAutoSave) {
                 action.triggerPreviewStateUpdate.invoke(
                         PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW,
                         PostInfoType.PostNoInfo
                 )
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    UploadService.uploadPost(activity, post, false)
+                    UploadService.uploadPost(activity, post.id, false)
                 } else {
                     AppLog.d(
                             AppLog.T.POSTS,
@@ -68,7 +68,7 @@ class PreviewStateHelper @Inject constructor() {
                         PostInfoType.PostNoInfo
                 )
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    UploadService.uploadPost(activity, post, false)
+                    UploadService.uploadPost(activity, post.id, false)
                 } else {
                     AppLog.d(
                             AppLog.T.POSTS,
