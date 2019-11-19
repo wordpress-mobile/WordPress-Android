@@ -1,2 +1,0 @@
-13.5:
-* Blok Düzenleyici: Bir video yada gösel bloğuna birden fazla medya seçimi seçimi yapıldığında oluşan bir sorunu çözdük. Yeni bir “Ortam ve metin” bloğu var ve görsel bloğuna bir bağlantı hedefi (Yeni sekmede aç) seçeneği ekledik.

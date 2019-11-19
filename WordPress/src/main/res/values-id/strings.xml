@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-31 02:54:10+0000
+Translation-Revision-Date: 2019-11-13 00:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Pemberitahuan</string>
+    <string name="master_switch_default_title_off">Nonaktif</string>
+    <string name="master_switch_default_title_on">Aktif</string>
+    <string name="notifications_tab_dialog_master_off_message">Menonaktifkan Pemberitahuan untuk situs ini akan menonaktifkan tampilan pemberitahuan di tab pemberitahuan untuk situs ini. Anda bisa memilih jenis pemberitahuan yang ingin Anda lihat setelah mengaktifkan Pemberitahuan untuk situs ini.</string>
+    <string name="notifications_tab_dialog_master_off_title">Untuk melihat pemberitahuan di tab pemberitahuan untuk situs ini, aktifkan Pemberitahuan untuk situs ini.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Aktifkan tampilan pemberitahuan di tab pemberitahuan untuk situs ini</string>
+    <string name="notifications_tab_dialog_master_hint_on">Nonaktifkan tampilan pemberitahuan di tab pemberitahuan untuk situs ini</string>
+    <string name="notifications_tab_dialog_master_status_off">Pemberitahuan untuk situs ini</string>
+    <string name="notifications_tab_dialog_master_status_on">Pemberitahuan untuk situs ini</string>
+    <string name="dialog_gutenberg_informative_description_page">Saat ini Anda menggunakan penyunting blok untuk halaman baru u2014 hebat! Jika Anda ingin mengubah ke penyunting klasik, buka \'Situs Saya\' > \'Pengaturan Situs\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">Saat ini Anda menggunakan penyunting blok untuk pos baru u2014 hebat! Jika Anda ingin mengubah ke penyunting klasik, buka \'Situs Saya\' > \'Pengaturan Situs\'.</string>
     <string name="pick_media">Tambahkan gambar atau video</string>
     <string name="error_post_not_submitted_retrying">Kami tidak dapat mengirim pos ini untuk ditinjau, namun kami akan mencoba lagi nanti. </string>
     <string name="error_post_not_scheduled_retrying">Kami tidak dapat menjadwalkan pos ini, namun kami akan mencoba lagi nanti.</string>
@@ -117,8 +128,6 @@ Language: id
     <string name="stats_bar_chart_content_description">Grafik penayangan situs.</string>
     <string name="stats_loading_card">Memuat data kartu yang dipilih</string>
     <string name="site_settings_editor">Penyunting</string>
-    <string name="dialog_gutenberg_informative_description_page">Saat ini Anda menggunakan penyunting blok untuk membuat halaman baru. Ingin menggunakan penyunting klasik sebagai pengaturan asal? Buka Pengaturan Situs.</string>
-    <string name="dialog_gutenberg_informative_description_post">Saat ini Anda menggunakan penyunting blok untuk membuat pos baru. Ingin menggunakan penyunting klasik sebagai pengaturan asal? Buka Pengaturan Situs.</string>
     <string name="description_expand">Bentangkan</string>
     <string name="description_collapse">Ciutkan</string>
     <string name="editor_retry_failed_uploads">Coba mengunggah ulang</string>
