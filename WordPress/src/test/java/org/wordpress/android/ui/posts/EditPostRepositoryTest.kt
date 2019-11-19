@@ -414,9 +414,9 @@ class EditPostRepositoryTest {
 
         assertThat(editPostRepository.getPost()).isEqualTo(firstPost)
 
-        editPostRepository.saveSnapshot()
+        editPostRepository.saveInitialSnapshot()
 
-        assertThat(editPostRepository.hasSnapshot()).isTrue()
+        assertThat(editPostRepository.hasInitialSnapshot()).isTrue()
     }
 
     @Test
@@ -427,18 +427,19 @@ class EditPostRepositoryTest {
         val secondPost = PostModel()
         val secondPostId = 2
         secondPost.setId(secondPostId)
+        whenever(postUtils.postHasEdits(firstPost, secondPost)).thenReturn(true)
 
         editPostRepository.setInTransaction { firstPost }
 
         assertThat(editPostRepository.getPost()).isEqualTo(firstPost)
 
-        editPostRepository.saveSnapshot()
+        editPostRepository.saveInitialSnapshot()
 
-        assertThat(editPostRepository.isSnapshotDifferent()).isFalse()
+        assertThat(editPostRepository.postHasEdits()).isFalse()
 
         editPostRepository.setInTransaction { secondPost }
 
-        assertThat(editPostRepository.isSnapshotDifferent()).isTrue()
+        assertThat(editPostRepository.postHasEdits()).isTrue()
     }
 
     @Test
@@ -452,13 +453,13 @@ class EditPostRepositoryTest {
 
         editPostRepository.setInTransaction { firstPost }
 
-        editPostRepository.saveSnapshot()
+        editPostRepository.saveInitialSnapshot()
 
         editPostRepository.setInTransaction { secondPost }
 
         assertThat(editPostRepository.status).isEqualTo(PENDING)
 
-        editPostRepository.updateStatusFromSnapshot(secondPost)
+        editPostRepository.updateStatusFromInitialSnapshot(secondPost)
 
         assertThat(editPostRepository.status).isEqualTo(PUBLISHED)
     }

@@ -25,6 +25,7 @@ class EditPostRepository
     private var post: PostModel? = null
     private var postForUndo: PostModel? = null
     private var postSnapshotWhenEditorOpened: PostModel? = null
+    private var postSnapshotForDb: PostModel? = null
     val id: Int
         get() = post!!.id
     val localSiteId: Int
@@ -120,22 +121,26 @@ class EditPostRepository
         this.post = postForUndo?.clone()
     }
 
-    fun saveSnapshot() {
+    fun postHasChangesFromDb(post: PostModel): Boolean =
+            postSnapshotForDb == null || post != postSnapshotForDb
+
+    fun saveDbSnapshot(post: PostModel) {
+        postSnapshotForDb = post.clone()
+    }
+
+    fun saveInitialSnapshot() {
         postSnapshotWhenEditorOpened = post?.clone()
     }
 
-    fun isSnapshotDifferent(): Boolean =
-            postSnapshotWhenEditorOpened == null || post != postSnapshotWhenEditorOpened
+    fun hasInitialSnapshot() = postSnapshotWhenEditorOpened != null
 
-    fun hasSnapshot() = postSnapshotWhenEditorOpened != null
-
-    fun updateStatusFromSnapshot(post: PostModel) {
+    fun updateStatusFromInitialSnapshot(post: PostModel) {
         // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
         // original post's status as we could not proceed with the action
         post.setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
     }
 
-    fun hasStatusChanged(postStatus: String?): Boolean {
+    fun hasStatusChangedFromInitialSnapshot(postStatus: String?): Boolean {
         return postSnapshotWhenEditorOpened?.status != null && postStatus != postSnapshotWhenEditorOpened?.status
     }
 

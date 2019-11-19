@@ -370,12 +370,6 @@ public class EditPostActivity extends AppCompatActivity implements
         mDispatcher.register(this);
         mViewModel =
                 ViewModelProviders.of(this, mViewModelFactory).get(EditPostViewModel.class);
-        mViewModel.getOnSavePostTriggered().observe(this, unitEvent -> {
-            updatePostObject();
-            if (mEditPostRepository.isSnapshotDifferent()) {
-                mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
-            }
-        });
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -600,11 +594,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 contentIfNotHandled.show(this);
             }
         });
+        mViewModel.getOnSavePostTriggered().observe(this, unitEvent -> {
+            updatePostObject();
+            mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
+        });
     }
 
     private void initializePostObject() {
         if (mEditPostRepository.hasPost()) {
-            mEditPostRepository.saveSnapshot();
+            mEditPostRepository.saveInitialSnapshot();
             mEditPostRepository.replaceInTransaction(UploadService::updatePostWithCurrentlyCompletedUploads);
             if (mShowAztecEditor) {
                 try {
@@ -1998,7 +1996,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         savePostLocallyAndFinishAsync(true);
                     }
                 } else {
-                    mEditPostRepository.updateStatusFromSnapshot(postModel);
+                    mEditPostRepository.updateStatusFromInitialSnapshot(postModel);
                     EditPostActivity.this.runOnUiThread(() -> {
                         String message = getString(
                                 mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
@@ -2096,7 +2094,7 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean isPublishable = mEditPostRepository.isPostPublishable();
 
         // if post was modified during this editing session, save it
-        return (mEditPostRepository.hasSnapshot() && hasChanges) || (isPublishable && isNewPost());
+        return (mEditPostRepository.hasInitialSnapshot() && hasChanges) || (isPublishable && isNewPost());
     }
 
 
@@ -2365,7 +2363,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     .isCurrentMediaMarkedUploadingDifferentToOriginal(this, mShowAztecEditor, editedPost.getContent());
         }
 
-        boolean statusChanged = mEditPostRepository.hasStatusChanged(editedPost.getStatus());
+        boolean statusChanged = mEditPostRepository.hasStatusChangedFromInitialSnapshot(editedPost.getStatus());
 
         if (!editedPost.isLocalDraft() && (contentChanged || statusChanged)) {
             editedPost.setIsLocallyChanged(true);

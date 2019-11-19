@@ -2,7 +2,9 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -97,6 +99,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         ).thenReturn(
                 mediaIDs
         )
+        whenever(postRepository.postHasChangesFromDb(postModel)).thenReturn(true)
 
         viewModel.savePostToDb(context, postRepository, true)
 
@@ -108,10 +111,13 @@ class EditPostViewModelTest : BaseUnitTest() {
         assertThat(actionCaptor.firstValue.type).isEqualTo(PostAction.UPDATE_POST)
         assertThat(actionCaptor.firstValue.payload).isEqualTo(postModel)
         assertThat(viewModel.mediaMarkedUploadingOnStartIds).isEqualTo(mediaIDs)
+        verify(postRepository).saveDbSnapshot(postModel)
     }
 
     @Test
     fun `saves post to DB and does not update media IDs for non-Aztec editor`() {
+        whenever(postRepository.postHasChangesFromDb(postModel)).thenReturn(true)
+
         viewModel.savePostToDb(context, postRepository, false)
 
         verify(postRepository).updateInTransaction(transactionCaptor.capture())
@@ -122,6 +128,21 @@ class EditPostViewModelTest : BaseUnitTest() {
         assertThat(actionCaptor.firstValue.type).isEqualTo(PostAction.UPDATE_POST)
         assertThat(actionCaptor.firstValue.payload).isEqualTo(postModel)
         assertThat(viewModel.mediaMarkedUploadingOnStartIds).isEmpty()
+        verify(postRepository).saveDbSnapshot(postModel)
+    }
+
+    @Test
+    fun `does not save the post with no change`() {
+        whenever(postRepository.postHasChangesFromDb(postModel)).thenReturn(false)
+
+        viewModel.savePostToDb(context, postRepository, false)
+
+        verify(postRepository).updateInTransaction(transactionCaptor.capture())
+
+        transactionCaptor.firstValue.invoke(postModel)
+
+        verify(dispatcher, never()).dispatch(any())
+        verify(postRepository, never()).saveDbSnapshot(postModel)
     }
 
     @Test
@@ -284,7 +305,7 @@ class EditPostViewModelTest : BaseUnitTest() {
 
     @Test
     fun `updates post date when status has changed`() {
-        whenever(postRepository.hasStatusChanged(postStatus)).thenReturn(true)
+        whenever(postRepository.hasStatusChangedFromInitialSnapshot(postStatus)).thenReturn(true)
         whenever(postRepository.hasPost()).thenReturn(true)
 
         viewModel.updatePostObject(context, true, postRepository, title) { content }

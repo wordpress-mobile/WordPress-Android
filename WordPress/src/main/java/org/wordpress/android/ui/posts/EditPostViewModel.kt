@@ -58,14 +58,17 @@ class EditPostViewModel
         showAztecEditor: Boolean
     ) {
         postRepository.updateInTransaction { postModel ->
-            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postModel))
+            if (postRepository.postHasChangesFromDb(postModel)) {
+                postRepository.saveDbSnapshot(postModel)
+                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postModel))
 
-            if (showAztecEditor) {
-                // update the list of uploading ids
-                mediaMarkedUploadingOnStartIds = aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
-                        context,
-                        postModel.content
-                )
+                if (showAztecEditor) {
+                    // update the list of uploading ids
+                    mediaMarkedUploadingOnStartIds = aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
+                            context,
+                            postModel.content
+                    )
+                }
             }
             false
         }
@@ -141,7 +144,7 @@ class EditPostViewModel
             editedPost.setContent(content)
         }
 
-        val statusChanged = postRepository.hasStatusChanged(editedPost.status)
+        val statusChanged = postRepository.hasStatusChangedFromInitialSnapshot(editedPost.status)
 
         if (!editedPost.isLocalDraft && (titleChanged || contentChanged || statusChanged)) {
             editedPost.setIsLocallyChanged(true)
