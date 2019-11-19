@@ -1076,11 +1076,7 @@ public class EditPostSettingsFragment extends Fragment {
                 mPostLocation = null;
                 return false;
             }
-            if (mPostLocation == null) {
-                mPostLocation = new PostLocation();
-            }
-            mPostLocation.setLatitude(place.getLatLng().latitude);
-            mPostLocation.setLongitude(place.getLatLng().longitude);
+            mPostLocation = new PostLocation(place.getLatLng().latitude, place.getLatLng().longitude);
             postModel.setLocation(mPostLocation);
             mLocationTextView.setText(place.getAddress());
             return true;
