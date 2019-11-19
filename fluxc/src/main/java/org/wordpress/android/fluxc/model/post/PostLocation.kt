@@ -2,7 +2,10 @@ package org.wordpress.android.fluxc.model.post
 
 import java.io.Serializable
 
-data class PostLocation(val latitude: Double = INVALID_LATITUDE, val longitude: Double = INVALID_LONGITUDE) : Serializable {
+data class PostLocation(
+    val latitude: Double = INVALID_LATITUDE,
+    val longitude: Double = INVALID_LONGITUDE
+) : Serializable {
     val isValid: Boolean
         get() = isValidLatitude(latitude) && isValidLongitude(longitude)
 
