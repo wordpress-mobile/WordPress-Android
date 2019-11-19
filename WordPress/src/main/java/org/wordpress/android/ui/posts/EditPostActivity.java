@@ -191,7 +191,6 @@ import javax.inject.Inject;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
-import kotlin.Pair;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
