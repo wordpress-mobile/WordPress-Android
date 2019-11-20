@@ -128,13 +128,13 @@ class EditPostRepository
         postSnapshotForDb = post?.clone()
     }
 
-    fun saveInitialSnapshot() {
+    fun savePostSnapshotWhenEditorOpened() {
         postSnapshotWhenEditorOpened = post?.clone()
     }
 
-    fun hasInitialSnapshot() = postSnapshotWhenEditorOpened != null
+    fun hasPostSnapshotWhenEditorOpened() = postSnapshotWhenEditorOpened != null
 
-    fun updateStatusFromInitialSnapshot(post: PostModel) {
+    fun updateStatusFromPostSnapshotWhenEditorOpened(post: PostModel) {
         // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
         // original post's status as we could not proceed with the action
         post.setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())

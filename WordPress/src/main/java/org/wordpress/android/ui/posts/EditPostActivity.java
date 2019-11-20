@@ -604,7 +604,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void initializePostObject() {
         if (mEditPostRepository.hasPost()) {
-            mEditPostRepository.saveInitialSnapshot();
+            mEditPostRepository.savePostSnapshotWhenEditorOpened();
             mEditPostRepository.replaceInTransaction(UploadService::updatePostWithCurrentlyCompletedUploads);
             if (mShowAztecEditor) {
                 try {
@@ -1996,7 +1996,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         savePostLocallyAndFinishAsync(true);
                     }
                 } else {
-                    mEditPostRepository.updateStatusFromInitialSnapshot(postModel);
+                    mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened(postModel);
                     EditPostActivity.this.runOnUiThread(() -> {
                         String message = getString(
                                 mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
@@ -2094,7 +2094,7 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean isPublishable = mEditPostRepository.isPostPublishable();
 
         // if post was modified during this editing session, save it
-        return (mEditPostRepository.hasInitialSnapshot() && hasChanges) || (isPublishable && isNewPost());
+        return (mEditPostRepository.hasPostSnapshotWhenEditorOpened() && hasChanges) || (isPublishable && isNewPost());
     }
 
 

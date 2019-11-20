@@ -414,9 +414,9 @@ class EditPostRepositoryTest {
 
         assertThat(editPostRepository.getPost()).isEqualTo(firstPost)
 
-        editPostRepository.saveInitialSnapshot()
+        editPostRepository.savePostSnapshotWhenEditorOpened()
 
-        assertThat(editPostRepository.hasInitialSnapshot()).isTrue()
+        assertThat(editPostRepository.hasPostSnapshotWhenEditorOpened()).isTrue()
     }
 
     @Test
@@ -433,7 +433,7 @@ class EditPostRepositoryTest {
 
         assertThat(editPostRepository.getPost()).isEqualTo(firstPost)
 
-        editPostRepository.saveInitialSnapshot()
+        editPostRepository.savePostSnapshotWhenEditorOpened()
 
         assertThat(editPostRepository.postHasEdits()).isFalse()
 
@@ -453,13 +453,13 @@ class EditPostRepositoryTest {
 
         editPostRepository.setInTransaction { firstPost }
 
-        editPostRepository.saveInitialSnapshot()
+        editPostRepository.savePostSnapshotWhenEditorOpened()
 
         editPostRepository.setInTransaction { secondPost }
 
         assertThat(editPostRepository.status).isEqualTo(PENDING)
 
-        editPostRepository.updateStatusFromInitialSnapshot(secondPost)
+        editPostRepository.updateStatusFromPostSnapshotWhenEditorOpened(secondPost)
 
         assertThat(editPostRepository.status).isEqualTo(PUBLISHED)
     }
