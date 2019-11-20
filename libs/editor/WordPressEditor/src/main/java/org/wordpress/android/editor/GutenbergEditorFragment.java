@@ -524,6 +524,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
                 mEditorFragmentListener.onMediaDeleted(String.valueOf(mediaId));
+                mFailedMediaIds.remove(String.valueOf(mediaId));
                 getGutenbergContainerFragment().clearMediaFileURL(mediaId);
             }
         });
