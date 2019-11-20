@@ -460,7 +460,7 @@ class ReaderPostDetailFragment : Fragment(),
                         dispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload))
                         ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true)
                     }
-                    .addToSequencer()
+                    .show()
         }
     }
 
@@ -573,7 +573,7 @@ class ReaderPostDetailFragment : Fragment(),
                             .track(READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE)
                     ActivityLauncher.viewSavedPostsListInReader(activity)
                 }
-                .addToSequencer()
+                .show()
     }
 
     /*

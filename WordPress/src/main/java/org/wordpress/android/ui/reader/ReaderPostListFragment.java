@@ -1204,7 +1204,7 @@ public class ReaderPostListFragment extends Fragment
         };
         WPSnackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, undoListener)
-                .addToSequencer();
+                .show();
     }
 
     /*
@@ -1518,7 +1518,7 @@ public class ReaderPostListFragment extends Fragment
                             }
                         }
                     })
-                .addToSequencer();
+                .show();
     }
 
     /*
@@ -2239,7 +2239,7 @@ public class ReaderPostListFragment extends Fragment
                                 ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
                             }
                         })
-                .addToSequencer();
+                .show();
     }
 
     @Override

@@ -761,7 +761,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 findViewById(R.id.main_view),
                 R.string.signup_user_exists,
                 Snackbar.LENGTH_LONG
-        ).addToSequencer();
+        ).show();
     }
 
     // GoogleListener

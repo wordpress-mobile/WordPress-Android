@@ -298,7 +298,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
             AppLog.e(T.PLANS, PluginDetailActivity.class.getSimpleName() + ".onPlansFetched: "
                               + event.error.type + " - " + event.error.message);
             WPSnackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error), Snackbar.LENGTH_LONG)
-                      .addToSequencer();
+                      .show();
         } else {
             // This should not happen
             if (event.plans == null) {
@@ -307,7 +307,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                     throw new IllegalStateException(errorMessage);
                 }
                 WPSnackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error), Snackbar.LENGTH_LONG)
-                          .addToSequencer();
+                          .show();
                 AppLog.e(T.PLANS, errorMessage);
                 return;
             }
@@ -880,21 +880,21 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_updated_successfully, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
-                  .addToSequencer();
+                  .show();
     }
 
     private void showSuccessfulInstallSnackbar() {
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_installed_successfully, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
-                  .addToSequencer();
+                  .show();
     }
 
     private void showSuccessfulPluginRemovedSnackbar() {
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_removed_successfully, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
-                  .addToSequencer();
+                  .show();
     }
 
     private void showUpdateFailedSnackbar() {
@@ -906,7 +906,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                           dispatchUpdatePluginAction();
                       }
                   })
-                  .addToSequencer();
+                  .show();
     }
 
     private void showInstallFailedSnackbar() {
@@ -918,14 +918,14 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                           dispatchInstallPluginAction();
                       }
                   })
-                  .addToSequencer();
+                  .show();
     }
 
     private void showPluginRemoveFailedSnackbar() {
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_remove_failed, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
-                  .addToSequencer();
+                  .show();
     }
 
     private void showDomainCreditsCheckProgressDialog() {

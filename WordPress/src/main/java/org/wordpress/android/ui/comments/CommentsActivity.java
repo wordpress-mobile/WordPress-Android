@@ -268,7 +268,7 @@ public class CommentsActivity extends AppCompatActivity
                 }
             });
 
-            snackbar.addToSequencer();
+            snackbar.show();
         }
     }
 

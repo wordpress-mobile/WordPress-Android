@@ -1964,7 +1964,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                         AnalyticsUtils.trackWithSiteDetails(
                                 AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK, mSite);
                         dismissProgressDialog(progressDialog);
-                        WPSnackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).addToSequencer();
+                        WPSnackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
                     }
                 }
             }, new RestRequest.ErrorListener() {
