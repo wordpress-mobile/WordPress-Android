@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.giphy
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.giphy.sdk.core.models.Media
 import org.wordpress.android.viewmodel.SingleLiveEvent
 
 /**
@@ -41,14 +40,6 @@ class MutableGiphyMediaViewModel(
 
     private val _selectionNumber = MutableLiveData<Int?>()
     override val selectionNumber: LiveData<Int?> = _selectionNumber
-
-    constructor(media: Media) : this(
-            id = media.id,
-            thumbnailUri = Uri.parse(media.images.fixedHeightDownsampled.gifUrl),
-            previewImageUri = Uri.parse(media.images.downsized.gifUrl),
-            largeImageUri = Uri.parse(media.images.downsizedLarge.gifUrl),
-            title = media.title
-    )
 
     fun postIsSelected(isSelected: Boolean) = _isSelected.postValue(isSelected)
     fun postSelectionNumber(number: Int?) = _selectionNumber.postValue(number)

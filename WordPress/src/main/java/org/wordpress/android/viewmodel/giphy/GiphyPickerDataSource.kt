@@ -3,9 +3,6 @@ package org.wordpress.android.viewmodel.giphy
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PositionalDataSource
-import com.giphy.sdk.core.models.Media
-import com.giphy.sdk.core.models.enums.MediaType.gif
-import com.giphy.sdk.core.network.api.GPHApiClient
 
 /**
  * The PagedListDataSource that is created and managed by [GiphyPickerDataSourceFactory]
@@ -14,7 +11,6 @@ import com.giphy.sdk.core.network.api.GPHApiClient
  * [searchQuery] is changed by the user.
  */
 class GiphyPickerDataSource(
-    private val apiClient: GPHApiClient,
     private val searchQuery: String
 ) : PositionalDataSource<GiphyMediaViewModel>() {
     /**
@@ -75,18 +71,7 @@ class GiphyPickerDataSource(
             return
         }
 
-        apiClient.search(searchQuery, gif, params.requestedLoadSize, startPosition, null, null) { response, error ->
-            if (response != null) {
-                callback.onResult(
-                        response.data.toGiphyMediaViewModels(),
-                        startPosition,
-                        response.pagination?.totalCount ?: response.data.size
-                )
-            } else {
-                initialLoadError = error
-                callback.onResult(emptyList(), startPosition, 0)
-            }
-        }
+        callback.onResult(emptyList(), startPosition, 0)
     }
 
     /**
@@ -96,22 +81,7 @@ class GiphyPickerDataSource(
      * automatically retried using [retryAllFailedRangeLoads].
      */
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<GiphyMediaViewModel>) {
-        apiClient.search(searchQuery, gif, params.loadSize, params.startPosition, null, null) { response, error ->
-            if (response != null) {
-                callback.onResult(response.data.toGiphyMediaViewModels())
-
-                retryAllFailedRangeLoads()
-            } else {
-                failedRangeLoadArguments.add(RangeLoadArguments(params, callback))
-
-                // Do not replace the error if we already dispatched one. This makes the UI better since loadRange()
-                // gets called every time we load a part in the endless scroll. The user would be seeing an endless
-                // stream of error messages if we don't throttle it here.
-                if (_rangeLoadErrorEvent.value == null) {
-                    _rangeLoadErrorEvent.value = error
-                }
-            }
-        }
+        // Logic removed for now.
     }
 
     /**
@@ -129,6 +99,4 @@ class GiphyPickerDataSource(
             failedRangeLoadArguments.remove(args)
         }
     }
-
-    private fun List<Media>.toGiphyMediaViewModels(): List<GiphyMediaViewModel> = map { MutableGiphyMediaViewModel(it) }
 }

@@ -46,28 +46,27 @@
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingTop="@dimen/margin_small"
-        android:paddingStart="@dimen/margin_medium"
-        android:paddingEnd="@dimen/margin_extra_large">
+        >
 
         <EditText
+            android:paddingStart="@dimen/margin_large"
+            android:paddingEnd="@dimen/margin_medium"
             android:textSize="@dimen/text_sz_medium"
             android:textAlignment="viewStart"
-            android:gravity="start"
             android:id="@+id/edit_add"
             style="@style/ReaderEditText.Topic"
             android:layout_width="0dp"
+            android:minHeight="@dimen/min_touch_target_sz"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/reader_hint_add_tag_or_url" />
 
         <ImageButton
             android:id="@+id/btn_add"
+            android:padding="@dimen/margin_extra_medium_large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
-            android:padding="@dimen/margin_small"
             android:contentDescription="@string/add"
             android:src="@drawable/ic_reader_follow_white_24dp"
             android:tint="@color/primary_40" />

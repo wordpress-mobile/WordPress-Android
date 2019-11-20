@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-28 19:04:14+0000
+Translation-Revision-Date: 2019-11-13 00:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Benachrichtigungen</string>
+    <string name="master_switch_default_title_off">Aus</string>
+    <string name="master_switch_default_title_on">Ein</string>
+    <string name="notifications_tab_dialog_master_off_message">Wenn du die Benachrichtigungen für diese Website deaktivierst, wird auch die Benachrichtigungsanzeige auf dem Tab „Benachrichtigungen“ für diese Website deaktiviert. Du kannst detailliert festlegen, welche Art von Benachrichtigung du siehst, nachdem du die Benachrichtigungen für diese Website aktiviert hast.</string>
+    <string name="notifications_tab_dialog_master_off_title">Aktiviere die Benachrichtigungen für diese Website, um Benachrichtigungen auf dem Tab „Benachrichtigungen“ zu sehen.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Benachrichtigungsanzeige auf dem Tab „Benachrichtigungen“ für diese Website aktivieren</string>
+    <string name="notifications_tab_dialog_master_hint_on">Benachrichtigungsanzeige auf dem Tab „Benachrichtigungen“ für diese Website deaktivieren</string>
+    <string name="notifications_tab_dialog_master_status_off">Benachrichtigungen für diese Website</string>
+    <string name="notifications_tab_dialog_master_status_on">Benachrichtigungen für diese Website</string>
+    <string name="dialog_gutenberg_informative_description_page">Großartig! Du nutzt jetzt den Block-Editor für neue Seiten! Wenn du zum klassischen Editor wechseln möchtest, gehe zu „Meine Website“ > „Website-Einstellungen“.</string>
+    <string name="dialog_gutenberg_informative_description_post">Großartig! Du nutzt jetzt den Block-Editor für neue Beiträge! Wenn du zum klassischen Editor wechseln möchtest, gehe zu „Meine Website“ > „Website-Einstellungen“.</string>
     <string name="pick_media">Bild oder Video hinzufügen</string>
     <string name="error_post_not_submitted_retrying">Wir konnten diesen Beitrag nicht zur Überprüfung einreichen, aber wir werden es später erneut versuchen.</string>
     <string name="error_post_not_scheduled_retrying">Wir konnten diesen Beitrag nicht planen, aber wir werden es später noch einmal versuchen.</string>
@@ -117,8 +128,6 @@ Language: de
     <string name="stats_bar_chart_content_description">Grafik der Website-Aufrufe.</string>
     <string name="stats_loading_card">Laden der ausgewählten Kartendaten</string>
     <string name="site_settings_editor">Editor</string>
-    <string name="dialog_gutenberg_informative_description_page">Du verwendest derzeit den Block-Editor, um neue Seiten zu erstellen. Möchtest du standardmäßig den klassischen Editor verwenden? Ruf die Website-Einstellungen auf.</string>
-    <string name="dialog_gutenberg_informative_description_post">Du verwendest derzeit den Block-Editor, um neue Beiträge zu erstellen. Möchtest du standardmäßig den klassischen Editor verwenden? Ruf die Website-Einstellungen auf.</string>
     <string name="description_expand">Erweitern</string>
     <string name="description_collapse">Einklappen</string>
     <string name="editor_retry_failed_uploads">Hochladen erneut starten</string>

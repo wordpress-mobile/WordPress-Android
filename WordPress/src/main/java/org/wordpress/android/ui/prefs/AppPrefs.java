@@ -115,6 +115,7 @@ public class AppPrefs {
         NEWS_CARD_SHOWN_VERSION,
         AVATAR_VERSION,
         GUTENBERG_DEFAULT_FOR_NEW_POSTS,
+        USER_IN_GUTENBERG_ROLLOUT_GROUP,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
 
@@ -605,6 +606,14 @@ public class AppPrefs {
     public static boolean isDefaultAppWideEditorPreferenceSet() {
         // Check if the default editor pref was previously set
         return !"".equals(getString(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS));
+    }
+
+    public static boolean isUserInGutenbergRolloutGroup() {
+        return getBoolean(DeletablePrefKey.USER_IN_GUTENBERG_ROLLOUT_GROUP, false);
+    }
+
+    public static void setUserInGutenbergRolloutGroup() {
+        setBoolean(DeletablePrefKey.USER_IN_GUTENBERG_ROLLOUT_GROUP, true);
     }
 
     public static void removeAppWideEditorPreference() {
