@@ -189,7 +189,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     );
                 }
             } catch (Resources.NotFoundException rnfe) {
-                AppLog.e(T.EDITOR, rnfe);
+                AppLog.i(T.EDITOR, rnfe.getMessage());
             }
         }
 
