@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
@@ -32,19 +33,21 @@ class EditPostViewModel
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val dateTimeUtils: DateTimeUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
-    private var mDebounceCounter = 0
+    private var debounceCounter = 0
+    private var saveJob: Job? = null
     var mediaInsertedOnCreation: Boolean = false
     var mediaMarkedUploadingOnStartIds: List<String> = listOf()
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
     val onSavePostTriggered: LiveData<Event<Unit>> = _onSavePostTriggered
 
     fun savePost() {
-        launch {
-            if (mDebounceCounter < MAX_UNSAVED_POSTS) {
-                mDebounceCounter++
+        saveJob?.cancel()
+        saveJob = launch {
+            if (debounceCounter < MAX_UNSAVED_POSTS) {
+                debounceCounter++
                 delay(CHANGE_SAVE_DELAY)
             }
-            mDebounceCounter = 0
+            debounceCounter = 0
             _onSavePostTriggered.value = Event(Unit)
         }
     }
