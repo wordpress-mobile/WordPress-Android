@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-195"
+            versionName "alpha-196"
         }
-        versionCode 793
+        versionCode 795
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -83,9 +83,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "13.6-rc-2"
+                versionName "13.6"
             }
-            versionCode 792
+            versionCode 796
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
@@ -279,10 +279,6 @@ dependencies {
         exclude group: 'com.google.dagger'
     }
 
-    implementation('com.giphy.sdk:core:1.0.2@aar') {
-        transitive = true
-    }
-
     lintChecks 'org.wordpress:lint:1.0.1'
 
     // Sentry
@@ -297,6 +293,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+
+    implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:2.0.1'
 }
 
 configurations.all {

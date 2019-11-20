@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-25 05:33:23+0000
+Translation-Revision-Date: 2019-11-06 00:13:45+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Уведомления</string>
+    <string name="master_switch_default_title_off">Выкл.</string>
+    <string name="master_switch_default_title_on">Вкл.</string>
+    <string name="notifications_tab_dialog_master_off_message">Отключение уведомлений для этого сайта выключит их отображение на вкладке уведомлений. Вы можете настроить какие из уведомлений вы хотите видеть, после того как включите уведомления.</string>
+    <string name="notifications_tab_dialog_master_off_title">Для просмотра уведомлений от этого сайта на вкладке уведомлений включите уведомления для сайта.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Включить отображение уведомлений для этого сайта на вкладке уведомлений</string>
+    <string name="notifications_tab_dialog_master_hint_on">Выключить отображение уведомлений для этого сайта на вкладке уведомлений</string>
+    <string name="notifications_tab_dialog_master_status_off">Уведомления для этого сайта</string>
+    <string name="notifications_tab_dialog_master_status_on">Уведомления для этого сайта</string>
+    <string name="dialog_gutenberg_informative_description_page">Сейчас вы используете редактор блоков для новых страниц. Отлично! Если захотите изменить редактор на классический, то сделайте это в \'Мой сайт\'>\'Настройки сайта\',</string>
+    <string name="dialog_gutenberg_informative_description_post">Сейчас вы используете редактор блоков для новых записей. Отлично! Если захотите изменить редактор на классический, то сделайте это в \'Мой сайт\'>\'Настройки сайта\',</string>
     <string name="pick_media">Добавить изображение или видео</string>
     <string name="error_post_not_submitted_retrying">Невозможно отправить запись на одобрение, но мы попробуем ещё раз позже.</string>
     <string name="error_post_not_scheduled_retrying">Невозможно запланировать публикацию записи, но мы попробуем ещё раз позже.</string>
@@ -117,8 +128,6 @@ Language: ru
     <string name="stats_bar_chart_content_description">График просмотров сайта.</string>
     <string name="stats_loading_card">Загрузка данных выбранной карты</string>
     <string name="site_settings_editor">Редактор</string>
-    <string name="dialog_gutenberg_informative_description_page">Сейчас вы используете редактор блоков для новых страниц. Хотите использовать классический редактор по умолчанию? Перейдите в настройки сайта.</string>
-    <string name="dialog_gutenberg_informative_description_post">Сейчас вы используете редактор блоков для новых записей. Хотите использовать классический редактор по умолчанию? Перейдите в настройки сайта.</string>
     <string name="description_expand">Развернуть</string>
     <string name="description_collapse">Свернуть</string>
     <string name="editor_retry_failed_uploads">Повторить загрузку</string>

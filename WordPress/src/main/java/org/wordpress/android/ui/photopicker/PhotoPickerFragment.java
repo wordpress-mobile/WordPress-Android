@@ -59,8 +59,7 @@ public class PhotoPickerFragment extends Fragment {
         ANDROID_CAPTURE_VIDEO(true),
         ANDROID_CHOOSE_PHOTO_OR_VIDEO(true),
         WP_MEDIA(false),
-        STOCK_MEDIA(true),
-        GIPHY(true);
+        STOCK_MEDIA(true);
 
         private boolean mRequiresUploadPermission;
 
@@ -258,8 +257,6 @@ public class PhotoPickerFragment extends Fragment {
                 break;
             case STOCK_MEDIA:
                 break;
-            case GIPHY:
-                break;
         }
 
         if (mListener != null) {
@@ -296,14 +293,6 @@ public class PhotoPickerFragment extends Fragment {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     doIconClicked(PhotoPickerIcon.STOCK_MEDIA);
-                    return true;
-                }
-            });
-
-            MenuItem itemGiphy = popup.getMenu().add(R.string.photo_picker_giphy);
-            itemGiphy.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override public boolean onMenuItemClick(MenuItem item) {
-                    doIconClicked(PhotoPickerIcon.GIPHY);
                     return true;
                 }
             });
