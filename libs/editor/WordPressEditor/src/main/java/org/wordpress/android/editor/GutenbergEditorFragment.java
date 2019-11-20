@@ -150,7 +150,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         // Here we assume the Application class is at the same level as the R class
         // It will not work if this lib is used outside of WordPress-Android,
         // in this case let's just return an empty map
-        Class<?> rString, rPlurals;
+        Class<?> rString;
         Package mainPackage = getActivity().getApplication().getClass().getPackage();
 
         if (mainPackage == null) {
