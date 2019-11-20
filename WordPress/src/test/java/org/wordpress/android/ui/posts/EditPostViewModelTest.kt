@@ -301,7 +301,7 @@ class EditPostViewModelTest : BaseUnitTest() {
 
     @Test
     fun `updates post date when status has changed`() {
-        whenever(postRepository.hasStatusChangedFromInitialSnapshot(postStatus)).thenReturn(true)
+        whenever(postRepository.hasStatusChangedFromWhenEditorOpened(postStatus)).thenReturn(true)
         whenever(postRepository.hasPost()).thenReturn(true)
 
         viewModel.updatePostObject(context, true, postRepository) { PostFields(title, content) }

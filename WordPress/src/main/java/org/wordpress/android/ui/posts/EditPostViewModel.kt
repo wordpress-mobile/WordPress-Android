@@ -146,7 +146,7 @@ class EditPostViewModel
             editedPost.setContent(content)
         }
 
-        val statusChanged = postRepository.hasStatusChangedFromInitialSnapshot(editedPost.status)
+        val statusChanged = postRepository.hasStatusChangedFromWhenEditorOpened(editedPost.status)
 
         if (!editedPost.isLocalDraft && (titleChanged || contentChanged || statusChanged)) {
             editedPost.setIsLocallyChanged(true)

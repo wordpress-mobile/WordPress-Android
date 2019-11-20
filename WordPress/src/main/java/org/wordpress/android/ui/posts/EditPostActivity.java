@@ -2363,7 +2363,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     .isCurrentMediaMarkedUploadingDifferentToOriginal(this, mShowAztecEditor, editedPost.getContent());
         }
 
-        boolean statusChanged = mEditPostRepository.hasStatusChangedFromInitialSnapshot(editedPost.getStatus());
+        boolean statusChanged = mEditPostRepository.hasStatusChangedFromWhenEditorOpened(editedPost.getStatus());
 
         if (!editedPost.isLocalDraft() && (contentChanged || statusChanged)) {
             editedPost.setIsLocallyChanged(true);

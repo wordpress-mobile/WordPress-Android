@@ -140,7 +140,7 @@ class EditPostRepository
         post.setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
     }
 
-    fun hasStatusChangedFromInitialSnapshot(postStatus: String?): Boolean {
+    fun hasStatusChangedFromWhenEditorOpened(postStatus: String?): Boolean {
         return postSnapshotWhenEditorOpened?.status != null && postStatus != postSnapshotWhenEditorOpened?.status
     }
 
