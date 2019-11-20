@@ -1846,7 +1846,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     // or a shortcode replacement (for instance for images and galleries)
 
                     // Update the post object directly, without re-fetching the fields from the EditorFragment
-                    updatePostContentNewEditor(postModel);
+                    updatePostLocallyChangedOnStatusOrMediaChange(postModel);
                     return true;
                 });
                 mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
@@ -2350,7 +2350,7 @@ public class EditPostActivity extends AppCompatActivity implements
     /**
      * Updates post object
      */
-    private void updatePostContentNewEditor(PostModel editedPost) {
+    private void updatePostLocallyChangedOnStatusOrMediaChange(PostModel editedPost) {
         if (editedPost == null) {
             return;
         }
