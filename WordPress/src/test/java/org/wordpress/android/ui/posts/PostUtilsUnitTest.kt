@@ -71,9 +71,9 @@ class PostUtilsUnitTest {
             dateLocallyChanged: String? = null
         ): PostModel {
             val post = PostModel()
-            post.status = postStatus.toString()
+            post.setStatus(postStatus.toString())
             if (dateLocallyChanged != null) {
-                post.dateLocallyChanged = dateLocallyChanged
+                post.setDateLocallyChanged(dateLocallyChanged)
             }
 
             val site = SiteModel()

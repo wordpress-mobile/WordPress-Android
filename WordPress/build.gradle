@@ -279,10 +279,6 @@ dependencies {
         exclude group: 'com.google.dagger'
     }
 
-    implementation('com.giphy.sdk:core:1.0.2@aar') {
-        transitive = true
-    }
-
     lintChecks 'org.wordpress:lint:1.0.1'
 
     // Sentry

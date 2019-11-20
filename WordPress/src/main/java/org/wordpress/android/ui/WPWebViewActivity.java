@@ -37,7 +37,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -470,7 +470,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static void openUrlByUsingBlogCredentials(
             Context context,
             SiteModel site,
-            PostModel post,
+            PostImmutableModel post,
             String url,
             String[] listOfAllowedURLs,
             boolean disableLinks,
