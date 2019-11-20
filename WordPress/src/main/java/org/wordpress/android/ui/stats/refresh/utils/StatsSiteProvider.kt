@@ -87,7 +87,7 @@ class StatsSiteProvider
     }
 
     sealed class SiteUpdateResult {
-        object NotConnectedJetpackSite: SiteUpdateResult()
-        data class SiteConnected(val siteId: Long): SiteUpdateResult()
+        object NotConnectedJetpackSite : SiteUpdateResult()
+        data class SiteConnected(val siteId: Long) : SiteUpdateResult()
     }
 }

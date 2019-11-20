@@ -141,7 +141,7 @@ class StatsFragment : DaggerFragment() {
 
         viewModel.siteChanged.observe(this, Observer { siteChangedEvent ->
             siteChangedEvent?.applyIfNotHandled {
-                when(this) {
+                when (this) {
                     is SiteUpdateResult.SiteConnected -> viewModel.onSiteChanged()
                     is SiteUpdateResult.NotConnectedJetpackSite -> getActivity()?.finish()
                 }
