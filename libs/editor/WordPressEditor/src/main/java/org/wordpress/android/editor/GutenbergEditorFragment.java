@@ -193,43 +193,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
         }
 
-        try {
-            rPlurals = getActivity().getApplication().getClassLoader().loadClass(mainPackage.getName() + ".R$plurals");
-        } catch (ClassNotFoundException ex) {
-            // ignore plurals if not found
-            return translations;
-        }
-
-        for (Field stringField : rPlurals.getDeclaredFields()) {
-            int resourceId;
-            try {
-                resourceId = stringField.getInt(rPlurals);
-            } catch (IllegalArgumentException | IllegalAccessException iae) {
-                AppLog.e(T.EDITOR, iae);
-                continue;
-            }
-
-            String fieldName = stringField.getName();
-            // Filter out all strings that are not prefixed with `gutenberg_native_`
-            if (!fieldName.startsWith("gutenberg_native_")) {
-                continue;
-            }
-
-            try {
-                // Add the mapping english => [ singular, plural ] to the bundle
-                String[] currentResourceStrings = currentResources.getStringArray(resourceId);
-                String[] englishResourceStrings = englishResources.getStringArray(resourceId);
-                if (currentResourceStrings.length > 0 && englishResourceStrings.length > 0) {
-                    translations.putStringArrayList(
-                            englishResourceStrings[0],
-                            new ArrayList<>(Arrays.asList(currentResourceStrings))
-                    );
-                }
-            } catch (Resources.NotFoundException rnfe) {
-                AppLog.e(T.EDITOR, rnfe);
-            }
-        }
-
         return translations;
     }
 
