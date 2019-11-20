@@ -71,8 +71,8 @@ class StatsSiteProvider
                 mutableSiteChanged.value = Event(SiteConnected(site.siteId))
             } else {
                 if (counter < maxAttempts) {
-                    dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
                     counter++
+                    dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
                 } else {
                     counter = 0
                     mutableSiteChanged.value = Event(NotConnectedJetpackSite)
