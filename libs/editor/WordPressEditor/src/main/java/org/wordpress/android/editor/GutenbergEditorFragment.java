@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Consumer;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
@@ -39,6 +40,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
@@ -330,6 +332,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnAuthHeaderRequestedListener() {
                     @Override public String onAuthHeaderRequested(String url) {
                         return mEditorFragmentListener.onAuthHeaderRequested(url);
+                    }
+                },
+                new RequestExecutor() {
+                    @Override public void performRequest(String path,
+                                                         Consumer<String> onResult,
+                                                         Consumer<String> onError) {
+                        mEditorFragmentListener.onPerformFetch(path, onResult, onError);
                     }
                 },
                 new OnImageFullscreenPreviewListener() {
