@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -77,6 +79,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -114,6 +117,7 @@ public class EditPostSettingsFragment extends Fragment {
     private LinearLayout mExcerptContainer;
     private LinearLayout mFormatContainer;
     private LinearLayout mTagsContainer;
+    private LinearLayout mShortlinkContainer;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
     private TextView mLocationTextView;
@@ -123,6 +127,8 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
     private TextView mPublishDateTextView;
+    private TextView mShortlinkTextView;
+    private TextView mShortlinkCopyButton;
     private ImageView mFeaturedImageView;
     private ImageView mLocalFeaturedImageView;
     private Button mFeaturedImageButton;
@@ -258,6 +264,9 @@ public class EditPostSettingsFragment extends Fragment {
         mPostFormatTextView = rootView.findViewById(R.id.post_format);
         mPasswordTextView = rootView.findViewById(R.id.post_password);
         mPublishDateTextView = rootView.findViewById(R.id.publish_date);
+        mShortlinkContainer = rootView.findViewById(R.id.post_shortlink_container);
+        mShortlinkTextView = rootView.findViewById(R.id.post_shortlink);
+        mShortlinkCopyButton = rootView.findViewById(R.id.shortlink_copy_url);
 
         mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
         mLocalFeaturedImageView = rootView.findViewById(R.id.post_featured_image_local);
@@ -452,6 +461,29 @@ public class EditPostSettingsFragment extends Fragment {
         mExcerptTextView.setText(postModel.getExcerpt());
         mSlugTextView.setText(postModel.getSlug());
         mPasswordTextView.setText(postModel.getPassword());
+
+        // Shortlink functionality is only available for WPCom and Jetpack-connected sites
+        if (WPMeShortlinks.getPostShortlink(getSite(), postModel) != null) {
+            mShortlinkTextView.setText(WPMeShortlinks.getPostShortlink(getSite(), postModel));
+            mShortlinkCopyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        ClipboardManager clipboard = (ClipboardManager) getActivity()
+                                .getSystemService(Context.CLIPBOARD_SERVICE);
+                        clipboard.setPrimaryClip(ClipData.newPlainText(getString(R.string.app_name),
+                                WPMeShortlinks.getPostShortlink(getSite(), postModel)));
+                        ToastUtils.showToast(getActivity(), R.string.media_edit_copy_url_toast);
+                    } catch (Exception e) {
+                        AppLog.e(AppLog.T.UTILS, e);
+                        ToastUtils.showToast(getActivity(), R.string.error_copy_to_clipboard);
+                    }
+                }
+            });
+        } else {
+            mShortlinkContainer.setVisibility(View.GONE);
+        }
+
         updatePostFormatTextView();
         updateTagsTextView();
         updateStatusTextView();

@@ -1225,6 +1225,7 @@
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
     <string name="post_settings_status">Status</string>
+    <string name="post_settings_shortlink">Shortlink</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_more_options">More Options</string>
     <string name="post_settings_not_set">Not Set</string>
