@@ -2519,7 +2519,7 @@
     <string name="post_list_drafts">Drafts</string>
     <string name="post_list_scheduled">Scheduled</string>
     <string name="post_list_trashed">Trashed</string>
-    <string name="post_list_search_prompt">Search published posts</string>
+    <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 
 
