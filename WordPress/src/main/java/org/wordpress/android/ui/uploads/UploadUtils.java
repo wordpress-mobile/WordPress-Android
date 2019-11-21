@@ -30,16 +30,22 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction;
 import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
+import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.SnackbarActionInfo;
+import org.wordpress.android.util.SnackbarInfo;
+import org.wordpress.android.util.SnackbarSequencer;
+import org.wordpress.android.util.SnackbarSequencerInfo;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.widgets.WPSnackbar;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,6 +156,7 @@ public class UploadUtils {
                                                      @NonNull final PostModel post,
                                                      @NonNull final SiteModel site,
                                                      @NonNull final UploadAction uploadAction,
+                                                     SnackbarSequencer sequencer,
                                                      View.OnClickListener publishPostListener) {
         boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
@@ -162,24 +169,24 @@ public class UploadUtils {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
             // And tell the user about it
-            showSnackbar(snackbarAttachView, getDeviceOfflinePostNotUploadedMessage(post, uploadAction),
+            showSnackbar(activity, snackbarAttachView, getDeviceOfflinePostNotUploadedMessage(post, uploadAction),
                     R.string.cancel,
                     v -> {
                         int msgRes = cancelPendingAutoUpload(post, dispatcher);
-                        showSnackbar(snackbarAttachView, msgRes);
-                    });
+                        showSnackbar(activity, snackbarAttachView, msgRes, sequencer);
+                    }, sequencer);
             return;
         }
 
         boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
         if (hasFailedMedia) {
-            showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
+            showSnackbar(activity, snackbarAttachView, R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
                          new View.OnClickListener() {
                              @Override
                              public void onClick(View v) {
                                  ActivityLauncher.editPostOrPageForResult(activity, site, post);
                              }
-                         });
+                         }, sequencer);
             return;
         }
 
@@ -189,8 +196,8 @@ public class UploadUtils {
         if (isScheduledPost) {
             // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
-                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
-                             publishPostListener);
+                showSnackbar(activity, snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
+                             publishPostListener, sequencer);
             }
             return;
         }
@@ -199,10 +206,10 @@ public class UploadUtils {
         if (isPublished) {
             // if it's a published post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
-                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
-                             publishPostListener);
+                showSnackbar(activity, snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
+                             publishPostListener, sequencer);
             } else {
-                showSnackbar(snackbarAttachView, R.string.editor_uploading_post);
+                showSnackbar(activity, snackbarAttachView, R.string.editor_uploading_post, sequencer);
             }
             return;
         }
@@ -212,75 +219,159 @@ public class UploadUtils {
             if (PostUtils.isPublishable(post)) {
                 // if the post is publishable, we offer the PUBLISH button
                 if (savedLocally) {
-                    showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_locally,
+                    showSnackbarSuccessAction(activity, snackbarAttachView, R.string.editor_draft_saved_locally,
                                               R.string.button_publish,
-                                              publishPostListener);
+                                              publishPostListener, sequencer);
                 } else {
                     if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
                         || UploadService.isPostUploadingOrQueued(post)) {
-                        showSnackbar(snackbarAttachView, R.string.editor_uploading_draft);
+                        showSnackbar(activity, snackbarAttachView, R.string.editor_uploading_draft, sequencer);
                     } else {
-                        showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
+                        showSnackbarSuccessAction(activity, snackbarAttachView, R.string.editor_draft_saved_online,
                                                   R.string.button_publish,
-                                                  publishPostListener);
+                                                  publishPostListener, sequencer);
                     }
                 }
             } else {
-                showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally);
+                showSnackbar(activity, snackbarAttachView, R.string.editor_draft_saved_locally, sequencer);
             }
         } else {
             if (savedLocally) {
-                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_publish,
-                             publishPostListener);
+                showSnackbar(activity, snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_publish,
+                             publishPostListener, sequencer);
             } else {
                 if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
                     || UploadService.isPostUploadingOrQueued(post)) {
-                    showSnackbar(snackbarAttachView, R.string.editor_uploading_post);
+                    showSnackbar(activity, snackbarAttachView, R.string.editor_uploading_post, sequencer);
                 } else {
-                    showSnackbarSuccessAction(snackbarAttachView, R.string.editor_post_saved_online,
+                    showSnackbarSuccessAction(activity, snackbarAttachView, R.string.editor_post_saved_online,
                                               R.string.button_publish,
-                                              publishPostListener);
+                                              publishPostListener, sequencer);
                 }
             }
         }
     }
 
-    private static void showSnackbarError(View view, String message, int buttonTitleRes,
-                                          View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
-                  .setAction(buttonTitleRes, onClickListener).addToSequencer();
+    private static void showSnackbarError(Context context, View view, String message, int buttonTitleRes,
+                                          View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
+        //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
+        //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
+        sequencer.enqueueSnackbar(
+                new SnackbarSequencerInfo(new WeakReference<>(context),
+                        new SnackbarInfo(
+                             new WeakReference<>(view),
+                             new UiStringText(message),
+                             K_SNACKBAR_WAIT_TIME_MS
+                        ),
+                        new SnackbarActionInfo(
+                             new UiStringRes(buttonTitleRes),
+                             new WeakReference(onClickListener)
+                        ),
+                        null,
+                        System.currentTimeMillis()
+                )
+        );
     }
 
-    public static void showSnackbarError(View view, String message) {
-        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).addToSequencer();
+    public static void showSnackbarError(Context context, View view, String message, SnackbarSequencer sequencer) {
+        //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).addToSequencer();
+        sequencer.enqueueSnackbar(
+                new SnackbarSequencerInfo(new WeakReference<>(context),
+                        new SnackbarInfo(
+                                new WeakReference<>(view),
+                                new UiStringText(message),
+                                K_SNACKBAR_WAIT_TIME_MS
+                        ),
+                        null,
+                        null,
+                        System.currentTimeMillis()
+                )
+        );
     }
 
-    private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
-                                     View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
-                  .setAction(buttonTitleRes, onClickListener).addToSequencer();
+    private static void showSnackbar(Context context, View view, int messageRes, int buttonTitleRes,
+                                     View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
+        //WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
+        //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
+        sequencer.enqueueSnackbar(
+                new SnackbarSequencerInfo(new WeakReference<>(context),
+                        new SnackbarInfo(
+                                new WeakReference<>(view),
+                                new UiStringRes(messageRes),
+                                K_SNACKBAR_WAIT_TIME_MS
+                        ),
+                        new SnackbarActionInfo(
+                                new UiStringRes(buttonTitleRes),
+                                new WeakReference(onClickListener)
+                        ),
+                        null,
+                        System.currentTimeMillis()
+                )
+        );
     }
 
-    public static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
-                                                 View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
-                  .setAction(buttonTitleRes, onClickListener).addToSequencer();
+    public static void showSnackbarSuccessAction(Context context, View view, int messageRes, int buttonTitleRes,
+                                                 View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
+        //WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
+        //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
+        sequencer.enqueueSnackbar(
+                new SnackbarSequencerInfo(new WeakReference<>(context),
+                        new SnackbarInfo(
+                                new WeakReference<>(view),
+                                new UiStringRes(messageRes),
+                                K_SNACKBAR_WAIT_TIME_MS
+                        ),
+                        new SnackbarActionInfo(
+                                new UiStringRes(buttonTitleRes),
+                                new WeakReference(onClickListener)
+                        ),
+                        null,
+                        System.currentTimeMillis()
+                )
+        );
     }
 
-    private static void showSnackbarSuccessAction(View view, String message, int buttonTitleRes,
-                                                  View.OnClickListener onClickListener) {
-       WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
-                 .setAction(buttonTitleRes, onClickListener).addToSequencer();
+    private static void showSnackbarSuccessAction(Context context, View view, String message, int buttonTitleRes,
+                                                  View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
+       //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
+       //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
+        sequencer.enqueueSnackbar(
+                new SnackbarSequencerInfo(new WeakReference<>(context),
+                        new SnackbarInfo(
+                                new WeakReference<>(view),
+                                new UiStringText(message),
+                                K_SNACKBAR_WAIT_TIME_MS
+                        ),
+                        new SnackbarActionInfo(
+                                new UiStringRes(buttonTitleRes),
+                                new WeakReference(onClickListener)
+                        ),
+                        null,
+                        System.currentTimeMillis()
+                )
+        );
     }
 
     public static void showSnackbarSuccessActionOrange(View view, int messageRes, int buttonTitleRes,
                                                        View.OnClickListener onClickListener) {
         WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
-                  .setAction(buttonTitleRes, onClickListener).addToSequencer();
+                  .setAction(buttonTitleRes, onClickListener).show();
     }
 
-    public static void showSnackbar(View view, int messageRes) {
-        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).addToSequencer();
+    public static void showSnackbar(Context context, View view, int messageRes, SnackbarSequencer sequencer) {
+        //WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).addToSequencer();
+        sequencer.enqueueSnackbar(
+                new SnackbarSequencerInfo(new WeakReference<>(context),
+                        new SnackbarInfo(
+                                new WeakReference<>(view),
+                                new UiStringRes(messageRes),
+                                Snackbar.LENGTH_LONG
+                        ),
+                        null,
+                        null,
+                        System.currentTimeMillis()
+                )
+        );
     }
 
     public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher) {
@@ -317,13 +408,14 @@ public class UploadUtils {
                                                      boolean isError,
                                                      final PostModel post,
                                                      final String errorMessage,
-                                                     final SiteModel site, final Dispatcher dispatcher) {
+                                                     final SiteModel site, final Dispatcher dispatcher,
+                                                     SnackbarSequencer sequencer) {
         boolean userCanPublish = userCanPublish(site);
         if (isError) {
             if (errorMessage != null) {
                 // RETRY only available for Aztec
                 if (AppPrefs.isAztecEditorEnabled()) {
-                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry,
+                    UploadUtils.showSnackbarError(activity, snackbarAttachView, errorMessage, R.string.retry,
                                                   new View.OnClickListener() {
                                                       @Override
                                                       public void onClick(View view) {
@@ -331,12 +423,12 @@ public class UploadUtils {
                                                                   activity, post, false);
                                                           activity.startService(intent);
                                                       }
-                                                  });
+                                                  }, sequencer);
                 } else {
-                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage);
+                    UploadUtils.showSnackbarError(activity, snackbarAttachView, errorMessage, sequencer);
                 }
             } else {
-                UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally);
+                UploadUtils.showSnackbar(activity, snackbarAttachView, R.string.editor_draft_saved_locally, sequencer);
             }
         } else {
             if (post != null) {
@@ -386,10 +478,10 @@ public class UploadUtils {
                 }
 
                 if (snackbarButtonRes > 0) {
-                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, snackbarMessageRes, snackbarButtonRes,
-                            publishPostListener);
+                    UploadUtils.showSnackbarSuccessAction(activity, snackbarAttachView, snackbarMessageRes, snackbarButtonRes,
+                            publishPostListener, sequencer);
                 } else {
-                    UploadUtils.showSnackbar(snackbarAttachView, snackbarMessageRes);
+                    UploadUtils.showSnackbar(activity, snackbarAttachView, snackbarMessageRes, sequencer);
                 }
             }
         }
@@ -398,12 +490,13 @@ public class UploadUtils {
     public static void onMediaUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
                                                       boolean isError,
                                                       final List<MediaModel> mediaList, final SiteModel site,
-                                                      final String messageForUser) {
+                                                      final String messageForUser,
+                                                      SnackbarSequencer sequencer) {
         if (isError) {
             if (messageForUser != null) {
                 // RETRY only available for Aztec
                 if (mediaList != null && !mediaList.isEmpty()) {
-                    UploadUtils.showSnackbarError(snackbarAttachView, messageForUser, R.string.retry,
+                    UploadUtils.showSnackbarError(activity, snackbarAttachView, messageForUser, R.string.retry,
                                                   new View.OnClickListener() {
                                                       @Override
                                                       public void onClick(View view) {
@@ -414,12 +507,17 @@ public class UploadUtils {
                                                                                                mediaListToRetry, true);
                                                           activity.startService(retryIntent);
                                                       }
-                                                  });
+                                                  }, sequencer);
                 } else {
-                    UploadUtils.showSnackbarError(snackbarAttachView, messageForUser);
+                    UploadUtils.showSnackbarError(activity, snackbarAttachView, messageForUser, sequencer);
                 }
             } else {
-                UploadUtils.showSnackbarError(snackbarAttachView, activity.getString(R.string.error_media_upload));
+                UploadUtils.showSnackbarError(
+                        activity,
+                        snackbarAttachView,
+                        activity.getString(R.string.error_media_upload),
+                        sequencer
+                );
             }
         } else {
             if (mediaList == null || mediaList.isEmpty()) {
@@ -427,7 +525,7 @@ public class UploadUtils {
             }
 
             // show success snackbar for media only items and offer the WRITE POST functionality)
-            UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageForUser,
+            UploadUtils.showSnackbarSuccessAction(activity, snackbarAttachView, messageForUser,
                                                   R.string.media_files_uploaded_write_post, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -443,7 +541,7 @@ public class UploadUtils {
                             writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
                             activity.startActivity(writePostIntent);
                         }
-                    });
+                    }, sequencer);
         }
     }
 

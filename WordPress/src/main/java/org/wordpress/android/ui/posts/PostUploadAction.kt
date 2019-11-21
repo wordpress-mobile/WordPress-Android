@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.util.SnackbarSequencer
 
 sealed class PostUploadAction {
     class EditPostResult(
@@ -51,7 +52,8 @@ fun handleUploadAction(
     activity: Activity,
     dispatcher: Dispatcher,
     snackbarAttachView: View,
-    uploadActionUseCase: UploadActionUseCase
+    uploadActionUseCase: UploadActionUseCase,
+    snackbarSequencer: SnackbarSequencer
 ) {
     when (action) {
         is PostUploadAction.EditPostResult -> {
@@ -62,7 +64,8 @@ fun handleUploadAction(
                     action.data,
                     action.post,
                     action.site,
-                    uploadActionUseCase.getUploadAction(action.post)
+                    uploadActionUseCase.getUploadAction(action.post),
+                    snackbarSequencer
             ) {
                 action.publishAction()
             }
@@ -83,7 +86,8 @@ fun handleUploadAction(
                     action.post,
                     action.errorMessage,
                     action.site,
-                    action.dispatcher
+                    action.dispatcher,
+                    snackbarSequencer
             )
         }
         is PostUploadAction.MediaUploadedSnackbar -> {
@@ -93,13 +97,16 @@ fun handleUploadAction(
                     action.isError,
                     action.mediaList,
                     action.site,
-                    action.message
+                    action.message,
+                    snackbarSequencer
             )
         }
         is PostUploadAction.PostRemotePreviewSnackbarError -> {
             UploadUtils.showSnackbarError(
+                    activity,
                     snackbarAttachView,
-                    snackbarAttachView.resources.getString(action.messageResId)
+                    snackbarAttachView.resources.getString(action.messageResId),
+                    snackbarSequencer
             )
         }
         is PostUploadAction.CancelPostAndMediaUpload -> {

@@ -107,6 +107,7 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -176,6 +177,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
+    @Inject SnackbarSequencer mSnackbarSequencer;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -777,6 +779,7 @@ public class WPMainActivity extends AppCompatActivity implements
                             post,
                             site,
                             mUploadActionUseCase.getUploadAction(post),
+                            mSnackbarSequencer,
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -1144,7 +1147,8 @@ public class WPMainActivity extends AppCompatActivity implements
                         event.post,
                         null,
                         site,
-                        mDispatcher);
+                        mDispatcher,
+                        mSnackbarSequencer);
             }
         }
     }

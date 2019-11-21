@@ -80,6 +80,7 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
@@ -111,6 +112,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject SiteStore mSiteStore;
+    @Inject SnackbarSequencer mSnackbarSequencer;
 
     private SiteModel mSite;
 
@@ -1091,7 +1093,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(this,
                     findViewById(R.id.tab_layout), true,
-                    event.mediaModelList, mSite, event.errorMessage);
+                    event.mediaModelList, mSite, event.errorMessage, mSnackbarSequencer);
             updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }
@@ -1103,7 +1105,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(this,
                     findViewById(R.id.tab_layout), false,
-                    event.mediaModelList, mSite, event.successMessage);
+                    event.mediaModelList, mSite, event.successMessage, mSnackbarSequencer);
             updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }

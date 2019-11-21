@@ -87,6 +87,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
@@ -180,6 +181,7 @@ public class MySiteFragment extends Fragment implements
     @Inject MediaStore mMediaStore;
     @Inject QuickStartStore mQuickStartStore;
     @Inject ImageManager mImageManager;
+    @Inject SnackbarSequencer mSnackbarSequencer;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -1147,12 +1149,12 @@ public class MySiteFragment extends Fragment implements
             if (event.post.getLocalSiteId() == site.getId()) {
                 UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
                         requireActivity().findViewById(R.id.coordinator), true,
-                        event.post, event.errorMessage, site, mDispatcher);
+                        event.post, event.errorMessage, site, mDispatcher, mSnackbarSequencer);
             }
         } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                     requireActivity().findViewById(R.id.coordinator), true,
-                    event.mediaModelList, site, event.errorMessage);
+                    event.mediaModelList, site, event.errorMessage, mSnackbarSequencer);
         }
     }
 
@@ -1178,7 +1180,7 @@ public class MySiteFragment extends Fragment implements
                 if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
                     UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                             requireActivity().findViewById(R.id.coordinator), false,
-                            event.mediaModelList, site, event.successMessage);
+                            event.mediaModelList, site, event.successMessage, mSnackbarSequencer);
                 }
             }
         }
