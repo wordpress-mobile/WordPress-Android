@@ -17,14 +17,17 @@ import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.EndListIndicatorIdentifier
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.SectionHeaderIdentifier
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.LoadingItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
+import org.wordpress.android.viewmodel.posts.PostListItemType.SectionHeaderItem
 
 sealed class PostListItemIdentifier {
     data class LocalPostId(val id: LocalId) : PostListItemIdentifier()
     data class RemotePostId(val id: RemoteId) : PostListItemIdentifier()
     object EndListIndicatorIdentifier : PostListItemIdentifier()
+    data class SectionHeaderIdentifier(val type:PostListType) : PostListItemIdentifier()
 }
 
 class PostListItemDataSource(
@@ -78,17 +81,19 @@ class PostListItemDataSource(
                 is LocalPostId -> transformToPostListItemType(identifier.id, localPostMap[identifier.id])
                 is RemotePostId -> transformToPostListItemType(identifier.id, remotePostMap[identifier.id])
                 EndListIndicatorIdentifier -> EndListIndicatorItem
+                is SectionHeaderIdentifier -> SectionHeaderItem(identifier.type)
             }
         }
     }
 
     private fun localOrRemoteIdsFromPostListItemIds(itemIdentifiers: List<PostListItemIdentifier>): List<LocalOrRemoteId> {
-        val localOrRemoteIds = itemIdentifiers.mapNotNull { identifier ->
-            when (identifier) {
-                is LocalPostId -> identifier.id
-                is RemotePostId -> identifier.id
+        val localOrRemoteIds = itemIdentifiers.mapNotNull {
+            when (it) {
+                is LocalPostId -> it.id
+                is RemotePostId -> it.id
                 // We are creating a list of local and remote ids, so other type of identifiers don't matter
                 EndListIndicatorIdentifier -> null
+                is SectionHeaderIdentifier -> null
             }
         }
         return localOrRemoteIds
@@ -142,24 +147,26 @@ class PostListItemDataSource(
                 PostListType.PUBLISHED -> listPublished.add(mapToPostListItemIdentifier(it))
                 PostListType.SCHEDULED -> listScheduled.add(mapToPostListItemIdentifier(it))
                 TRASHED -> listTrashed.add(mapToPostListItemIdentifier(it))
+                // We are grouping Post results into display groups. Search isn't a valid post type so it can be ignored.
+                PostListType.SEARCH -> {}
             }
         }
 
         val allItems = mutableListOf<PostListItemIdentifier>()
         if (listDrafts.isNotEmpty()) {
-            allItems += listDrafts
+            allItems += listOf(SectionHeaderIdentifier(PostListType.DRAFTS)) + listDrafts
         }
 
         if (listPublished.isNotEmpty()) {
-            allItems += listPublished
+            allItems += listOf(SectionHeaderIdentifier(PostListType.PUBLISHED)) + listPublished
         }
 
         if (listScheduled.isNotEmpty()) {
-            allItems += listScheduled
+            allItems += listOf(SectionHeaderIdentifier(PostListType.SCHEDULED)) + listScheduled
         }
 
         if (listTrashed.isNotEmpty()) {
-            allItems += listTrashed
+            allItems += listOf(SectionHeaderIdentifier(TRASHED)) + listTrashed
         }
 
         return allItems

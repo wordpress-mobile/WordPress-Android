@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -22,12 +23,14 @@ import org.wordpress.android.viewmodel.posts.PostListItemType
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.LoadingItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
+import org.wordpress.android.viewmodel.posts.PostListItemType.SectionHeaderItem
 
 private const val VIEW_TYPE_POST = 0
 private const val VIEW_TYPE_POST_COMPACT = 1
 private const val VIEW_TYPE_ENDLIST_INDICATOR = 2
 private const val VIEW_TYPE_LOADING = 3
 private const val VIEW_TYPE_LOADING_COMPACT = 4
+private const val VIEW_TYPE_SECTION_HEADER = 5
 
 class PostListAdapter(
     context: Context,
@@ -40,6 +43,7 @@ class PostListAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is EndListIndicatorItem -> VIEW_TYPE_ENDLIST_INDICATOR
+            is SectionHeaderItem -> VIEW_TYPE_SECTION_HEADER
             is PostListItemUiState -> {
                 when (itemLayoutType) {
                     STANDARD -> VIEW_TYPE_POST
@@ -75,6 +79,10 @@ class PostListAdapter(
             VIEW_TYPE_POST_COMPACT -> {
                 PostListItemViewHolder.Compact(parent, imageManager, uiHelpers)
             }
+            VIEW_TYPE_SECTION_HEADER -> {
+                val view = layoutInflater.inflate(R.layout.page_divider_item, parent, false)
+                SectionHeaderViewHolder(view)
+            }
             else -> {
                 // Fail fast if a new view type is added so the we can handle it
                 throw IllegalStateException("The view type '$viewType' needs to be handled")
@@ -101,6 +109,14 @@ class PostListAdapter(
             // getItem returns the item, or NULL, if a null placeholder is at the specified position.
             item?.let { holder.onBind((item as LoadingItem)) }
         }
+        if (holder is SectionHeaderViewHolder) {
+            val item = getItem(position)
+            assert(item is SectionHeaderItem) {
+                "If we are presenting SectionHeaderViewHolder, the item has to be of type SectionHeaderItem " +
+                        "for position: $position"
+            }
+            item?.let { holder.onBind((item as SectionHeaderItem)) }
+        }
     }
 
     fun updateItemLayoutType(updatedItemLayoutType: PostListViewLayoutType): Boolean {
@@ -125,6 +141,13 @@ class PostListAdapter(
             buttonMore?.setVisible(item.options.showMoreButton)
             buttonMoveToDraft?.setVisible(item.options.showMoveToDraftButton)
             buttonDeletePermanently?.setVisible(item.options.showDeletePermanentlyButton)
+        }
+    }
+    private class SectionHeaderViewHolder(view: View): ViewHolder(view) {
+        private val dividerTitle = itemView.findViewById<TextView>(R.id.divider_text)
+
+        fun onBind(headerItem: SectionHeaderItem) {
+            dividerTitle.text = headerItem.type.toString()
         }
     }
 
