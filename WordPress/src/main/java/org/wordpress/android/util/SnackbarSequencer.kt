@@ -1,5 +1,6 @@
 package org.wordpress.android.util
 
+import android.app.Activity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +12,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.widgets.WPSnackbar
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -39,52 +41,49 @@ class SnackbarSequencer @Inject constructor(
 
     private suspend fun schedule(snackbarSequencerInfo: SnackbarSequencerInfo, delay: Long) {
         delay(delay)
-        System.gc()
         withContext(Dispatchers.Main) {
-            //AppLog.d(T.UTILS, "SnackbarSequencer > show snackbar [${snackbar.message}]")
+            val context = snackbarSequencerInfo.context.get()
 
-            snackbarSequencerInfo.context?.let {
-                if (it.get() == null) {
-                    AppLog.d(T.UTILS, "SnackbarSequencer > schedule got null context (garbaged?)")
-                } else {
-                    AppLog.d(T.UTILS, "SnackbarSequencer > schedule context [${it.get()}]")
-                }
-            }
+            context?.let {
+                AppLog.d(T.UTILS, "SnackbarSequencer > schedule context [$it]")
 
-            snackbarSequencerInfo.snackbarInfo.view.get()?.let {view ->
-                snackbarSequencerInfo.snackbarInfo.let { snackbarInfo ->
-                    val message = uiHelper.getTextOfUiString(contextProvider.getContext(), snackbarInfo.textRes)
+                if ((context as? Activity)?.isFinishing == false) {
+                    snackbarSequencerInfo.snackbarInfo.view.get()?.let {view ->
+                        snackbarSequencerInfo.snackbarInfo.let { snackbarInfo ->
+                            val message = uiHelper.getTextOfUiString(contextProvider.getContext(), snackbarInfo.textRes)
 
-                    val snackbar = WPSnackbar.make(
-                           view,
-                           message,
-                           snackbarInfo.duration
+                            val snackbar = WPSnackbar.make(
+                                    view,
+                                    message,
+                                    snackbarInfo.duration
+                            )
+
+                            snackbarSequencerInfo.snackbarActionInfo?.let { actionInfo ->
+                                snackbar.setAction(
+                                        uiHelper.getTextOfUiString(contextProvider.getContext(), actionInfo.textRes),
+                                        actionInfo.clickListener.get()
+                                )
+                            }
+
+                            snackbarSequencerInfo.snackbarCallbackInfo?.let { callbackinfo ->
+                                snackbar.addCallback(
+                                        callbackinfo.snackbarCallback.get()
+                                )
+                            }
+
+                            AppLog.d(T.UTILS, "SnackbarSequencer > schedule Showing snackbar [$message]")
+
+                            snackbar.show()
+                        }
+                    } ?: AppLog.d(
+                            T.UTILS,
+                            "SnackbarSequencer > schedule " +
+                                    "skipping snackbar [${uiHelper.getTextOfUiString(
+                                            contextProvider.getContext(),
+                                            snackbarSequencerInfo.snackbarInfo.textRes)}]"
                     )
-
-                    snackbarSequencerInfo.snackbarActionInfo?.let {
-                        snackbar.setAction(
-                                uiHelper.getTextOfUiString(contextProvider.getContext(), it.textRes),
-                                it.clickListener.get()
-                        )
-                    }
-
-                    snackbarSequencerInfo.snackbarCallbackInfo?.let {
-                        snackbar.addCallback(
-                                it.snackbarCallback.get()
-                        )
-                    }
-
-                    AppLog.d(T.UTILS, "SnackbarSequencer > schedule Showing snackbar [$message]")
-
-                    snackbar.show()
                 }
-            } ?: AppLog.d(
-                        T.UTILS,
-                    "SnackbarSequencer > schedule " +
-                            "skipping snackbar [${uiHelper.getTextOfUiString(
-                                    contextProvider.getContext(),
-                                    snackbarSequencerInfo.snackbarInfo.textRes)}]"
-            )
+            } ?: AppLog.d(T.UTILS, "SnackbarSequencer > schedule got null context (garbaged?)")
         }
     }
 
@@ -121,7 +120,7 @@ class SnackbarSequencer @Inject constructor(
 
     private fun getSnackbarDurationMs(snackbarSequencerInfo: SnackbarSequencerInfo): Int {
         return when (snackbarSequencerInfo.snackbarInfo.duration) {
-            Snackbar.LENGTH_INDEFINITE -> TODO("Create Exception or silently overwrite with some default?")
+            Snackbar.LENGTH_INDEFINITE -> throw IllegalArgumentException("Snackbar.LENGTH_INDEFINITE not allowed in sequencer.")
             Snackbar.LENGTH_LONG -> LONG_DURATION_MS
             Snackbar.LENGTH_SHORT -> SHORT_DURATION_MS
             else -> snackbarSequencerInfo.snackbarInfo.duration
@@ -129,7 +128,6 @@ class SnackbarSequencer @Inject constructor(
     }
 
     fun enqueueSnackbar(snackbarSequencerInfo: SnackbarSequencerInfo) {
-        //AppLog.d(T.UTILS, "SnackbarSequencer > enqueueSnackbar message [${snackbar.message}]")
         val delay = estimateNextAvailableTimeSlot(
                 getSnackbarDurationMs(snackbarSequencerInfo),
                 snackbarSequencerInfo.creationTimestamp

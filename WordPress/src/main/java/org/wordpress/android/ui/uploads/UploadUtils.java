@@ -257,15 +257,15 @@ public class UploadUtils {
         //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
         //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
         sequencer.enqueueSnackbar(
-                new SnackbarSequencerInfo(new WeakReference<>(context),
+                new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
-                             new WeakReference<>(view),
+                             view,
                              new UiStringText(message),
                              K_SNACKBAR_WAIT_TIME_MS
                         ),
                         new SnackbarActionInfo(
                              new UiStringRes(buttonTitleRes),
-                             new WeakReference(onClickListener)
+                             onClickListener
                         ),
                         null,
                         System.currentTimeMillis()
@@ -276,9 +276,9 @@ public class UploadUtils {
     public static void showSnackbarError(Context context, View view, String message, SnackbarSequencer sequencer) {
         //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).addToSequencer();
         sequencer.enqueueSnackbar(
-                new SnackbarSequencerInfo(new WeakReference<>(context),
+                new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
-                                new WeakReference<>(view),
+                                view,
                                 new UiStringText(message),
                                 K_SNACKBAR_WAIT_TIME_MS
                         ),
@@ -294,15 +294,15 @@ public class UploadUtils {
         //WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
         //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
         sequencer.enqueueSnackbar(
-                new SnackbarSequencerInfo(new WeakReference<>(context),
+                new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
-                                new WeakReference<>(view),
+                                view,
                                 new UiStringRes(messageRes),
                                 K_SNACKBAR_WAIT_TIME_MS
                         ),
                         new SnackbarActionInfo(
                                 new UiStringRes(buttonTitleRes),
-                                new WeakReference(onClickListener)
+                                onClickListener
                         ),
                         null,
                         System.currentTimeMillis()
@@ -315,15 +315,15 @@ public class UploadUtils {
         //WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
         //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
         sequencer.enqueueSnackbar(
-                new SnackbarSequencerInfo(new WeakReference<>(context),
+                new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
-                                new WeakReference<>(view),
+                                view,
                                 new UiStringRes(messageRes),
                                 K_SNACKBAR_WAIT_TIME_MS
                         ),
                         new SnackbarActionInfo(
                                 new UiStringRes(buttonTitleRes),
-                                new WeakReference(onClickListener)
+                                onClickListener
                         ),
                         null,
                         System.currentTimeMillis()
@@ -336,15 +336,15 @@ public class UploadUtils {
        //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
        //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
         sequencer.enqueueSnackbar(
-                new SnackbarSequencerInfo(new WeakReference<>(context),
+                new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
-                                new WeakReference<>(view),
+                                view,
                                 new UiStringText(message),
                                 K_SNACKBAR_WAIT_TIME_MS
                         ),
                         new SnackbarActionInfo(
                                 new UiStringRes(buttonTitleRes),
-                                new WeakReference(onClickListener)
+                                onClickListener
                         ),
                         null,
                         System.currentTimeMillis()
@@ -361,9 +361,9 @@ public class UploadUtils {
     public static void showSnackbar(Context context, View view, int messageRes, SnackbarSequencer sequencer) {
         //WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).addToSequencer();
         sequencer.enqueueSnackbar(
-                new SnackbarSequencerInfo(new WeakReference<>(context),
+                new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
-                                new WeakReference<>(view),
+                                view,
                                 new UiStringRes(messageRes),
                                 Snackbar.LENGTH_LONG
                         ),

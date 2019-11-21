@@ -5,35 +5,37 @@ import android.view.View
 import android.view.View.OnClickListener
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.ui.utils.UiString
+import java.lang.ref.SoftReference
 import java.lang.ref.WeakReference
 
 class SnackbarActionInfo(
     val textRes: UiString,
-    //actionListener: (() -> Unit)
-    //clickListener: ((View) -> Unit)? = null
-    val clickListener: WeakReference<OnClickListener>
+    clickListener: OnClickListener
 ) {
-    //val actionListener = WeakReference(actionListener)
-    //val clickListener = WeakReference(clickListener)
+    val clickListener = SoftReference(clickListener)
 }
 
-class SnacbarCallbackInfo(
-    val snackbarCallback: WeakReference<Snackbar.Callback>
+class SnackbarCallbackInfo(
+    snackbarCallback: Snackbar.Callback
 ) {
-    //val snackbarCallback = WeakReference(snackbarCallback)
+    val snackbarCallback = SoftReference(snackbarCallback)
 }
 
-data class SnackbarInfo(
-    val view: WeakReference<View>,
+class SnackbarInfo(
+    view: View,
     val textRes: UiString,
     val duration: Int
-)
+) {
+    val view = WeakReference(view)
+}
 
 
-data class SnackbarSequencerInfo(
-    val context: WeakReference<Context>,
+class SnackbarSequencerInfo(
+    context: Context,
     val snackbarInfo: SnackbarInfo,
     val snackbarActionInfo: SnackbarActionInfo? = null,
-    val snackbarCallbackInfo: SnacbarCallbackInfo? = null,
+    val snackbarCallbackInfo: SnackbarCallbackInfo? = null,
     val creationTimestamp: Long
-)
+) {
+    val context = WeakReference(context)
+}

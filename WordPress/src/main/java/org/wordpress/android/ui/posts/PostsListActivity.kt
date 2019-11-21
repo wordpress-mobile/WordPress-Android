@@ -45,7 +45,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.SnacbarCallbackInfo
+import org.wordpress.android.util.SnackbarCallbackInfo
 import org.wordpress.android.util.SnackbarActionInfo
 import org.wordpress.android.util.SnackbarInfo
 import org.wordpress.android.util.SnackbarSequencer
@@ -297,25 +297,25 @@ class PostsListActivity : AppCompatActivity(),
 
             snackbarSequencer.enqueueSnackbar(
                     SnackbarSequencerInfo(
-                            WeakReference(this@PostsListActivity),
+                            this@PostsListActivity,
                             SnackbarInfo(
-                                view = WeakReference(parent),
+                                view = parent,
                                 textRes = UiStringRes(holder.messageRes),
                                 duration = Snackbar.LENGTH_LONG
                             ),
                             holder.buttonTitleRes?.let {
                                 SnackbarActionInfo(
                                     textRes = UiStringRes(holder.buttonTitleRes),
-                                    clickListener = WeakReference(OnClickListener { holder.buttonAction() })
+                                    clickListener = OnClickListener { holder.buttonAction() }
                                 )
                             },
-                            SnacbarCallbackInfo(
-                                snackbarCallback = WeakReference(object : Snackbar.Callback() {
+                            SnackbarCallbackInfo(
+                                snackbarCallback = object : Snackbar.Callback() {
                                         override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                                             holder.onDismissAction()
                                             super.onDismissed(transientBottomBar, event)
                                         }
-                                })
+                                }
                             ),
                             creationTimestamp =  System.currentTimeMillis()
                     )

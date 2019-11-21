@@ -15,7 +15,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.snackbar.Snackbar.SnackbarLayout;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AccessibilityUtils;
 
 /**
@@ -28,8 +27,6 @@ public class WPSnackbar {
     private View mContentView;
 
     private WPSnackbar(@NonNull View view, @NonNull CharSequence text, int duration) {
-        ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
-
         mSnackbar = Snackbar.make(view, "", // CHECKSTYLE IGNORE
                 AccessibilityUtils.getSnackbarDuration(view.getContext(), duration));
 
@@ -52,8 +49,6 @@ public class WPSnackbar {
         mContentView = LayoutInflater.from(context).inflate(R.layout.snackbar, null);
 
         TextView message = mContentView.findViewById(R.id.message);
-
-        //mText = text;
 
         // Hide message view when text is empty.
         if (TextUtils.isEmpty(text)) {
@@ -79,10 +74,6 @@ public class WPSnackbar {
 
     public boolean isShowing() {
         return mSnackbar != null && mSnackbar.isShown();
-    }
-
-    public int getDuration() {
-        return mSnackbar.getDuration();
     }
 
     public static WPSnackbar make(@NonNull View view, @NonNull CharSequence text, int duration) {
