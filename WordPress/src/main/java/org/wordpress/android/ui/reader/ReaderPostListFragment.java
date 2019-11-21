@@ -396,7 +396,7 @@ public class ReaderPostListFragment extends Fragment
                         mCurrentTag,
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
-                )) {
+                ) || ReaderUtils.isDefaultTag(mCurrentTag)) {
                   mViewModel.applySubfilter(subfilterListItem, true);
                 }
             });
@@ -427,11 +427,11 @@ public class ReaderPostListFragment extends Fragment
 
         mViewModel.start(
                 mCurrentTag,
-                ReaderUtils.isFollowing(
+                (ReaderUtils.isFollowing(
                         mCurrentTag,
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
-                )
+                ) || ReaderUtils.isDefaultTag(mCurrentTag))
                 && BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel
         );
     }

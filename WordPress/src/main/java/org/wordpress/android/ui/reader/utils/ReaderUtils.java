@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
 public class ReaderUtils {
     public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
         return getResizedImageUrl(imageUrl, width, height, isPrivate, PhotonUtils.Quality.MEDIUM);
@@ -207,18 +205,33 @@ public class ReaderUtils {
      * (so we can also get its title & endpoint), returns a new tag if that fails
      */
     public static ReaderTag getTagFromTagName(String tagName, ReaderTagType tagType) {
+        return getTagFromTagName(tagName, tagType, false);
+    }
+
+    public static ReaderTag getTagFromTagName(String tagName, ReaderTagType tagType, boolean isDefaultTag) {
         ReaderTag tag = ReaderTagTable.getTag(tagName, tagType);
         if (tag != null) {
             return tag;
         } else {
-            return createTagFromTagName(tagName, tagType);
+            return createTagFromTagName(tagName, tagType, isDefaultTag);
         }
     }
 
     public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType) {
+        return createTagFromTagName(tagName, tagType, false);
+    }
+
+    public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType, boolean isDefaultTag) {
         String tagSlug = sanitizeWithDashes(tagName).toLowerCase(Locale.ROOT);
         String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
-        return new ReaderTag(tagSlug, tagDisplayName, tagName, null, tagType);
+        return new ReaderTag(
+                tagSlug,
+                tagDisplayName,
+                tagName,
+                null,
+                tagType,
+                isDefaultTag
+        );
     }
 
     /*
@@ -228,7 +241,7 @@ public class ReaderUtils {
     public static ReaderTag getDefaultTag() {
         ReaderTag defaultTag = getTagFromEndpoint(ReaderTag.TAG_ENDPOINT_DEFAULT);
         if (defaultTag == null) {
-            defaultTag = getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT);
+            defaultTag = getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT, true);
         }
         return defaultTag;
     }
@@ -359,7 +372,6 @@ public class ReaderUtils {
                 if (isFollowing(tag, isTopLevelReader, recyclerView)) {
                     validTag = ReaderUtils.getDefaultTag();
 
-                    ReaderUtils.getDefaultTag();
                     // it's possible the default tag won't exist if the user just changed the app's
                     // language, in which case default to the first tag in the table
                     if (!ReaderTagTable.tagExists(tag)) {
@@ -370,5 +382,9 @@ public class ReaderUtils {
         }
 
         return validTag;
+    }
+
+    public static boolean isDefaultTag(ReaderTag tag) {
+        return tag != null && tag.isDefaultTag();
     }
 }
