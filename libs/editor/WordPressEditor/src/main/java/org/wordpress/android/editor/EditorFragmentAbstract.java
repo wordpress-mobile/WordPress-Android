@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.view.DragEvent;
 
+import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 
@@ -190,6 +191,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onTrackableEvent(TrackableEvent event);
         void onHtmlModeToggledInToolbar();
         void onAddStockMediaClicked(boolean allowMultipleSelection);
+        void onPerformFetch(String path, Consumer<String> onResult, Consumer<String> onError);
     }
 
     /**
