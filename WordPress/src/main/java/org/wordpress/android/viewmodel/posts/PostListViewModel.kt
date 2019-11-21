@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.list.AuthorFilter
 import org.wordpress.android.fluxc.model.list.AuthorFilter.Everyone
 import org.wordpress.android.fluxc.model.list.AuthorFilter.SpecificAuthor
-import org.wordpress.android.fluxc.model.list.ListConfig
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
@@ -88,17 +87,14 @@ class PostListViewModel @Inject constructor(
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
 
-    private val postsListConfig: ListConfig by lazy {
-        ListConfig(PostStore.NUM_POSTS_PER_FETCH, ListConfig.default.initialLoadSize, ListConfig.default.dbPageSize, ListConfig.default.prefetchDistance)
-    }
-
     private val dataSource: PostListItemDataSource by lazy {
         PostListItemDataSource(
                 dispatcher = dispatcher,
                 postStore = postStore,
                 postFetcher = connector.postFetcher,
                 transform = this::transformPostModelToPostListItemUiState,
-                postListType = connector.postListType
+                postListType = connector.postListType,
+                isSearch = (connector.postListType == SEARCH)
         )
     }
 
@@ -224,15 +220,10 @@ class PostListViewModel @Inject constructor(
                     site = connector.site,
                     statusList = connector.postListType.postStatuses,
                     author = author,
-                    searchQuery = searchQuery,
-                    config = postsListConfig
+                    searchQuery = searchQuery
             )
         } else {
-            PostListDescriptorForXmlRpcSite(
-                    site = connector.site,
-                    statusList = connector.postListType.postStatuses,
-                    config = postsListConfig
-            )
+            PostListDescriptorForXmlRpcSite(site = connector.site, statusList = connector.postListType.postStatuses)
         }
     }
 

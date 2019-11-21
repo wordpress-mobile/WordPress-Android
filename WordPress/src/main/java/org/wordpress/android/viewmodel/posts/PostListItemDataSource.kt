@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.ui.posts.PostListType
@@ -31,7 +32,8 @@ class PostListItemDataSource(
     private val postStore: PostStore,
     private val postFetcher: PostFetcher,
     private val transform: (PostModel) -> PostListItemUiState,
-    private val postListType: PostListType
+    private val postListType: PostListType,
+    private val isSearch: Boolean
 ) : ListItemDataSourceInterface<PostListDescriptor, PostListItemIdentifier, PostListItemType> {
     override fun fetchList(listDescriptor: PostListDescriptor, offset: Long) {
         val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
@@ -48,6 +50,10 @@ class PostListItemDataSource(
         val remoteItems = remoteItemIds.map { RemotePostId(id = it) }
         val actualItems = localItems + remoteItems
 
+        if (isSearch) {
+            return getGroupedItemIdentifiers(listDescriptor, actualItems)
+        }
+
         // We only want to show the end list indicator if the list is fully fetched and it's not empty
         return if (isListFullyFetched && actualItems.isNotEmpty()) {
             (actualItems + listOf(EndListIndicatorIdentifier))
@@ -58,15 +64,7 @@ class PostListItemDataSource(
         listDescriptor: PostListDescriptor,
         itemIdentifiers: List<PostListItemIdentifier>
     ): List<PostListItemType> {
-        val localOrRemoteIds = itemIdentifiers.mapNotNull { identifier ->
-            when (identifier) {
-                is LocalPostId -> identifier.id
-                is RemotePostId -> identifier.id
-                // We are creating a list of local and remote ids, so other type of identifiers don't matter
-                EndListIndicatorIdentifier -> null
-            }
-        }
-
+        val localOrRemoteIds = localOrRemoteIdsFromPostListItemIds(itemIdentifiers)
         val postList = postStore.getPostsByLocalOrRemotePostIds(localOrRemoteIds, listDescriptor.site)
 
         // Convert the post list into 2 maps with local and remote ids as keys
@@ -82,6 +80,18 @@ class PostListItemDataSource(
                 EndListIndicatorIdentifier -> EndListIndicatorItem
             }
         }
+    }
+
+    private fun localOrRemoteIdsFromPostListItemIds(itemIdentifiers: List<PostListItemIdentifier>): List<LocalOrRemoteId> {
+        val localOrRemoteIds = itemIdentifiers.mapNotNull { identifier ->
+            when (identifier) {
+                is LocalPostId -> identifier.id
+                is RemotePostId -> identifier.id
+                // We are creating a list of local and remote ids, so other type of identifiers don't matter
+                EndListIndicatorIdentifier -> null
+            }
+        }
+        return localOrRemoteIds
     }
 
     private fun fetchMissingRemotePosts(
@@ -106,4 +116,52 @@ class PostListItemDataSource(
             } else {
                 transform(post)
             }
+
+
+    private fun getGroupedItemIdentifiers(
+        listDescriptor: PostListDescriptor,
+        itemIdentifiers: List<PostListItemIdentifier>
+    ): List<PostListItemIdentifier> {
+        val localOrRemoteIds = localOrRemoteIdsFromPostListItemIds(itemIdentifiers)
+        val postList = postStore.getPostsByLocalOrRemotePostIds(localOrRemoteIds, listDescriptor.site)
+        val listDrafts = mutableListOf<PostListItemIdentifier>()
+        val listPublished = mutableListOf<PostListItemIdentifier>()
+        val listScheduled = mutableListOf<PostListItemIdentifier>()
+        val listTrashed = mutableListOf<PostListItemIdentifier>()
+        val mapToPostListItemIdentifier = { post: PostModel ->
+            if (post.remotePostId != 0L) {
+                RemotePostId(RemoteId(post.remotePostId))
+            } else {
+                LocalPostId(LocalId(post.id))
+            }
+        }
+
+        postList.forEach {
+            when (PostListType.fromPostStatus(PostStatus.fromPost(it))) {
+                PostListType.DRAFTS -> listDrafts.add(mapToPostListItemIdentifier(it))
+                PostListType.PUBLISHED -> listPublished.add(mapToPostListItemIdentifier(it))
+                PostListType.SCHEDULED -> listScheduled.add(mapToPostListItemIdentifier(it))
+                TRASHED -> listTrashed.add(mapToPostListItemIdentifier(it))
+            }
+        }
+
+        val allItems = mutableListOf<PostListItemIdentifier>()
+        if (listDrafts.isNotEmpty()) {
+            allItems += listDrafts
+        }
+
+        if (listPublished.isNotEmpty()) {
+            allItems += listPublished
+        }
+
+        if (listScheduled.isNotEmpty()) {
+            allItems += listScheduled
+        }
+
+        if (listTrashed.isNotEmpty()) {
+            allItems += listTrashed
+        }
+
+        return allItems
+    }
 }
