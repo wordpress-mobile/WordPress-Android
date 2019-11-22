@@ -61,7 +61,7 @@ class PostListItemDataSourceTest {
         assertThat(identifiers.size).isEqualTo(10)
         assertThat(identifiers.last()).isNotInstanceOf(EndListIndicatorIdentifier.javaClass)
     }
-    
+
     @Test
     fun `getItemIdentifiers when searching and results are in missing in PUBLISHED`() {
         posts = makePosts().filter { PostListType.fromPostStatus(PostStatus.fromPost(it)) != PostListType.PUBLISHED }
@@ -158,7 +158,7 @@ class PostListItemDataSourceTest {
     }
 
     private fun makePosts(): List<PostModel> {
-        var posts = mutableListOf<PostModel>()
+        val posts = mutableListOf<PostModel>()
         val statuses = listOf("draft", "publish", "pending", "trash", "future", "private")
         statuses.forEachIndexed { i, status ->
             val post = PostModel()
