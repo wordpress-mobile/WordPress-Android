@@ -143,7 +143,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         defaultLocaleConfiguration.setLocale(defaultLocale);
         Context localizedContextDefault = getActivity()
                 .createConfigurationContext(defaultLocaleConfiguration);
-        Resources defaultResources = localizedContextDefault.getResources();
+        Resources englishResources = localizedContextDefault.getResources();
 
         // Strings are only being translated in the WordPress package
         // thus we need to get a reference of the R class for this package
@@ -173,21 +173,26 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
 
             String fieldName = stringField.getName();
-            // Filter out all strings that are not prefixed with `gutenberg_mobile_`
-            if (!fieldName.startsWith("gutenberg_mobile_")) {
+            // Filter out all strings that are not prefixed with `gutenberg_native_`
+            if (!fieldName.startsWith("gutenberg_native_")) {
                 continue;
             }
 
-            // Add the mapping english => [ translated ] to the bundle if both string are not empty
-            String currentResourceString = currentResources.getString(resourceId);
-            String defaultResourceString = defaultResources.getString(resourceId);
-            if (currentResourceString.length() > 0 && defaultResourceString.length() > 0) {
-                translations.putStringArrayList(
-                        defaultResourceString,
-                        new ArrayList<>(Arrays.asList(currentResourceString))
-                );
+            try {
+                // Add the mapping english => [ translated ] to the bundle if both string are not empty
+                String currentResourceString = currentResources.getString(resourceId);
+                String englishResourceString = englishResources.getString(resourceId);
+                if (currentResourceString.length() > 0 && englishResourceString.length() > 0) {
+                    translations.putStringArrayList(
+                            englishResourceString,
+                            new ArrayList<>(Arrays.asList(currentResourceString))
+                    );
+                }
+            } catch (Resources.NotFoundException rnfe) {
+                AppLog.w(T.EDITOR, rnfe.getMessage());
             }
         }
+
         return translations;
     }
 
