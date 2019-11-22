@@ -621,6 +621,7 @@ public class MySiteFragment extends Fragment implements
         requestNextStepOfActiveQuickStartTask();
         SiteModel selectedSite = getSelectedSite();
         if (selectedSite != null) {
+            ToastUtils.showToast(getActivity(), R.string.site_cannot_be_loaded);
             ActivityLauncher.viewCurrentBlogPages(requireActivity(), selectedSite);
         }
     }

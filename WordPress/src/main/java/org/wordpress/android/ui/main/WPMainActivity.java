@@ -538,6 +538,7 @@ public class WPMainActivity extends AppCompatActivity implements
         // if no specific post id passed, show the list
         SiteModel selectedSite = getSelectedSite();
         if (selectedSite == null) {
+            ToastUtils.showToast(this, R.string.site_cannot_be_loaded);
             return;
         }
         if (postId == 0) {
