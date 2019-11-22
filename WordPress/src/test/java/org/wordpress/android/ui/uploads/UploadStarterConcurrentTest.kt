@@ -94,9 +94,9 @@ class UploadStarterConcurrentTest {
         }
 
         fun createLocallyChangedPostModel() = PostModel().apply {
-            status = PostStatus.DRAFT.toString()
+            setStatus(PostStatus.DRAFT.toString())
             setIsLocallyChanged(true)
-            dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(Date().time / 1000)
+            setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(Date().time / 1000))
         }
 
         fun createSiteModel(): SiteModel = SiteModel().apply { setIsWPCom(true) }
