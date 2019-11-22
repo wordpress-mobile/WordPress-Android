@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.PostListType
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.EndListIndicatorIdentifier
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.SectionHeaderIdentifier
 
@@ -32,7 +33,7 @@ class PostListItemDataSourceTest {
         whenever(postStore.getPostsByLocalOrRemotePostIds(anyOrNull(), anyOrNull())).thenReturn(posts)
 
         val identifiers = dataSource.getItemIdentifiers(mock(), remoteItemIds = emptyList(), isListFullyFetched = true)
-        assertThat(identifiers.size).isEqualTo(10)
+        assertThat(identifiers.size).isEqualTo(11)
 
         assertThat((identifiers[0] as SectionHeaderIdentifier).type).isEqualTo(PostListType.PUBLISHED)
         assertThat((identifiers[1] as LocalPostId).id.value).isEqualTo(2)
@@ -47,15 +48,27 @@ class PostListItemDataSourceTest {
 
         assertThat((identifiers[8] as SectionHeaderIdentifier).type).isEqualTo(PostListType.TRASHED)
         assertThat((identifiers[9] as LocalPostId).id.value).isEqualTo(4)
+
+        assertThat(identifiers.last()).isInstanceOf(EndListIndicatorIdentifier.javaClass)
     }
 
+    @Test
+    fun `getItemIdentifiers list is not fully fetched`() {
+        posts = makePosts()
+        whenever(postStore.getPostsByLocalOrRemotePostIds(anyOrNull(), anyOrNull())).thenReturn(posts)
+
+        val identifiers = dataSource.getItemIdentifiers(mock(), remoteItemIds = emptyList(), isListFullyFetched = false)
+        assertThat(identifiers.size).isEqualTo(10)
+        assertThat(identifiers.last()).isNotInstanceOf(EndListIndicatorIdentifier.javaClass)
+    }
+    
     @Test
     fun `getItemIdentifiers when searching and results are in missing in PUBLISHED`() {
         posts = makePosts().filter { PostListType.fromPostStatus(PostStatus.fromPost(it)) != PostListType.PUBLISHED }
         whenever(postStore.getPostsByLocalOrRemotePostIds(anyOrNull(), anyOrNull())).thenReturn(posts)
 
         val identifiers = dataSource.getItemIdentifiers(mock(), remoteItemIds = emptyList(), isListFullyFetched = true)
-        assertThat(identifiers.size).isEqualTo(7)
+        assertThat(identifiers.size).isEqualTo(8)
 
         assertThat((identifiers[0] as SectionHeaderIdentifier).type).isEqualTo(PostListType.DRAFTS)
         assertThat((identifiers[1] as LocalPostId).id.value).isEqualTo(1)
@@ -66,6 +79,8 @@ class PostListItemDataSourceTest {
 
         assertThat((identifiers[5] as SectionHeaderIdentifier).type).isEqualTo(PostListType.TRASHED)
         assertThat((identifiers[6] as LocalPostId).id.value).isEqualTo(4)
+
+        assertThat(identifiers.last()).isInstanceOf(EndListIndicatorIdentifier.javaClass)
     }
 
     @Test
@@ -74,7 +89,7 @@ class PostListItemDataSourceTest {
         whenever(postStore.getPostsByLocalOrRemotePostIds(anyOrNull(), anyOrNull())).thenReturn(posts)
 
         val identifiers = dataSource.getItemIdentifiers(mock(), remoteItemIds = emptyList(), isListFullyFetched = true)
-        assertThat(identifiers.size).isEqualTo(7)
+        assertThat(identifiers.size).isEqualTo(8)
 
         assertThat((identifiers[0] as SectionHeaderIdentifier).type).isEqualTo(PostListType.PUBLISHED)
         assertThat((identifiers[1] as LocalPostId).id.value).isEqualTo(2)
@@ -85,6 +100,8 @@ class PostListItemDataSourceTest {
 
         assertThat((identifiers[5] as SectionHeaderIdentifier).type).isEqualTo(PostListType.TRASHED)
         assertThat((identifiers[6] as LocalPostId).id.value).isEqualTo(4)
+
+        assertThat(identifiers.last()).isInstanceOf(EndListIndicatorIdentifier.javaClass)
     }
 
     @Test
@@ -93,7 +110,7 @@ class PostListItemDataSourceTest {
         whenever(postStore.getPostsByLocalOrRemotePostIds(anyOrNull(), anyOrNull())).thenReturn(posts)
 
         val identifiers = dataSource.getItemIdentifiers(mock(), remoteItemIds = emptyList(), isListFullyFetched = true)
-        assertThat(identifiers.size).isEqualTo(8)
+        assertThat(identifiers.size).isEqualTo(9)
 
         assertThat((identifiers[0] as SectionHeaderIdentifier).type).isEqualTo(PostListType.PUBLISHED)
         assertThat((identifiers[1] as LocalPostId).id.value).isEqualTo(2)
@@ -105,6 +122,8 @@ class PostListItemDataSourceTest {
 
         assertThat((identifiers[6] as SectionHeaderIdentifier).type).isEqualTo(PostListType.TRASHED)
         assertThat((identifiers[7] as LocalPostId).id.value).isEqualTo(4)
+
+        assertThat(identifiers.last()).isInstanceOf(EndListIndicatorIdentifier.javaClass)
     }
 
     @Test
@@ -113,7 +132,7 @@ class PostListItemDataSourceTest {
         whenever(postStore.getPostsByLocalOrRemotePostIds(anyOrNull(), anyOrNull())).thenReturn(posts)
 
         val identifiers = dataSource.getItemIdentifiers(mock(), remoteItemIds = emptyList(), isListFullyFetched = true)
-        assertThat(identifiers.size).isEqualTo(8)
+        assertThat(identifiers.size).isEqualTo(9)
 
         assertThat((identifiers[0] as SectionHeaderIdentifier).type).isEqualTo(PostListType.PUBLISHED)
         assertThat((identifiers[1] as LocalPostId).id.value).isEqualTo(2)
@@ -125,6 +144,8 @@ class PostListItemDataSourceTest {
 
         assertThat((identifiers[6] as SectionHeaderIdentifier).type).isEqualTo(PostListType.SCHEDULED)
         assertThat((identifiers[7] as LocalPostId).id.value).isEqualTo(5)
+
+        assertThat(identifiers.last()).isInstanceOf(EndListIndicatorIdentifier.javaClass)
     }
 
     @Test

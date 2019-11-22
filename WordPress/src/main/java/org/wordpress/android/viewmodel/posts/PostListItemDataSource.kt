@@ -51,10 +51,12 @@ class PostListItemDataSource(
         val localItems = postStore.getLocalPostIdsForDescriptor(listDescriptor)
                 .map { LocalPostId(id = it) }
         val remoteItems = remoteItemIds.map { RemotePostId(id = it) }
-        val actualItems = localItems + remoteItems
+        val actualItems: List<PostListItemIdentifier>
 
         if (postListType == SEARCH) {
-            return getGroupedItemIdentifiers(listDescriptor, actualItems)
+            actualItems = getGroupedItemIdentifiers(listDescriptor, localItems + remoteItems)
+        } else {
+            actualItems = localItems + remoteItems
         }
 
         // We only want to show the end list indicator if the list is fully fetched and it's not empty
