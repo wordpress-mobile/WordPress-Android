@@ -29,7 +29,6 @@ class SnackbarInfo(
     val view = WeakReference(view)
 }
 
-
 class SnackbarSequencerInfo(
     context: Context,
     val snackbarInfo: SnackbarInfo,

@@ -40,18 +40,18 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.uploads.UploadActionUseCase
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.SnackbarCallbackInfo
 import org.wordpress.android.util.SnackbarActionInfo
+import org.wordpress.android.util.SnackbarCallbackInfo
 import org.wordpress.android.util.SnackbarInfo
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.SnackbarSequencerInfo
 import org.wordpress.android.util.redirectContextClickToLongPressListener
-import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
@@ -70,6 +70,7 @@ class PostsListActivity : AppCompatActivity(),
     @Inject internal lateinit var dispatcher: Dispatcher
     @Inject internal lateinit var uploadActionUseCase: UploadActionUseCase
     @Inject internal lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
@@ -268,10 +269,9 @@ class PostsListActivity : AppCompatActivity(),
                 handleUploadAction(
                         uploadAction,
                         this@PostsListActivity,
-                        dispatcher,
                         findViewById(R.id.coordinator),
                         uploadActionUseCase,
-                        snackbarSequencer
+                        uploadUtilsWrapper
                 )
             }
         })
@@ -279,22 +279,6 @@ class PostsListActivity : AppCompatActivity(),
 
     private fun showSnackBar(holder: SnackbarMessageHolder) {
         findViewById<View>(R.id.coordinator)?.let { parent ->
-            //val message = getString(holder.messageRes)
-            //val duration = Snackbar.LENGTH_LONG
-            //val snackBar = WPSnackbar.make(parent, message, duration)
-            //if (holder.buttonTitleRes != null) {
-            //    snackBar.setAction(getString(holder.buttonTitleRes)) {
-            //        holder.buttonAction()
-            //    }
-            //}
-            //snackBar.addCallback(object : Snackbar.Callback() {
-            //    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-            //        holder.onDismissAction()
-            //        super.onDismissed(transientBottomBar, event)
-            //    }
-            //})
-            //snackBar.addToSequencer()
-
             snackbarSequencer.enqueue(
                     SnackbarSequencerInfo(
                             this@PostsListActivity,
@@ -317,7 +301,7 @@ class PostsListActivity : AppCompatActivity(),
                                         }
                                 }
                             ),
-                            creationTimestamp =  System.currentTimeMillis()
+                            creationTimestamp = System.currentTimeMillis()
                     )
             )
         }

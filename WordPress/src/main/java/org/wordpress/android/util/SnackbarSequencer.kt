@@ -47,14 +47,14 @@ class SnackbarSequencer @Inject constructor(
 
     fun enqueue(item: SnackbarSequencerInfo) {
         synchronized(this@SnackbarSequencer) {
-            AppLog.d(AppLog.T.UTILS,"SnackbarSequencer > New item added")
-            if(snackBarQueue.size == QUEUE_SIZE_LIMIT) {
+            AppLog.d(AppLog.T.UTILS, "SnackbarSequencer > New item added")
+            if (snackBarQueue.size == QUEUE_SIZE_LIMIT) {
                 snackBarQueue.remove()
             }
             snackBarQueue.add(item)
             if (snackBarQueue.size == 1) {
                 launch {
-                    AppLog.d(AppLog.T.UTILS,"SnackbarSequencer > invoking start()")
+                    AppLog.d(AppLog.T.UTILS, "SnackbarSequencer > invoking start()")
                     start()
                 }
             }
@@ -69,9 +69,9 @@ class SnackbarSequencer @Inject constructor(
                 withContext(mainDispatcher) {
                     prepareSnackBar(context, item)?.show()
                 }
-                AppLog.e(AppLog.T.UTILS,"SnackbarSequencer > before delay")
+                AppLog.e(AppLog.T.UTILS, "SnackbarSequencer > before delay")
                 delay(getSnackbarDurationMs(item) + DURATION_EXTRA_MARGIN)
-                AppLog.e(AppLog.T.UTILS,"SnackbarSequencer > after delay")
+                AppLog.e(AppLog.T.UTILS, "SnackbarSequencer > after delay")
             }
             synchronized(this@SnackbarSequencer) {
                 if (snackBarQueue.peek() == item) {
@@ -79,7 +79,7 @@ class SnackbarSequencer @Inject constructor(
                     snackBarQueue.remove()
                 }
                 if (snackBarQueue.isEmpty()) {
-                    AppLog.d(AppLog.T.UTILS,"SnackbarSequencer > finishing start()")
+                    AppLog.d(AppLog.T.UTILS, "SnackbarSequencer > finishing start()")
                     return
                 }
             }

@@ -1,7 +1,17 @@
 package org.wordpress.android.ui.uploads
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.view.View
+import android.view.View.OnClickListener
 import dagger.Reusable
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
+import org.wordpress.android.util.SnackbarSequencer
 import javax.inject.Inject
 
 /**
@@ -11,8 +21,76 @@ import javax.inject.Inject
  * Main purpose of this wrapper is to make testing easier.
  */
 @Reusable
-class UploadUtilsWrapper @Inject constructor() {
+class UploadUtilsWrapper @Inject constructor(
+    private val sequencer: SnackbarSequencer,
+    private val dispatcher: Dispatcher
+) {
     fun userCanPublish(site: SiteModel): Boolean {
         return UploadUtils.userCanPublish(site)
     }
+
+    fun onMediaUploadedSnackbarHandler(
+        activity: Activity?,
+        snackbarAttachView: View?,
+        isError: Boolean,
+        mediaList: List<MediaModel?>?, site: SiteModel?,
+        messageForUser: String?
+    ) = UploadUtils.onMediaUploadedSnackbarHandler(
+            activity,
+            snackbarAttachView,
+            isError,
+            mediaList,
+            site,
+            messageForUser,
+            sequencer
+    )
+
+    fun onPostUploadedSnackbarHandler(
+        activity: Activity?, snackbarAttachView: View?,
+        isError: Boolean,
+        post: PostModel?,
+        errorMessage: String?,
+        site: SiteModel?
+    ) = UploadUtils.onPostUploadedSnackbarHandler(
+            activity,
+            snackbarAttachView,
+            isError,
+            post,
+            errorMessage,
+            site,
+            dispatcher,
+            sequencer
+    )
+
+    fun handleEditPostResultSnackbars(
+        activity: Activity,
+        snackbarAttachView: View,
+        data: Intent,
+        post: PostModel,
+        site: SiteModel,
+        uploadAction: UploadAction,
+        publishPostListener: OnClickListener?
+    ) = UploadUtils.handleEditPostResultSnackbars(
+            activity,
+            dispatcher,
+            snackbarAttachView,
+            data,
+            post,
+            site,
+            uploadAction,
+            sequencer,
+            publishPostListener
+    )
+
+    fun showSnackbarError(
+        context: Context?,
+        view: View?,
+        message: String?
+    ) = UploadUtils.showSnackbarError(context, view, message, sequencer)
+
+    fun showSnackbar(
+        context: Context?,
+        view: View?,
+        messageRes: Int
+    ) = UploadUtils.showSnackbar(context, view, messageRes, sequencer)
 }

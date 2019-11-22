@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
-import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 
 sealed class PostUploadAction {
     class EditPostResult(
@@ -50,25 +50,21 @@ sealed class PostUploadAction {
 fun handleUploadAction(
     action: PostUploadAction,
     activity: Activity,
-    dispatcher: Dispatcher,
     snackbarAttachView: View,
     uploadActionUseCase: UploadActionUseCase,
-    snackbarSequencer: SnackbarSequencer
+    uploadUtilsWrapper: UploadUtilsWrapper
 ) {
     when (action) {
         is PostUploadAction.EditPostResult -> {
-            UploadUtils.handleEditPostResultSnackbars(
+            uploadUtilsWrapper.handleEditPostResultSnackbars(
                     activity,
-                    dispatcher,
                     snackbarAttachView,
                     action.data,
                     action.post,
                     action.site,
                     uploadActionUseCase.getUploadAction(action.post),
-                    snackbarSequencer
-            ) {
-                action.publishAction()
-            }
+                    View.OnClickListener { action.publishAction()  }
+            )
         }
         is PostUploadAction.PublishPost -> {
             UploadUtils.publishPost(
@@ -79,34 +75,30 @@ fun handleUploadAction(
             )
         }
         is PostUploadAction.PostUploadedSnackbar -> {
-            UploadUtils.onPostUploadedSnackbarHandler(
+            uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     activity,
                     snackbarAttachView,
                     action.isError,
                     action.post,
                     action.errorMessage,
-                    action.site,
-                    action.dispatcher,
-                    snackbarSequencer
+                    action.site
             )
         }
         is PostUploadAction.MediaUploadedSnackbar -> {
-            UploadUtils.onMediaUploadedSnackbarHandler(
+            uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                     activity,
                     snackbarAttachView,
                     action.isError,
                     action.mediaList,
                     action.site,
-                    action.message,
-                    snackbarSequencer
+                    action.message
             )
         }
         is PostUploadAction.PostRemotePreviewSnackbarError -> {
-            UploadUtils.showSnackbarError(
+            uploadUtilsWrapper.showSnackbarError(
                     activity,
                     snackbarAttachView,
-                    snackbarAttachView.resources.getString(action.messageResId),
-                    snackbarSequencer
+                    snackbarAttachView.resources.getString(action.messageResId)
             )
         }
         is PostUploadAction.CancelPostAndMediaUpload -> {

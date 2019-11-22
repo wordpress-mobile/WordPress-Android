@@ -77,7 +77,7 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
-import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -87,7 +87,6 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
@@ -181,7 +180,7 @@ public class MySiteFragment extends Fragment implements
     @Inject MediaStore mMediaStore;
     @Inject QuickStartStore mQuickStartStore;
     @Inject ImageManager mImageManager;
-    @Inject SnackbarSequencer mSnackbarSequencer;
+    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -1147,14 +1146,14 @@ public class MySiteFragment extends Fragment implements
         SiteModel site = getSelectedSite();
         if (site != null && event.post != null) {
             if (event.post.getLocalSiteId() == site.getId()) {
-                UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(getActivity(),
                         requireActivity().findViewById(R.id.coordinator), true,
-                        event.post, event.errorMessage, site, mDispatcher, mSnackbarSequencer);
+                        event.post, event.errorMessage, site);
             }
         } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(getActivity(),
                     requireActivity().findViewById(R.id.coordinator), true,
-                    event.mediaModelList, site, event.errorMessage, mSnackbarSequencer);
+                    event.mediaModelList, site, event.errorMessage);
         }
     }
 
@@ -1178,9 +1177,9 @@ public class MySiteFragment extends Fragment implements
                 showSiteIconProgressBar(false);
             } else {
                 if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-                    UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(getActivity(),
                             requireActivity().findViewById(R.id.coordinator), false,
-                            event.mediaModelList, site, event.successMessage, mSnackbarSequencer);
+                            event.mediaModelList, site, event.successMessage);
                 }
             }
         }

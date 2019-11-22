@@ -129,6 +129,7 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
@@ -148,7 +149,6 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -317,7 +317,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject LocaleManagerWrapper mLocaleManagerWrapper;
     @Inject EditPostRepository mEditPostRepository;
     @Inject PostUtilsWrapper mPostUtils;
-    @Inject SnackbarSequencer mSnackbarSequencer;
+    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
 
     private SiteModel mSite;
 
@@ -1276,11 +1276,10 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT);
         ToastUtils.showToast(EditPostActivity.this,
                 getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
-        UploadUtils.showSnackbar(
+        mUploadUtilsWrapper.showSnackbar(
                 this,
                 findViewById(R.id.editor_activity),
-                R.string.editor_uploading_post,
-                mSnackbarSequencer);
+                R.string.editor_uploading_post);
         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
         savePostAndOptionallyFinish(false);
     }
@@ -3241,8 +3240,8 @@ public class EditPostActivity extends AppCompatActivity implements
         } else if (isError || isRemoteAutoSaveError()) {
             // We got an error from the uploading or from the remote auto save of a post: show snackbar error
             updatePostLoadingAndDialogState(PostLoadingState.NONE);
-            UploadUtils.showSnackbarError(this, findViewById(R.id.editor_activity),
-                    getString(R.string.remote_preview_operation_error), mSnackbarSequencer);
+            mUploadUtilsWrapper.showSnackbarError(this, findViewById(R.id.editor_activity),
+                    getString(R.string.remote_preview_operation_error));
         }
         return post;
     }
@@ -3255,8 +3254,8 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!isRemotePreviewingFromEditor()) {
                 // We are not remote previewing a post: show snackbar and update post status if needed
                 View snackbarAttachView = findViewById(R.id.editor_activity);
-                UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
-                        event.isError() ? event.error.message : null, getSite(), mDispatcher, mSnackbarSequencer);
+                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
+                        event.isError() ? event.error.message : null, getSite());
                 if (!event.isError()) {
                     mEditPostRepository.setInTransaction(() -> {
                         updateOnSuccessfulUpload();

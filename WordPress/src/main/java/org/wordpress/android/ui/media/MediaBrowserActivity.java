@@ -69,7 +69,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.uploads.UploadService;
-import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -80,7 +80,6 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
-import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
@@ -112,7 +111,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject SiteStore mSiteStore;
-    @Inject SnackbarSequencer mSnackbarSequencer;
+    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
 
     private SiteModel mSite;
 
@@ -1091,9 +1090,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            UploadUtils.onMediaUploadedSnackbarHandler(this,
+            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this,
                     findViewById(R.id.tab_layout), true,
-                    event.mediaModelList, mSite, event.errorMessage, mSnackbarSequencer);
+                    event.mediaModelList, mSite, event.errorMessage);
             updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }
@@ -1103,9 +1102,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            UploadUtils.onMediaUploadedSnackbarHandler(this,
+            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this,
                     findViewById(R.id.tab_layout), false,
-                    event.mediaModelList, mSite, event.successMessage, mSnackbarSequencer);
+                    event.mediaModelList, mSite, event.successMessage);
             updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }

@@ -45,7 +45,6 @@ import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.widgets.WPSnackbar;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 

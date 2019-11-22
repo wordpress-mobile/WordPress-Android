@@ -153,7 +153,6 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
-import org.wordpress.android.widgets.WPSnackbar;
 
 import javax.inject.Singleton;
 
@@ -472,8 +471,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PostNotificationScheduleTimeDialogFragment object);
 
     void inject(PublishNotificationReceiver object);
-
-    void inject(WPSnackbar object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
