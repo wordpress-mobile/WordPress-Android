@@ -88,11 +88,11 @@ class UploadUtilsWrapper @Inject constructor(
         context: Context?,
         view: View?,
         message: String?
-    ) = UploadUtils.showSnackbarError(context, view, message, sequencer)
+    ) = UploadUtils.showSnackbarError(view, message, sequencer)
 
     fun showSnackbar(
         context: Context?,
         view: View?,
         messageRes: Int
-    ) = UploadUtils.showSnackbar(context, view, messageRes, sequencer)
+    ) = UploadUtils.showSnackbar(view, messageRes, sequencer)
 }

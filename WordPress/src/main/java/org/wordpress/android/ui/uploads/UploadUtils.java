@@ -173,7 +173,7 @@ public class UploadUtils {
                     R.string.cancel,
                     v -> {
                         int msgRes = cancelPendingAutoUpload(post, dispatcher);
-                        showSnackbar(activity, snackbarAttachView, msgRes, sequencer);
+                        showSnackbar(snackbarAttachView, msgRes, sequencer);
                     }, sequencer);
             return;
         }
@@ -209,7 +209,7 @@ public class UploadUtils {
                 showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
                              publishPostListener, sequencer);
             } else {
-                showSnackbar(activity, snackbarAttachView, R.string.editor_uploading_post, sequencer);
+                showSnackbar(snackbarAttachView, R.string.editor_uploading_post, sequencer);
             }
             return;
         }
@@ -219,21 +219,21 @@ public class UploadUtils {
             if (PostUtils.isPublishable(post)) {
                 // if the post is publishable, we offer the PUBLISH button
                 if (savedLocally) {
-                    showSnackbarSuccessAction(activity, snackbarAttachView, R.string.editor_draft_saved_locally,
+                    showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_locally,
                                               R.string.button_publish,
                                               publishPostListener, sequencer);
                 } else {
                     if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
                         || UploadService.isPostUploadingOrQueued(post)) {
-                        showSnackbar(activity, snackbarAttachView, R.string.editor_uploading_draft, sequencer);
+                        showSnackbar(snackbarAttachView, R.string.editor_uploading_draft, sequencer);
                     } else {
-                        showSnackbarSuccessAction(activity, snackbarAttachView, R.string.editor_draft_saved_online,
+                        showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
                                                   R.string.button_publish,
                                                   publishPostListener, sequencer);
                     }
                 }
             } else {
-                showSnackbar(activity, snackbarAttachView, R.string.editor_draft_saved_locally, sequencer);
+                showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally, sequencer);
             }
         } else {
             if (savedLocally) {
@@ -242,9 +242,9 @@ public class UploadUtils {
             } else {
                 if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
                     || UploadService.isPostUploadingOrQueued(post)) {
-                    showSnackbar(activity, snackbarAttachView, R.string.editor_uploading_post, sequencer);
+                    showSnackbar(snackbarAttachView, R.string.editor_uploading_post, sequencer);
                 } else {
-                    showSnackbarSuccessAction(activity, snackbarAttachView, R.string.editor_post_saved_online,
+                    showSnackbarSuccessAction(snackbarAttachView, R.string.editor_post_saved_online,
                                               R.string.button_publish,
                                               publishPostListener, sequencer);
                 }
@@ -252,8 +252,8 @@ public class UploadUtils {
         }
     }
 
-    private static void showSnackbarError(Context context, View view, String message, int buttonTitleRes,
-                                          View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
+    private static void showSnackbarError(View view, String message, int buttonTitleRes,
+                                          OnClickListener onClickListener, SnackbarSequencer sequencer) {
         //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
         //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
         sequencer.enqueue(
@@ -272,7 +272,7 @@ public class UploadUtils {
         );
     }
 
-    public static void showSnackbarError(Context context, View view, String message, SnackbarSequencer sequencer) {
+    public static void showSnackbarError(View view, String message, SnackbarSequencer sequencer) {
         sequencer.enqueue(
                 new SnackbarSequencerInfo(
                         new SnackbarInfo(
@@ -304,8 +304,8 @@ public class UploadUtils {
         );
     }
 
-    public static void showSnackbarSuccessAction(Context context, View view, int messageRes, int buttonTitleRes,
-                                                 View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
+    public static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
+                                                 OnClickListener onClickListener, SnackbarSequencer sequencer) {
         sequencer.enqueue(
                 new SnackbarSequencerInfo(
                         new SnackbarInfo(
@@ -322,8 +322,8 @@ public class UploadUtils {
         );
     }
 
-    private static void showSnackbarSuccessAction(Context context, View view, String message, int buttonTitleRes,
-                                                  View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
+    private static void showSnackbarSuccessAction(View view, String message, int buttonTitleRes,
+                                                  OnClickListener onClickListener, SnackbarSequencer sequencer) {
         sequencer.enqueue(
                 new SnackbarSequencerInfo(
                         new SnackbarInfo(
@@ -346,7 +346,7 @@ public class UploadUtils {
                   .setAction(buttonTitleRes, onClickListener).show();
     }
 
-    public static void showSnackbar(Context context, View view, int messageRes, SnackbarSequencer sequencer) {
+    public static void showSnackbar(View view, int messageRes, SnackbarSequencer sequencer) {
         sequencer.enqueue(
                 new SnackbarSequencerInfo(
                         new SnackbarInfo(
@@ -401,7 +401,7 @@ public class UploadUtils {
             if (errorMessage != null) {
                 // RETRY only available for Aztec
                 if (AppPrefs.isAztecEditorEnabled()) {
-                    UploadUtils.showSnackbarError(activity, snackbarAttachView, errorMessage, R.string.retry,
+                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry,
                                                   new View.OnClickListener() {
                                                       @Override
                                                       public void onClick(View view) {
@@ -411,10 +411,10 @@ public class UploadUtils {
                                                       }
                                                   }, sequencer);
                 } else {
-                    UploadUtils.showSnackbarError(activity, snackbarAttachView, errorMessage, sequencer);
+                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, sequencer);
                 }
             } else {
-                UploadUtils.showSnackbar(activity, snackbarAttachView, R.string.editor_draft_saved_locally, sequencer);
+                UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally, sequencer);
             }
         } else {
             if (post != null) {
@@ -464,10 +464,10 @@ public class UploadUtils {
                 }
 
                 if (snackbarButtonRes > 0) {
-                    UploadUtils.showSnackbarSuccessAction(activity, snackbarAttachView, snackbarMessageRes, snackbarButtonRes,
+                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, snackbarMessageRes, snackbarButtonRes,
                             publishPostListener, sequencer);
                 } else {
-                    UploadUtils.showSnackbar(activity, snackbarAttachView, snackbarMessageRes, sequencer);
+                    UploadUtils.showSnackbar(snackbarAttachView, snackbarMessageRes, sequencer);
                 }
             }
         }
@@ -482,7 +482,7 @@ public class UploadUtils {
             if (messageForUser != null) {
                 // RETRY only available for Aztec
                 if (mediaList != null && !mediaList.isEmpty()) {
-                    UploadUtils.showSnackbarError(activity, snackbarAttachView, messageForUser, R.string.retry,
+                    UploadUtils.showSnackbarError(snackbarAttachView, messageForUser, R.string.retry,
                                                   new View.OnClickListener() {
                                                       @Override
                                                       public void onClick(View view) {
@@ -495,11 +495,10 @@ public class UploadUtils {
                                                       }
                                                   }, sequencer);
                 } else {
-                    UploadUtils.showSnackbarError(activity, snackbarAttachView, messageForUser, sequencer);
+                    UploadUtils.showSnackbarError(snackbarAttachView, messageForUser, sequencer);
                 }
             } else {
                 UploadUtils.showSnackbarError(
-                        activity,
                         snackbarAttachView,
                         activity.getString(R.string.error_media_upload),
                         sequencer
@@ -511,7 +510,7 @@ public class UploadUtils {
             }
 
             // show success snackbar for media only items and offer the WRITE POST functionality)
-            UploadUtils.showSnackbarSuccessAction(activity, snackbarAttachView, messageForUser,
+            UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageForUser,
                                                   R.string.media_files_uploaded_write_post, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

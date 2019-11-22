@@ -281,7 +281,6 @@ class PostsListActivity : AppCompatActivity(),
         findViewById<View>(R.id.coordinator)?.let { parent ->
             snackbarSequencer.enqueue(
                     SnackbarSequencerInfo(
-                            this@PostsListActivity,
                             SnackbarInfo(
                                 view = parent,
                                 textRes = UiStringRes(holder.messageRes),
@@ -300,8 +299,7 @@ class PostsListActivity : AppCompatActivity(),
                                             super.onDismissed(transientBottomBar, event)
                                         }
                                 }
-                            ),
-                            creationTimestamp = System.currentTimeMillis()
+                            )
                     )
             )
         }
