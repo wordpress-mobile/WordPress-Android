@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.ui.posts.PostListType
+import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.EndListIndicatorIdentifier
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
@@ -35,8 +36,7 @@ class PostListItemDataSource(
     private val postStore: PostStore,
     private val postFetcher: PostFetcher,
     private val transform: (PostModel) -> PostListItemUiState,
-    private val postListType: PostListType,
-    private val isSearch: Boolean
+    private val postListType: PostListType
 ) : ListItemDataSourceInterface<PostListDescriptor, PostListItemIdentifier, PostListItemType> {
     override fun fetchList(listDescriptor: PostListDescriptor, offset: Long) {
         val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
@@ -53,7 +53,7 @@ class PostListItemDataSource(
         val remoteItems = remoteItemIds.map { RemotePostId(id = it) }
         val actualItems = localItems + remoteItems
 
-        if (isSearch) {
+        if (postListType == SEARCH) {
             return getGroupedItemIdentifiers(listDescriptor, actualItems)
         }
 

@@ -93,8 +93,7 @@ class PostListViewModel @Inject constructor(
                 postStore = postStore,
                 postFetcher = connector.postFetcher,
                 transform = this::transformPostModelToPostListItemUiState,
-                postListType = connector.postListType,
-                isSearch = (connector.postListType == SEARCH)
+                postListType = connector.postListType
         )
     }
 
