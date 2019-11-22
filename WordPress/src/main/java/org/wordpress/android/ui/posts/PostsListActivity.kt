@@ -295,7 +295,7 @@ class PostsListActivity : AppCompatActivity(),
             //})
             //snackBar.addToSequencer()
 
-            snackbarSequencer.enqueueSnackbar(
+            snackbarSequencer.enqueue(
                     SnackbarSequencerInfo(
                             this@PostsListActivity,
                             SnackbarInfo(

@@ -256,7 +256,7 @@ public class UploadUtils {
                                           View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
         //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
         //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
-        sequencer.enqueueSnackbar(
+        sequencer.enqueue(
                 new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
                              view,
@@ -275,7 +275,7 @@ public class UploadUtils {
 
     public static void showSnackbarError(Context context, View view, String message, SnackbarSequencer sequencer) {
         //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).addToSequencer();
-        sequencer.enqueueSnackbar(
+        sequencer.enqueue(
                 new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
                                 view,
@@ -293,7 +293,7 @@ public class UploadUtils {
                                      View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
         //WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
         //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
-        sequencer.enqueueSnackbar(
+        sequencer.enqueue(
                 new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
                                 view,
@@ -314,7 +314,7 @@ public class UploadUtils {
                                                  View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
         //WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
         //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
-        sequencer.enqueueSnackbar(
+        sequencer.enqueue(
                 new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
                                 view,
@@ -335,7 +335,7 @@ public class UploadUtils {
                                                   View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
        //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
        //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
-        sequencer.enqueueSnackbar(
+        sequencer.enqueue(
                 new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
                                 view,
@@ -360,7 +360,7 @@ public class UploadUtils {
 
     public static void showSnackbar(Context context, View view, int messageRes, SnackbarSequencer sequencer) {
         //WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).addToSequencer();
-        sequencer.enqueueSnackbar(
+        sequencer.enqueue(
                 new SnackbarSequencerInfo(context,
                         new SnackbarInfo(
                                 view,
