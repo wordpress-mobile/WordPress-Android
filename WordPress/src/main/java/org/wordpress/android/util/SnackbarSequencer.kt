@@ -64,7 +64,7 @@ class SnackbarSequencer @Inject constructor(
     private suspend fun start() {
         while (true) {
             val item = snackBarQueue.peek()
-            val context = item.context.get()
+            val context: Activity? = item.snackbarInfo.view.get()?.context as? Activity
             if (context != null && isContextAlive(context)) {
                 withContext(mainDispatcher) {
                     prepareSnackBar(context, item)?.show()
@@ -86,8 +86,8 @@ class SnackbarSequencer @Inject constructor(
         }
     }
 
-    private fun isContextAlive(context: Context): Boolean {
-        return !(context as Activity).isFinishing
+    private fun isContextAlive(activity: Activity): Boolean {
+        return !activity.isFinishing
     }
 
     private fun prepareSnackBar(context: Context, item: SnackbarSequencerInfo): WPSnackbar? {

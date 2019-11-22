@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -168,7 +169,7 @@ public class UploadUtils {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
             // And tell the user about it
-            showSnackbar(activity, snackbarAttachView, getDeviceOfflinePostNotUploadedMessage(post, uploadAction),
+            showSnackbar(snackbarAttachView, getDeviceOfflinePostNotUploadedMessage(post, uploadAction),
                     R.string.cancel,
                     v -> {
                         int msgRes = cancelPendingAutoUpload(post, dispatcher);
@@ -179,7 +180,7 @@ public class UploadUtils {
 
         boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
         if (hasFailedMedia) {
-            showSnackbar(activity, snackbarAttachView, R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
+            showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
                          new View.OnClickListener() {
                              @Override
                              public void onClick(View v) {
@@ -195,7 +196,7 @@ public class UploadUtils {
         if (isScheduledPost) {
             // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
-                showSnackbar(activity, snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
+                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
                              publishPostListener, sequencer);
             }
             return;
@@ -205,7 +206,7 @@ public class UploadUtils {
         if (isPublished) {
             // if it's a published post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
-                showSnackbar(activity, snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
+                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
                              publishPostListener, sequencer);
             } else {
                 showSnackbar(activity, snackbarAttachView, R.string.editor_uploading_post, sequencer);
@@ -236,7 +237,7 @@ public class UploadUtils {
             }
         } else {
             if (savedLocally) {
-                showSnackbar(activity, snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_publish,
+                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_publish,
                              publishPostListener, sequencer);
             } else {
                 if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
@@ -256,7 +257,7 @@ public class UploadUtils {
         //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
         //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
         sequencer.enqueue(
-                new SnackbarSequencerInfo(context,
+                new SnackbarSequencerInfo(
                         new SnackbarInfo(
                              view,
                              new UiStringText(message),
@@ -266,34 +267,29 @@ public class UploadUtils {
                              new UiStringRes(buttonTitleRes),
                              onClickListener
                         ),
-                        null,
-                        System.currentTimeMillis()
+                        null
                 )
         );
     }
 
     public static void showSnackbarError(Context context, View view, String message, SnackbarSequencer sequencer) {
-        //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).addToSequencer();
         sequencer.enqueue(
-                new SnackbarSequencerInfo(context,
+                new SnackbarSequencerInfo(
                         new SnackbarInfo(
                                 view,
                                 new UiStringText(message),
                                 K_SNACKBAR_WAIT_TIME_MS
                         ),
                         null,
-                        null,
-                        System.currentTimeMillis()
+                        null
                 )
         );
     }
 
-    private static void showSnackbar(Context context, View view, int messageRes, int buttonTitleRes,
-                                     View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
-        //WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
-        //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
+    private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
+                                     OnClickListener onClickListener, SnackbarSequencer sequencer) {
         sequencer.enqueue(
-                new SnackbarSequencerInfo(context,
+                new SnackbarSequencerInfo(
                         new SnackbarInfo(
                                 view,
                                 new UiStringRes(messageRes),
@@ -303,18 +299,15 @@ public class UploadUtils {
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
-                        null,
-                        System.currentTimeMillis()
+                        null
                 )
         );
     }
 
     public static void showSnackbarSuccessAction(Context context, View view, int messageRes, int buttonTitleRes,
                                                  View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
-        //WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
-        //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
         sequencer.enqueue(
-                new SnackbarSequencerInfo(context,
+                new SnackbarSequencerInfo(
                         new SnackbarInfo(
                                 view,
                                 new UiStringRes(messageRes),
@@ -324,18 +317,15 @@ public class UploadUtils {
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
-                        null,
-                        System.currentTimeMillis()
+                        null
                 )
         );
     }
 
     private static void showSnackbarSuccessAction(Context context, View view, String message, int buttonTitleRes,
                                                   View.OnClickListener onClickListener, SnackbarSequencer sequencer) {
-       //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
-       //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
         sequencer.enqueue(
-                new SnackbarSequencerInfo(context,
+                new SnackbarSequencerInfo(
                         new SnackbarInfo(
                                 view,
                                 new UiStringText(message),
@@ -345,8 +335,7 @@ public class UploadUtils {
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
-                        null,
-                        System.currentTimeMillis()
+                        null
                 )
         );
     }
@@ -358,17 +347,15 @@ public class UploadUtils {
     }
 
     public static void showSnackbar(Context context, View view, int messageRes, SnackbarSequencer sequencer) {
-        //WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).addToSequencer();
         sequencer.enqueue(
-                new SnackbarSequencerInfo(context,
+                new SnackbarSequencerInfo(
                         new SnackbarInfo(
                                 view,
                                 new UiStringRes(messageRes),
                                 Snackbar.LENGTH_LONG
                         ),
                         null,
-                        null,
-                        System.currentTimeMillis()
+                        null
                 )
         );
     }
