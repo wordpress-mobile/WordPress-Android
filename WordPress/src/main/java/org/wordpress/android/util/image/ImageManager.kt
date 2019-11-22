@@ -142,22 +142,24 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     fun loadWithResultListener(
         imageView: ImageView,
         imageType: ImageType,
-        imgUrl: String,
+        imgUrl: String?,
         scaleType: ScaleType = CENTER,
         thumbnailUrl: String? = null,
         requestListener: RequestListener<Drawable>
     ) {
         val context = imageView.context
         if (!context.isAvailable()) return
-        GlideApp.with(context)
-                .load(imgUrl)
-                .addFallback(imageType)
-                .addPlaceholder(imageType)
-                .addThumbnail(context, thumbnailUrl, requestListener)
-                .applyScaleType(scaleType)
-                .attachRequestListener(requestListener)
-                .into(imageView)
-                .clearOnDetach()
+        imgUrl?.let {
+            GlideApp.with(context)
+                    .load(it)
+                    .addFallback(imageType)
+                    .addPlaceholder(imageType)
+                    .addThumbnail(context, thumbnailUrl, requestListener)
+                    .applyScaleType(scaleType)
+                    .attachRequestListener(requestListener)
+                    .into(imageView)
+                    .clearOnDetach()
+        }
     }
 
     /**
