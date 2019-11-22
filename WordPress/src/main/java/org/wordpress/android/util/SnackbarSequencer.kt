@@ -14,6 +14,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.widgets.WPSnackbar
+import org.wordpress.android.widgets.WPSnackbarWrapper
 import java.util.LinkedList
 import java.util.Queue
 import javax.inject.Inject
@@ -33,6 +34,7 @@ private const val LONG_DURATION_MS = 2750L
 @Singleton
 class SnackbarSequencer @Inject constructor(
     private val uiHelper: UiHelpers,
+    private val wpSnackbarWrapper: WPSnackbarWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : Snackbar.Callback(), CoroutineScope {
@@ -92,7 +94,7 @@ class SnackbarSequencer @Inject constructor(
         return item.snackbarInfo.view.get()?.let { view ->
             val message = uiHelper.getTextOfUiString(context, item.snackbarInfo.textRes)
 
-            val snackbar = WPSnackbar.make(view, message, item.snackbarInfo.duration)
+            val snackbar = wpSnackbarWrapper.make(view, message, item.snackbarInfo.duration)
 
             item.snackbarActionInfo?.let { actionInfo ->
                 snackbar.setAction(
