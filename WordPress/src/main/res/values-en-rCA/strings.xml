@@ -142,7 +142,7 @@ Language: en_CA
     <string name="post_settings_retry_featured_image">Retry uploading</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nPlease tap for options.</string>
     <string name="link_open_new_window">Open link in a new window/tab</string>
-    <string name="post_list_search_prompt">Search posts</string>
+    <string name="post_list_search_prompt">Search published posts</string>
     <string name="stats_widget_error_no_access_token">To view your stats, log in to the WordPress.com account.</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
