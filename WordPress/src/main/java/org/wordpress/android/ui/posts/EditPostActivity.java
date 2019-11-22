@@ -37,6 +37,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -111,6 +113,9 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor;
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields;
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
@@ -241,8 +246,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int PAGE_PUBLISH_SETTINGS = 2;
     private static final int PAGE_HISTORY = 3;
 
-    private static final int CHANGE_SAVE_DELAY = 500;
-    public static final int MAX_UNSAVED_POSTS = 50;
     private AztecImageLoader mAztecImageLoader;
 
     enum RestartEditorOptions {
@@ -253,15 +256,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private RestartEditorOptions mRestartEditorOption = RestartEditorOptions.NO_RESTART;
 
-    private Handler mHandler;
-    private int mDebounceCounter = 0;
     private boolean mShowAztecEditor;
     private boolean mShowGutenbergEditor;
-    private boolean mMediaInsertedOnCreation;
 
     private List<String> mPendingVideoPressInfoRequests;
     private List<String> mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds = new ArrayList<>();
-    private List<String> mMediaMarkedUploadingOnStartIds = new ArrayList<>();
     private PostEditorAnalyticsSession mPostEditorAnalyticsSession;
     private boolean mIsConfigChange = false;
 
@@ -319,6 +318,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject LocaleManagerWrapper mLocaleManagerWrapper;
     @Inject EditPostRepository mEditPostRepository;
     @Inject PostUtilsWrapper mPostUtils;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+
+    private EditPostViewModel mViewModel;
 
     private SiteModel mSite;
 
@@ -370,7 +372,8 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
-        mHandler = new Handler();
+        mViewModel =
+                ViewModelProviders.of(this, mViewModelFactory).get(EditPostViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -595,17 +598,21 @@ public class EditPostActivity extends AppCompatActivity implements
                 contentIfNotHandled.show(this);
             }
         });
+        mViewModel.getOnSavePostTriggered().observe(this, unitEvent -> {
+            updatePostObject();
+            mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
+        });
     }
 
     private void initializePostObject() {
         if (mEditPostRepository.hasPost()) {
-            mEditPostRepository.saveSnapshot();
+            mEditPostRepository.savePostSnapshotWhenEditorOpened();
             mEditPostRepository.replaceInTransaction(UploadService::updatePostWithCurrentlyCompletedUploads);
             if (mShowAztecEditor) {
                 try {
-                    mMediaMarkedUploadingOnStartIds = AztecEditorFragment
-                            .getMediaMarkedUploadingInPostContent(this, mEditPostRepository.getContent());
-                    Collections.sort(mMediaMarkedUploadingOnStartIds);
+                    mViewModel.setMediaMarkedUploadingOnStartIds(AztecEditorFragment
+                            .getMediaMarkedUploadingInPostContent(this, mEditPostRepository.getContent()));
+                    mViewModel.sortMediaMarkedUploadingOnStartIds();
                 } catch (NumberFormatException err) {
                     // see: https://github.com/wordpress-mobile/AztecEditor-Android/issues/805
                     if (getSite() != null && getSite().isWPCom() && !getSite().isPrivate()
@@ -700,20 +707,6 @@ public class EditPostActivity extends AppCompatActivity implements
         });
     }
 
-    private Runnable mSave = new Runnable() {
-        @Override
-        public void run() {
-            new Thread(() -> {
-                mDebounceCounter = 0;
-                updatePostObject(true);
-                // make sure we save the post only after the user made some changes
-                if (mEditPostRepository.isSnapshotDifferent()) {
-                    savePostToDb();
-                }
-            }).start();
-        }
-    };
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -789,10 +782,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         mDispatcher.unregister(this);
-        if (mHandler != null) {
-            mHandler.removeCallbacks(mSave);
-            mHandler = null;
-        }
         mEditorMedia.cancelAddMediaToEditorActions();
         removePostOpenInEditorStickyEvent();
         if (mEditorFragment instanceof AztecEditorFragment) {
@@ -1570,36 +1559,30 @@ public class EditPostActivity extends AppCompatActivity implements
         );
     }
 
-    private boolean updatePostObject(boolean isAutosave) {
-        if (!mEditPostRepository.hasPost() || mEditorFragment == null) {
-            AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
+    private boolean updatePostObject() {
+        if (mEditorFragment == null) {
+            AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
             return false;
         }
-        return mEditPostRepository.updateInTransaction(postModel -> {
-            try {
-                boolean postTitleOrContentChanged =
-                        updatePostContentNewEditor(postModel, isAutosave, (String) mEditorFragment.getTitle(),
-                                (String) mEditorFragment.getContent(postModel.getContent()));
-
-                // only makes sense to change the publish date and locally changed date if the Post was actually changed
-                if (postTitleOrContentChanged) {
-                    mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
-                    postModel
-                            .setDateLocallyChanged(
-                                    DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-                }
-            } catch (EditorFragmentNotAddedException e) {
-                AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-                return false;
-            }
-            return true;
-        });
+        UpdateResult updateResult = mViewModel
+                .updatePostObject(this, mShowAztecEditor, mEditPostRepository,
+                        oldContent -> {
+                            try {
+                                String title = (String) mEditorFragment.getTitle();
+                                String content = (String) mEditorFragment.getContent(oldContent);
+                                return new PostFields(title, content);
+                            } catch (EditorFragmentNotAddedException e) {
+                                AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+                                return new UpdateFromEditor.Failed(e);
+                            }
+                        });
+        return updateResult instanceof UpdateResult.Success;
     }
 
     private void savePostAsync(final AfterSavePostListener listener) {
         new Thread(() -> {
-            if (updatePostObject(false)) {
-                savePostToDb();
+            if (updatePostObject()) {
+                mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
                 if (listener != null) {
                     listener.onPostSave();
                 }
@@ -1759,16 +1742,6 @@ public class EditPostActivity extends AppCompatActivity implements
         void onPostSave();
     }
 
-    private synchronized void savePostToDb() {
-        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mEditPostRepository.getEditablePost()));
-
-        if (mShowAztecEditor) {
-            // update the list of uploading ids
-            mMediaMarkedUploadingOnStartIds =
-                    AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mEditPostRepository.getContent());
-        }
-    }
-
     @Override
     public void onBackPressed() {
         handleBackPressed();
@@ -1839,7 +1812,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
 
-            savePostToDb();
+            mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
             PostUtils.trackSavePostAnalytics(mEditPostRepository.getPost(),
                     mSiteStore.getSiteByLocalId(mEditPostRepository.getLocalSiteId()));
 
@@ -1877,10 +1850,10 @@ public class EditPostActivity extends AppCompatActivity implements
                     // or a shortcode replacement (for instance for images and galleries)
 
                     // Update the post object directly, without re-fetching the fields from the EditorFragment
-                    updatePostContentNewEditor(postModel, false, postModel.getTitle(), postModel.getContent());
+                    updatePostLocallyChangedOnStatusOrMediaChange(postModel);
                     return true;
                 });
-                savePostToDb();
+                mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
 
                 // For self-hosted sites, when exiting the editor without uploading, the `PostUploadModel
                 // .uploadState`
@@ -2027,7 +2000,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         savePostLocallyAndFinishAsync(true);
                     }
                 } else {
-                    mEditPostRepository.updateStatusFromSnapshot(postModel);
+                    mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened(postModel);
                     EditPostActivity.this.runOnUiThread(() -> {
                         String message = getString(
                                 mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
@@ -2125,7 +2098,7 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean isPublishable = mEditPostRepository.isPostPublishable();
 
         // if post was modified during this editing session, save it
-        return (mEditPostRepository.hasSnapshot() && hasChanges) || (isPublishable && isNewPost());
+        return (mEditPostRepository.hasPostSnapshotWhenEditorOpened() && hasChanges) || (isPublishable && isNewPost());
     }
 
 
@@ -2149,10 +2122,6 @@ public class EditPostActivity extends AppCompatActivity implements
      */
     private boolean hasFailedMedia() {
         return mEditorFragment.hasFailedMediaUploads() || mEditorFragment.isActionInProgress();
-    }
-
-    private boolean updatePostObject() {
-        return updatePostObject(false);
     }
 
     private void savePostLocallyAndFinishAsync(boolean doFinishActivity) {
@@ -2210,15 +2179,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     mEditorFragment.setImageLoader(mImageLoader);
 
                     mEditorFragment.getTitleOrContentChanged().observe(EditPostActivity.this, editable -> {
-                        if (mHandler != null) {
-                            mHandler.removeCallbacks(mSave);
-                            if (mDebounceCounter < MAX_UNSAVED_POSTS) {
-                                mDebounceCounter++;
-                                mHandler.postDelayed(mSave, CHANGE_SAVE_DELAY);
-                            } else {
-                                mHandler.post(mSave);
-                            }
-                        }
+                        mViewModel.savePost();
                     });
 
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
@@ -2391,56 +2352,28 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     /**
-     * Updates post object with given title and content
+     * Updates post object
      */
-    public boolean updatePostContentNewEditor(PostModel editedPost, boolean isAutoSave, String title, String content) {
+    private void updatePostLocallyChangedOnStatusOrMediaChange(PostModel editedPost) {
         if (editedPost == null) {
-            return false;
+            return;
         }
-
-        if (!isAutoSave) {
-            // TODO: Shortcode handling, media handling
-        }
-        boolean titleChanged = !editedPost.getTitle().equals(title);
-        editedPost.setTitle(title);
         boolean contentChanged;
-        if (mMediaInsertedOnCreation) {
-            mMediaInsertedOnCreation = false;
-            contentChanged = true;
-        } else if (isCurrentMediaMarkedUploadingDifferentToOriginal(content)) {
+        if (mViewModel.getMediaInsertedOnCreation()) {
+            mViewModel.setMediaInsertedOnCreation(false);
             contentChanged = true;
         } else {
-            contentChanged = editedPost.getContent().compareTo(content) != 0;
-        }
-        if (contentChanged) {
-            editedPost.setContent(content);
+            contentChanged = mViewModel
+                    .isCurrentMediaMarkedUploadingDifferentToOriginal(this, mShowAztecEditor, editedPost.getContent());
         }
 
-        boolean statusChanged = mEditPostRepository.hasStatusChanged(editedPost.getStatus());
+        boolean statusChanged = mEditPostRepository.hasStatusChangedFromWhenEditorOpened(editedPost.getStatus());
 
-        if (!editedPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
+        if (!editedPost.isLocalDraft() && (contentChanged || statusChanged)) {
             editedPost.setIsLocallyChanged(true);
             editedPost
                     .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
-
-        return titleChanged || contentChanged;
-    }
-
-    /*
-      * for as long as the user is in the Editor, we check whether there are any differences in media items
-      * being uploaded since they opened the Editor for this Post. If some items have finished, the current list
-      * won't be equal and thus we'll know we need to save the Post content as it's changed, given the local
-      * URLs will have been replaced with the remote ones.
-     */
-    private boolean isCurrentMediaMarkedUploadingDifferentToOriginal(String newContent) {
-        // this method makes use of AztecEditorFragment methods. Make sure to only run if Aztec is the current editor.
-        if (!mShowAztecEditor) {
-            return false;
-        }
-        List<String> currentUploadingMedia = AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, newContent);
-        Collections.sort(currentUploadingMedia);
-        return !mMediaMarkedUploadingOnStartIds.equals(currentUploadingMedia);
     }
 
     private void setFeaturedImageId(final long mediaId) {
@@ -2991,7 +2924,7 @@ public class EditPostActivity extends AppCompatActivity implements
             getIntent().removeExtra(EXTRA_INSERT_MEDIA);
             if (mediaList != null && !mediaList.isEmpty()) {
                 shouldFinishInit = false;
-                mMediaInsertedOnCreation = true;
+                mViewModel.setMediaInsertedOnCreation(true);
                 mEditorMedia.addExistingMediaToEditorAsync(mediaList, AddExistingMediaSource.WP_MEDIA_LIBRARY);
                 // TODO we save the post in `addExistingMediaToEditor` but we don't have access to AfterSavePostListener
                 savePostAsync(() -> runOnUiThread(this::onEditorFinalTouchesBeforeShowing));

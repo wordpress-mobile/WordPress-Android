@@ -25,6 +25,7 @@ class EditPostRepository
     private var post: PostModel? = null
     private var postForUndo: PostModel? = null
     private var postSnapshotWhenEditorOpened: PostModel? = null
+    private var postSnapshotForDb: PostModel? = null
     val id: Int
         get() = post!!.id
     val localSiteId: Int
@@ -74,7 +75,7 @@ class EditPostRepository
 
     private val lock = ReentrantReadWriteLock()
 
-    fun updateInTransaction(action: (PostModel) -> Boolean) = lock.write {
+    fun <T> updateInTransaction(action: (PostModel) -> T) = lock.write {
         action(post!!)
     }
 
@@ -120,22 +121,26 @@ class EditPostRepository
         this.post = postForUndo?.clone()
     }
 
-    fun saveSnapshot() {
+    fun postHasChangesFromDb(): Boolean =
+            postSnapshotForDb == null || post != postSnapshotForDb
+
+    fun saveDbSnapshot() {
+        postSnapshotForDb = post?.clone()
+    }
+
+    fun savePostSnapshotWhenEditorOpened() {
         postSnapshotWhenEditorOpened = post?.clone()
     }
 
-    fun isSnapshotDifferent(): Boolean =
-            postSnapshotWhenEditorOpened == null || post != postSnapshotWhenEditorOpened
+    fun hasPostSnapshotWhenEditorOpened() = postSnapshotWhenEditorOpened != null
 
-    fun hasSnapshot() = postSnapshotWhenEditorOpened != null
-
-    fun updateStatusFromSnapshot(post: PostModel) {
+    fun updateStatusFromPostSnapshotWhenEditorOpened(post: PostModel) {
         // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
         // original post's status as we could not proceed with the action
         post.setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
     }
 
-    fun hasStatusChanged(postStatus: String?): Boolean {
+    fun hasStatusChangedFromWhenEditorOpened(postStatus: String?): Boolean {
         return postSnapshotWhenEditorOpened?.status != null && postStatus != postSnapshotWhenEditorOpened?.status
     }
 
