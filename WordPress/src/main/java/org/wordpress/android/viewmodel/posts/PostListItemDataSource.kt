@@ -153,12 +153,12 @@ class PostListItemDataSource(
         }
 
         val allItems = mutableListOf<PostListItemIdentifier>()
-        if (listDrafts.isNotEmpty()) {
-            allItems += listOf(SectionHeaderIdentifier(PostListType.DRAFTS)) + listDrafts
-        }
-
         if (listPublished.isNotEmpty()) {
             allItems += listOf(SectionHeaderIdentifier(PostListType.PUBLISHED)) + listPublished
+        }
+
+        if (listDrafts.isNotEmpty()) {
+            allItems += listOf(SectionHeaderIdentifier(PostListType.DRAFTS)) + listDrafts
         }
 
         if (listScheduled.isNotEmpty()) {
