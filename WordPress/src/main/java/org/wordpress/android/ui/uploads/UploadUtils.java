@@ -44,7 +44,6 @@ import org.wordpress.android.util.SnackbarSequencerInfo;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.WPMediaUtils;
-import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -341,9 +340,17 @@ public class UploadUtils {
     }
 
     public static void showSnackbarSuccessActionOrange(View view, int messageRes, int buttonTitleRes,
-                                                       View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
-                  .setAction(buttonTitleRes, onClickListener).show();
+                                                       View.OnClickListener onClickListener,
+                                                       SnackbarSequencer snackbarSequencer) {
+        snackbarSequencer.enqueue(new SnackbarSequencerInfo(
+                new SnackbarInfo(
+                        view,
+                        new UiStringRes(messageRes),
+                        Snackbar.LENGTH_LONG
+                ),
+                new SnackbarActionInfo(new UiStringRes(buttonTitleRes), onClickListener),
+                null
+        ));
     }
 
     public static void showSnackbar(View view, int messageRes, SnackbarSequencer sequencer) {

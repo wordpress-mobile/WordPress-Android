@@ -1277,7 +1277,6 @@ public class EditPostActivity extends AppCompatActivity implements
         ToastUtils.showToast(EditPostActivity.this,
                 getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
         mUploadUtilsWrapper.showSnackbar(
-                this,
                 findViewById(R.id.editor_activity),
                 R.string.editor_uploading_post);
         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
@@ -1316,7 +1315,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void toggledHtmlModeSnackbar(View.OnClickListener onUndoClickListener) {
-        UploadUtils.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
+        mUploadUtilsWrapper.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
                 mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
                         : R.string.menu_visual_mode_done_snackbar,
                 R.string.menu_undo_snackbar_action,
@@ -3240,7 +3239,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else if (isError || isRemoteAutoSaveError()) {
             // We got an error from the uploading or from the remote auto save of a post: show snackbar error
             updatePostLoadingAndDialogState(PostLoadingState.NONE);
-            mUploadUtilsWrapper.showSnackbarError(this, findViewById(R.id.editor_activity),
+            mUploadUtilsWrapper.showSnackbarError(findViewById(R.id.editor_activity),
                     getString(R.string.remote_preview_operation_error));
         }
         return post;

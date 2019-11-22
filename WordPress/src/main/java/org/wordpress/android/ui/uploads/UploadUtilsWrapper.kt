@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.uploads
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.view.View.OnClickListener
@@ -85,14 +84,19 @@ class UploadUtilsWrapper @Inject constructor(
     )
 
     fun showSnackbarError(
-        context: Context?,
         view: View?,
         message: String?
     ) = UploadUtils.showSnackbarError(view, message, sequencer)
 
     fun showSnackbar(
-        context: Context?,
         view: View?,
         messageRes: Int
     ) = UploadUtils.showSnackbar(view, messageRes, sequencer)
+
+    fun showSnackbarSuccessActionOrange(
+        view: View?,
+        messageRes: Int,
+        buttonTitleRes: Int,
+        onClickListener: OnClickListener?
+    ) = UploadUtils.showSnackbarSuccessActionOrange(view, messageRes, buttonTitleRes, onClickListener, sequencer)
 }

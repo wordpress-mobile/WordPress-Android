@@ -96,7 +96,6 @@ fun handleUploadAction(
         }
         is PostUploadAction.PostRemotePreviewSnackbarError -> {
             uploadUtilsWrapper.showSnackbarError(
-                    activity,
                     snackbarAttachView,
                     snackbarAttachView.resources.getString(action.messageResId)
             )
