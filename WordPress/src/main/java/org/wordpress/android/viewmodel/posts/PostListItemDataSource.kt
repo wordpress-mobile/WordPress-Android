@@ -28,7 +28,7 @@ sealed class PostListItemIdentifier {
     data class LocalPostId(val id: LocalId) : PostListItemIdentifier()
     data class RemotePostId(val id: RemoteId) : PostListItemIdentifier()
     object EndListIndicatorIdentifier : PostListItemIdentifier()
-    data class SectionHeaderIdentifier(val type:PostListType) : PostListItemIdentifier()
+    data class SectionHeaderIdentifier(val type: PostListType) : PostListItemIdentifier()
 }
 
 class PostListItemDataSource(
@@ -88,7 +88,9 @@ class PostListItemDataSource(
         }
     }
 
-    private fun localOrRemoteIdsFromPostListItemIds(itemIdentifiers: List<PostListItemIdentifier>): List<LocalOrRemoteId> {
+    private fun localOrRemoteIdsFromPostListItemIds(
+        itemIdentifiers: List<PostListItemIdentifier>
+    ): List<LocalOrRemoteId> {
         val localOrRemoteIds = itemIdentifiers.mapNotNull {
             when (it) {
                 is LocalPostId -> it.id
@@ -123,7 +125,6 @@ class PostListItemDataSource(
             } else {
                 transform(post)
             }
-
 
     private fun getGroupedItemIdentifiers(
         listDescriptor: PostListDescriptor,

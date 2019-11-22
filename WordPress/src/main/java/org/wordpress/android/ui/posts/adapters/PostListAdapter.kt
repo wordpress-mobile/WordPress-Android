@@ -143,7 +143,7 @@ class PostListAdapter(
             buttonDeletePermanently?.setVisible(item.options.showDeletePermanentlyButton)
         }
     }
-    private class SectionHeaderViewHolder(view: View): ViewHolder(view) {
+    private class SectionHeaderViewHolder(view: View) : ViewHolder(view) {
         private val dividerTitle = itemView.findViewById<TextView>(R.id.divider_text)
 
         fun onBind(headerItem: SectionHeaderItem) {

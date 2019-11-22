@@ -162,7 +162,7 @@ class PostListItemDataSourceTest {
         val statuses = listOf("draft", "publish", "pending", "trash", "future", "private")
         statuses.forEachIndexed { i, status ->
             val post = PostModel()
-            post.setId(i+1)
+            post.setId(i + 1)
             post.setStatus(status)
             posts.add(post)
         }
