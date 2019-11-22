@@ -171,6 +171,9 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
                 is RemoteId -> oldItem.localOrRemoteId == newItem.data.remotePostId.id
             }
         }
+        if (oldItem is SectionHeaderItem && newItem is SectionHeaderItem) {
+            return oldItem.type == newItem.type
+        }
         return false
     }
 
@@ -186,6 +189,9 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
         }
         if (oldItem is PostListItemUiState && newItem is PostListItemUiState) {
             return oldItem.data == newItem.data
+        }
+        if (oldItem is SectionHeaderItem && newItem is SectionHeaderItem) {
+            return oldItem.type == newItem.type
         }
         return false
     }
