@@ -63,7 +63,7 @@ fun handleUploadAction(
                     action.post,
                     action.site,
                     uploadActionUseCase.getUploadAction(action.post),
-                    View.OnClickListener { action.publishAction()  }
+                    View.OnClickListener { action.publishAction() }
             )
         }
         is PostUploadAction.PublishPost -> {

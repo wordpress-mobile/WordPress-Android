@@ -33,7 +33,8 @@ class UploadUtilsWrapper @Inject constructor(
         activity: Activity?,
         snackbarAttachView: View?,
         isError: Boolean,
-        mediaList: List<MediaModel?>?, site: SiteModel?,
+        mediaList: List<MediaModel?>?,
+        site: SiteModel?,
         messageForUser: String?
     ) = UploadUtils.onMediaUploadedSnackbarHandler(
             activity,
@@ -46,7 +47,8 @@ class UploadUtilsWrapper @Inject constructor(
     )
 
     fun onPostUploadedSnackbarHandler(
-        activity: Activity?, snackbarAttachView: View?,
+        activity: Activity?,
+        snackbarAttachView: View?,
         isError: Boolean,
         post: PostModel?,
         errorMessage: String?,
