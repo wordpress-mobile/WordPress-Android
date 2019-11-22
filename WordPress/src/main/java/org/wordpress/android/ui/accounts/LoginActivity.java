@@ -826,18 +826,21 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         return mFragmentInjector;
     }
 
-    @Override public void showHelpFindingConnectedEmail() {
+    @Override
+    public void showHelpFindingConnectedEmail() {
         // Not used in WordPress app
     }
 
-    @Override public void gotConnectedSiteInfo(
+    @Override
+    public void gotConnectedSiteInfo(
             @NonNull String siteAddress,
             @Nullable String redirectUrl,
             boolean hasJetpack) {
         // Not used in WordPress app
     }
 
-    @Override public void helpHandleDiscoveryError(
+    @Override
+    public void helpHandleDiscoveryError(
             String siteAddress,
             String endpointAddress,
             String username,
@@ -847,7 +850,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         // Not used in WordPress app
     }
 
-    @Override public void helpNoJetpackScreen(
+    @Override
+    public void helpNoJetpackScreen(
             String siteAddress,
             String endpointAddress,
             String username,
@@ -857,7 +861,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         // Not used in WordPress app
     }
 
-    @Override public void loginViaSiteCredentials(String inputSiteAddress) {
+    @Override
+    public void loginViaSiteCredentials(String inputSiteAddress) {
         // Not used in WordPress app
     }
 }
