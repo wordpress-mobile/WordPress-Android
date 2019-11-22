@@ -117,16 +117,24 @@ public class ReaderUpdateLogic {
         WordPress.getRestClientUtilsV1_2().get("read/menu", params, null, listener, errorListener);
     }
 
-    private void updateServerTopicsDisplayName(ReaderTagList serverTopics) {
+    private boolean displayNameUpdateWasNeeded(ReaderTagList serverTopics) {
+        boolean updateDone = false;
+
         for (ReaderTag tag : serverTopics) {
+            String tagNameBefore = tag.getTagDisplayName();
             if (tag.isFollowedSites()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_following_display_name));
+                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isDiscover()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_discover_display_name));
+                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isPostsILike()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_my_likes_display_name));
+                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             }
         }
+
+        return updateDone;
     }
 
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
@@ -138,8 +146,10 @@ public class ReaderUpdateLogic {
                 ReaderTagList serverTopics = new ReaderTagList();
                 serverTopics.addAll(parseTags(jsonObject, "default", ReaderTagType.DEFAULT));
 
+                boolean displayNameUpdateWasNeeded = false;
+
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                    updateServerTopicsDisplayName(serverTopics);
+                    displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
                 }
 
                 if (!mAccountStore.hasAccessToken()) {
@@ -167,7 +177,7 @@ public class ReaderUpdateLogic {
                 localTopics.addAll(ReaderTagTable.getBookmarkTags());
                 localTopics.addAll(ReaderTagTable.getCustomListTags());
 
-                if (!localTopics.isSameList(serverTopics)) {
+                if (!localTopics.isSameList(serverTopics) || displayNameUpdateWasNeeded) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed");
                     // if any local topics have been removed from the server, make sure to delete
                     // them locally (including their posts)
