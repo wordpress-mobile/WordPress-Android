@@ -147,7 +147,7 @@ class PostListAdapter(
         private val dividerTitle = itemView.findViewById<TextView>(R.id.divider_text)
 
         fun onBind(headerItem: SectionHeaderItem) {
-            dividerTitle.text = itemView.context.getString(headerItem.type.titleResId)
+            dividerTitle.setText(headerItem.type.titleResId)
         }
     }
 
