@@ -1,6 +1,7 @@
 13.8
 -----
 * Modified Blog Post search to search for posts under all categories.
+* Block editor: Add support for Preformatted block.
  
 13.7
 -----
