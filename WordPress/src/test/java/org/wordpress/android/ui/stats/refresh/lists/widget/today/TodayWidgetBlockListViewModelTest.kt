@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider.BlockItemUiModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -29,6 +30,7 @@ class TodayWidgetBlockListViewModelTest {
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var context: Context
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var todayWidgetUpdater: TodayWidgetUpdater
     private lateinit var viewModel: TodayWidgetBlockListViewModel
     private val siteId: Int = 15
@@ -36,7 +38,13 @@ class TodayWidgetBlockListViewModelTest {
     private val color = Color.LIGHT
     @Before
     fun setUp() {
-        viewModel = TodayWidgetBlockListViewModel(siteStore, store, resourceProvider, todayWidgetUpdater)
+        viewModel = TodayWidgetBlockListViewModel(
+                siteStore,
+                store,
+                resourceProvider,
+                todayWidgetUpdater,
+                appPrefsWrapper
+        )
         viewModel.start(siteId, color, appWidgetId)
     }
 
@@ -64,6 +72,7 @@ class TodayWidgetBlockListViewModelTest {
         Assertions.assertThat(viewModel.data).hasSize(2)
         assertListItem(viewModel.data[0], viewsKey, views, visitorsKey, visitors)
         assertListItem(viewModel.data[1], likesKey, likes, commentsKey, comments)
+        verify(appPrefsWrapper).setAppWidgetHasData(true, appWidgetId)
     }
 
     @Test
