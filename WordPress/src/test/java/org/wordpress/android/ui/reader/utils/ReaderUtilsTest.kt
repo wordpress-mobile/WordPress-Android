@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.utils
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -10,7 +9,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
-import org.wordpress.android.models.ReaderTagType.CUSTOM_LIST
 import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.ui.FilteredRecyclerView
@@ -76,24 +74,5 @@ class ReaderUtilsTest {
         whenever(filteredRecyclerView.currentFilter).thenReturn(currentTag)
         result = ReaderUtils.isFollowing(currentTag, true, filteredRecyclerView)
         assertThat(result).isEqualTo(false)
-    }
-
-    @Test
-    fun `isValidTagForSharedPrefs is based on isValidFilter when is top level reader`() {
-        whenever(filteredRecyclerView.isValidFilter(any())).thenReturn(true)
-        assertThat(
-                ReaderUtils.isValidTagForSharedPrefs(
-                        ReaderTag("", "", "", "", CUSTOM_LIST),
-                        true,
-                        filteredRecyclerView)
-        ).isEqualTo(true)
-
-        whenever(filteredRecyclerView.isValidFilter(any())).thenReturn(false)
-        assertThat(
-                ReaderUtils.isValidTagForSharedPrefs(
-                        ReaderTag("", "", "", "", CUSTOM_LIST),
-                        true,
-                        filteredRecyclerView)
-        ).isEqualTo(false)
     }
 }

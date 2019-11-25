@@ -62,11 +62,11 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-   @Subscribe(threadMode = ThreadMode.MAIN)
-   fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
-       AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
-       viewModel.loadSubFilters()
-   }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
+        AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
+        viewModel.loadSubFilters()
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
