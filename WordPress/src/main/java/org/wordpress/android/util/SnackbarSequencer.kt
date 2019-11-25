@@ -2,7 +2,6 @@ package org.wordpress.android.util
 
 import android.app.Activity
 import android.content.Context
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -22,14 +21,9 @@ import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
-private const val DURATION_EXTRA_MARGIN = 500L
+const val DURATION_EXTRA_MARGIN = 500L
 
 private const val QUEUE_SIZE_LIMIT: Int = 10
-
-// Taken from com.google.android.material.snackbar.SnackbarManager.java
-// Did not find a way to get them directly from the android framework for now
-private const val SHORT_DURATION_MS = 1500L
-private const val LONG_DURATION_MS = 2750L
 
 @Singleton
 class SnackbarSequencer @Inject constructor(
@@ -37,7 +31,7 @@ class SnackbarSequencer @Inject constructor(
     private val wpSnackbarWrapper: WPSnackbarWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : Snackbar.Callback(), CoroutineScope {
+) : CoroutineScope {
     private var job: Job = Job()
 
     private val snackBarQueue: Queue<SnackbarSequencerInfo> = LinkedList()
@@ -47,14 +41,14 @@ class SnackbarSequencer @Inject constructor(
 
     fun enqueue(item: SnackbarSequencerInfo) {
         synchronized(this@SnackbarSequencer) {
-            AppLog.d(AppLog.T.UTILS, "SnackbarSequencer > New item added")
+            AppLog.d(T.UTILS, "SnackbarSequencer > New item added")
             if (snackBarQueue.size == QUEUE_SIZE_LIMIT) {
                 snackBarQueue.remove()
             }
             snackBarQueue.add(item)
             if (snackBarQueue.size == 1) {
                 launch {
-                    AppLog.d(AppLog.T.UTILS, "SnackbarSequencer > invoking start()")
+                    AppLog.d(T.UTILS, "SnackbarSequencer > invoking start()")
                     start()
                 }
             }
@@ -69,9 +63,12 @@ class SnackbarSequencer @Inject constructor(
                 withContext(mainDispatcher) {
                     prepareSnackBar(context, item)?.show()
                 }
-                AppLog.e(AppLog.T.UTILS, "SnackbarSequencer > before delay")
+                AppLog.d(T.UTILS, "SnackbarSequencer > before delay")
                 delay(getSnackbarDurationMs(item) + DURATION_EXTRA_MARGIN)
-                AppLog.e(AppLog.T.UTILS, "SnackbarSequencer > after delay")
+                AppLog.d(T.UTILS, "SnackbarSequencer > after delay")
+            } else {
+                AppLog.d(T.UTILS,
+                        "SnackbarSequencer > start context was ${if (context == null) "null" else "not alive"}")
             }
             synchronized(this@SnackbarSequencer) {
                 if (snackBarQueue.peek() == item) {
@@ -79,7 +76,7 @@ class SnackbarSequencer @Inject constructor(
                     snackBarQueue.remove()
                 }
                 if (snackBarQueue.isEmpty()) {
-                    AppLog.d(AppLog.T.UTILS, "SnackbarSequencer > finishing start()")
+                    AppLog.d(T.UTILS, "SnackbarSequencer > finishing start()")
                     return
                 }
             }
@@ -107,21 +104,11 @@ class SnackbarSequencer @Inject constructor(
                 snackbar.addCallback(callbackinfo.snackbarCallback.get())
             }
 
-            AppLog.d(T.UTILS, "SnackbarSequencer > showSnackBar Showing snackbar [$message]")
+            AppLog.d(T.UTILS, "SnackbarSequencer > prepareSnackBar message [$message]")
 
             return snackbar
         } ?: null.also {
-            AppLog.e(T.UTILS, "SnackbarSequencer > showSnackBar Unexpected null view")
-        }
-    }
-
-    private fun getSnackbarDurationMs(snackbarSequencerInfo: SnackbarSequencerInfo): Long {
-        return when (snackbarSequencerInfo.snackbarInfo.duration) {
-            Snackbar.LENGTH_INDEFINITE ->
-                throw IllegalArgumentException("Snackbar.LENGTH_INDEFINITE not allowed in sequencer.")
-            Snackbar.LENGTH_LONG -> LONG_DURATION_MS
-            Snackbar.LENGTH_SHORT -> SHORT_DURATION_MS
-            else -> snackbarSequencerInfo.snackbarInfo.duration.toLong()
+            AppLog.e(T.UTILS, "SnackbarSequencer > prepareSnackBar Unexpected null view")
         }
     }
 }
