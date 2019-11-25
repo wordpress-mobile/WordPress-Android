@@ -1,5 +1,6 @@
 13.8
 -----
+* Modified Blog Post search to search for posts under all categories.
  
 13.7
 -----
