@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
@@ -41,16 +42,11 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-data class EditorMediaPostData(
-    val localPostId: Int,
-    val remotePostId: Long
-)
-
 interface EditorMediaListener {
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
     fun syncPostObjectWithUiAndSaveIt(listener: AfterSavePostListener? = null)
     fun advertiseImageOptimization(listener: () -> Unit)
-    fun editorMediaPostData(): EditorMediaPostData
+    fun getImmutablePost(): PostImmutableModel
 }
 
 class EditorMedia @Inject constructor(
@@ -215,7 +211,7 @@ class EditorMedia @Inject constructor(
                     ?.let {
                         updateMediaModelUseCase.updateMediaModel(
                                 it,
-                                editorMediaListener.editorMediaPostData(),
+                                editorMediaListener.getImmutablePost(),
                                 mediaUploadState
                         )
                         it

@@ -31,6 +31,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
+import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -58,6 +59,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentNotAdde
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorImageMetaData;
+import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorImageSettingsListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
@@ -98,10 +100,10 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
-import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
@@ -119,10 +121,10 @@ import org.wordpress.android.ui.posts.editor.EditorTracker;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
+import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
-import org.wordpress.android.ui.posts.editor.media.EditorMediaPostData;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -192,6 +194,7 @@ import kotlin.jvm.functions.Function0;
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
+        EditorImagePreviewListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
         OnRequestPermissionsResultCallback,
@@ -312,6 +315,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject RemotePreviewLogicHelper mRemotePreviewLogicHelper;
     @Inject ProgressDialogHelper mProgressDialogHelper;
     @Inject FeaturedImageHelper mFeaturedImageHelper;
+    @Inject ReactNativeRequestHandler mReactNativeRequestHandler;
     @Inject EditorMedia mEditorMedia;
     @Inject LocaleManagerWrapper mLocaleManagerWrapper;
     @Inject EditPostRepository mEditPostRepository;
@@ -796,6 +800,11 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment) mEditorFragment).disableContentLogOnCrashes();
         }
+
+        if (mReactNativeRequestHandler != null) {
+            mReactNativeRequestHandler.destroy();
+        }
+
         super.onDestroy();
     }
 
@@ -976,9 +985,6 @@ public class EditPostActivity extends AppCompatActivity implements
             case STOCK_MEDIA:
                 ActivityLauncher.showStockMediaPickerForResult(
                         this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
-                break;
-            case GIPHY:
-                ActivityLauncher.showGiphyPickerForResult(this, mSite, RequestCodes.GIPHY_PICKER);
                 break;
         }
     }
@@ -1695,6 +1701,11 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaSettingsActivity.showForResult(this, mSite, editorImageMetaData);
     }
 
+
+    @Override public void onImagePreviewRequested(String mediaUrl) {
+        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+    }
+
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
@@ -1766,7 +1777,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onHistoryItemClicked(@NonNull Revision revision, @NonNull ArrayList<Revision> revisions) {
+    public void onHistoryItemClicked(@NonNull Revision revision, @NonNull List<Revision> revisions) {
         AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_LIST);
         mRevision = revision;
 
@@ -2513,12 +2524,6 @@ public class EditPostActivity extends AppCompatActivity implements
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
                     }
                     break;
-                case RequestCodes.GIPHY_PICKER:
-                    if (data.hasExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                        int[] localIds = data.getIntArrayExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
-                        mEditorMedia.addMediaFromGiphyToPostAsync(localIds);
-                    }
-                    break;
                 case RequestCodes.HISTORY_DETAIL:
                     if (data.hasExtra(KEY_REVISION)) {
                         mViewPager.setCurrentItem(PAGE_CONTENT);
@@ -2742,6 +2747,13 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onAddStockMediaClicked(boolean allowMultipleSelection) {
         onPhotoPickerIconClicked(PhotoPickerIcon.STOCK_MEDIA, allowMultipleSelection);
+    }
+
+    @Override
+    public void onPerformFetch(String path, Consumer<String> onResult, Consumer<String> onError) {
+        if (mSite != null) {
+            mReactNativeRequestHandler.performGetRequest(path, mSite, onResult, onError);
+        }
     }
 
     @Override
@@ -3229,9 +3241,8 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
     }
 
-    @Override
-    public @NonNull EditorMediaPostData editorMediaPostData() {
-        return new EditorMediaPostData(mEditPostRepository.getId(), mEditPostRepository.getRemotePostId());
+    @NotNull @Override public PostImmutableModel getImmutablePost() {
+        return Objects.requireNonNull(mEditPostRepository.getPost());
     }
 
     @Override

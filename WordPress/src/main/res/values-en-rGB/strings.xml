@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-25 07:43:07+0000
+Translation-Revision-Date: 2019-11-06 08:44:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Notifications</string>
+    <string name="master_switch_default_title_off">Off</string>
+    <string name="master_switch_default_title_on">On</string>
+    <string name="notifications_tab_dialog_master_off_message">Turning notifications for this site off will disable notifications display on notifications tab for this site. You can fine tune which kind of notification you see after turning notifications for this site on.</string>
+    <string name="notifications_tab_dialog_master_off_title">To see notifications on notifications tab for this site, turn notifications for this site on.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Enable notifications display on notifications tab for this site</string>
+    <string name="notifications_tab_dialog_master_hint_on">Disable notifications display on notifications tab for this site</string>
+    <string name="notifications_tab_dialog_master_status_off">Notifications for this site</string>
+    <string name="notifications_tab_dialog_master_status_on">Notifications for this site</string>
+    <string name="dialog_gutenberg_informative_description_page">You’re now using the block editor for new pages - great! If you’d like to change to the classic editor, go to \'My site\' > \'Site settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">You’re now using the block editor for new posts - great! If you’d like to change to the classic editor, go to \'My site\' > \'Site settings\'.</string>
     <string name="pick_media">Add image or video</string>
     <string name="error_post_not_submitted_retrying">We couldn\'t submit this post for review, but we\'ll try again later. </string>
     <string name="error_post_not_scheduled_retrying">We couldn\'t schedule this post, but we\'ll try again later.</string>
@@ -117,8 +128,6 @@ Language: en_GB
     <string name="stats_bar_chart_content_description">Graph of site views.</string>
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="site_settings_editor">Editor</string>
-    <string name="dialog_gutenberg_informative_description_page">You\'re currently using the block editor to create new pages. Want to use the classic editor by default? Head to Site Settings.</string>
-    <string name="dialog_gutenberg_informative_description_post">You\'re currently using the block editor to create new posts. Want to use the classic editor by default? Head to Site Settings.</string>
     <string name="description_expand">Expand</string>
     <string name="description_collapse">Collapse</string>
     <string name="editor_retry_failed_uploads">Retry uploading</string>

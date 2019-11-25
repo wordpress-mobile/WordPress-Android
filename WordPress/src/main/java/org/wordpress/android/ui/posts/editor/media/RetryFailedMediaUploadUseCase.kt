@@ -22,7 +22,7 @@ class RetryFailedMediaUploadUseCase @Inject constructor(
                 .map { media ->
                     updateMediaModelUseCase.updateMediaModel(
                             media,
-                            editorMediaListener.editorMediaPostData(),
+                            editorMediaListener.getImmutablePost(),
                             QUEUED
                     )
                     media

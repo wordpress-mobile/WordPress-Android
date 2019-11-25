@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-25 09:52:42+0000
+Translation-Revision-Date: 2019-11-05 23:35:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Aviseringar</string>
+    <string name="master_switch_default_title_off">Från</string>
+    <string name="master_switch_default_title_on">Till</string>
+    <string name="notifications_tab_dialog_master_off_message">Om du stänger av aviseringar för denna webbplats kommer all visning av aviseringar under aviseringsfliken att stängas av för webbplatsen. Du kan finjustera vilka aviseringar du vill använda efter att du först aktiverat aviseringar för webbplatsen.</string>
+    <string name="notifications_tab_dialog_master_off_title">För att kunna se aviseringar under aviseringsfliken för denna webbplats behöver du aktivera aviseringar för webbplatsen.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Aktivera visning av aviseringar under aviseringsfliken för denna webbplats</string>
+    <string name="notifications_tab_dialog_master_hint_on">Inaktivera visning av aviseringar under aviseringsfliken för denna webbplats</string>
+    <string name="notifications_tab_dialog_master_status_off">Aviseringar för denna webbplats</string>
+    <string name="notifications_tab_dialog_master_status_on">Aviseringar för denna webbplats</string>
+    <string name="dialog_gutenberg_informative_description_page">Nu använder du blockredigeraren för nya sidor – utmärkt! Om du vill återgå till den klassiska redigeraren går du till ”Min webbplats” > ”Inställningar”.</string>
+    <string name="dialog_gutenberg_informative_description_post">Nu använder du blockredigeraren för nya inlägg – utmärkt! Om du vill återgå till den klassiska redigeraren går du till ”Min webbplats” > ”Inställningar”.</string>
     <string name="pick_media">Lägg till bild eller video</string>
     <string name="error_post_not_submitted_retrying">Det gick inte att skicka detta inlägg för granskning, men vi försöker igen senare.</string>
     <string name="error_post_not_scheduled_retrying">Det gick inte att schemalägga detta inlägg, men vi försöker igen senare.</string>
@@ -117,8 +128,6 @@ Language: sv_SE
     <string name="stats_bar_chart_content_description">Diagram över webbplatsvisningar.</string>
     <string name="stats_loading_card">Laddar in vald kortinformation</string>
     <string name="site_settings_editor">Redigerare</string>
-    <string name="dialog_gutenberg_informative_description_page">För närvarande använder du blockredigeraren för att skapa nya sidor. Gå till inställningarna för webbplatsen om du vill använda den klassiska redigeraren som standardval.</string>
-    <string name="dialog_gutenberg_informative_description_post">För närvarande använder du blockredigeraren för att skapa nya inlägg. Gå till inställningarna för webbplatsen om du vill använda den klassiska redigeraren som standardval.</string>
     <string name="description_expand">Expandera</string>
     <string name="description_collapse">Minimera</string>
     <string name="editor_retry_failed_uploads">Försök ladda upp igen</string>
