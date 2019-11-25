@@ -73,7 +73,7 @@ class AppPrefsWrapper @Inject constructor() {
     fun removeAppWidgetColorModeId(appWidgetId: Int) = AppPrefs.removeStatsWidgetColorModeId(appWidgetId)
 
     fun getAppWidgetDataType(appWidgetId: Int): DataType? {
-        return when (AppPrefs.getStatsWidgetDatatTypeId(appWidgetId)) {
+        return when (AppPrefs.getStatsWidgetDataTypeId(appWidgetId)) {
             VIEWS_TYPE_ID -> VIEWS
             VISITORS_TYPE_ID -> VISITORS
             COMMENTS_TYPE_ID -> COMMENTS
@@ -89,10 +89,20 @@ class AppPrefsWrapper @Inject constructor() {
             COMMENTS -> COMMENTS_TYPE_ID
             LIKES -> LIKES_TYPE_ID
         }
-        AppPrefs.setStatsWidgetDatatTypeId(dataTypeId, appWidgetId)
+        AppPrefs.setStatsWidgetDataTypeId(dataTypeId, appWidgetId)
     }
 
-    fun removeAppWidgetDataTypeModeId(appWidgetId: Int) = AppPrefs.removeStatsWidgetDatatTypeId(appWidgetId)
+    fun removeAppWidgetDataTypeModeId(appWidgetId: Int) = AppPrefs.removeStatsWidgetDataTypeId(appWidgetId)
+
+    fun hasAppWidgetData(appWidgetId: Int): Boolean {
+        return AppPrefs.getStatsWidgetHasData(appWidgetId)
+    }
+
+    fun setAppWidgetHasData(hasData: Boolean, appWidgetId: Int) {
+        AppPrefs.setStatsWidgetHasData(hasData, appWidgetId)
+    }
+
+    fun removeAppWidgetHasData(appWidgetId: Int) = AppPrefs.removeStatsWidgetHasData(appWidgetId)
 
     companion object {
         private const val LIGHT_MODE_ID = 0
