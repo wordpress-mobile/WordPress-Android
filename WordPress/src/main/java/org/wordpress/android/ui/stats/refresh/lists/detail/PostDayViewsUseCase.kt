@@ -18,6 +18,8 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -58,7 +60,7 @@ class PostDayViewsUseCase
 
         return when {
             error != null -> {
-                selectedDateProvider.onDateLoadingSucceeded(DETAIL)
+                selectedDateProvider.onDateLoadingFailed(DETAIL)
                 State.Error(error.message ?: error.type.name)
             }
             model != null && model.dayViews.isNotEmpty() -> {
@@ -73,35 +75,42 @@ class PostDayViewsUseCase
     }
 
     override fun buildUiModel(domainModel: PostDetailStatsModel, uiState: UiState): List<BlockListItem> {
-        val periodFromProvider = selectedDateProvider.getSelectedDate(DETAIL)
-        val visibleBarCount = uiState.visibleBarCount ?: domainModel.dayViews.size
-        val availablePeriods = domainModel.dayViews.takeLast(visibleBarCount)
-        val availableDates = availablePeriods.map { statsDateFormatter.parseStatsDate(DAYS, it.period) }
-        val selectedPeriod = periodFromProvider ?: availableDates.last()
-        val index = availableDates.indexOf(selectedPeriod)
-
-        selectedDateProvider.selectDate(selectedPeriod, availableDates, DETAIL)
-
-        val shiftedIndex = index + domainModel.dayViews.size - visibleBarCount
-        val selectedItem = domainModel.dayViews.getOrNull(shiftedIndex) ?: domainModel.dayViews.last()
-        val previousItem = domainModel.dayViews.getOrNull(domainModel.dayViews.indexOf(selectedItem) - 1)
-
         val items = mutableListOf<BlockListItem>()
-        items.add(
-                postDayViewsMapper.buildTitle(
-                        selectedItem,
-                        previousItem,
-                        isLast = selectedItem == domainModel.dayViews.last()
-                )
-        )
-        items.addAll(
-                postDayViewsMapper.buildChart(
-                        domainModel.dayViews,
-                        selectedItem.period,
-                        this::onBarSelected,
-                        this::onBarChartDrawn
-                )
-        )
+        val visibleBarCount = uiState.visibleBarCount ?: domainModel.dayViews.size
+
+        if (domainModel.dayViews.isNotEmpty() && visibleBarCount > 0) {
+            val periodFromProvider = selectedDateProvider.getSelectedDate(DETAIL)
+            val availablePeriods = domainModel.dayViews.takeLast(visibleBarCount)
+            val availableDates = availablePeriods.map { statsDateFormatter.parseStatsDate(DAYS, it.period) }
+
+            val selectedPeriod = periodFromProvider ?: availableDates.last()
+            val index = availableDates.indexOf(selectedPeriod)
+
+            selectedDateProvider.selectDate(selectedPeriod, availableDates, DETAIL)
+
+            val shiftedIndex = index + domainModel.dayViews.size - visibleBarCount
+            val selectedItem = domainModel.dayViews.getOrNull(shiftedIndex) ?: domainModel.dayViews.last()
+            val previousItem = domainModel.dayViews.getOrNull(domainModel.dayViews.indexOf(selectedItem) - 1)
+
+            items.add(
+                    postDayViewsMapper.buildTitle(
+                            selectedItem,
+                            previousItem,
+                            isLast = selectedItem == domainModel.dayViews.last()
+                    )
+            )
+            items.addAll(
+                    postDayViewsMapper.buildChart(
+                            domainModel.dayViews,
+                            selectedItem.period,
+                            this::onBarSelected,
+                            this::onBarChartDrawn
+                    )
+            )
+        } else {
+            selectedDateProvider.onDateLoadingFailed(DETAIL)
+            AppLog.e(T.STATS, "There is no data to be shown in the post day view block")
+        }
         return items
     }
 
