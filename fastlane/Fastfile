@@ -171,8 +171,22 @@ ENV["HAS_ALPHA_VERSION"]="true"
     android_finalize_prechecks(options)
     hotfix = android_current_branch_is_hotfix
     android_update_metadata(options) unless hotfix
-    android_bump_version_final_release() unless hotfix
+
+    # Run release checks
+    project_folder = Dir.pwd + "/.."
+    android_check_new_languages_glotpress(verbose: false,
+        glotpress_status_url: "http://translate.wordpress.org/projects/apps/android/dev",
+        language_file: project_folder + "/tools/exported-language-codes.csv") unless hotfix
+    android_check_en_strings(verbose: false,
+        res_dir: project_folder + "/WordPress/src/main/res/",
+        project_dir: project_folder) unless hotfix
+    UI.message("alpha_version: #{android_get_alpha_version()}") unless hotfix
     version = android_get_release_version() unless hotfix
+    UI.message("release_version: #{version}") unless hotfix
+    android_check_devices(require_device: true) unless hotfix
+    gradle(task: "connectedVanillaDebugAndroidTest") unless hotfix
+
+    android_bump_version_final_release() unless hotfix
     download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix
     android_tag_build(tag_alpha: false)
 
