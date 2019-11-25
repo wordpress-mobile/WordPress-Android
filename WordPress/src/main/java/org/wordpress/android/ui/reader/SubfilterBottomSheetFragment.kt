@@ -12,11 +12,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.subfilter_list.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.subfilter.adapters.SubfilterListAdapter
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.NetworkUtils
+import java.util.EnumSet
 import javax.inject.Inject
 
 class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
@@ -44,12 +53,52 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         viewModel.subFilters.observe(this, Observer {
             (dialog.filter_recycler_view.adapter as? SubfilterListAdapter)?.update(it ?: listOf())
         })
-
         viewModel.loadSubFilters()
+        performUpdate()
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+   @Subscribe(threadMode = ThreadMode.MAIN)
+   fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
+       AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
+       viewModel.loadSubFilters()
+   }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
+        AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
+        viewModel.loadSubFilters()
+    }
+
+    private fun performUpdate() {
+        performUpdate(
+                EnumSet.of(
+                        UpdateTask.TAGS,
+                        UpdateTask.FOLLOWED_BLOGS/*,
+                        UpdateTask.RECOMMENDED_BLOGS*/
+                )
+        )
+    }
+
+    private fun performUpdate(tasks: EnumSet<UpdateTask>) {
+        if (!NetworkUtils.isNetworkAvailable(activity)) {
+            return
+        }
+
+        ReaderUpdateServiceStarter.startService(activity, tasks)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
     }
 }
