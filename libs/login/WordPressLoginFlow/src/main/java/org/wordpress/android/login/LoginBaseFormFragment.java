@@ -237,6 +237,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
 
         if (mProgressDialog != null) {
             mProgressDialog.cancel();
+            mProgressDialog.setOnCancelListener(null);
             mProgressDialog = null;
         }
 

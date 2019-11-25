@@ -6,6 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -16,7 +17,8 @@ class AllTimeWidgetListViewModel
 @Inject constructor(
     private val siteStore: SiteStore,
     private val allTimeStore: AllTimeInsightsStore,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     private var siteId: Int? = null
     private var colorMode: Color = Color.LIGHT
@@ -41,6 +43,9 @@ class AllTimeWidgetListViewModel
                     if (uiModels != data) {
                         mutableData.clear()
                         mutableData.addAll(uiModels)
+                        appWidgetId?.let {
+                            appPrefsWrapper.setAppWidgetHasData(true, it)
+                        }
                     }
                 }
             } else {

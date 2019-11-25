@@ -1018,8 +1018,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void setupJetpackSearch() {
-        boolean isJetpackBusiness =
-                mSite.isJetpackConnected() && mSite.getPlanId() == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
+        boolean isJetpackBusiness = mSite != null && mSite.isJetpackConnected()
+                                    && mSite.getPlanId() == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
         if (isJetpackBusiness || mSiteSettings.getJetpackSearchSupported()) {
             mImprovedSearch
                     .setChecked(mSiteSettings.isImprovedSearchEnabled() || mSiteSettings.getJetpackSearchEnabled());
