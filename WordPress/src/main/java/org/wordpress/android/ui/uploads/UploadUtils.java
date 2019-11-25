@@ -253,8 +253,6 @@ public class UploadUtils {
 
     private static void showSnackbarError(View view, String message, int buttonTitleRes,
                                           OnClickListener onClickListener, SnackbarSequencer sequencer) {
-        //WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
-        //          .setAction(buttonTitleRes, onClickListener).addToSequencer();
         sequencer.enqueue(
                 new SnackbarSequencerInfo(
                         new SnackbarInfo(
