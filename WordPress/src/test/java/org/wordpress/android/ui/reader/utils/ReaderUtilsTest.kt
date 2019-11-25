@@ -77,23 +77,4 @@ class ReaderUtilsTest {
         result = ReaderUtils.isFollowing(currentTag, true, filteredRecyclerView)
         assertThat(result).isEqualTo(false)
     }
-
-    @Test
-    fun `isValidTagForSharedPrefs is based on isValidFilter when is top level reader`() {
-        whenever(filteredRecyclerView.isValidFilter(any())).thenReturn(true)
-        assertThat(
-                ReaderUtils.isValidTagForSharedPrefs(
-                        ReaderTag("", "", "", "", CUSTOM_LIST),
-                        true,
-                        filteredRecyclerView)
-        ).isEqualTo(true)
-
-        whenever(filteredRecyclerView.isValidFilter(any())).thenReturn(false)
-        assertThat(
-                ReaderUtils.isValidTagForSharedPrefs(
-                        ReaderTag("", "", "", "", CUSTOM_LIST),
-                        true,
-                        filteredRecyclerView)
-        ).isEqualTo(false)
-    }
 }
