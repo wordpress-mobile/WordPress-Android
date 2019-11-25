@@ -653,6 +653,9 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void updateQuickStartContainer() {
+        if (!isAdded()) {
+            return;
+        }
         if (QuickStartUtils.isQuickStartInProgress(mQuickStartStore)) {
             int site = AppPrefs.getSelectedSite();
 
