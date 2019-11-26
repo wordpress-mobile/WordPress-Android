@@ -974,7 +974,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void refreshSelectedSiteDetails(SiteModel site) {
-        if (!isAdded()) {
+        if (!isAdded() || getView() == null) {
             return;
         }
 
