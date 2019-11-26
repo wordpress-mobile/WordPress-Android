@@ -152,6 +152,60 @@ class StatsUtilsTest {
     }
 
     @Test
+    fun `returns null value when input is null integer and default is empty`() {
+        val input: Int? = null
+
+        val result = statsUtils.toFormattedString(input)
+
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `returns null value when input is null long and default is empty`() {
+        val input: Long? = null
+
+        val result = statsUtils.toFormattedString(input)
+
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `returns null value when input is null double and default is empty`() {
+        val input: Double? = null
+
+        val result = statsUtils.toFormattedString(input)
+
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `returns default value when input is null integer and default is not empty`() {
+        val input: Int? = null
+
+        val result = statsUtils.toFormattedString(input, defaultValue = "-")
+
+        assertThat(result).isEqualTo("-")
+    }
+
+    @Test
+    fun `returns default value when input is null long and default is not empty`() {
+        val input: Long? = null
+
+        val result = statsUtils.toFormattedString(input, defaultValue = "-")
+
+        assertThat(result).isEqualTo("-")
+    }
+
+    @Test
+    fun `returns default value when input is null double and default is not empty`() {
+        val input: Double? = null
+
+        val result = statsUtils.toFormattedString(input, defaultValue = "-")
+
+        assertThat(result).isEqualTo("-")
+    }
+
+    @Test
     fun `test stats int formatter with start value`() {
         val numbers = listOf(
                 999999,
