@@ -246,7 +246,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     private void setSearchViewHintColor() {
         if (mSearchView != null && getActivity() != null) {
             ((EditText) mSearchView.findViewById(androidx.appcompat.R.id.search_src_text))
-                    .setHintTextColor(ContextCompat.getColor(getActivity(), R.color.wordpress_blue_10));
+                    .setHintTextColor(ContextCompat.getColor(getActivity(), R.color.wordpress_blue_5));
         }
     }
 
