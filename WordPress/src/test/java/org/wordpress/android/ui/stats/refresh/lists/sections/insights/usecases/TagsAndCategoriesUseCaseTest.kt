@@ -85,7 +85,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                 any(),
                 any<String>()
         )).thenReturn(contentDescription)
-        whenever(statsUtils.toFormattedString(any<Long>(), any(), any())).then { (it.arguments[0] as Long).toString() }
+        whenever(statsUtils.toFormattedString(any<Long>(), any())).then { (it.arguments[0] as Long).toString() }
     }
 
     @Test

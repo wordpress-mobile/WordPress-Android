@@ -11,6 +11,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.anyNullable
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel
@@ -94,7 +95,8 @@ class ClicksUseCaseTest : BaseUnitTest() {
                 any<String>(),
                 any()
         )).thenReturn(contentDescription)
-        whenever(statsUtils.toFormattedString(any<Int>(), any(), any())).then { (it.arguments[0] as Int).toString() }
+        whenever(statsUtils.toFormattedString(anyNullable<Int>(), any())).then { (it.arguments[0] as? Int)?.toString() }
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as? Int)?.toString() }
     }
 
     @Test

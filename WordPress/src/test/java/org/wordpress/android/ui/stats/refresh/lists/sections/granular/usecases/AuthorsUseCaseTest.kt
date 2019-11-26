@@ -99,7 +99,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 any(),
                 any<Int>()
         )).thenReturn(contentDescription)
-        whenever(statsUtils.toFormattedString(any<Int>(), any(), any())).then { (it.arguments[0] as Int).toString() }
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

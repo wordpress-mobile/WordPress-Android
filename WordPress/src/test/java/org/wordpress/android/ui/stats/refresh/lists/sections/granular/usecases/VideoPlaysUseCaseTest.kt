@@ -86,7 +86,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
                 any<String>(),
                 any()
         )).thenReturn(contentDescription)
-        whenever(statsUtils.toFormattedString(any<Int>(), any(), any())).then { (it.arguments[0] as Int).toString() }
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

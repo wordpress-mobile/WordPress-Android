@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -9,6 +10,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
+import org.wordpress.android.anyNullable
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel.YearInsights
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -35,15 +37,20 @@ class AnnualStatsMapperTest {
         whenever(
                 statsUtils.toFormattedString(
                         any<Int>(),
-                        any(),
                         any()
                 )
         ).then { (it.arguments[0] as Int).toString() }
         whenever(
                 statsUtils.toFormattedString(
-                        any<Double>(),
-                        any(),
+                        anyNullable<Double>(),
                         any()
+                )
+        ).then { (it.arguments[0] as Double).toString() }
+        whenever(
+                statsUtils.toFormattedString(
+                        anyNullable<Double>(),
+                        any(),
+                        eq("0")
                 )
         ).then { (it.arguments[0] as Double).toString() }
     }

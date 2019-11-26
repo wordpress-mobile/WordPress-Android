@@ -62,7 +62,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(statsDateFormatter.printDate(bestDay)).thenReturn(bestDayTransformed)
-        whenever(statsUtils.toFormattedString(any<Int>(), any(), any())).then { (it.arguments[0] as Int).toString() }
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

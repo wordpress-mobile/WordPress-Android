@@ -60,7 +60,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
-        whenever(statsUtils.toFormattedString(any<Int>(), any(), any())).then { (it.arguments[0] as Int).toString() }
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

@@ -38,7 +38,7 @@ class OverviewMapperTest : BaseUnitTest() {
         mapper = OverviewMapper(statsDateFormatter, resourceProvider, statsUtils, contentDescriptionHelper)
         whenever(resourceProvider.getString(R.string.stats_likes)).thenReturn(likesTitle)
         whenever(statsDateFormatter.printGranularDate(any<String>(), any())).thenReturn(printedDate)
-        whenever(statsUtils.toFormattedString(any<Long>(), any(), any())).then { (it.arguments[0] as Long).toString() }
+        whenever(statsUtils.toFormattedString(any<Long>(), any())).then { (it.arguments[0] as Long).toString() }
     }
 
     @Test
