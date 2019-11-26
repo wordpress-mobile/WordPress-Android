@@ -67,6 +67,7 @@ class ReaderUtilsTest {
     fun `isFollowing is based on FilteredRecyclerView when is top level reader`() {
         whenever(currentTag.isFollowedSites).thenReturn(true)
         whenever(filteredRecyclerView.currentFilter).thenReturn(currentTag)
+        whenever(filteredRecyclerView.isValidFilter(currentTag)).thenReturn(true)
         var result = ReaderUtils.isFollowing(currentTag, true, filteredRecyclerView)
         assertThat(result).isEqualTo(true)
 
