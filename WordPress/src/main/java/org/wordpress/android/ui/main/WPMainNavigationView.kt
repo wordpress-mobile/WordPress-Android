@@ -209,7 +209,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             fragmentManager
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment, getTagForPosition(position))
-                    .commit()
+                    .commitAllowingStateLoss()
         }
     }
 
