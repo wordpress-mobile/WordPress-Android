@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.views
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.isNull
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodDa
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEGATIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
@@ -34,6 +36,7 @@ class ViewsWidgetListViewModelTest {
     @Mock private lateinit var overviewMapper: OverviewMapper
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var site: SiteModel
     private lateinit var viewModel: ViewsWidgetListViewModel
     private val siteId: Int = 15
@@ -47,7 +50,8 @@ class ViewsWidgetListViewModelTest {
                 visitsAndViewsStore,
                 overviewMapper,
                 resourceProvider,
-                statsDateFormatter
+                statsDateFormatter,
+                appPrefsWrapper
         )
     }
 
@@ -124,6 +128,7 @@ class ViewsWidgetListViewModelTest {
             assertThat(data[2].isNegativeChangeVisible).isFalse()
             assertThat(data[2].change).isEqualTo(change)
         }
+        verify(appPrefsWrapper).setAppWidgetHasData(true, appWidgetId)
     }
 
     @Test

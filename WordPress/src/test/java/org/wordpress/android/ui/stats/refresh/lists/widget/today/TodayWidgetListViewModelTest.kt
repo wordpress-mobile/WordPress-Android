@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.today
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -13,6 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetListViewModel.TodayItemUiModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
@@ -23,6 +25,7 @@ class TodayWidgetListViewModelTest {
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var store: TodayInsightsStore
     @Mock private lateinit var resourceProvider: ResourceProvider
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var statsUtils: StatsUtils
     @Mock private lateinit var site: SiteModel
     private lateinit var viewModel: TodayWidgetListViewModel
@@ -31,7 +34,13 @@ class TodayWidgetListViewModelTest {
     private val color = Color.LIGHT
     @Before
     fun setUp() {
-        viewModel = TodayWidgetListViewModel(siteStore, store, statsUtils, resourceProvider)
+        viewModel = TodayWidgetListViewModel(
+                siteStore,
+                store,
+                resourceProvider,
+                appPrefsWrapper,
+                statsUtils
+        )
         viewModel.start(siteId, color, appWidgetId)
         whenever(statsUtils.toFormattedString(any<Int>(), any(), any())).then { (it.arguments[0] as Int).toString() }
     }
@@ -62,6 +71,7 @@ class TodayWidgetListViewModelTest {
         assertListItem(viewModel.data[1], visitorsKey, visitors)
         assertListItem(viewModel.data[2], likesKey, likes)
         assertListItem(viewModel.data[3], commentsKey, comments)
+        verify(appPrefsWrapper).setAppWidgetHasData(true, appWidgetId)
     }
 
     @Test

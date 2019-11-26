@@ -31,6 +31,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
+import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -99,7 +100,6 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
-import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -120,6 +120,7 @@ import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
+import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
@@ -313,6 +314,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject RemotePreviewLogicHelper mRemotePreviewLogicHelper;
     @Inject ProgressDialogHelper mProgressDialogHelper;
     @Inject FeaturedImageHelper mFeaturedImageHelper;
+    @Inject ReactNativeRequestHandler mReactNativeRequestHandler;
     @Inject EditorMedia mEditorMedia;
     @Inject LocaleManagerWrapper mLocaleManagerWrapper;
     @Inject EditPostRepository mEditPostRepository;
@@ -796,6 +798,11 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment) mEditorFragment).disableContentLogOnCrashes();
         }
+
+        if (mReactNativeRequestHandler != null) {
+            mReactNativeRequestHandler.destroy();
+        }
+
         super.onDestroy();
     }
 
@@ -976,9 +983,6 @@ public class EditPostActivity extends AppCompatActivity implements
             case STOCK_MEDIA:
                 ActivityLauncher.showStockMediaPickerForResult(
                         this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
-                break;
-            case GIPHY:
-                ActivityLauncher.showGiphyPickerForResult(this, mSite, RequestCodes.GIPHY_PICKER);
                 break;
         }
     }
@@ -2518,12 +2522,6 @@ public class EditPostActivity extends AppCompatActivity implements
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
                     }
                     break;
-                case RequestCodes.GIPHY_PICKER:
-                    if (data.hasExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                        int[] localIds = data.getIntArrayExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
-                        mEditorMedia.addMediaFromGiphyToPostAsync(localIds);
-                    }
-                    break;
                 case RequestCodes.HISTORY_DETAIL:
                     if (data.hasExtra(KEY_REVISION)) {
                         mViewPager.setCurrentItem(PAGE_CONTENT);
@@ -2747,6 +2745,13 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onAddStockMediaClicked(boolean allowMultipleSelection) {
         onPhotoPickerIconClicked(PhotoPickerIcon.STOCK_MEDIA, allowMultipleSelection);
+    }
+
+    @Override
+    public void onPerformFetch(String path, Consumer<String> onResult, Consumer<String> onError) {
+        if (mSite != null) {
+            mReactNativeRequestHandler.performGetRequest(path, mSite, onResult, onError);
+        }
     }
 
     @Override

@@ -34,7 +34,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     private val mainDispatcher: CoroutineDispatcher,
     private val backgroundDispatcher: CoroutineDispatcher,
     private val defaultUiState: UI_STATE,
-    private val fetchParams: List<UseCaseParam> = listOf(UseCaseParam.Site),
+    private val fetchParams: List<UseCaseParam> = listOf(),
     private val uiUpdateParams: List<UseCaseParam> = listOf()
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext
@@ -250,7 +250,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         type: StatsType,
         mainDispatcher: CoroutineDispatcher,
         backgroundDispatcher: CoroutineDispatcher,
-        inputParams: List<UseCaseParam> = listOf(UseCaseParam.Site)
+        inputParams: List<UseCaseParam> = listOf()
     ) : BaseStatsUseCase<DOMAIN_MODEL, NotUsedUiState>(
             type,
             mainDispatcher,
@@ -281,7 +281,6 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     }
 
     sealed class UseCaseParam {
-        object Site : UseCaseParam()
         data class SelectedDateParam(val statsSection: StatsSection) : UseCaseParam()
     }
 }
