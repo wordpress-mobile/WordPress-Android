@@ -52,7 +52,7 @@ class StatsUtils
     fun toFormattedString(number: Double, startValue: Int = TEN_THOUSAND): String {
         val locale = localeManager.getLocale()
         return number.let {
-            if (it < startValue) {
+            if (it < startValue && it > (startValue * -1)) {
                 val formatter = DecimalFormat.getInstance(locale)
                 formatter.maximumFractionDigits = 1
                 formatter.minimumFractionDigits = 0

@@ -44,7 +44,42 @@ class StatsUtilsTest {
 
     @Test
     fun `test stats int formatter`() {
-        val numbers = listOf(
+        val numbers: List<Int> = listOf(
+                0,
+                5,
+                999,
+                1000,
+                -5821,
+                10500,
+                -101800,
+                2000000,
+                -7800000,
+                92150000,
+                1232000000
+        )
+        val expected = listOf(
+                "0",
+                "5",
+                "999",
+                "1,000",
+                "-5,821",
+                "10k",
+                "-101k",
+                "2M",
+                "-7.8M",
+                "92M",
+                "1.2B"
+        )
+        for (i in numbers.indices) {
+            val number = numbers[i]
+            val formatted = statsUtils.toFormattedString(number)
+            assertThat(formatted).isEqualTo(expected[i])
+        }
+    }
+
+    @Test
+    fun `test stats long formatter`() {
+        val numbers: List<Long> = listOf(
                 0,
                 5,
                 999,
@@ -64,6 +99,43 @@ class StatsUtilsTest {
                 "999",
                 "1,000",
                 "-5,821",
+                "10k",
+                "-101k",
+                "2M",
+                "-7.8M",
+                "92M",
+                "1.2B",
+                "-2.1T"
+        )
+        for (i in numbers.indices) {
+            val number = numbers[i]
+            val formatted = statsUtils.toFormattedString(number)
+            assertThat(formatted).isEqualTo(expected[i])
+        }
+    }
+
+    @Test
+    fun `test stats double formatter`() {
+        val numbers: List<Double> = listOf(
+                0.5,
+                5.1,
+                999.753,
+                1000.21312,
+                -5821.43,
+                10500.07,
+                -101800.123,
+                2000000.432,
+                -7800000.87,
+                92150000.33,
+                1232000000.3456,
+                -2120000000000.765
+        )
+        val expected = listOf(
+                "0.5",
+                "5.1",
+                "999.8",
+                "1,000.2",
+                "-5,821.4",
                 "10k",
                 "-101k",
                 "2M",
