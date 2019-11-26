@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
@@ -191,7 +192,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         mSearchMenuItem = menu.findItem(R.id.menu_notifications_settings_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setQueryHint(getString(R.string.search_sites));
-        setSearchViewHintColor();
+        setSearchViewHintColor(mSearchView, R.color.wordpress_blue_5);
         mBlogsCategory = (PreferenceCategory) findPreference(
                 getString(R.string.pref_notification_blogs));
         mFollowedBlogsCategory = (PreferenceCategory) findPreference(
@@ -243,10 +244,11 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
     }
 
-    private void setSearchViewHintColor() {
-        if (mSearchView != null && getActivity() != null) {
-            ((EditText) mSearchView.findViewById(androidx.appcompat.R.id.search_src_text))
-                    .setHintTextColor(ContextCompat.getColor(getActivity(), R.color.wordpress_blue_5));
+    private static void setSearchViewHintColor(@NonNull SearchView searchView, @ColorRes int colorResId) {
+        final Context context = searchView.getContext();
+        if (context != null) {
+            ((EditText) searchView.findViewById(androidx.appcompat.R.id.search_src_text))
+                    .setHintTextColor(ContextCompat.getColor(context, colorResId));
         }
     }
 
