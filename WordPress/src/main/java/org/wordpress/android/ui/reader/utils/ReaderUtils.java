@@ -343,10 +343,14 @@ public class ReaderUtils {
                 return false;
             } else if (recyclerView != null && recyclerView.getCurrentFilter() == null) {
                 // we are initializing now: return true to get the subfiltering first init
-                return currentTag != null && currentTag.isFollowedSites();
+                return currentTag != null
+                       && (currentTag.isFollowedSites() || currentTag.tagType == ReaderTagType.FOLLOWED);
             } else if (recyclerView != null && recyclerView.getCurrentFilter() instanceof ReaderTag) {
-                ReaderTag filter = (ReaderTag) recyclerView.getCurrentFilter();
-                return filter.isFollowedSites();
+                if (recyclerView.isValidFilter(currentTag)) {
+                    return currentTag.isFollowedSites();
+                } else {
+                    return true;
+                }
             } else {
                 return false;
             }
