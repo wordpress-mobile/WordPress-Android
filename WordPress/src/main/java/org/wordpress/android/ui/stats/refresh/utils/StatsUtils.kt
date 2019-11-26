@@ -29,26 +29,50 @@ class StatsUtils
             )
     )
 
-    fun toFormattedString(number: Long?, startValue: Int = TEN_THOUSAND, defaultValue: String = "0"): String {
-        return number?.toFormattedString(resourceProvider, startValue, localeManager.getLocale()) ?: defaultValue
+    fun toFormattedString(number: Long?, startValue: Int = TEN_THOUSAND): String? {
+        return number?.toFormattedString(resourceProvider, startValue)
     }
 
-    fun toFormattedString(number: Double?, startValue: Int = TEN_THOUSAND, defaultValue: String = "0"): String {
+    fun toFormattedString(number: Long?, startValue: Int = TEN_THOUSAND, defaultValue: String): String {
+        return number?.toFormattedString(resourceProvider, startValue) ?: defaultValue
+    }
+
+    fun toFormattedString(number: Long, startValue: Int = TEN_THOUSAND): String {
+        return number.toFormattedString(resourceProvider, startValue)
+    }
+
+    fun toFormattedString(number: Double?, startValue: Int = TEN_THOUSAND): String? {
+        return number?.let { toFormattedString(it, startValue) }
+    }
+
+    fun toFormattedString(number: Double?, startValue: Int = TEN_THOUSAND, defaultValue: String): String {
+        return number?.let { toFormattedString(it, startValue) } ?: defaultValue
+    }
+
+    fun toFormattedString(number: Double, startValue: Int = TEN_THOUSAND): String {
         val locale = localeManager.getLocale()
-        return number?.let {
+        return number.let {
             if (it < startValue) {
-            val formatter = DecimalFormat.getInstance(locale)
-            formatter.maximumFractionDigits = 1
-            formatter.minimumFractionDigits = 0
-            formatter.format(it)
-        } else {
-            it.toLong().toFormattedString(resourceProvider, startValue, locale)
+                val formatter = DecimalFormat.getInstance(locale)
+                formatter.maximumFractionDigits = 1
+                formatter.minimumFractionDigits = 0
+                formatter.format(it)
+            } else {
+                it.toLong().toFormattedString(resourceProvider, startValue, locale)
+            }
         }
-        } ?: defaultValue
     }
 
-    fun toFormattedString(number: Int?, startValue: Int = TEN_THOUSAND, defaultValue: String = "0"): String {
+    fun toFormattedString(number: Int?, startValue: Int = TEN_THOUSAND): String? {
+        return toFormattedString(number?.toLong(), startValue)
+    }
+
+    fun toFormattedString(number: Int?, startValue: Int = TEN_THOUSAND, defaultValue: String): String {
         return toFormattedString(number?.toLong(), startValue, defaultValue)
+    }
+
+    fun toFormattedString(number: Int, startValue: Int = TEN_THOUSAND): String {
+        return toFormattedString(number.toLong(), startValue)
     }
 
     private fun Long.toFormattedString(

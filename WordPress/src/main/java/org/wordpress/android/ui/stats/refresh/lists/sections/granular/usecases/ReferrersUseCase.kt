@@ -120,7 +120,7 @@ constructor(
                             icon = icon,
                             iconUrl = if (icon == null) group.icon else null,
                             text = group.name,
-                            value = statsUtils.toFormattedString(group.total),
+                            value = group.total?.let { statsUtils.toFormattedString(it) },
                             showDivider = index < domainModel.groups.size - 1,
                             navigationAction = group.url?.let { create(it, this::onItemClick) },
                             contentDescription = contentDescription
@@ -131,7 +131,7 @@ constructor(
                             icon = icon,
                             iconUrl = if (icon == null) group.icon else null,
                             text = group.name,
-                            value = statsUtils.toFormattedString(group.total),
+                            value = group.total?.let { statsUtils.toFormattedString(it) },
                             showDivider = index < domainModel.groups.size - 1,
                             contentDescription = contentDescription
                     )

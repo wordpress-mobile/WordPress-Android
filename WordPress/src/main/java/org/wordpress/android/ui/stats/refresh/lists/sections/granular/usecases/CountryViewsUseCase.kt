@@ -120,7 +120,7 @@ constructor(
             } else {
                 minViews ?: 0
             }.let { statsUtils.toFormattedString(it) }
-            val endLabel = statsUtils.toFormattedString(maxViews)
+            val endLabel = statsUtils.toFormattedString(maxViews, defaultValue = "0")
             items.add(MapItem(stringBuilder.toString(), R.string.stats_country_views_label))
             items.add(MapLegend(startLabel, endLabel))
             val header = Header(R.string.stats_country_label, R.string.stats_country_views_label)

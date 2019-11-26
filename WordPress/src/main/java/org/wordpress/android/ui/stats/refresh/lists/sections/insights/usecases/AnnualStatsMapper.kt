@@ -34,7 +34,7 @@ class AnnualStatsMapper
                         ),
                         Column(
                                 R.string.stats_insights_average_comments,
-                                statsUtils.toFormattedString(selectedYear.avgComments)
+                                statsUtils.toFormattedString(selectedYear.avgComments, defaultValue = "0")
                         )
                 ),
                 QuickScanItem(
@@ -44,7 +44,7 @@ class AnnualStatsMapper
                         ),
                         Column(
                                 R.string.stats_insights_average_likes,
-                                statsUtils.toFormattedString(selectedYear.avgLikes)
+                                statsUtils.toFormattedString(selectedYear.avgLikes, defaultValue = "0")
                         )
                 ),
                 QuickScanItem(
@@ -54,7 +54,7 @@ class AnnualStatsMapper
                         ),
                         Column(
                                 R.string.stats_insights_average_words,
-                                statsUtils.toFormattedString(selectedYear.avgWords)
+                                statsUtils.toFormattedString(selectedYear.avgWords, defaultValue = "0")
                         )
                 )
         )
