@@ -209,6 +209,9 @@ class WPMainNavigationView @JvmOverloads constructor(
             fragmentManager
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment, getTagForPosition(position))
+                    // This is used because the main activity sometimes crashes because it's trying to switch fragments
+                    // after `onSaveInstanceState` was already called. This is the related issue
+                    // https://github.com/wordpress-mobile/WordPress-Android/pull/10853
                     .commitAllowingStateLoss()
         }
     }
