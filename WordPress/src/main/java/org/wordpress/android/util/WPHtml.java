@@ -37,7 +37,7 @@ import android.text.style.URLSpan;
 
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -94,7 +94,7 @@ public class WPHtml {
      * This uses TagSoup to handle real HTML, including all of the brokenness
      * found in the wild.
      */
-    public static Spanned fromHtml(String source, Context ctx, PostModel post, int maxImageWidth) {
+    public static Spanned fromHtml(String source, Context ctx, PostImmutableModel post, int maxImageWidth) {
         return fromHtml(source, null, null, ctx, post, maxImageWidth);
     }
 
@@ -118,7 +118,7 @@ public class WPHtml {
      * found in the wild.
      */
     public static Spanned fromHtml(String source, ImageGetter imageGetter,
-                                   TagHandler tagHandler, Context ctx, PostModel post, int maxImageWidth) {
+                                   TagHandler tagHandler, Context ctx, PostImmutableModel post, int maxImageWidth) {
         Parser parser = new Parser();
         try {
             parser.setProperty(Parser.schemaProperty, HtmlParser.HTML_SCHEMA);

@@ -18,7 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWi
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -30,6 +30,7 @@ class AllTimeStatsUseCase
     private val statsSiteProvider: StatsSiteProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val statsWidgetUpdaters: StatsWidgetUpdaters,
+    private val statsUtils: StatsUtils,
     private val popupMenuHandler: ItemPopupMenuHandler
 ) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher, backgroundDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_all_time_stats))
@@ -73,8 +74,8 @@ class AllTimeStatsUseCase
         } else {
             items.add(
                     QuickScanItem(
-                            Column(R.string.stats_views, domainModel.views.toFormattedString()),
-                            Column(R.string.stats_visitors, domainModel.visitors.toFormattedString())
+                            Column(R.string.stats_views, statsUtils.toFormattedString(domainModel.views)),
+                            Column(R.string.stats_visitors, statsUtils.toFormattedString(domainModel.visitors))
                     )
             )
             val tooltip = if (domainModel.viewsBestDay.isNotEmpty()) {
@@ -84,10 +85,10 @@ class AllTimeStatsUseCase
             }
             items.add(
                     QuickScanItem(
-                            Column(R.string.posts, domainModel.posts.toFormattedString()),
+                            Column(R.string.posts, statsUtils.toFormattedString(domainModel.posts)),
                             Column(
                                     R.string.stats_insights_best_ever,
-                                    domainModel.viewsBestDayTotal.toFormattedString(),
+                                    statsUtils.toFormattedString(domainModel.viewsBestDayTotal),
                                     tooltip
                             )
                     )

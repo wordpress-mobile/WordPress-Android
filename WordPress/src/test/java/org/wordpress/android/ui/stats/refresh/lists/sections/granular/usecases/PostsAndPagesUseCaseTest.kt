@@ -41,7 +41,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -56,6 +56,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: PostsAndPagesUseCase
     private val contentDescription = "title, views"
     @InternalCoroutinesApi
@@ -70,6 +71,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 selectedDateProvider,
                 tracker,
                 contentDescriptionHelper,
+                statsUtils,
                 BLOCK
         )
         whenever(siteModelProvider.siteModel).thenReturn(site)
@@ -85,6 +87,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 any<String>(),
                 any()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
@@ -259,7 +262,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val item = items[2] as ListItemWithIcon
         assertThat(item.icon).isEqualTo(R.drawable.ic_pages_white_24dp)
         assertThat(item.text).isEqualTo(title)
-        assertThat(item.value).isEqualTo(views.toFormattedString())
+        assertThat(item.value).isEqualTo(views.toString())
         assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 

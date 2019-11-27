@@ -117,9 +117,12 @@ jobs:
       - android/save-gradle-cache
   strings-check:
     docker:
-      - image: circleci/ruby:2.3
+      - image: circleci/ruby:2.5.5
     steps:
       - git/shallow-checkout
+      - run:
+          name: Install bundler
+          command: gem install bundler --version 2.0.2 
       - bundle-install/bundle-install:
           cache_key_prefix: strings-check
       - run:

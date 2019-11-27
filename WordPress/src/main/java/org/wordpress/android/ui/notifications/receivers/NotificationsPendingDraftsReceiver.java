@@ -64,7 +64,8 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                 for (PostModel post : draftPosts) {
                     // reschedule next notifications for each local draft post we have, as we have
                     // just been rebooted
-                    PendingDraftsNotificationsUtils.scheduleNextNotifications(context, post);
+                    PendingDraftsNotificationsUtils.scheduleNextNotifications(context, post.getId(),
+                            post.getDateLocallyChanged());
                 }
             }
         } else {
