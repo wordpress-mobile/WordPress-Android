@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
@@ -102,6 +103,22 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         Assertions.assertThat(result.state).isEqualTo(ERROR)
+    }
+
+    @Test
+    fun `get empty state when dayViews is empty in model`() = test {
+        val forced = false
+        whenever(model.dayViews).thenReturn(listOf())
+        whenever(store.getPostDetail(site, postId)).thenReturn(model)
+        whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
+                OnStatsFetched(
+                        model
+                )
+        )
+
+        val result = loadData(true, forced)
+
+        Assertions.assertThat(result.state).isEqualTo(EMPTY)
     }
 
     private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
