@@ -855,6 +855,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return false;
     }
 
+    @Override public void mediaSelectionCancelled() {
+        getGutenbergContainerFragment().mediaSelectionCancelled();
+    }
+
     @Override
     public void onMediaUploadReattached(String localMediaId, float currentProgress) {
         mUploadingMediaProgressMax.put(localMediaId, currentProgress);
