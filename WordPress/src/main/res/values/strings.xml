@@ -109,6 +109,7 @@
     <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
     <string name="ok">OK</string>
+    <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -243,6 +244,7 @@
     <string name="page_parent_changed">Page parent has been changed</string>
 
     <!-- posts tab -->
+    <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="untitled">Untitled</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="local_draft">Local draft</string>
