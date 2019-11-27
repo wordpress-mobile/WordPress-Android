@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -45,6 +46,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: LatestPostSummaryUseCase
     @InternalCoroutinesApi
     @Before
@@ -57,6 +59,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 latestPostSummaryMapper,
                 tracker,
                 popupMenuHandler,
+                statsUtils,
                 contentDescriptionHelper
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -65,6 +68,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 any(),
                 any<Int>()
         )).thenReturn("likes: 10")
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

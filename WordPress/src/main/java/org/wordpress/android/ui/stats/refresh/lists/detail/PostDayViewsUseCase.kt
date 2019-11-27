@@ -17,7 +17,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -108,7 +107,7 @@ class PostDayViewsUseCase
     override fun buildLoadingItem(): List<BlockListItem> {
         return listOf(
                 ValueItem(
-                        value = 0.toFormattedString(),
+                        value = "0",
                         unit = R.string.stats_views,
                         isFirst = true,
                         contentDescription = resourceProvider.getString(R.string.stats_loading_card)

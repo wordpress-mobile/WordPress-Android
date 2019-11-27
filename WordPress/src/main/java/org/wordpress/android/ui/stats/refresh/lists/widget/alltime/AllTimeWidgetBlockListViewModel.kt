@@ -11,7 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvid
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider.WidgetBlockListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -21,7 +21,8 @@ class AllTimeWidgetBlockListViewModel
     private val allTimeStore: AllTimeInsightsStore,
     private val resourceProvider: ResourceProvider,
     private val allTimeWidgetUpdater: AllTimeWidgetUpdater,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val statsUtils: StatsUtils
 ) : WidgetBlockListViewModel {
     private var siteId: Int? = null
     private var colorMode: Color = Color.LIGHT
@@ -72,17 +73,17 @@ class AllTimeWidgetBlockListViewModel
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_views),
-                        domainModel.views.toFormattedString(MILLION),
+                        statsUtils.toFormattedString(domainModel.views, MILLION),
                         resourceProvider.getString(R.string.stats_visitors),
-                        domainModel.visitors.toFormattedString(MILLION)
+                        statsUtils.toFormattedString(domainModel.visitors, MILLION)
                 ),
                 BlockItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.posts),
-                        domainModel.posts.toFormattedString(MILLION),
+                        statsUtils.toFormattedString(domainModel.posts, MILLION),
                         resourceProvider.getString(R.string.stats_insights_best_ever),
-                        domainModel.viewsBestDayTotal.toFormattedString(MILLION)
+                        statsUtils.toFormattedString(domainModel.viewsBestDayTotal, MILLION)
                 )
         )
     }
