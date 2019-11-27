@@ -54,6 +54,9 @@ class ReaderPostListViewModel @Inject constructor(
     private val _readerModeInfo = SingleLiveEvent<ReaderModeInfo>()
     val readerModeInfo: LiveData<ReaderModeInfo> = _readerModeInfo
 
+    private val _isBottomSheetShowing = MutableLiveData<Boolean>()
+    val isBottomSheetShowing: LiveData<Boolean> = _isBottomSheetShowing
+
     /**
      * First tag for which the card was shown.
      */
@@ -167,8 +170,10 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onSubfilterClicked(filter: SubfilterListItem) {
+        _isBottomSheetShowing.postValue(false)
+
         _subFilters.postValue(_subFilters.value?.map {
-            it.isSelected = filter == it
+            it.isSelected = it.isSameItem(filter)
             it
         })
 
@@ -201,6 +206,10 @@ class ReaderPostListViewModel @Inject constructor(
                         onClickAction = ::onSubfilterClicked,
                         isSelected = true
                 ))
+    }
+
+    fun setIsBottomSheetShowing(showing: Boolean) {
+        _isBottomSheetShowing.value = showing
     }
 
     fun applySubfilter(
