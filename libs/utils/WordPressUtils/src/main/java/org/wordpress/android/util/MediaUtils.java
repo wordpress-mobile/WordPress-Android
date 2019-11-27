@@ -188,6 +188,11 @@ public class MediaUtils {
         }
     }
 
+    /*
+     * Some media providers (eg. Google Photos) give us a limited access to media files just so we can copy them and
+     * then they revoke the access. Copying these files must be performed on the UI thread, otherwise the access might
+     * be revoked before the action completes. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+     */
     public static Uri downloadExternalMedia(Context context, Uri imageUri) {
         if (context == null || imageUri == null) {
             return null;
