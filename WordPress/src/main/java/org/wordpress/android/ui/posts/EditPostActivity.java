@@ -2468,7 +2468,23 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (resultCode != Activity.RESULT_OK) {
-            return;
+            switch (requestCode) {
+                case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
+                case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
+                case RequestCodes.PHOTO_PICKER:
+                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
+                case RequestCodes.MEDIA_LIBRARY:
+                case RequestCodes.PICTURE_LIBRARY:
+                case RequestCodes.TAKE_PHOTO:
+                case RequestCodes.VIDEO_LIBRARY:
+                case RequestCodes.TAKE_VIDEO:
+                case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
+                    mEditorFragment.mediaSelectionCancelled();
+                    return;
+                default:
+                    // noop
+                    return;
+            }
         }
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO
