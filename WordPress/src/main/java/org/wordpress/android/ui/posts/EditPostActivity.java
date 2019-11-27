@@ -3362,6 +3362,10 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
     }
 
+    @Override public void appendMediaFiles(@NotNull Map<String, ? extends MediaFile> mediaFiles) {
+        mEditorFragment.appendMediaFiles((Map<String, MediaFile>) mediaFiles);
+    }
+
     @NotNull @Override public PostImmutableModel getImmutablePost() {
         return Objects.requireNonNull(mEditPostRepository.getPost());
     }

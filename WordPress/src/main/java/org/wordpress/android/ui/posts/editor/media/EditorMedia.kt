@@ -44,6 +44,7 @@ import kotlin.coroutines.CoroutineContext
 
 interface EditorMediaListener {
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
+    fun appendMediaFiles(mediaFiles: Map<String, MediaFile>)
     fun syncPostObjectWithUiAndSaveIt(listener: AfterSavePostListener? = null)
     fun advertiseImageOptimization(listener: () -> Unit)
     fun getImmutablePost(): PostImmutableModel
