@@ -24,6 +24,9 @@ class WPMainActivityViewModel @Inject constructor() : ViewModel() {
     private val _createAction = SingleLiveEvent<ActionType>()
     val createAction: LiveData<ActionType> = _createAction
 
+    private val _isBottomSheetShowing = MutableLiveData<Boolean>()
+    val isBottomSheetShowing: LiveData<Boolean> = _isBottomSheetShowing
+
     fun start(isFabVisible: Boolean) {
         if (isStarted) return
         isStarted = true
@@ -52,7 +55,12 @@ class WPMainActivityViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun onCreateActionClicked(actionType: ActionType) {
+        _isBottomSheetShowing.postValue(false)
         _createAction.postValue(actionType)
+    }
+
+    fun setIsBottomSheetShowing(showing: Boolean) {
+        _isBottomSheetShowing.value = showing
     }
 
     fun onPageChanged(showFab: Boolean) {

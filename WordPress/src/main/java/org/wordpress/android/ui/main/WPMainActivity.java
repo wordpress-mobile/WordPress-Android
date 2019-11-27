@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -169,7 +170,6 @@ public class WPMainActivity extends AppCompatActivity implements
     private SiteModel mSelectedSite;
     private WPMainActivityViewModel mViewModel;
     private FloatingActionButton mFloatingActionButton;
-    private MainBottomSheetFragment mMainBottomSheetFragment;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
 
     @Inject AccountStore mAccountStore;
@@ -404,16 +404,26 @@ public class WPMainActivity extends AppCompatActivity implements
                         handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
                         break;
                 }
-
-                if (mMainBottomSheetFragment != null) {
-                    mMainBottomSheetFragment.dismiss();
-                    mMainBottomSheetFragment = null;
-                }
             });
 
             mFloatingActionButton.setOnClickListener(v -> {
-                mMainBottomSheetFragment = new MainBottomSheetFragment();
-                mMainBottomSheetFragment.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
+                MainBottomSheetFragment bottomSheet = new MainBottomSheetFragment();
+                bottomSheet.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
+                mViewModel.setIsBottomSheetShowing(true);
+            });
+
+            mViewModel.isBottomSheetShowing().observe(this, isShowing -> {
+                if (!isShowing) {
+                    FragmentManager fm = getSupportFragmentManager();
+                    if (fm != null) {
+                        MainBottomSheetFragment bottomSheet =
+                                (MainBottomSheetFragment) fm.findFragmentByTag(MAIN_BOTTOM_SHEET_TAG);
+
+                        if (bottomSheet != null) {
+                            bottomSheet.dismiss();
+                        }
+                    }
+                }
             });
         }
 
