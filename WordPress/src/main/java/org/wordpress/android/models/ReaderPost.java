@@ -233,15 +233,17 @@ public class ReaderPost {
 
         for (int i = 0; i < jsonMetadata.length(); i++) {
             JSONObject jsonMetaItem = jsonMetadata.optJSONObject(i);
-            String metaKey = jsonMetaItem.optString("key");
-            if (!TextUtils.isEmpty(metaKey) && metaKey.equals("xpost_origin")) {
-                String value = jsonMetaItem.optString("value");
-                if (!TextUtils.isEmpty(value) && value.contains(":")) {
-                    String[] valuePair = value.split(":");
-                    if (valuePair.length == 2) {
-                        post.xpostBlogId = StringUtils.stringToLong(valuePair[0]);
-                        post.xpostPostId = StringUtils.stringToLong(valuePair[1]);
-                        return;
+            if (jsonMetaItem != null) {
+                String metaKey = jsonMetaItem.optString("key");
+                if (!TextUtils.isEmpty(metaKey) && metaKey.equals("xpost_origin")) {
+                    String value = jsonMetaItem.optString("value");
+                    if (!TextUtils.isEmpty(value) && value.contains(":")) {
+                        String[] valuePair = value.split(":");
+                        if (valuePair.length == 2) {
+                            post.xpostBlogId = StringUtils.stringToLong(valuePair[0]);
+                            post.xpostPostId = StringUtils.stringToLong(valuePair[1]);
+                            return;
+                        }
                     }
                 }
             }
