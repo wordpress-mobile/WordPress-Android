@@ -18,7 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -29,6 +29,7 @@ class TodayStatsUseCase
     private val todayStore: TodayInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsWidgetUpdaters: StatsWidgetUpdaters,
+    private val statsUtils: StatsUtils,
     private val popupMenuHandler: ItemPopupMenuHandler
 ) : StatelessUseCase<VisitsModel>(TODAY_STATS, mainDispatcher, backgroundDispatcher) {
     override suspend fun loadCachedData(): VisitsModel? {
@@ -70,14 +71,14 @@ class TodayStatsUseCase
         } else {
             items.add(
                     QuickScanItem(
-                            Column(R.string.stats_views, domainModel.views.toFormattedString()),
-                            Column(R.string.stats_visitors, domainModel.visitors.toFormattedString())
+                            Column(R.string.stats_views, statsUtils.toFormattedString(domainModel.views)),
+                            Column(R.string.stats_visitors, statsUtils.toFormattedString(domainModel.visitors))
                     )
             )
             items.add(
                     QuickScanItem(
-                            Column(R.string.stats_likes, domainModel.likes.toFormattedString()),
-                            Column(R.string.stats_comments, domainModel.comments.toFormattedString())
+                            Column(R.string.stats_likes, statsUtils.toFormattedString(domainModel.likes)),
+                            Column(R.string.stats_comments, statsUtils.toFormattedString(domainModel.comments))
                     )
             )
         }

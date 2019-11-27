@@ -21,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import java.util.Locale
@@ -28,18 +29,27 @@ import java.util.Locale
 class PostDetailMapperTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var postDetailMapper: PostDetailMapper
     private val contentDescription = "period, views"
     @Before
     fun setUp() {
-        postDetailMapper = PostDetailMapper(localeManagerWrapper, statsDateFormatter, contentDescriptionHelper)
+        postDetailMapper = PostDetailMapper(
+                localeManagerWrapper,
+                statsDateFormatter,
+                statsUtils,
+                contentDescriptionHelper
+        )
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
-        whenever(contentDescriptionHelper.buildContentDescription(
-                any(),
-                any<String>(),
-                any()
-        )).thenReturn(contentDescription)
+        whenever(
+                contentDescriptionHelper.buildContentDescription(
+                        any(),
+                        any<String>(),
+                        any()
+                )
+        ).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
@@ -51,7 +61,10 @@ class PostDetailMapperTest : BaseUnitTest() {
         val result = postDetailMapper.mapYears(
                 years,
                 ExpandedYearUiState(),
-                Header(R.string.stats_months_and_years_period_label, R.string.stats_months_and_years_views_label)
+                Header(
+                        R.string.stats_months_and_years_period_label,
+                        R.string.stats_months_and_years_views_label
+                )
         ) {
             expandedYear = it.expandedYear
         }
@@ -84,7 +97,10 @@ class PostDetailMapperTest : BaseUnitTest() {
         val result = postDetailMapper.mapYears(
                 years,
                 ExpandedYearUiState(expandedYear = 2019),
-                Header(R.string.stats_months_and_years_period_label, R.string.stats_months_and_years_views_label)
+                Header(
+                        R.string.stats_months_and_years_period_label,
+                        R.string.stats_months_and_years_views_label
+                )
         ) { }
         assertThat(result).hasSize(5)
         assertThat(result[0] is Divider).isTrue()
@@ -131,13 +147,18 @@ class PostDetailMapperTest : BaseUnitTest() {
         val secondWeek = Week(listOf(Day(day3, 300), Day(day4, 400)), 350, 700)
         val weeks = listOf(firstWeek, secondWeek)
         val secondWeekLabel = "Jan 9 - Jan 16, 2019"
-        whenever(statsDateFormatter.printWeek(secondWeekFirstDay, secondWeekLastDay)).thenReturn(secondWeekLabel)
+        whenever(statsDateFormatter.printWeek(secondWeekFirstDay, secondWeekLastDay)).thenReturn(
+                secondWeekLabel
+        )
 
         val result = postDetailMapper.mapWeeks(
                 weeks,
                 1,
                 ExpandedWeekUiState(),
-                Header(R.string.stats_months_and_years_period_label, R.string.stats_months_and_years_views_label)
+                Header(
+                        R.string.stats_months_and_years_period_label,
+                        R.string.stats_months_and_years_views_label
+                )
         ) {}
 
         assertThat(result).hasSize(1)
@@ -172,7 +193,10 @@ class PostDetailMapperTest : BaseUnitTest() {
                 weeks,
                 1,
                 ExpandedWeekUiState(firstDay),
-                Header(R.string.stats_months_and_years_period_label, R.string.stats_months_and_years_views_label)
+                Header(
+                        R.string.stats_months_and_years_period_label,
+                        R.string.stats_months_and_years_views_label
+                )
         ) {}
 
         assertThat(result).hasSize(5)
