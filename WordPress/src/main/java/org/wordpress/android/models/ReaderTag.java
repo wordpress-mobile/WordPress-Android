@@ -26,6 +26,8 @@ public class ReaderTag implements Serializable, FilterCriteria {
     private String mTagTitle; // title, used for default tags
     private String mEndpoint; // endpoint for updating posts with this tag
 
+    private boolean mIsDefaultTag;
+
     public final ReaderTagType tagType;
 
     public ReaderTag(String slug,
@@ -33,6 +35,15 @@ public class ReaderTag implements Serializable, FilterCriteria {
                      String title,
                      String endpoint,
                      ReaderTagType tagType) {
+        this(slug, displayName, title, endpoint, tagType, false);
+    }
+
+    public ReaderTag(String slug,
+                     String displayName,
+                     String title,
+                     String endpoint,
+                     ReaderTagType tagType,
+                     boolean isDefaultTag) {
         // we need a slug since it's used to uniquely ID the tag (including setting it as the
         // primary key in the tag table)
         if (TextUtils.isEmpty(slug)) {
@@ -51,6 +62,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
         setTagTitle(title);
         setEndpoint(endpoint);
         this.tagType = tagType;
+        mIsDefaultTag = isDefaultTag;
     }
 
     public String getEndpoint() {
@@ -160,6 +172,10 @@ public class ReaderTag implements Serializable, FilterCriteria {
 
     public boolean isFollowedSites() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(FOLLOWING_PATH);
+    }
+
+    public boolean isDefaultTag() {
+        return tagType == ReaderTagType.DEFAULT && mIsDefaultTag;
     }
 
     public boolean isBookmarked() {

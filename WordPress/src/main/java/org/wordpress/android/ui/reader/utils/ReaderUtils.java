@@ -16,6 +16,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.PhotonUtils;
@@ -204,18 +205,33 @@ public class ReaderUtils {
      * (so we can also get its title & endpoint), returns a new tag if that fails
      */
     public static ReaderTag getTagFromTagName(String tagName, ReaderTagType tagType) {
+        return getTagFromTagName(tagName, tagType, false);
+    }
+
+    public static ReaderTag getTagFromTagName(String tagName, ReaderTagType tagType, boolean isDefaultTag) {
         ReaderTag tag = ReaderTagTable.getTag(tagName, tagType);
         if (tag != null) {
             return tag;
         } else {
-            return createTagFromTagName(tagName, tagType);
+            return createTagFromTagName(tagName, tagType, isDefaultTag);
         }
     }
 
     public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType) {
+        return createTagFromTagName(tagName, tagType, false);
+    }
+
+    public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType, boolean isDefaultTag) {
         String tagSlug = sanitizeWithDashes(tagName).toLowerCase(Locale.ROOT);
         String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
-        return new ReaderTag(tagSlug, tagDisplayName, tagName, null, tagType);
+        return new ReaderTag(
+                tagSlug,
+                tagDisplayName,
+                tagName,
+                null,
+                tagType,
+                isDefaultTag
+        );
     }
 
     /*
@@ -225,7 +241,7 @@ public class ReaderUtils {
     public static ReaderTag getDefaultTag() {
         ReaderTag defaultTag = getTagFromEndpoint(ReaderTag.TAG_ENDPOINT_DEFAULT);
         if (defaultTag == null) {
-            defaultTag = getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT);
+            defaultTag = getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT, true);
         }
         return defaultTag;
     }
@@ -313,5 +329,66 @@ public class ReaderUtils {
         prependDefaults(defaultTags, orderedTagList, defaultTagInfos);
 
         return orderedTagList;
+    }
+
+    public static boolean isFollowing(
+            ReaderTag currentTag,
+            boolean isTopLevelReader,
+            FilteredRecyclerView recyclerView
+    ) {
+        if (isTopLevelReader) {
+            if (currentTag != null
+                &&
+                (currentTag.isDiscover() || currentTag.isPostsILike() || currentTag.isBookmarked())) {
+                return false;
+            } else if (recyclerView != null && recyclerView.getCurrentFilter() == null) {
+                // we are initializing now: return true to get the subfiltering first init
+                return currentTag != null
+                       && (currentTag.isFollowedSites() || currentTag.tagType == ReaderTagType.FOLLOWED);
+            } else if (recyclerView != null && recyclerView.getCurrentFilter() instanceof ReaderTag) {
+                if (recyclerView.isValidFilter(currentTag)) {
+                    return currentTag.isFollowedSites();
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return currentTag != null && currentTag.isFollowedSites();
+        }
+    }
+
+    public static ReaderTag getValidTagForSharedPrefs(
+            ReaderTag tag,
+            boolean isTopLevelReader,
+            FilteredRecyclerView recyclerView
+    ) {
+        ReaderTag validTag = tag;
+
+        if (isTopLevelReader) {
+            if (tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked()
+                    ||
+                (recyclerView != null && recyclerView.isValidFilter(tag))
+            ) {
+                validTag = tag;
+            } else {
+                if (isFollowing(tag, isTopLevelReader, recyclerView)) {
+                    validTag = ReaderUtils.getDefaultTag();
+
+                    // it's possible the default tag won't exist if the user just changed the app's
+                    // language, in which case default to the first tag in the table
+                    if (!ReaderTagTable.tagExists(tag)) {
+                        validTag = ReaderTagTable.getFirstTag();
+                    }
+                }
+            }
+        }
+
+        return validTag;
+    }
+
+    public static boolean isDefaultTag(ReaderTag tag) {
+        return tag != null && tag.isDefaultTag();
     }
 }

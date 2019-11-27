@@ -117,16 +117,45 @@ public class ReaderUpdateLogic {
         WordPress.getRestClientUtilsV1_2().get("read/menu", params, null, listener, errorListener);
     }
 
-    private void updateServerTopicsDisplayName(ReaderTagList serverTopics) {
+    private boolean displayNameUpdateWasNeeded(ReaderTagList serverTopics) {
+        boolean updateDone = false;
+
         for (ReaderTag tag : serverTopics) {
+            String tagNameBefore = tag.getTagDisplayName();
             if (tag.isFollowedSites()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_following_display_name));
+                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isDiscover()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_discover_display_name));
+                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isPostsILike()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_my_likes_display_name));
+                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             }
         }
+
+        return updateDone;
+    }
+
+    private boolean downgradeFromIAFeatureFlagDetected() {
+        boolean downgradeDetected = false;
+
+        ReaderTagList savedTags = ReaderTagTable.getBookmarkTags();
+
+        if (savedTags != null && savedTags.size() == 1) {
+            ReaderTag savedTag = savedTags.get(0);
+
+            if (savedTag != null) {
+                String tagNameBefore = savedTag.getTagDisplayName();
+
+                if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
+                    && tagNameBefore.equals(mContext.getString(R.string.reader_save_for_later_display_name))) {
+                    downgradeDetected = true;
+                }
+            }
+        }
+
+        return downgradeDetected;
     }
 
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
@@ -138,8 +167,10 @@ public class ReaderUpdateLogic {
                 ReaderTagList serverTopics = new ReaderTagList();
                 serverTopics.addAll(parseTags(jsonObject, "default", ReaderTagType.DEFAULT));
 
+                boolean displayNameUpdateWasNeeded = false;
+
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                    updateServerTopicsDisplayName(serverTopics);
+                    displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
                 }
 
                 if (!mAccountStore.hasAccessToken()) {
@@ -149,16 +180,19 @@ public class ReaderUpdateLogic {
                 }
 
                 // manually insert Bookmark tag, as server doesn't support bookmarking yet
+                // and check if we are going to change it to trigger UI update in case of downgrade
                 serverTopics.add(
                         new ReaderTag(
                                 "",
                                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
-                                ? mContext.getString(R.string.reader_save_for_later_display_name) : "",
+                                        ? mContext.getString(R.string.reader_save_for_later_display_name) : "",
                                 mContext.getString(R.string.reader_save_for_later_title),
                                 "",
                                 ReaderTagType.BOOKMARKED
                         )
                 );
+
+                boolean downgradeFromIAFeatureFlagDetected = downgradeFromIAFeatureFlagDetected();
 
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
@@ -167,8 +201,14 @@ public class ReaderUpdateLogic {
                 localTopics.addAll(ReaderTagTable.getBookmarkTags());
                 localTopics.addAll(ReaderTagTable.getCustomListTags());
 
-                if (!localTopics.isSameList(serverTopics)) {
-                    AppLog.d(AppLog.T.READER, "reader service > followed topics changed");
+                if (
+                        !localTopics.isSameList(serverTopics)
+                        || displayNameUpdateWasNeeded
+                        || downgradeFromIAFeatureFlagDetected
+                ) {
+                    AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
+                                              + "updatedDisplaYNames [" + displayNameUpdateWasNeeded
+                                              + "] donwgradeDetected [" + downgradeFromIAFeatureFlagDetected + "]");
                     // if any local topics have been removed from the server, make sure to delete
                     // them locally (including their posts)
                     deleteTags(localTopics.getDeletions(serverTopics));

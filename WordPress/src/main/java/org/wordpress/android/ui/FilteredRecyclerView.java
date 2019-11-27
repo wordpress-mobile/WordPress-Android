@@ -119,6 +119,13 @@ public class FilteredRecyclerView extends RelativeLayout {
         return mCurrentFilter;
     }
 
+    public boolean isValidFilter(FilterCriteria filter) {
+        return filter != null
+               && mFilterCriteriaOptions != null
+               && !mFilterCriteriaOptions.isEmpty()
+               && mFilterCriteriaOptions.contains(filter);
+    }
+
     public void setFilterListener(FilterListener filterListener) {
         mFilterListener = filterListener;
         setup(false);
