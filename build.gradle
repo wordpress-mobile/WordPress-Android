@@ -109,6 +109,7 @@ ext {
     fluxCVersion = '1.5.4-beta-1'
 }
 
+// Onboarding and dev env setup tasks
 task checkBundler(type:Exec) {
     doFirst {
         println "Check Bundler"
@@ -162,7 +163,6 @@ task applyCredentials(type:Exec, dependsOn:checkBundle) {
         return standardOutput.toString()
     }
 }
-
 
 tasks.register("prodDeps") { 
     group = 'Onboarding'
