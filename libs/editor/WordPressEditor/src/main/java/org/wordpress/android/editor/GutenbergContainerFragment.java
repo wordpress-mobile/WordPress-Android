@@ -162,4 +162,8 @@ public class GutenbergContainerFragment extends Fragment {
     public void clearMediaFileURL(final int mediaId) {
         mWPAndroidGlueCode.clearMediaFileURL(mediaId);
     }
+
+    public void mediaSelectionCancelled() {
+        mWPAndroidGlueCode.mediaSelectionCancelled();
+    }
 }

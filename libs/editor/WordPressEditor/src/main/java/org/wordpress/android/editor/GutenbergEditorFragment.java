@@ -60,6 +60,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.wordpress.mobile.WPAndroidGlue.Media.createRNMediaUsingMimeType;
+
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener {
@@ -781,15 +783,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
-            rnMediaList.add(
-                    new Media(
-                            isNetworkUrl
-                                    ? Integer.valueOf(mediaEntry.getValue().getMediaId())
-                                    : mediaEntry.getValue().getId(),
-                            isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey(),
-                            mediaEntry.getValue().getMimeType()
-                    )
-            );
+            int mediaId = isNetworkUrl ? Integer.valueOf(mediaEntry.getValue().getMediaId())
+                    : mediaEntry.getValue().getId();
+            String url = isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey();
+            rnMediaList.add(createRNMediaUsingMimeType(mediaId, url, mediaEntry.getValue().getMimeType()));
         }
 
         getGutenbergContainerFragment().appendUploadMediaFiles(rnMediaList);
@@ -853,6 +850,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return true;
         }
         return false;
+    }
+
+    @Override public void mediaSelectionCancelled() {
+        getGutenbergContainerFragment().mediaSelectionCancelled();
     }
 
     @Override
