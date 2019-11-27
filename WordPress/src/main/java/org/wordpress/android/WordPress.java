@@ -238,7 +238,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         ProfilingUtils.start("App Startup");
         // Enable log recording
-        AppLog.enableRecording(true);
+        AppLog.enableRecording(true, this);
         AppLog.addListener(new AppLogListener() {
             @Override
             public void onLog(T tag, LogLevel logLevel, String message) {

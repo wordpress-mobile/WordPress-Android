@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -19,6 +20,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.TimeZone;
+
+import org.wordpress.android.util.datasets.LogDatabase;
+import org.wordpress.android.util.datasets.LogTable;
 
 import static java.lang.String.format;
 
@@ -64,6 +68,10 @@ public class AppLog {
     private static List<AppLogListener> mListeners = new ArrayList<>(0);
     private static TimeZone mUtcTimeZone = TimeZone.getTimeZone("UTC");
 
+    private static Context context;
+    private static LogSessionDataList mLogSessionDataList = new LogSessionDataList();
+    private static long mCurrentLogSessionId = -1;
+
     private AppLog() {
         throw new AssertionError();
     }
@@ -72,8 +80,19 @@ public class AppLog {
      * Capture log so it can be displayed by AppLogViewerActivity
      * @param enable A boolean flag to capture log. Default is false, pass true to enable recording
      */
-    public static void enableRecording(boolean enable) {
+    public static void enableRecording(boolean enable, Context newContext) {
         mEnableRecording = enable;
+        context = newContext;
+        if (enable && mLogSessionDataList.isEmpty()) {
+            final SQLiteDatabase logDb = LogDatabase.getWritableDb(context);
+
+            mCurrentLogSessionId = LogTable.getNewLogSessionId(logDb, getAppInfoHeaderText(context), getDeviceInfoHeaderText(context));
+
+            ArrayList<LogTable.LogTableSessionData> dataList = LogTable.getData(logDb);
+            for (LogTable.LogTableSessionData data : dataList) {
+                addSessionData(data);
+            }
+        }
     }
 
     public static void addListener(@NonNull AppLogListener listener) {
@@ -226,8 +245,12 @@ public class AppLog {
         final T mLogTag;
 
         LogEntry(LogLevel logLevel, String logText, T logTag) {
+            this(logLevel, logText, logTag, new Date());
+        }
+
+        LogEntry(LogLevel logLevel, String logText, T logTag, java.util.Date date) {
             mLogLevel = logLevel;
-            mDate = new Date();
+            mDate = date;
             if (logText == null) {
                 mLogText = "null";
             } else {
@@ -259,12 +282,6 @@ public class AppLog {
     }
 
     private static class LogEntryList extends ArrayList<LogEntry> {
-        private synchronized boolean addEntry(LogEntry entry) {
-            if (size() >= MAX_ENTRIES) {
-                removeFirstEntry();
-            }
-            return add(entry);
-        }
 
         private void removeFirstEntry() {
             Iterator<LogEntry> it = iterator();
@@ -279,7 +296,116 @@ public class AppLog {
         }
     }
 
-    private static LogEntryList mLogEntries = new LogEntryList();
+    private static class LogSessionData {
+        final long mSessionId;
+        final String mAppInfoHeader;
+        final String mDeviceInfoHeader;
+        final LogEntryList mLogEntries;
+
+        LogSessionData(final long sessionId, final String appInfoHeader, final String deviceInfoHeader) {
+            mSessionId = sessionId;
+            mAppInfoHeader = appInfoHeader + " - Session id: " + sessionId;
+            mDeviceInfoHeader = deviceInfoHeader;
+            mLogEntries = new LogEntryList();
+        }
+
+        void addEntry(final LogEntry logEntry) {
+            mLogEntries.add(logEntry);
+        }
+
+        int getLogEntryCount() {
+            return mLogEntries.size();
+        }
+
+        public void addToHtmlList(final ArrayList<String> items) {
+            // add version & device info - be sure to change HEADER_LINE_COUNT if additional lines are added
+            items.add("<strong>" + mAppInfoHeader + "</strong>");
+            items.add("<strong>" + mDeviceInfoHeader + "</strong>");
+
+            Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
+            while (it.hasNext()) {
+                items.add(it.next().toHtml());
+            }
+        }
+
+        public void appendToStringBuilder(final StringBuilder sb) {
+            // add version & device info
+            sb.append(mAppInfoHeader).append("\n")
+              .append(mDeviceInfoHeader).append("\n\n");
+
+            Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
+            int lineNum = 1;
+            while (it.hasNext()) {
+                LogEntry entry = it.next();
+                sb.append(format(Locale.US, "%02d - ", lineNum))
+                  .append("[")
+                  .append(entry.formatLogDate()).append(" ")
+                  .append(entry.mLogTag.name())
+                  .append("] ")
+                  .append(entry.mLogText)
+                  .append("\n");
+                lineNum++;
+            }
+        }
+    }
+
+    private static class LogSessionDataList extends ArrayList<LogSessionData> {
+        private synchronized void addLogEntry(LogEntry entry) {
+            if (MAX_ENTRIES == 0)
+                return;
+
+            if (getLogEntryCount() >= MAX_ENTRIES) {
+                removeFirstLogEntry();
+            }
+
+            if (isEmpty()) {
+                add(new LogSessionData(-1, "null", "null"));
+            }
+
+            get(size() - 1).mLogEntries.add(entry);
+        }
+
+        private void removeFirstLogEntry() {
+            Iterator<LogSessionData> it = iterator();
+            if (!it.hasNext()) {
+                return;
+            }
+
+            it.next().mLogEntries.removeFirstEntry();
+
+            // remove first session data if it has 0 log entries and it isn't the only session
+            if (size() > 1 && it.next().mLogEntries.isEmpty())
+            {
+                try {
+                    remove(it.next());
+                } catch (NoSuchElementException e) {
+                    // ignore
+                }
+            }
+        }
+    }
+
+    private static int getLogEntryCount() {
+        int count = 0;
+        for (LogSessionData logSessionData : mLogSessionDataList) {
+            count += logSessionData.getLogEntryCount();
+        }
+
+        return count;
+    }
+
+    private static void addSessionData(final LogTable.LogTableSessionData tableLogSessionData) {
+        LogSessionData logSessionData = new LogSessionData(tableLogSessionData.mSessionId, tableLogSessionData.mAppInfoHeader, tableLogSessionData.mDeviceInfoHeader);
+        mLogSessionDataList.add(logSessionData);
+
+        for (LogTable.LogTableEntry logTableEntry : tableLogSessionData.mLogEntries) {
+            LogEntry entry = new LogEntry(LogLevel.valueOf(logTableEntry.mLogLevel), 
+                    logTableEntry.mLogText, 
+                    T.valueOf(logTableEntry.mLogTag), 
+                    logTableEntry.mDate);
+            mLogSessionDataList.addLogEntry(entry);
+        }
+    }
 
     private static void addEntry(T tag, LogLevel level, String text) {
         // Call our listeners if any
@@ -289,8 +415,14 @@ public class AppLog {
         // Record entry if enabled
         if (mEnableRecording) {
             LogEntry entry = new LogEntry(level, text, tag);
-            mLogEntries.addEntry(entry);
+            mLogSessionDataList.addLogEntry(entry);
+            persistLogEntry(entry);
         }
+    }
+
+    private static void persistLogEntry(final LogEntry entry) {
+        final SQLiteDatabase logDb = LogDatabase.getWritableDb(context);
+        LogTable.addLogEntry(logDb, mCurrentLogSessionId, entry.mLogLevel.name(), entry.mLogTag.name(), entry.mLogText, entry.mDate);
     }
 
     private static String getStringStackTrace(Throwable throwable) {
@@ -322,49 +454,28 @@ public class AppLog {
     }
 
     /**
-     * Returns entire log as html for display (see AppLogViewerActivity)
-     * @param context
+     * Returns entire log as html for display (see AppLogViewerActivity)Oh
      * @return Arraylist of Strings containing log messages
      */
-    public static ArrayList<String> toHtmlList(Context context) {
+    public static ArrayList<String> toHtmlList() {
         ArrayList<String> items = new ArrayList<String>();
 
-        // add version & device info - be sure to change HEADER_LINE_COUNT if additional lines are added
-        items.add("<strong>" + getAppInfoHeaderText(context) + "</strong>");
-        items.add("<strong>" + getDeviceInfoHeaderText(context) + "</strong>");
-
-        Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
-        while (it.hasNext()) {
-            items.add(it.next().toHtml());
+        for (LogSessionData data : mLogSessionDataList) {
+            data.addToHtmlList(items);
         }
         return items;
     }
 
     /**
      * Converts the entire log to plain text
-     * @param context
      * @return The log as plain text
      */
-    public static synchronized String toPlainText(Context context) {
+    public static synchronized String toPlainText() {
         StringBuilder sb = new StringBuilder();
-
-        // add version & device info
-        sb.append(getAppInfoHeaderText(context)).append("\n")
-          .append(getDeviceInfoHeaderText(context)).append("\n\n");
-
-        Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
-        int lineNum = 1;
-        while (it.hasNext()) {
-            LogEntry entry = it.next();
-            sb.append(format(Locale.US, "%02d - ", lineNum))
-              .append("[")
-              .append(entry.formatLogDate()).append(" ")
-              .append(entry.mLogTag.name())
-              .append("] ")
-              .append(entry.mLogText)
-              .append("\n");
-            lineNum++;
+        for (LogSessionData data : mLogSessionDataList) {
+            data.appendToStringBuilder(sb);
         }
+
         return sb.toString();
     }
 }
