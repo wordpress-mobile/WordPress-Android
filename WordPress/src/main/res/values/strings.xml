@@ -109,6 +109,7 @@
     <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
     <string name="ok">OK</string>
+    <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -243,6 +244,7 @@
     <string name="page_parent_changed">Page parent has been changed</string>
 
     <!-- posts tab -->
+    <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="untitled">Untitled</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="local_draft">Local draft</string>
@@ -858,6 +860,14 @@
     <string name="stats_site_positive_utc">Site timezone (UTC + %s)</string>
     <string name="stats_site_negative_utc">Site timezone (UTC - %s)</string>
     <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
+
+    <!-- Number suffixes -->
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000">%sQa</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
 
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>

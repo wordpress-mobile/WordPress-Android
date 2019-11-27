@@ -346,7 +346,7 @@ class PostUploadNotifier {
                 .getPendingIntentForNotificationDismiss(mContext, (int) notificationId,
                         notificationType));
 
-        Intent notificationIntent = getNotificationIntent(post, site, notificationId);
+        Intent notificationIntent = getNotificationIntent(post, site);
         notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
 
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
@@ -493,7 +493,7 @@ class PostUploadNotifier {
                         mContext.getString(R.string.notification_channel_normal_id));
 
         long notificationId = getNotificationIdForPost(post);
-        Intent notificationIntent = getNotificationIntent(post, site, notificationId);
+        Intent notificationIntent = getNotificationIntent(post, site);
         notificationIntent.setAction(String.valueOf(notificationId));
         NotificationType notificationType = NotificationType.POST_UPLOAD_ERROR;
         notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
@@ -537,8 +537,7 @@ class PostUploadNotifier {
     }
 
     @NonNull
-    private Intent getNotificationIntent(@NonNull PostImmutableModel post, @NonNull SiteModel site,
-                                         long notificationId) {
+    private Intent getNotificationIntent(@NonNull PostImmutableModel post, @NonNull SiteModel site) {
         // Tap notification intent (open the post/page list)
         Intent notificationIntent;
         if (post.isPage()) {

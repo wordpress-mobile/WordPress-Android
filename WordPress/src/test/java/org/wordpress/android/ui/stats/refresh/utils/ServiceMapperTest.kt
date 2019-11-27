@@ -14,21 +14,23 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 class ServiceMapperTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var serviceMapper: ServiceMapper
     @Before
     fun setUp() {
-        serviceMapper = ServiceMapper(resourceProvider, contentDescriptionHelper)
+        serviceMapper = ServiceMapper(resourceProvider, statsUtils, contentDescriptionHelper)
         whenever(contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
                 any()
         )).thenReturn("title, views")
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
     fun `maps facebook item correctly`() {
-        val service = Service("facebook", 15000)
+        val service = Service("facebook", 15)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -45,13 +47,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("15k")
+            assertThat(this.value).isEqualTo("15")
         }
     }
 
     @Test
     fun `maps twitter item correctly`() {
-        val service = Service("twitter", 15000)
+        val service = Service("twitter", 15)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -68,13 +70,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("15k")
+            assertThat(this.value).isEqualTo("15")
         }
     }
 
     @Test
     fun `maps tumblr item correctly`() {
-        val service = Service("tumblr", 15000)
+        val service = Service("tumblr", 15)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -91,13 +93,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("15k")
+            assertThat(this.value).isEqualTo("15")
         }
     }
 
     @Test
     fun `maps path item correctly`() {
-        val service = Service("path", 15000)
+        val service = Service("path", 15)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -114,13 +116,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("15k")
+            assertThat(this.value).isEqualTo("15")
         }
     }
 
     @Test
     fun `maps google plus item correctly`() {
-        val service = Service("google_plus", 15000)
+        val service = Service("google_plus", 15)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -137,13 +139,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("15k")
+            assertThat(this.value).isEqualTo("15")
         }
     }
 
     @Test
     fun `maps linkedin item correctly`() {
-        val service = Service("linkedin", 15000)
+        val service = Service("linkedin", 15)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -160,14 +162,14 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("15k")
+            assertThat(this.value).isEqualTo("15")
         }
     }
 
     @Test
     fun `maps unknown item correctly`() {
         val serviceName = "unknown"
-        val service = Service(serviceName, 15000)
+        val service = Service(serviceName, 15)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -183,13 +185,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isEqualTo(serviceName)
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("15k")
+            assertThat(this.value).isEqualTo("15")
         }
     }
 
     @Test
     fun `shows divider on all items but last`() {
-        val service1 = Service("facebook", 15000)
+        val service1 = Service("facebook", 15)
         val service2 = Service("twitter", 500)
         val service3 = Service("tumblr", 50)
         val pixelSize = 10

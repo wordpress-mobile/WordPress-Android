@@ -732,6 +732,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "gutenberg_enabled";
             case EDITOR_GUTENBERG_DISABLED:
                 return "gutenberg_disabled";
+            case POST_LIST_ACCESS_ERROR:
+                return "post_list_access_error";
             case POST_LIST_BUTTON_PRESSED:
                 return "post_list_button_pressed";
             case POST_LIST_ITEM_SELECTED:
