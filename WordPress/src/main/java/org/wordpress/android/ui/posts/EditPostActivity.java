@@ -3356,17 +3356,13 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     // EditorMediaListener
-
     @Override
-    public void appendMediaFile(@NotNull MediaFile mediaFile, @NotNull String imageUrl) {
-        mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
-    }
-
-    @Override public void appendMediaFiles(@NotNull Map<String, ? extends MediaFile> mediaFiles) {
+    public void appendMediaFiles(@NotNull Map<String, ? extends MediaFile> mediaFiles) {
         mEditorFragment.appendMediaFiles((Map<String, MediaFile>) mediaFiles);
     }
 
-    @NotNull @Override public PostImmutableModel getImmutablePost() {
+    @NotNull @Override
+    public PostImmutableModel getImmutablePost() {
         return Objects.requireNonNull(mEditPostRepository.getPost());
     }
 
