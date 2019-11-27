@@ -861,6 +861,14 @@
     <string name="stats_site_negative_utc">Site timezone (UTC - %s)</string>
     <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
 
+    <!-- Number suffixes -->
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000">%sQa</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
+
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="stats_bar_chart_content_description">Graph of site views.</string>

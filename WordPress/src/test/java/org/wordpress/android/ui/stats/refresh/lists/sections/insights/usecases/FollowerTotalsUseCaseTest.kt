@@ -31,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 
 class FollowerTotalsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var followersStore: FollowersStore
@@ -38,6 +39,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: FollowerTotalsUseCase
 
@@ -59,6 +61,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
                 publicizeStore,
                 statsSiteProvider,
                 contentDescriptionHelper,
+                statsUtils,
                 popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -70,6 +73,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
                 any(),
                 any<Int>()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

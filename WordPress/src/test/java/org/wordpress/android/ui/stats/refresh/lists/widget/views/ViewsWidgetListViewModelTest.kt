@@ -27,7 +27,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -84,7 +83,7 @@ class ViewsWidgetListViewModelTest {
                         any(),
                         any()
                 )
-        ).thenReturn(ValueItem(firstViews.toFormattedString(), 0, false, change, POSITIVE, change))
+        ).thenReturn(ValueItem(firstViews.toString(), 0, false, change, POSITIVE, change))
         whenever(
                 overviewMapper.buildTitle(
                         eq(dates[1]),
@@ -94,7 +93,7 @@ class ViewsWidgetListViewModelTest {
                         any(),
                         any()
                 )
-        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEGATIVE, change))
+        ).thenReturn(ValueItem(todayViews.toString(), 0, true, change, NEGATIVE, change))
         whenever(
                 overviewMapper.buildTitle(
                         eq(dates[2]),
@@ -104,7 +103,7 @@ class ViewsWidgetListViewModelTest {
                         any(),
                         any()
                 )
-        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEUTRAL, change))
+        ).thenReturn(ValueItem(todayViews.toString(), 0, true, change, NEUTRAL, change))
 
         viewModel.start(siteId, color, showChangeColumn, appWidgetId)
 

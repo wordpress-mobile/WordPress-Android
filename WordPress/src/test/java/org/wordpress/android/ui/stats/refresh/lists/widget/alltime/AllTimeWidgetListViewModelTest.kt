@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.alltime
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListViewModel.AllTimeItemUiModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -24,6 +26,7 @@ class AllTimeWidgetListViewModelTest {
     @Mock private lateinit var allTimeStore: AllTimeInsightsStore
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock private lateinit var statsUtils: StatsUtils
     @Mock private lateinit var site: SiteModel
     private lateinit var viewModel: AllTimeWidgetListViewModel
     private val siteId: Int = 15
@@ -31,8 +34,15 @@ class AllTimeWidgetListViewModelTest {
     private val color = Color.LIGHT
     @Before
     fun setUp() {
-        viewModel = AllTimeWidgetListViewModel(siteStore, allTimeStore, resourceProvider, appPrefsWrapper)
+        viewModel = AllTimeWidgetListViewModel(
+                siteStore,
+                allTimeStore,
+                resourceProvider,
+                appPrefsWrapper,
+                statsUtils
+        )
         viewModel.start(siteId, color, appWidgetId)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
