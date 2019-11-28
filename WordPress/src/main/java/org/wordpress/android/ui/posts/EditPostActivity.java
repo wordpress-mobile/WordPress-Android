@@ -2468,6 +2468,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (resultCode != Activity.RESULT_OK) {
+            // for all media related intents, let editor fragment know about cancellation
             switch (requestCode) {
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:

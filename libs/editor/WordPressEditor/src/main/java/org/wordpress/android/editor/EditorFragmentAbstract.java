@@ -42,7 +42,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void removeMedia(String mediaId);
     public abstract boolean showSavingProgressDialogIfNeeded();
     public abstract boolean hideSavingProgressDialog();
-    // Called from block editor when a media selection is cancelled
+    // Called from EditPostActivity to let the block editor know when a media selection is cancelled
     public abstract void mediaSelectionCancelled();
 
 
