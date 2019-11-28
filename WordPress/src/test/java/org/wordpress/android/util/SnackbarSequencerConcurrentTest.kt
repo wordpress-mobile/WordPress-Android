@@ -24,21 +24,9 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPSnackbarWrapper
-import java.util.Collections.max
 
-private val TEST_MESSAGES = listOf(
-    "This is test message 1",
-    "This is test message 2",
-    "This is test message 3"
-)
-
-private val TEST_DURATIONS = listOf(
-    5000,
-    10000,
-    15000
-)
-
-const val SNACKBAR_DURATION_MARGIN = 100L
+private val TEST_MESSAGE_TEMPLATE = "This is test message number "
+private val SNACKBAR_DURATION_MS = 500L
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -70,8 +58,7 @@ class SnackbarSequencerConcurrentTest {
     @Test
     fun `snackbars are shown in sequence with the correct duration`() = runBlockingTest(coroutineContext) {
         // Given
-        val items = getItems()
-        val checkPoints = getCheckPoints(items)
+        val items = getItems(2)
 
         // When
         for (item in items) {
@@ -80,22 +67,18 @@ class SnackbarSequencerConcurrentTest {
 
         // Then
         verify(wpSnackbar, times(1)).show()
-        advanceTimeBy(checkPoints[0])
+        // Probably not strictly necessary but we add a +1 to the duration just to be explicit that
+        // we want to sample after the snackbar duration.
+        advanceTimeBy(SNACKBAR_DURATION_MS + 1)
         verify(wpSnackbar, times(2)).show()
-        advanceTimeBy(checkPoints[1])
-        verify(wpSnackbar, times(3)).show()
-        advanceTimeBy(checkPoints[2])
-
-        // Nothing else shown
-        verify(wpSnackbar, times(3)).show()
         verifyNoMoreInteractions(wpSnackbar)
     }
 
     @Test
     fun `snackbars are not shown until previous duration elapsed`() = runBlockingTest(coroutineContext) {
         // Given
-        val items = getItems()
-        val checkPoints = getCheckPoints(items)
+        val items = getItems(2)
+        val durations = getDurations(items)
 
         // When
         for (item in items) {
@@ -104,27 +87,21 @@ class SnackbarSequencerConcurrentTest {
 
         // Then
         verify(wpSnackbar, times(1)).show()
-        advanceTimeBy(checkPoints[0] - 2 * SNACKBAR_DURATION_MARGIN)
+        // We offset the duration with -1 to be explicit that
+        // we want to sample before the snackbar duration.
+        // Note also that the advanceTimeBy function adds on top of the previous time so
+        // adding +2 brings us just after the first duration
+        advanceTimeBy(SNACKBAR_DURATION_MS - 1)
         verify(wpSnackbar, times(1)).show()
-        advanceTimeBy(2 * SNACKBAR_DURATION_MARGIN)
+        advanceTimeBy(2)
         verify(wpSnackbar, times(2)).show()
-        advanceTimeBy(checkPoints[1])
-        verify(wpSnackbar, times(3)).show()
-        advanceTimeBy(checkPoints[2])
-
-        // Nothing else shown
-        verify(wpSnackbar, times(3)).show()
         verifyNoMoreInteractions(wpSnackbar)
     }
 
     @Test
     fun `snackbars beyond capacity are not shown`() = runBlockingTest(coroutineContext) {
         // Given
-        val items = mutableListOf<SnackbarItem>()
-
-        items.addAll(getItems())
-        items.addAll(getItems())
-        items.addAll(getItems())
+        val items = getItems(10)
 
         // When
         for (item in items) {
@@ -132,42 +109,26 @@ class SnackbarSequencerConcurrentTest {
         }
 
         // Then
-        advanceTimeBy((max(TEST_DURATIONS) * items.size).toLong())
+        advanceTimeBy(SNACKBAR_DURATION_MS * items.size)
         verify(wpSnackbar, times(QUEUE_SIZE_LIMIT + 1)).show()
         verifyNoMoreInteractions(wpSnackbar)
     }
 
-    private fun getCheckPoints(items: List<SnackbarItem>): List<Long> {
-        return listOf(
-            SNACKBAR_DURATION_MARGIN + items[0].getSnackbarDurationMs(),
-            items[1].getSnackbarDurationMs(),
-            items[2].getSnackbarDurationMs()
-        )
+    private fun getDurations(items: List<SnackbarItem>): List<Long> {
+        return items.map {
+            it.getSnackbarDurationMs()
+        }
     }
 
-    private fun getItems(): List<SnackbarItem> {
-        return listOf(
+    private fun getItems(numItems: Int): List<SnackbarItem> {
+        return List(numItems) {index ->
             SnackbarItem(
                     Info(
                         view = view,
-                        textRes = UiStringText(TEST_MESSAGES[0]),
-                        duration = TEST_DURATIONS[0]
-                    )
-            ),
-            SnackbarItem(
-                    Info(
-                        view = view,
-                        textRes = UiStringText(TEST_MESSAGES[1]),
-                        duration = TEST_DURATIONS[1]
-                    )
-            ),
-            SnackbarItem(
-                    Info(
-                        view = view,
-                        textRes = UiStringText(TEST_MESSAGES[2]),
-                        duration = TEST_DURATIONS[2]
+                        textRes = UiStringText(TEST_MESSAGE_TEMPLATE + index),
+                        duration = SNACKBAR_DURATION_MS.toInt()
                     )
             )
-        )
+        }
     }
 }
