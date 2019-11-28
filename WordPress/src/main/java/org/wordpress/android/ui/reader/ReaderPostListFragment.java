@@ -407,7 +407,7 @@ public class ReaderPostListFragment extends Fragment
 
             mViewModel.getReaderModeInfo().observe(getActivity(), readerModeInfo -> {
                 if (readerModeInfo != null) {
-                    changeReaderMode(readerModeInfo);
+                    changeReaderMode(readerModeInfo, true);
 
                     if (mBottomSheet != null) {
                         mBottomSheet.dismiss();
@@ -436,7 +436,21 @@ public class ReaderPostListFragment extends Fragment
         );
     }
 
-    private void changeReaderMode(ReaderModeInfo readerModeInfo) {
+    private void changeReaderMode(ReaderModeInfo readerModeInfo, boolean onlyOnChanges) {
+        boolean changesDetected = false;
+
+        if (onlyOnChanges) {
+            changesDetected = (readerModeInfo.getTag() != null
+                               && mCurrentTag != null
+                               && !readerModeInfo.getTag().equals(mCurrentTag))
+                              || (mPostListType != readerModeInfo.getListType())
+                              || (mCurrentBlogId != readerModeInfo.getBlogId())
+                              || (mCurrentFeedId != readerModeInfo.getFeedId())
+                              || (readerModeInfo.isFirstLoad());
+        }
+
+        if (onlyOnChanges && !changesDetected) return;
+
         if (readerModeInfo.getTag() != null) {
             mCurrentTag = readerModeInfo.getTag();
         }
@@ -1872,7 +1886,9 @@ public class ReaderPostListFragment extends Fragment
                         0,
                         0,
                         false,
-                        null)
+                        null,
+                        false),
+                        false
                 );
             }
         }

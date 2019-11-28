@@ -10,5 +10,6 @@ data class ReaderModeInfo(
     val blogId: Long,
     val feedId: Long,
     val requestNewerPosts: Boolean,
-    val label: UiString?
+    val label: UiString?,
+    val isFirstLoad: Boolean
 )
