@@ -59,6 +59,7 @@ class ReaderPostListViewModel @Inject constructor(
      */
     private var initialTag: ReaderTag? = null
     private var isStarted = false
+    private var isFirstLoad = true
 
     /**
      * Tag may be null for Blog previews for instance.
@@ -218,7 +219,8 @@ class ReaderPostListViewModel @Inject constructor(
                     0,
                     0,
                     requestNewerPosts,
-                    subfilterListItem.label
+                    subfilterListItem.label,
+                    isFirstLoad
             ))
             SubfilterListItem.ItemType.SITE -> {
                 val currentFeedId = (subfilterListItem as Site).blog.feedId
@@ -233,7 +235,8 @@ class ReaderPostListViewModel @Inject constructor(
                         currentBlogId,
                         currentFeedId,
                         requestNewerPosts,
-                        subfilterListItem.label
+                        subfilterListItem.label,
+                        isFirstLoad
                 ))
             }
             SubfilterListItem.ItemType.TAG -> _readerModeInfo.value = (ReaderModeInfo(
@@ -242,9 +245,11 @@ class ReaderPostListViewModel @Inject constructor(
                     0,
                     0,
                     requestNewerPosts,
-                    subfilterListItem.label
+                    subfilterListItem.label,
+                    isFirstLoad
             ))
         }
+        isFirstLoad = false
     }
 
     override fun onCleared() {
