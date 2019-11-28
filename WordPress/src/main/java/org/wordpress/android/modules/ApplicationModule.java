@@ -15,7 +15,6 @@ import org.wordpress.android.ui.news.NewsService;
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
-import org.wordpress.android.ui.sitecreation.domains.PublicSuffixDatabaseWrapper;
 import org.wordpress.android.ui.stats.refresh.StatsFragment;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
@@ -99,11 +98,6 @@ public abstract class ApplicationModule {
     public static WizardManager<SiteCreationStep> provideWizardManager(
             SiteCreationStepsProvider stepsProvider) {
         return new WizardManager<>(stepsProvider.getSteps());
-    }
-
-    @Provides
-    public static PublicSuffixDatabaseWrapper providePublicSuffixDatabaseWrapper() {
-        return new PublicSuffixDatabaseWrapper();
     }
 
     @Provides

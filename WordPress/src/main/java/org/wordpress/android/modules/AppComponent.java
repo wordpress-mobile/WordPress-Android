@@ -125,7 +125,6 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainValidator;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment;
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment;
@@ -472,8 +471,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PostNotificationScheduleTimeDialogFragment object);
 
     void inject(PublishNotificationReceiver object);
-
-    void inject(SiteCreationDomainValidator siteCreationDomainValidator);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
