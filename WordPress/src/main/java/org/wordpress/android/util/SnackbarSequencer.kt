@@ -90,8 +90,8 @@ class SnackbarSequencer @Inject constructor(
                 )
             }
 
-            item.callback?.let { callbackinfo ->
-                snackbar.addCallback(callbackinfo.snackbarCallback.get())
+            item.dismissCallback.get()?.let {
+                snackbar.addCallback(item.snackbarCallback)
             }
 
             AppLog.d(T.UTILS, "SnackbarSequencer > prepareSnackBar message [$message]")

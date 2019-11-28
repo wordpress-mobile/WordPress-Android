@@ -27,8 +27,10 @@ fun getSnackbarDurationMs(snackbarItem: SnackbarItem): Long {
 class SnackbarItem(
     val info: Info,
     val action: Action? = null,
-    val callback: Callback? = null
+    dismissCallback: ((transientBottomBar: Snackbar?, event: Int) -> Unit)?
 ) {
+    val dismissCallback = SoftReference(dismissCallback)
+
     class Info(
         view: View,
         val textRes: UiString,
@@ -44,9 +46,10 @@ class SnackbarItem(
         val clickListener = SoftReference(clickListener)
     }
 
-    class Callback(
-        snackbarCallback: Snackbar.Callback
-    ) {
-        val snackbarCallback = SoftReference(snackbarCallback)
+    val snackbarCallback = object: Snackbar.Callback() {
+        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+            this@SnackbarItem.dismissCallback.get()?.invoke(transientBottomBar, event)
+            super.onDismissed(transientBottomBar, event)
+        }
     }
 }

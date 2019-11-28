@@ -290,17 +290,7 @@ class PostsListActivity : AppCompatActivity(),
                                     clickListener = OnClickListener { holder.buttonAction() }
                                 )
                             },
-                            SnackbarItem.Callback(
-                                    snackbarCallback = object : Callback() {
-                                        override fun onDismissed(
-                                            transientBottomBar: Snackbar?,
-                                            event: Int
-                                        ) {
-                                            holder.onDismissAction()
-                                            super.onDismissed(transientBottomBar, event)
-                                        }
-                                    }
-                            )
+                            dismissCallback = { _,_ -> holder.onDismissAction() }
                     )
             )
         }
