@@ -121,7 +121,7 @@ class SnackbarSequencerConcurrentTest {
     }
 
     private fun getItems(numItems: Int): List<SnackbarItem> {
-        return List(numItems) {index ->
+        return List(numItems) { index ->
             SnackbarItem(
                     Info(
                         view = view,
