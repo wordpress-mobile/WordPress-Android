@@ -31,7 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.SelectedClicksGroup
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -51,6 +51,7 @@ constructor(
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<ClicksModel, SelectedClicksGroup>(
         CLICKS,
@@ -113,7 +114,7 @@ constructor(
                 )
                 val headerItem = ListItemWithIcon(
                         text = groupName,
-                        value = group.views?.toFormattedString(),
+                        value = statsUtils.toFormattedString(group.views),
                         showDivider = index < domainModel.groups.size - 1,
                         navigationAction = group.url?.let { create(it, this::onItemClick) },
                         contentDescription = contentDescription
@@ -130,7 +131,7 @@ constructor(
                             ListItemWithIcon(
                                     text = click.name,
                                     textStyle = LIGHT,
-                                    value = click.views.toFormattedString(),
+                                    value = statsUtils.toFormattedString(click.views),
                                     showDivider = false,
                                     navigationAction = click.url?.let { create(it, this::onItemClick) },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
@@ -182,6 +183,7 @@ constructor(
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val contentDescriptionHelper: ContentDescriptionHelper,
+        private val statsUtils: StatsUtils,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
@@ -194,6 +196,7 @@ constructor(
                         selectedDateProvider,
                         analyticsTracker,
                         contentDescriptionHelper,
+                        statsUtils,
                         useCaseMode
                 )
     }
