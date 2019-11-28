@@ -37,7 +37,6 @@ import zendesk.support.UiConfig
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
-import java.util.Locale
 import java.util.Timer
 import kotlin.concurrent.schedule
 
