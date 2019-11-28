@@ -26,6 +26,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Consumer;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
@@ -378,13 +379,20 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private ArrayList<MediaOption> initOtherMediaImageOptions() {
         ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
+        FragmentActivity activity = getActivity();
 
-        boolean supportStockPhotos = getArguments().getBoolean(ARG_SUPPORT_STOCK_PHOTOS);
-        if (supportStockPhotos) {
-            String packageName = getActivity().getApplication().getPackageName();
-            int stockMediaResourceId = getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
+        Bundle arguments = getArguments();
+        boolean supportStockPhotos = arguments != null && arguments.getBoolean(ARG_SUPPORT_STOCK_PHOTOS);
+        if (activity != null) {
+            if (supportStockPhotos) {
+                String packageName = activity.getApplication().getPackageName();
+                int stockMediaResourceId =
+                        getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
 
-            otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
+                otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
+            }
+        } else {
+            AppLog.e(T.EDITOR, "Failed to initialize other media options because the activity is null");
         }
 
         return otherMediaOptions;
