@@ -308,10 +308,6 @@ public class AppLog {
     }
 
     private static void addSessionData(final LogTable.LogTableSessionData tableLogSessionData) {
-        final long sessionId = tableLogSessionData.mSessionId;
-        final String appInfoHeader = tableLogSessionData.mAppInfoHeader;
-        final String deviceInfoHeader = tableLogSessionData.mDeviceInfoHeader;
-
         java.util.Date date = new Date();
         for (LogTable.LogTableEntry logTableEntry : tableLogSessionData.mLogEntries) {
             date = logTableEntry.mDate;
@@ -322,8 +318,12 @@ public class AppLog {
             mLogEntries.addEntry(entry);
         }
 
+        final long sessionId = tableLogSessionData.mSessionId;
         if (sessionId != mCurrentLogSessionId) {
-            addAppSessionEndedLogEntry(sessionId, appInfoHeader, deviceInfoHeader, date);
+            addAppSessionEndedLogEntry(sessionId, 
+                    tableLogSessionData.mAppInfoHeader, 
+                    tableLogSessionData.mDeviceInfoHeader, 
+                    date);
         }
     }
 

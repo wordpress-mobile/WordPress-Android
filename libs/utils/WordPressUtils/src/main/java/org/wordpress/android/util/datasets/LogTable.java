@@ -27,7 +27,7 @@ public class LogTable {
         public final long mSessionId;
         public final String mAppInfoHeader;
         public final String mDeviceInfoHeader;
-        public ArrayList<LogTableEntry> mLogEntries;
+        public final ArrayList<LogTableEntry> mLogEntries;
 
         LogTableSessionData(final long sessionId, final String appInfoHeader, final String deviceInfoHeader) {
             mSessionId = sessionId;
@@ -154,7 +154,6 @@ public class LogTable {
                 + "ORDER BY " + COLUMN_TIMESTAMP + " ASC",
                 selectionArgs);
 
-            sessionData.mLogEntries = new ArrayList<LogTableEntry>();
             if (cursorLogEntry.moveToFirst()) {
                 do {
                     sessionData.mLogEntries.add(getLogEntryDataFromCursor(cursorLogEntry));
