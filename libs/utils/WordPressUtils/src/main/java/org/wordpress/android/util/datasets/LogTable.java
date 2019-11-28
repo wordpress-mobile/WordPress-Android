@@ -2,19 +2,13 @@ package org.wordpress.android.util.datasets;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.wordpress.android.util.SqlUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 
 public class LogTable {
-
     public static class LogTableEntry {
         public final String mLogLevel;
         public final String mLogTag;
@@ -29,8 +23,7 @@ public class LogTable {
         }
     }
 
-    public static class LogTableSessionData
-    {
+    public static class LogTableSessionData {
         public final long mSessionId;
         public final String mAppInfoHeader;
         public final String mDeviceInfoHeader;
@@ -91,7 +84,9 @@ public class LogTable {
         }
     }
 
-    public static long getNewLogSessionId(final SQLiteDatabase db, final String appInfoHeader, final String deviceInfoHeader) {
+    public static long getNewLogSessionId(final SQLiteDatabase db, 
+            final String appInfoHeader, 
+            final String deviceInfoHeader) {
         db.beginTransaction();
         long sessionId = -1;
         try {
@@ -106,7 +101,12 @@ public class LogTable {
         }
     }
 
-    public static boolean addLogEntry(final SQLiteDatabase db, final long sessionId, final String logLevel, final String logTag, final String logText, final java.util.Date date) {
+    public static boolean addLogEntry(final SQLiteDatabase db,
+            final long sessionId,
+            final String logLevel,
+            final String logTag,
+            final String logText,
+            final java.util.Date date) {
         db.beginTransaction();
         boolean success = false;
         try {
@@ -129,11 +129,11 @@ public class LogTable {
     public static ArrayList<LogTableSessionData> getData(final SQLiteDatabase db) {
         ArrayList<LogTableSessionData> logSessionDataList = new ArrayList<LogTableSessionData>();
 
-        Cursor cursorLogInfo = db.rawQuery("SELECT " +
-                COLUMN_LOG_SESSION_ID + ", " +
-                COLUMN_APP_INFO_HEADER + ", " +
-                COLUMN_DEVICE_INFO_HEADER + " FROM " +
-                LOG_INFO_TABLE, null);
+        Cursor cursorLogInfo = db.rawQuery("SELECT "
+                + COLUMN_LOG_SESSION_ID + ", "
+                + COLUMN_APP_INFO_HEADER + ", "
+                + COLUMN_DEVICE_INFO_HEADER + " FROM "
+                + LOG_INFO_TABLE, null);
 
         if (cursorLogInfo.moveToFirst()) {
             do {
@@ -144,17 +144,16 @@ public class LogTable {
 
         for (LogTableSessionData sessionData : logSessionDataList) {
             String[] selectionArgs = new String[] {String.valueOf(sessionData.mSessionId)};
-            Cursor cursorLogEntry = db.rawQuery("SELECT " +
-                COLUMN_LOG_LEVEL + ", " +
-                COLUMN_LOG_TAG + ", " +
-                COLUMN_LOG_TEXT + ", " +
-                COLUMN_TIMESTAMP + " FROM " +
-                LOG_ENTRY_TABLE + " WHERE " +
-                COLUMN_LOG_SESSION_ID + "=? " +
-                "ORDER BY " + COLUMN_TIMESTAMP + " ASC",
+            Cursor cursorLogEntry = db.rawQuery("SELECT "
+                + COLUMN_LOG_LEVEL + ", "
+                + COLUMN_LOG_TAG + ", "
+                + COLUMN_LOG_TEXT + ", "
+                + COLUMN_TIMESTAMP + " FROM "
+                + LOG_ENTRY_TABLE + " WHERE "
+                + COLUMN_LOG_SESSION_ID + "=? "
+                + "ORDER BY " + COLUMN_TIMESTAMP + " ASC",
                 selectionArgs);
 
-            // raven start here. get log data out of the cursor, store it in session data, add session data to output array list
             sessionData.mLogEntries = new ArrayList<LogTableEntry>();
             if (cursorLogEntry.moveToFirst()) {
                 do {
@@ -167,18 +166,18 @@ public class LogTable {
     }
 
     private static void deleteOldEntries(final SQLiteDatabase db) {
-        final String deleteOldEntriesQuery = "DELETE FROM " + LOG_ENTRY_TABLE +
-                " WHERE " + COLUMN_LOG_ID + " NOT IN " +
-                "(SELECT " + COLUMN_LOG_ID + " FROM " +
-                "(SELECT " + COLUMN_LOG_ID + ", " + COLUMN_TIMESTAMP + " FROM " +
-                LOG_ENTRY_TABLE + " ORDER BY " + COLUMN_TIMESTAMP + " DESC " +
-                "LIMIT " + String.valueOf(MAX_ENTRIES) + "))";
+        final String deleteOldEntriesQuery = "DELETE FROM " + LOG_ENTRY_TABLE
+                + " WHERE " + COLUMN_LOG_ID + " NOT IN "
+                + "(SELECT " + COLUMN_LOG_ID + " FROM "
+                + "(SELECT " + COLUMN_LOG_ID + ", " + COLUMN_TIMESTAMP + " FROM "
+                + LOG_ENTRY_TABLE + " ORDER BY " + COLUMN_TIMESTAMP + " DESC "
+                + "LIMIT " + String.valueOf(MAX_ENTRIES) + "))";
         db.execSQL(deleteOldEntriesQuery);
 
-        db.execSQL("DELETE FROM " + LOG_INFO_TABLE +
-                " WHERE " + COLUMN_LOG_SESSION_ID + " NOT IN " +
-                "(SELECT " + COLUMN_LOG_SESSION_ID + " FROM " +
-                LOG_ENTRY_TABLE + ")");
+        db.execSQL("DELETE FROM " + LOG_INFO_TABLE
+                + " WHERE " + COLUMN_LOG_SESSION_ID + " NOT IN "
+                + "(SELECT " + COLUMN_LOG_SESSION_ID + " FROM "
+                + LOG_ENTRY_TABLE + ")");
     }
 
     private static LogTableSessionData getSessionDataFromCursor(final Cursor cursor) {

@@ -10,6 +10,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.util.datasets.LogDatabase;
+import org.wordpress.android.util.datasets.LogTable;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -21,8 +24,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.TimeZone;
 
-import org.wordpress.android.util.datasets.LogDatabase;
-import org.wordpress.android.util.datasets.LogTable;
+
 
 import static java.lang.String.format;
 
@@ -87,7 +89,9 @@ public class AppLog {
         if (enable && mLogEntries.isEmpty()) {
             final SQLiteDatabase logDb = LogDatabase.getWritableDb(mContext);
 
-            mCurrentLogSessionId = LogTable.getNewLogSessionId(logDb, getAppInfoHeaderText(mContext), getDeviceInfoHeaderText(mContext));
+            mCurrentLogSessionId = LogTable.getNewLogSessionId(logDb,
+                    getAppInfoHeaderText(mContext),
+                    getDeviceInfoHeaderText(mContext));
 
             ArrayList<LogTable.LogTableSessionData> dataList = LogTable.getData(logDb);
             for (LogTable.LogTableSessionData data : dataList) {
@@ -323,7 +327,10 @@ public class AppLog {
         }
     }
 
-    private static void addAppSessionEndedLogEntry(final long sessionId, final String appInfoHeader, final String deviceInfoHeader, java.util.Date date) {
+    private static void addAppSessionEndedLogEntry(final long sessionId,
+            final String appInfoHeader,
+            final String deviceInfoHeader,
+            final java.util.Date date) {
         StringBuilder sb = new StringBuilder();
         sb.append("Previous App Session Ended - ");
         sb.append(appInfoHeader).append(" - ");
@@ -349,7 +356,12 @@ public class AppLog {
 
     private static void persistLogEntry(final LogEntry entry) {
         final SQLiteDatabase logDb = LogDatabase.getWritableDb(mContext);
-        LogTable.addLogEntry(logDb, mCurrentLogSessionId, entry.mLogLevel.name(), entry.mLogTag.name(), entry.mLogText, entry.mDate);
+        LogTable.addLogEntry(logDb,
+                mCurrentLogSessionId,
+                entry.mLogLevel.name(),
+                entry.mLogTag.name(),
+                entry.mLogText,
+                entry.mDate);
     }
 
     private static String getStringStackTrace(Throwable throwable) {
