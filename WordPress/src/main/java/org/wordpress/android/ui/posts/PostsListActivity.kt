@@ -24,7 +24,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.snackbar.Snackbar.Callback
 import com.google.android.material.tabs.TabLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -290,7 +289,7 @@ class PostsListActivity : AppCompatActivity(),
                                     clickListener = OnClickListener { holder.buttonAction() }
                                 )
                             },
-                            dismissCallback = { _,_ -> holder.onDismissAction() }
+                            dismissCallback = { _, _ -> holder.onDismissAction() }
                     )
             )
         }
