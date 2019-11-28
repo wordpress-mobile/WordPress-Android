@@ -84,9 +84,10 @@ public class InstallationReferrerServiceLogic {
                                     response.getReferrerClickTimestampSeconds());
                             AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALLATION_REFERRER_OBTAINED, properties);
                             mReferrerClient.endConnection();
-                        } catch (RemoteException e) {
+                        } catch (RemoteException | IllegalStateException e) {
                             e.printStackTrace();
-                            AppLog.i(T.UTILS, "installation referrer: RemoteException occurred");
+                            CrashLoggingUtils.logException(e, T.UTILS);
+                            AppLog.e(T.UTILS, "installation referrer: " + e.getClass().getSimpleName() + " occurred");
                         }
                         break;
                     case InstallReferrerResponse.FEATURE_NOT_SUPPORTED:

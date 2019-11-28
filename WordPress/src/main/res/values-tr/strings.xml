@@ -1,39 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-26 11:01:02+0000
+Translation-Revision-Date: 2019-11-10 17:10:28+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Bildirimler</string>
+    <string name="master_switch_default_title_off">Kapalı</string>
+    <string name="master_switch_default_title_on">Açık</string>
+    <string name="notifications_tab_dialog_master_off_message">Bu site için bildirimleri kapatmak, bildirimler sekmesinde görünen bildirimleri devre dışı bırakacaktır. Bu site için bildirimleri açtıktan sonra ne tür bir bildirim göreceğinize ince ayar yapabilirsiniz.</string>
+    <string name="notifications_tab_dialog_master_off_title">Bu sitenin bildirimlerini, bildirimler sekmesindeki bildirimleri görmek için, açın.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Bu site için bildirimler sekmesinde bildirim gösterimini etkinleştir</string>
+    <string name="notifications_tab_dialog_master_hint_on">Bu site için bildirimler sekmesinde bildirim gösterimini etkisizleştir</string>
+    <string name="notifications_tab_dialog_master_status_off">Bu site için bildirimler</string>
+    <string name="notifications_tab_dialog_master_status_on">Bu site için bildirimler</string>
+    <string name="dialog_gutenberg_informative_description_page">Şimdi yeni sayfalar için blok düzenleyiciyi kullanıyorsunuz, u2014 harika! Klasik düzenleyicide değişiklik yapmak istiyorsanız, Sitem > Site Ayarları\'na gidin.</string>
+    <string name="dialog_gutenberg_informative_description_post">Şimdi yeni yazılar için blok düzenleyiciyi kullanıyorsunuz, u2014 harika! Klasik düzenleyicide değişiklik yapmak istiyorsanız, Sitem > Site Ayarları\'na gidin.</string>
     <string name="pick_media">Görsel veya video ekle.</string>
-    <string name="error_post_not_submitted_retrying">Bu iletiyi inceleme için sunamadık ama daha sonra tekrar deneyeceğiz. </string>
-    <string name="error_post_not_scheduled_retrying">Bu iletiyi planlayamadık ama daha sonra tekrar deneyeceğiz.</string>
-    <string name="error_post_not_published_retrying_private">Bu özel iletiyi yayınlayamadık ama daha sonra tekrar deneyeceğiz.</string>
-    <string name="error_post_not_published_retrying">Bu iletiyi yayınlayamadık ama daha sonra tekrar deneyeceğiz.</string>
-    <string name="error_post_not_submitted">Bu eylemi tamamlayamadık ve bu iletiyi inceleme için sunmadık.</string>
-    <string name="error_post_not_scheduled">Bu eylemi tamamlayamadık ve bu iletiyi planlamadık.</string>
-    <string name="error_post_not_published_private">Bu eylemi tamamlayamadık ve bu özel iletiyi yayınlamadık.</string>
-    <string name="error_post_not_published">Bu eylemi tamamlayamadık ve bu iletiyi yayınlamadık.</string>
-    <string name="error_media_recover_post_not_submitted">Bu medyayı yükleyemedik ve bu iletiyi inceleme için sunmadık. </string>
-    <string name="error_media_recover_post_not_scheduled">Bu medyayı yükleyemedik ve bu iletiyi planlamadık.</string>
-    <string name="error_media_recover_post_not_published_private">Bu medyayı yükleyemedik ve bu özel iletiyi yayınlamadık.</string>
-    <string name="error_media_recover_post_not_published">Bu medyayı yükleyemedik ve bu iletiyi yayınlamadık.</string>
+    <string name="error_post_not_submitted_retrying">Bu yazıyı inceleme için gönderemedik ama daha sonra tekrar deneyeceğiz.</string>
+    <string name="error_post_not_scheduled_retrying">Bu yazıyı planlayamadık ama daha sonra tekrar deneyeceğiz.</string>
+    <string name="error_post_not_published_retrying_private">Bu özel yazıyı yayınlayamadık ama daha sonra tekrar deneyeceğiz.</string>
+    <string name="error_post_not_published_retrying">Bu yazıyı yayınlayamadık ama daha sonra tekrar deneyeceğiz.</string>
+    <string name="error_post_not_submitted">Bu eylemi tamamlayamadık ve bu yazıyı inceleme için göndermedik.</string>
+    <string name="error_post_not_scheduled">Bu eylemi tamamlayamadık ve bu yazıyı planlamadık.</string>
+    <string name="error_post_not_published_private">Bu eylemi tamamlayamadık ve bu özel yazıyı yayınlamadık.</string>
+    <string name="error_post_not_published">Bu eylemi tamamlayamadık ve bu yazıyı yayınlamadık.</string>
+    <string name="error_media_recover_post_not_submitted">Bu medyayı karşıya yükleyemedik ve bu yazıyı inceleme için göndermedik.</string>
+    <string name="error_media_recover_post_not_scheduled">Bu medyayı karşıya yükleyemedik ve bu yazıyı planlamadık.</string>
+    <string name="error_media_recover_post_not_published_private">Bu medyayı karşıya yükleyemedik ve bu özel yazıyı yayınlamadık.</string>
+    <string name="error_media_recover_post_not_published">Bu medyayı karşıya yükleyemedik ve bu yazıyı yayınlamadık.</string>
     <string name="error_media_recover_post">Bu medyayı yükleyemedik.</string>
     <string name="error_generic_error_retrying">Bu eylemi tamamlayamadık ama daha sonra tekrar deneyeceğiz. </string>
     <string name="error_generic_error">Bu eylemi tamamlayamadık.</string>
     <string name="error_preview_empty_draft">Boş bir taslak önizlenemez</string>
     <string name="error_preview_empty_page">Boş bir sayfa önizlenemez</string>
-    <string name="error_preview_empty_post">Boş bir ileti önizlenemez</string>
+    <string name="error_preview_empty_post">Boş bir yazı önizlenemez</string>
     <string name="preview_unavailable_self_hosted_sites">Önizleme Kullanılamıyor</string>
-    <string name="remote_preview_operation_error">Önizlemeden önce iletiyi kaydetmeye çalışırken hata</string>
+    <string name="remote_preview_operation_error">Önizlemeden önce yazıyı kaydetmeye çalışırken hata</string>
     <string name="post_preview_remote_auto_saving_post">Önizleme Oluşturuluyor…</string>
     <string name="post_preview_saving_draft">Kaydediliyor…</string>
-    <string name="local_post_autosave_revision_available">Bu iletide kaydedilmeyen değişiklikler yaptınız</string>
+    <string name="local_post_autosave_revision_available">Bu yazıda kaydedilmeyen değişiklikler yaptınız</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Bu uygulamadan sürüm</string>
     <string name="dialog_confirm_autosave_restore_button">Başka cihazdan sürüm</string>
     <string name="dialog_confirm_autosave_body_second_part">Bu uygulamadan\n%s tarihinde kaydedildi\n\nBaşka cihazdan\n%s tarihinde kaydedildi\n</string>
-    <string name="dialog_confirm_autosave_body_first_part">Yakın zamanda bu iletide değişiklikler yaptınız ancak değişiklikleri kaydetmediniz. Yüklenecek sürümü seçin:\n\n</string>
+    <string name="dialog_confirm_autosave_body_first_part">Yakın zamanda bu yazınıda değişiklikler yaptınız ancak değişiklikleri kaydetmediniz. Yüklenecek sürümü seçin:\n\n</string>
     <string name="dialog_confirm_autosave_title">Hangi sürümü düzenlemekl istersiniz?</string>
     <string name="button_delete_permanently">Kalıcı Olarak Sil</string>
     <string name="post_waiting_for_connection_draft_cancel">Taslağınızdaki son değişiklikleri kaydetmeyeceğiz.</string>
@@ -41,10 +52,10 @@ Language: tr
     <string name="post_waiting_for_connection_pending_cancel">Bu değişiklikleri inceleme için sunmayacağız. </string>
     <string name="post_waiting_for_connection_publish_cancel"> Bu değişiklikleri yayınlamayacağız.</string>
     <string name="post_waiting_for_connection_draft">Cihazınız yeniden çevrimiçi olduğunda taslağınızı kaydedeceğiz</string>
-    <string name="post_waiting_for_connection_private">Cihazınız yeniden çevrimiçi olduğunda özel iletinizi yayınlayacağız.</string>
-    <string name="post_waiting_for_connection_scheduled">Cihazının yeniden çevrimiçi olduğunda iletinizi planlayacağız.</string>
-    <string name="post_waiting_for_connection_pending">Cihazınız yeniden çevrimiçi olduğunda iletinizi inceleme için sunacağız.</string>
-    <string name="post_waiting_for_connection_publish">Cihazınız yeniden çevrimiçi olduğunda iletinizi yayınlayacağız.</string>
+    <string name="post_waiting_for_connection_private">Cihazınız yeniden çevrimiçi olduğunda özel yazınızı yayınlayacağız.</string>
+    <string name="post_waiting_for_connection_scheduled">Cihazının yeniden çevrimiçi olduğunda yazınızı planlayacağız.</string>
+    <string name="post_waiting_for_connection_pending">Cihazınız yeniden çevrimiçi olduğunda yazınızı inceleme için göndereceğiz.</string>
+    <string name="post_waiting_for_connection_publish">Cihazınız yeniden çevrimiçi olduğunda yazınızı yayınlayacağız.</string>
     <string name="settings_username_changer_snackbar_cancel">Bu işlem iptal edilemez. Kullanıcı adı zaten güncellenmiş olabilir.</string>
     <string name="settings_username_changer_toast_content">Yeni kullanıcı adınız %1$s</string>
     <string name="settings_username_changer_progress_dialog">Kullanıcı adı kaydediliyor…</string>
@@ -117,8 +128,6 @@ Language: tr
     <string name="stats_bar_chart_content_description">Site görüntülemelerinin grafiği.</string>
     <string name="stats_loading_card">Seçilen kart verileri yükleniyor</string>
     <string name="site_settings_editor">Düzenleyici</string>
-    <string name="dialog_gutenberg_informative_description_page">Şu anda yeni sayfalar oluşturmak için blok düzenleyiciyi kullanıyorsunuz. Varsayılan olarak klasik düzenleyiciyi kullanmak ister misiniz? Site Ayarları’na gidin.</string>
-    <string name="dialog_gutenberg_informative_description_post">Şu anda yeni gönderiler oluşturmak için blok düzenleyiciyi kullanıyorsunuz. Varsayılan olarak klasik düzenleyiciyi kullanmak ister misiniz? Site Ayarları’na gidin.</string>
     <string name="description_expand">Genişlet</string>
     <string name="description_collapse">Daralt</string>
     <string name="editor_retry_failed_uploads">Yüklemeyi yeniden dene</string>
@@ -201,7 +210,7 @@ Language: tr
     <string name="stats_management_edit">Düzenle</string>
     <string name="stats_management_dismiss_insights_news_card">Kapat</string>
     <string name="stats_management_try_it_now">Şimdi deneyin</string>
-    <string name="stats_management_news_card_message">Hangi istatistikleri göreceğinizi seçin ve en çok önem verdiğiniz verilere odaklanın. İstatistiklerinizi özelleştirmek için \"Tek bakışta\" altındaki %1$s öğesine dokunun.</string>
+    <string name="stats_management_news_card_message">Hangi istatistikleri göreceğinizi seçin ve en çok önem verdiğiniz verilere odaklanın. İstatistiklerinizi özelleştirmek için \"Yönelimler\" altındaki %1$s öğesine dokunun.</string>
     <string name="stats_manage_your_stats">İstatistiklerinizi yönetin</string>
     <string name="history_fetching_revisions">Eski srümler getiriliyor…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Ortam ekleme başarısız.\nSeçenekler için dokunun.</string>
@@ -214,9 +223,9 @@ Language: tr
     <string name="post_list_author_me">Ben</string>
     <string name="error_restoring_post">Yazı geri yüklenirken bir hata oluştu</string>
     <string name="backdated_for">Geriye dönüldü: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Yukarıda gösterilen öğeler Insights (İçgörüler) adlı sekmenizde gösterilecektir. Kişiselleştirmek için sürükleyip bırakın.</string>
-    <string name="stats_insights_add_insights_header">Tek bakışa ekle</string>
-    <string name="stats_insights_management_title">Sadece en çok ilgili olan istatistikleri görün. İçgörülerinizi aşağıya ekleyin ve düzenleyin.</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Yukarıda gösterilen öğeler yönelim adlı sekmenizde gösterilecektir. Kişiselleştirmek için sürükleyip bırakın.</string>
+    <string name="stats_insights_add_insights_header">Yönelime ekle</string>
+    <string name="stats_insights_management_title">Sadece en çok ilgili olan istatistikleri görün. Yönelimleri aşağıya ekleyin ve düzenleyin.</string>
     <string name="stats_insights_social">Sosyal</string>
     <string name="stats_insights_annual_site_stats">Yıllık site istatistikleri</string>
     <string name="stats_view_follower_totals">Toplam takipçi</string>
@@ -464,8 +473,8 @@ Language: tr
     <string name="stats_followers_count_message">Toplam %1$s takipçisi: %2$s</string>
     <string name="stats_followers_email">E-posta</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">Analizleri Yönet</string>
-    <string name="stats_empty_insights_title">Henüz içgörü eklenmedi</string>
+    <string name="stats_manage_insights">Yönelimleri yönet</string>
+    <string name="stats_empty_insights_title">Henüz yönelim eklenmedi</string>
     <string name="stats_no_data_yet">Henüz veri yok</string>
     <string name="menu_debug">Hata ayıklama menüsü</string>
     <string name="change_password_dialog_message">Parola değiştiriliyor…</string>
@@ -1712,7 +1721,7 @@ Language: tr
     <string name="stats_insights_best_ever">Şuana kadar ki en iyi görüntülemeler</string>
     <string name="stats_insights_today">Bugünün istatistikleri</string>
     <string name="stats_insights_all_time">Tüm zamanlardaki yazılar, görüntülemeler ve ziyaretçiler</string>
-    <string name="stats_insights">Tek bakışta</string>
+    <string name="stats_insights">Yönelimler</string>
     <string name="me_disconnect_from_wordpress_com">WordPress.com hesabından çıkış yap</string>
     <string name="me_btn_login_logout">Giriş/Çıkış</string>
     <string name="me_connect_to_wordpress_com">WordPress.com hesabına giriş yap</string>

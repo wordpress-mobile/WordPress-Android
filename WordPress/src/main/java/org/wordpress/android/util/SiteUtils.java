@@ -1,15 +1,16 @@
 package org.wordpress.android.util;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
@@ -25,6 +26,7 @@ import java.util.List;
 public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
+    private static final int GB_ROLLOUT_PERCENTAGE = 10;
 
     /**
      * Migrate the old app-wide editor preference value to per-site setting. wpcom sites will make a network call
@@ -35,8 +37,58 @@ public class SiteUtils {
      * -- 12.9 OPTED OUT (were auto-opted in but turned it OFF) -> turn all sites OFF in 13.0
      *
      */
-    public static void migrateAppWideMobileEditorPreferenceToRemote(final Context context,
+    public static void migrateAppWideMobileEditorPreferenceToRemote(final AccountStore accountStore,
+                                                                    final SiteStore siteStore,
                                                                     final Dispatcher dispatcher) {
+        // Skip if the user is not signed in
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)) {
+            return;
+        }
+
+        // In a later version we might override mobile_editor setting if it's set to `aztec` and show a specific notice
+        // for these users ("We made a lot of progress on the block editor and we think it's now better than
+        // the classic editor, we switched it on, but you can change the configuration in your Site Settings").
+        // ^ This code should be here.
+
+        // If the user is already in the rollout group, we can skip this the migration.
+        if (AppPrefs.isUserInGutenbergRolloutGroup()) {
+            return;
+        }
+
+        // Check if the user has been "randomly" selected to enter the rollout group.
+        //
+        // For self hosted sites, there are often one or two users, and the user id is probably 0, 1 in these cases.
+        // If we exclude low ids, we won't get an not an homogeneous distribution over self hosted and WordPress.com
+        // users, but the purpose of this is to do a progressive rollout, not an necessarily an homogeneous rollout.
+        //
+        // To exclude ids 0 and 1, to rollout for 10% users,
+        // we'll use a test like `id % 100 >= 90` instead of `id % 100 < 10`.
+        if (accountStore.getAccount().getUserId() % 100 >= (100 - GB_ROLLOUT_PERCENTAGE)) {
+            if (atLeastOneSiteHasAztecEnabled(siteStore)) {
+                // If the user has opt-ed out from at least one of their site, then exclude them from the cohort
+                return;
+            }
+
+            if (!NetworkUtils.isNetworkAvailable(WordPress.getContext())) {
+                // If the network is not available, abort. We can't update the remote setting.
+                return;
+            }
+
+            // Force the dialog to be shown on updated sites
+            for (SiteModel site : siteStore.getSites()) {
+                if (TextUtils.isEmpty(site.getMobileEditor())) {
+                    AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(site.getUrl(), true);
+                }
+            }
+
+            // Enable Gutenberg for all sites using a single network call
+            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
+                    new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
+
+            // After enabling Gutenberg on these sites, we consider the user entered the rollout group
+            AppPrefs.setUserInGutenbergRolloutGroup();
+        }
+
         if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
             return;
         }
@@ -49,6 +101,16 @@ public class SiteUtils {
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.AZTEC_EDITOR_NAME)));
         }
+    }
+
+    private static boolean atLeastOneSiteHasAztecEnabled(final SiteStore siteStore) {
+        // We want to make sure to enable Gutenberg only on the sites they didn't opt-out.
+        for (SiteModel site : siteStore.getSites()) {
+            if (TextUtils.equals(site.getMobileEditor(), AZTEC_EDITOR_NAME)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean enableBlockEditorOnSiteCreation(Dispatcher dispatcher, SiteStore siteStore,

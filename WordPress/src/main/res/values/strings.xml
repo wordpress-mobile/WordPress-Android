@@ -109,6 +109,7 @@
     <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
     <string name="ok">OK</string>
+    <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -243,6 +244,7 @@
     <string name="page_parent_changed">Page parent has been changed</string>
 
     <!-- posts tab -->
+    <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="untitled">Untitled</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="local_draft">Local draft</string>
@@ -858,6 +860,14 @@
     <string name="stats_site_positive_utc">Site timezone (UTC + %s)</string>
     <string name="stats_site_negative_utc">Site timezone (UTC - %s)</string>
     <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
+
+    <!-- Number suffixes -->
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000">%sQa</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
 
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
@@ -1555,6 +1565,9 @@
     <!-- title shown for untitled posts and blogs -->
     <string name="reader_untitled_post">(Untitled)</string>
 
+    <!-- accessibility announcement when list loads -->
+    <string name="reader_acessibility_list_loaded">"The list has loaded with %1$d items."</string>
+
     <!-- activity titles -->
     <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
@@ -1689,6 +1702,7 @@
     <string name="reader_empty_posts_liked_description">Posts that you like will appear here</string>
     <string name="reader_empty_saved_posts_title">No posts saved — yet!</string>
     <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
+    <string name="reader_empty_saved_posts_content_description">Tap the Add to Save Posts button to save a post to your list.</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This site is empty</string>
     <string name="reader_empty_search_title">No results found</string>
@@ -1797,7 +1811,6 @@
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
-    <string name="notification_settings_moved_notices">Notification Settings can now be found in the Notifications tab.</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
@@ -2150,7 +2163,6 @@
     <!-- Editor: Errors -->
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode
         in this state. Remove all failed uploads and continue?</string>
-    <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state.</string>
@@ -2164,7 +2176,6 @@
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
-    <string name="photo_picker_giphy">Choose from Giphy</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
@@ -2270,6 +2281,14 @@
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
     <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
+    <string name="send_verification_email">Send verification email</string>
+    <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
+    <string name="enter_site_credentials_instead">Log in with site credentials</string>
+    <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b>%1$s&lt;/b></string>
+    <string name="login_discovery_error_xmlrpc">We were unable to access the &lt;b>XMLRPC file&lt;/b> on your site. You will need to reach out to your host to resolve this.</string>
+    <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b>HTTP Authentication&lt;/b>. You will need to reach out to your host to resolve this.</string>
+    <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b>SSL Certificate&lt;/b>. You will need to reach out to your host to resolve this.</string>
+    <string name="login_discovery_error_generic">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>
     <string name="site_address_login_title">Site address login</string>
@@ -2517,7 +2536,7 @@
     <string name="post_list_drafts">Drafts</string>
     <string name="post_list_scheduled">Scheduled</string>
     <string name="post_list_trashed">Trashed</string>
-    <string name="post_list_search_prompt">Search published posts</string>
+    <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 
 

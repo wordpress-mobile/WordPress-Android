@@ -872,10 +872,10 @@ class PostListItemUiStateHelperTest {
         authorDisplayName: String? = null
     ): PostModel {
         val post = PostModel()
-        post.status = status
+        post.setStatus(status)
         post.setIsLocalDraft(isLocalDraft)
         post.setIsLocallyChanged(isLocallyChanged)
-        post.authorDisplayName = authorDisplayName
+        post.setAuthorDisplayName(authorDisplayName)
         return post
     }
 

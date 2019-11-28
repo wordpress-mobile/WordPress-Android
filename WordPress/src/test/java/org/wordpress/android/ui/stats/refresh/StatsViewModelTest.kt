@@ -18,6 +18,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
@@ -121,5 +122,12 @@ class StatsViewModelTest : BaseUnitTest() {
         _liveSelectedSection.value = DAYS
 
         assertThat(toolbarHasShadow).isFalse()
+    }
+
+    @Test
+    fun `propagates site change event to base list use case`() = test {
+        viewModel.onSiteChanged()
+
+        verify(baseListUseCase).refreshData(true)
     }
 }

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.views
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.isNull
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodDa
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEGATIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
@@ -25,7 +27,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -35,6 +36,7 @@ class ViewsWidgetListViewModelTest {
     @Mock private lateinit var overviewMapper: OverviewMapper
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var site: SiteModel
     private lateinit var viewModel: ViewsWidgetListViewModel
     private val siteId: Int = 15
@@ -48,7 +50,8 @@ class ViewsWidgetListViewModelTest {
                 visitsAndViewsStore,
                 overviewMapper,
                 resourceProvider,
-                statsDateFormatter
+                statsDateFormatter,
+                appPrefsWrapper
         )
     }
 
@@ -80,7 +83,7 @@ class ViewsWidgetListViewModelTest {
                         any(),
                         any()
                 )
-        ).thenReturn(ValueItem(firstViews.toFormattedString(), 0, false, change, POSITIVE, change))
+        ).thenReturn(ValueItem(firstViews.toString(), 0, false, change, POSITIVE, change))
         whenever(
                 overviewMapper.buildTitle(
                         eq(dates[1]),
@@ -90,7 +93,7 @@ class ViewsWidgetListViewModelTest {
                         any(),
                         any()
                 )
-        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEGATIVE, change))
+        ).thenReturn(ValueItem(todayViews.toString(), 0, true, change, NEGATIVE, change))
         whenever(
                 overviewMapper.buildTitle(
                         eq(dates[2]),
@@ -100,7 +103,7 @@ class ViewsWidgetListViewModelTest {
                         any(),
                         any()
                 )
-        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEUTRAL, change))
+        ).thenReturn(ValueItem(todayViews.toString(), 0, true, change, NEUTRAL, change))
 
         viewModel.start(siteId, color, showChangeColumn, appWidgetId)
 
@@ -125,6 +128,7 @@ class ViewsWidgetListViewModelTest {
             assertThat(data[2].isNegativeChangeVisible).isFalse()
             assertThat(data[2].change).isEqualTo(change)
         }
+        verify(appPrefsWrapper).setAppWidgetHasData(true, appWidgetId)
     }
 
     @Test

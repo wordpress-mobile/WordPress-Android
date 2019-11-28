@@ -15,7 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -23,6 +23,7 @@ class OverviewMapper
 @Inject constructor(
     private val statsDateFormatter: StatsDateFormatter,
     private val resourceProvider: ResourceProvider,
+    private val statsUtils: StatsUtils,
     private val contentDescriptionHelper: ContentDescriptionHelper
 ) {
     private val units = listOf(
@@ -51,7 +52,7 @@ class OverviewMapper
             else -> State.NEGATIVE
         }
         return ValueItem(
-                value = value.toFormattedString(startValue),
+                value = statsUtils.toFormattedString(value, startValue),
                 unit = units[selectedPosition],
                 isFirst = true,
                 change = change,
@@ -90,7 +91,7 @@ class OverviewMapper
 
     private fun mapLongToString(value: Long, isFormattedNumber: Boolean): String {
         return when (isFormattedNumber) {
-            true -> value.toFormattedString()
+            true -> statsUtils.toFormattedString(value)
             false -> value.toString()
         }
     }
@@ -120,7 +121,7 @@ class OverviewMapper
                 listOf(
                         Column(
                                 R.string.stats_views,
-                                views.toFormattedString(),
+                                statsUtils.toFormattedString(views),
                                 contentDescriptionHelper.buildContentDescription(
                                         R.string.stats_views,
                                         views
@@ -128,7 +129,7 @@ class OverviewMapper
                         ),
                         Column(
                                 R.string.stats_visitors,
-                                visitors.toFormattedString(),
+                                statsUtils.toFormattedString(visitors),
                                 contentDescriptionHelper.buildContentDescription(
                                         R.string.stats_visitors,
                                         visitors
@@ -136,7 +137,7 @@ class OverviewMapper
                         ),
                         Column(
                                 R.string.stats_likes,
-                                likes.toFormattedString(),
+                                statsUtils.toFormattedString(likes),
                                 contentDescriptionHelper.buildContentDescription(
                                         R.string.stats_likes,
                                         likes
@@ -144,7 +145,7 @@ class OverviewMapper
                         ),
                         Column(
                                 R.string.stats_comments,
-                                comments.toFormattedString(),
+                                statsUtils.toFormattedString(comments),
                                 contentDescriptionHelper.buildContentDescription(
                                         R.string.stats_comments,
                                         comments

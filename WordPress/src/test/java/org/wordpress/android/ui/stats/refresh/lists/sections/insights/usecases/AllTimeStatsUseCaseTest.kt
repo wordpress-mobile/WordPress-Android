@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWi
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 
 class AllTimeStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: AllTimeInsightsStore
@@ -38,6 +40,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+    @Mock lateinit var statsUtils: StatsUtils
     private val site = SiteModel()
     private lateinit var useCase: AllTimeStatsUseCase
     private val bestDay = "2018-11-25"
@@ -53,11 +56,13 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 statsDateFormatter,
                 statsWidgetUpdaters,
+                statsUtils,
                 popupMenuHandler
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(statsDateFormatter.printDate(bestDay)).thenReturn(bestDayTransformed)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
