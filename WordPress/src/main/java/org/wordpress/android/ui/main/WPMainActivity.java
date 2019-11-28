@@ -407,21 +407,19 @@ public class WPMainActivity extends AppCompatActivity implements
             });
 
             mFloatingActionButton.setOnClickListener(v -> {
-                MainBottomSheetFragment bottomSheet = new MainBottomSheetFragment();
-                bottomSheet.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
                 mViewModel.setIsBottomSheetShowing(true);
             });
 
             mViewModel.isBottomSheetShowing().observe(this, isShowing -> {
-                if (!isShowing) {
-                    FragmentManager fm = getSupportFragmentManager();
-                    if (fm != null) {
-                        MainBottomSheetFragment bottomSheet =
-                                (MainBottomSheetFragment) fm.findFragmentByTag(MAIN_BOTTOM_SHEET_TAG);
-
-                        if (bottomSheet != null) {
-                            bottomSheet.dismiss();
-                        }
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm != null) {
+                    MainBottomSheetFragment bottomSheet =
+                            (MainBottomSheetFragment) fm.findFragmentByTag(MAIN_BOTTOM_SHEET_TAG);
+                    if (isShowing && bottomSheet == null) {
+                        bottomSheet = new MainBottomSheetFragment();
+                        bottomSheet.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
+                    } else if (!isShowing && bottomSheet != null) {
+                        bottomSheet.dismiss();
                     }
                 }
             });

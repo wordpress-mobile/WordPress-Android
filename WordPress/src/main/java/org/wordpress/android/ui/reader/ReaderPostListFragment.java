@@ -423,15 +423,15 @@ public class ReaderPostListFragment extends Fragment
             });
 
             mViewModel.isBottomSheetShowing().observe(getActivity(), isShowing -> {
-                if (!isShowing) {
-                    FragmentManager fm = getFragmentManager();
-                    if (fm != null) {
-                        SubfilterBottomSheetFragment bottomSheet =
-                                (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
-
-                        if (bottomSheet != null) {
-                            bottomSheet.dismiss();
-                        }
+                FragmentManager fm = getFragmentManager();
+                if (fm != null) {
+                    SubfilterBottomSheetFragment bottomSheet =
+                            (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
+                    if (isShowing && bottomSheet == null) {
+                        bottomSheet = new SubfilterBottomSheetFragment();
+                        bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
+                    } else if (!isShowing && bottomSheet != null) {
+                        bottomSheet.dismiss();
                     }
                 }
             });
@@ -880,8 +880,6 @@ public class ReaderPostListFragment extends Fragment
 
             mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
             mSubFiltersListButton.setOnClickListener(v -> {
-                BottomSheetDialogFragment bottomSheet = new SubfilterBottomSheetFragment();
-                bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                 mViewModel.setIsBottomSheetShowing(true);
             });
 
