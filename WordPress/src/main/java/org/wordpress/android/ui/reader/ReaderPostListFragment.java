@@ -34,6 +34,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -170,7 +171,6 @@ public class ReaderPostListFragment extends Fragment
     private ImageView mSettingsButton;
     private View mSubFiltersListButton;
     private TextView mSubFilterTitle;
-    private SubfilterBottomSheetFragment mBottomSheet;
 
     private boolean mIsTopLevel = false;
     private static final String SUBFILTER_BOTTOM_SHEET_TAG = "SUBFILTER_BOTTOM_SHEET_TAG";
@@ -373,6 +373,7 @@ public class ReaderPostListFragment extends Fragment
             if (savedInstanceState.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
                 mIsTopLevel = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL);
             }
+
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mSiteSearchRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION);
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
@@ -409,10 +410,6 @@ public class ReaderPostListFragment extends Fragment
                 if (readerModeInfo != null) {
                     changeReaderMode(readerModeInfo, true);
 
-                    if (mBottomSheet != null) {
-                        mBottomSheet.dismiss();
-                        mBottomSheet = null;
-                    }
                     if (readerModeInfo.getLabel() != null) {
                         mSubFilterTitle.setText(
                                 mUiHelpers.getTextOfUiString(
@@ -420,6 +417,20 @@ public class ReaderPostListFragment extends Fragment
                                         readerModeInfo.getLabel()
                                 )
                         );
+                    }
+                }
+            });
+
+            mViewModel.isBottomSheetShowing().observe(getActivity(), isShowing -> {
+                FragmentManager fm = getFragmentManager();
+                if (fm != null) {
+                    SubfilterBottomSheetFragment bottomSheet =
+                            (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
+                    if (isShowing && bottomSheet == null) {
+                        bottomSheet = new SubfilterBottomSheetFragment();
+                        bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
+                    } else if (!isShowing && bottomSheet != null) {
+                        bottomSheet.dismiss();
                     }
                 }
             });
@@ -882,8 +893,7 @@ public class ReaderPostListFragment extends Fragment
 
             mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
             mSubFiltersListButton.setOnClickListener(v -> {
-                mBottomSheet = new SubfilterBottomSheetFragment();
-                mBottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
+                mViewModel.setIsBottomSheetShowing(true);
             });
 
             mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);

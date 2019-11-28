@@ -14,6 +14,22 @@ sealed class SubfilterListItem(val type: ItemType) {
     open val onClickAction: ((filter: SubfilterListItem) -> Unit)? = null
     open val label: UiString? = null
 
+    fun isSameItem(otherItem: SubfilterListItem?): Boolean {
+        if (otherItem == null) return false
+
+        return if (type == otherItem.type) {
+            when (type) {
+                SECTION_TITLE -> label == otherItem.label
+                SITE -> (this as Site).blog.isSameAs((otherItem as Site).blog)
+                TAG -> (this as Tag).tag == (otherItem as Tag).tag
+                SITE_ALL,
+                DIVIDER -> true
+            }
+        } else {
+            false
+        }
+    }
+
     enum class ItemType {
         SECTION_TITLE,
         SITE_ALL,
