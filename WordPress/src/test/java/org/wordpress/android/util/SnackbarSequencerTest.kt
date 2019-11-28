@@ -24,6 +24,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPSnackbarWrapper
 import java.lang.ref.WeakReference
@@ -44,7 +45,7 @@ class SnackbarSequencerTest {
     private val uiHelper: UiHelpers = UiHelpers()
     private lateinit var sequencer: SnackbarSequencer
 
-    private lateinit var item: SnackbarSequencerInfo
+    private lateinit var item: SnackbarItem
 
     @Before
     fun setUp() {
@@ -52,10 +53,10 @@ class SnackbarSequencerTest {
         whenever(view.context).thenReturn(activity)
         whenever(wpSnackbarWrapper.make(any(), any(), any())).thenReturn(wpSnackbar)
 
-        sequencer = SnackbarSequencer(uiHelper, wpSnackbarWrapper, TEST_DISPATCHER, TEST_DISPATCHER)
+        sequencer = SnackbarSequencer(uiHelper, wpSnackbarWrapper, TEST_DISPATCHER)
 
-        item = SnackbarSequencerInfo(
-                SnackbarInfo(
+        item = SnackbarItem(
+                Info(
                         view = view,
                         textRes = UiStringText(TEST_MESSAGE),
                         duration = Snackbar.LENGTH_LONG
@@ -96,12 +97,12 @@ class SnackbarSequencerTest {
     fun `snackbar is not shown when view is null`() {
         // Given
         val spiedItem = spy(item)
-        val aliveSnackbarInfo = mock<SnackbarInfo>()
-        val deadSnackbarInfo = mock<SnackbarInfo>()
+        val aliveSnackbarInfo = mock<Info>()
+        val deadSnackbarInfo = mock<Info>()
 
         whenever(aliveSnackbarInfo.view).thenReturn(WeakReference(view))
         whenever(deadSnackbarInfo.view).thenReturn(WeakReference(null))
-        whenever(spiedItem.snackbarInfo).thenReturn(aliveSnackbarInfo, deadSnackbarInfo)
+        whenever(spiedItem.info).thenReturn(aliveSnackbarInfo, deadSnackbarInfo)
 
         // When
         sequencer.enqueue(spiedItem)

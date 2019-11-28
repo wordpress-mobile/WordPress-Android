@@ -21,7 +21,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
-private const val QUEUE_SIZE_LIMIT: Int = 5
+const val QUEUE_SIZE_LIMIT: Int = 5
 
 @Singleton
 class SnackbarSequencer @Inject constructor(
