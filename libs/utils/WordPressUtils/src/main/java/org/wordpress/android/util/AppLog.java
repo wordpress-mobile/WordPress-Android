@@ -60,7 +60,7 @@ public class AppLog {
         SUPPORT,
         SITE_CREATION,
         DOMAIN_REGISTRATION,
-        APP_LAUNCH_INFO
+        APP_SESSION_END
     }
 
     public static final String TAG = "WordPress";
@@ -330,7 +330,7 @@ public class AppLog {
         sb.append(deviceInfoHeader).append(" - ");
         sb.append("Session id: ").append(sessionId);
 
-        LogEntry entry = new LogEntry(LogLevel.i, sb.toString(), T.APP_LAUNCH_INFO);
+        LogEntry entry = new LogEntry(LogLevel.i, sb.toString(), T.APP_SESSION_END);
         mLogEntries.addEntry(entry);
     }
 
