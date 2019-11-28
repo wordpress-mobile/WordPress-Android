@@ -56,7 +56,7 @@ class SnackbarSequencer @Inject constructor(
             if (context != null && isContextAlive(context)) {
                 prepareSnackBar(context, item)?.show()
                 AppLog.d(T.UTILS, "SnackbarSequencer > before delay")
-                delay(getSnackbarDurationMs(item))
+                delay(item.getSnackbarDurationMs())
                 AppLog.d(T.UTILS, "SnackbarSequencer > after delay")
             } else {
                 AppLog.d(T.UTILS,

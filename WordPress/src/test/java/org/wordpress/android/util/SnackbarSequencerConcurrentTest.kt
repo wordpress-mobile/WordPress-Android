@@ -139,9 +139,9 @@ class SnackbarSequencerConcurrentTest {
 
     private fun getCheckPoints(items: List<SnackbarItem>): List<Long> {
         return listOf(
-            SNACKBAR_DURATION_MARGIN + getSnackbarDurationMs(items[0]),
-            getSnackbarDurationMs(items[1]),
-            getSnackbarDurationMs(items[2])
+            SNACKBAR_DURATION_MARGIN + items[0].getSnackbarDurationMs(),
+            items[1].getSnackbarDurationMs(),
+            items[2].getSnackbarDurationMs()
         )
     }
 

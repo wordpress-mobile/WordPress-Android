@@ -14,22 +14,22 @@ private const val LONG_DURATION_MS = 2750L
 
 const val INDEFINITE_SNACKBAR_NOT_ALLOWED = "Snackbar.LENGTH_INDEFINITE not allowed in getSnackbarDurationMs."
 
-fun getSnackbarDurationMs(snackbarItem: SnackbarItem): Long {
-    return when (snackbarItem.info.duration) {
-        Snackbar.LENGTH_INDEFINITE ->
-            throw IllegalArgumentException(INDEFINITE_SNACKBAR_NOT_ALLOWED)
-        Snackbar.LENGTH_LONG -> LONG_DURATION_MS
-        Snackbar.LENGTH_SHORT -> SHORT_DURATION_MS
-        else -> snackbarItem.info.duration.toLong()
-    }
-}
-
 class SnackbarItem(
     val info: Info,
     val action: Action? = null,
     dismissCallback: ((transientBottomBar: Snackbar?, event: Int) -> Unit)? = null
 ) {
     val dismissCallback = SoftReference(dismissCallback)
+
+    fun getSnackbarDurationMs(): Long {
+        return when (info.duration) {
+            Snackbar.LENGTH_INDEFINITE ->
+                throw IllegalArgumentException(INDEFINITE_SNACKBAR_NOT_ALLOWED)
+            Snackbar.LENGTH_LONG -> LONG_DURATION_MS
+            Snackbar.LENGTH_SHORT -> SHORT_DURATION_MS
+            else -> info.duration.toLong()
+        }
+    }
 
     class Info(
         view: View,
