@@ -337,7 +337,7 @@ public class AppLog {
         sb.append(deviceInfoHeader).append(" - ");
         sb.append("Session id: ").append(sessionId);
 
-        LogEntry entry = new LogEntry(LogLevel.i, sb.toString(), T.APP_SESSION_END);
+        LogEntry entry = new LogEntry(LogLevel.i, sb.toString(), T.APP_SESSION_END, date);
         mLogEntries.addEntry(entry);
     }
 
