@@ -59,7 +59,8 @@ public class AppLog {
         JETPACK_REMOTE_INSTALL,
         SUPPORT,
         SITE_CREATION,
-        DOMAIN_REGISTRATION
+        DOMAIN_REGISTRATION,
+        APP_LAUNCH_INFO
     }
 
     public static final String TAG = "WordPress";
@@ -68,9 +69,9 @@ public class AppLog {
     private static List<AppLogListener> mListeners = new ArrayList<>(0);
     private static TimeZone mUtcTimeZone = TimeZone.getTimeZone("UTC");
 
-    private static Context context;
-    private static LogSessionDataList mLogSessionDataList = new LogSessionDataList();
+    private static Context mContext;
     private static long mCurrentLogSessionId = -1;
+    private static LogEntryList mLogEntries = new LogEntryList();
 
     private AppLog() {
         throw new AssertionError();
@@ -80,13 +81,13 @@ public class AppLog {
      * Capture log so it can be displayed by AppLogViewerActivity
      * @param enable A boolean flag to capture log. Default is false, pass true to enable recording
      */
-    public static void enableRecording(boolean enable, Context newContext) {
+    public static void enableRecording(boolean enable, Context context) {
         mEnableRecording = enable;
-        context = newContext;
-        if (enable && mLogSessionDataList.isEmpty()) {
-            final SQLiteDatabase logDb = LogDatabase.getWritableDb(context);
+        mContext = context;
+        if (enable && mLogEntries.isEmpty()) {
+            final SQLiteDatabase logDb = LogDatabase.getWritableDb(mContext);
 
-            mCurrentLogSessionId = LogTable.getNewLogSessionId(logDb, getAppInfoHeaderText(context), getDeviceInfoHeaderText(context));
+            mCurrentLogSessionId = LogTable.getNewLogSessionId(logDb, getAppInfoHeaderText(mContext), getDeviceInfoHeaderText(mContext));
 
             ArrayList<LogTable.LogTableSessionData> dataList = LogTable.getData(logDb);
             for (LogTable.LogTableSessionData data : dataList) {
@@ -282,6 +283,12 @@ public class AppLog {
     }
 
     private static class LogEntryList extends ArrayList<LogEntry> {
+        private synchronized boolean addEntry(LogEntry entry) {
+            if (size() >= MAX_ENTRIES) {
+                removeFirstEntry();
+            }
+            return add(entry);
+        }
 
         private void removeFirstEntry() {
             Iterator<LogEntry> it = iterator();
@@ -296,115 +303,33 @@ public class AppLog {
         }
     }
 
-    private static class LogSessionData {
-        final long mSessionId;
-        final String mAppInfoHeader;
-        final String mDeviceInfoHeader;
-        final LogEntryList mLogEntries;
-
-        LogSessionData(final long sessionId, final String appInfoHeader, final String deviceInfoHeader) {
-            mSessionId = sessionId;
-            mAppInfoHeader = appInfoHeader + " - Session id: " + sessionId;
-            mDeviceInfoHeader = deviceInfoHeader;
-            mLogEntries = new LogEntryList();
-        }
-
-        void addEntry(final LogEntry logEntry) {
-            mLogEntries.add(logEntry);
-        }
-
-        int getLogEntryCount() {
-            return mLogEntries.size();
-        }
-
-        public void addToHtmlList(final ArrayList<String> items) {
-            // add version & device info - be sure to change HEADER_LINE_COUNT if additional lines are added
-            items.add("<strong>" + mAppInfoHeader + "</strong>");
-            items.add("<strong>" + mDeviceInfoHeader + "</strong>");
-
-            Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
-            while (it.hasNext()) {
-                items.add(it.next().toHtml());
-            }
-        }
-
-        public void appendToStringBuilder(final StringBuilder sb) {
-            // add version & device info
-            sb.append(mAppInfoHeader).append("\n")
-              .append(mDeviceInfoHeader).append("\n\n");
-
-            Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
-            int lineNum = 1;
-            while (it.hasNext()) {
-                LogEntry entry = it.next();
-                sb.append(format(Locale.US, "%02d - ", lineNum))
-                  .append("[")
-                  .append(entry.formatLogDate()).append(" ")
-                  .append(entry.mLogTag.name())
-                  .append("] ")
-                  .append(entry.mLogText)
-                  .append("\n");
-                lineNum++;
-            }
-        }
-    }
-
-    private static class LogSessionDataList extends ArrayList<LogSessionData> {
-        private synchronized void addLogEntry(LogEntry entry) {
-            if (MAX_ENTRIES == 0)
-                return;
-
-            if (getLogEntryCount() >= MAX_ENTRIES) {
-                removeFirstLogEntry();
-            }
-
-            if (isEmpty()) {
-                add(new LogSessionData(-1, "null", "null"));
-            }
-
-            get(size() - 1).mLogEntries.add(entry);
-        }
-
-        private void removeFirstLogEntry() {
-            Iterator<LogSessionData> it = iterator();
-            if (!it.hasNext()) {
-                return;
-            }
-
-            it.next().mLogEntries.removeFirstEntry();
-
-            // remove first session data if it has 0 log entries and it isn't the only session
-            if (size() > 1 && it.next().mLogEntries.isEmpty())
-            {
-                try {
-                    remove(it.next());
-                } catch (NoSuchElementException e) {
-                    // ignore
-                }
-            }
-        }
-    }
-
-    private static int getLogEntryCount() {
-        int count = 0;
-        for (LogSessionData logSessionData : mLogSessionDataList) {
-            count += logSessionData.getLogEntryCount();
-        }
-
-        return count;
-    }
-
     private static void addSessionData(final LogTable.LogTableSessionData tableLogSessionData) {
-        LogSessionData logSessionData = new LogSessionData(tableLogSessionData.mSessionId, tableLogSessionData.mAppInfoHeader, tableLogSessionData.mDeviceInfoHeader);
-        mLogSessionDataList.add(logSessionData);
+        final long sessionId = tableLogSessionData.mSessionId;
+        final String appInfoHeader = tableLogSessionData.mAppInfoHeader;
+        final String deviceInfoHeader = tableLogSessionData.mDeviceInfoHeader;
 
+        java.util.Date date = new Date();
         for (LogTable.LogTableEntry logTableEntry : tableLogSessionData.mLogEntries) {
-            LogEntry entry = new LogEntry(LogLevel.valueOf(logTableEntry.mLogLevel), 
-                    logTableEntry.mLogText, 
-                    T.valueOf(logTableEntry.mLogTag), 
+            date = logTableEntry.mDate;
+            LogEntry entry = new LogEntry(LogLevel.valueOf(logTableEntry.mLogLevel),
+                    logTableEntry.mLogText,
+                    T.valueOf(logTableEntry.mLogTag),
                     logTableEntry.mDate);
-            mLogSessionDataList.addLogEntry(entry);
+            mLogEntries.addEntry(entry);
         }
+
+        addAppSessionEndedLogEntry(sessionId, appInfoHeader, deviceInfoHeader, date);
+    }
+
+    private static void addAppSessionEndedLogEntry(final long sessionId, final String appInfoHeader, final String deviceInfoHeader, java.util.Date date) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Previous App Session Ended - ");
+        sb.append(appInfoHeader).append(" - ");
+        sb.append(deviceInfoHeader).append(" - ");
+        sb.append("Session id: ").append(sessionId);
+
+        LogEntry entry = new LogEntry(LogLevel.i, sb.toString(), T.APP_LAUNCH_INFO);
+        mLogEntries.addEntry(entry);
     }
 
     private static void addEntry(T tag, LogLevel level, String text) {
@@ -415,13 +340,13 @@ public class AppLog {
         // Record entry if enabled
         if (mEnableRecording) {
             LogEntry entry = new LogEntry(level, text, tag);
-            mLogSessionDataList.addLogEntry(entry);
+            mLogEntries.addEntry(entry);
             persistLogEntry(entry);
         }
     }
 
     private static void persistLogEntry(final LogEntry entry) {
-        final SQLiteDatabase logDb = LogDatabase.getWritableDb(context);
+        final SQLiteDatabase logDb = LogDatabase.getWritableDb(mContext);
         LogTable.addLogEntry(logDb, mCurrentLogSessionId, entry.mLogLevel.name(), entry.mLogTag.name(), entry.mLogText, entry.mDate);
     }
 
@@ -454,14 +379,19 @@ public class AppLog {
     }
 
     /**
-     * Returns entire log as html for display (see AppLogViewerActivity)Oh
+     * Returns entire log as html for display (see AppLogViewerActivity)
      * @return Arraylist of Strings containing log messages
      */
     public static ArrayList<String> toHtmlList() {
         ArrayList<String> items = new ArrayList<String>();
 
-        for (LogSessionData data : mLogSessionDataList) {
-            data.addToHtmlList(items);
+        // add version & device info - be sure to change HEADER_LINE_COUNT if additional lines are added
+        items.add("<strong>" + getAppInfoHeaderText(mContext) + "</strong>");
+        items.add("<strong>" + getDeviceInfoHeaderText(mContext) + "</strong>");
+
+        Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
+        while (it.hasNext()) {
+            items.add(it.next().toHtml());
         }
         return items;
     }
@@ -472,10 +402,24 @@ public class AppLog {
      */
     public static synchronized String toPlainText() {
         StringBuilder sb = new StringBuilder();
-        for (LogSessionData data : mLogSessionDataList) {
-            data.appendToStringBuilder(sb);
-        }
 
+        // add version & device info
+        sb.append(getAppInfoHeaderText(mContext)).append("\n")
+          .append(getDeviceInfoHeaderText(mContext)).append("\n\n");
+
+        Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
+        int lineNum = 1;
+        while (it.hasNext()) {
+            LogEntry entry = it.next();
+            sb.append(format(Locale.US, "%02d - ", lineNum))
+              .append("[")
+              .append(entry.formatLogDate()).append(" ")
+              .append(entry.mLogTag.name())
+              .append("] ")
+              .append(entry.mLogText)
+              .append("\n");
+            lineNum++;
+        }
         return sb.toString();
     }
 }
