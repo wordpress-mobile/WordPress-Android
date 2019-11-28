@@ -71,7 +71,6 @@ public class AppLog {
     private static List<AppLogListener> mListeners = new ArrayList<>(0);
     private static TimeZone mUtcTimeZone = TimeZone.getTimeZone("UTC");
 
-    private static Context mContext;
     private static long mCurrentLogSessionId = -1;
     private static LogEntryList mLogEntries = new LogEntryList();
 
@@ -85,17 +84,19 @@ public class AppLog {
      */
     public static void enableRecording(boolean enable, Context context) {
         mEnableRecording = enable;
-        mContext = context;
         if (enable && mLogEntries.isEmpty()) {
-            final SQLiteDatabase logDb = LogDatabase.getWritableDb(mContext);
+            LogDatabase.init(context);
 
-            mCurrentLogSessionId = LogTable.getNewLogSessionId(logDb,
-                    getAppInfoHeaderText(mContext),
-                    getDeviceInfoHeaderText(mContext));
+            final SQLiteDatabase logDb = LogDatabase.getWritableDb();
+            if (logDb != null) {
+                mCurrentLogSessionId = LogTable.getNewLogSessionId(logDb,
+                        getAppInfoHeaderText(context),
+                        getDeviceInfoHeaderText(context));
 
-            ArrayList<LogTable.LogTableSessionData> dataList = LogTable.getData(logDb);
-            for (LogTable.LogTableSessionData data : dataList) {
-                addSessionData(data);
+                ArrayList<LogTable.LogTableSessionData> dataList = LogTable.getData(logDb);
+                for (LogTable.LogTableSessionData data : dataList) {
+                    addSessionData(data);
+                }
             }
         }
     }
@@ -355,13 +356,15 @@ public class AppLog {
     }
 
     private static void persistLogEntry(final LogEntry entry) {
-        final SQLiteDatabase logDb = LogDatabase.getWritableDb(mContext);
-        LogTable.addLogEntry(logDb,
-                mCurrentLogSessionId,
-                entry.mLogLevel.name(),
-                entry.mLogTag.name(),
-                entry.mLogText,
-                entry.mDate);
+        final SQLiteDatabase logDb = LogDatabase.getWritableDb();
+        if (logDb != null) {
+            LogTable.addLogEntry(logDb,
+                    mCurrentLogSessionId,
+                    entry.mLogLevel.name(),
+                    entry.mLogTag.name(),
+                    entry.mLogText,
+                    entry.mDate);
+        }
     }
 
     private static String getStringStackTrace(Throwable throwable) {
@@ -394,14 +397,15 @@ public class AppLog {
 
     /**
      * Returns entire log as html for display (see AppLogViewerActivity)
+     * @param context
      * @return Arraylist of Strings containing log messages
      */
-    public static ArrayList<String> toHtmlList() {
+    public static ArrayList<String> toHtmlList(Context context) {
         ArrayList<String> items = new ArrayList<String>();
 
         // add version & device info - be sure to change HEADER_LINE_COUNT if additional lines are added
-        items.add("<strong>" + getAppInfoHeaderText(mContext) + "</strong>");
-        items.add("<strong>" + getDeviceInfoHeaderText(mContext) + "</strong>");
+        items.add("<strong>" + getAppInfoHeaderText(context) + "</strong>");
+        items.add("<strong>" + getDeviceInfoHeaderText(context) + "</strong>");
 
         Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
         while (it.hasNext()) {
@@ -412,14 +416,15 @@ public class AppLog {
 
     /**
      * Converts the entire log to plain text
+     * @param context
      * @return The log as plain text
      */
-    public static synchronized String toPlainText() {
+    public static synchronized String toPlainText(Context context) {
         StringBuilder sb = new StringBuilder();
 
         // add version & device info
-        sb.append(getAppInfoHeaderText(mContext)).append("\n")
-          .append(getDeviceInfoHeaderText(mContext)).append("\n\n");
+        sb.append(getAppInfoHeaderText(context)).append("\n")
+          .append(getDeviceInfoHeaderText(context)).append("\n\n");
 
         Iterator<LogEntry> it = new ArrayList<>(mLogEntries).iterator();
         int lineNum = 1;

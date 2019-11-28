@@ -63,7 +63,7 @@ public class AppLogViewerActivity extends AppCompatActivity {
         private final LayoutInflater mInflater;
 
         private LogAdapter(Context context) {
-            mEntries = AppLog.toHtmlList();
+            mEntries = AppLog.toHtmlList(context);
             mInflater = LayoutInflater.from(context);
         }
 
@@ -122,7 +122,7 @@ public class AppLogViewerActivity extends AppCompatActivity {
     private void shareAppLog() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, AppLog.toPlainText());
+        intent.putExtra(Intent.EXTRA_TEXT, AppLog.toPlainText(this));
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " " + getTitle());
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.reader_btn_share)));
@@ -134,7 +134,7 @@ public class AppLogViewerActivity extends AppCompatActivity {
     private void copyAppLogToClipboard() {
         try {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newPlainText("AppLog", AppLog.toPlainText()));
+            clipboard.setPrimaryClip(ClipData.newPlainText("AppLog", AppLog.toPlainText(this)));
             ToastUtils.showToast(this, R.string.logs_copied_to_clipboard);
         } catch (Exception e) {
             AppLog.e(T.UTILS, e);

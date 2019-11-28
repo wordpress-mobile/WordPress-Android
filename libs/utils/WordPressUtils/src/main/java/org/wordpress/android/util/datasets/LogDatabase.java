@@ -22,7 +22,7 @@ public class LogDatabase extends SQLiteOpenHelper {
     private static LogDatabase mLogDb;
     private static final Object DB_LOCK = new Object();
 
-    public static LogDatabase getDatabase(Context context) {
+    public static void init(Context context) {
         if (mLogDb == null) {
             synchronized (DB_LOCK) {
                 if (mLogDb == null) {
@@ -33,15 +33,22 @@ public class LogDatabase extends SQLiteOpenHelper {
                 }
             }
         }
-        return mLogDb;
     }
 
-    public static SQLiteDatabase getReadableDb(Context context) {
-        return getDatabase(context).getReadableDatabase();
+    public static SQLiteDatabase getReadableDb() {
+        if (mLogDb != null) {
+            return mLogDb.getReadableDatabase();
+        }
+
+        return null;
     }
 
-    public static SQLiteDatabase getWritableDb(Context context) {
-        return getDatabase(context).getWritableDatabase();
+    public static SQLiteDatabase getWritableDb() {
+        if (mLogDb != null) {
+            return mLogDb.getWritableDatabase();
+        }
+
+        return null;
     }
 
     public LogDatabase(Context context) {
