@@ -27,7 +27,6 @@ private const val QUEUE_SIZE_LIMIT: Int = 5
 class SnackbarSequencer @Inject constructor(
     private val uiHelper: UiHelpers,
     private val wpSnackbarWrapper: WPSnackbarWrapper,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     private var job: Job = Job()
@@ -35,20 +34,19 @@ class SnackbarSequencer @Inject constructor(
     private val snackBarQueue: Queue<SnackbarItem> = LinkedList()
 
     override val coroutineContext: CoroutineContext
-        get() = bgDispatcher + job
+        get() = mainDispatcher + job
 
     fun enqueue(item: SnackbarItem) {
-        synchronized(this@SnackbarSequencer) {
+        // This needs to be run on a single thread or synchronized - we are accessing a critical zone (`snackBarQueue`)
+        launch {
             AppLog.d(T.UTILS, "SnackbarSequencer > New item added")
             if (snackBarQueue.size == QUEUE_SIZE_LIMIT) {
                 snackBarQueue.remove()
             }
             snackBarQueue.add(item)
             if (snackBarQueue.size == 1) {
-                launch {
-                    AppLog.d(T.UTILS, "SnackbarSequencer > invoking start()")
-                    start()
-                }
+                AppLog.d(T.UTILS, "SnackbarSequencer > invoking start()")
+                start()
             }
         }
     }
@@ -58,9 +56,7 @@ class SnackbarSequencer @Inject constructor(
             val item = snackBarQueue.peek()
             val context: Activity? = item.info.view.get()?.context as? Activity
             if (context != null && isContextAlive(context)) {
-                withContext(mainDispatcher) {
-                    prepareSnackBar(context, item)?.show()
-                }
+                prepareSnackBar(context, item)?.show()
                 AppLog.d(T.UTILS, "SnackbarSequencer > before delay")
                 delay(getSnackbarDurationMs(item))
                 AppLog.d(T.UTILS, "SnackbarSequencer > after delay")
@@ -68,15 +64,13 @@ class SnackbarSequencer @Inject constructor(
                 AppLog.d(T.UTILS,
                         "SnackbarSequencer > start context was ${if (context == null) "null" else "not alive"}")
             }
-            synchronized(this@SnackbarSequencer) {
-                if (snackBarQueue.peek() == item) {
-                    AppLog.d(T.UTILS, "SnackbarSequencer > item removed from the queue")
-                    snackBarQueue.remove()
-                }
-                if (snackBarQueue.isEmpty()) {
-                    AppLog.d(T.UTILS, "SnackbarSequencer > finishing start()")
-                    return
-                }
+            if (snackBarQueue.peek() == item) {
+                AppLog.d(T.UTILS, "SnackbarSequencer > item removed from the queue")
+                snackBarQueue.remove()
+            }
+            if (snackBarQueue.isEmpty()) {
+                AppLog.d(T.UTILS, "SnackbarSequencer > finishing start()")
+                return
             }
         }
     }
