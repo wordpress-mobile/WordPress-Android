@@ -318,7 +318,9 @@ public class AppLog {
             mLogEntries.addEntry(entry);
         }
 
-        addAppSessionEndedLogEntry(sessionId, appInfoHeader, deviceInfoHeader, date);
+        if (sessionId != mCurrentLogSessionId) {
+            addAppSessionEndedLogEntry(sessionId, appInfoHeader, deviceInfoHeader, date);
+        }
     }
 
     private static void addAppSessionEndedLogEntry(final long sessionId, final String appInfoHeader, final String deviceInfoHeader, java.util.Date date) {
