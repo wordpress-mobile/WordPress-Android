@@ -73,6 +73,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -3202,6 +3203,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         } else if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
+            if (!mEditPostRepository.hasPost() || (mEditPostRepository.getId()
+                                                   != ((RemoteAutoSavePost) event.causeOfChange).getLocalPostId())) {
+                AppLog.e(T.POSTS,
+                        "Ignoring REMOTE_AUTO_SAVE_POST in EditPostActivity as mPost is null or id of the opened post"
+                        + " doesn't match the event.");
+                return;
+            }
             if (event.isError()) {
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
