@@ -372,7 +372,7 @@ public class MySiteFragment extends Fragment implements
 
         mToolbar = rootView.findViewById(R.id.toolbar_main);
         mToolbar.setTitle(mToolbarTitle);
-        if (BuildConfig.ME_ACTIVITY_AVAILABLE) {
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
             mToolbar.inflateMenu(R.menu.my_site_menu);
             mToolbar.setOnMenuItemClickListener(item -> {
                 if (item.getItemId() == R.id.me_item) {

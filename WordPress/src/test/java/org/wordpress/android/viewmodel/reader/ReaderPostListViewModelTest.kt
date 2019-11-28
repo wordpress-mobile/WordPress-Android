@@ -9,20 +9,28 @@ import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagType.BOOKMARKED
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.ui.news.NewsManager
 import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostListViewModelTest {
     @Rule
@@ -46,20 +54,20 @@ class ReaderPostListViewModelTest {
     @Before
     fun setUp() {
         whenever(newsManager.newsItemSource()).thenReturn(liveData)
-        viewModel = ReaderPostListViewModel(newsManager, newsTracker, newsTrackerHelper)
+        viewModel = ReaderPostListViewModel(newsManager, newsTracker, newsTrackerHelper, TEST_DISPATCHER)
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
     }
 
     @Test
     fun verifyPullInvokedInOnStart() {
-        viewModel.start(initialTag)
+        viewModel.start(initialTag, false)
         verify(newsManager).pull(false)
     }
 
     @Test
     fun verifyViewModelPropagatesNewsItems() {
-        viewModel.start(initialTag)
+        viewModel.start(initialTag, false)
         liveData.postValue(item)
         liveData.postValue(null)
         liveData.postValue(item)
@@ -78,7 +86,7 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun emitNullOnInitialTagChanged() {
-        viewModel.start(otherTag)
+        viewModel.start(otherTag, false)
         // propagates the item since the card hasn't been shown yet
         liveData.postValue(item)
         viewModel.onTagChanged(initialTag)
@@ -93,7 +101,7 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun verifyNewsItemAvailableOnlyForFirstTagForWhichCardWasShown() {
-        viewModel.start(otherTag)
+        viewModel.start(otherTag, false)
         // propagate the item since the card hasn't been shown yet
         liveData.postValue(item)
         viewModel.onTagChanged(initialTag)
@@ -142,5 +150,40 @@ class ReaderPostListViewModelTest {
     fun verifyViewModelPropagatesExtendedInfoRequestedToNewsTracker() {
         viewModel.onNewsCardExtendedInfoRequested(item)
         verify(newsTracker).trackNewsCardExtendedInfoRequested(argThat { this == READER }, any())
+    }
+
+    @Test
+    fun verifySubfilterVisibility() {
+        viewModel.setSubfiltersVisibility(true)
+        assertThat(viewModel.shouldShowSubFilters.value).isEqualTo(true)
+
+        viewModel.setSubfiltersVisibility(false)
+        assertThat(viewModel.shouldShowSubFilters.value).isEqualTo(false)
+    }
+
+    @Test
+    fun getCurrentSubfilterReturnsDefaultAtStart() {
+        assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(SiteAll::class.java)
+    }
+
+    @Test
+    fun verifySetSubfilterFromTag() {
+        val tag = ReaderTag("", "", "", "", BOOKMARKED)
+        var item: SubfilterListItem? = null
+        viewModel.setSubfilterFromTag(tag)
+
+        viewModel.currentSubFilter.observeForever { item = it }
+
+        assertThat((item as Tag).tag).isEqualTo(tag)
+    }
+
+    @Test
+    fun verifySetDefaultSubfilter() {
+        var item: SubfilterListItem? = null
+        viewModel.setDefaultSubfilter()
+
+        viewModel.currentSubFilter.observeForever { item = it }
+
+        assertThat(item).isInstanceOf(SiteAll::class.java)
     }
 }
