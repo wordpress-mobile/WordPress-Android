@@ -383,11 +383,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         Bundle arguments = getArguments();
         boolean supportStockPhotos = arguments != null && arguments.getBoolean(ARG_SUPPORT_STOCK_PHOTOS);
-        if (supportStockPhotos && activity != null) {
-            String packageName = activity.getApplication().getPackageName();
-            int stockMediaResourceId = getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
+        if (activity != null) {
+            if (supportStockPhotos) {
+                String packageName = activity.getApplication().getPackageName();
+                int stockMediaResourceId =
+                        getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
 
-            otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
+                otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
+            }
+        } else {
+            AppLog.e(T.EDITOR, "Failed to initialize other media options because the activity is null");
         }
 
         return otherMediaOptions;
