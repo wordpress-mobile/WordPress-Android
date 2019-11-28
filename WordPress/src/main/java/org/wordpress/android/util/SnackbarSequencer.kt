@@ -21,9 +21,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
-const val DURATION_EXTRA_MARGIN = 500L
-
-private const val QUEUE_SIZE_LIMIT: Int = 10
+private const val QUEUE_SIZE_LIMIT: Int = 5
 
 @Singleton
 class SnackbarSequencer @Inject constructor(
@@ -34,12 +32,12 @@ class SnackbarSequencer @Inject constructor(
 ) : CoroutineScope {
     private var job: Job = Job()
 
-    private val snackBarQueue: Queue<SnackbarSequencerInfo> = LinkedList()
+    private val snackBarQueue: Queue<SnackbarItem> = LinkedList()
 
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
 
-    fun enqueue(item: SnackbarSequencerInfo) {
+    fun enqueue(item: SnackbarItem) {
         synchronized(this@SnackbarSequencer) {
             AppLog.d(T.UTILS, "SnackbarSequencer > New item added")
             if (snackBarQueue.size == QUEUE_SIZE_LIMIT) {
@@ -58,13 +56,13 @@ class SnackbarSequencer @Inject constructor(
     private suspend fun start() {
         while (true) {
             val item = snackBarQueue.peek()
-            val context: Activity? = item.snackbarInfo.view.get()?.context as? Activity
+            val context: Activity? = item.info.view.get()?.context as? Activity
             if (context != null && isContextAlive(context)) {
                 withContext(mainDispatcher) {
                     prepareSnackBar(context, item)?.show()
                 }
                 AppLog.d(T.UTILS, "SnackbarSequencer > before delay")
-                delay(getSnackbarDurationMs(item) + DURATION_EXTRA_MARGIN)
+                delay(getSnackbarDurationMs(item))
                 AppLog.d(T.UTILS, "SnackbarSequencer > after delay")
             } else {
                 AppLog.d(T.UTILS,
@@ -87,20 +85,20 @@ class SnackbarSequencer @Inject constructor(
         return !activity.isFinishing
     }
 
-    private fun prepareSnackBar(context: Context, item: SnackbarSequencerInfo): WPSnackbar? {
-        return item.snackbarInfo.view.get()?.let { view ->
-            val message = uiHelper.getTextOfUiString(context, item.snackbarInfo.textRes)
+    private fun prepareSnackBar(context: Context, item: SnackbarItem): WPSnackbar? {
+        return item.info.view.get()?.let { view ->
+            val message = uiHelper.getTextOfUiString(context, item.info.textRes)
 
-            val snackbar = wpSnackbarWrapper.make(view, message, item.snackbarInfo.duration)
+            val snackbar = wpSnackbarWrapper.make(view, message, item.info.duration)
 
-            item.snackbarActionInfo?.let { actionInfo ->
+            item.action?.let { actionInfo ->
                 snackbar.setAction(
                         uiHelper.getTextOfUiString(context, actionInfo.textRes),
                         actionInfo.clickListener.get()
                 )
             }
 
-            item.snackbarCallbackInfo?.let { callbackinfo ->
+            item.callback?.let { callbackinfo ->
                 snackbar.addCallback(callbackinfo.snackbarCallback.get())
             }
 

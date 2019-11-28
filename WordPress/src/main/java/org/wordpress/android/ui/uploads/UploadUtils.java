@@ -37,10 +37,10 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SnackbarActionInfo;
-import org.wordpress.android.util.SnackbarInfo;
+import org.wordpress.android.util.SnackbarItem.Action;
+import org.wordpress.android.util.SnackbarItem.Info;
 import org.wordpress.android.util.SnackbarSequencer;
-import org.wordpress.android.util.SnackbarSequencerInfo;
+import org.wordpress.android.util.SnackbarItem;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.WPMediaUtils;
@@ -254,13 +254,13 @@ public class UploadUtils {
     private static void showSnackbarError(View view, String message, int buttonTitleRes,
                                           OnClickListener onClickListener, SnackbarSequencer sequencer) {
         sequencer.enqueue(
-                new SnackbarSequencerInfo(
-                        new SnackbarInfo(
+                new SnackbarItem(
+                        new Info(
                              view,
                              new UiStringText(message),
                              K_SNACKBAR_WAIT_TIME_MS
                         ),
-                        new SnackbarActionInfo(
+                        new Action(
                              new UiStringRes(buttonTitleRes),
                              onClickListener
                         ),
@@ -271,8 +271,8 @@ public class UploadUtils {
 
     public static void showSnackbarError(View view, String message, SnackbarSequencer sequencer) {
         sequencer.enqueue(
-                new SnackbarSequencerInfo(
-                        new SnackbarInfo(
+                new SnackbarItem(
+                        new Info(
                                 view,
                                 new UiStringText(message),
                                 K_SNACKBAR_WAIT_TIME_MS
@@ -286,13 +286,13 @@ public class UploadUtils {
     private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
                                      OnClickListener onClickListener, SnackbarSequencer sequencer) {
         sequencer.enqueue(
-                new SnackbarSequencerInfo(
-                        new SnackbarInfo(
+                new SnackbarItem(
+                        new Info(
                                 view,
                                 new UiStringRes(messageRes),
                                 K_SNACKBAR_WAIT_TIME_MS
                         ),
-                        new SnackbarActionInfo(
+                        new Action(
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
@@ -304,13 +304,13 @@ public class UploadUtils {
     public static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
                                                  OnClickListener onClickListener, SnackbarSequencer sequencer) {
         sequencer.enqueue(
-                new SnackbarSequencerInfo(
-                        new SnackbarInfo(
+                new SnackbarItem(
+                        new Info(
                                 view,
                                 new UiStringRes(messageRes),
                                 K_SNACKBAR_WAIT_TIME_MS
                         ),
-                        new SnackbarActionInfo(
+                        new Action(
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
@@ -322,13 +322,13 @@ public class UploadUtils {
     private static void showSnackbarSuccessAction(View view, String message, int buttonTitleRes,
                                                   OnClickListener onClickListener, SnackbarSequencer sequencer) {
         sequencer.enqueue(
-                new SnackbarSequencerInfo(
-                        new SnackbarInfo(
+                new SnackbarItem(
+                        new Info(
                                 view,
                                 new UiStringText(message),
                                 K_SNACKBAR_WAIT_TIME_MS
                         ),
-                        new SnackbarActionInfo(
+                        new Action(
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
@@ -340,21 +340,21 @@ public class UploadUtils {
     public static void showSnackbarSuccessActionOrange(View view, int messageRes, int buttonTitleRes,
                                                        View.OnClickListener onClickListener,
                                                        SnackbarSequencer snackbarSequencer) {
-        snackbarSequencer.enqueue(new SnackbarSequencerInfo(
-                new SnackbarInfo(
+        snackbarSequencer.enqueue(new SnackbarItem(
+                new Info(
                         view,
                         new UiStringRes(messageRes),
                         Snackbar.LENGTH_LONG
                 ),
-                new SnackbarActionInfo(new UiStringRes(buttonTitleRes), onClickListener),
+                new Action(new UiStringRes(buttonTitleRes), onClickListener),
                 null
         ));
     }
 
     public static void showSnackbar(View view, int messageRes, SnackbarSequencer sequencer) {
         sequencer.enqueue(
-                new SnackbarSequencerInfo(
-                        new SnackbarInfo(
+                new SnackbarItem(
+                        new Info(
                                 view,
                                 new UiStringRes(messageRes),
                                 Snackbar.LENGTH_LONG

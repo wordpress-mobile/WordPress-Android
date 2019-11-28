@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.Callback
 import com.google.android.material.tabs.TabLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -46,11 +47,8 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.SnackbarActionInfo
-import org.wordpress.android.util.SnackbarCallbackInfo
-import org.wordpress.android.util.SnackbarInfo
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.SnackbarSequencerInfo
+import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import javax.inject.Inject
 
@@ -280,25 +278,28 @@ class PostsListActivity : AppCompatActivity(),
     private fun showSnackBar(holder: SnackbarMessageHolder) {
         findViewById<View>(R.id.coordinator)?.let { parent ->
             snackbarSequencer.enqueue(
-                    SnackbarSequencerInfo(
-                            SnackbarInfo(
+                    SnackbarItem(
+                            SnackbarItem.Info(
                                 view = parent,
                                 textRes = UiStringRes(holder.messageRes),
                                 duration = Snackbar.LENGTH_LONG
                             ),
                             holder.buttonTitleRes?.let {
-                                SnackbarActionInfo(
+                                SnackbarItem.Action(
                                     textRes = UiStringRes(holder.buttonTitleRes),
                                     clickListener = OnClickListener { holder.buttonAction() }
                                 )
                             },
-                            SnackbarCallbackInfo(
-                                snackbarCallback = object : Snackbar.Callback() {
-                                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            SnackbarItem.Callback(
+                                    snackbarCallback = object : Callback() {
+                                        override fun onDismissed(
+                                            transientBottomBar: Snackbar?,
+                                            event: Int
+                                        ) {
                                             holder.onDismissAction()
                                             super.onDismissed(transientBottomBar, event)
                                         }
-                                }
+                                    }
                             )
                     )
             )
