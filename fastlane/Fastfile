@@ -173,13 +173,9 @@ ENV["HAS_ALPHA_VERSION"]="true"
     android_update_metadata(options) unless hotfix
 
     # Run release checks
-    project_folder = Dir.pwd + "/.."
-    android_check_new_languages_glotpress(verbose: false,
-        glotpress_status_url: "http://translate.wordpress.org/projects/apps/android/dev",
-        language_file: project_folder + "/tools/exported-language-codes.csv") unless hotfix
-    android_check_en_strings(verbose: false,
-        res_dir: project_folder + "/WordPress/src/main/res/",
-        project_dir: project_folder) unless hotfix
+    android_check_new_languages_glotpress(glotpress_status_url: "http://translate.wordpress.org/projects/apps/android/dev",
+        language_file: "tools/exported-language-codes.csv") unless hotfix
+    android_check_en_strings(ensure_git_status_clean: false, res_dir: "WordPress/src/main/res/") unless hotfix
     UI.message("alpha_version: #{android_get_alpha_version()}") unless hotfix
     version = android_get_release_version() unless hotfix
     UI.message("release_version: #{version}") unless hotfix
