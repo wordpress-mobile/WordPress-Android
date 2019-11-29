@@ -20,4 +20,3 @@ class SiteCreationDomainSanitizer
                     .replace("https://", "")
                     .replace("[^a-zA-Z0-9]".toRegex(), "")
 }
-
