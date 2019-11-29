@@ -192,7 +192,8 @@ class SiteCreationDomainsViewModelTest {
             }
 
     /**
-     * Verifies the UI state for after the user enters a non-empty query which results in multiple domain suggestions.
+     * Verifies the UI state for after the user enters a query that is unavailable which results in the domain
+     * unavailability list item being shown in the domain suggestions.
      */
     @Test
     fun verifyDomainUnavailableUiStateAfterResponseWithMultipleResults() =
