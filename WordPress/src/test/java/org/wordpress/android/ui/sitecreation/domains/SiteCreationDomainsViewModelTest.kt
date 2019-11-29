@@ -27,14 +27,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionRespo
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainValidator.ValidationResult
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelUnavailabilityUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModelTest.ValidationResultType.INVALID
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModelTest.ValidationResultType.VALID_AVAILABLE
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModelTest.ValidationResultType.VALID_UNAVAILABLE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -63,7 +60,7 @@ class SiteCreationDomainsViewModelTest {
     @Mock private lateinit var clearBtnObserver: Observer<Unit>
     @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
-    @Mock private lateinit var siteCreationDomainValidator: SiteCreationDomainValidator
+    @Mock private lateinit var mSiteCreationDomainSanitizer: SiteCreationDomainSanitizer
 
     private lateinit var viewModel: SiteCreationDomainsViewModel
 
@@ -71,7 +68,7 @@ class SiteCreationDomainsViewModelTest {
     fun setUp() {
         viewModel = SiteCreationDomainsViewModel(
                 networkUtils = networkUtils,
-                domainValidator = siteCreationDomainValidator,
+                domainSanitizer = mSiteCreationDomainSanitizer,
                 dispatcher = dispatcher,
                 fetchDomainsUseCase = fetchDomainsUseCase,
                 tracker = tracker,
@@ -87,12 +84,12 @@ class SiteCreationDomainsViewModelTest {
 
     private fun <T> testWithSuccessResponse(
         queryResultSizePair: Pair<String, Int> = MULTI_RESULT_DOMAIN_FETCH_QUERY,
-        domainValidResultType: ValidationResultType = VALID_AVAILABLE,
+        isDomainAvailableInSuggestions: Boolean = true,
         block: suspend CoroutineScope.() -> T
     ) {
         test {
-            whenever(siteCreationDomainValidator.validateDomain(any())).thenReturn(
-                    createDomainValidationResult(domainValidResultType)
+            whenever(mSiteCreationDomainSanitizer.sanitizeDomainQuery(any())).thenReturn(
+                    createSanitizedDomainResult(isDomainAvailableInSuggestions)
             )
             whenever(fetchDomainsUseCase.fetchDomains(queryResultSizePair.first, SEGMENT_ID))
                     .thenReturn(createSuccessfulOnSuggestedDomains(queryResultSizePair))
@@ -199,14 +196,13 @@ class SiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyDomainUnavailableUiStateAfterResponseWithMultipleResults() =
-            testWithSuccessResponse(domainValidResultType = VALID_UNAVAILABLE) {
+            testWithSuccessResponse(isDomainAvailableInSuggestions = false) {
                 viewModel.start(null, SEGMENT_ID)
                 viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
                 verify(uiStateObserver, times(3)).onChanged(captor.capture())
-                verifyVisibleItemsContentUiAndDomainValidityState(
-                        captor.thirdValue,
-                        showClearButton = true
+                verifyContentAndDomainValidityUiStatesAreVisible(
+                        captor.thirdValue
                 )
             }
 
@@ -321,17 +317,11 @@ class SiteCreationDomainsViewModelTest {
     }
 
     /**
-     * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.VisibleItems] content state & [DomainsModelUnavailabilityUiState] Ui State.
+     * Helper function to verify a [DomainsModelUnavailabilityUiState] Ui State.
      */
-    private fun verifyVisibleItemsContentUiAndDomainValidityState(
-        uiState: DomainsUiState,
-        showClearButton: Boolean = false,
-        numberOfItems: Int = MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
+    private fun verifyContentAndDomainValidityUiStatesAreVisible(
+        uiState: DomainsUiState
     ) {
-        assertThat(uiState.searchInputUiState.showProgress, Is(false))
-        assertThat(uiState.searchInputUiState.showClearButton, Is(showClearButton))
-        assertThat(uiState.contentState, instanceOf(DomainsUiContentState.VisibleItems::class.java))
-        assertThat(uiState.contentState.items.size, Is(numberOfItems.inc()))
         assertThat(
                 uiState.contentState.items.first(),
                 instanceOf(DomainsModelUnavailabilityUiState::class.java)
@@ -373,38 +363,15 @@ class SiteCreationDomainsViewModelTest {
     }
 
     /**
-     * Helper function and associated enum to create the different validation states for the current domain query.
-     *
-     * The [VALID_AVAILABLE] state is the default that will allow the
-     * list to stay in it's default state since the domain is said to be included in the list.
-     *
-     * The [VALID_UNAVAILABLE] state means the domain is valid but it isn't available for selection.
-     *
-     * The [INVALID] state means the domain is invalid and not available.
+     * Helper function that creates the current sanitized query being used to generate the domain suggestions.
+     * It returns a test domain that's based on the test suggestions being used so that the app can behave in it's
+     * normal [DomainsModelAvailableUiState] state. It also returns an unavailable domain query so that the
+     *  [DomainsModelUnavailabilityUiState] state is activated.
      */
-    enum class ValidationResultType {
-        VALID_AVAILABLE,
-        VALID_UNAVAILABLE,
-        INVALID
-    }
-
-    private fun createDomainValidationResult(resultType: ValidationResultType): ValidationResult {
-        return when (resultType) {
-            VALID_AVAILABLE -> ValidationResult(
-                    true,
-                    "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-1.wordpress.com"
-            )
-
-            VALID_UNAVAILABLE -> ValidationResult(
-                    true,
-                    "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-" +
-                            "${MULTI_RESULT_DOMAIN_FETCH_QUERY.second.inc()}.wordpress.com"
-            )
-
-            INVALID -> ValidationResult(
-                    false,
-                    "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-&&.wordpress.com"
-            )
-        }
-    }
+    private fun createSanitizedDomainResult(isDomainAvailableInSuggestions: Boolean) =
+            if (isDomainAvailableInSuggestions) {
+                "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-1"
+            } else {
+                "invaliddomain"
+            }
 }

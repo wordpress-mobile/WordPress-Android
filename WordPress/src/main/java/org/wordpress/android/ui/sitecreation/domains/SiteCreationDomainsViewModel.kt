@@ -49,7 +49,7 @@ private const val ERROR_CONTEXT = "domains"
 class SiteCreationDomainsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
-    private val domainValidator: SiteCreationDomainValidator,
+    private val domainSanitizer: SiteCreationDomainSanitizer,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -227,7 +227,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
         val items = createSuggestionsUiStates(
                 onRetry = { updateQueryInternal(query) },
-                query = query,
+                query = query?.value,
                 data = state.data,
                 errorFetchingSuggestions = isError,
                 errorResId = if (isError) (state as Error).errorMessageResId else null
@@ -243,7 +243,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     private fun createSuggestionsUiStates(
         onRetry: () -> Unit,
-        query: DomainSuggestionsQuery?,
+        query: String?,
         data: List<String>,
         errorFetchingSuggestions: Boolean,
         @StringRes errorResId: Int?
@@ -259,11 +259,9 @@ class SiteCreationDomainsViewModel @Inject constructor(
             items.add(errorUiState)
         } else {
             if (data.isNotEmpty())
-                query?.value?.let {
-                    val itemUiState = getDomainUnavailableUiState(it, data)
-
-                    itemUiState?.let {
-                        items.add(itemUiState)
+                query?.let { value ->
+                    getDomainUnavailableUiState(value, data)?.let {
+                        items.add(it)
                     }
                 }
 
@@ -283,26 +281,19 @@ class SiteCreationDomainsViewModel @Inject constructor(
         query: String,
         domains: List<String>
     ): DomainsModelUiState? {
-        val domainValidationResult = domainValidator.validateDomain(query)
+        val resolvedQuery = domainSanitizer.sanitizeDomainQuery(query)
 
-        if (domainValidationResult.isDomainValid) {
-            val isDomainUnavailable = (domains.find { domain ->
-                domain == domainValidationResult.domain
-            }).isNullOrEmpty()
+        val isDomainUnavailable = (domains.find { domain ->
+            domain.startsWith("${resolvedQuery}.", true)
+        }).isNullOrEmpty()
 
-            return if (isDomainUnavailable) {
-                DomainsModelUnavailabilityUiState(
-                        domainValidationResult.domain,
-                        UiStringRes(R.string.new_site_creation_unavailable_domain)
-                )
-            } else {
-                null
-            }
-        } else {
-            return DomainsModelUnavailabilityUiState(
-                    domainValidationResult.domain,
-                    UiStringRes(R.string.new_site_creation_invalid_domain)
+        return if (isDomainUnavailable) {
+            DomainsModelUnavailabilityUiState(
+                    "${resolvedQuery}.wordpress.com",
+                    UiStringRes(R.string.new_site_creation_unavailable_domain)
             )
+        } else {
+            null
         }
     }
 
