@@ -511,7 +511,7 @@ public class ReaderPostListFragment extends Fragment
             ReaderTag readerTag = AppPrefs.getReaderTag();
 
             if (discoverTag != null && discoverTag.equals(readerTag)) {
-                setCurrentTag(readerTag, true);
+                setCurrentTag(readerTag, BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE);
                 updateCurrentTag();
             } else if (discoverTag == null) {
                 AppLog.w(T.READER, "Discover tag not found; ReaderTagTable returned null");
@@ -855,7 +855,7 @@ public class ReaderPostListFragment extends Fragment
         // add a menu to the filtered recycler's toolbar
         if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED
                                                || getPostListType() == ReaderPostListType.SEARCH_RESULTS
-                                               || mIsTopLevel)) {
+                                               || (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel))) {
             setupRecyclerToolbar();
         }
 
@@ -1897,7 +1897,7 @@ public class ReaderPostListFragment extends Fragment
 
         mCurrentTag = tag;
 
-        if (manageSubfilter) {
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && manageSubfilter) {
             if (mCurrentTag.isFollowedSites()) {
                 mViewModel.applySubfilter(mViewModel.getCurrentSubfilterValue(), false);
             } else {
