@@ -95,6 +95,7 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -176,6 +177,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
+    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -774,9 +776,8 @@ public class WPMainActivity extends AppCompatActivity implements
                 }
 
                 if (site != null && post != null) {
-                    UploadUtils.handleEditPostResultSnackbars(
+                    mUploadUtilsWrapper.handleEditPostResultSnackbars(
                             this,
-                            mDispatcher,
                             findViewById(R.id.coordinator),
                             data,
                             post,
@@ -1142,14 +1143,13 @@ public class WPMainActivity extends AppCompatActivity implements
         if (getLifecycle().getCurrentState().isAtLeast(STARTED)) {
             SiteModel site = getSelectedSite();
             if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
-                UploadUtils.onPostUploadedSnackbarHandler(
+                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         this,
                         findViewById(R.id.coordinator),
                         event.isError(),
                         event.post,
                         null,
-                        site,
-                        mDispatcher);
+                        site);
             }
         }
     }
