@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -421,18 +423,21 @@ public class ReaderPostListFragment extends Fragment
                 }
             });
 
-            mViewModel.isBottomSheetShowing().observe(getActivity(), isShowing -> {
-                FragmentManager fm = getFragmentManager();
-                if (fm != null) {
-                    SubfilterBottomSheetFragment bottomSheet =
-                            (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
-                    if (isShowing && bottomSheet == null) {
-                        bottomSheet = new SubfilterBottomSheetFragment();
-                        bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
-                    } else if (!isShowing && bottomSheet != null) {
-                        bottomSheet.dismiss();
+            mViewModel.isBottomSheetShowing().observe(getActivity(), event -> {
+                event.applyIfNotHandled(isShowing -> {
+                    FragmentManager fm = getFragmentManager();
+                    if (fm != null) {
+                        SubfilterBottomSheetFragment bottomSheet =
+                                (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
+                        if (isShowing && bottomSheet == null) {
+                            bottomSheet = new SubfilterBottomSheetFragment();
+                            bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
+                        } else if (!isShowing && bottomSheet != null) {
+                            bottomSheet.dismiss();
+                        }
                     }
-                }
+                    return null;
+                });
             });
         }
 

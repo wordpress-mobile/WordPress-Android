@@ -9,6 +9,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
@@ -24,8 +25,8 @@ class WPMainActivityViewModel @Inject constructor() : ViewModel() {
     private val _createAction = SingleLiveEvent<ActionType>()
     val createAction: LiveData<ActionType> = _createAction
 
-    private val _isBottomSheetShowing = MutableLiveData<Boolean>()
-    val isBottomSheetShowing: LiveData<Boolean> = _isBottomSheetShowing
+    private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
+    val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
     fun start(isFabVisible: Boolean) {
         if (isStarted) return
@@ -55,12 +56,12 @@ class WPMainActivityViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun onCreateActionClicked(actionType: ActionType) {
-        _isBottomSheetShowing.postValue(false)
+        _isBottomSheetShowing.postValue(Event(false))
         _createAction.postValue(actionType)
     }
 
     fun setIsBottomSheetShowing(showing: Boolean) {
-        _isBottomSheetShowing.value = showing
+        _isBottomSheetShowing.value = Event(showing)
     }
 
     fun onPageChanged(showFab: Boolean) {

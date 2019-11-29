@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -54,8 +55,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val _readerModeInfo = SingleLiveEvent<ReaderModeInfo>()
     val readerModeInfo: LiveData<ReaderModeInfo> = _readerModeInfo
 
-    private val _isBottomSheetShowing = MutableLiveData<Boolean>()
-    val isBottomSheetShowing: LiveData<Boolean> = _isBottomSheetShowing
+    private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
+    val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
     /**
      * First tag for which the card was shown.
@@ -171,7 +172,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onSubfilterClicked(filter: SubfilterListItem) {
-        _isBottomSheetShowing.postValue(false)
+        _isBottomSheetShowing.postValue(Event(false))
 
         _subFilters.postValue(_subFilters.value?.map {
             it.isSelected = it.isSameItem(filter)
@@ -210,7 +211,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun setIsBottomSheetShowing(showing: Boolean) {
-        _isBottomSheetShowing.value = showing
+        _isBottomSheetShowing.value = Event(showing)
     }
 
     fun applySubfilter(

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -60,6 +61,11 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    override fun onCancel(dialog: DialogInterface?) {
+        super.onCancel(dialog)
+        viewModel.setIsBottomSheetShowing(false)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -412,18 +412,21 @@ public class WPMainActivity extends AppCompatActivity implements
                 mViewModel.setIsBottomSheetShowing(true);
             });
 
-            mViewModel.isBottomSheetShowing().observe(this, isShowing -> {
-                FragmentManager fm = getSupportFragmentManager();
-                if (fm != null) {
-                    MainBottomSheetFragment bottomSheet =
-                            (MainBottomSheetFragment) fm.findFragmentByTag(MAIN_BOTTOM_SHEET_TAG);
-                    if (isShowing && bottomSheet == null) {
-                        bottomSheet = new MainBottomSheetFragment();
-                        bottomSheet.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
-                    } else if (!isShowing && bottomSheet != null) {
-                        bottomSheet.dismiss();
+            mViewModel.isBottomSheetShowing().observe(this, event -> {
+                event.applyIfNotHandled(isShowing -> {
+                    FragmentManager fm = getSupportFragmentManager();
+                    if (fm != null) {
+                        MainBottomSheetFragment bottomSheet =
+                                (MainBottomSheetFragment) fm.findFragmentByTag(MAIN_BOTTOM_SHEET_TAG);
+                        if (isShowing && bottomSheet == null) {
+                            bottomSheet = new MainBottomSheetFragment();
+                            bottomSheet.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
+                        } else if (!isShowing && bottomSheet != null) {
+                            bottomSheet.dismiss();
+                        }
                     }
-                }
+                    return null;
+                });
             });
         }
 
