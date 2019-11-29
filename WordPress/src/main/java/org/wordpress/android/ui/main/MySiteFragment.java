@@ -77,7 +77,7 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
-import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -180,6 +180,7 @@ public class MySiteFragment extends Fragment implements
     @Inject MediaStore mMediaStore;
     @Inject QuickStartStore mQuickStartStore;
     @Inject ImageManager mImageManager;
+    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -1153,12 +1154,12 @@ public class MySiteFragment extends Fragment implements
         SiteModel site = getSelectedSite();
         if (site != null && event.post != null) {
             if (event.post.getLocalSiteId() == site.getId()) {
-                UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(getActivity(),
                         requireActivity().findViewById(R.id.coordinator), true,
-                        event.post, event.errorMessage, site, mDispatcher);
+                        event.post, event.errorMessage, site);
             }
         } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(getActivity(),
                     requireActivity().findViewById(R.id.coordinator), true,
                     event.mediaModelList, site, event.errorMessage);
         }
@@ -1184,7 +1185,7 @@ public class MySiteFragment extends Fragment implements
                 showSiteIconProgressBar(false);
             } else {
                 if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-                    UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(getActivity(),
                             requireActivity().findViewById(R.id.coordinator), false,
                             event.mediaModelList, site, event.successMessage);
                 }
