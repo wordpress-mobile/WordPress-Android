@@ -99,6 +99,7 @@ import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -187,6 +188,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
 import kotlin.Unit;
@@ -222,6 +224,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_RESTART_EDITOR = "isSwitchingEditors";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
+    public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -1561,6 +1564,7 @@ public class EditPostActivity extends AppCompatActivity implements
         Map<String, Object> properties = new HashMap<>();
         // Post created from the post list (new post button).
         String normalizedSourceName = "post-list";
+
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             // Post created with share with WordPress
             normalizedSourceName = "shared-from-external-app";
@@ -1576,6 +1580,23 @@ public class EditPostActivity extends AppCompatActivity implements
         }
         PostUtils.addPostTypeToAnalyticsProperties(mEditPostRepository.getPost(), properties);
         properties.put("created_post_source", normalizedSourceName);
+
+        if (intent != null
+            && intent.hasExtra(EXTRA_CREATION_SOURCE_DETAIL)
+            && normalizedSourceName == "post-list") {
+            PagePostCreationSourcesDetail source =
+                    (PagePostCreationSourcesDetail) intent.getSerializableExtra(EXTRA_CREATION_SOURCE_DETAIL);
+            properties.put(
+                    CREATED_POST_SOURCE_DETAIL_KEY,
+                    source != null ? source.getLabel() : PagePostCreationSourcesDetail.NO_DETAIL.getLabel()
+            );
+        } else {
+            properties.put(
+                    CREATED_POST_SOURCE_DETAIL_KEY,
+                    PagePostCreationSourcesDetail.NO_DETAIL.getLabel()
+            );
+        }
+
         AnalyticsUtils.trackWithSiteDetails(
                 AnalyticsTracker.Stat.EDITOR_CREATED_POST,
                 mSiteStore.getSiteByLocalId(mEditPostRepository.getLocalSiteId()),

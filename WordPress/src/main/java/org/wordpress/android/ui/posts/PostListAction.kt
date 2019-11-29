@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -45,7 +46,7 @@ fun handlePostListAction(
             ActivityLauncher.editPostOrPageForResult(activity, action.site, action.post, action.loadAutoSaveRevision)
         }
         is PostListAction.NewPost -> {
-            ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo)
+            ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo, POST_FROM_POSTS_LIST)
         }
         is PostListAction.PreviewPost -> {
             val helperFunctions = previewStateHelper.getUploadStrategyFunctions(activity, action)
