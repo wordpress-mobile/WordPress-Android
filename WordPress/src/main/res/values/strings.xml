@@ -2549,7 +2549,6 @@
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
-    <string name="new_site_creation_invalid_domain">This domain is invalid</string>
     <string name="new_site_creation_domain_header_title">Choose a domain name for your site</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
     <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
