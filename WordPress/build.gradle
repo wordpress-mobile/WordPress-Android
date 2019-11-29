@@ -207,8 +207,8 @@ dependencies {
         exclude group: 'com.squareup.okhttp3'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    kapt 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    kapt 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
 
     testImplementation 'junit:junit:4.12'
