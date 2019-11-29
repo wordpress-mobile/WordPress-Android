@@ -284,12 +284,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val resolvedQuery = domainSanitizer.sanitizeDomainQuery(query)
 
         val isDomainUnavailable = (domains.find { domain ->
-            domain.startsWith("${resolvedQuery}.", true)
+            domain.startsWith("$resolvedQuery.", true)
         }).isNullOrEmpty()
 
         return if (isDomainUnavailable) {
             DomainsModelUnavailabilityUiState(
-                    "${resolvedQuery}.wordpress.com",
+                    "$resolvedQuery.wordpress.com",
                     UiStringRes(R.string.new_site_creation_unavailable_domain)
             )
         } else {
