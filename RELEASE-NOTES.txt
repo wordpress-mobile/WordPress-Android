@@ -1,6 +1,7 @@
 13.8
 -----
 * Modified Blog Post search to search for posts under all categories.
+* Fixed a crash on Samsung devices running Android 5 (Lollipop)
  
 13.7
 -----
