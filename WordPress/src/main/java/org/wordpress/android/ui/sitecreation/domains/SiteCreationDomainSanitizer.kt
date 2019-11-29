@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.domains
 
+import java.util.Locale
 import javax.inject.Inject
 
 class SiteCreationDomainSanitizer
@@ -19,4 +20,5 @@ class SiteCreationDomainSanitizer
             }.replace("http://", "")
                     .replace("https://", "")
                     .replace("[^a-zA-Z0-9]".toRegex(), "")
+                    .toLowerCase(Locale.getDefault())
 }

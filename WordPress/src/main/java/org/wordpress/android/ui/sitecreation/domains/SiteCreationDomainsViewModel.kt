@@ -284,7 +284,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val resolvedQuery = domainSanitizer.sanitizeDomainQuery(query)
 
         val isDomainUnavailable = (domains.find { domain ->
-            domain.startsWith("$resolvedQuery.", true)
+            domain.startsWith("$resolvedQuery.")
         }).isNullOrEmpty()
 
         return if (isDomainUnavailable) {
