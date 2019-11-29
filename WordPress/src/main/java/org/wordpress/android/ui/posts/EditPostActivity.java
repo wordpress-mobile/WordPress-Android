@@ -73,6 +73,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -963,27 +964,35 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon, boolean allowMultipleSelection) {
         mEditorPhotoPicker.hidePhotoPicker();
-        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
-        switch (icon) {
-            case ANDROID_CAPTURE_PHOTO:
-                launchCamera();
-                break;
-            case ANDROID_CAPTURE_VIDEO:
-                launchVideoCamera();
-                break;
-            case ANDROID_CHOOSE_PHOTO:
-                launchPictureLibrary();
-                break;
-            case ANDROID_CHOOSE_VIDEO:
-                launchVideoLibrary();
-                break;
-            case WP_MEDIA:
-                ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
-                break;
-            case STOCK_MEDIA:
-                ActivityLauncher.showStockMediaPickerForResult(
-                        this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
-                break;
+        if (!icon.requiresUploadPermission() || WPMediaUtils.currentUserCanUploadMedia(mSite)) {
+            mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
+            switch (icon) {
+                case ANDROID_CAPTURE_PHOTO:
+                    launchCamera();
+                    break;
+                case ANDROID_CAPTURE_VIDEO:
+                    launchVideoCamera();
+                    break;
+                case ANDROID_CHOOSE_PHOTO_OR_VIDEO:
+                    WPMediaUtils.launchMediaLibrary(this, allowMultipleSelection);
+                    break;
+                case ANDROID_CHOOSE_PHOTO:
+                    launchPictureLibrary();
+                    break;
+                case ANDROID_CHOOSE_VIDEO:
+                    launchVideoLibrary();
+                    break;
+                case WP_MEDIA:
+                    ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+                    break;
+                case STOCK_MEDIA:
+                    ActivityLauncher.showStockMediaPickerForResult(
+                            this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
+                    break;
+            }
+        } else {
+            WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_error_no_permission_upload,
+                            Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -2755,8 +2764,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
-        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
-        WPMediaUtils.launchMediaLibrary(this, allowMultipleSelection);
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO, allowMultipleSelection);
     }
 
     @Override
@@ -3219,6 +3227,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         } else if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
+            if (!mEditPostRepository.hasPost() || (mEditPostRepository.getId()
+                                                   != ((RemoteAutoSavePost) event.causeOfChange).getLocalPostId())) {
+                AppLog.e(T.POSTS,
+                        "Ignoring REMOTE_AUTO_SAVE_POST in EditPostActivity as mPost is null or id of the opened post"
+                        + " doesn't match the event.");
+                return;
+            }
             if (event.isError()) {
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
