@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
