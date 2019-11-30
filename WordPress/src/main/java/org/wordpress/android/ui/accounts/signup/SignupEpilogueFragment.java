@@ -703,32 +703,44 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected void updateAccountOrContinue() {
         if (changedDisplayName()) {
             startProgress(false);
-            PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
-            payload.params = new HashMap<>();
-            payload.params.put("display_name", mDisplayName);
-
-            if (changedPassword()) {
-                payload.params.put("password", mInputPassword.getEditText().getText().toString());
-            }
-
-            mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+            updateDisplayName();
         } else if (changedPassword()) {
             startProgress(false);
-            PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
-            payload.params = new HashMap<>();
-            payload.params.put("password", mInputPassword.getEditText().getText().toString());
-            mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+            updatePassword();
         } else if (changedUsername()) {
             startProgress(false);
-            PushUsernamePayload payload = new PushUsernamePayload(
-                    mUsername, AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
-            mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
+            updateUsername();
         } else if (mSignupEpilogueListener != null) {
             AnalyticsTracker.track(mIsEmailSignup
                     ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UNCHANGED
                     : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UNCHANGED);
             mSignupEpilogueListener.onContinue();
         }
+    }
+
+    private void updateDisplayName() {
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put("display_name", mDisplayName);
+
+        if (changedPassword()) {
+            payload.params.put("password", mInputPassword.getEditText().getText().toString());
+        }
+
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+    }
+
+    private void updatePassword() {
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put("password", mInputPassword.getEditText().getText().toString());
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+    }
+
+    private void updateUsername() {
+        PushUsernamePayload payload = new PushUsernamePayload(
+                mUsername, AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
+        mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
     }
 
     private class DownloadAvatarAndUploadGravatarThread extends Thread {
