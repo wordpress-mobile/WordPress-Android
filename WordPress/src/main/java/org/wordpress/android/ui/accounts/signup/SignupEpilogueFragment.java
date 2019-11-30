@@ -103,6 +103,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected boolean mIsAvatarAdded;
     protected boolean mIsEmailSignup;
 
+    private boolean mIsUpdatingDisplayName = false;
+    private boolean mIsUpdatingPassword = false;
+    private boolean mHasUpdatedDisplayName = false;
+    private boolean mHasUpdatedUsername = false;
+    private boolean mHasUpdatedPassword = false;
+
     private static final String ARG_DISPLAY_NAME = "ARG_DISPLAY_NAME";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_IS_EMAIL_SIGNUP = "ARG_IS_EMAIL_SIGNUP";
@@ -275,7 +281,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 // Start progress and wait for account to be fetched before populating views when
                 // email does not exist in account store.
                 if (TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
-                    startProgress(false);
+                    if (!isInProgress()) {
+                        startProgress(false);
+                    }
                 } else {
                     // Skip progress and populate views when email does exist in account store.
                     populateViews();
@@ -433,9 +441,15 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         if (event.isError()) {
-            AnalyticsTracker.track(mIsEmailSignup
-                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED
-                    : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED);
+            if (mIsUpdatingDisplayName) {
+                mIsUpdatingDisplayName = false;
+                AnalyticsTracker.track(mIsEmailSignup
+                        ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED
+                        : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED);
+            } else if (mIsUpdatingPassword) {
+                mIsUpdatingPassword = false;
+            }
+
             AppLog.e(T.API, "SignupEpilogueFragment.onAccountChanged: "
                             + event.error.type + " - " + event.error.message);
             endProgress();
@@ -445,22 +459,26 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             } else {
                 showErrorDialog(getString(R.string.signup_epilogue_error_generic));
             }
+
         // Wait to populate epilogue for email interface until account is fetched and email address
         // is available since flow is coming from magic link with no instance argument values.
         } else if (mIsEmailSignup && event.causeOfChange == AccountAction.FETCH_ACCOUNT
                    && !TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
             endProgress();
             populateViews();
-        } else if (changedUsername()) {
-            startProgress(false);
-            PushUsernamePayload payload = new PushUsernamePayload(
-                    mUsername, AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
-            mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
         } else if (event.causeOfChange == AccountAction.PUSH_SETTINGS && mSignupEpilogueListener != null) {
-            AnalyticsTracker.track(mIsEmailSignup
-                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED
-                    : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED);
-            mSignupEpilogueListener.onContinue();
+            if (mIsUpdatingDisplayName) {
+                mIsUpdatingDisplayName = false;
+                mHasUpdatedDisplayName = true;
+                AnalyticsTracker.track(mIsEmailSignup
+                        ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED
+                        : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED);
+            } else if (mIsUpdatingPassword) {
+                mIsUpdatingPassword = false;
+                mHasUpdatedPassword = true;
+            }
+
+            updateAccountOrContinue();
         }
     }
 
@@ -476,10 +494,11 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             endProgress();
             showErrorDialog(getString(R.string.signup_epilogue_error_generic));
         } else if (mSignupEpilogueListener != null) {
+            mHasUpdatedUsername = true;
             AnalyticsTracker.track(mIsEmailSignup
                     ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED
                     : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED);
-            mSignupEpilogueListener.onContinue();
+            updateAccountOrContinue();
         }
     }
 
@@ -701,20 +720,31 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected void updateAccountOrContinue() {
-        if (changedDisplayName()) {
-            startProgress(false);
-            updateDisplayName();
-        } else if (changedPassword()) {
-            startProgress(false);
-            updatePassword();
-        } else if (changedUsername()) {
-            startProgress(false);
-            updateUsername();
-        } else if (mSignupEpilogueListener != null) {
+        final boolean hasChangedDisplayName = changedDisplayName();
+        final boolean hasChangedPassword = changedPassword();
+        final boolean hasChangedUsername = changedUsername();
+
+        if (!hasChangedDisplayName && !hasChangedPassword && !hasChangedUsername && mSignupEpilogueListener != null) {
             AnalyticsTracker.track(mIsEmailSignup
                     ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UNCHANGED
                     : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UNCHANGED);
             mSignupEpilogueListener.onContinue();
+        } else {
+            if (!isInProgress()) {
+                startProgress(false);
+            }
+            if (hasChangedUsername && !mHasUpdatedUsername) {
+                updateUsername();
+            } else if (hasChangedDisplayName && !mHasUpdatedDisplayName) {
+                mIsUpdatingDisplayName = true;
+                updateDisplayName();
+            } else if (hasChangedPassword && !mHasUpdatedPassword) {
+                mIsUpdatingPassword = true;
+                updatePassword();
+            } else if (mSignupEpilogueListener != null) {
+                endProgress();
+                mSignupEpilogueListener.onContinue();
+            }
         }
     }
 
@@ -722,11 +752,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put("display_name", mDisplayName);
-
-        if (changedPassword()) {
-            payload.params.put("password", mInputPassword.getEditText().getText().toString());
-        }
-
         mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
     }
 
