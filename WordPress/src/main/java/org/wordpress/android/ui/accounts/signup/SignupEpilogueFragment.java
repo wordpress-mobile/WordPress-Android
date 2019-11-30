@@ -119,6 +119,11 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     private static final String KEY_IS_AVATAR_ADDED = "KEY_IS_AVATAR_ADDED";
     private static final String KEY_PHOTO_URL = "KEY_PHOTO_URL";
     private static final String KEY_USERNAME = "KEY_USERNAME";
+    private static final String KEY_IS_UPDATING_DISPLAY_NAME = "KEY_IS_UPDATING_DISPLAY_NAME";
+    private static final String KEY_IS_UPDATING_PASSWORD = "KEY_IS_UPDATING_PASSWORD";
+    private static final String KEY_HAS_UPDATED_DISPLAY_NAME = "KEY_HAS_UPDATED_DISPLAY_NAME";
+    private static final String KEY_HAS_UPDATED_USERNAME = "KEY_HAS_UPDATED_USERNAME";
+    private static final String KEY_HAS_UPDATED_PASSWORD = "KEY_HAS_UPDATED_PASSWORD";
 
     public static final String TAG = "signup_epilogue_fragment_tag";
 
@@ -312,6 +317,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 mHeaderAvatarAdd.setVisibility(mIsAvatarAdded ? View.GONE : View.VISIBLE);
             }
             mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR_WITHOUT_BACKGROUND, mPhotoUrl);
+
+            mIsUpdatingDisplayName = savedInstanceState.getBoolean(KEY_IS_UPDATING_DISPLAY_NAME);
+            mIsUpdatingPassword = savedInstanceState.getBoolean(KEY_IS_UPDATING_PASSWORD);
+            mHasUpdatedDisplayName = savedInstanceState.getBoolean(KEY_HAS_UPDATED_DISPLAY_NAME);
+            mHasUpdatedUsername = savedInstanceState.getBoolean(KEY_HAS_UPDATED_USERNAME);
+            mHasUpdatedPassword = savedInstanceState.getBoolean(KEY_HAS_UPDATED_PASSWORD);
         }
     }
 
@@ -414,6 +425,11 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         outState.putString(KEY_EMAIL_ADDRESS, mEmailAddress);
         outState.putString(KEY_USERNAME, mUsername);
         outState.putBoolean(KEY_IS_AVATAR_ADDED, mIsAvatarAdded);
+        outState.putBoolean(KEY_IS_UPDATING_DISPLAY_NAME, mIsUpdatingDisplayName);
+        outState.putBoolean(KEY_IS_UPDATING_PASSWORD, mIsUpdatingPassword);
+        outState.putBoolean(KEY_HAS_UPDATED_DISPLAY_NAME, mHasUpdatedDisplayName);
+        outState.putBoolean(KEY_HAS_UPDATED_USERNAME, mHasUpdatedUsername);
+        outState.putBoolean(KEY_HAS_UPDATED_PASSWORD, mHasUpdatedPassword);
     }
 
     @Override
