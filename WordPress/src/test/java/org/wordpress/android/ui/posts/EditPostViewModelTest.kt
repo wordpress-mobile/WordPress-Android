@@ -77,7 +77,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         }
         assertThat(event).isNull()
 
-        viewModel.savePost()
+        viewModel.savePostWithDelay()
 
         assertThat(event).isNotNull()
     }

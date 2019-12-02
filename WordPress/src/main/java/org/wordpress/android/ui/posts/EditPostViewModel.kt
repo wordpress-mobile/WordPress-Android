@@ -10,13 +10,21 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.generated.UploadActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Success
+import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -34,6 +42,7 @@ class EditPostViewModel
     private val dispatcher: Dispatcher,
     private val aztecEditorWrapper: AztecEditorWrapper,
     private val localeManagerWrapper: LocaleManagerWrapper,
+    private val siteStore: SiteStore,
     private val dateTimeUtils: DateTimeUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var debounceCounter = 0
@@ -42,6 +51,147 @@ class EditPostViewModel
     var mediaMarkedUploadingOnStartIds: List<String> = listOf()
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
     val onSavePostTriggered: LiveData<Event<Unit>> = _onSavePostTriggered
+
+    fun savePostOnline(
+        isFirstTimePublish: Boolean,
+        context: Context,
+        editPostRepository: EditPostRepository,
+        showAztecEditor: Boolean,
+        site: SiteModel,
+        onPostSaved: (() -> Unit)? = null
+    ) {
+        launch(bgDispatcher) {
+            // mark as pending if the user doesn't have publishing rights
+            if (!UploadUtils.userCanPublish(site)) {
+                when (editPostRepository.status) {
+                    PostStatus.UNKNOWN,
+                    PostStatus.PUBLISHED,
+                    PostStatus.SCHEDULED,
+                    PostStatus.PRIVATE ->
+                        editPostRepository.updateStatus(PostStatus.PENDING)
+                    PostStatus.DRAFT,
+                    PostStatus.PENDING,
+                    PostStatus.TRASHED -> {
+                    }
+                }
+            }
+
+            savePostToDb(context, editPostRepository, showAztecEditor);
+            PostUtils.trackSavePostAnalytics(
+                    editPostRepository.getPost(),
+                    siteStore.getSiteByLocalId(editPostRepository.localSiteId)
+            )
+
+            UploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish);
+
+            PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(
+                    context,
+                    editPostRepository.id
+            )
+
+            onPostSaved?.let { action ->
+                withContext(mainDispatcher) {
+                    action()
+                }
+            }
+        }
+    }
+
+    fun savePostLocally(
+        context: Context,
+        editPostRepository: EditPostRepository,
+        showAztecEditor: Boolean,
+        onPostSaved: (() -> Unit)? = null
+    ) {
+        launch(bgDispatcher) {
+            if (editPostRepository.postHasEdits()) {
+                editPostRepository.updateInTransaction { postModel ->
+                    // Changes have been made - save the post and ask for the post list to refresh
+                    // We consider this being "manual save", it will replace some Android "spans" by an html
+                    // or a shortcode replacement (for instance for images and galleries)
+
+                    // Update the post object directly, without re-fetching the fields from the EditorFragment
+                    updatePostLocallyChangedOnStatusOrMediaChange(
+                            context,
+                            postModel,
+                            showAztecEditor,
+                            editPostRepository
+                    )
+                    true
+                }
+                savePostToDb(context, editPostRepository, showAztecEditor);
+
+                // For self-hosted sites, when exiting the editor without uploading, the `PostUploadModel
+                // .uploadState`
+                // can get stuck in `PENDING`. This happens in this scenario:
+                //
+                // 1. The user edits an existing post
+                // 2. Adds an image -- this creates the `PostUploadModel` as `PENDING`
+                // 3. Exits the editor by tapping on Back (not saving or publishing)
+                //
+                // If the `uploadState` is stuck at `PENDING`, the Post List will indefinitely show a “Queued post”
+                // label.
+                //
+                // The `uploadState` does not get stuck on `PENDING` for WPCom because the app will automatically
+                // start a remote auto-save when the editor exits. Hence, the `PostUploadModel` eventually gets
+                // updated.
+                //
+                // Marking the `PostUploadModel` as `CANCELLED` when exiting should be fine for all site types since
+                // we do not currently have any special handling for cancelled uploads. Eventually, the user will
+                // restart them and the `uploadState` will be corrected.
+                //
+                // See `PostListUploadStatusTracker` and `PostListItemUiStateHelper.createUploadUiState` for how
+                // the Post List determines what label to use.
+                dispatcher.dispatch(UploadActionBuilder.newCancelPostAction(editPostRepository.getEditablePost()));
+
+                // now set the pending notification alarm to be triggered in the next day, week, and month
+                PendingDraftsNotificationsUtils
+                        .scheduleNextNotifications(
+                                context, editPostRepository.id,
+                                editPostRepository.dateLocallyChanged
+                        )
+            }
+            onPostSaved?.let { action ->
+                withContext(mainDispatcher) {
+                    action()
+                }
+            }
+        }
+    }
+
+    private fun updatePostLocallyChangedOnStatusOrMediaChange(
+        context: Context,
+        editedPost: PostModel?,
+        showAztecEditor: Boolean,
+        editPostRepository: EditPostRepository
+    ) {
+        if (editedPost == null) {
+            return
+        }
+        val contentChanged: Boolean
+        if (mediaInsertedOnCreation) {
+            mediaInsertedOnCreation = false
+            contentChanged = true
+        } else {
+            contentChanged = isCurrentMediaMarkedUploadingDifferentToOriginal(
+                    context,
+                    showAztecEditor,
+                    editedPost.content
+            )
+        }
+        val statusChanged: Boolean = editPostRepository.hasStatusChangedFromWhenEditorOpened(
+                editedPost.status
+        )
+        if (!editedPost.isLocalDraft && (contentChanged || statusChanged)) {
+            editedPost.setIsLocallyChanged(true)
+            editedPost
+                    .setDateLocallyChanged(
+                            DateTimeUtils.iso8601FromTimestamp(
+                                    System.currentTimeMillis() / 1000
+                            )
+                    )
+        }
+    }
 
     fun updateAndSavePostAsync(
         context: Context,
@@ -70,7 +220,7 @@ class EditPostViewModel
         }
     }
 
-    fun savePost() {
+    fun savePostWithDelay() {
         saveJob?.cancel()
         saveJob = launch {
             if (debounceCounter < MAX_UNSAVED_POSTS) {
