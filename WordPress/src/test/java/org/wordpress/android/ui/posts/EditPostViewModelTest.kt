@@ -18,9 +18,13 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult
+import org.wordpress.android.ui.uploads.UploadServiceFacade
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -31,9 +35,14 @@ class EditPostViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var aztecEditorWrapper: AztecEditorWrapper
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-    @Mock lateinit var context: Context
+    @Mock lateinit var siteStore: SiteStore
+    @Mock lateinit var uploadUtils: UploadUtilsWrapper
+    @Mock lateinit var postUtils: PostUtilsWrapper
+    @Mock lateinit var pendingDraftsNotificationsUtils: PendingDraftsNotificationsUtilsWrapper
+    @Mock lateinit var uploadService: UploadServiceFacade
+    @Mock lateinit var dateTimeUtils: DateTimeUtilsWrapper
     @Mock lateinit var postRepository: EditPostRepository
+    @Mock lateinit var context: Context
 
     private lateinit var transactionCaptor: KArgumentCaptor<(PostModel) -> Boolean>
     private lateinit var updateResultCaptor: KArgumentCaptor<(PostModel) -> UpdateResult>
@@ -53,10 +62,16 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = EditPostViewModel(
                 TEST_DISPATCHER,
+                TEST_DISPATCHER,
                 dispatcher,
                 aztecEditorWrapper,
                 localeManagerWrapper,
-                dateTimeUtilsWrapper
+                siteStore,
+                uploadUtils,
+                postUtils,
+                pendingDraftsNotificationsUtils,
+                uploadService,
+                dateTimeUtils
         )
         transactionCaptor = argumentCaptor()
         updateResultCaptor = argumentCaptor()
@@ -206,7 +221,12 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `returns update error when post is missing`() {
         whenever(postRepository.hasPost()).thenReturn(false)
 
-        val result = viewModel.updatePostObject(context, true, postRepository) { PostFields(title, content) }
+        val result = viewModel.updatePostObject(context, true, postRepository) {
+            PostFields(
+                    title,
+                    content
+            )
+        }
 
         assertThat(result).isEqualTo(UpdateResult.Error)
     }
@@ -232,7 +252,12 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `updates post title and date locally changed when title has changed`() {
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository) { PostFields(updatedTitle, content) }
+        viewModel.updatePostObject(context, true, postRepository) {
+            PostFields(
+                    updatedTitle,
+                    content
+            )
+        }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 
@@ -248,7 +273,12 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `updates post content and date locally changed when content has changed`() {
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository) { PostFields(title, updatedContent) }
+        viewModel.updatePostObject(context, true, postRepository) {
+            PostFields(
+                    title,
+                    updatedContent
+            )
+        }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 
@@ -319,6 +349,6 @@ class EditPostViewModelTest : BaseUnitTest() {
         now.set(2019, 10, 10, 10, 10, 0)
         now.timeZone = TimeZone.getTimeZone("UTC")
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(now)
-        whenever(dateTimeUtilsWrapper.iso8601FromCalendar(now)).thenReturn(currentTime)
+        whenever(dateTimeUtils.iso8601FromCalendar(now)).thenReturn(currentTime)
     }
 }
