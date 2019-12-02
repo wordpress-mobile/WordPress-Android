@@ -109,6 +109,7 @@
     <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
     <string name="ok">OK</string>
+    <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -243,6 +244,7 @@
     <string name="page_parent_changed">Page parent has been changed</string>
 
     <!-- posts tab -->
+    <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="untitled">Untitled</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="local_draft">Local draft</string>
@@ -859,6 +861,14 @@
     <string name="stats_site_negative_utc">Site timezone (UTC - %s)</string>
     <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
 
+    <!-- Number suffixes -->
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000">%sQa</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
+
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="stats_bar_chart_content_description">Graph of site views.</string>
@@ -1209,6 +1219,9 @@
 
     <!-- reader -->
     <string name="reader">Reader</string>
+    <string name="reader_filter_all_sites">All sites</string>
+    <string name="reader_filter_sites_title">Sites</string>
+    <string name="reader_filter_tags_title">Tags</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1549,6 +1562,11 @@
       reader strings
     -->
     <string name="reader_save_for_later_title">Saved posts</string>
+    <string name="reader_save_for_later_display_name">Saved</string>
+    <string name="reader_discover_display_name">Discover</string>
+    <string name="reader_my_likes_display_name">Likes</string>
+    <string name="reader_following_display_name">Following</string>
+    
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="timespan_now">now</string>
 
@@ -1773,6 +1791,9 @@
     <string name="my_site_icon_dialog_remove_button">Remove</string>
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_content_description">Change site icon</string>
+
+    <string name="my_site_bottom_sheet_add_post">Create new post</string>
+    <string name="my_site_bottom_sheet_add_page">Create new page</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -2526,7 +2547,7 @@
     <string name="post_list_drafts">Drafts</string>
     <string name="post_list_scheduled">Scheduled</string>
     <string name="post_list_trashed">Trashed</string>
-    <string name="post_list_search_prompt">Search published posts</string>
+    <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 
 

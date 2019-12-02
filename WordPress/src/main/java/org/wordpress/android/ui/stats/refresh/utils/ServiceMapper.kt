@@ -24,6 +24,7 @@ private const val PATH_ICON = "https://secure.gravatar.com/blavatar/3a03c8ce5bf1
 class ServiceMapper
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
+    private val statsUtils: StatsUtils,
     private val contentDescriptionHelper: ContentDescriptionHelper
 ) {
     fun map(
@@ -43,7 +44,7 @@ class ServiceMapper
                     iconUrl = mappedService?.iconUrl?.let { it + dimension },
                     text = text,
                     textResource = mappedService?.nameResource,
-                    value = service.followers.toFormattedString(),
+                    value = statsUtils.toFormattedString(service.followers),
                     showDivider = index < services.size - 1,
                     contentDescription = contentDescription
             )

@@ -35,8 +35,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -56,6 +56,7 @@ constructor(
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<AuthorsModel, SelectedAuthor>(
         AUTHORS,
@@ -116,7 +117,7 @@ constructor(
                         iconStyle = AVATAR,
                         text = author.name,
                         barWidth = getBarWidth(author.views, maxViews),
-                        value = author.views.toFormattedString(),
+                        value = statsUtils.toFormattedString(author.views),
                         showDivider = index < domainModel.authors.size - 1,
                         contentDescription = contentDescriptionHelper.buildContentDescription(
                                 header,
@@ -135,7 +136,7 @@ constructor(
                         items.addAll(author.posts.map { post ->
                             ListItemWithIcon(
                                     text = post.title,
-                                    value = post.views.toFormattedString(),
+                                    value = statsUtils.toFormattedString(post.views),
                                     iconStyle = if (author.avatarUrl != null) EMPTY_SPACE else NORMAL,
                                     textStyle = LIGHT,
                                     showDivider = false,
@@ -206,6 +207,7 @@ constructor(
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val statsUtils: StatsUtils,
         private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
@@ -218,6 +220,7 @@ constructor(
                         selectedDateProvider,
                         analyticsTracker,
                         contentDescriptionHelper,
+                        statsUtils,
                         useCaseMode
                 )
     }

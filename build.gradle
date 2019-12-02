@@ -106,5 +106,69 @@ buildScan {
 
 ext {
     daggerVersion = '2.22.1'
-    fluxCVersion = '1.5.4-beta-1'
+    fluxCVersion = '1.5.4-beta-2'
+}
+
+// Onboarding and dev env setup tasks
+task checkBundler(type:Exec) {
+    doFirst {
+        println "Check Bundler"
+    }
+    
+    workingDir = './'
+    executable "sh"
+    args "-c", "if ! type 'bundle' > /dev/null; then gem install bundler; fi"
+
+    //store the output instead of printing to the console:
+    standardOutput = new ByteArrayOutputStream()
+
+    //extension method checkBundler.output() can be used to obtain the output:
+    ext.output = {
+        return standardOutput.toString()
+    }
+}
+
+task checkBundle(type:Exec, dependsOn:checkBundler) {
+    doFirst {
+        println "Check Bundle"
+    }
+    
+    workingDir = './'
+    executable "sh"
+    args "-c", "bundle check --path=\${BUNDLE_PATH:-vendor/bundle} > /dev/null || bundle install --jobs=3 --retry=3 --path=\${BUNDLE_PATH:-vendor/bundle}"
+
+    //store the output instead of printing to the console:
+    standardOutput = new ByteArrayOutputStream()
+
+    //extension method checkBundle.output() can be used to obtain the output:
+    ext.output = {
+        return standardOutput.toString()
+    }
+}
+
+task applyCredentials(type:Exec, dependsOn:checkBundle) {
+    doFirst {
+        println "Apply credentials for this branch"
+    }
+    
+    workingDir = './'
+    executable "sh"
+    args "-c", "FASTLANE_SKIP_UPDATE_CHECK=1 FASTLANE_ENV_PRINTER=1 bundle exec fastlane run configure_apply force:true"
+
+    //store the output instead of printing to the console:
+    standardOutput = new ByteArrayOutputStream()
+
+    //extension method checkBundle.output() can be used to obtain the output:
+    ext.output = {
+        return standardOutput.toString()
+    }
+}
+
+tasks.register("prodDeps") { 
+    group = 'Onboarding'
+    description = 'Install dependencies for production builds'
+    dependsOn applyCredentials
+    doLast { 
+        println("Done")
+    }
 }

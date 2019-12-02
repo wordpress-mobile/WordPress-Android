@@ -89,6 +89,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
@@ -329,6 +330,17 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
+        if (site == null) {
+            AppLog.e(T.POSTS, "Site cannot be null when opening posts");
+            AnalyticsTracker.track(
+                    POST_LIST_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Posts because of the null SiteModel"
+            );
+            ToastUtils.showToast(context, R.string.posts_cannot_be_started, ToastUtils.Duration.SHORT);
+            return;
+        }
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
@@ -482,11 +494,22 @@ public class ActivityLauncher {
         openUrlExternal(context, site.getAdminUrl());
     }
 
-    public static void addNewPostForResult(Activity activity, SiteModel site, boolean isPromo) {
-        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo);
+    public static void addNewPostForResult(
+            Activity activity,
+            SiteModel site,
+            boolean isPromo,
+            PagePostCreationSourcesDetail source
+    ) {
+        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source);
     }
 
-    public static void addNewPostForResult(Intent intent, Activity activity, SiteModel site, boolean isPromo) {
+    public static void addNewPostForResult(
+            Intent intent,
+            Activity activity,
+            SiteModel site,
+            boolean isPromo,
+            PagePostCreationSourcesDetail source
+    ) {
         if (site == null) {
             return;
         }
@@ -494,6 +517,7 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
+        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -539,11 +563,28 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void addNewPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site) {
+    public static void addNewPageForResult(
+            @NonNull Activity activity,
+            @NonNull SiteModel site,
+            @NonNull PagePostCreationSourcesDetail source
+    ) {
+        Intent intent = new Intent(activity, EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
+    public static void addNewPageForResult(
+            @NonNull Fragment fragment,
+            @NonNull SiteModel site,
+            @NonNull PagePostCreationSourcesDetail source) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 

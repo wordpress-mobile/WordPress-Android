@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -26,6 +25,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPPermissionUtils;
@@ -49,12 +49,14 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     private static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     private static final String KEY_SELECTED_SITE_LOCAL_ID = "KEY_SELECTED_SITE_LOCAL_ID";
     private static final String KEY_SHARE_ACTION_ID = "KEY_SHARE_ACTION_ID";
+    private static final String KEY_LOCAL_MEDIA_URIS = "KEY_LOCAL_MEDIA_URIS";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
     private int mClickedSiteLocalId;
     private String mShareActionName;
+    private ArrayList<Uri> mLocalMediaUris = new ArrayList<>();
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -92,6 +94,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     private void refreshContent() {
         if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             List<SiteModel> visibleSites = mSiteStore.getVisibleSites();
+            downloadExternalMedia();
             if (visibleSites.size() == 0) {
                 ToastUtils.showToast(this, R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
                 finish();
@@ -108,6 +111,18 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         }
     }
 
+    private void downloadExternalMedia() {
+        if (Intent.ACTION_SEND_MULTIPLE.equals(getIntent().getAction())) {
+            ArrayList<Uri> externalUris = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+            for (Uri uri : externalUris) {
+                mLocalMediaUris.add(MediaUtils.downloadExternalMedia(this, uri));
+            }
+        } else if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
+            Uri externalUri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+            mLocalMediaUris.add(MediaUtils.downloadExternalMedia(this, externalUri));
+        }
+    }
+
     private void initShareFragment(boolean afterLogin) {
         ShareIntentReceiverFragment shareIntentReceiverFragment = ShareIntentReceiverFragment
                 .newInstance(!isSharingText(), loadLastUsedBlogLocalId(), afterLogin);
@@ -120,13 +135,15 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     private void loadState(Bundle savedInstanceState) {
         mClickedSiteLocalId = savedInstanceState.getInt(KEY_SELECTED_SITE_LOCAL_ID);
         mShareActionName = savedInstanceState.getString(KEY_SHARE_ACTION_ID);
+        mLocalMediaUris = savedInstanceState.getParcelableArrayList(KEY_LOCAL_MEDIA_URIS);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putInt(KEY_SELECTED_SITE_LOCAL_ID, mClickedSiteLocalId);
         outState.putString(KEY_SHARE_ACTION_ID, mShareActionName);
+        outState.putParcelableArrayList(KEY_LOCAL_MEDIA_URIS, mLocalMediaUris);
     }
 
     private int loadLastUsedBlogLocalId() {
@@ -200,11 +217,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));
 
         if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            ArrayList<Uri> extra = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
-            intent.putExtra(Intent.EXTRA_STREAM, extra);
-        } else {
-            Uri extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-            intent.putExtra(Intent.EXTRA_STREAM, extra);
+            intent.putExtra(Intent.EXTRA_STREAM, mLocalMediaUris);
+        } else if (Intent.ACTION_SEND.equals(action)) {
+            intent.putExtra(Intent.EXTRA_STREAM, mLocalMediaUris.get(0));
         }
 
         // save preferences
@@ -243,16 +258,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     }
 
     private void trackMediaAddedToMediaLibrary(SiteModel selectedSite) {
-        ArrayList<Uri> mediaUrls = new ArrayList<>();
-        if (countMedia() == 1) {
-            Uri singleMedia = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-            mediaUrls.add(singleMedia);
-        } else {
-            ArrayList<Uri> imageUris = getIntent().getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-            mediaUrls.addAll(imageUris);
-        }
-
-        for (Uri uri : mediaUrls) {
+        for (Uri uri : mLocalMediaUris) {
             if (uri != null) {
                 String mimeType = getContentResolver().getType(uri);
                 boolean isVideo = mimeType != null && mimeType.startsWith("video");
@@ -276,10 +282,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
             String action = getIntent().getAction();
             if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 // Multiple pictures share to WP
-                ArrayList<Uri> mediaUrls = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
-                if (mediaUrls != null) {
-                    mediaShared = mediaUrls.size();
-                }
+                mediaShared = mLocalMediaUris.size();
             } else {
                 mediaShared = 1;
             }

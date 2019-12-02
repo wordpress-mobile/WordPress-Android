@@ -73,6 +73,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -98,6 +99,7 @@ import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -132,6 +134,7 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
@@ -186,6 +189,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
 import kotlin.Unit;
@@ -221,6 +225,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_RESTART_EDITOR = "isSwitchingEditors";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
+    public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -321,6 +326,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject EditPostRepository mEditPostRepository;
     @Inject PostUtilsWrapper mPostUtils;
     @Inject EditorTracker mEditorTracker;
+    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
 
     private SiteModel mSite;
 
@@ -965,27 +971,35 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon, boolean allowMultipleSelection) {
         mEditorPhotoPicker.hidePhotoPicker();
-        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
-        switch (icon) {
-            case ANDROID_CAPTURE_PHOTO:
-                launchCamera();
-                break;
-            case ANDROID_CAPTURE_VIDEO:
-                launchVideoCamera();
-                break;
-            case ANDROID_CHOOSE_PHOTO:
-                launchPictureLibrary();
-                break;
-            case ANDROID_CHOOSE_VIDEO:
-                launchVideoLibrary();
-                break;
-            case WP_MEDIA:
-                ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
-                break;
-            case STOCK_MEDIA:
-                ActivityLauncher.showStockMediaPickerForResult(
-                        this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
-                break;
+        if (!icon.requiresUploadPermission() || WPMediaUtils.currentUserCanUploadMedia(mSite)) {
+            mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
+            switch (icon) {
+                case ANDROID_CAPTURE_PHOTO:
+                    launchCamera();
+                    break;
+                case ANDROID_CAPTURE_VIDEO:
+                    launchVideoCamera();
+                    break;
+                case ANDROID_CHOOSE_PHOTO_OR_VIDEO:
+                    WPMediaUtils.launchMediaLibrary(this, allowMultipleSelection);
+                    break;
+                case ANDROID_CHOOSE_PHOTO:
+                    launchPictureLibrary();
+                    break;
+                case ANDROID_CHOOSE_VIDEO:
+                    launchVideoLibrary();
+                    break;
+                case WP_MEDIA:
+                    ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+                    break;
+                case STOCK_MEDIA:
+                    ActivityLauncher.showStockMediaPickerForResult(
+                            this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
+                    break;
+            }
+        } else {
+            WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_error_no_permission_upload,
+                            Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -1284,7 +1298,9 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT);
         ToastUtils.showToast(EditPostActivity.this,
                 getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
-        UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
+        mUploadUtilsWrapper.showSnackbar(
+                findViewById(R.id.editor_activity),
+                R.string.editor_uploading_post);
         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
         savePostAndOptionallyFinish(false);
     }
@@ -1321,7 +1337,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void toggledHtmlModeSnackbar(View.OnClickListener onUndoClickListener) {
-        UploadUtils.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
+        mUploadUtilsWrapper.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
                 mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
                         : R.string.menu_visual_mode_done_snackbar,
                 R.string.menu_undo_snackbar_action,
@@ -1550,6 +1566,7 @@ public class EditPostActivity extends AppCompatActivity implements
         Map<String, Object> properties = new HashMap<>();
         // Post created from the post list (new post button).
         String normalizedSourceName = "post-list";
+
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             // Post created with share with WordPress
             normalizedSourceName = "shared-from-external-app";
@@ -1565,6 +1582,23 @@ public class EditPostActivity extends AppCompatActivity implements
         }
         PostUtils.addPostTypeToAnalyticsProperties(mEditPostRepository.getPost(), properties);
         properties.put("created_post_source", normalizedSourceName);
+
+        if (intent != null
+            && intent.hasExtra(EXTRA_CREATION_SOURCE_DETAIL)
+            && normalizedSourceName == "post-list") {
+            PagePostCreationSourcesDetail source =
+                    (PagePostCreationSourcesDetail) intent.getSerializableExtra(EXTRA_CREATION_SOURCE_DETAIL);
+            properties.put(
+                    CREATED_POST_SOURCE_DETAIL_KEY,
+                    source != null ? source.getLabel() : PagePostCreationSourcesDetail.NO_DETAIL.getLabel()
+            );
+        } else {
+            properties.put(
+                    CREATED_POST_SOURCE_DETAIL_KEY,
+                    PagePostCreationSourcesDetail.NO_DETAIL.getLabel()
+            );
+        }
+
         AnalyticsUtils.trackWithSiteDetails(
                 AnalyticsTracker.Stat.EDITOR_CREATED_POST,
                 mSiteStore.getSiteByLocalId(mEditPostRepository.getLocalSiteId()),
@@ -2740,8 +2774,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
-        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
-        WPMediaUtils.launchMediaLibrary(this, allowMultipleSelection);
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO, allowMultipleSelection);
     }
 
     @Override
@@ -3097,6 +3130,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         } else if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
+            if (!mEditPostRepository.hasPost() || (mEditPostRepository.getId()
+                                                   != ((RemoteAutoSavePost) event.causeOfChange).getLocalPostId())) {
+                AppLog.e(T.POSTS,
+                        "Ignoring REMOTE_AUTO_SAVE_POST in EditPostActivity as mPost is null or id of the opened post"
+                        + " doesn't match the event.");
+                return;
+            }
             if (event.isError()) {
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
@@ -3145,7 +3185,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else if (isError || isRemoteAutoSaveError()) {
             // We got an error from the uploading or from the remote auto save of a post: show snackbar error
             updatePostLoadingAndDialogState(PostLoadingState.NONE);
-            UploadUtils.showSnackbarError(findViewById(R.id.editor_activity),
+            mUploadUtilsWrapper.showSnackbarError(findViewById(R.id.editor_activity),
                     getString(R.string.remote_preview_operation_error));
         }
         return post;
@@ -3159,8 +3199,8 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!isRemotePreviewingFromEditor()) {
                 // We are not remote previewing a post: show snackbar and update post status if needed
                 View snackbarAttachView = findViewById(R.id.editor_activity);
-                UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
-                        event.isError() ? event.error.message : null, getSite(), mDispatcher);
+                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
+                        event.isError() ? event.error.message : null, getSite());
                 if (!event.isError()) {
                     mEditPostRepository.setInTransaction(() -> {
                         updateOnSuccessfulUpload();
