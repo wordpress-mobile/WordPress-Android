@@ -19,10 +19,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -67,6 +71,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
+import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -95,6 +100,7 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -111,6 +117,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
+import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
@@ -163,6 +170,9 @@ public class WPMainActivity extends AppCompatActivity implements
     private boolean mIsMagicLinkSignup;
 
     private SiteModel mSelectedSite;
+    private WPMainActivityViewModel mViewModel;
+    private FloatingActionButton mFloatingActionButton;
+    private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -176,6 +186,8 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
+    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -208,8 +220,9 @@ public class WPMainActivity extends AppCompatActivity implements
 
         mBottomNav = findViewById(R.id.bottom_navigation);
 
-        if (BuildConfig.ME_ACTIVITY_AVAILABLE) {
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
             mBottomNav.getMenu().removeItem(R.id.nav_me);
+            mBottomNav.getMenu().removeItem(R.id.nav_write);
         }
         mBottomNav.init(getSupportFragmentManager(), this);
 
@@ -343,6 +356,8 @@ public class WPMainActivity extends AppCompatActivity implements
         if (canShowAppRatingPrompt) {
             AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
+
+        initViewModel();
     }
 
     public boolean isGooglePlayServicesAvailable(Activity activity) {
@@ -367,6 +382,57 @@ public class WPMainActivity extends AppCompatActivity implements
                                    + googleApiAvailability.getErrorString(connectionResult));
         }
         return false;
+    }
+
+    private void initViewModel() {
+        mFloatingActionButton = findViewById(R.id.fab_button);
+
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPMainActivityViewModel.class);
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            // Setup Observers
+            mViewModel.getShowMainActionFab().observe(this, shouldShow -> {
+                if (shouldShow) {
+                    mFloatingActionButton.show();
+                } else {
+                    mFloatingActionButton.hide();
+                }
+            });
+
+            mViewModel.getCreateAction().observe(this, createAction -> {
+                switch (createAction) {
+                    case CREATE_NEW_POST:
+                        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
+                        break;
+                    case CREATE_NEW_PAGE:
+                        handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                        break;
+                }
+            });
+
+            mFloatingActionButton.setOnClickListener(v -> {
+                mViewModel.setIsBottomSheetShowing(true);
+            });
+
+            mViewModel.isBottomSheetShowing().observe(this, event -> {
+                event.applyIfNotHandled(isShowing -> {
+                    FragmentManager fm = getSupportFragmentManager();
+                    if (fm != null) {
+                        MainBottomSheetFragment bottomSheet =
+                                (MainBottomSheetFragment) fm.findFragmentByTag(MAIN_BOTTOM_SHEET_TAG);
+                        if (isShowing && bottomSheet == null) {
+                            bottomSheet = new MainBottomSheetFragment();
+                            bottomSheet.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
+                        } else if (!isShowing && bottomSheet != null) {
+                            bottomSheet.dismiss();
+                        }
+                    }
+                    return null;
+                });
+            });
+        }
+
+        mViewModel.start(mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
     }
 
     private @Nullable String getAuthToken() {
@@ -538,16 +604,21 @@ public class WPMainActivity extends AppCompatActivity implements
                 .dismissNotification(PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId), this);
 
         // if no specific post id passed, show the list
+        SiteModel selectedSite = getSelectedSite();
+        if (selectedSite == null) {
+            ToastUtils.showToast(this, R.string.site_cannot_be_loaded);
+            return;
+        }
         if (postId == 0) {
             // show list
             if (isPage) {
-                ActivityLauncher.viewCurrentBlogPages(this, getSelectedSite());
+                ActivityLauncher.viewCurrentBlogPages(this, selectedSite);
             } else {
-                ActivityLauncher.viewCurrentBlogPosts(this, getSelectedSite());
+                ActivityLauncher.viewCurrentBlogPosts(this, selectedSite);
             }
         } else {
             PostModel post = mPostStore.getPostByLocalPostId(postId);
-            ActivityLauncher.editPostOrPageForResult(this, getSelectedSite(), post);
+            ActivityLauncher.editPostOrPageForResult(this, selectedSite, post);
         }
     }
 
@@ -657,11 +728,31 @@ public class WPMainActivity extends AppCompatActivity implements
                 getMySiteFragment().requestNextStepOfActiveQuickStartTask();
             }
         }
+
+        mViewModel.onPageChanged(pageType == PageType.MY_SITE);
     }
 
     // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
+        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR);
+    }
+
+    private void handleNewPageAction(PagePostCreationSourcesDetail source) {
+        if (!mSiteStore.hasSite()) {
+            // No site yet - Move to My Sites fragment that shows the create new site screen
+            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+            return;
+        }
+
+        SiteModel site = getSelectedSite();
+        if (site != null) {
+            // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
+            ActivityLauncher.addNewPageForResult(this, site, source);
+        }
+    }
+
+    public void handleNewPostAction(PagePostCreationSourcesDetail source) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
@@ -678,7 +769,7 @@ public class WPMainActivity extends AppCompatActivity implements
             }
         }
 
-        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false);
+        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
     }
 
     private void updateTitle() {
@@ -769,9 +860,8 @@ public class WPMainActivity extends AppCompatActivity implements
                 }
 
                 if (site != null && post != null) {
-                    UploadUtils.handleEditPostResultSnackbars(
+                    mUploadUtilsWrapper.handleEditPostResultSnackbars(
                             this,
-                            mDispatcher,
                             findViewById(R.id.coordinator),
                             data,
                             post,
@@ -1137,14 +1227,13 @@ public class WPMainActivity extends AppCompatActivity implements
         if (getLifecycle().getCurrentState().isAtLeast(STARTED)) {
             SiteModel site = getSelectedSite();
             if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
-                UploadUtils.onPostUploadedSnackbarHandler(
+                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         this,
                         findViewById(R.id.coordinator),
                         event.isError(),
                         event.post,
                         null,
-                        site,
-                        mDispatcher);
+                        site);
             }
         }
     }

@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/nav_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/bottom_nav_bar_icon_size"
+            android:layout_height="@dimen/bottom_nav_bar_icon_size"
             android:layout_gravity="center"
             android:contentDescription="@string/tabbar_accessibility_label_my_site"
             android:tint="@drawable/nav_bar_button_selector"
@@ -23,8 +23,8 @@
 
         <View
             android:id="@+id/badge"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="@dimen/bottom_nav_bar_badge_size"
+            android:layout_height="@dimen/bottom_nav_bar_badge_size"
             android:layout_gravity="top"
             android:background="@drawable/bg_oval_accent_stroke_white"
             android:visibility="gone"
@@ -39,9 +39,8 @@
         android:layout_gravity="center_horizontal"
         android:duplicateParentState="true"
         android:singleLine="true"
-        android:textColor="@color/primary_40"
-        android:textSize="12sp"
-        android:visibility="gone"
-        tools:text="label"
-        tools:visibility="visible"/>
+        android:textColor="@color/neutral_20"
+        android:textSize="@dimen/text_sz_small"
+        android:visibility="visible"
+        tools:text="label"/>
 </LinearLayout>

@@ -1,6 +1,8 @@
 13.8
 -----
- 
+* Modified Blog Post search to search for posts under all categories.
+* Block editor: New Spacer block to create white space between two blocks.
+
 13.7
 -----
 * Block editor: Include block title in Unsupported block's UI
@@ -11,14 +13,14 @@
 * Fixed time displayed on Post Conflict Detected and Unpublished Revision dialogs
 * Block editor: Fix issue when removing image/page break block crashes the app
 * Removed support for Giphy
- 
+
 13.6
 -----
  * Change navigation bar color to white on Android 8.1+
 * Pages ordering is case insensitive now
 * Block Editor: Add support for pexels images
 * Block Editor: Add left, center, and right image alignment controls
- 
+
 13.5
 -----
  * Block Editor: Fix issue when multiple media selection adds only one image or video block.
@@ -26,7 +28,7 @@
  * Block Editor: New block "Media & Text".
  * Block Editor: Fix issue where the block inserter layout wasn't correct after device rotation.
  * Fix crash when fast-scrolling on Blog Posts screen
- 
+
 13.4
 -----
 * Add Remote Preview support for posts and pages.
@@ -49,7 +51,7 @@
 * Block Editor: Blocks that would be replaced are now hidden when add block bottom sheet displays
 * Block Editor: Tapping on empty editor area now always inserts new block at end of post
 * Block Editor: Automatically saves post locally after 2 seconds of inactivity
- 
+
 13.2
 -----
 * Fix issue where establishing LinkedIn connection would always fail

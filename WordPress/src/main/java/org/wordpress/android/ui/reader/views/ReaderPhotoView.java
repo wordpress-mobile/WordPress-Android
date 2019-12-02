@@ -190,7 +190,9 @@ public class ReaderPhotoView extends RelativeLayout {
             if (mIsInitialLayout) {
                 mIsInitialLayout = false;
                 AppLog.d(AppLog.T.READER, "reader photo > initial layout");
-                loadImage();
+                if (mLoResImageUrl != null && mHiResImageUrl != null) {
+                    loadImage();
+                }
             }
         }
     }

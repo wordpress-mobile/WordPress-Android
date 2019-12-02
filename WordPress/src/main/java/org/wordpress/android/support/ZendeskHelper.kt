@@ -21,6 +21,7 @@ import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DeviceUtils
+import org.wordpress.android.util.LanguageUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.SiteUtils
@@ -36,7 +37,6 @@ import zendesk.support.UiConfig
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
-import java.util.Locale
 import java.util.Timer
 import kotlin.concurrent.schedule
 
@@ -365,6 +365,7 @@ private fun buildZendeskCustomFields(
     } else {
         "not_selected"
     }
+
     return listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
             CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(allSites)),
@@ -372,7 +373,7 @@ private fun buildZendeskCustomFields(
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
             CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context)),
-            CustomField(TicketFieldIds.appLanguage, Locale.getDefault().language),
+            CustomField(TicketFieldIds.appLanguage, LanguageUtils.getPatchedCurrentDeviceLanguage(context)),
             CustomField(TicketFieldIds.sourcePlatform, ZendeskConstants.sourcePlatform)
     )
 }

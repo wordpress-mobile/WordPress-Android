@@ -69,10 +69,17 @@ class HelpActivity : AppCompatActivity() {
             var emailSuggestion = AppPrefs.getSupportEmail()
             if (emailSuggestion.isNullOrEmpty()) {
                 emailSuggestion = supportHelper
-                        .getSupportEmailAndNameSuggestion(accountStore.account, selectedSiteFromExtras).first
+                        .getSupportEmailAndNameSuggestion(
+                                accountStore.account,
+                                selectedSiteFromExtras
+                        ).first
             }
 
-            supportHelper.showSupportIdentityInputDialog(this, emailSuggestion, isNameInputHidden = true) { email, _ ->
+            supportHelper.showSupportIdentityInputDialog(
+                    this,
+                    emailSuggestion,
+                    isNameInputHidden = true
+            ) { email, _ ->
                 zendeskHelper.setSupportEmail(email)
                 refreshContactEmailText()
                 AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_SET)
@@ -81,10 +88,10 @@ class HelpActivity : AppCompatActivity() {
         }
 
         /**
-        * If the user taps on a Zendesk notification, we want to show them the `My Tickets` page. However, this
-        * should only be triggered when the activity is first created, otherwise if the user comes back from
-        * `My Tickets` and rotates the screen (or triggers the activity re-creation in any other way) it'll navigate
-        * them to `My Tickets` again since the `originFromExtras` will still be [Origin.ZENDESK_NOTIFICATION].
+         * If the user taps on a Zendesk notification, we want to show them the `My Tickets` page. However, this
+         * should only be triggered when the activity is first created, otherwise if the user comes back from
+         * `My Tickets` and rotates the screen (or triggers the activity re-creation in any other way) it'll navigate
+         * them to `My Tickets` again since the `originFromExtras` will still be [Origin.ZENDESK_NOTIFICATION].
          */
         if (savedInstanceState == null && originFromExtras == Origin.ZENDESK_NOTIFICATION) {
             showZendeskTickets()
@@ -106,16 +113,31 @@ class HelpActivity : AppCompatActivity() {
     }
 
     private fun createNewZendeskTicket() {
-        zendeskHelper.createNewTicket(this, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
+        zendeskHelper.createNewTicket(
+                this,
+                originFromExtras,
+                selectedSiteFromExtras,
+                extraTagsFromExtras
+        )
     }
 
     private fun showZendeskTickets() {
-        zendeskHelper.showAllTickets(this, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
+        zendeskHelper.showAllTickets(
+                this,
+                originFromExtras,
+                selectedSiteFromExtras,
+                extraTagsFromExtras
+        )
     }
 
     private fun showZendeskFaq() {
         zendeskHelper
-                .showZendeskHelpCenter(this, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
+                .showZendeskHelpCenter(
+                        this,
+                        originFromExtras,
+                        selectedSiteFromExtras,
+                        extraTagsFromExtras
+                )
     }
 
     private fun refreshContactEmailText() {
@@ -176,23 +198,20 @@ class HelpActivity : AppCompatActivity() {
                 intent.putExtra(WordPress.SITE, selectedSite)
             }
 
-            val tagsList: ArrayList<String>? = if (SiteUtils.isBlockEditorDefaultForNewPost(selectedSite)) {
-                // construct a mutable list to add the Gutenberg related extra tag
-                val list = ArrayList<String>()
+            // construct a mutable list to add the related and extra tags
+            val tagsList = ArrayList<String>()
 
-                // add the provided list of tags if any
-                extraSupportTags?.let {
-                    list.addAll(extraSupportTags)
-                }
-
-                // Append the "mobile_gutenberg_is_default" tag if gutenberg is set to default for new posts
-                list.add(ZendeskExtraTags.gutenbergIsDefault)
-                list // "return" the list
-            } else {
-                extraSupportTags as ArrayList<String>?
+            // add the provided list of tags if any
+            extraSupportTags?.let {
+                tagsList.addAll(extraSupportTags)
             }
 
-            if (tagsList != null && tagsList.isNotEmpty()) {
+            // Append the "mobile_gutenberg_is_default" tag if gutenberg is set to default for new posts
+            if (SiteUtils.isBlockEditorDefaultForNewPost(selectedSite)) {
+                tagsList.add(ZendeskExtraTags.gutenbergIsDefault)
+            }
+
+            if (tagsList.isNotEmpty()) {
                 intent.putStringArrayListExtra(EXTRA_TAGS_KEY, tagsList)
             }
 

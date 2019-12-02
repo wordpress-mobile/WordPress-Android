@@ -210,7 +210,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             switch (result) {
                 case ERROR:
                     mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost);
-                    mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage, 0);
+                    if (mSite != null) {
+                        mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage, 0);
+                    } else {
+                        AppLog.e(T.POSTS, "Site cannot be null");
+                    }
                     finishUpload();
                     break;
                 case NOTHING_TO_UPLOAD:
@@ -625,7 +629,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
-            mPostUploadNotifier.updateNotificationSuccessForPost(event.post, site, isFirstTimePublish);
+            if (site != null) {
+                mPostUploadNotifier.updateNotificationSuccessForPost(event.post, site, isFirstTimePublish);
+            } else {
+                AppLog.e(T.POSTS, "Cannot update notification success without a site");
+            }
             if (isFirstTimePublish) {
                 if (sCurrentUploadingPostAnalyticsProperties != null) {
                     sCurrentUploadingPostAnalyticsProperties.put("post_id", event.post.getRemotePostId());

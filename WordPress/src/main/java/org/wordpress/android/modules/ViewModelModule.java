@@ -39,6 +39,7 @@ import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewMode
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
+import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
 import org.wordpress.android.viewmodel.pages.PageParentViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
@@ -263,6 +264,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderCommentListViewModel.class)
     abstract ViewModel readerCommentListViewModel(ReaderCommentListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(WPMainActivityViewModel.class)
+    abstract ViewModel wpMainActivityViewModel(WPMainActivityViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

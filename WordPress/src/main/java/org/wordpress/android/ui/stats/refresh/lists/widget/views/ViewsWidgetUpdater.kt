@@ -46,6 +46,7 @@ class ViewsWidgetUpdater
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_views))
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         val hasAccessToken = accountStore.hasAccessToken()
+        val widgetHasData = appPrefsWrapper.hasAppWidgetData(appWidgetId)
         if (networkAvailable && hasAccessToken && siteModel != null) {
             siteModel.let {
                 views.setOnClickPendingIntent(
@@ -63,7 +64,7 @@ class ViewsWidgetUpdater
                     WEEK_VIEWS,
                     isWideView
             )
-        } else {
+        } else if (!widgetHasData || !hasAccessToken || siteModel == null) {
             widgetUtils.showError(
                     widgetManager,
                     views,
