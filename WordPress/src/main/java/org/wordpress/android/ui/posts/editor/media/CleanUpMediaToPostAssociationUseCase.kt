@@ -31,8 +31,8 @@ class CleanUpMediaToPostAssociationUseCase @Inject constructor(
             mediaAssociatedWithPost
                     .filter { media ->
                         // Find media which is not in the post anymore
-                        val containsGutenbergBlocks  = postUtilsWrapper.contentContainsGutenbergBlocks(post.content)
-                        if(containsGutenbergBlocks) {
+                        val containsGutenbergBlocks = postUtilsWrapper.contentContainsGutenbergBlocks(post.content)
+                        if (containsGutenbergBlocks) {
                             !postUtilsWrapper.isMediaInGutenbergPostBody(post.content, media.id.toString())
                         } else {
                             !aztecEditorWrapper.isMediaInPostBody(post.content, media.id.toString())
