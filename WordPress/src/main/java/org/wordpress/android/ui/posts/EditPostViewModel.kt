@@ -7,9 +7,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
@@ -28,6 +30,7 @@ private const val MAX_UNSAVED_POSTS = 50
 class EditPostViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
     private val aztecEditorWrapper: AztecEditorWrapper,
     private val localeManagerWrapper: LocaleManagerWrapper,
@@ -39,6 +42,33 @@ class EditPostViewModel
     var mediaMarkedUploadingOnStartIds: List<String> = listOf()
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
     val onSavePostTriggered: LiveData<Event<Unit>> = _onSavePostTriggered
+
+    fun updateAndSavePostAsync(
+        context: Context,
+        showAztecEditor: Boolean,
+        postRepository: EditPostRepository,
+        getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor),
+        onSaveAction: (() -> Unit)? = null
+    ) {
+        launch {
+            val postUpdated = withContext(bgDispatcher) {
+                (updatePostObject(
+                        context,
+                        showAztecEditor,
+                        postRepository,
+                        getUpdatedTitleAndContent
+                ) is Success)
+                        .also { success ->
+                            if (success) {
+                                savePostToDb(context, postRepository, showAztecEditor)
+                            }
+                        }
+            }
+            if (postUpdated) {
+                onSaveAction?.invoke()
+            }
+        }
+    }
 
     fun savePost() {
         saveJob?.cancel()

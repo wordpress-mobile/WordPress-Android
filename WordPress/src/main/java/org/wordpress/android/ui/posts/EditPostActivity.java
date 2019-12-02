@@ -607,8 +607,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         });
         mViewModel.getOnSavePostTriggered().observe(this, unitEvent -> {
-            updatePostObject();
-            mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
+            updateAndSavePostAsync();
         });
     }
 
@@ -816,7 +815,7 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
-        savePostAsync(null);
+        updateAndSavePostAsync();
         outState.putInt(STATE_KEY_POST_LOCAL_ID, mEditPostRepository.getId());
         if (!mEditPostRepository.isLocalDraft()) {
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mEditPostRepository.getRemotePostId());
@@ -1601,29 +1600,37 @@ public class EditPostActivity extends AppCompatActivity implements
             return false;
         }
         UpdateResult updateResult = mViewModel
-                .updatePostObject(this, mShowAztecEditor, mEditPostRepository,
-                        oldContent -> {
-                            try {
-                                String title = (String) mEditorFragment.getTitle();
-                                String content = (String) mEditorFragment.getContent(oldContent);
-                                return new PostFields(title, content);
-                            } catch (EditorFragmentNotAddedException e) {
-                                AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-                                return new UpdateFromEditor.Failed(e);
-                            }
-                        });
+                .updatePostObject(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor);
         return updateResult instanceof UpdateResult.Success;
     }
 
-    private void savePostAsync(final AfterSavePostListener listener) {
-        new Thread(() -> {
-            if (updatePostObject()) {
-                mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
-                if (listener != null) {
-                    listener.onPostSave();
-                }
-            }
-        }).start();
+    private void updateAndSavePostAsync() {
+        updateAndSavePostAsync(null);
+    }
+
+    private void updateAndSavePostAsync(final AfterSavePostListener listener) {
+        if (mEditorFragment == null) {
+            AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
+            return;
+        }
+        mViewModel.updateAndSavePostAsync(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor,
+                () -> {
+                    if (listener != null) {
+                        listener.onPostSave();
+                    }
+                    return null;
+                });
+    }
+
+    private UpdateFromEditor updateFromEditor(String oldContent) {
+        try {
+            String title = (String) mEditorFragment.getTitle();
+            String content = (String) mEditorFragment.getContent(oldContent);
+            return new PostFields(title, content);
+        } catch (EditorFragmentNotAddedException e) {
+            AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+            return new UpdateFromEditor.Failed(e);
+        }
     }
 
     @Override
@@ -2418,11 +2425,11 @@ public class EditPostActivity extends AppCompatActivity implements
             postModel.setIsLocallyChanged(true);
             return true;
         });
-        savePostAsync(() -> EditPostActivity.this.runOnUiThread(() -> {
+        updateAndSavePostAsync(() -> {
             if (mEditPostSettingsFragment != null) {
                 mEditPostSettingsFragment.updateFeaturedImage(mediaId);
             }
-        }));
+        });
     }
 
     @Override
@@ -2962,7 +2969,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mViewModel.setMediaInsertedOnCreation(true);
                 mEditorMedia.addExistingMediaToEditorAsync(mediaList, AddExistingMediaSource.WP_MEDIA_LIBRARY);
                 // TODO we save the post in `addExistingMediaToEditor` but we don't have access to AfterSavePostListener
-                savePostAsync(() -> runOnUiThread(this::onEditorFinalTouchesBeforeShowing));
+                updateAndSavePostAsync(this::onEditorFinalTouchesBeforeShowing);
             }
         }
 
@@ -3220,7 +3227,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void syncPostObjectWithUiAndSaveIt(@Nullable AfterSavePostListener listener) {
-        savePostAsync(listener);
+        updateAndSavePostAsync(listener);
     }
 
     @Override public void advertiseImageOptimization(@NotNull Function0<Unit> listener) {
