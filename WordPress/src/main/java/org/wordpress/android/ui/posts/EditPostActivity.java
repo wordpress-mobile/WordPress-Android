@@ -119,6 +119,7 @@ import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
+import org.wordpress.android.ui.posts.editor.EditorTracker;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
@@ -324,6 +325,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject LocaleManagerWrapper mLocaleManagerWrapper;
     @Inject EditPostRepository mEditPostRepository;
     @Inject PostUtilsWrapper mPostUtils;
+    @Inject EditorTracker mEditorTracker;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
 
     private SiteModel mSite;
@@ -3069,125 +3071,18 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onTrackableEvent(TrackableEvent event) throws IllegalArgumentException {
-        AnalyticsTracker.Stat currentStat = null;
+        mEditorTracker.trackEditorEvent(event, mEditorFragment.getEditorName());
         switch (event) {
-            case BOLD_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_BOLD;
-                break;
-            case BLOCKQUOTE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_BLOCKQUOTE;
-                break;
             case ELLIPSIS_COLLAPSE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_ELLIPSIS_COLLAPSE;
                 AppPrefs.setAztecEditorToolbarExpanded(false);
                 break;
             case ELLIPSIS_EXPAND_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_ELLIPSIS_EXPAND;
                 AppPrefs.setAztecEditorToolbarExpanded(true);
                 break;
-            case HEADING_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING;
-                break;
-            case HEADING_1_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_1;
-                break;
-            case HEADING_2_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_2;
-                break;
-            case HEADING_3_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_3;
-                break;
-            case HEADING_4_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_4;
-                break;
-            case HEADING_5_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_5;
-                break;
-            case HEADING_6_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_6;
-                break;
-            case HORIZONTAL_RULE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HORIZONTAL_RULE;
-                break;
-            case FORMAT_ALIGN_LEFT_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_LEFT);
-                break;
-            case FORMAT_ALIGN_CENTER_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_CENTER);
-                break;
-            case FORMAT_ALIGN_RIGHT_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_RIGHT);
-                break;
             case HTML_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HTML;
-                mEditorPhotoPicker.hidePhotoPicker();
-                break;
-            case IMAGE_EDITED:
-                currentStat = Stat.EDITOR_EDITED_IMAGE;
-                break;
-            case ITALIC_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_ITALIC;
-                break;
             case LINK_ADDED_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_LINK_ADDED;
                 mEditorPhotoPicker.hidePhotoPicker();
                 break;
-            case LIST_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_LIST;
-                break;
-            case LIST_ORDERED_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_LIST_ORDERED;
-                break;
-            case LIST_UNORDERED_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_LIST_UNORDERED;
-                break;
-            case MEDIA_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_IMAGE;
-                break;
-            case NEXT_PAGE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_NEXT_PAGE;
-                break;
-            case PARAGRAPH_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_PARAGRAPH;
-                break;
-            case PREFORMAT_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_PREFORMAT;
-                break;
-            case READ_MORE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_READ_MORE;
-                break;
-            case STRIKETHROUGH_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_STRIKETHROUGH;
-                break;
-            case UNDERLINE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_UNDERLINE;
-                break;
-            case REDO_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_REDO);
-                break;
-            case UNDO_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDO);
-                break;
-            default:
-                AppLog.w(T.EDITOR, "onTrackableEvent event not being tracked in EditPostActivity: " + event.name());
-                break;
-        }
-
-        if (currentStat != null) {
-            Map<String, String> properties = new HashMap<>();
-            String editorName = null;
-            if (mEditorFragment instanceof GutenbergEditorFragment) {
-                editorName = "gutenberg";
-            } else if (mEditorFragment instanceof AztecEditorFragment) {
-                editorName = "aztec";
-            }
-            if (editorName == null) {
-                throw new IllegalArgumentException("Unexpected Editor Fragment - got "
-                                                   + mEditorFragment.getClass().getName()
-                                                   + " but expected GutenbergEditorFragment or AztecEditorFragment");
-            }
-            properties.put("editor", editorName);
-            AnalyticsTracker.track(currentStat, properties);
         }
     }
 
