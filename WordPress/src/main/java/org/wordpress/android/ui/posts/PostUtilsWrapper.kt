@@ -28,4 +28,7 @@ class PostUtilsWrapper @Inject constructor() {
 
     fun isMediaInGutenbergPostBody(postContent: String, localMediaId: String) =
             PostUtils.isMediaInGutenbergPostBody(postContent, localMediaId)
+
+    fun contentContainsGutenbergBlocks(postContent: String): Boolean =
+            PostUtils.contentContainsGutenbergBlocks(postContent)
 }

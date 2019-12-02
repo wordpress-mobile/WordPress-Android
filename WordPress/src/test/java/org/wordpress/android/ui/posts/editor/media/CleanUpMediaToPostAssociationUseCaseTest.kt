@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts.editor.media
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
@@ -22,19 +23,14 @@ import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload
 import org.wordpress.android.test
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.editor.AztecEditorFragmentStaticWrapper
-import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociationUseCaseTest.Fixtures.createAppPrefsWrapper
 import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociationUseCaseTest.Fixtures.createAztecEditorWrapper
 import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociationUseCaseTest.Fixtures.createMediaList
 import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociationUseCaseTest.Fixtures.createPostUtilsWrapper
 import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociationUseCaseTest.Fixtures.createUploadStore
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @InternalCoroutinesApi
 @RunWith(Parameterized::class)
-class CleanUpMediaToPostAssociationUseCaseTest(
-    private val aztecEnabled: Boolean,
-    private val gutenbergEnabled: Boolean
-) : BaseUnitTest() {
+class CleanUpMediaToPostAssociationUseCaseTest(private val containsGutenbergBlocks: Boolean) : BaseUnitTest() {
     @Test
     fun `media which are NOT in post are cleared`() = test {
         // Arrange
@@ -115,9 +111,8 @@ class CleanUpMediaToPostAssociationUseCaseTest(
     ) = CleanUpMediaToPostAssociationUseCase(
             dispatcher,
             uploadStore,
-            createAppPrefsWrapper(aztecEnabled, gutenbergEnabled),
             createAztecEditorWrapper(mediaInPost),
-            createPostUtilsWrapper(mediaInPost),
+            createPostUtilsWrapper(mediaInPost, containsGutenbergBlocks),
             TEST_DISPATCHER
     )
 
@@ -125,10 +120,8 @@ class CleanUpMediaToPostAssociationUseCaseTest(
         @JvmStatic
         @Parameterized.Parameters
         fun parameters() = listOf(
-                arrayOf(true, true), // aztec enabled, gutenberg enabled
-                arrayOf(true, false), // aztec enabled, gutenberg disabled
-                arrayOf(false, true) // aztec disabled, gutenberg enabled
-                // arrayOf(false, false) is an invalid option, one of the editors must be enabled
+                arrayOf(true), // Test with posts containing gutenberg blocks
+                arrayOf(false) // Test with posts not containing gutenberg blocks
         )
     }
 
@@ -143,19 +136,19 @@ class CleanUpMediaToPostAssociationUseCaseTest(
             on { getUploadingMediaForPost(any()) }.thenReturn(uploadingMedia)
         }
 
-        fun createAppPrefsWrapper(aztecEnabled: Boolean, gutenbergEnabled: Boolean) =
-                mock<AppPrefsWrapper> {
-                    on { isAztecEditorEnabled }.thenReturn(aztecEnabled)
-                    on { isGutenbergEditorEnabled() }.thenReturn(gutenbergEnabled)
-                }
-
-        fun createPostUtilsWrapper(mediaInPost: Set<MediaModel>) =
+        fun createPostUtilsWrapper(
+            mediaInPost: Set<MediaModel>,
+            containsGutenbergBlocks: Boolean
+        ) =
                 mock<PostUtilsWrapper> {
                     on { isMediaInGutenbergPostBody(anyOrNull(), anyOrNull()) }
                             .doAnswer { invocation ->
                                 mediaInPost.map { it.id }
                                         .contains((invocation.arguments[1] as String).toInt())
                             }
+                    on { contentContainsGutenbergBlocks(anyOrNull()) }.doReturn(
+                            containsGutenbergBlocks
+                    )
                 }
 
         fun createAztecEditorWrapper(mediaInPost: Set<MediaModel>) =
