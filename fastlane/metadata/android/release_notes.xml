@@ -1,117 +1,90 @@
-<ar>
-13.6:
-- قمنا بتحديث لون شريط التنقل إلى اللون الأبيض على نظام التشغيل Android 8.1 والإصدارات الأحدث منه.
-- تم إصلاح الأخطاء الواردة في ترتيب قائمة الصفحات، لذا ستظهر الصفحات دائمًا بترتيب أبجدي.
-- تحديثات محرِّر المكوّنات: تمت إضافة دعم للصور وخيارات محاذاة الصورة في Pexels.
-
-</ar>
 <de-DE>
-13.6:
-- Wir haben die Farbe der Navigationsleiste in Android 8.1 oder höher auf Weiß aktualisiert.
-- Ein Fehler beim Sortieren von Seiten wurden behoben, sodass Seiten stets in alphabetischer Reihenfolge angezeigt werden.
-- Updates im Block-Editor: Support für Pexels-Bilder und Optionen zum Ausrichten von Bildern hinzugefügt.
+13.7:
+* Updates im Block-Editor: Nicht unterstützte Blöcke zeigen jetzt einen Titel an, Indikatoren für neue Blöcke werden sowohl in leeren Editoren als auch nach dem letzten Block angezeigt, Hinzufügen von Links aus bestehenden URLs in deiner Zwischenablage, Medien- und Textblöcke haben jetzt mehr Ausrichtungsoptionen, Bildblöcke sind jetzt für die Vorschau im Vollbildmodus antippbar.
 
+* Allgemeine Verbesserungen: Einige Fehler und Abstürze wurden behoben, im Reader gibt es einen besseren Support für den TalkBack-Screenreader.
 </de-DE>
 <en-US>
-13.6:
-- We updated the navigation bar color to white on Android 8.1 and higher.
-- Bugs in page list ordering are fixed, so pages always appear in alphabetical order.
-- Block editor updates: Added support for Pexels images and image alignment options.
+13.7:
+* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.
 
+* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.
 </en-US>
 <es-ES>
-13.6:
-- Hemos actualizado el color de la barra de navegación a blanco en Android 8.1 y superior.
-- Los fallos en el orden de la lista de páginas han sido corregidos, por lo que las páginas siempre aparecen en orden alfabético.
-- Actualizaciones del editor de bloques: Añadida compatibilidad para imágenes de Pexels y opciones de alineación de imágenes.
+13.7:
+* Actualizaciones del editor de bloques: ahora, los bloques no compatibles muestran un título, los indicadores de nuevos bloques se muestran tanto en los editores vacíos como después del último bloque, añadir enlaces a las URLs existentes en tu portapapeles, los bloques de medios y texto tienen más opciones de alineación, los bloques de imagen se pueden tocar para obtener una vista previa a pantalla completa.
+
+* Mejoras generales: corregidos algunos fallos y roturas y añadido una mejor compatibilidad para el lector de pantalla TalkBack en el lector.
 </es-ES>
 <fr-CA>
-13.6:
-- We updated the navigation bar color to white on Android 8.1 and higher.
-- Bugs in page list ordering are fixed, so pages always appear in alphabetical order.
-- Block editor updates: Added support for Pexels images and image alignment options.
+13.7 :
+*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
 
+* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-CA>
 <fr-FR>
-13.6:
-- We updated the navigation bar color to white on Android 8.1 and higher.
-- Bugs in page list ordering are fixed, so pages always appear in alphabetical order.
-- Block editor updates: Added support for Pexels images and image alignment options.
+13.7 :
+*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
 
+* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-FR>
 <iw-IL>
-13.6:
-- שינינו את הצבע של סרגל הניווט ללבן ב-Android 8.1 ומעלה.
-- תוקנו הבאגים בסידור רשימת העמודים כך שהעמודים תמיד יופיעו בסדר אלפביתי.
-- עדכונים בעורך הבלוקים: הוספנו תמיכה בתמונות Pexels ובאפשרויות יישור תמונה.
+13.7:
+* עדכונים בעורך הבלוקים: בלוקים שלא נתמכים כעת מציגים כותרת, סממנים של בלוקים חדשים מוצגים בעורכים ריקים ולאחר הבלוק האחרון, הוספה של קישורים אפשרית מכתובות URL שנמצאות בלוח שלך, בלוקים של טקסט ומדיה כוללים אפשרויות יישור נוספות, ניתן להקיש על בלוקים של תמונה לתצוגה במסך מלא.
 
+* שיפורים כלליים: תיקנו כמה באגים וקריסות ושיפרנו את התמיכה בקורא של מסך TalkBack ב-Reader.
 </iw-IL>
 <id>
-13.6:
-- Kami memperbarui warna bilah navigasi menjadi putih di Android 8.1 dan yang lebih tinggi.
-- Bug di pengurutan daftar halaman telah diperbaiki, sehingga halaman selalu ditampilkan dalam urutan alfabet.
-* Pembaruan penyunting blok: Dukungan yang ditambahkan untuk gambar Pexels dan pilihan penyelarasan gambar.
+13.7.
+* Pembaruan penyunting blok: blok yang tidak didukung kini menampilkan judul, indikator blok baru ditampilkan baik di penyunting kosong maupun setelah blok terakhir, menambahkan tautan dari URL yang sudah ada di papan klip Anda, blok Media dan Teks memiliki lebih banyak pilihan perataan, blok gambar kini dapat diketuk untuk pratinjau layar penuh.
 
+* Penyempurnaan umum: memperbaiki beberapa bug dan kesalahan, serta menambahkan dukungan pembaca layar TalkBack yang lebih baik di Pembaca.
 </id>
-<it-IT>
-13.6:
-- Abbiamo aggiornato il colore della barra di navigazione al bianco su Android 8.1 e versioni successione.
-- I bug nell'ordinamento dell'elenco di pagine sono stati risolti, quindi le pagine saranno sempre visualizzate in ordine alfabetico.
-* Aggiornamenti all'editor dei blocchi: aggiunto supporto per immagini Pexels e opzioni per l'allineamento delle immagini.
-
-</it-IT>
 <ja-JP>
-13.6:
-- Android 8.1以降で、ナビゲーションバーの色が白に変更されました。
-- ページリストの順序についてのバグが修正され、ページが常にアルファベット順に表示されるようになりました。
-- ブロックエディターの更新 :Pexels 画像対応となり、画像の配置オプションが追加されました。
+13.7:
+* ブロックエディターの更新 :サポート対象外のブロックにタイトルが表示されるようになり、新しいブロックインジケータが空のエディターと最後のブロック後の両方に表示され、リンクを追加するとクリップボードで既存の URL から抽出され、メディアブロックとテキストブロックに他の配置オプションが追加され、画像ブロックをタップするとフルスクリーンのプレビューが可能になります。
 
+* 一般的な改善 :いくつかのバグとクラッシュが修正され、TalkBack 画面の読者サポートが Reader で改善されました。
 </ja-JP>
 <ko-KR>
-13.6:
-- Android 8.1 이상에서 탐색 표시줄 색을 흰색으로 업데이트했습니다.
-- 페이지 목록 순서의 버그가 수정되어 페이지가 항상 알파벳순으로 표시됩니다.
-- 블록 편집기 업데이트: Pexels 이미지 및 이미지 정렬 옵션에 대한 지원이 추가되었습니다.
+13.7:
+* 블록 편집기 업데이트: 지원되지 않는 블록에 이제 제목이 표시됨, 새 블록 표시기가 빈 편집기와 마지막 블록 뒤에 모두 표시됨, 링크를 추가하면 클립보드의 기존 URL에서 가져옴, 미디어 및 텍스트 블록에 정렬 옵션이 추가됨, 이미지 블록을 탭하여 전체 화면으로 미리보기 가능.
 
+* 일반 개선 사항 : 일부 버그 및 충돌을 수정하고 리더에서 더 나은 TalkBack 화면 판독기 지원을 추가했습니다.
 </ko-KR>
 <nl-NL>
-13.6:
-- We hebben de kleur van de navigatiebalk op Android 8.1 en hoger bijgewerkt naar wit.
-- Bugs die voor problemen zorgden met de sortering van de paginalijst zijn verwijderd, zodat pagina's altijd in alfabetische volgorde worden weergegeven.
-* Updates van de blokeditor: Ondersteuning voor Pexels-afbeeldingen en opties voor uitlijning van afbeeldingen toegevoegd.
+13.7:
+* Updates van de blokeditor: in niet-ondersteunde blokken wordt nu een titel weergegeven, indicators van nieuwe blokken worden zowel in lege editors als na het laatste blok weergegeven, links kunnen worden toegevoegd vanuit bestaande URL's in je klembord, de blokken Media en Tekst bevatten nu meer opties voor uitlijning, er kan op afbeeldingsblokken worden getikt voor weergave op volledig scherm.
 
+* Algemene verbeteringen: een paar bugs en crashes zijn opgelost en er is verbeterde ondersteuning voor de TalkBack-schermreader in de Reader.
 </nl-NL>
 <ru-RU>
-13.6:
-- Цвет панели навигации изменен на белый для Android 8.1 и выше
-- Исправлена ошибка отображения списка страниц, теперь они всегда будут упорядочены по алфавиту.
-- Обновление редактора блоков: Поддержка изображений с Pexels и возможности выравнивания изображений.
+13.7:
+* Обновления для редактора блоков: для неподдерживаемых блоков показывается их название, индикаторы нового блока показываются и в пустом редакторе и после последнего блока, добавление ссылки может использовать содержимое буфера обмена, мультимедиа и текстовые блоки имеют больше возможностей выравнивания, блоки изображений можно развернуть на полноэкранный просмотр при нажатии.
 
+* Общие улучшения: исправлены некоторые ошибки и падения, добавлена поддержка чтения с экрана TalkBack в Чтиво.
 </ru-RU>
 <sv-SE>
-13.6:
-- Vi har uppdaterat navigationslisten färg till vitt i Android 8.1 och senare.
-- Fel i sorteringen av listan med sidor har rättats så att sidorna alltid ska visas i bokstavsordning.
-- Uppdateringar av blockredigeraren: Stöd för Pexels-bilder och justering av bilder i sidled.
+13.7:
+* Blockredigeraren: block utan stöd har nu en särskild rubrik, nya indikatorer visar tomma redigerare och slutet på sista blocket, vid tillägg av ny länk hämtas eventuell URL i urklippet, media- och textblock har fler justeringsalternativ, man kan klicka på bildblock för förhandsvisning i fullskärm.
 
+* Allmänna förbättringar: korrigerat olika fel och programkrascher och förbättrat stödet för skärmläsaren TalkBack i läsaren.
 </sv-SE>
 <tr-TR>
-13.6:
-- Gezinti çubuğunun rengini Android 8.1 ve üzeri sürümlerde beyaza dönüştürdük.
-- Sayfa listesindeki hatalar düzeltildi, bu yüzden sayfalar her zaman alfabetik sırada görünüyor.
-- Block düzenleyici güncellemeleri: Pexels görselleri ve görüntü hizalama seçenekleri için destek eklendi.
+13.7:
+* Blok düzenleyici güncellemeleri: desteklenmeyen bloklarda artık bir başlık görüntülenir, yeni blok göstergeleri hem boş düzenleyicilerde hem de son bloktan sonra gösterilir, bağlantılar eklendiğinde panodaki mevcut URL'lerden alınır, Ortam ve Metin bloklarında daha fazla hizalama seçeneği bulunur, görsel bloklarına dokunularak tam ekran önizleme yapılabilir.
+
+* Genel iyileştirmeler: Bazı hatalar ve kilitlenme durumları düzeltildi, Okuyucu'daki TalkBack ekran okuyucu desteği geliştirildi.
 </tr-TR>
 <zh-CN>
-13.6：
-- 在 Android 8.1 及更高版本中，我们已将导航栏颜色更新为白色。
-- 修复了页面列表排序中的错误，因此页面始终按字母顺序显示。
-- 更新了区块编辑器：增加了对 Pexels 图片和图片对齐选项的支持。
+13.7：
+* 更新了区块编辑器：不支持的区块现可显示标题；新区块指示器同时显示在空白编辑器中和最后一个区块之后；添加从剪贴板的现有 URL 中提取的链接；“媒体和文本”区块具有更多对齐选项；轻点“图片”区块可进行全屏预览。
 
+* 常规改进：修复了一些错误和崩溃，并在阅读器中添加了更好的 TalkBack 屏幕阅读器支持。
 </zh-CN>
 <zh-TW>
-13.6：
-- 我們已將 Android 8.1 與更新版本的導覽列顏色改成白色。
-- 頁面清單排序的錯誤已經修正，現在頁面將一律依字母順序顯示。
-* 區塊編輯器更新：新增對 Pexels 圖片和圖片對齊選項的支援。
+13.7：
+* 區塊編輯器更新：不支援的區塊現在會顯示標題；在空白編輯器內和前一個區塊之後，都會顯示新區塊指標；你可從剪貼簿拖入現有網址以新增連結；媒體和文字區塊可提供更多對齊選項；點選圖片區塊即可進行全螢幕預覽。
 
+* 一般改善項目：修正一些錯誤和故障情況，並為讀取器新增更完善的 TalkBack 螢幕讀取器支援。
 </zh-TW>

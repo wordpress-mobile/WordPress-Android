@@ -10,10 +10,6 @@ Language: el_GR
     <string name="post_list_published">Δημοσιευμένα</string>
     <string name="post_list_author_everyone">Όλοι</string>
     <string name="post_list_author_me">Εγώ</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Μη υποστηριζόμενο</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Εναλλακτικό κείμενο</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Κείμενο συνδέσμου</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Εισάγετε URL</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
     <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="quick_start_sites">Επόμενα βήματα</string>

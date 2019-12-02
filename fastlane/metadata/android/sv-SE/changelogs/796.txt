@@ -1,5 +1,0 @@
-13.6:
-- Vi har uppdaterat navigationslisten färg till vitt i Android 8.1 och senare.
-- Fel i sorteringen av listan med sidor har rättats så att sidorna alltid ska visas i bokstavsordning.
-- Uppdateringar av blockredigeraren: Stöd för Pexels-bilder och justering av bilder i sidled.
-

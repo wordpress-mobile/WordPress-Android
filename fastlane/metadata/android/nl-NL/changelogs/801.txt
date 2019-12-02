@@ -1,0 +1,4 @@
+13.7:
+* Updates van de blokeditor: in niet-ondersteunde blokken wordt nu een titel weergegeven, indicators van nieuwe blokken worden zowel in lege editors als na het laatste blok weergegeven, links kunnen worden toegevoegd vanuit bestaande URL's in je klembord, de blokken Media en Tekst bevatten nu meer opties voor uitlijning, er kan op afbeeldingsblokken worden getikt voor weergave op volledig scherm.
+
+* Algemene verbeteringen: een paar bugs en crashes zijn opgelost en er is verbeterde ondersteuning voor de TalkBack-schermreader in de Reader.
