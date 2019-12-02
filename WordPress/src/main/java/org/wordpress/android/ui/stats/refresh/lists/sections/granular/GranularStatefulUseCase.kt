@@ -24,7 +24,7 @@ abstract class GranularStatefulUseCase<DOMAIN_MODEL, UI_STATE>(
         mainDispatcher,
         backgroundDispatcher,
         defaultUiState,
-        listOf(UseCaseParam.Site, UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
+        listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
 ) {
     abstract suspend fun loadCachedData(selectedDate: Date, site: SiteModel): DOMAIN_MODEL?
 

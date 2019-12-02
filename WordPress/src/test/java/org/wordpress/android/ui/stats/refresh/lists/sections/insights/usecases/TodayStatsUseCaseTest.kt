@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -30,12 +31,14 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 
 class TodayStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: TodayInsightsStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: TodayStatsUseCase
     private val views = 10
     private val visitors = 15
@@ -52,10 +55,12 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
                 insightsStore,
                 statsSiteProvider,
                 statsWidgetUpdaters,
+                statsUtils,
                 popupMenuHandler
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

@@ -51,7 +51,7 @@ dependencies {
             exclude group: "org.wordpress", module: "utils"
         }
     } else {
-        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:9f07b031646dd3e6021d4b8e0a35647c9109ff27") {
+        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:1.5.1-beta-4") {
             exclude group: "com.android.support"
             exclude group: "org.wordpress", module: "utils"
         }

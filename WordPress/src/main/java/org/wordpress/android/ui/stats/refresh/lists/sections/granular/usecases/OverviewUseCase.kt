@@ -19,7 +19,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.O
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
@@ -54,7 +53,7 @@ constructor(
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(
                     ValueItem(
-                            value = 0.toFormattedString(),
+                            value = "0",
                             unit = R.string.stats_views,
                             isFirst = true,
                             contentDescription = resourceProvider.getString(R.string.stats_loading_card)
@@ -100,7 +99,10 @@ constructor(
         }
     }
 
-    override fun buildUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
+    override fun buildUiModel(
+        domainModel: VisitsAndViewsModel,
+        uiState: UiState
+    ): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
             val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
@@ -140,7 +142,13 @@ constructor(
                             selectedItem.period
                     )
             )
-            items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
+            items.add(
+                    overviewMapper.buildColumns(
+                            selectedItem,
+                            this::onColumnSelected,
+                            uiState.selectedPosition
+                    )
+            )
         } else {
             selectedDateProvider.onDateLoadingFailed(statsGranularity)
             AppLog.e(T.STATS, "There is no data to be shown in the overview block")
@@ -149,7 +157,10 @@ constructor(
     }
 
     private fun onBarSelected(period: String?) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+                AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED,
+                statsGranularity
+        )
         if (period != null && period != "empty") {
             val selectedDate = statsDateFormatter.parseStatsDate(statsGranularity, period)
             selectedDateProvider.selectDate(
@@ -160,7 +171,10 @@ constructor(
     }
 
     private fun onColumnSelected(position: Int) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(
+                AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED,
+                statsGranularity
+        )
         updateUiState { it.copy(selectedPosition = position) }
     }
 

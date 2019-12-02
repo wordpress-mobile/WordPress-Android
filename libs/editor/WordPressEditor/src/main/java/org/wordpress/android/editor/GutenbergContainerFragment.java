@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
@@ -48,10 +49,17 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnEditorMountListener onEditorMountListener,
                                   OnEditorAutosaveListener onEditorAutosaveListener,
                                   OnAuthHeaderRequestedListener onAuthHeaderRequestedListener,
-                                  OnImageFullscreenPreviewListener onImageFullscreenPreviewListener) {
-        mWPAndroidGlueCode.attachToContainer(viewGroup, onMediaLibraryButtonListener, onReattachQueryListener,
-                onEditorMountListener, onEditorAutosaveListener, onAuthHeaderRequestedListener,
-                onImageFullscreenPreviewListener);
+                                  RequestExecutor fetchExecutor,
+        OnImageFullscreenPreviewListener onImageFullscreenPreviewListener) {
+            mWPAndroidGlueCode.attachToContainer(
+                    viewGroup,
+                    onMediaLibraryButtonListener,
+                    onReattachQueryListener,
+                    onEditorMountListener,
+                    onEditorAutosaveListener,
+                    onAuthHeaderRequestedListener,
+                    fetchExecutor,
+                    onImageFullscreenPreviewListener);
     }
 
     @Override

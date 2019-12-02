@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodDa
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEGATIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
@@ -29,7 +30,8 @@ class ViewsWidgetListViewModel
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val overviewMapper: OverviewMapper,
     private val resourceProvider: ResourceProvider,
-    private val statsDateFormatter: StatsDateFormatter
+    private val statsDateFormatter: StatsDateFormatter,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     private var siteId: Int? = null
     private var colorMode: Color = Color.LIGHT
@@ -63,6 +65,9 @@ class ViewsWidgetListViewModel
                 if (uiModels != data) {
                     mutableData.clear()
                     mutableData.addAll(uiModels)
+                    appWidgetId?.let {
+                        appPrefsWrapper.setAppWidgetHasData(true, it)
+                    }
                 }
             } else {
                 appWidgetId?.let { nonNullAppWidgetId ->

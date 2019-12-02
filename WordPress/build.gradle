@@ -67,6 +67,7 @@ android {
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
+        buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -93,13 +94,12 @@ android {
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
+            buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
     }
 
@@ -120,6 +120,7 @@ android {
     testOptions {
         unitTests {
             includeAndroidResources = true
+            returnDefaultValues = true
         }
     }
 
@@ -216,6 +217,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.23.0'
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
     testImplementation 'org.assertj:assertj-core:3.11.1'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1'
 
     androidTestImplementation 'org.mockito:mockito-android:2.27.0'
     androidTestImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
@@ -277,10 +279,6 @@ dependencies {
 
     implementation (group: 'com.zendesk', name: 'support', version: '2.0.0') {
         exclude group: 'com.google.dagger'
-    }
-
-    implementation('com.giphy.sdk:core:1.0.2@aar') {
-        transitive = true
     }
 
     lintChecks 'org.wordpress:lint:1.0.1'
