@@ -1,4 +1,0 @@
-13.6:
-- Gezinti çubuğunun rengini Android 8.1 ve üzeri sürümlerde beyaza dönüştürdük.
-- Sayfa listesindeki hatalar düzeltildi, bu yüzden sayfalar her zaman alfabetik sırada görünüyor.
-- Block düzenleyici güncellemeleri: Pexels görselleri ve görüntü hizalama seçenekleri için destek eklendi.

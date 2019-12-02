@@ -12,6 +12,8 @@
 * Block editor: Images clickable for fullscreen preview
 * Fixed time displayed on Post Conflict Detected and Unpublished Revision dialogs
 * Block editor: Fix issue when removing image/page break block crashes the app
+* Fixed a crash on Samsung devices running Android 5 (Lollipop)
+ 
 * Removed support for Giphy
 
 13.6
