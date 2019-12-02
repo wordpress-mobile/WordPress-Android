@@ -17,12 +17,12 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Success
-import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.uploads.UploadServiceFacade
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -43,6 +43,10 @@ class EditPostViewModel
     private val aztecEditorWrapper: AztecEditorWrapper,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val siteStore: SiteStore,
+    private val uploadUtils: UploadUtilsWrapper,
+    private val postUtils: PostUtilsWrapper,
+    private val pendingDraftsNotificationsUtils: PendingDraftsNotificationsUtilsWrapper,
+    private val uploadService: UploadServiceFacade,
     private val dateTimeUtils: DateTimeUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var debounceCounter = 0
@@ -51,6 +55,8 @@ class EditPostViewModel
     var mediaMarkedUploadingOnStartIds: List<String> = listOf()
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
     val onSavePostTriggered: LiveData<Event<Unit>> = _onSavePostTriggered
+    private val _onFinish = MutableLiveData<Event<Unit>>()
+    val onFinish: LiveData<Event<Unit>> = _onFinish
 
     fun savePostOnline(
         isFirstTimePublish: Boolean,
@@ -58,11 +64,11 @@ class EditPostViewModel
         editPostRepository: EditPostRepository,
         showAztecEditor: Boolean,
         site: SiteModel,
-        onPostSaved: (() -> Unit)? = null
+        doFinishActivity: Boolean
     ) {
         launch(bgDispatcher) {
             // mark as pending if the user doesn't have publishing rights
-            if (!UploadUtils.userCanPublish(site)) {
+            if (!uploadUtils.userCanPublish(site)) {
                 when (editPostRepository.status) {
                     PostStatus.UNKNOWN,
                     PostStatus.PUBLISHED,
@@ -76,22 +82,21 @@ class EditPostViewModel
                 }
             }
 
-            savePostToDb(context, editPostRepository, showAztecEditor);
-            PostUtils.trackSavePostAnalytics(
+            savePostToDb(context, editPostRepository, showAztecEditor)
+            postUtils.trackSavePostAnalytics(
                     editPostRepository.getPost(),
                     siteStore.getSiteByLocalId(editPostRepository.localSiteId)
             )
 
-            UploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish);
+            uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
 
-            PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(
+            pendingDraftsNotificationsUtils.cancelPendingDraftAlarms(
                     context,
                     editPostRepository.id
             )
-
-            onPostSaved?.let { action ->
+            if (doFinishActivity) {
                 withContext(mainDispatcher) {
-                    action()
+                    _onFinish.value = Event(Unit)
                 }
             }
         }
@@ -101,7 +106,7 @@ class EditPostViewModel
         context: Context,
         editPostRepository: EditPostRepository,
         showAztecEditor: Boolean,
-        onPostSaved: (() -> Unit)? = null
+        doFinishActivity: Boolean
     ) {
         launch(bgDispatcher) {
             if (editPostRepository.postHasEdits()) {
@@ -119,7 +124,7 @@ class EditPostViewModel
                     )
                     true
                 }
-                savePostToDb(context, editPostRepository, showAztecEditor);
+                savePostToDb(context, editPostRepository, showAztecEditor)
 
                 // For self-hosted sites, when exiting the editor without uploading, the `PostUploadModel
                 // .uploadState`
@@ -142,18 +147,18 @@ class EditPostViewModel
                 //
                 // See `PostListUploadStatusTracker` and `PostListItemUiStateHelper.createUploadUiState` for how
                 // the Post List determines what label to use.
-                dispatcher.dispatch(UploadActionBuilder.newCancelPostAction(editPostRepository.getEditablePost()));
+                dispatcher.dispatch(UploadActionBuilder.newCancelPostAction(editPostRepository.getEditablePost()))
 
                 // now set the pending notification alarm to be triggered in the next day, week, and month
-                PendingDraftsNotificationsUtils
+                pendingDraftsNotificationsUtils
                         .scheduleNextNotifications(
                                 context, editPostRepository.id,
                                 editPostRepository.dateLocallyChanged
                         )
             }
-            onPostSaved?.let { action ->
+            if (doFinishActivity) {
                 withContext(mainDispatcher) {
-                    action()
+                    _onFinish.value = Event(Unit)
                 }
             }
         }

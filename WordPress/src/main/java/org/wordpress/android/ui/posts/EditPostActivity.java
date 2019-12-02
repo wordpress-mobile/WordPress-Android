@@ -197,6 +197,7 @@ import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KE
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function1;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
@@ -604,9 +605,16 @@ public class EditPostActivity extends AppCompatActivity implements
                 contentIfNotHandled.show(this);
             }
         });
-        mViewModel.getOnSavePostTriggered().observe(this, unitEvent -> {
+        mViewModel.getOnSavePostTriggered().observe(this, unitEvent -> unitEvent.applyIfNotHandled(unit -> {
             updateAndSavePostAsync();
-        });
+            return null;
+        }));
+        mViewModel.getOnFinish().observe(this, finishEvent -> finishEvent.applyIfNotHandled(unit -> {
+            saveResult(true, false, false);
+            removePostOpenInEditorStickyEvent();
+            finish();
+            return null;
+        }));
     }
 
     private void initializePostObject() {
@@ -1487,14 +1495,7 @@ public class EditPostActivity extends AppCompatActivity implements
             boolean doFinishActivity
     ) {
         mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mShowAztecEditor, mSite,
-                () -> {
-                    if (doFinishActivity) {
-                        saveResult(true, false, false);
-                        removePostOpenInEditorStickyEvent();
-                        finish();
-                    }
-                    return null;
-                });
+                doFinishActivity);
     }
 
     private void onUploadSuccess(MediaModel media) {
@@ -2061,14 +2062,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void savePostLocallyAndFinishAsync(boolean doFinishActivity) {
-        mViewModel.savePostLocally(this, mEditPostRepository, mShowAztecEditor, () -> {
-            if (doFinishActivity) {
-                saveResult(true, false, true);
-                removePostOpenInEditorStickyEvent();
-                finish();
-            }
-            return null;
-        });
+        mViewModel.savePostLocally(this, mEditPostRepository, mShowAztecEditor, doFinishActivity);
     }
 
     /**

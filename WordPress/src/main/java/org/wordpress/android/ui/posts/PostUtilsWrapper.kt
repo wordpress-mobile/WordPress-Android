@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.PostImmutableModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import javax.inject.Inject
 
@@ -16,13 +17,18 @@ import javax.inject.Inject
 class PostUtilsWrapper @Inject constructor() {
     fun isPublishable(post: PostImmutableModel) = PostUtils.isPublishable(post)
 
-    fun isPostInConflictWithRemote(post: PostImmutableModel) = PostUtils.isPostInConflictWithRemote(post)
+    fun isPostInConflictWithRemote(post: PostImmutableModel) =
+            PostUtils.isPostInConflictWithRemote(post)
 
-    fun isPostCurrentlyBeingEdited(post: PostImmutableModel) = PostUtils.isPostCurrentlyBeingEdited(post)
+    fun isPostCurrentlyBeingEdited(post: PostImmutableModel) =
+            PostUtils.isPostCurrentlyBeingEdited(post)
 
     fun shouldPublishImmediately(postStatus: PostStatus, dateCreated: String) =
             PostUtils.shouldPublishImmediately(postStatus, dateCreated)
 
     fun postHasEdits(oldPost: PostImmutableModel?, newPost: PostImmutableModel) =
             PostUtils.postHasEdits(oldPost, newPost)
+
+    fun trackSavePostAnalytics(post: PostImmutableModel?, site: SiteModel) =
+            PostUtils.trackSavePostAnalytics(post, site)
 }
