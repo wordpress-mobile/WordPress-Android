@@ -39,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 class CommentsUseCaseTest : BaseUnitTest() {
@@ -48,6 +49,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: CommentsUseCase
     private val postId: Long = 10
     private val postTitle = "Post"
@@ -66,6 +68,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
                 insightsStore,
                 statsSiteProvider,
                 popupMenuHandler,
+                statsUtils,
                 contentDescriptionHelper
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -74,6 +77,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
                 any<String>(),
                 any()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

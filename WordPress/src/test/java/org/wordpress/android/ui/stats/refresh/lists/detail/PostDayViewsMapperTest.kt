@@ -12,11 +12,13 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class PostDayViewsMapperTest : BaseUnitTest() {
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var mapper: PostDayViewsMapper
     private val count = 20
     private val selectedItem = PostDetailStatsModel.Day("2010-10-10", count)
@@ -25,7 +27,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
     private val contentDescription = "Content description"
     @Before
     fun setUp() {
-        mapper = PostDayViewsMapper(resourceProvider, statsDateFormatter)
+        mapper = PostDayViewsMapper(resourceProvider, statsUtils, statsDateFormatter)
         whenever(resourceProvider.getString(R.string.stats_views)).thenReturn(views)
         whenever(statsDateFormatter.printDate(any())).thenReturn(date)
         whenever(resourceProvider.getString(
@@ -35,6 +37,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
                 eq(date),
                 any()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

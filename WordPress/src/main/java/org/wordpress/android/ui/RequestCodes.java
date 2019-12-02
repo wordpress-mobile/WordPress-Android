@@ -46,8 +46,6 @@ public class RequestCodes {
     // QuickStart
     public static final int QUICK_START_REMINDER_RECEIVER = 4000;
 
-    public static final int GIPHY_PICKER = 3200;
-
     // Domain Registration
     public static final int DOMAIN_REGISTRATION = 5000;
 }

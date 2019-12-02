@@ -40,6 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Calendar
@@ -57,6 +58,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: FileDownloadsUseCase
     private lateinit var selectedDate: Date
     private val contentDescription = "file, downloads"
@@ -73,6 +75,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
                 tracker,
                 contentDescriptionHelper,
                 localeManagerWrapper,
+                statsUtils,
                 BLOCK
         )
         val selectedCalendar = Calendar.getInstance()
@@ -91,6 +94,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
                 any<String>(),
                 any()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

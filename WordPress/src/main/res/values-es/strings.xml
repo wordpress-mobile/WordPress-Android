@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-25 03:23:05+0000
+Translation-Revision-Date: 2019-11-05 23:13:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Avisos</string>
+    <string name="master_switch_default_title_off">Desactivados</string>
+    <string name="master_switch_default_title_on">Activados</string>
+    <string name="notifications_tab_dialog_master_off_message">Al desactivar los avisos para este sitio, se desactivarán los avisos que se muestran en la pestaña de avisos de este sitio. Puedes ajustar el tipo de aviso que ves después de activar los avisos para este sitio.</string>
+    <string name="notifications_tab_dialog_master_off_title">Para ver los avisos en la pestaña de avisos de este sitio, activa los avisos para este sitio.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Activar los avisos mostrados en la pestaña de avisos de este sitio</string>
+    <string name="notifications_tab_dialog_master_hint_on">Desactivar los avisos mostrados en la pestaña de avisos de este sitio</string>
+    <string name="notifications_tab_dialog_master_status_off">Avisos para este sitio</string>
+    <string name="notifications_tab_dialog_master_status_on">Avisos para este sitio</string>
+    <string name="dialog_gutenberg_informative_description_page">Ahora estás usando el editor de bloques para las nuevas páginas — ¡Genial! Si quieres cambiar al editor clásico, ve a «Mi sitio > Ajustes del sitio».</string>
+    <string name="dialog_gutenberg_informative_description_post">Ahora estás usando el editor de bloques para las nuevas entradas — ¡Genial! Si quieres cambiar al editor clásico, ve a «Mi sitio > Ajustes del sitio».</string>
     <string name="pick_media">Añadir una imagen o vídeo</string>
     <string name="error_post_not_submitted_retrying">No hemos podido enviar esta entrada para revisión, pero lo intentaremos de nuevo más tarde. </string>
     <string name="error_post_not_scheduled_retrying">No hemos podido programar esta entrada, pero lo intentaremos de nuevo más tarde.</string>
@@ -117,8 +128,6 @@ Language: es
     <string name="stats_bar_chart_content_description">Gráfico de visitas del sitio.</string>
     <string name="stats_loading_card">Cargando los datos de la tarjeta seleccionada</string>
     <string name="site_settings_editor">Editor</string>
-    <string name="dialog_gutenberg_informative_description_page">Actualmente estás usando el editor de bloques para crear nuevas páginas. ¿Quieres usar el editor clásico por defecto? Dirígete a los ajustes del sitio.</string>
-    <string name="dialog_gutenberg_informative_description_post">Actualmente estás usando el editor de bloques para crear nuevas entradas. ¿Quieres usar el editor clásico por defecto? Dirígete a los ajustes del sitio.</string>
     <string name="description_expand">Expandir</string>
     <string name="description_collapse">Cerrar</string>
     <string name="editor_retry_failed_uploads">Reintentar la subida</string>

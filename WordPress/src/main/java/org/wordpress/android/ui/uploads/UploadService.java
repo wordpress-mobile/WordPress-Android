@@ -741,8 +741,12 @@ public class UploadService extends Service {
             // the user actively cancelled it. No need to show an error then.
             String message = UploadUtils.getErrorMessage(this, postToCancel.isPage(), errorMessage, true);
             SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
-            mPostUploadNotifier.updateNotificationErrorForPost(postToCancel, site, message,
-                    mUploadStore.getFailedMediaForPost(postToCancel).size());
+            if (site != null) {
+                mPostUploadNotifier.updateNotificationErrorForPost(postToCancel, site, message,
+                        mUploadStore.getFailedMediaForPost(postToCancel).size());
+            } else {
+                AppLog.e(T.POSTS, "Trying to update notifications with missing site");
+            }
         }
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel.getId());
@@ -754,9 +758,12 @@ public class UploadService extends Service {
     private void rebuildNotificationError(PostModel post, String errorMessage) {
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         mPostUploadNotifier.setTotalMediaItems(post, failedMedia.size());
-        mPostUploadNotifier.updateNotificationErrorForPost(post,
-                mSiteStore.getSiteByLocalId(post.getLocalSiteId()),
-                errorMessage, 0);
+        SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
+        if (site != null) {
+            mPostUploadNotifier.updateNotificationErrorForPost(post, site, errorMessage, 0);
+        } else {
+            AppLog.e(T.POSTS, "Trying to rebuild notification error without a site");
+        }
     }
 
     private void aztecRegisterFailedMediaForThisPost(PostModel post) {
@@ -990,7 +997,11 @@ public class UploadService extends Service {
                             String message = UploadUtils
                                     .getErrorMessage(this, postModel.isPage(), getString(R.string.error_generic_error),
                                             true);
-                            mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message, 0);
+                            if (site != null) {
+                                mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message, 0);
+                            } else {
+                                AppLog.e(T.POSTS, "Error notification cannot be updated without a post");
+                            }
                         }
 
                         mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel.getId());

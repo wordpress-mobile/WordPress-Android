@@ -1,52 +1,108 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
+import org.wordpress.android.R
+import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DecimalFormat
 import java.util.Locale
 import java.util.TreeMap
-
-private val SUFFIXES = TreeMap(mapOf(
-        1_000L to "k",
-        1_000_000L to "M",
-        1_000_000_000L to "B",
-        1_000_000_000_000L to "T",
-        1_000_000_000_000_000L to "Qa",
-        1_000_000_000_000_000_000L to "Qi"
-))
+import javax.inject.Inject
 
 const val ONE_THOUSAND = 1000
 const val TEN_THOUSAND = 10000
 const val HUNDRED_THOUSAND = 100000
 const val MILLION = 1000000
 
-fun Int.toFormattedString(startValue: Int = TEN_THOUSAND, locale: Locale = Locale.getDefault()): String {
-    return this.toLong().toFormattedString(startValue, locale)
-}
+class StatsUtils
+@Inject constructor(
+    private val resourceProvider: ResourceProvider,
+    private val localeManager: LocaleManagerWrapper
+) {
+    private val suffixes = TreeMap(
+            mapOf(
+                    1_000L to R.string.suffix_1_000,
+                    1_000_000L to R.string.suffix_1_000_000,
+                    1_000_000_000L to R.string.suffix_1_000_000_000,
+                    1_000_000_000_000L to R.string.suffix_1_000_000_000_000,
+                    1_000_000_000_000_000L to R.string.suffix_1_000_000_000_000_000,
+                    1_000_000_000_000_000_000L to R.string.suffix_1_000_000_000_000_000_000
+            )
+    )
 
-fun Long.toFormattedString(startValue: Int = TEN_THOUSAND, locale: Locale = Locale.getDefault()): String {
-    if (this == java.lang.Long.MIN_VALUE) return (java.lang.Long.MIN_VALUE + 1).toFormattedString(locale = locale)
-    if (this < 0) return "-" + (-this).toFormattedString(locale = locale)
-    if (this < startValue) return DecimalFormat.getInstance(locale).format(this).toString()
+    fun toFormattedString(number: Long?, startValue: Int = TEN_THOUSAND): String? {
+        return number?.toFormattedString(resourceProvider, startValue)
+    }
 
-    val e = SUFFIXES.floorEntry(this)
-    val divideBy = e.key
-    val suffix = e.value
+    fun toFormattedString(number: Long?, startValue: Int = TEN_THOUSAND, defaultValue: String): String {
+        return number?.toFormattedString(resourceProvider, startValue) ?: defaultValue
+    }
 
-    val truncated = this / (divideBy!! / 10)
-    val hasDecimal = truncated < 100 && truncated / 10.0 != (truncated / 10).toDouble()
-    return if (hasDecimal)
-        DecimalFormat.getInstance(locale).format(truncated / 10.0) + suffix
-    else
-        DecimalFormat.getInstance(locale).format(truncated / 10) + suffix
-}
+    fun toFormattedString(number: Long, startValue: Int = TEN_THOUSAND): String {
+        return number.toFormattedString(resourceProvider, startValue)
+    }
 
-fun Double.toFormattedString(thresholdValue: Int = TEN_THOUSAND, locale: Locale = Locale.getDefault()): String {
-    return if (this < thresholdValue) {
-        val formatter = DecimalFormat.getInstance(locale)
-        formatter.maximumFractionDigits = 1
-        formatter.minimumFractionDigits = 0
-        formatter.format(this)
-    } else {
-        this.toLong().toFormattedString(thresholdValue, locale)
+    fun toFormattedString(number: Double?, startValue: Int = TEN_THOUSAND): String? {
+        return number?.let { toFormattedString(it, startValue) }
+    }
+
+    fun toFormattedString(number: Double?, startValue: Int = TEN_THOUSAND, defaultValue: String): String {
+        return number?.let { toFormattedString(it, startValue) } ?: defaultValue
+    }
+
+    fun toFormattedString(number: Double, startValue: Int = TEN_THOUSAND): String {
+        val locale = localeManager.getLocale()
+        return number.let {
+            if (it < startValue && it > (startValue * -1)) {
+                val formatter = DecimalFormat.getInstance(locale)
+                formatter.maximumFractionDigits = 1
+                formatter.minimumFractionDigits = 0
+                formatter.format(it)
+            } else {
+                it.toLong().toFormattedString(resourceProvider, startValue, locale)
+            }
+        }
+    }
+
+    fun toFormattedString(number: Int?, startValue: Int = TEN_THOUSAND): String? {
+        return toFormattedString(number?.toLong(), startValue)
+    }
+
+    fun toFormattedString(number: Int?, startValue: Int = TEN_THOUSAND, defaultValue: String): String {
+        return toFormattedString(number?.toLong(), startValue, defaultValue)
+    }
+
+    fun toFormattedString(number: Int, startValue: Int = TEN_THOUSAND): String {
+        return toFormattedString(number.toLong(), startValue)
+    }
+
+    private fun Long.toFormattedString(
+        resourceProvider: ResourceProvider,
+        startValue: Int = TEN_THOUSAND,
+        locale: Locale = Locale.getDefault()
+    ): String {
+        if (this == java.lang.Long.MIN_VALUE) return (java.lang.Long.MIN_VALUE + 1).toFormattedString(
+                locale = locale,
+                resourceProvider = resourceProvider
+        )
+        if (this < 0) return "-" + (-this).toFormattedString(
+                locale = locale,
+                resourceProvider = resourceProvider
+        )
+        if (this < startValue) return DecimalFormat.getInstance(locale).format(this).toString()
+
+        val e = suffixes.floorEntry(this)
+        val divideBy = e.key
+        val suffix = e.value
+
+        val truncated = this / (divideBy!! / 10)
+        val hasDecimal = truncated < 100 && truncated / 10.0 != (truncated / 10).toDouble()
+        return if (hasDecimal)
+            resourceProvider.getString(
+                    suffix,
+                    DecimalFormat.getInstance(locale).format(truncated / 10.0)
+            )
+        else
+            resourceProvider.getString(suffix, DecimalFormat.getInstance(locale).format(truncated / 10))
     }
 }
 

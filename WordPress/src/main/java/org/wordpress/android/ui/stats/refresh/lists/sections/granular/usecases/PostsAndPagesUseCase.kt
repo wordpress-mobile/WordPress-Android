@@ -33,8 +33,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUs
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -54,6 +54,7 @@ constructor(
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<PostAndPageViewsModel>(
         POSTS_AND_PAGES,
@@ -119,7 +120,7 @@ constructor(
                 ListItemWithIcon(
                         icon = icon,
                         text = viewsModel.title,
-                        value = viewsModel.views.toFormattedString(),
+                        value = statsUtils.toFormattedString(viewsModel.views),
                         showDivider = index < domainModel.views.size - 1,
                         barWidth = getBarWidth(viewsModel.views, maxViews),
                         navigationAction = create(
@@ -186,6 +187,7 @@ constructor(
         private val selectedDateProvider: SelectedDateProvider,
         private val statsSiteProvider: StatsSiteProvider,
         private val contentDescriptionHelper: ContentDescriptionHelper,
+        private val statsUtils: StatsUtils,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
@@ -198,6 +200,7 @@ constructor(
                         selectedDateProvider,
                         analyticsTracker,
                         contentDescriptionHelper,
+                        statsUtils,
                         useCaseMode
                 )
     }

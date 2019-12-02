@@ -66,6 +66,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -121,6 +122,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final long ITEM_ID_NEWS_CARD = -3L;
 
     private static final int NEWS_CARD_POSITION = 0;
+
+    private boolean mIsMainReader = false;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -236,6 +239,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             ViewGroup postHeaderView = itemView.findViewById(R.id.layout_post_header);
             mFollowButton = postHeaderView.findViewById(R.id.follow_button);
+
+            ViewUtilsKt.expandTouchTargetArea(mLayoutDiscover, R.dimen.reader_discover_layout_extra_padding, true);
+            ViewUtilsKt.expandTouchTargetArea(mVisit, R.dimen.reader_visit_layout_extra_padding, false);
+            ViewUtilsKt.expandTouchTargetArea(mImgMore, R.dimen.reader_more_image_extra_padding, false);
 
             // show post in internal browser when "visit" is clicked
             View.OnClickListener visitListener = new View.OnClickListener() {
@@ -680,7 +687,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     // ********************************************************************************************
 
-    public ReaderPostAdapter(Context context, ReaderPostListType postListType, ImageManager imageManager) {
+    public ReaderPostAdapter(
+            Context context,
+            ReaderPostListType postListType,
+            ImageManager imageManager,
+            boolean isMainReader
+    ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
         this.mImageManager = imageManager;
@@ -689,6 +701,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = !mAccountStore.hasAccessToken();
+        mIsMainReader = isMainReader;
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
@@ -703,11 +716,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasSiteHeader() {
-        return isDiscover() || getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW;
+        return !mIsMainReader && (isDiscover() || getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
     }
 
     private boolean hasTagHeader() {
-        return mCurrentTag != null && mCurrentTag.isTagTopic() && !isEmpty();
+        return !mIsMainReader && (mCurrentTag != null && mCurrentTag.isTagTopic() && !isEmpty());
     }
 
     private boolean isDiscover() {

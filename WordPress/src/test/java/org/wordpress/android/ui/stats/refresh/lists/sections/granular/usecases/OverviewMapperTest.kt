@@ -17,11 +17,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class OverviewMapperTest : BaseUnitTest() {
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var mapper: OverviewMapper
     private val views: Long = 10
@@ -33,9 +35,10 @@ class OverviewMapperTest : BaseUnitTest() {
     private val printedDate = "10. 10. 2010"
     @Before
     fun setUp() {
-        mapper = OverviewMapper(statsDateFormatter, resourceProvider, contentDescriptionHelper)
+        mapper = OverviewMapper(statsDateFormatter, resourceProvider, statsUtils, contentDescriptionHelper)
         whenever(resourceProvider.getString(R.string.stats_likes)).thenReturn(likesTitle)
         whenever(statsDateFormatter.printGranularDate(any<String>(), any())).thenReturn(printedDate)
+        whenever(statsUtils.toFormattedString(any<Long>(), any())).then { (it.arguments[0] as Long).toString() }
     }
 
     @Test

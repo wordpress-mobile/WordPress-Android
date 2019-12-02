@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-31 02:54:10+0000
+Translation-Revision-Date: 2019-11-15 00:54:12+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">通知</string>
+    <string name="master_switch_default_title_off">關閉</string>
+    <string name="master_switch_default_title_on">開啟</string>
+    <string name="notifications_tab_dialog_master_off_message">若關閉此網站的「通知」功能，將會停用網站通知分頁的通知顯示。你可以開啟網站的「通知」功能，進一步調整想查看哪一類通知。</string>
+    <string name="notifications_tab_dialog_master_off_title">若要在此網站的通知分頁查看通知，請開啟此網站的「通知」功能。</string>
+    <string name="notifications_tab_dialog_master_hint_off">啟用此網站通知分頁的通知顯示</string>
+    <string name="notifications_tab_dialog_master_hint_on">停用此網站通知分頁的通知顯示</string>
+    <string name="notifications_tab_dialog_master_status_off">此網站的通知</string>
+    <string name="notifications_tab_dialog_master_status_on">此網站的通知</string>
+    <string name="dialog_gutenberg_informative_description_page">你正在使用區塊編輯器編輯新頁面，太棒了！若你想改用傳統編輯器，請前往「我的網站」>「網站設定」。</string>
+    <string name="dialog_gutenberg_informative_description_post">你正在使用區塊編輯器編輯新文章，太棒了！若你想改用傳統編輯器，請前往「我的網站」>「網站設定」。</string>
     <string name="pick_media">新增圖片或視訊</string>
     <string name="error_post_not_submitted_retrying">我們無法將這篇文章提交送審，但稍後會再試一次。</string>
     <string name="error_post_not_scheduled_retrying">我們無法排程這篇文章，但稍後會再試一次。</string>
@@ -117,8 +128,6 @@ Language: zh_TW
     <string name="stats_bar_chart_content_description">網站點閱數的圖表。</string>
     <string name="stats_loading_card">正在載入選取的卡片資料</string>
     <string name="site_settings_editor">編輯器</string>
-    <string name="dialog_gutenberg_informative_description_page">你正在使用區塊編輯器建立新頁面。想預設使用傳統編輯器嗎？請前往「網站設定」。</string>
-    <string name="dialog_gutenberg_informative_description_post">你正在使用區塊編輯器建立新文章。想預設使用傳統編輯器嗎？請前往「網站設定」。</string>
     <string name="description_expand">擴大</string>
     <string name="description_collapse">折疊</string>
     <string name="editor_retry_failed_uploads">重新嘗試上傳</string>

@@ -35,7 +35,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/reader_card_avatar_margin_end"
                 android:src="@drawable/bg_rectangle_neutral_10_globe_32dp"
-                android:contentDescription="@string/reader_blavatar_desc"
+                android:importantForAccessibility="no"
                 style="@style/ReaderImageView.Avatar">
             </ImageView>
 
@@ -192,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:maxLines="3"
-                android:textColor="@color/neutral_30"
+                android:textColor="@color/neutral_50"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_attribution"
                 style="@style/ReaderTextView" >
