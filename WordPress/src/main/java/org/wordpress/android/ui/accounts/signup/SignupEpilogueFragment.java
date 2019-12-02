@@ -286,9 +286,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 // Start progress and wait for account to be fetched before populating views when
                 // email does not exist in account store.
                 if (TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
-                    if (!isInProgress()) {
-                        startProgress(false);
-                    }
+                    startProgress(false);
                 } else {
                     // Skip progress and populate views when email does exist in account store.
                     populateViews();
