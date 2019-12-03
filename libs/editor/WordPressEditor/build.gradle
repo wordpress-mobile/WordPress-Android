@@ -72,7 +72,7 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'org.wordpress:utils:1.22'
 
-    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion") {
+    api ("com.github.wordpress-mobile:WordPress-Aztec-Android:issue~samsung-clipboard-SNAPSHOT") {
         exclude group: "com.android.volley"
     }
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
