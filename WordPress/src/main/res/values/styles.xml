@@ -27,15 +27,18 @@
         <item name="wpColorText">@color/neutral_70</item>
         <item name="wpColorTextSubtle">@color/neutral</item>
         <item name="wpColorError">@color/error</item>
-
         <item name="wpColorWarningDark">@color/warning_50</item>
+        <item name="wpColorAppBar">@color/primary</item>
 
-        <item name="android:windowBackground">@color/background_default</item>
+        <item name="actionOverflowMenuStyle">
+            @style/Widget.MaterialComponents.PopupMenu.Overflow
+        </item>
+
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
-        <item name="android:actionModeBackground">@color/primary_dark</item>
+        <item name="android:actionModeBackground">?attr/wpColorAppBar</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
         <item name="android:statusBarColor">@color/status_bar</item>
@@ -57,6 +60,11 @@
 
     <style name="WordPress" parent="Base.Wordpress">
         <!-- We need to keep this here so we can override it in values-vXY -->
+    </style>
+
+     <style name="WordPress.NoActionBar" parent="WordPress">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="NumberPickerTheme" parent="WordPress">
@@ -149,7 +157,12 @@
 
     <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="titleTextColor">?attr/colorOnPrimary</item>
-        <item name="android:background">@color/primary_50</item>
+        <item name="android:background">?attr/wpColorAppBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+    <style name="WordPress.ActionBar" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:textColorSecondary">?attr/colorOnPrimarySurface</item>
     </style>
 
     <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
