@@ -256,7 +256,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_LOGIN_FINISHED, mLoginFinished);
-        outState.putBoolean(KEY_LOGIN_FINISHED, mLoginStarted);
+        outState.putBoolean(KEY_LOGIN_STARTED, mLoginStarted);
         outState.putString(KEY_REQUESTED_USERNAME, mRequestedUsername);
         outState.putString(KEY_REQUESTED_PASSWORD, mRequestedPassword);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
