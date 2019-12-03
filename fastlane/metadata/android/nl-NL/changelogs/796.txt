@@ -1,5 +1,0 @@
-13.6:
-- We hebben de kleur van de navigatiebalk op Android 8.1 en hoger bijgewerkt naar wit.
-- Bugs die voor problemen zorgden met de sortering van de paginalijst zijn verwijderd, zodat pagina's altijd in alfabetische volgorde worden weergegeven.
-* Updates van de blokeditor: Ondersteuning voor Pexels-afbeeldingen en opties voor uitlijning van afbeeldingen toegevoegd.
-

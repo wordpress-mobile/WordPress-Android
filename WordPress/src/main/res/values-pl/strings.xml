@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-06 07:36:59+0000
+Translation-Revision-Date: 2019-11-22 12:10:43+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="reader_empty_saved_posts_content_description">Stuknij przycisk Dodaj do Zapisanych Wpisów aby zapisać wpis na swojej liście. </string>
+    <string name="reader_acessibility_list_loaded">\"Lista ma %1$d elementów.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Powiadomienia</string>
     <string name="master_switch_default_title_off">Wyłączone</string>
     <string name="master_switch_default_title_on">Włączone</string>
@@ -213,7 +215,6 @@ Language: pl
     <string name="stats_management_news_card_message">Wybierz statystyki, które chcesz widzieć i skup się na danych na których najbardziej tobie zależy. Stuknij %1$s na dole strony Trendów aby spersonalizować statystyki.</string>
     <string name="stats_manage_your_stats">Zarządzaj statystykami</string>
     <string name="history_fetching_revisions">Pobieranie wersji…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Nie udało się pobrać plików mediów.\nStuknij aby uzyskać dostęp do opcji. </string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Nie udało się wstawić plików mediów.\nStuknij aby spróbować ponownie. </string>
     <string name="editor_uploading_draft">Twój szkic jest przesyłany</string>
     <string name="post_uploading_draft">Przesyłanie wpisu</string>
@@ -293,26 +294,6 @@ Language: pl
     <string name="stats_site_not_loaded_yet">Witryna jeszcze nie załadowana</string>
     <string name="stats_more_posts">Więcej wpisów</string>
     <string name="stats_fewer_posts">Mniej wpisów</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Usuń treści</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Przesuń blok w dół</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Przesuń blok w górę</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">PRZESUŃ BLOK TUTAJ</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Niewspierane</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Niewspierany typ bloku.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Niewspierany blok</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Wklej adres URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">WYBIERZ OBRAZEK</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Wyczyść wszystkie ustawienia</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Tekst alternatywny</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Biblioteka mediów WordPress</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Wykonaj zdjęcie</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Wybierz z urządzenia</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Rozpocznij pisanie…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Usuń odnośnik</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Dodaj tekst do odnośnika</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Tekst odnośnika</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Dodaj adres URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Odnośnik osadzony</string>
     <string name="new_site_creation_preview_back_pressed_warning">Utracisz postęp swoich prac. Czy na pewno chcesz wyjść?</string>
     <string name="plans_loading_error_with_cache_button">Zobacz plany mimo to</string>
     <string name="plans_loading_error_with_cache_subtitle">Wymagane jest połączenie z internetem aby przejrzeć plany subskrypcji, szczegóły mogą być nieaktualne</string>

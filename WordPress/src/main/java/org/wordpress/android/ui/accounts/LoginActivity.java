@@ -757,7 +757,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void showSignupToLoginMessage() {
-        WPSnackbar.make(findViewById(R.id.main_view), R.string.signup_user_exists, Snackbar.LENGTH_LONG).show();
+        WPSnackbar.make(
+                findViewById(R.id.main_view),
+                R.string.signup_user_exists,
+                Snackbar.LENGTH_LONG
+        ).show();
     }
 
     // GoogleListener

@@ -902,8 +902,7 @@ class ReaderPostDetailFragment : Fragment(),
             WPSnackbar.make(
                     view!!, R.string.reader_snackbar_err_cannot_like_post_logged_out,
                     Snackbar.LENGTH_INDEFINITE
-            )
-                    .setAction(R.string.sign_in, mSignInClickListener).show()
+            ).setAction(R.string.sign_in, mSignInClickListener).show()
             return
         }
 

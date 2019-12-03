@@ -32,7 +32,12 @@ public class ShortcutsNavigator {
                 break;
             case CREATE_NEW_POST:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_NEW_POST_CLICKED);
-                ActivityLauncher.addNewPostForResult(activity, currentSite, false);
+                ActivityLauncher.addNewPostForResult(
+                        activity,
+                        currentSite,
+                        false,
+                        PagePostCreationSourcesDetail.POST_FROM_SHORTCUT
+                );
                 break;
             case OPEN_NOTIFICATIONS:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_NOTIFICATIONS_CLICKED);

@@ -1057,5 +1057,48 @@
         <item name="android:textSize">@dimen/text_sz_larger</item>
         <item name="android:gravity">start|center_vertical</item>
     </style>
+    
+    <!-- Main actions styles -->
+    <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
+        <item name="android:layout_height">@dimen/main_bottom_sheet_list_row_icon_size</item>
+    </style>
+
+    <style name="MainBottomSheetRowTextView" parent="MySiteListRowTextView">
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+    
+    <!-- Reader styles -->
+    <style name="SubfilterSectionItem">
+        <item name="android:layout_height">@dimen/one_line_list_item_height</item>
+        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
+    </style>
+
+    <style name="SubfilterSectionTitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/neutral_30</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+    </style>
+
+    <style name="SubfilterSiteTagItem">
+        <item name="android:layout_height">@dimen/one_line_list_item_height</item>
+        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingEnd">@dimen/content_margin_site_row_start</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="SiteTagFilteredTitle" parent="MySiteListRowTextView">
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="SubfilterDividerItem">
+        <item name="android:layout_height">@dimen/one_line_list_item_height</item>
+    </style>
+
+    <style name="SubfilterDivider">
+        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:layout_marginStart">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+        <item name="android:background">@color/neutral_30</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
 
 </resources>
