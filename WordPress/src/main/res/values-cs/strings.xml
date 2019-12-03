@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-27 13:50:52+0000
+Translation-Revision-Date: 2019-11-28 12:57:35+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+    <string name="gutenberg_native_translate">\"Překlad\"</string>
+    <string name="gutenberg_native_title">\"Název:\"</string>
     <string name="domain_registration_state_picker_dialog_title">Vybrat stát</string>
     <string name="domain_registration_country_picker_dialog_title">Vybrat zemi</string>
     <string name="domain_registration_result_continue_button">Další</string>
@@ -64,26 +66,6 @@ Language: cs_CZ
     <string name="stats_site_not_loaded_yet">Stránka dosud nenačtena</string>
     <string name="stats_more_posts">Více příspěvků</string>
     <string name="stats_fewer_posts">Méně příspěvků</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Odstranit obsah</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Posunout blok dolů</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Posunout blok nahoru</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">PŘIDAT TADY BLOK</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Nepodporováno</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Nepodporovaný typ bloku.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Nepodporovaný blok</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Vložte adresu URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ZVOLIT OBRÁZEK</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Vymazat všechna nastavení</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Zarovnání textu</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress knihovna médií</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Vyfoť</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Vyberte si ze zařízení</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Začněte psát…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Odebrat odkaz</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Přidat text odkazu</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Text odkazu</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Přidat URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Odkaz vložen</string>
     <string name="new_site_creation_preview_back_pressed_warning">Můžete ztratit svůj pokrok. Opravdu chcete skončit?</string>
     <string name="plans_loading_error_with_cache_button">Zobrazit plány stejně</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Použijte Editor bloků</string>
@@ -1484,7 +1466,6 @@ Language: cs_CZ
     <string name="reader_title_blog_preview">Web čtenáře</string>
     <string name="ssl_certificate_ask_trust">Pokud se k tomuto webu obvykle připojujete bez problémů, pak tato chyba znamená, že se někdo snaží podvrhnout vaši identitu a neměli byste dále pokračovat. Chcete i přesto důvěřovat tomuto certifikátu?</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
-    <string name="forgot_password">Zapomněl jsi heslo?</string>
     <string name="help">Nápověda</string>
     <string name="username_or_password_incorrect">Vložené uživatelské jméno nebo heslo je neplatné</string>
     <string name="email_invalid">Vlož platnou emailovou adresu</string>

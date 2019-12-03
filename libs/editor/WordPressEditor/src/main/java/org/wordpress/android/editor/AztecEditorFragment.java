@@ -1182,6 +1182,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return false;
     }
 
+    @Override public void mediaSelectionCancelled() {
+        // noop implementation for shared interface with block editor
+    }
+
     @Override
     public void onMediaUploadReattached(String localId, float currentProgress) {
         mUploadingMediaProgressMax.put(localId, currentProgress);
