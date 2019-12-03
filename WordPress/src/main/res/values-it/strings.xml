@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-30 00:54:11+0000
+Translation-Revision-Date: 2019-11-13 01:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Notifiche</string>
+    <string name="master_switch_default_title_off">Disattivo</string>
+    <string name="master_switch_default_title_on">Attivo</string>
+    <string name="notifications_tab_dialog_master_off_message">La disattivazione delle notifiche per questo sito ne comporterà la disattivazione della visualizzazione nella scheda delle notifiche per questo sito. Puoi regolare il tipo di notifica da vedere dopo aver attivato le notifiche per questo sito.</string>
+    <string name="notifications_tab_dialog_master_off_title">Per vedere le notifiche sulla scheda delle notifiche per questo sito, attiva le notifiche per questo sito.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Abilita la visualizzazione delle notifiche sulla scheda delle notifiche per questo sito</string>
+    <string name="notifications_tab_dialog_master_hint_on">Disabilita la visualizzazione delle notifiche sulla scheda delle notifiche per questo sito</string>
+    <string name="notifications_tab_dialog_master_status_off">Notifiche per questo sito</string>
+    <string name="notifications_tab_dialog_master_status_on">Notifiche per questo sito</string>
+    <string name="dialog_gutenberg_informative_description_page">Ora stai usando l\'editor dei blocchi per le nuove pagine, u2014 fantastico. Se desideri passare all\'editor classico, vai a \"Il mio sito\" > \"Impostazioni del sito\".</string>
+    <string name="dialog_gutenberg_informative_description_post">Ora stai usando l\'editor dei blocchi per i nuovi articoli, u2014 fantastico. Se desideri passare all\'editor classico, vai a \"Il mio sito\" > \"Impostazioni del sito\".</string>
     <string name="pick_media">Aggiungi immagine o video</string>
     <string name="error_post_not_submitted_retrying">Impossibile inviare questo articolo per la revisione, riproveremo più tardi. </string>
     <string name="error_post_not_scheduled_retrying">Impossibile pianificare questo articolo, riproveremo più tardi.</string>
@@ -117,8 +128,6 @@ Language: it
     <string name="stats_bar_chart_content_description">Grafico delle visualizzazioni del sito.</string>
     <string name="stats_loading_card">Caricamento dei dati della carta selezionata.</string>
     <string name="site_settings_editor">Editor</string>
-    <string name="dialog_gutenberg_informative_description_page">Stai attualmente usando l\'editor dei blocchi per creare nuove pagine. Desideri utilizzare l\'editor classico per impostazione predefinita? Vai a Impostazioni del sito.</string>
-    <string name="dialog_gutenberg_informative_description_post">Stai attualmente usando l\'editor dei blocchi per creare nuovi articoli. Desideri utilizzare l\'editor classico per impostazione predefinita? Vai a Impostazioni del sito.</string>
     <string name="description_expand">Espandi</string>
     <string name="description_collapse">Comprimi</string>
     <string name="editor_retry_failed_uploads">Riprova caricamento</string>
@@ -204,7 +213,6 @@ Language: it
     <string name="stats_management_news_card_message">Scegli quali statistiche vedere e concentrati sui dati più importanti per te. Per personalizzare le tue statistiche, tocca %1$s nella parte inferiore di Panoramica.</string>
     <string name="stats_manage_your_stats">Gestisci le tue statistiche</string>
     <string name="history_fetching_revisions">Recupero delle revisioni in corso…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Inserimento file multimediali non riuscito.\nTocca per le opzioni.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Inserimento file multimediali non riuscito.\nTocca per riprovare.</string>
     <string name="editor_uploading_draft">La tua bozza è in caricamento</string>
     <string name="post_uploading_draft">Caricamento della bozza</string>
@@ -284,26 +292,6 @@ Language: it
     <string name="stats_site_not_loaded_yet">Sito non ancora caricato</string>
     <string name="stats_more_posts">Più articoli</string>
     <string name="stats_fewer_posts">Meno articoli</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Rimuovi contenuto</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Sposta blocco giù</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Sposta blocco su</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">AGGIUNGI BLOCCO QUI</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Non supportato</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Tipo blocco non supportato.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Blocco non supportato</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Incolla URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">SCEGLI IMMAGINE</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Cancella tutte le impostazioni</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Testo Alt</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Libreria multimediale WordPress</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Scatta una foto</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Scegli da dispositivo</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Inizia a scrivere…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Rimuovi link</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Aggiungi testo del link</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Testo del link</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Aggiungi URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link inserito</string>
     <string name="new_site_creation_preview_back_pressed_warning">Potresti perdere i tuoi progressi. Desideri uscire?</string>
     <string name="plans_loading_error_with_cache_button">Visualizza piani in ogni caso</string>
     <string name="plans_loading_error_with_cache_subtitle">Per visualizzare i Piani è richiesta una connessione Internet, pertanto i dettagli potrebbero non essere aggiornati.</string>

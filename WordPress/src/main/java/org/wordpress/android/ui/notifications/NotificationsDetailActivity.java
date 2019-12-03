@@ -32,7 +32,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FormattableRangeType;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.push.GCMMessageService;
+import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -76,6 +76,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject GCMMessageHandler mGCMMessageHandler;
 
     private String mNoteId;
     private boolean mIsTappedOnNotification;
@@ -271,7 +272,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     }
 
     private void markNoteAsRead(Note note) {
-        GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, note.getId());
+        mGCMMessageHandler.removeNotificationWithNoteIdFromSystemBar(this, note.getId());
         // mark the note as read if it's unread
         if (note.isUnread()) {
             NotificationsActions.markNoteAsRead(note);

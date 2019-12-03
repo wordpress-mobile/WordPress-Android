@@ -1,2 +1,0 @@
-13.5:
-* Editor dei blocchi: abbiamo corretto un problema per cui veniva aggiunto un solo blocco di immagine o video quando si selezionavano più contenuti multimediali. C'è un nuovo blocco "Media e testo" e abbiamo aggiunto un'opzione Destinazione link (Apri in una nuova scheda) al blocco Immagine.

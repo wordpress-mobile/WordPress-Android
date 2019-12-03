@@ -19,6 +19,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
@@ -35,7 +36,6 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
-import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -89,6 +89,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
@@ -147,17 +148,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, StockMediaPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(StockMediaPickerActivity.KEY_REQUEST_CODE, requestCode);
-
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    public static void showGiphyPickerForResult(Activity activity, @NonNull SiteModel site, int requestCode) {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("from", activity.getClass().getSimpleName());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_ACCESSED, properties);
-
-        Intent intent = new Intent(activity, GiphyPickerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
 
         activity.startActivityForResult(intent, requestCode);
     }
@@ -340,6 +330,17 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
+        if (site == null) {
+            AppLog.e(T.POSTS, "Site cannot be null when opening posts");
+            AnalyticsTracker.track(
+                    POST_LIST_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Posts because of the null SiteModel"
+            );
+            ToastUtils.showToast(context, R.string.posts_cannot_be_started, ToastUtils.Duration.SHORT);
+            return;
+        }
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
@@ -493,11 +494,22 @@ public class ActivityLauncher {
         openUrlExternal(context, site.getAdminUrl());
     }
 
-    public static void addNewPostForResult(Activity activity, SiteModel site, boolean isPromo) {
-        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo);
+    public static void addNewPostForResult(
+            Activity activity,
+            SiteModel site,
+            boolean isPromo,
+            PagePostCreationSourcesDetail source
+    ) {
+        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source);
     }
 
-    public static void addNewPostForResult(Intent intent, Activity activity, SiteModel site, boolean isPromo) {
+    public static void addNewPostForResult(
+            Intent intent,
+            Activity activity,
+            SiteModel site,
+            boolean isPromo,
+            PagePostCreationSourcesDetail source
+    ) {
         if (site == null) {
             return;
         }
@@ -505,6 +517,7 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
+        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -550,32 +563,49 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void addNewPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site) {
+    public static void addNewPageForResult(
+            @NonNull Activity activity,
+            @NonNull SiteModel site,
+            @NonNull PagePostCreationSourcesDetail source
+    ) {
+        Intent intent = new Intent(activity, EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
+    public static void addNewPageForResult(
+            @NonNull Fragment fragment,
+            @NonNull SiteModel site,
+            @NonNull PagePostCreationSourcesDetail source) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void viewHistoryDetailForResult(Activity activity, Revision revision, ArrayList<Revision> revisions) {
+    public static void viewHistoryDetailForResult(Activity activity, Revision revision, List<Revision> revisions) {
         Intent intent = new Intent(activity, HistoryDetailActivity.class);
         intent.putExtra(HistoryDetailContainerFragment.EXTRA_REVISION, revision);
-        intent.putParcelableArrayListExtra(HistoryDetailContainerFragment.EXTRA_REVISIONS, revisions);
+        intent.putParcelableArrayListExtra(HistoryDetailContainerFragment.EXTRA_REVISIONS, new ArrayList<>(revisions));
         activity.startActivityForResult(intent, RequestCodes.HISTORY_DETAIL);
     }
 
     /*
      * Load the post preview as an authenticated URL so stats aren't bumped
      */
-    public static void browsePostOrPage(Context context, SiteModel site, PostModel post) {
+    public static void browsePostOrPage(Context context, SiteModel site, PostImmutableModel post) {
         browsePostOrPageEx(context, site, post, RemotePreviewType.NOT_A_REMOTE_PREVIEW);
     }
 
     public static void previewPostOrPageForResult(
             Activity activity,
             SiteModel site,
-            PostModel post,
+            PostImmutableModel post,
             RemotePreviewType remotePreviewType
     ) {
         browsePostOrPageEx(activity, site, post, remotePreviewType);
@@ -584,7 +614,7 @@ public class ActivityLauncher {
     private static void browsePostOrPageEx(
             Context context,
             SiteModel site,
-            PostModel post,
+            PostImmutableModel post,
             RemotePreviewType remotePreviewType) {
         if (site == null || post == null || TextUtils.isEmpty(post.getLink())) {
             return;

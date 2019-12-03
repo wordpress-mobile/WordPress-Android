@@ -68,7 +68,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final int GOOGLE_API_CLIENT_ID = 1002;
     private static final int EMAIL_CREDENTIALS_REQUEST_CODE = 25100;
 
-    private static final String ARG_HIDE_LOGIN_BY_SITE_OPTION = "ARG_HIDE_LOGIN_BY_SITE_OPTION";
     private static final String ARG_LOGIN_SITE_URL = "ARG_LOGIN_SITE_URL";
 
     public static final String TAG = "login_email_fragment_tag";
@@ -83,13 +82,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
     protected boolean mIsDisplayingEmailHints;
-    protected boolean mHideLoginWithSiteOption;
     protected String mLoginSiteUrl;
 
-    public static LoginEmailFragment newInstance(Boolean hideLoginWithSiteOption, String url) {
+    public static LoginEmailFragment newInstance(String url) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
-        args.putBoolean(ARG_HIDE_LOGIN_BY_SITE_OPTION, hideLoginWithSiteOption);
         args.putString(ARG_LOGIN_SITE_URL, url);
         fragment.setArguments(args);
         return fragment;
@@ -180,30 +177,32 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         });
 
         LinearLayout siteLoginButton = rootView.findViewById(R.id.login_site_button);
-        if (mHideLoginWithSiteOption) {
-            siteLoginButton.setVisibility(View.GONE);
-        } else {
-            siteLoginButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mLoginListener != null) {
-                        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
-                            mLoginListener.loginViaWpcomUsernameInstead();
-                        } else {
-                            mLoginListener.loginViaSiteAddress();
-                        }
+        siteLoginButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mLoginListener != null) {
+                    LoginMode loginMode = mLoginListener.getLoginMode();
+                    if (loginMode == LoginMode.JETPACK_STATS) {
+                        mLoginListener.loginViaWpcomUsernameInstead();
+                    } else if (loginMode == LoginMode.WOO_LOGIN_MODE) {
+                        mLoginListener.loginViaSiteCredentials(mLoginSiteUrl);
+                    } else {
+                        mLoginListener.loginViaSiteAddress();
                     }
                 }
-            });
-        }
+            }
+        });
 
         ImageView siteLoginButtonIcon = rootView.findViewById(R.id.login_site_button_icon);
         TextView siteLoginButtonText = rootView.findViewById(R.id.login_site_button_text);
 
         switch (mLoginListener.getLoginMode()) {
+            case WOO_LOGIN_MODE:
+                siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
+                siteLoginButtonText.setText(R.string.enter_site_credentials_instead);
+                break;
             case FULL:
             case WPCOM_LOGIN_ONLY:
-            case WOO_LOGIN_MODE:
             case SHARE_INTENT:
                 siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
                 siteLoginButtonText.setText(R.string.enter_site_address_instead);
@@ -277,7 +276,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
         Bundle args = getArguments();
         if (args != null) {
-            mHideLoginWithSiteOption = args.getBoolean(ARG_HIDE_LOGIN_BY_SITE_OPTION, false);
             mLoginSiteUrl = args.getString(ARG_LOGIN_SITE_URL, "");
         }
     }
@@ -434,7 +432,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     showEmailError(R.string.email_not_registered_wpcom);
                 } else if (mLoginListener != null) {
                     ActivityUtils.hideKeyboardForced(mEmailInput);
-                    mLoginListener.gotWpcomEmail(event.value);
+                    mLoginListener.gotWpcomEmail(event.value, false);
                 }
                 break;
             default:

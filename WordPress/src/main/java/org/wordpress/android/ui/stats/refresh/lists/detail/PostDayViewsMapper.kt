@@ -10,13 +10,14 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State
 import org.wordpress.android.ui.stats.refresh.utils.HUNDRED_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class PostDayViewsMapper
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
+    private val statsUtils: StatsUtils,
     private val statsDateFormatter: StatsDateFormatter
 ) {
     fun buildTitle(
@@ -36,7 +37,7 @@ class PostDayViewsMapper
             else -> State.NEGATIVE
         }
         return ValueItem(
-                value = value.toFormattedString(HUNDRED_THOUSAND),
+                value = statsUtils.toFormattedString(value, HUNDRED_THOUSAND),
                 unit = R.string.stats_views,
                 isFirst = true,
                 change = change,
@@ -75,7 +76,7 @@ class PostDayViewsMapper
 
     private fun mapIntToString(value: Int, isFormattedNumber: Boolean): String {
         return when (isFormattedNumber) {
-            true -> value.toFormattedString()
+            true -> statsUtils.toFormattedString(value)
             false -> value.toString()
         }
     }

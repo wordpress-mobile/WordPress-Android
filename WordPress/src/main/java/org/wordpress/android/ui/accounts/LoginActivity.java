@@ -441,12 +441,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     // LoginListener implementation methods
 
     @Override
-    public void gotWpcomEmail(String email) {
+    public void gotWpcomEmail(String email, boolean verifyEmail) {
         initSmartLockIfNotFinished(false);
         if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
             LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(
                     email, AuthEmailPayloadScheme.WORDPRESS, mIsJetpackConnect,
-                    mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
+                    mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null, verifyEmail);
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
             LoginEmailPasswordFragment loginEmailPasswordFragment =
@@ -757,7 +757,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void showSignupToLoginMessage() {
-        WPSnackbar.make(findViewById(R.id.main_view), R.string.signup_user_exists, Snackbar.LENGTH_LONG).show();
+        WPSnackbar.make(
+                findViewById(R.id.main_view),
+                R.string.signup_user_exists,
+                Snackbar.LENGTH_LONG
+        ).show();
     }
 
     // GoogleListener
@@ -826,14 +830,43 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         return mFragmentInjector;
     }
 
-    @Override public void showHelpFindingConnectedEmail() {
+    @Override
+    public void showHelpFindingConnectedEmail() {
         // Not used in WordPress app
     }
 
-    @Override public void gotConnectedSiteInfo(
+    @Override
+    public void gotConnectedSiteInfo(
             @NonNull String siteAddress,
             @Nullable String redirectUrl,
             boolean hasJetpack) {
+        // Not used in WordPress app
+    }
+
+    @Override
+    public void helpHandleDiscoveryError(
+            String siteAddress,
+            String endpointAddress,
+            String username,
+            String password,
+            String userAvatarUrl,
+            int errorMessage) {
+        // Not used in WordPress app
+    }
+
+    @Override
+    public void helpNoJetpackScreen(
+            String siteAddress,
+            String endpointAddress,
+            String username,
+            String password,
+            String userAvatarUrl,
+            Boolean checkJetpackAvailability) {
+        // Not used in WordPress app
+    }
+
+    @Override
+    public void loginViaSiteCredentials(String inputSiteAddress) {
         // Not used in WordPress app
     }
 }

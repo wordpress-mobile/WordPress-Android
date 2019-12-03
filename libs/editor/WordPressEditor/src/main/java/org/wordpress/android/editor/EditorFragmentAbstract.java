@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.view.DragEvent;
 
+import androidx.annotation.NonNull;
+import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 
@@ -23,6 +25,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public class EditorFragmentNotAddedException extends Exception {
     }
 
+    public abstract @NonNull String getEditorName();
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
     public abstract CharSequence getTitle() throws EditorFragmentNotAddedException;
@@ -41,6 +44,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void removeMedia(String mediaId);
     public abstract boolean showSavingProgressDialogIfNeeded();
     public abstract boolean hideSavingProgressDialog();
+    // Called from EditPostActivity to let the block editor know when a media selection is cancelled
+    public abstract void mediaSelectionCancelled();
 
 
     public enum MediaType {
@@ -84,6 +89,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
 
     protected EditorFragmentListener mEditorFragmentListener;
     protected EditorDragAndDropListener mEditorDragAndDropListener;
+    protected EditorImagePreviewListener mEditorImagePreviewListener;
     protected boolean mFeaturedImageSupported;
     protected long mFeaturedImageId;
     protected String mBlogSettingMaxImageWidth;
@@ -189,6 +195,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onTrackableEvent(TrackableEvent event);
         void onHtmlModeToggledInToolbar();
         void onAddStockMediaClicked(boolean allowMultipleSelection);
+        void onPerformFetch(String path, Consumer<String> onResult, Consumer<String> onError);
     }
 
     /**

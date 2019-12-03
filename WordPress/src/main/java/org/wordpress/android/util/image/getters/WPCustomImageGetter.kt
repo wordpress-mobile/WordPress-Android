@@ -35,7 +35,7 @@ class WPCustomImageGetter(
     @Inject lateinit var imageManager: ImageManager
 
     init {
-        (WordPress.getContext() as WordPress).component().inject(this)
+        (WordPress.getContext().applicationContext as WordPress).component().inject(this)
         clear(textView)
         // store the WPCustomImageGetter into the textView's tag, so we can cancel any pending/ongoing requests when the
         // TextView is reused.

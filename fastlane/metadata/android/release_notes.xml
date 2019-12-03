@@ -1,71 +1,90 @@
-<ar>
-13.5:
-* محرِّر المكوِّنات: أصلحنا المشكلة التي تفيد بإضافة تحديد الوسائط المتعددة مكوِّن صورة أو فيديوهات واحد فقط. ثمَّة مكوِّن "الوسائط والنص"، وأضفنا خيار هدف الرابط (مفتوح في علامة تبويب جديدة) إلى مكوِّن الصور.
-</ar>
 <de-DE>
-13.5:
-* Block-Editor: Wir haben eine Fehler behoben, bei dem die Auswahl mehrerer Medien nur einen Bild- oder Videoblock hinzugefügt hat. Es gibt einen neuen Block „Medien und Text“, und wir haben die Option „Ziel verlinken (In neuem Tab öffnen)“ zum Bildblock hinzugefügt.
+13.7:
+* Updates im Block-Editor: Nicht unterstützte Blöcke zeigen jetzt einen Titel an, Indikatoren für neue Blöcke werden sowohl in leeren Editoren als auch nach dem letzten Block angezeigt, Hinzufügen von Links aus bestehenden URLs in deiner Zwischenablage, Medien- und Textblöcke haben jetzt mehr Ausrichtungsoptionen, Bildblöcke sind jetzt für die Vorschau im Vollbildmodus antippbar.
+
+* Allgemeine Verbesserungen: Einige Fehler und Abstürze wurden behoben, im Reader gibt es einen besseren Support für den TalkBack-Screenreader.
 </de-DE>
 <en-US>
-13.5:
-* Block Editor: We fixed an issue when multiple media selection added only one image or video block. There’s a new “Media & Text” block and we’ve added a Link Target (Open in new tab) option to the Image Block.
+13.7:
+* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.
+
+* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.
 </en-US>
 <es-ES>
-13.5:
-* Editor de bloques: hemos corregido un problema cuando una selección múltiple de medios añade solo un bloque de imagen o vídeo. Hay un nuevo bloque de «Medios y texto» y hemos añadido al bloque de imágenes una opción de enlace de destino (se abre en una nueva pestaña).
+13.7:
+* Actualizaciones del editor de bloques: ahora, los bloques no compatibles muestran un título, los indicadores de nuevos bloques se muestran tanto en los editores vacíos como después del último bloque, añadir enlaces a las URLs existentes en tu portapapeles, los bloques de medios y texto tienen más opciones de alineación, los bloques de imagen se pueden tocar para obtener una vista previa a pantalla completa.
+
+* Mejoras generales: corregidos algunos fallos y roturas y añadido una mejor compatibilidad para el lector de pantalla TalkBack en el lector.
 </es-ES>
 <fr-CA>
-13.5 :
-* Éditeur de blocs : nous avons résolu un problème dans lequel la sélection de plusieurs éléments multimédias n'ajoutait qu'une seule image ou un seul bloc vidéo. Un nouveau bloc « Média & Texte » est disponible et nous avons ajouté une option Cible du lien (Ouvrir dans le nouvel onglet) au Bloc d'image.
+13.7 :
+*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
+
+* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-CA>
 <fr-FR>
-13.5 :
-* Éditeur de blocs : nous avons résolu un problème dans lequel la sélection de plusieurs éléments multimédias n'ajoutait qu'une seule image ou un seul bloc vidéo. Un nouveau bloc « Média & Texte » est disponible et nous avons ajouté une option Cible du lien (Ouvrir dans le nouvel onglet) au Bloc d'image.
+13.7 :
+*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
+
+* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-FR>
 <iw-IL>
-13.5:
-* עורך הבלוקים: תיקנו בעיה שגרמה להוספה של בלוק אחד בלבד של תמונה או וידאו כאשר נבחרו פרטי מדיה רבים. יש בלוק 'מדיה וטקסט' חדש והסופנו אפשרות של 'קישור ליעד (נפתח בלשונית חדשה)' בבלוק התמונה.
+13.7:
+* עדכונים בעורך הבלוקים: בלוקים שלא נתמכים כעת מציגים כותרת, סממנים של בלוקים חדשים מוצגים בעורכים ריקים ולאחר הבלוק האחרון, הוספה של קישורים אפשרית מכתובות URL שנמצאות בלוח שלך, בלוקים של טקסט ומדיה כוללים אפשרויות יישור נוספות, ניתן להקיש על בלוקים של תמונה לתצוגה במסך מלא.
+
+* שיפורים כלליים: תיקנו כמה באגים וקריסות ושיפרנו את התמיכה בקורא של מסך TalkBack ב-Reader.
 </iw-IL>
 <id>
-13.5:
-* Penyunting Blok: Kami memperbaiki masalah ketika pemilihan beberapa media hanya menambahkan satu blok gambar atau video. Ada blok “Media & Teks” baru dan kami menambahkan pilihan Target Tautan (Buka di tab baru) ke Blok Gambar.
+13.7.
+* Pembaruan penyunting blok: blok yang tidak didukung kini menampilkan judul, indikator blok baru ditampilkan baik di penyunting kosong maupun setelah blok terakhir, menambahkan tautan dari URL yang sudah ada di papan klip Anda, blok Media dan Teks memiliki lebih banyak pilihan perataan, blok gambar kini dapat diketuk untuk pratinjau layar penuh.
+
+* Penyempurnaan umum: memperbaiki beberapa bug dan kesalahan, serta menambahkan dukungan pembaca layar TalkBack yang lebih baik di Pembaca.
 </id>
-<it-IT>
-13.5:
-* Editor dei blocchi: abbiamo corretto un problema per cui veniva aggiunto un solo blocco di immagine o video quando si selezionavano più contenuti multimediali. C'è un nuovo blocco "Media e testo" e abbiamo aggiunto un'opzione Destinazione link (Apri in una nuova scheda) al blocco Immagine.
-</it-IT>
 <ja-JP>
-13.5:
-* ブロックエディター :複数のメディアを選択したときに、画像または動画のブロックが1つしか追加されない問題を修正しました。「メディアとテキスト」ブロックが新しくなり、画像ブロックに「リンクターゲット」 (新しいタブで開く) オプションが追加されました。
+13.7:
+* ブロックエディターの更新 :サポート対象外のブロックにタイトルが表示されるようになり、新しいブロックインジケータが空のエディターと最後のブロック後の両方に表示され、リンクを追加するとクリップボードで既存の URL から抽出され、メディアブロックとテキストブロックに他の配置オプションが追加され、画像ブロックをタップするとフルスクリーンのプレビューが可能になります。
+
+* 一般的な改善 :いくつかのバグとクラッシュが修正され、TalkBack 画面の読者サポートが Reader で改善されました。
 </ja-JP>
 <ko-KR>
-13.5:
-* 블록 편집기: 여러 미디어를 선택하면 한 개의 이미지 또는 비디오 블록만 추가되는 문제가 해결되었습니다. 새로운 “미디어 및 텍스트” 블록이 있으며 이미지 블록에 링크 대상(새 탭에서 열기) 옵션을 추가했습니다.
+13.7:
+* 블록 편집기 업데이트: 지원되지 않는 블록에 이제 제목이 표시됨, 새 블록 표시기가 빈 편집기와 마지막 블록 뒤에 모두 표시됨, 링크를 추가하면 클립보드의 기존 URL에서 가져옴, 미디어 및 텍스트 블록에 정렬 옵션이 추가됨, 이미지 블록을 탭하여 전체 화면으로 미리보기 가능.
+
+* 일반 개선 사항 : 일부 버그 및 충돌을 수정하고 리더에서 더 나은 TalkBack 화면 판독기 지원을 추가했습니다.
 </ko-KR>
 <nl-NL>
-13.5:
-* Blokeditor: We hebben een probleem opgelost waarbij het selecteren van meerdere media slechts één afbeelding- of videoblok toevoegde. Er is een nieuw 'Media en tekst'-blok en we hebben een optie voor linkverwijzing (Openen in nieuw tabblad) toegevoegd aan het afbeeldingsblok.
+13.7:
+* Updates van de blokeditor: in niet-ondersteunde blokken wordt nu een titel weergegeven, indicators van nieuwe blokken worden zowel in lege editors als na het laatste blok weergegeven, links kunnen worden toegevoegd vanuit bestaande URL's in je klembord, de blokken Media en Tekst bevatten nu meer opties voor uitlijning, er kan op afbeeldingsblokken worden getikt voor weergave op volledig scherm.
+
+* Algemene verbeteringen: een paar bugs en crashes zijn opgelost en er is verbeterde ondersteuning voor de TalkBack-schermreader in de Reader.
 </nl-NL>
-<pt-BR>
-Editor de blocos: Corrigimos um problema quando várias tinha várias mídias selecionadas adicionava apenas uma imagem ou bloco de vídeo. Há um novo bloco "Mídia e texto" e adicionamos uma opção destino do link (Abrir em nova guia) ao Bloco de imagens.
-</pt-BR>
 <ru-RU>
-13.5:
-* Редактор блоков: исправлена проблема с множественным выбором медиафайлов (добавлялось только одно изображение или блок видео). Добавлен новый блок "Медиа и текст", а также возможность указывать цель ссылки (открыть в новой вкладке) для блока изображения.
+13.7:
+* Обновления для редактора блоков: для неподдерживаемых блоков показывается их название, индикаторы нового блока показываются и в пустом редакторе и после последнего блока, добавление ссылки может использовать содержимое буфера обмена, мультимедиа и текстовые блоки имеют больше возможностей выравнивания, блоки изображений можно развернуть на полноэкранный просмотр при нажатии.
+
+* Общие улучшения: исправлены некоторые ошибки и падения, добавлена поддержка чтения с экрана TalkBack в Чтиво.
 </ru-RU>
 <sv-SE>
-13.5:
-* Blockredigeraren: Vi har korrigerat ett problem där endast ett bildblock eller videoblock lades till trots att flera mediafiler var valda. Det finns en ny blocktyp ”Media och Text” och vi har lagt till ett alternativ för länkmål (öppna i ny flik) i bildblocket.
+13.7:
+* Blockredigeraren: block utan stöd har nu en särskild rubrik, nya indikatorer visar tomma redigerare och slutet på sista blocket, vid tillägg av ny länk hämtas eventuell URL i urklippet, media- och textblock har fler justeringsalternativ, man kan klicka på bildblock för förhandsvisning i fullskärm.
+
+* Allmänna förbättringar: korrigerat olika fel och programkrascher och förbättrat stödet för skärmläsaren TalkBack i läsaren.
 </sv-SE>
 <tr-TR>
-13.5:
-* Blok Düzenleyici: Bir video yada gösel bloğuna birden fazla medya seçimi seçimi yapıldığında oluşan bir sorunu çözdük. Yeni bir “Ortam ve metin” bloğu var ve görsel bloğuna bir bağlantı hedefi (Yeni sekmede aç) seçeneği ekledik.
+13.7:
+* Blok düzenleyici güncellemeleri: desteklenmeyen bloklarda artık bir başlık görüntülenir, yeni blok göstergeleri hem boş düzenleyicilerde hem de son bloktan sonra gösterilir, bağlantılar eklendiğinde panodaki mevcut URL'lerden alınır, Ortam ve Metin bloklarında daha fazla hizalama seçeneği bulunur, görsel bloklarına dokunularak tam ekran önizleme yapılabilir.
+
+* Genel iyileştirmeler: Bazı hatalar ve kilitlenme durumları düzeltildi, Okuyucu'daki TalkBack ekran okuyucu desteği geliştirildi.
 </tr-TR>
 <zh-CN>
-13.5：
-* 区块编辑器：我们修复了选择了多个媒体文件但仅添加一张图片或一个视频区块的问题。推出新的“媒体文件和文本”区块，而且我们已经为“图片”区块添加“链接目标”（在新标签页中打开）选项。
+13.7：
+* 更新了区块编辑器：不支持的区块现可显示标题；新区块指示器同时显示在空白编辑器中和最后一个区块之后；添加从剪贴板的现有 URL 中提取的链接；“媒体和文本”区块具有更多对齐选项；轻点“图片”区块可进行全屏预览。
+
+* 常规改进：修复了一些错误和崩溃，并在阅读器中添加了更好的 TalkBack 屏幕阅读器支持。
 </zh-CN>
 <zh-TW>
-13.5：
-* 區塊編輯器：我們修正了多種媒體選項只能新增一個圖片或視訊區塊的問題。有一個新的「媒體和文字」區塊，我們已將「連結目標」(在新分頁中開啟) 選項新增至圖片區塊。
+13.7：
+* 區塊編輯器更新：不支援的區塊現在會顯示標題；在空白編輯器內和前一個區塊之後，都會顯示新區塊指標；你可從剪貼簿拖入現有網址以新增連結；媒體和文字區塊可提供更多對齊選項；點選圖片區塊即可進行全螢幕預覽。
+
+* 一般改善項目：修正一些錯誤和故障情況，並為讀取器新增更完善的 TalkBack 螢幕讀取器支援。
 </zh-TW>

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-25 13:03:21+0000
+Translation-Revision-Date: 2019-11-14 12:55:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Varsler</string>
+    <string name="master_switch_default_title_off">Av</string>
+    <string name="master_switch_default_title_on">På</string>
+    <string name="notifications_tab_dialog_master_off_message">Å skru av varslinger for dette nettstedet vil deaktivere visning av varslinger på varslingsfanen for dette nettstedet. Du kan finjustere hva slags varslinger du vil se etter å ha skrudd på varslinger dette nettstedet.</string>
+    <string name="notifications_tab_dialog_master_off_title">For å se varslinger på varslingsfanen for dette nettstedet, skru på varslinger for dette nettstedet.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Aktiver visning av varslinger på varslingsfanen for dette nettstedet</string>
+    <string name="notifications_tab_dialog_master_hint_on">Deaktiver visning av varslinger  på varslingsfanen for dette nettstedet.</string>
+    <string name="notifications_tab_dialog_master_status_off">Varslinger for dette nettstedet</string>
+    <string name="notifications_tab_dialog_master_status_on">Varslinger for dette nettstedet</string>
+    <string name="dialog_gutenberg_informative_description_page">Du bruker nå blokkredigering for nye sider u2014 flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">Du bruker nå blokkredigering for nye innlegg u2014 flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
     <string name="pick_media">Legg til bilde eller video</string>
     <string name="error_post_not_submitted_retrying">Vi kunne ikke sende dette innlegget til gjennomgang, men vi vil prøve igjen senere.</string>
     <string name="error_post_not_scheduled_retrying">Vi kunne ikke planlegge dette innlegget, men vi vil prøve igjen senere.</string>
@@ -117,8 +128,6 @@ Language: nb_NO
     <string name="stats_bar_chart_content_description">Diagram for nettstedsvisninger.</string>
     <string name="stats_loading_card">Laster inn valgte kortdata</string>
     <string name="site_settings_editor">Redigering</string>
-    <string name="dialog_gutenberg_informative_description_page">Du bruker for tiden blokkredigering for å lage nye sider. Ønsker du å bruke klassisk redigering som standard? Gå til innstillinger for nettstedet.</string>
-    <string name="dialog_gutenberg_informative_description_post">Du bruker for tiden blokkredigering for å lage nye innlegg. Ønsker du å bruke klassisk redigering som standard? Gå til innstillinger for nettstedet.</string>
     <string name="description_expand">Uttvid</string>
     <string name="description_collapse">Trekk sammen</string>
     <string name="editor_retry_failed_uploads">Prøv å laste opp på nytt</string>
@@ -202,7 +211,6 @@ Language: nb_NO
     <string name="stats_management_news_card_message">Vekg hvilken statistikk å se og fokuser på de data du bryr deg mest om. Trykk %1$s i bunnen av innsikter for å tilpasse din statistikk.</string>
     <string name="stats_manage_your_stats">Behandle din statistikk</string>
     <string name="history_fetching_revisions">Henter revisjoner…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Mislyktes i å sette inn menia.\nVennligst trykk for alternativer.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Mislyktes i å sette inn media.\nVennligst trykk for å prøve igjen.</string>
     <string name="editor_uploading_draft">Din kladd lastes opp</string>
     <string name="post_uploading_draft">Laster opp kladd</string>
@@ -282,26 +290,6 @@ Language: nb_NO
     <string name="stats_site_not_loaded_yet">Nettstedet er ikke lastet inn ennå</string>
     <string name="stats_more_posts">Flere innlegg</string>
     <string name="stats_fewer_posts">Færre innlegg</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Fjern innhold</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Flytt blokk ned</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Flytt blokk opp</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">Legg til blokk her</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Ikke støttet</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Ikke støttet blokktype.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Ikke støttet blokk</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Lim inn URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">Velg bilde</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Tilbakestil alle innstillinger</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alt-tekst</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Mediebiblioteket i WordPress</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Ta en bilde</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Velg fra enheten</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Start å skrive…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Fjern lenke</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Legg til lenketekst</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Lenketekst</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Legg til URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Lenke satt inn</string>
     <string name="new_site_creation_preview_back_pressed_warning">Din kan miste din fremdrift. Er du sikker på at du vil gå ut?</string>
     <string name="plans_loading_error_with_cache_button">Se pakker likevel</string>
     <string name="plans_loading_error_with_cache_subtitle">En Internet-forbindelse er nødvendig for å vise pakker, så detaljer kan være utdatert.</string>

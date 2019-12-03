@@ -30,7 +30,7 @@ import android.text.style.URLSpan;
 import org.ccil.cowan.tagsoup.Parser;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.WPImageSpan;
@@ -60,7 +60,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
     private boolean mysteryTagFound;
     private int mMaxImageWidth;
     private Context mContext;
-    private PostModel mPost;
+    private PostImmutableModel mPost;
 
     private String mysteryTagName;
 
@@ -68,7 +68,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
 
     public HtmlToSpannedConverter(String source,
                                   WPHtml.ImageGetter imageGetter, WPHtml.TagHandler tagHandler,
-                                  Parser parser, Context context, PostModel p, int maxImageWidth) {
+                                  Parser parser, Context context, PostImmutableModel p, int maxImageWidth) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
         mSource = source;

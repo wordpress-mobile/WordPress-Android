@@ -7,11 +7,14 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import javax.inject.Inject
 
 class AnnualStatsMapper
-@Inject constructor(private val contentDescriptionHelper: ContentDescriptionHelper) {
+@Inject constructor(
+    private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val statsUtils: StatsUtils
+) {
     fun mapYearInBlock(selectedYear: YearInsights): List<BlockListItem> {
         return listOf(
                 QuickScanItem(
@@ -21,37 +24,37 @@ class AnnualStatsMapper
                         ),
                         Column(
                                 R.string.stats_insights_posts,
-                                selectedYear.totalPosts.toFormattedString()
+                                statsUtils.toFormattedString(selectedYear.totalPosts)
                         )
                 ),
                 QuickScanItem(
                         Column(
                                 R.string.stats_insights_total_comments,
-                                selectedYear.totalComments.toFormattedString()
+                                statsUtils.toFormattedString(selectedYear.totalComments)
                         ),
                         Column(
                                 R.string.stats_insights_average_comments,
-                                selectedYear.avgComments?.toFormattedString() ?: "0"
+                                statsUtils.toFormattedString(selectedYear.avgComments, defaultValue = "0")
                         )
                 ),
                 QuickScanItem(
                         Column(
                                 R.string.stats_insights_total_likes,
-                                selectedYear.totalLikes.toFormattedString()
+                                statsUtils.toFormattedString(selectedYear.totalLikes)
                         ),
                         Column(
                                 R.string.stats_insights_average_likes,
-                                selectedYear.avgLikes?.toFormattedString() ?: "0"
+                                statsUtils.toFormattedString(selectedYear.avgLikes, defaultValue = "0")
                         )
                 ),
                 QuickScanItem(
                         Column(
                                 R.string.stats_insights_total_words,
-                                selectedYear.totalWords.toFormattedString()
+                                statsUtils.toFormattedString(selectedYear.totalWords)
                         ),
                         Column(
                                 R.string.stats_insights_average_words,
-                                selectedYear.avgWords?.toFormattedString() ?: "0"
+                                statsUtils.toFormattedString(selectedYear.avgWords, defaultValue = "0")
                         )
                 )
         )
@@ -61,31 +64,31 @@ class AnnualStatsMapper
         return listOf(
                 mapItem(
                         textResource = R.string.stats_insights_posts,
-                        value = selectedYear.totalPosts.toFormattedString()
+                        value = statsUtils.toFormattedString(selectedYear.totalPosts)
                 ),
                 mapItem(
                         textResource = R.string.stats_insights_total_comments,
-                        value = selectedYear.totalComments.toFormattedString()
+                        value = statsUtils.toFormattedString(selectedYear.totalComments)
                 ),
                 mapItem(
                         textResource = R.string.stats_insights_average_comments,
-                        value = selectedYear.avgComments?.toFormattedString()
+                        value = statsUtils.toFormattedString(selectedYear.avgComments)
                 ),
                 mapItem(
                         textResource = R.string.stats_insights_total_likes,
-                        value = selectedYear.totalLikes.toFormattedString()
+                        value = statsUtils.toFormattedString(selectedYear.totalLikes)
                 ),
                 mapItem(
                         textResource = R.string.stats_insights_average_likes,
-                        value = selectedYear.avgLikes?.toFormattedString()
+                        value = statsUtils.toFormattedString(selectedYear.avgLikes)
                 ),
                 mapItem(
                         textResource = R.string.stats_insights_total_words,
-                        value = selectedYear.totalWords.toFormattedString()
+                        value = statsUtils.toFormattedString(selectedYear.totalWords)
                 ),
                 mapItem(
                         textResource = R.string.stats_insights_average_words,
-                        value = selectedYear.avgWords?.toFormattedString()
+                        value = statsUtils.toFormattedString(selectedYear.avgWords)
                 )
         )
     }
