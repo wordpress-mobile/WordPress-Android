@@ -1,5 +1,0 @@
-13.4:
-* Menambahkan dukungan Pratinjau Jarak Jauh untuk pos dan halaman.
-* Pos yang dibuang tetap ada di sampah. Pos tersebut harus dipulihkan untuk dapat disunting atau dipratinjau.
-* Perbaikan: Mengklik “Publikasikan” pada pos pribadi kini secara akurat memublikasikan pos sebagai pribadi, beberapa masalah penyuntingan tautan telah diperbaiki.
-* Perubahan yang tidak tersimpan pada pos dan halaman akan otomatis dicadangkan.

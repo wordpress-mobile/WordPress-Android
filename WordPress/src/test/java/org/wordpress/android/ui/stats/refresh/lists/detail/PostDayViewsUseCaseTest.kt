@@ -43,6 +43,7 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var title: ValueItem
     @Mock lateinit var barChartItem: BarChartItem
+    @Mock lateinit var emptyModel: PostDetailStatsModel
     @Mock lateinit var model: PostDetailStatsModel
     private lateinit var useCase: PostDayViewsUseCase
     private val postId = 1L
@@ -102,6 +103,31 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         Assertions.assertThat(result.state).isEqualTo(ERROR)
+    }
+
+    /**
+     * Note that this test covers an edge condition tracked in GitHub issue
+     * https://github.com/wordpress-mobile/WordPress-Android/issues/10830
+     * For some context see
+     * See https://github.com/wordpress-mobile/WordPress-Android/pull/10850#issuecomment-559555035
+     */
+    @Test
+    fun `manage edge condition with data available but empty list`() = test {
+        val forced = false
+
+        whenever(emptyModel.dayViews).thenReturn(listOf())
+        whenever(model.dayViews).thenReturn(listOf(Day("2019-10-10", 50)))
+        whenever(store.getPostDetail(site, postId)).thenReturn(emptyModel)
+        whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
+                OnStatsFetched(
+                        model
+                )
+        )
+
+        val result = loadData(true, forced)
+
+        Assertions.assertThat(result.state).isEqualTo(SUCCESS)
+        Assertions.assertThat(result.data).isEmpty()
     }
 
     private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {

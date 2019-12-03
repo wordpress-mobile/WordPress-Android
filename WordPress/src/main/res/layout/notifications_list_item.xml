@@ -59,7 +59,7 @@
                 android:layout_marginStart="@dimen/notifications_note_icon_margin"
                 android:layout_marginTop="@dimen/notifications_note_icon_margin"
                 android:background="@drawable/bg_oval_primary_40_stroke_notification_unread"
-                android:contentDescription="@string/icon"
+                android:importantForAccessibility="no"
                 android:gravity="center"
                 android:padding="4dp" />
 

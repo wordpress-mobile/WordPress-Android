@@ -86,7 +86,7 @@ jobs:
           name: Prepare APK
           command: |
             mkdir -p Artifacts
-            mv WordPress/build/outputs/apk/vanilla/release/WordPress-vanilla-release.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
+            mv WordPress/build/outputs/apk/vanilla/release/org.wordpress.android-vanilla-release.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
       - store_artifacts:
           path: Artifacts
           destination: Artifacts
@@ -107,8 +107,8 @@ jobs:
       - android/firebase-test:
           key-file: .circleci/.firebase.secrets.json
           type: instrumentation
-          apk-path: WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk
-          test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk
+          apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
+          test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk
           test-targets: notPackage org.wordpress.android.ui.screenshots
           device: model=Nexus5X,version=26,locale=en,orientation=portrait
           project: api-project-108380595987
@@ -117,9 +117,12 @@ jobs:
       - android/save-gradle-cache
   strings-check:
     docker:
-      - image: circleci/ruby:2.3
+      - image: circleci/ruby:2.5.5
     steps:
       - git/shallow-checkout
+      - run:
+          name: Install bundler
+          command: gem install bundler --version 2.0.2 
       - bundle-install/bundle-install:
           cache_key_prefix: strings-check
       - run:

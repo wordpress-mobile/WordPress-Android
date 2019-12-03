@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.posts
 
 import androidx.annotation.ColorRes
 import org.wordpress.android.fluxc.model.LocalOrRemoteId
+import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
@@ -17,6 +18,7 @@ sealed class PostListItemType {
 
     class LoadingItem(val localOrRemoteId: LocalOrRemoteId, val options: LoadingItemOptions) : PostListItemType()
     object EndListIndicatorItem : PostListItemType()
+    data class SectionHeaderItem(val type: PostListType) : PostListItemType()
 }
 
 sealed class LoadingItemOptions(

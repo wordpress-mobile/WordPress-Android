@@ -1,5 +1,0 @@
-13.4:
-* Voorbeeldweergave op afstand toegevoegd voor berichten en pagina's.
-* Verwijderde berichten blijven in de prullenbak. Ze moeten voor de voorbeeldweergave of het bewerken worden hersteld.
-* Opgelost: Klikken op Publiceren bij een privébericht zorgt er nu voor dat het bericht daadwerkelijk privé is, en enkele problemen met linkbewerking zijn opgelost.
-* Er worden automatisch back-ups gemaakt van niet-opgeslagen wijzigingen in berichten en pagina's.

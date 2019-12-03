@@ -205,9 +205,6 @@ Language: cy_GB
     <string name="primary_site">Prif wefan</string>
     <string name="editor_toast_uploading_please_wait">Rydych wrthi\'n llwytho cyfryngau. Arhoswch nes i hyn orffen.</string>
     <string name="error_refresh_comments_showing_older">Nid oes modd adnewyddu sylwadau ar hyn o bryd - yn dangos sylwadau hŷn</string>
-    <string name="editor_content_placeholder">Rhanwch eich stori yma…</string>
-    <string name="editor_page_title_placeholder">Teitl Tudalen</string>
-    <string name="editor_post_title_placeholder">Teitl Cofnod</string>
     <string name="email_address">Cyfeiriad e-bost</string>
     <string name="dlg_sure_to_delete_comments">Dileu\'r sylwadau hyn yn barhaol?</string>
     <string name="dlg_sure_to_delete_comment">Dileu\'r sylwadau hyn yn barhaol?</string>
@@ -570,7 +567,6 @@ Language: cy_GB
     <string name="reader_empty_posts_in_tag_updating">Estyn cofnodion…</string>
     <string name="cant_share_no_visible_blog">Nid oes modd rhannu i WordPress heb flog gweladwy</string>
     <string name="reader_label_reply">Ateb</string>
-    <string name="video">Fideo</string>
     <string name="comment_spammed">Mae\'r sylw hwn wedi ei farcio fel sbam</string>
     <string name="reader_likes_you_and_multi">Rydych chi a %,d o bobl eraill yn hoffi hwn</string>
     <string name="reader_likes_multi">%,d o pobl yn hoffi hwn</string>

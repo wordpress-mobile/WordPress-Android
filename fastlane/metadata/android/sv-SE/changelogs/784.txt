@@ -1,5 +1,0 @@
-13.4:
-* Lagt till stöd för fjärrförhandsvisning av inlägg och sidor.
-* Kastade inlägg stannar kvar i papperskorgen. Man måste återställa dem innan man kan redigera eller förhandsvisa dem.
-* Rättat: När man klickar på ”Publicera” för ett privat inlägg kommer det verkligen att publiceras privat. Dessutom har några problem med redigering av länkar rättats.
-* Osparade ändringar i inlägg och sidor sparas automatiskt i en reservkopia.

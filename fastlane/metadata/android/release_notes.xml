@@ -1,127 +1,90 @@
-<ar>
-13.4:
-* تمت إضافة دعم المعاينة عن بُعد للمقالات والصفحات.
-* تظل المقالات الموضوعة في سلة المهملات في سلة المهملات. لا بد من استعادتها قبل التحرير أو المعاينة.
-* تم إصلاح ما يلي: يؤدي النقر على "نشر" حول مقالة خاصة إلى نشر مقالتك بشكل موثوق الآن على أنها خاصة، وتم حل بعض مشكلات تحرير الرابط.
-* تُنسخ التغييرات غير المحفوظة على المقالات والصفحات نسخًا احتياطيًا تلقائيًا.
-</ar>
 <de-DE>
-13.4:
-* Die externe Vorschau wird nun für Beiträge und Seiten unterstützt.
-* In den Papierkorb verschobene Beiträge bleiben dort. Zur Bearbeitung oder Ansicht einer Vorschau müssen sie zuerst wiederhergestellt werden.
-* Behoben: Durch Klicken auf „Veröffentlichen“ bei einem privaten Beitrag wird der Beitrag nun zuverlässig privat veröffentlicht. Dabei wurden Probleme bei der Linkbearbeitung gelöst.
-* Nicht gespeicherte Änderungen an Beiträgen und Seiten werden automatisch gesichert.
+13.7:
+* Updates im Block-Editor: Nicht unterstützte Blöcke zeigen jetzt einen Titel an, Indikatoren für neue Blöcke werden sowohl in leeren Editoren als auch nach dem letzten Block angezeigt, Hinzufügen von Links aus bestehenden URLs in deiner Zwischenablage, Medien- und Textblöcke haben jetzt mehr Ausrichtungsoptionen, Bildblöcke sind jetzt für die Vorschau im Vollbildmodus antippbar.
+
+* Allgemeine Verbesserungen: Einige Fehler und Abstürze wurden behoben, im Reader gibt es einen besseren Support für den TalkBack-Screenreader.
 </de-DE>
 <en-US>
-13.4:
-* Added Remote Preview support for posts and pages.
-* Trashed posts stay trashed. They must be restored before editing or previewing.
-* Fixed: Clicking on “Publish” on a private post now reliably publishes the post as private, some link editing issues resolved.
-* Unsaved changes to posts and pages are automatically backed up.
+13.7:
+* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.
+
+* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.
 </en-US>
 <es-ES>
-13.4:
-* Añadida compatibilidad de vista previa remota para entradas y páginas.
-* Las entradas de la papelera se quedan en la papelera. Deben ser restauradas antes de editar o previsualizar.
-* Corregido: Ahora, al hacer clic en «Publicar» en una entrada privada, la entrada se publica con seguridad como privada; resueltos algunos problemas de edición de enlaces.
-* Los cambios no guardados en entradas y páginas se guardan automáticamente en una copia de seguridad.
+13.7:
+* Actualizaciones del editor de bloques: ahora, los bloques no compatibles muestran un título, los indicadores de nuevos bloques se muestran tanto en los editores vacíos como después del último bloque, añadir enlaces a las URLs existentes en tu portapapeles, los bloques de medios y texto tienen más opciones de alineación, los bloques de imagen se pueden tocar para obtener una vista previa a pantalla completa.
+
+* Mejoras generales: corregidos algunos fallos y roturas y añadido una mejor compatibilidad para el lector de pantalla TalkBack en el lector.
 </es-ES>
 <fr-CA>
-13.4 :
-* Ajout de la prévisualisation à distance pour les publications et les pages.
-*Les publications mises à la poubelle restent à la poubelle. Elles doivent être restaurées avant de les modifier ou de les prévisualiser.
-* Corrigé : Le fait de cliquer "Publier" sur une publication privée la publier effectivement de manière privée, et certains problèmes de modification de liens ont été résolus.
-* Les modifications non sauvegardées des publications et des pages sont automatiquement sauvegardées.
+13.7 :
+*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
+
+* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-CA>
 <fr-FR>
-13.4 :
-* Ajout de la prévisualisation à distance pour les publications et les pages.
-*Les publications mises à la poubelle restent à la poubelle. Elles doivent être restaurées avant de les modifier ou de les prévisualiser.
-* Corrigé : Le fait de cliquer "Publier" sur une publication privée la publier effectivement de manière privée, et certains problèmes de modification de liens ont été résolus.
-* Les modifications non sauvegardées des publications et des pages sont automatiquement sauvegardées.
+13.7 :
+*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
+
+* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-FR>
 <iw-IL>
-13.4:
-- הוספנו תמיכה בתצוגה מקדימה בעמדות עבודה מרוחקות לפוסטים ולעמודים.
-* פוסטים שהועברו לפח נשארים בפח. עליך לשחזר את הפריטים לפני עריכה או יצירה של תצוגה מקדימה.
-* בעיות שתוקנו: לחיצה על "פרסום" בפוסט פרטי כעת מפרסמת באופן מהימן את הפוסט כפרטי. בנוסף, תיקנו כמה מהבעיות בעריכת הקישורים.
-* שינויים שלא נשמרו לפוסטים ולעמודים מגובים באופן אוטומטי.
+13.7:
+* עדכונים בעורך הבלוקים: בלוקים שלא נתמכים כעת מציגים כותרת, סממנים של בלוקים חדשים מוצגים בעורכים ריקים ולאחר הבלוק האחרון, הוספה של קישורים אפשרית מכתובות URL שנמצאות בלוח שלך, בלוקים של טקסט ומדיה כוללים אפשרויות יישור נוספות, ניתן להקיש על בלוקים של תמונה לתצוגה במסך מלא.
+
+* שיפורים כלליים: תיקנו כמה באגים וקריסות ושיפרנו את התמיכה בקורא של מסך TalkBack ב-Reader.
 </iw-IL>
 <id>
-13.4:
-* Menambahkan dukungan Pratinjau Jarak Jauh untuk pos dan halaman.
-* Pos yang dibuang tetap ada di sampah. Pos tersebut harus dipulihkan untuk dapat disunting atau dipratinjau.
-* Perbaikan: Mengklik “Publikasikan” pada pos pribadi kini secara akurat memublikasikan pos sebagai pribadi, beberapa masalah penyuntingan tautan telah diperbaiki.
-* Perubahan yang tidak tersimpan pada pos dan halaman akan otomatis dicadangkan.
+13.7.
+* Pembaruan penyunting blok: blok yang tidak didukung kini menampilkan judul, indikator blok baru ditampilkan baik di penyunting kosong maupun setelah blok terakhir, menambahkan tautan dari URL yang sudah ada di papan klip Anda, blok Media dan Teks memiliki lebih banyak pilihan perataan, blok gambar kini dapat diketuk untuk pratinjau layar penuh.
+
+* Penyempurnaan umum: memperbaiki beberapa bug dan kesalahan, serta menambahkan dukungan pembaca layar TalkBack yang lebih baik di Pembaca.
 </id>
-<it-IT>
-13.4:
-* Aggiunto supporto per l'anteprima da remoto per articoli e pagine.
-* Gli articoli nel cestino restano nel cestino. Devono essere ripristinati prima della modifica o dell'anteprima.
-* Correzione: facendo clic su "Pubblica" su un articolo privato, ora l'articolo viene correttamente pubblicato come privato; risolti alcuni problemi di modifica dei link.
-* Backup automatico delle modifiche non salvate ad articoli e pagine.
-</it-IT>
 <ja-JP>
-13.4:
-* 投稿とページの「リモートプレビュー」サポートを追加しました。
-* ゴミ箱に移動済みの投稿は、そのままゴミ箱に残ります。編集したり、プレビューするには、元に戻す必要があります。
-* 修正済み事項として、非公開の投稿の「公開」をクリックすることによって、投稿を確実に非公開で公開できるようになりました。リンク編集に関するいくつかの問題を解消しました。
-* 投稿とページの保存されていない変更を自動的にバックアップします。
+13.7:
+* ブロックエディターの更新 :サポート対象外のブロックにタイトルが表示されるようになり、新しいブロックインジケータが空のエディターと最後のブロック後の両方に表示され、リンクを追加するとクリップボードで既存の URL から抽出され、メディアブロックとテキストブロックに他の配置オプションが追加され、画像ブロックをタップするとフルスクリーンのプレビューが可能になります。
+
+* 一般的な改善 :いくつかのバグとクラッシュが修正され、TalkBack 画面の読者サポートが Reader で改善されました。
 </ja-JP>
 <ko-KR>
-13.4:
-* 글 및 페이지에 대한 원격 미리보기 지원이 추가되었습니다.
-* 휴지통으로 이동한 글은 계속 휴지통에 있습니다. 편집 또는 미리보기 전에 복원해야 합니다.
-* 수정 사항: 이제 비공개 글에서 “발행”을 클릭하면 글이 안정적으로 비공개로 발행되고, 일부 링크 편집 문제가 해결되었습니다.
-* 글 및 페이지에 저장되지 않은 변경 사항은 자동으로 백업됩니다.
+13.7:
+* 블록 편집기 업데이트: 지원되지 않는 블록에 이제 제목이 표시됨, 새 블록 표시기가 빈 편집기와 마지막 블록 뒤에 모두 표시됨, 링크를 추가하면 클립보드의 기존 URL에서 가져옴, 미디어 및 텍스트 블록에 정렬 옵션이 추가됨, 이미지 블록을 탭하여 전체 화면으로 미리보기 가능.
+
+* 일반 개선 사항 : 일부 버그 및 충돌을 수정하고 리더에서 더 나은 TalkBack 화면 판독기 지원을 추가했습니다.
 </ko-KR>
 <nl-NL>
-13.4:
-* Voorbeeldweergave op afstand toegevoegd voor berichten en pagina's.
-* Verwijderde berichten blijven in de prullenbak. Ze moeten voor de voorbeeldweergave of het bewerken worden hersteld.
-* Opgelost: Klikken op Publiceren bij een privébericht zorgt er nu voor dat het bericht daadwerkelijk privé is, en enkele problemen met linkbewerking zijn opgelost.
-* Er worden automatisch back-ups gemaakt van niet-opgeslagen wijzigingen in berichten en pagina's.
-</nl-NL>
-<pt-BR>
-13.4:
-* Adicionamos visualização remota a posts e páginas
-* Posts enviados para a lixeira continuarão nela. É necessário restaurá-los antes de editar ou visualizar.
-* Correções: ao clicar em "Publicar" em um post privado, agora ele é publicado como privado. Também corrigimos alguns problemas com links de edição.
-* Agora criamos um backup das alterações não salvas em posts e páginas.
-</pt-BR>
-<ru-RU>
-13.4:
-* Поддержка удаленного просмотра для страниц и записей.
-* Записи удаленные в корзину должны быть восстановлены из неё перед просмотром или редактированием.
-* Исправлена - публикация личной записи будет публиковать запись как личную, также исправлены некоторые проблемы с редактированием ссылок.
-* Автоматическое резервное копирование несохраненных изменений в записях и на страницах.
+13.7:
+* Updates van de blokeditor: in niet-ondersteunde blokken wordt nu een titel weergegeven, indicators van nieuwe blokken worden zowel in lege editors als na het laatste blok weergegeven, links kunnen worden toegevoegd vanuit bestaande URL's in je klembord, de blokken Media en Tekst bevatten nu meer opties voor uitlijning, er kan op afbeeldingsblokken worden getikt voor weergave op volledig scherm.
 
+* Algemene verbeteringen: een paar bugs en crashes zijn opgelost en er is verbeterde ondersteuning voor de TalkBack-schermreader in de Reader.
+</nl-NL>
+<ru-RU>
+13.7:
+* Обновления для редактора блоков: для неподдерживаемых блоков показывается их название, индикаторы нового блока показываются и в пустом редакторе и после последнего блока, добавление ссылки может использовать содержимое буфера обмена, мультимедиа и текстовые блоки имеют больше возможностей выравнивания, блоки изображений можно развернуть на полноэкранный просмотр при нажатии.
+
+* Общие улучшения: исправлены некоторые ошибки и падения, добавлена поддержка чтения с экрана TalkBack в Чтиво.
 </ru-RU>
 <sv-SE>
-13.4:
-* Lagt till stöd för fjärrförhandsvisning av inlägg och sidor.
-* Kastade inlägg stannar kvar i papperskorgen. Man måste återställa dem innan man kan redigera eller förhandsvisa dem.
-* Rättat: När man klickar på ”Publicera” för ett privat inlägg kommer det verkligen att publiceras privat. Dessutom har några problem med redigering av länkar rättats.
-* Osparade ändringar i inlägg och sidor sparas automatiskt i en reservkopia.
+13.7:
+* Blockredigeraren: block utan stöd har nu en särskild rubrik, nya indikatorer visar tomma redigerare och slutet på sista blocket, vid tillägg av ny länk hämtas eventuell URL i urklippet, media- och textblock har fler justeringsalternativ, man kan klicka på bildblock för förhandsvisning i fullskärm.
+
+* Allmänna förbättringar: korrigerat olika fel och programkrascher och förbättrat stödet för skärmläsaren TalkBack i läsaren.
 </sv-SE>
 <tr-TR>
-13.4:
-* İletiler ve sayfalar için Uzaktan Önizleme desteği eklendi.
-* Çöpe atılan iletiler çöpte kalır. Düzenleme veya önizlemeden önce geri getirilmeleri gerekir.
-* Düzeltildi: Özel bir iletide “Yayınla” öğesine tıklamak artık iletiyi güvenilir bir biçimde özel olarak yayınlar, bazı bağlantı düzenleme sorunları düzeltildi.
-* İleti ve sayfalardaki kaydedilmeyen değişiklikler otomatik olarak yedeklenir.
+13.7:
+* Blok düzenleyici güncellemeleri: desteklenmeyen bloklarda artık bir başlık görüntülenir, yeni blok göstergeleri hem boş düzenleyicilerde hem de son bloktan sonra gösterilir, bağlantılar eklendiğinde panodaki mevcut URL'lerden alınır, Ortam ve Metin bloklarında daha fazla hizalama seçeneği bulunur, görsel bloklarına dokunularak tam ekran önizleme yapılabilir.
+
+* Genel iyileştirmeler: Bazı hatalar ve kilitlenme durumları düzeltildi, Okuyucu'daki TalkBack ekran okuyucu desteği geliştirildi.
 </tr-TR>
 <zh-CN>
-13.4：
-* 新增了对文章和页面的远程预览支持。
-* 已放入回收站的文章依旧在回收站中。这些文章必须先进行还原，才能进行编辑或预览。
-* 已修复：现在，在私密文章中点击“发布”按钮，即可放心地将文章发布为私密文章，某些链接编辑问题也得到了解决。
-* 系统会自动备份文章和页面中未保存的更改。
+13.7：
+* 更新了区块编辑器：不支持的区块现可显示标题；新区块指示器同时显示在空白编辑器中和最后一个区块之后；添加从剪贴板的现有 URL 中提取的链接；“媒体和文本”区块具有更多对齐选项；轻点“图片”区块可进行全屏预览。
+
+* 常规改进：修复了一些错误和崩溃，并在阅读器中添加了更好的 TalkBack 屏幕阅读器支持。
 </zh-CN>
 <zh-TW>
-13.4：
-* 為文章和頁面新增「遠端預覽」支援。
-* 移至垃圾桶的文章會一直留在垃圾桶。若要編輯或預覽，必須先還原這些文章。
-* 修正內容：現在按一下私密文章上的「發表」，將能確實以私密狀態發表文章，部分連結編輯問題也已獲得解決。
-* 文章和頁面未儲存的變更都會自動備份。
+13.7：
+* 區塊編輯器更新：不支援的區塊現在會顯示標題；在空白編輯器內和前一個區塊之後，都會顯示新區塊指標；你可從剪貼簿拖入現有網址以新增連結；媒體和文字區塊可提供更多對齊選項；點選圖片區塊即可進行全螢幕預覽。
+
+* 一般改善項目：修正一些錯誤和故障情況，並為讀取器新增更完善的 TalkBack 螢幕讀取器支援。
 </zh-TW>

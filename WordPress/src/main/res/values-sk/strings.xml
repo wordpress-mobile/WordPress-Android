@@ -22,18 +22,6 @@ Language: sk
     <string name="app_rating_rate_now">Ohodnotiť teraz</string>
     <string name="stats_more_posts">Viac príspevkov</string>
     <string name="stats_fewer_posts">Menej príspevkov</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Odstrániť obsah</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Posunúť blok nižšie</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Posunúť blok vyššie</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">VLOŽTE BLOK TU</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Nepodporované</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Vložte URL adresu</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">VYBERTE OBRÁZOK</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Začnite písať…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Odstrániť odkaz</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Text odkazu</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Pridať URL adresu</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link vložený</string>
     <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
     <string name="quick_start_sites_type_subtitle">%1$d z %2$d kompletné</string>
     <string name="quick_start_sites">Ďalšie kroky</string>
@@ -1148,9 +1136,6 @@ Language: sk
     <string name="error_refresh_comments_showing_older">Komentáre sa nepodarilo aktualizovať v tejto chvíli - zobrazujú sa staršie komentáre</string>
     <string name="post_settings_set_featured_image">Nastaviť odporúčaný obrázok</string>
     <string name="post_settings_featured_image">Odporúčaný obrázok</string>
-    <string name="editor_content_placeholder">Zdieľaj svoj príbeh tu…</string>
-    <string name="editor_page_title_placeholder">Nadpis stránky</string>
-    <string name="editor_post_title_placeholder">Nadpis článku</string>
     <string name="email_address">Emailová adresa</string>
     <string name="dlg_sure_to_delete_comments">Trvale odstrániť tieto komentáre?</string>
     <string name="dlg_sure_to_delete_comment">Trvale odstrániť tento komentár?</string>
@@ -1545,7 +1530,6 @@ Language: sk
     <string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
     <string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
     <string name="comment_spammed">Komentáre označené ako spam</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Odpovedať</string>
     <string name="reader_likes_multi">počet ľudí, ktorým sa to páči: %,d</string>
     <string name="reader_likes_you_and_multi">Vy a niekoľkí ďalší (%,d) ste to lajkli</string>

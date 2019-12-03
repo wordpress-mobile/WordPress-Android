@@ -210,17 +210,6 @@
 
             <View style="@style/MeListSectionDividerView"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginEnd="@dimen/content_margin"
-                android:layout_marginStart="@dimen/content_margin"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:text="@string/notification_settings_moved_notices"
-                android:textColor="@color/gray_50"
-                android:textSize="@dimen/text_sz_small" />
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

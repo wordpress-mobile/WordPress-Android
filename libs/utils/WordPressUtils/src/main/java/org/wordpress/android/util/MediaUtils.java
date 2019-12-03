@@ -1,7 +1,6 @@
 package org.wordpress.android.util;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -106,11 +105,11 @@ public class MediaUtils {
                || state.equalsIgnoreCase("failed");
     }
 
-    public static Uri getLastRecordedVideoUri(Activity activity) {
+    public static Uri getLastRecordedVideoUri(Context appContext) {
         String[] proj = {MediaStore.Video.Media._ID};
         Uri contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         String sortOrder = MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC";
-        CursorLoader loader = new CursorLoader(activity, contentUri, proj, null, null, sortOrder);
+        CursorLoader loader = new CursorLoader(appContext, contentUri, proj, null, null, sortOrder);
         Cursor cursor = loader.loadInBackground();
         cursor.moveToFirst();
         long value = cursor.getLong(0);
@@ -189,6 +188,11 @@ public class MediaUtils {
         }
     }
 
+    /*
+     * Some media providers (eg. Google Photos) give us a limited access to media files just so we can copy them and
+     * then they revoke the access. Copying these files must be performed on the UI thread, otherwise the access might
+     * be revoked before the action completes. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+     */
     public static Uri downloadExternalMedia(Context context, Uri imageUri) {
         if (context == null || imageUri == null) {
             return null;

@@ -53,13 +53,23 @@ public class PhotoPickerFragment extends Fragment {
     public static final String ARG_BROWSER_TYPE = "browser_type";
 
     public enum PhotoPickerIcon {
-        ANDROID_CHOOSE_PHOTO,
-        ANDROID_CHOOSE_VIDEO,
-        ANDROID_CAPTURE_PHOTO,
-        ANDROID_CAPTURE_VIDEO,
-        WP_MEDIA,
-        STOCK_MEDIA,
-        GIPHY
+        ANDROID_CHOOSE_PHOTO(true),
+        ANDROID_CHOOSE_VIDEO(true),
+        ANDROID_CAPTURE_PHOTO(true),
+        ANDROID_CAPTURE_VIDEO(true),
+        ANDROID_CHOOSE_PHOTO_OR_VIDEO(true),
+        WP_MEDIA(false),
+        STOCK_MEDIA(true);
+
+        private boolean mRequiresUploadPermission;
+
+        PhotoPickerIcon(boolean requiresUploadPermission) {
+            this.mRequiresUploadPermission = requiresUploadPermission;
+        }
+
+        public boolean requiresUploadPermission() {
+            return mRequiresUploadPermission;
+        }
     }
 
     /*
@@ -247,8 +257,6 @@ public class PhotoPickerFragment extends Fragment {
                 break;
             case STOCK_MEDIA:
                 break;
-            case GIPHY:
-                break;
         }
 
         if (mListener != null) {
@@ -285,14 +293,6 @@ public class PhotoPickerFragment extends Fragment {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     doIconClicked(PhotoPickerIcon.STOCK_MEDIA);
-                    return true;
-                }
-            });
-
-            MenuItem itemGiphy = popup.getMenu().add(R.string.photo_picker_giphy);
-            itemGiphy.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override public boolean onMenuItemClick(MenuItem item) {
-                    doIconClicked(PhotoPickerIcon.GIPHY);
                     return true;
                 }
             });

@@ -47,6 +47,7 @@ class TodayWidgetUpdater
         val views = RemoteViews(context.packageName, widgetUtils.getLayout(colorMode))
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_today_stats))
         val hasAccessToken = accountStore.hasAccessToken()
+        val widgetHasData = appPrefsWrapper.hasAppWidgetData(appWidgetId)
         if (networkAvailable && hasAccessToken && siteModel != null) {
             widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
             siteModel.let {
@@ -65,7 +66,7 @@ class TodayWidgetUpdater
                     TODAY_VIEWS,
                     isWideView
             )
-        } else {
+        } else if (!widgetHasData || !hasAccessToken || siteModel == null) {
             widgetUtils.showError(
                     widgetManager,
                     views,
@@ -85,5 +86,7 @@ class TodayWidgetUpdater
         analyticsTrackerWrapper.trackWithWidgetType(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED, TODAY_VIEWS)
         appPrefsWrapper.removeAppWidgetColorModeId(appWidgetId)
         appPrefsWrapper.removeAppWidgetSiteId(appWidgetId)
+        appPrefsWrapper.removeAppWidgetDataTypeModeId(appWidgetId)
+        appPrefsWrapper.removeAppWidgetHasData(appWidgetId)
     }
 }

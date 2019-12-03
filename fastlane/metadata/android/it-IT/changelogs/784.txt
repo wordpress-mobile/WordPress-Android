@@ -1,5 +1,0 @@
-13.4:
-* Aggiunto supporto per l'anteprima da remoto per articoli e pagine.
-* Gli articoli nel cestino restano nel cestino. Devono essere ripristinati prima della modifica o dell'anteprima.
-* Correzione: facendo clic su "Pubblica" su un articolo privato, ora l'articolo viene correttamente pubblicato come privato; risolti alcuni problemi di modifica dei link.
-* Backup automatico delle modifiche non salvate ad articoli e pagine.

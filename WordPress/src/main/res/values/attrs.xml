@@ -145,6 +145,8 @@
 
         <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
         <attr name="wpToolbarDisableScrollGestures" format="boolean"/>
+        <!-- Optional: Default to false. Activate filtering by Tabs instead of Spinner -->
+        <attr name="wpUseTabsForFiltering" format="boolean"/>
     </declare-styleable>
 
     <!--
@@ -169,6 +171,23 @@
             <enum name="views" value="0"/>
             <enum name="allTime" value="1"/>
             <enum name="today" value="2"/>
+        </attr>
+    </declare-styleable>
+
+    <!--
+        Master Switch Toolbar View
+    -->
+    <declare-styleable name="PrefMasterSwitchToolbarView">
+        <attr name="masterTitleOn" format="reference" />
+        <attr name="masterTitleOff" format="reference" />
+        <attr name="masterContentDescription" format="reference" />
+        <attr name="masterHintOn" format="reference" />
+        <attr name="masterHintOff" format="reference" />
+        <attr name="masterContentInsetStart" format="dimension" />
+        <attr name="masterOffsetEnd" format="dimension" />
+        <attr name="masterViewStyle" format="enum">
+            <enum name="highlighted" value="0" />
+            <enum name="normal" value="1" />
         </attr>
     </declare-styleable>
 </resources>

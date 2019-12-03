@@ -732,6 +732,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "gutenberg_enabled";
             case EDITOR_GUTENBERG_DISABLED:
                 return "gutenberg_disabled";
+            case POST_LIST_ACCESS_ERROR:
+                return "post_list_access_error";
             case POST_LIST_BUTTON_PRESSED:
                 return "post_list_button_pressed";
             case POST_LIST_ITEM_SELECTED:
@@ -920,6 +922,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_received_processing_start";
             case NOTIFICATION_RECEIVED_PROCESSING_END:
                 return "notifications_received_processing_end";
+            case NOTIFICATION_SHOWN:
+                return "notification_shown";
+            case NOTIFICATION_TAPPED:
+                return "notification_tapped";
+            case NOTIFICATION_DISMISSED:
+                return "notification_dismissed";
             case OPENED_POSTS:
                 return "site_menu_opened";
             case OPENED_PAGES:
