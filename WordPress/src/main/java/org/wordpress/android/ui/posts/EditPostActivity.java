@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,7 +71,6 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
-import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
@@ -108,7 +106,6 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
-import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
@@ -605,10 +602,16 @@ public class EditPostActivity extends AppCompatActivity implements
                 contentIfNotHandled.show(this);
             }
         });
-        mViewModel.getOnSavePostTriggered().observe(this, unitEvent -> {
-            updatePostObject();
-            mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
-        });
+        mViewModel.getOnSavePostTriggered().observe(this, unitEvent -> unitEvent.applyIfNotHandled(unit -> {
+            updateAndSavePostAsync();
+            return null;
+        }));
+        mViewModel.getOnFinish().observe(this, finishEvent -> finishEvent.applyIfNotHandled(unit -> {
+            saveResult(true, false, false);
+            removePostOpenInEditorStickyEvent();
+            finish();
+            return null;
+        }));
     }
 
     private void initializePostObject() {
@@ -774,7 +777,7 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
-        savePostAsync(null);
+        updateAndSavePostAsync();
         outState.putInt(STATE_KEY_POST_LOCAL_ID, mEditPostRepository.getId());
         if (!mEditPostRepository.isLocalDraft()) {
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mEditPostRepository.getRemotePostId());
@@ -1447,8 +1450,8 @@ public class EditPostActivity extends AppCompatActivity implements
             boolean isFirstTimePublish,
             boolean doFinishActivity
     ) {
-        new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity)
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mShowAztecEditor, mSite,
+                doFinishActivity);
     }
 
     private void onUploadSuccess(MediaModel media) {
@@ -1559,29 +1562,37 @@ public class EditPostActivity extends AppCompatActivity implements
             return false;
         }
         UpdateResult updateResult = mViewModel
-                .updatePostObject(this, mShowAztecEditor, mEditPostRepository,
-                        oldContent -> {
-                            try {
-                                String title = (String) mEditorFragment.getTitle();
-                                String content = (String) mEditorFragment.getContent(oldContent);
-                                return new PostFields(title, content);
-                            } catch (EditorFragmentNotAddedException e) {
-                                AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-                                return new UpdateFromEditor.Failed(e);
-                            }
-                        });
+                .updatePostObject(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor);
         return updateResult instanceof UpdateResult.Success;
     }
 
-    private void savePostAsync(final AfterSavePostListener listener) {
-        new Thread(() -> {
-            if (updatePostObject()) {
-                mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
-                if (listener != null) {
-                    listener.onPostSave();
-                }
-            }
-        }).start();
+    private void updateAndSavePostAsync() {
+        updateAndSavePostAsync(null);
+    }
+
+    private void updateAndSavePostAsync(final AfterSavePostListener listener) {
+        if (mEditorFragment == null) {
+            AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
+            return;
+        }
+        mViewModel.updateAndSavePostAsync(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor,
+                () -> {
+                    if (listener != null) {
+                        listener.onPostSave();
+                    }
+                    return null;
+                });
+    }
+
+    private UpdateFromEditor updateFromEditor(String oldContent) {
+        try {
+            String title = (String) mEditorFragment.getTitle();
+            String content = (String) mEditorFragment.getContent(oldContent);
+            return new PostFields(title, content);
+        } catch (EditorFragmentNotAddedException e) {
+            AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+            return new UpdateFromEditor.Failed(e);
+        }
     }
 
     @Override
@@ -1777,118 +1788,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean isNewPost() {
         return mIsNewPost;
-    }
-
-    private class SavePostOnlineAndFinishTask extends AsyncTask<Void, Void, Void> {
-        boolean mIsFirstTimePublish;
-        boolean mDoFinishActivity;
-
-        SavePostOnlineAndFinishTask(boolean isFirstTimePublish, boolean doFinishActivity) {
-            this.mIsFirstTimePublish = isFirstTimePublish;
-            this.mDoFinishActivity = doFinishActivity;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            // mark as pending if the user doesn't have publishing rights
-            if (!UploadUtils.userCanPublish(mSite)) {
-                switch (mEditPostRepository.getStatus()) {
-                    case UNKNOWN:
-                    case PUBLISHED:
-                    case SCHEDULED:
-                    case PRIVATE:
-                        mEditPostRepository.updateStatus(PostStatus.PENDING);
-                        break;
-                    case DRAFT:
-                    case PENDING:
-                    case TRASHED:
-                        break;
-                }
-            }
-
-            mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
-            PostUtils.trackSavePostAnalytics(mEditPostRepository.getPost(),
-                    mSiteStore.getSiteByLocalId(mEditPostRepository.getLocalSiteId()));
-
-            UploadService.uploadPost(EditPostActivity.this, mEditPostRepository.getId(), mIsFirstTimePublish);
-
-            PendingDraftsNotificationsUtils
-                    .cancelPendingDraftAlarms(EditPostActivity.this, mEditPostRepository.getId());
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void saved) {
-            if (mDoFinishActivity) {
-                saveResult(true, false, false);
-                removePostOpenInEditorStickyEvent();
-                finish();
-            }
-        }
-    }
-
-    private class SavePostLocallyAndFinishTask extends AsyncTask<Void, Void, Boolean> {
-        boolean mDoFinishActivity;
-
-        SavePostLocallyAndFinishTask(boolean doFinishActivity) {
-            this.mDoFinishActivity = doFinishActivity;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            if (mEditPostRepository.postHasEdits()) {
-                mEditPostRepository.updateInTransaction(postModel -> {
-                    // Changes have been made - save the post and ask for the post list to refresh
-                    // We consider this being "manual save", it will replace some Android "spans" by an html
-                    // or a shortcode replacement (for instance for images and galleries)
-
-                    // Update the post object directly, without re-fetching the fields from the EditorFragment
-                    updatePostLocallyChangedOnStatusOrMediaChange(postModel);
-                    return true;
-                });
-                mViewModel.savePostToDb(EditPostActivity.this, mEditPostRepository, mShowAztecEditor);
-
-                // For self-hosted sites, when exiting the editor without uploading, the `PostUploadModel
-                // .uploadState`
-                // can get stuck in `PENDING`. This happens in this scenario:
-                //
-                // 1. The user edits an existing post
-                // 2. Adds an image -- this creates the `PostUploadModel` as `PENDING`
-                // 3. Exits the editor by tapping on Back (not saving or publishing)
-                //
-                // If the `uploadState` is stuck at `PENDING`, the Post List will indefinitely show a “Queued post”
-                // label.
-                //
-                // The `uploadState` does not get stuck on `PENDING` for WPCom because the app will automatically
-                // start a remote auto-save when the editor exits. Hence, the `PostUploadModel` eventually gets
-                // updated.
-                //
-                // Marking the `PostUploadModel` as `CANCELLED` when exiting should be fine for all site types since
-                // we do not currently have any special handling for cancelled uploads. Eventually, the user will
-                // restart them and the `uploadState` will be corrected.
-                //
-                // See `PostListUploadStatusTracker` and `PostListItemUiStateHelper.createUploadUiState` for how
-                // the Post List determines what label to use.
-                mDispatcher.dispatch(UploadActionBuilder.newCancelPostAction(mEditPostRepository.getEditablePost()));
-
-                // now set the pending notification alarm to be triggered in the next day, week, and month
-                PendingDraftsNotificationsUtils
-                        .scheduleNextNotifications(EditPostActivity.this, mEditPostRepository.getId(),
-                                mEditPostRepository.getDateLocallyChanged());
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean saved) {
-            if (mDoFinishActivity) {
-                saveResult(saved, false, true);
-                removePostOpenInEditorStickyEvent();
-                finish();
-            }
-        }
     }
 
     private void saveResult(boolean saved, boolean discardable, boolean savedLocally) {
@@ -2119,7 +2018,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void savePostLocallyAndFinishAsync(boolean doFinishActivity) {
-        new SavePostLocallyAndFinishTask(doFinishActivity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mViewModel.savePostLocally(this, mEditPostRepository, mShowAztecEditor, doFinishActivity);
     }
 
     /**
@@ -2173,7 +2072,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     mEditorFragment.setImageLoader(mImageLoader);
 
                     mEditorFragment.getTitleOrContentChanged().observe(EditPostActivity.this, editable -> {
-                        mViewModel.savePost();
+                        mViewModel.savePostWithDelay();
                     });
 
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
@@ -2345,42 +2244,17 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * Updates post object
-     */
-    private void updatePostLocallyChangedOnStatusOrMediaChange(PostModel editedPost) {
-        if (editedPost == null) {
-            return;
-        }
-        boolean contentChanged;
-        if (mViewModel.getMediaInsertedOnCreation()) {
-            mViewModel.setMediaInsertedOnCreation(false);
-            contentChanged = true;
-        } else {
-            contentChanged = mViewModel
-                    .isCurrentMediaMarkedUploadingDifferentToOriginal(this, mShowAztecEditor, editedPost.getContent());
-        }
-
-        boolean statusChanged = mEditPostRepository.hasStatusChangedFromWhenEditorOpened(editedPost.getStatus());
-
-        if (!editedPost.isLocalDraft() && (contentChanged || statusChanged)) {
-            editedPost.setIsLocallyChanged(true);
-            editedPost
-                    .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-        }
-    }
-
     private void setFeaturedImageId(final long mediaId) {
         mEditPostRepository.updateInTransaction(postModel -> {
             postModel.setFeaturedImageId(mediaId);
             postModel.setIsLocallyChanged(true);
             return true;
         });
-        savePostAsync(() -> EditPostActivity.this.runOnUiThread(() -> {
+        updateAndSavePostAsync(() -> {
             if (mEditPostSettingsFragment != null) {
                 mEditPostSettingsFragment.updateFeaturedImage(mediaId);
             }
-        }));
+        });
     }
 
     @Override
@@ -2937,7 +2811,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mViewModel.setMediaInsertedOnCreation(true);
                 mEditorMedia.addExistingMediaToEditorAsync(mediaList, AddExistingMediaSource.WP_MEDIA_LIBRARY);
                 // TODO we save the post in `addExistingMediaToEditor` but we don't have access to AfterSavePostListener
-                savePostAsync(() -> runOnUiThread(this::onEditorFinalTouchesBeforeShowing));
+                updateAndSavePostAsync(this::onEditorFinalTouchesBeforeShowing);
             }
         }
 
@@ -3195,7 +3069,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void syncPostObjectWithUiAndSaveIt(@Nullable AfterSavePostListener listener) {
-        savePostAsync(listener);
+        updateAndSavePostAsync(listener);
     }
 
     @Override public void advertiseImageOptimization(@NotNull Function0<Unit> listener) {
