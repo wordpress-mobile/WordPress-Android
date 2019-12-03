@@ -61,6 +61,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.wordpress.mobile.WPAndroidGlue.Media.createRNMediaUsingMimeType;
+
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener {
@@ -147,7 +149,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         defaultLocaleConfiguration.setLocale(defaultLocale);
         Context localizedContextDefault = getActivity()
                 .createConfigurationContext(defaultLocaleConfiguration);
-        Resources defaultResources = localizedContextDefault.getResources();
+        Resources englishResources = localizedContextDefault.getResources();
 
         // Strings are only being translated in the WordPress package
         // thus we need to get a reference of the R class for this package
@@ -177,21 +179,26 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
 
             String fieldName = stringField.getName();
-            // Filter out all strings that are not prefixed with `gutenberg_mobile_`
-            if (!fieldName.startsWith("gutenberg_mobile_")) {
+            // Filter out all strings that are not prefixed with `gutenberg_native_`
+            if (!fieldName.startsWith("gutenberg_native_")) {
                 continue;
             }
 
-            // Add the mapping english => [ translated ] to the bundle if both string are not empty
-            String currentResourceString = currentResources.getString(resourceId);
-            String defaultResourceString = defaultResources.getString(resourceId);
-            if (currentResourceString.length() > 0 && defaultResourceString.length() > 0) {
-                translations.putStringArrayList(
-                        defaultResourceString,
-                        new ArrayList<>(Arrays.asList(currentResourceString))
-                );
+            try {
+                // Add the mapping english => [ translated ] to the bundle if both string are not empty
+                String currentResourceString = currentResources.getString(resourceId);
+                String englishResourceString = englishResources.getString(resourceId);
+                if (currentResourceString.length() > 0 && englishResourceString.length() > 0) {
+                    translations.putStringArrayList(
+                            englishResourceString,
+                            new ArrayList<>(Arrays.asList(currentResourceString))
+                    );
+                }
+            } catch (Resources.NotFoundException rnfe) {
+                AppLog.w(T.EDITOR, rnfe.getMessage());
             }
         }
+
         return translations;
     }
 
@@ -750,23 +757,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
-        if (getActivity() == null) {
-            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
-            // Activity may have already be gone.
-            // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
-            AppLog.d(T.MEDIA, "appendMediaFile() called but Activity is null! mediaUrl: " + mediaUrl);
-            return;
-        }
-
-        boolean isNetworkUrl = URLUtil.isNetworkUrl(mediaUrl);
-        if (!isNetworkUrl) {
-            mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
-        }
-
-        getGutenbergContainerFragment().appendUploadMediaFile(
-                isNetworkUrl ? Integer.valueOf(mediaFile.getMediaId()) : mediaFile.getId(),
-                isNetworkUrl ? mediaUrl : "file://" + mediaUrl,
-                mediaFile.isVideo());
+        // noop implementation for shared interface with Aztec
     }
 
     @Override
@@ -796,15 +787,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
-            rnMediaList.add(
-                    new Media(
-                            isNetworkUrl
-                                    ? Integer.valueOf(mediaEntry.getValue().getMediaId())
-                                    : mediaEntry.getValue().getId(),
-                            isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey(),
-                            mediaEntry.getValue().getMimeType()
-                    )
-            );
+            int mediaId = isNetworkUrl ? Integer.valueOf(mediaEntry.getValue().getMediaId())
+                    : mediaEntry.getValue().getId();
+            String url = isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey();
+            rnMediaList.add(createRNMediaUsingMimeType(mediaId, url, mediaEntry.getValue().getMimeType()));
         }
 
         getGutenbergContainerFragment().appendUploadMediaFiles(rnMediaList);
@@ -868,6 +854,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return true;
         }
         return false;
+    }
+
+    @Override public void mediaSelectionCancelled() {
+        getGutenbergContainerFragment().mediaSelectionCancelled();
     }
 
     @Override

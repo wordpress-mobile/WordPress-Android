@@ -19,6 +19,7 @@ fun <T> test(context: CoroutineContext = EmptyCoroutineContext, block: suspend C
     runBlocking(context, block)
 }
 
+@Suppress("unused")
 fun <T : Any, R> KStubbing<T>.onBlocking(methodCall: suspend T.() -> R): OngoingStubbing<R> {
     return runBlocking { Mockito.`when`(mock.methodCall()) }
 }

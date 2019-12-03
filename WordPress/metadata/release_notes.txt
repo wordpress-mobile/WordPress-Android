@@ -1,4 +1,3 @@
-- We updated the navigation bar color to white on Android 8.1 and higher.
-- Bugs in page list ordering are fixed, so pages always appear in alphabetical order.
-- Block editor updates: Added support for Pexels images and image alignment options.
+* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.
 
+* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.

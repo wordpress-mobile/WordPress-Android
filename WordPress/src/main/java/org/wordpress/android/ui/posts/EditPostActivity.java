@@ -97,7 +97,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
-import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -638,48 +637,7 @@ public class EditPostActivity extends AppCompatActivity implements
             EventBus.getDefault().postSticky(new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(),
                     mEditPostRepository.getId()));
 
-            // run this purge in the background to not delay Editor initialization
-            new Thread(this::purgeMediaToPostAssociationsIfNotInPostAnymore).start();
-        }
-    }
-
-    private void purgeMediaToPostAssociationsIfNotInPostAnymore() {
-        boolean useAztec = AppPrefs.isAztecEditorEnabled();
-        boolean useGutenberg = AppPrefs.isGutenbergEditorEnabled();
-
-        ArrayList<MediaModel> allMedia = new ArrayList<>();
-        allMedia.addAll(mUploadStore.getFailedMediaForPost(mEditPostRepository.getPost()));
-        allMedia.addAll(mUploadStore.getCompletedMediaForPost(mEditPostRepository.getPost()));
-        allMedia.addAll(mUploadStore.getUploadingMediaForPost(mEditPostRepository.getPost()));
-
-        if (!allMedia.isEmpty()) {
-            HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
-            for (MediaModel media : allMedia) {
-                if (useAztec) {
-                    if (!AztecEditorFragment.isMediaInPostBody(this,
-                            mEditPostRepository.getContent(), String.valueOf(media.getId()))) {
-                        // don't delete featured image uploads
-                        if (!media.getMarkedLocallyAsFeatured()) {
-                            mediaToDeleteAssociationFor.add(media);
-                        }
-                    }
-                } else if (useGutenberg) {
-                    if (!PostUtils.isMediaInGutenbergPostBody(
-                            mEditPostRepository.getContent(), String.valueOf(media.getId()))) {
-                        // don't delete featured image uploads
-                        if (!media.getMarkedLocallyAsFeatured()) {
-                            mediaToDeleteAssociationFor.add(media);
-                        }
-                    }
-                }
-            }
-
-            if (!mediaToDeleteAssociationFor.isEmpty()) {
-                // also remove the association of Media-to-Post for this post
-                ClearMediaPayload clearMediaPayload =
-                        new ClearMediaPayload(mEditPostRepository.getPost(), mediaToDeleteAssociationFor);
-                mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
-            }
+            mEditorMedia.purgeMediaToPostAssociationsIfNotInPostAnymoreAsync();
         }
     }
 
@@ -2437,7 +2395,24 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (resultCode != Activity.RESULT_OK) {
-            return;
+            // for all media related intents, let editor fragment know about cancellation
+            switch (requestCode) {
+                case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
+                case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
+                case RequestCodes.PHOTO_PICKER:
+                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
+                case RequestCodes.MEDIA_LIBRARY:
+                case RequestCodes.PICTURE_LIBRARY:
+                case RequestCodes.TAKE_PHOTO:
+                case RequestCodes.VIDEO_LIBRARY:
+                case RequestCodes.TAKE_VIDEO:
+                case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
+                    mEditorFragment.mediaSelectionCancelled();
+                    return;
+                default:
+                    // noop
+                    return;
+            }
         }
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO
@@ -3208,13 +3183,13 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     // EditorMediaListener
-
     @Override
-    public void appendMediaFile(@NotNull MediaFile mediaFile, @NotNull String imageUrl) {
-        mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
+    public void appendMediaFiles(@NotNull Map<String, ? extends MediaFile> mediaFiles) {
+        mEditorFragment.appendMediaFiles((Map<String, MediaFile>) mediaFiles);
     }
 
-    @NotNull @Override public PostImmutableModel getImmutablePost() {
+    @NotNull @Override
+    public PostImmutableModel getImmutablePost() {
         return Objects.requireNonNull(mEditPostRepository.getPost());
     }
 

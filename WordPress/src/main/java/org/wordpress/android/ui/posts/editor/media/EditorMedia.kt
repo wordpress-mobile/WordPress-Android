@@ -43,7 +43,7 @@ import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 interface EditorMediaListener {
-    fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
+    fun appendMediaFiles(mediaFiles: Map<String, MediaFile>)
     fun syncPostObjectWithUiAndSaveIt(listener: AfterSavePostListener? = null)
     fun advertiseImageOptimization(listener: () -> Unit)
     fun getImmutablePost(): PostImmutableModel
@@ -58,6 +58,7 @@ class EditorMedia @Inject constructor(
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
     private val retryFailedMediaUploadUseCase: RetryFailedMediaUploadUseCase,
+    private val cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     // region Fields
@@ -222,6 +223,13 @@ class EditorMedia @Inject constructor(
     fun retryFailedMediaAsync(failedMediaIds: List<Int>) {
         launch {
             retryFailedMediaUploadUseCase.retryFailedMediaAsync(editorMediaListener, failedMediaIds)
+        }
+    }
+
+    fun purgeMediaToPostAssociationsIfNotInPostAnymoreAsync() {
+        launch {
+            cleanUpMediaToPostAssociationUseCase
+                    .purgeMediaToPostAssociationsIfNotInPostAnymore(editorMediaListener.getImmutablePost())
         }
     }
     // endregion
