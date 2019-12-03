@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MySiteListRowLayout">
+
+    <ImageView
+        android:id="@+id/action_icon"
+        tools:src="@drawable/ic_posts_white_24dp"
+        android:visibility="visible"
+        android:contentDescription="@null"
+        style="@style/MainBottomSheetRowIcon"/>
+
+    <TextView
+        android:id="@+id/action_title"
+        style="@style/MainBottomSheetRowTextView"
+        tools:text="@string/my_site_bottom_sheet_add_post" />
+
+</LinearLayout>

@@ -1,5 +1,0 @@
-13.6:
-- Wir haben die Farbe der Navigationsleiste in Android 8.1 oder höher auf Weiß aktualisiert.
-- Ein Fehler beim Sortieren von Seiten wurden behoben, sodass Seiten stets in alphabetischer Reihenfolge angezeigt werden.
-- Updates im Block-Editor: Support für Pexels-Bilder und Optionen zum Ausrichten von Bildern hinzugefügt.
-

@@ -99,6 +99,7 @@ import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -118,6 +119,7 @@ import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
+import org.wordpress.android.ui.posts.editor.EditorTracker;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
@@ -132,6 +134,7 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
@@ -186,6 +189,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
 import kotlin.Unit;
@@ -221,6 +225,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_RESTART_EDITOR = "isSwitchingEditors";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
+    public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -320,6 +325,8 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject LocaleManagerWrapper mLocaleManagerWrapper;
     @Inject EditPostRepository mEditPostRepository;
     @Inject PostUtilsWrapper mPostUtils;
+    @Inject EditorTracker mEditorTracker;
+    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
 
     private SiteModel mSite;
 
@@ -1291,7 +1298,9 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT);
         ToastUtils.showToast(EditPostActivity.this,
                 getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
-        UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
+        mUploadUtilsWrapper.showSnackbar(
+                findViewById(R.id.editor_activity),
+                R.string.editor_uploading_post);
         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
         savePostAndOptionallyFinish(false);
     }
@@ -1328,7 +1337,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void toggledHtmlModeSnackbar(View.OnClickListener onUndoClickListener) {
-        UploadUtils.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
+        mUploadUtilsWrapper.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
                 mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
                         : R.string.menu_visual_mode_done_snackbar,
                 R.string.menu_undo_snackbar_action,
@@ -1557,6 +1566,7 @@ public class EditPostActivity extends AppCompatActivity implements
         Map<String, Object> properties = new HashMap<>();
         // Post created from the post list (new post button).
         String normalizedSourceName = "post-list";
+
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             // Post created with share with WordPress
             normalizedSourceName = "shared-from-external-app";
@@ -1572,6 +1582,23 @@ public class EditPostActivity extends AppCompatActivity implements
         }
         PostUtils.addPostTypeToAnalyticsProperties(mEditPostRepository.getPost(), properties);
         properties.put("created_post_source", normalizedSourceName);
+
+        if (intent != null
+            && intent.hasExtra(EXTRA_CREATION_SOURCE_DETAIL)
+            && normalizedSourceName == "post-list") {
+            PagePostCreationSourcesDetail source =
+                    (PagePostCreationSourcesDetail) intent.getSerializableExtra(EXTRA_CREATION_SOURCE_DETAIL);
+            properties.put(
+                    CREATED_POST_SOURCE_DETAIL_KEY,
+                    source != null ? source.getLabel() : PagePostCreationSourcesDetail.NO_DETAIL.getLabel()
+            );
+        } else {
+            properties.put(
+                    CREATED_POST_SOURCE_DETAIL_KEY,
+                    PagePostCreationSourcesDetail.NO_DETAIL.getLabel()
+            );
+        }
+
         AnalyticsUtils.trackWithSiteDetails(
                 AnalyticsTracker.Stat.EDITOR_CREATED_POST,
                 mSiteStore.getSiteByLocalId(mEditPostRepository.getLocalSiteId()),
@@ -3061,125 +3088,18 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onTrackableEvent(TrackableEvent event) throws IllegalArgumentException {
-        AnalyticsTracker.Stat currentStat = null;
+        mEditorTracker.trackEditorEvent(event, mEditorFragment.getEditorName());
         switch (event) {
-            case BOLD_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_BOLD;
-                break;
-            case BLOCKQUOTE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_BLOCKQUOTE;
-                break;
             case ELLIPSIS_COLLAPSE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_ELLIPSIS_COLLAPSE;
                 AppPrefs.setAztecEditorToolbarExpanded(false);
                 break;
             case ELLIPSIS_EXPAND_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_ELLIPSIS_EXPAND;
                 AppPrefs.setAztecEditorToolbarExpanded(true);
                 break;
-            case HEADING_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING;
-                break;
-            case HEADING_1_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_1;
-                break;
-            case HEADING_2_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_2;
-                break;
-            case HEADING_3_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_3;
-                break;
-            case HEADING_4_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_4;
-                break;
-            case HEADING_5_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_5;
-                break;
-            case HEADING_6_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HEADING_6;
-                break;
-            case HORIZONTAL_RULE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HORIZONTAL_RULE;
-                break;
-            case FORMAT_ALIGN_LEFT_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_LEFT);
-                break;
-            case FORMAT_ALIGN_CENTER_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_CENTER);
-                break;
-            case FORMAT_ALIGN_RIGHT_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_RIGHT);
-                break;
             case HTML_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_HTML;
-                mEditorPhotoPicker.hidePhotoPicker();
-                break;
-            case IMAGE_EDITED:
-                currentStat = Stat.EDITOR_EDITED_IMAGE;
-                break;
-            case ITALIC_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_ITALIC;
-                break;
             case LINK_ADDED_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_LINK_ADDED;
                 mEditorPhotoPicker.hidePhotoPicker();
                 break;
-            case LIST_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_LIST;
-                break;
-            case LIST_ORDERED_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_LIST_ORDERED;
-                break;
-            case LIST_UNORDERED_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_LIST_UNORDERED;
-                break;
-            case MEDIA_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_IMAGE;
-                break;
-            case NEXT_PAGE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_NEXT_PAGE;
-                break;
-            case PARAGRAPH_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_PARAGRAPH;
-                break;
-            case PREFORMAT_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_PREFORMAT;
-                break;
-            case READ_MORE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_READ_MORE;
-                break;
-            case STRIKETHROUGH_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_STRIKETHROUGH;
-                break;
-            case UNDERLINE_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_UNDERLINE;
-                break;
-            case REDO_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_REDO);
-                break;
-            case UNDO_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDO);
-                break;
-            default:
-                AppLog.w(T.EDITOR, "onTrackableEvent event not being tracked in EditPostActivity: " + event.name());
-                break;
-        }
-
-        if (currentStat != null) {
-            Map<String, String> properties = new HashMap<>();
-            String editorName = null;
-            if (mEditorFragment instanceof GutenbergEditorFragment) {
-                editorName = "gutenberg";
-            } else if (mEditorFragment instanceof AztecEditorFragment) {
-                editorName = "aztec";
-            }
-            if (editorName == null) {
-                throw new IllegalArgumentException("Unexpected Editor Fragment - got "
-                                                   + mEditorFragment.getClass().getName()
-                                                   + " but expected GutenbergEditorFragment or AztecEditorFragment");
-            }
-            properties.put("editor", editorName);
-            AnalyticsTracker.track(currentStat, properties);
         }
     }
 
@@ -3282,7 +3202,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else if (isError || isRemoteAutoSaveError()) {
             // We got an error from the uploading or from the remote auto save of a post: show snackbar error
             updatePostLoadingAndDialogState(PostLoadingState.NONE);
-            UploadUtils.showSnackbarError(findViewById(R.id.editor_activity),
+            mUploadUtilsWrapper.showSnackbarError(findViewById(R.id.editor_activity),
                     getString(R.string.remote_preview_operation_error));
         }
         return post;
@@ -3296,8 +3216,8 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!isRemotePreviewingFromEditor()) {
                 // We are not remote previewing a post: show snackbar and update post status if needed
                 View snackbarAttachView = findViewById(R.id.editor_activity);
-                UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
-                        event.isError() ? event.error.message : null, getSite(), mDispatcher);
+                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
+                        event.isError() ? event.error.message : null, getSite());
                 if (!event.isError()) {
                     mEditPostRepository.setInTransaction(() -> {
                         updateOnSuccessfulUpload();

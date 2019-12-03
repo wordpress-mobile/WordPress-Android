@@ -123,6 +123,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final int NEWS_CARD_POSITION = 0;
 
+    private boolean mIsMainReader = false;
+
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
@@ -685,7 +687,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     // ********************************************************************************************
 
-    public ReaderPostAdapter(Context context, ReaderPostListType postListType, ImageManager imageManager) {
+    public ReaderPostAdapter(
+            Context context,
+            ReaderPostListType postListType,
+            ImageManager imageManager,
+            boolean isMainReader
+    ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
         this.mImageManager = imageManager;
@@ -694,6 +701,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = !mAccountStore.hasAccessToken();
+        mIsMainReader = isMainReader;
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
@@ -708,11 +716,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasSiteHeader() {
-        return isDiscover() || getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW;
+        return !mIsMainReader && (isDiscover() || getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
     }
 
     private boolean hasTagHeader() {
-        return mCurrentTag != null && mCurrentTag.isTagTopic() && !isEmpty();
+        return !mIsMainReader && (mCurrentTag != null && mCurrentTag.isTagTopic() && !isEmpty());
     }
 
     private boolean isDiscover() {

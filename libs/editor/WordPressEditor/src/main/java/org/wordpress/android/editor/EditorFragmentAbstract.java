@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.view.DragEvent;
 
+import androidx.annotation.NonNull;
 import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -24,6 +25,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public class EditorFragmentNotAddedException extends Exception {
     }
 
+    public abstract @NonNull String getEditorName();
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
     public abstract CharSequence getTitle() throws EditorFragmentNotAddedException;

@@ -66,6 +66,7 @@ import static org.wordpress.mobile.WPAndroidGlue.Media.createRNMediaUsingMimeTyp
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener {
+    private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
@@ -148,7 +149,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         defaultLocaleConfiguration.setLocale(defaultLocale);
         Context localizedContextDefault = getActivity()
                 .createConfigurationContext(defaultLocaleConfiguration);
-        Resources defaultResources = localizedContextDefault.getResources();
+        Resources englishResources = localizedContextDefault.getResources();
 
         // Strings are only being translated in the WordPress package
         // thus we need to get a reference of the R class for this package
@@ -178,21 +179,26 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
 
             String fieldName = stringField.getName();
-            // Filter out all strings that are not prefixed with `gutenberg_mobile_`
-            if (!fieldName.startsWith("gutenberg_mobile_")) {
+            // Filter out all strings that are not prefixed with `gutenberg_native_`
+            if (!fieldName.startsWith("gutenberg_native_")) {
                 continue;
             }
 
-            // Add the mapping english => [ translated ] to the bundle if both string are not empty
-            String currentResourceString = currentResources.getString(resourceId);
-            String defaultResourceString = defaultResources.getString(resourceId);
-            if (currentResourceString.length() > 0 && defaultResourceString.length() > 0) {
-                translations.putStringArrayList(
-                        defaultResourceString,
-                        new ArrayList<>(Arrays.asList(currentResourceString))
-                );
+            try {
+                // Add the mapping english => [ translated ] to the bundle if both string are not empty
+                String currentResourceString = currentResources.getString(resourceId);
+                String englishResourceString = englishResources.getString(resourceId);
+                if (currentResourceString.length() > 0 && englishResourceString.length() > 0) {
+                    translations.putStringArrayList(
+                            englishResourceString,
+                            new ArrayList<>(Arrays.asList(currentResourceString))
+                    );
+                }
+            } catch (Resources.NotFoundException rnfe) {
+                AppLog.w(T.EDITOR, rnfe.getMessage());
             }
         }
+
         return translations;
     }
 
@@ -714,6 +720,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 Thread.currentThread().interrupt();
             }
         });
+    }
+
+    @NonNull
+    @Override
+    public String getEditorName() {
+        return GUTENBERG_EDITOR_NAME;
     }
 
     @Override
