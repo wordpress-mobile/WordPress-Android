@@ -71,7 +71,6 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
-import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
@@ -196,7 +195,6 @@ import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KE
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
-import kotlin.jvm.functions.Function1;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
