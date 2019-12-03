@@ -24,7 +24,6 @@ import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Success
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -152,7 +151,8 @@ class EditPostViewModel
                 // now set the pending notification alarm to be triggered in the next day, week, and month
                 pendingDraftsNotificationsUtils
                         .scheduleNextNotifications(
-                                context, editPostRepository.id,
+                                context,
+                                editPostRepository.id,
                                 editPostRepository.dateLocallyChanged
                         )
             }
@@ -189,12 +189,8 @@ class EditPostViewModel
         )
         if (!editedPost.isLocalDraft && (contentChanged || statusChanged)) {
             editedPost.setIsLocallyChanged(true)
-            editedPost
-                    .setDateLocallyChanged(
-                            DateTimeUtils.iso8601FromTimestamp(
-                                    System.currentTimeMillis() / 1000
-                            )
-                    )
+            val currentTime = localeManagerWrapper.getCurrentCalendar()
+            editedPost.setDateLocallyChanged(dateTimeUtils.iso8601FromCalendar(currentTime))
         }
     }
 

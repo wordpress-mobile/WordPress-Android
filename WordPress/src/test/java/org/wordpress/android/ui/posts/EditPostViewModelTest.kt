@@ -17,6 +17,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.PostAction
+import org.wordpress.android.fluxc.action.UploadAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
@@ -473,6 +474,82 @@ class EditPostViewModelTest : BaseUnitTest() {
         verify(uploadService).uploadPost(context, postId, isFirstTimePublish)
         verify(pendingDraftsNotificationsUtils).cancelPendingDraftAlarms(context, postId)
         assertThat(finished).isTrue()
+    }
+
+    @Test
+    fun `savePostLocally sets locally changed flag when mediaInsertedOnCreation == true`() {
+        val showAztecEditor = true
+        val doFinishActivity = false
+        whenever(postRepository.postHasEdits()).thenReturn(true)
+        viewModel.mediaInsertedOnCreation = true
+        setupCurrentTime()
+
+        viewModel.savePostLocally(context, postRepository, showAztecEditor, doFinishActivity)
+
+        verify(postRepository).updateInTransaction(transactionCaptor.capture())
+
+        transactionCaptor.firstValue.invoke(postModel)
+
+        assertThat(viewModel.mediaInsertedOnCreation).isFalse()
+
+        assertThat(postModel.isLocallyChanged).isTrue()
+        assertThat(postModel.dateLocallyChanged).isEqualTo(currentTime)
+    }
+
+    @Test
+    fun `savePostLocally sets locally changed flag when media marked uploading changed`() {
+        val showAztecEditor = true
+        val doFinishActivity = false
+        whenever(postRepository.postHasEdits()).thenReturn(true)
+        setupCurrentTime()
+        val newContent = "new content"
+        postModel.setContent(newContent)
+        whenever(aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
+                context,
+                newContent
+        )).thenReturn(listOf("new media ID"))
+
+        viewModel.savePostLocally(context, postRepository, showAztecEditor, doFinishActivity)
+
+        verify(postRepository).updateInTransaction(transactionCaptor.capture())
+
+        transactionCaptor.firstValue.invoke(postModel)
+
+        assertThat(viewModel.mediaInsertedOnCreation).isFalse()
+
+        assertThat(postModel.isLocallyChanged).isTrue()
+        assertThat(postModel.dateLocallyChanged).isEqualTo(currentTime)
+    }
+
+    @Test
+    fun `savePostLocally sets post status as cancelled and schedules notification`() {
+        val showAztecEditor = true
+        val doFinishActivity = false
+        whenever(postRepository.postHasEdits()).thenReturn(true)
+        whenever(postRepository.id).thenReturn(postId)
+        whenever(postRepository.dateLocallyChanged).thenReturn(currentTime)
+
+        viewModel.savePostLocally(context, postRepository, showAztecEditor, doFinishActivity)
+
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        assertThat(actionCaptor.firstValue.type).isEqualTo(UploadAction.CANCEL_POST)
+        verify(pendingDraftsNotificationsUtils).scheduleNextNotifications(context, postId, currentTime)
+    }
+
+    @Test
+    fun `savePostLocally finishes when the flag is set`() {
+        val showAztecEditor = true
+        val doFinishActivity = true
+        whenever(postRepository.postHasEdits()).thenReturn(false)
+        var finish = false
+        viewModel.onFinish.observeForever {
+            it.applyIfNotHandled { finish = true }
+        }
+
+        viewModel.savePostLocally(context, postRepository, showAztecEditor, doFinishActivity)
+
+        assertThat(finish).isTrue()
     }
 
     private fun setupPostRepository(
