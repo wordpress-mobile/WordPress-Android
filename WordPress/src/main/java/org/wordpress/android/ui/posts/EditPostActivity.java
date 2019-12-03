@@ -2220,7 +2220,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
                         return GutenbergEditorFragment.newInstance("",
                                 "",
-                                postType
+                                postType,
                                 mIsNewPost,
                                 wpcomLocaleSlug,
                                 supportsStockPhotos);
