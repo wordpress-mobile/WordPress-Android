@@ -16,4 +16,12 @@ import javax.inject.Inject
 class AztecEditorFragmentStaticWrapper @Inject constructor(private val appContext: Context) {
     fun isMediaInPostBody(postContent: String, localMediaId: String) =
             AztecEditorFragment.isMediaInPostBody(appContext, postContent, localMediaId)
+
+    fun getMediaMarkedUploadingInPostContent(
+        context: Context,
+        newContent: String
+    ) = AztecEditorFragment.getMediaMarkedUploadingInPostContent(
+            context,
+            newContent
+    )
 }

@@ -34,6 +34,7 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult
+import org.wordpress.android.ui.posts.editor.AztecEditorFragmentStaticWrapper
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -44,7 +45,7 @@ import java.util.TimeZone
 
 class EditPostViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var aztecEditorWrapper: AztecEditorWrapper
+    @Mock lateinit var aztecEditorWrapper: AztecEditorFragmentStaticWrapper
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var uploadUtils: UploadUtilsWrapper

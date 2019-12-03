@@ -21,6 +21,7 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Success
+import org.wordpress.android.ui.posts.editor.AztecEditorFragmentStaticWrapper
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.AppLog
@@ -39,7 +40,7 @@ class EditPostViewModel
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
-    private val aztecEditorWrapper: AztecEditorWrapper,
+    private val aztecEditorWrapper: AztecEditorFragmentStaticWrapper,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val siteStore: SiteStore,
     private val uploadUtils: UploadUtilsWrapper,
