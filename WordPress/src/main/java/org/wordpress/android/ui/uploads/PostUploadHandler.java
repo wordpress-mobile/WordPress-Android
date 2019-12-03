@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -120,23 +121,23 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         uploadNextPost();
     }
 
-    void registerPostForAnalyticsTracking(@NonNull PostModel post) {
+    void registerPostForAnalyticsTracking(int postId) {
         synchronized (sFirstPublishPosts) {
-            sFirstPublishPosts.add(post.getId());
+            sFirstPublishPosts.add(postId);
         }
     }
 
-    void unregisterPostForAnalyticsTracking(@NonNull PostModel post) {
+    void unregisterPostForAnalyticsTracking(int postId) {
         synchronized (sFirstPublishPosts) {
-            sFirstPublishPosts.remove(post.getId());
+            sFirstPublishPosts.remove(postId);
         }
     }
 
-    static boolean isPostUploadingOrQueued(PostModel post) {
+    static boolean isPostUploadingOrQueued(PostImmutableModel post) {
         return post != null && (isPostUploading(post) || isPostQueued(post));
     }
 
-    static boolean isPostQueued(PostModel post) {
+    static boolean isPostQueued(PostImmutableModel post) {
         if (post == null) {
             return false;
         }
@@ -154,7 +155,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         return false;
     }
 
-    static boolean isPostUploading(PostModel post) {
+    static boolean isPostUploading(PostImmutableModel post) {
         return post != null && sCurrentUploadingPost != null && sCurrentUploadingPost.getId() == post.getId();
     }
 
@@ -209,7 +210,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             switch (result) {
                 case ERROR:
                     mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost);
-                    mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage, 0);
+                    if (mSite != null) {
+                        mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage, 0);
+                    } else {
+                        AppLog.e(T.POSTS, "Site cannot be null");
+                    }
                     finishUpload();
                     break;
                 case NOTHING_TO_UPLOAD:
@@ -326,7 +331,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                                 // and the PostModel contains Gutenberg blocks.
                                 // As a proxy to mIsNewPost, we're using postModel.isLocalDraft(). The choice is
                                 // loosely made knowing the other check ("contains blocks") is in place.
-                                PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost, selectedSite)
+                                PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost.getContent(),
+                                        selectedSite)
                                         ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
                     }
                 }
@@ -614,7 +620,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String errorMessage = mUiHelpers.getTextOfUiString(context,
                     UploadUtils.getErrorMessageResIdFromPostError(PostStatus.fromPost(event.post), event.post.isPage(),
                             event.error, mUploadActionUseCase.isEligibleForAutoUpload(site, event.post)));
-            String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
+            String notificationMessage = UploadUtils.getErrorMessage(context, event.post.isPage(), errorMessage, false);
             mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
                     mMediaStore.getMediaForPost(event.post));
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
@@ -623,7 +629,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
-            mPostUploadNotifier.updateNotificationSuccessForPost(event.post, site, isFirstTimePublish);
+            if (site != null) {
+                mPostUploadNotifier.updateNotificationSuccessForPost(event.post, site, isFirstTimePublish);
+            } else {
+                AppLog.e(T.POSTS, "Cannot update notification success without a site");
+            }
             if (isFirstTimePublish) {
                 if (sCurrentUploadingPostAnalyticsProperties != null) {
                     sCurrentUploadingPostAnalyticsProperties.put("post_id", event.post.getRemotePostId());

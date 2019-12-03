@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
-import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
@@ -42,7 +42,7 @@ internal class FeaturedImageHelper @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val dispatcher: Dispatcher
 ) {
-    fun getFailedFeaturedImageUpload(post: PostModel): MediaModel? {
+    fun getFailedFeaturedImageUpload(post: PostImmutableModel): MediaModel? {
         val failedMediaForPost = uploadStore.getFailedMediaForPost(post)
         for (item in failedMediaForPost) {
             if (item != null && item.markedLocallyAsFeatured) {
@@ -54,7 +54,7 @@ internal class FeaturedImageHelper @Inject constructor(
 
     fun retryFeaturedImageUpload(
         site: SiteModel,
-        post: PostModel
+        post: PostImmutableModel
     ): MediaModel? {
         val mediaModel = getFailedFeaturedImageUpload(post)
         if (mediaModel != null) {
@@ -79,7 +79,7 @@ internal class FeaturedImageHelper @Inject constructor(
         uri: Uri,
         mimeType: String?
     ): Boolean {
-        val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id)
+        val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
                 ?: return false
         if (localPostId != EMPTY_LOCAL_POST_ID) {
             media.localPostId = localPostId
@@ -93,7 +93,7 @@ internal class FeaturedImageHelper @Inject constructor(
         return true
     }
 
-    fun cancelFeaturedImageUpload(site: SiteModel, post: PostModel, cancelFailedOnly: Boolean) {
+    fun cancelFeaturedImageUpload(site: SiteModel, post: PostImmutableModel, cancelFailedOnly: Boolean) {
         var mediaModel: MediaModel? = getFailedFeaturedImageUpload(post)
         if (!cancelFailedOnly && mediaModel == null) {
             mediaModel = uploadServiceFacade.getPendingOrInProgressFeaturedImageUploadForPost(post)
@@ -106,7 +106,7 @@ internal class FeaturedImageHelper @Inject constructor(
         }
     }
 
-    fun createCurrentFeaturedImageState(site: SiteModel, post: PostModel): FeaturedImageData {
+    fun createCurrentFeaturedImageState(site: SiteModel, post: PostImmutableModel): FeaturedImageData {
         var uploadModel: MediaModel? = uploadServiceFacade.getPendingOrInProgressFeaturedImageUploadForPost(post)
         if (uploadModel != null) {
             return FeaturedImageData(FeaturedImageState.IMAGE_UPLOAD_IN_PROGRESS, uploadModel.filePath)

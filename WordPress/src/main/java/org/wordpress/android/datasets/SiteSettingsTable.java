@@ -49,20 +49,25 @@ public final class SiteSettingsTable {
     public static SparseArrayCompat<CategoryModel> getAllCategories() {
         String sqlCommand = sqlSelectAllCategories() + ";";
         Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
+        try {
+            if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) {
+                return null;
+            }
 
-        if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) {
-            return null;
+            SparseArrayCompat<CategoryModel> models = new SparseArrayCompat<>();
+            for (int i = 0; i < cursor.getCount(); ++i) {
+                CategoryModel model = new CategoryModel();
+                model.deserializeFromDatabase(cursor);
+                models.put(model.id, model);
+                cursor.moveToNext();
+            }
+
+            return models;
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
         }
-
-        SparseArrayCompat<CategoryModel> models = new SparseArrayCompat<>();
-        for (int i = 0; i < cursor.getCount(); ++i) {
-            CategoryModel model = new CategoryModel();
-            model.deserializeFromDatabase(cursor);
-            models.put(model.id, model);
-            cursor.moveToNext();
-        }
-
-        return models;
     }
 
     public static Cursor getCategory(long id) {

@@ -46,7 +46,7 @@ class HistoryViewModel @Inject constructor(
     private val postStore: PostStore,
     @Named(UI_THREAD) uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    connectionStatus: LiveData<ConnectionStatus>
+    private val connectionStatus: LiveData<ConnectionStatus>
 ) : ScopedViewModel(uiDispatcher), LifecycleOwner {
     enum class HistoryListStatus {
         DONE,
@@ -63,14 +63,14 @@ class HistoryViewModel @Inject constructor(
     val revisions: LiveData<List<HistoryListItem>>
         get() = _revisions
 
-    private val _showDialog = SingleLiveEvent<HistoryListItem>()
-    val showDialog: LiveData<HistoryListItem>
+    private val _showDialog = SingleLiveEvent<ShowDialogEvent>()
+    val showDialog: LiveData<ShowDialogEvent>
         get() = _showDialog
 
     private var isStarted = false
 
-    lateinit var revisionsList: ArrayList<Revision>
-    lateinit var site: SiteModel
+    private val revisionsList: MutableList<Revision> = mutableListOf()
+    private lateinit var site: SiteModel
 
     private val _post = MutableLiveData<PostModel?>()
     val post: LiveData<PostModel?> = _post
@@ -81,30 +81,33 @@ class HistoryViewModel @Inject constructor(
     init {
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
         dispatcher.register(this)
+    }
+
+    fun create(localPostId: Int, site: SiteModel) {
+        if (isStarted) {
+            return
+        }
+        isStarted = true
+        this.site = site
         connectionStatus.observe(this, Observer {
             if (it == AVAILABLE) {
                 fetchRevisions()
             }
         })
-    }
+        launch {
+            val post: PostModel? = withContext(bgDispatcher) {
+                postStore.getPostByLocalPostId(localPostId)
+            }
 
-    fun create(localPostId: Int, site: SiteModel) = launch {
-        if (isStarted) {
-            return@launch
+            revisionsList.clear()
+            _revisions.value = emptyList()
+
+            this@HistoryViewModel._post.value = post
+
+            fetchRevisions()
+
+            lifecycleRegistry.markState(Lifecycle.State.STARTED)
         }
-
-        val post: PostModel? = withContext(bgDispatcher) { postStore.getPostByLocalPostId(localPostId) }
-
-        revisionsList = ArrayList()
-        _revisions.value = emptyList()
-
-        this@HistoryViewModel._post.value = post
-        this@HistoryViewModel.site = site
-
-        fetchRevisions()
-
-        isStarted = true
-        lifecycleRegistry.markState(Lifecycle.State.STARTED)
     }
 
     private fun createRevisionsList(revisions: List<RevisionModel>) {
@@ -165,9 +168,7 @@ class HistoryViewModel @Inject constructor(
         if (post != null) {
             _listStatus.value = HistoryListStatus.FETCHING
             val payload = FetchRevisionsPayload(post, site)
-            launch {
-                dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
-            }
+            dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
         } else {
             _listStatus.value = HistoryListStatus.DONE
             createRevisionsList(emptyList())
@@ -210,13 +211,15 @@ class HistoryViewModel @Inject constructor(
 
     fun onItemClicked(item: HistoryListItem) {
         if (item is Revision) {
-            _showDialog.value = item
+            _showDialog.value = ShowDialogEvent(item, revisionsList)
         }
     }
 
     fun onPullToRefresh() {
         fetchRevisions()
     }
+
+    data class ShowDialogEvent(val historyListItem: HistoryListItem, val revisionsList: List<Revision>)
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")

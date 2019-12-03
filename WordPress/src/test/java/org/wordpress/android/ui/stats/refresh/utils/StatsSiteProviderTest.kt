@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
+import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -8,19 +11,23 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.SiteAction
+import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SelectedSiteStorage
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
 
 class StatsSiteProviderTest : BaseUnitTest() {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var firstSite: SiteModel
-    @Mock lateinit var secondSite: SiteModel
-    @Mock lateinit var selectedSite: SiteModel
     @Mock lateinit var siteStorage: SelectedSiteStorage
     private lateinit var statsSiteProvider: StatsSiteProvider
+    private lateinit var dispatchCaptor: KArgumentCaptor<Action<SiteModel>>
+    private lateinit var firstSite: SiteModel
+    private lateinit var secondSite: SiteModel
+    private lateinit var selectedSite: SiteModel
     private val firstSiteLocalId = 1
     private val secondSiteLocalId = 2
     private val selectedSiteId = 3
@@ -28,7 +35,14 @@ class StatsSiteProviderTest : BaseUnitTest() {
     @Before
     fun setUp() {
         statsSiteProvider = StatsSiteProvider(siteStore, siteStorage, dispatcher)
-        whenever(firstSite.siteId).thenReturn(1L)
+        dispatchCaptor = argumentCaptor()
+        firstSite = SiteModel()
+        secondSite = SiteModel()
+        selectedSite = SiteModel()
+        firstSite.siteId = 1L
+        firstSite.id = firstSiteLocalId
+        secondSite.id = secondSiteLocalId
+        selectedSite.id = selectedSiteId
         whenever(siteStorage.currentLocalSiteId).thenReturn(selectedSiteId)
         whenever(siteStore.getSiteByLocalId(firstSiteLocalId)).thenReturn(firstSite)
         whenever(siteStore.getSiteByLocalId(secondSiteLocalId)).thenReturn(secondSite)
@@ -61,9 +75,72 @@ class StatsSiteProviderTest : BaseUnitTest() {
     fun `updates site onSiteChange and triggers live data update`() {
         statsSiteProvider.start(secondSiteLocalId)
 
+        var event: SiteUpdateResult? = null
+        statsSiteProvider.siteChanged.observeForever {
+            event = it.getContentIfNotHandled()
+        }
+
+        val siteId = 5L
+        secondSite.siteId = siteId
+
         statsSiteProvider.onSiteChanged(OnSiteChanged(1))
 
         assertThat(statsSiteProvider.siteModel).isEqualTo(secondSite)
+        assertThat(event).isEqualTo(SiteUpdateResult.SiteConnected(siteId))
+    }
+
+    @Test
+    fun `tries to re-fetch when the updated site id == 0`() {
+        statsSiteProvider.start(secondSiteLocalId)
+        var event: SiteUpdateResult? = null
+        statsSiteProvider.siteChanged.observeForever {
+            event = it.getContentIfNotHandled()
+        }
+        secondSite.siteId = 0L
+
+        statsSiteProvider.onSiteChanged(OnSiteChanged(1))
+
+        verify(dispatcher).dispatch(dispatchCaptor.capture())
+
+        assertThat(dispatchCaptor.firstValue.type).isEqualTo(SiteAction.FETCH_SITE)
+        assertThat(dispatchCaptor.firstValue.payload).isEqualTo(secondSite)
+        assertThat(event).isNull()
+    }
+
+    @Test
+    fun `only tries to re-fetch 3 times when the updated site id == 0`() {
+        secondSite.siteId = 0L
+        statsSiteProvider.start(secondSiteLocalId)
+        var event: SiteUpdateResult? = null
+        statsSiteProvider.siteChanged.observeForever {
+            event = it.getContentIfNotHandled()
+        }
+
+        for (i in 0..2) {
+            statsSiteProvider.onSiteChanged(OnSiteChanged(1))
+        }
+
+        verify(dispatcher, times(3)).dispatch(dispatchCaptor.capture())
+        assertThat(dispatchCaptor.allValues).hasSize(3)
+        assertThat(event).isNull()
+    }
+
+    @Test
+    fun `fourth re-fetch finishes the activity`() {
+        secondSite.siteId = 0L
+        statsSiteProvider.start(secondSiteLocalId)
+        var event: SiteUpdateResult? = null
+        statsSiteProvider.siteChanged.observeForever {
+            event = it.getContentIfNotHandled()
+        }
+
+        for (i in 0..3) {
+            statsSiteProvider.onSiteChanged(OnSiteChanged(1))
+        }
+
+        verify(dispatcher, times(3)).dispatch(dispatchCaptor.capture())
+        assertThat(dispatchCaptor.allValues).hasSize(3)
+        assertThat(event).isEqualTo(SiteUpdateResult.NotConnectedJetpackSite)
     }
 
     @Test

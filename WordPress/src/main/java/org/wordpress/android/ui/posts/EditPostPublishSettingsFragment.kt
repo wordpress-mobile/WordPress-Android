@@ -20,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.util.ToastUtils
@@ -57,13 +56,13 @@ class EditPostPublishSettingsFragment : Fragment() {
         })
         viewModel.onPublishedDateChanged.observe(this, Observer {
             it?.let { date ->
-                viewModel.updatePost(date, getPost())
+                viewModel.updatePost(date, getPostRepository())
             }
         })
         viewModel.onNotificationTime.observe(this, Observer {
             it?.let { notificationTime ->
-                getPost()?.let { post ->
-                    viewModel.scheduleNotification(post, notificationTime)
+                getPostRepository()?.let { postRepository ->
+                    viewModel.scheduleNotification(postRepository, notificationTime)
                 }
             }
         })
@@ -77,13 +76,13 @@ class EditPostPublishSettingsFragment : Fragment() {
                 addToCalendarContainer.isEnabled = uiModel.notificationEnabled
                 if (uiModel.notificationEnabled) {
                     publishNotificationContainer.setOnClickListener {
-                        getPost()?.let { post ->
-                            viewModel.onShowDialog(post)
+                        getPostRepository()?.let { postRepository ->
+                            viewModel.onShowDialog(postRepository)
                         }
                     }
                     addToCalendarContainer.setOnClickListener {
-                        getPost()?.let { post ->
-                            viewModel.onAddToCalendar(post)
+                        getPostRepository()?.let { postRepository ->
+                            viewModel.onAddToCalendar(postRepository)
                         }
                     }
                 } else {
@@ -143,7 +142,7 @@ class EditPostPublishSettingsFragment : Fragment() {
                 startActivity(calIntent)
             }
         })
-        viewModel.start(getPost())
+        viewModel.start(getPostRepository())
         return rootView
     }
 
@@ -174,8 +173,8 @@ class EditPostPublishSettingsFragment : Fragment() {
         fragment.show(activity!!.supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
     }
 
-    private fun getPost(): PostModel? {
-        return getEditPostActivityHook()?.post
+    private fun getPostRepository(): EditPostRepository? {
+        return getEditPostActivityHook()?.editPostRepository
     }
 
     private fun getEditPostActivityHook(): EditPostActivityHook? {

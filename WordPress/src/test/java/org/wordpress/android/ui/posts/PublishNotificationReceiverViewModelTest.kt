@@ -39,12 +39,12 @@ class PublishNotificationReceiverViewModelTest {
                 SchedulingReminderModel(notificationId, postId, ONE_HOUR)
         )
         val post = PostModel()
-        post.status = PostStatus.PUBLISHED.toString()
+        post.setStatus(PostStatus.PUBLISHED.toString())
         val postTitle = "Post title"
-        post.title = postTitle
+        post.setTitle(postTitle)
         val now = Calendar.getInstance()
         now.add(Calendar.DAY_OF_MONTH, 10)
-        post.dateCreated = DateTimeUtils.iso8601FromDate(now.time)
+        post.setDateCreated(DateTimeUtils.iso8601FromDate(now.time))
         whenever(postStore.getPostByLocalPostId(postId)).thenReturn(post)
 
         val expectedTitle = "Notification title"
@@ -74,12 +74,12 @@ class PublishNotificationReceiverViewModelTest {
                 SchedulingReminderModel(notificationId, postId, OFF)
         )
         val post = PostModel()
-        post.status = PostStatus.PUBLISHED.toString()
+        post.setStatus(PostStatus.PUBLISHED.toString())
         val postTitle = "Post title"
-        post.title = postTitle
+        post.setTitle(postTitle)
         val now = Calendar.getInstance()
         now.add(Calendar.DAY_OF_MONTH, 10)
-        post.dateCreated = DateTimeUtils.iso8601FromDate(now.time)
+        post.setDateCreated(DateTimeUtils.iso8601FromDate(now.time))
         whenever(postStore.getPostByLocalPostId(postId)).thenReturn(post)
 
         val uiModel = viewModel.loadNotification(notificationId)
@@ -93,12 +93,12 @@ class PublishNotificationReceiverViewModelTest {
                 SchedulingReminderModel(notificationId, postId, ONE_HOUR)
         )
         val post = PostModel()
-        post.status = PostStatus.PUBLISHED.toString()
+        post.setStatus(PostStatus.PUBLISHED.toString())
         val postTitle = "Post title"
-        post.title = postTitle
+        post.setTitle(postTitle)
         val now = Calendar.getInstance()
         now.add(Calendar.DAY_OF_MONTH, -10)
-        post.dateCreated = DateTimeUtils.iso8601FromDate(now.time)
+        post.setDateCreated(DateTimeUtils.iso8601FromDate(now.time))
         whenever(postStore.getPostByLocalPostId(postId)).thenReturn(post)
 
         val uiModel = viewModel.loadNotification(notificationId)

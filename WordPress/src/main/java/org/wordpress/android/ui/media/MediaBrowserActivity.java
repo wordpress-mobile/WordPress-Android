@@ -17,7 +17,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -65,13 +64,12 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.uploads.UploadService;
-import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -113,6 +111,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject SiteStore mSiteStore;
+    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
 
     private SiteModel mSite;
 
@@ -137,8 +136,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         ITEM_CAPTURE_VIDEO,
         ITEM_CHOOSE_PHOTO,
         ITEM_CHOOSE_VIDEO,
-        ITEM_CHOOSE_STOCK_MEDIA,
-        ITEM_CHOOSE_GIPHY
+        ITEM_CHOOSE_STOCK_MEDIA
     }
 
     @Override
@@ -481,17 +479,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
                 if (resultCode == RESULT_OK) {
                     reloadMediaGrid();
-                }
-                break;
-            case RequestCodes.GIPHY_PICKER:
-                if (resultCode == RESULT_OK && data.hasExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                    int[] mediaLocalIds = data.getIntArrayExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
-                    ArrayList<MediaModel> mediaModels = new ArrayList<>();
-                    for (int localId : mediaLocalIds) {
-                        mediaModels.add(mMediaStore.getMediaWithLocalId(localId));
-                    }
-
-                    addMediaToUploadService(mediaModels);
                 }
                 break;
         }
@@ -923,16 +910,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     });
         }
 
-        if (mBrowserType.isBrowser()) {
-            popup.getMenu().add(R.string.photo_picker_giphy).setOnMenuItemClickListener(
-                    new OnMenuItemClickListener() {
-                        @Override public boolean onMenuItemClick(MenuItem item) {
-                            doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_GIPHY);
-                            return true;
-                        }
-                    });
-        }
-
         popup.show();
     }
 
@@ -969,9 +946,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case ITEM_CHOOSE_STOCK_MEDIA:
                 ActivityLauncher.showStockMediaPickerForResult(this,
                         mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
-                break;
-            case ITEM_CHOOSE_GIPHY:
-                ActivityLauncher.showGiphyPickerForResult(this, mSite, RequestCodes.GIPHY_PICKER);
                 break;
         }
     }
@@ -1116,7 +1090,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            UploadUtils.onMediaUploadedSnackbarHandler(this,
+            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this,
                     findViewById(R.id.tab_layout), true,
                     event.mediaModelList, mSite, event.errorMessage);
             updateMediaGridForTheseMedia(event.mediaModelList);
@@ -1128,7 +1102,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            UploadUtils.onMediaUploadedSnackbarHandler(this,
+            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this,
                     findViewById(R.id.tab_layout), false,
                     event.mediaModelList, mSite, event.successMessage);
             updateMediaGridForTheseMedia(event.mediaModelList);

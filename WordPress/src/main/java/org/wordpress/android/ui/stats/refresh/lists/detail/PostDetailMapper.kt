@@ -11,7 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.text.DateFormatSymbols
 import java.util.Date
@@ -21,6 +21,7 @@ class PostDetailMapper
 @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val statsDateFormatter: StatsDateFormatter,
+    private val statsUtils: StatsUtils,
     private val contentDescriptionHelper: ContentDescriptionHelper
 ) {
     fun mapYears(
@@ -51,7 +52,7 @@ class PostDetailMapper
                         val text = DateFormatSymbols(localeManagerWrapper.getLocale()).shortMonths[month.month - 1]
                         ListItemWithIcon(
                                 text = text,
-                                value = month.count.toFormattedString(locale = localeManagerWrapper.getLocale()),
+                                value = statsUtils.toFormattedString(month.count),
                                 textStyle = LIGHT,
                                 showDivider = false,
                                 contentDescription = contentDescriptionHelper.buildContentDescription(
@@ -82,7 +83,7 @@ class PostDetailMapper
         val text = year.year.toString()
         return ListItemWithIcon(
                 text = text,
-                value = year.value.toFormattedString(locale = localeManagerWrapper.getLocale()),
+                value = statsUtils.toFormattedString(year.value),
                 showDivider = isNextNotExpanded && index < size - 1,
                 contentDescription = contentDescriptionHelper.buildContentDescription(
                         header,
@@ -101,7 +102,14 @@ class PostDetailMapper
     ): List<BlockListItem> {
         val weekList = mutableListOf<BlockListItem>()
         val visibleWeeks = weeks.map { week ->
-            val days = week.days.map { DayUiModel(statsDateFormatter.parseStatsDate(DAYS, it.period), it.count) }
+            val days = week.days.map {
+                DayUiModel(
+                        statsDateFormatter.parseStatsDate(
+                                DAYS,
+                                it.period
+                        ), it.count
+                )
+            }
             val firstDay = days.first().date
             val lastDay = if (days.size > 1) days.last().date else null
             val descendingDays = days.sortedByDescending { it.date }
@@ -126,7 +134,7 @@ class PostDetailMapper
                     weekList.addAll(week.days
                             .map { day ->
                                 val text = statsDateFormatter.printDayWithoutYear(day.date)
-                                val value = day.average.toFormattedString(locale = localeManagerWrapper.getLocale())
+                                val value = statsUtils.toFormattedString(day.average)
                                 ListItemWithIcon(
                                         text = text,
                                         value = value,
@@ -172,7 +180,7 @@ class PostDetailMapper
         }
         return ListItemWithIcon(
                 text = label,
-                value = week.weekAverage.toFormattedString(locale = localeManagerWrapper.getLocale()),
+                value = statsUtils.toFormattedString(week.weekAverage),
                 showDivider = isNextNotExpanded && index < size - 1,
                 contentDescription = contentDescriptionHelper.buildContentDescription(
                         header,

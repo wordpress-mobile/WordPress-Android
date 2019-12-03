@@ -148,33 +148,31 @@ class StatsListFragment : DaggerFragment() {
 
     private fun setupObservers(activity: FragmentActivity) {
         viewModel.uiModel.observe(this, Observer {
-            if (it != null) {
-                when (it) {
-                    is UiModel.Success -> {
-                        updateInsights(it.data)
+            when (it) {
+                is UiModel.Success -> {
+                    updateInsights(it.data)
+                }
+                is UiModel.Error, null -> {
+                    recyclerView.visibility = View.GONE
+                    statsErrorView.visibility = View.VISIBLE
+                    statsEmptyView.visibility = View.GONE
+                }
+                is UiModel.Empty -> {
+                    recyclerView.visibility = View.GONE
+                    statsEmptyView.visibility = View.VISIBLE
+                    statsErrorView.visibility = View.GONE
+                    statsEmptyView.title.setText(it.title)
+                    if (it.subtitle != null) {
+                        statsEmptyView.subtitle.setText(it.subtitle)
+                    } else {
+                        statsEmptyView.subtitle.text = ""
                     }
-                    is UiModel.Error -> {
-                        recyclerView.visibility = View.GONE
-                        statsErrorView.visibility = View.VISIBLE
-                        statsEmptyView.visibility = View.GONE
+                    if (it.image != null) {
+                        statsEmptyView.image.setImageResource(it.image)
+                    } else {
+                        statsEmptyView.image.setImageDrawable(null)
                     }
-                    is UiModel.Empty -> {
-                        recyclerView.visibility = View.GONE
-                        statsEmptyView.visibility = View.VISIBLE
-                        statsErrorView.visibility = View.GONE
-                        statsEmptyView.title.setText(it.title)
-                        if (it.subtitle != null) {
-                            statsEmptyView.subtitle.setText(it.subtitle)
-                        } else {
-                            statsEmptyView.subtitle.text = ""
-                        }
-                        if (it.image != null) {
-                            statsEmptyView.image.setImageResource(it.image)
-                        } else {
-                            statsEmptyView.image.setImageDrawable(null)
-                        }
-                        statsEmptyView.button.setVisible(it.showButton)
-                    }
+                    statsEmptyView.button.setVisible(it.showButton)
                 }
             }
         })

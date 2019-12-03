@@ -29,9 +29,10 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.push.GCMMessageService;
+import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener;
@@ -90,6 +91,7 @@ public class NotificationsListFragmentPage extends Fragment implements
     private int mTabPosition;
 
     @Inject AccountStore mAccountStore;
+    @Inject GCMMessageHandler mGCMMessageHandler;
 
     public static Fragment newInstance(int position) {
         NotificationsListFragmentPage fragment = new NotificationsListFragmentPage();
@@ -293,7 +295,7 @@ public class NotificationsListFragmentPage extends Fragment implements
 
         new Thread(new Runnable() {
             public void run() {
-                GCMMessageService.removeAllNotifications(getActivity());
+                mGCMMessageHandler.removeAllNotifications(getActivity());
             }
         }).start();
     }
@@ -405,7 +407,12 @@ public class NotificationsListFragmentPage extends Fragment implements
         }
 
         if (mTabPosition == TAB_POSITION_UNREAD) {
-            ActivityLauncher.addNewPostForResult(getActivity(), getSelectedSite(), false);
+            ActivityLauncher.addNewPostForResult(
+                    getActivity(),
+                    getSelectedSite(),
+                    false,
+                    PagePostCreationSourcesDetail.POST_FROM_NOTIFS_EMPTY_VIEW
+            );
         } else if (getActivity() instanceof WPMainActivity) {
             ((WPMainActivity) getActivity()).setReaderPageActive();
         }
