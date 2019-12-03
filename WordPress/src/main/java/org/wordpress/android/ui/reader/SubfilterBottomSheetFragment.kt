@@ -52,18 +52,18 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(ReaderPostListViewModel::class.java)
 
         viewModel.subFilters.observe(this, Observer {
-            (dialog.filter_recycler_view.adapter as? SubfilterListAdapter)?.update(it ?: listOf())
+            (dialog?.filter_recycler_view?.adapter as? SubfilterListAdapter)?.update(it ?: listOf())
         })
         viewModel.loadSubFilters()
         performUpdate()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         viewModel.setIsBottomSheetShowing(false)
     }
