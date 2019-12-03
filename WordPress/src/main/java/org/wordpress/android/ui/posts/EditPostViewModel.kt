@@ -40,7 +40,7 @@ class EditPostViewModel
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
-    private val aztecEditorWrapper: AztecEditorFragmentStaticWrapper,
+    private val aztecEditorFragmentStaticWrapper: AztecEditorFragmentStaticWrapper,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val siteStore: SiteStore,
     private val uploadUtils: UploadUtilsWrapper,
@@ -249,7 +249,7 @@ class EditPostViewModel
 
             if (showAztecEditor) {
                 // update the list of uploading ids
-                mediaMarkedUploadingOnStartIds = aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
+                mediaMarkedUploadingOnStartIds = aztecEditorFragmentStaticWrapper.getMediaMarkedUploadingInPostContent(
                         context,
                         postRepository.content
                 )
@@ -358,7 +358,7 @@ class EditPostViewModel
         if (!showAztecEditor) {
             return false
         }
-        val currentUploadingMedia = aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
+        val currentUploadingMedia = aztecEditorFragmentStaticWrapper.getMediaMarkedUploadingInPostContent(
                 context,
                 newContent
         )

@@ -45,7 +45,7 @@ import java.util.TimeZone
 
 class EditPostViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var aztecEditorWrapper: AztecEditorFragmentStaticWrapper
+    @Mock lateinit var aztecEditorFragmentStaticWrapper: AztecEditorFragmentStaticWrapper
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var uploadUtils: UploadUtilsWrapper
@@ -80,7 +80,7 @@ class EditPostViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 dispatcher,
-                aztecEditorWrapper,
+                aztecEditorFragmentStaticWrapper,
                 localeManagerWrapper,
                 siteStore,
                 uploadUtils,
@@ -127,7 +127,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         assertThat(viewModel.mediaMarkedUploadingOnStartIds).isEmpty()
         val mediaIDs = listOf("A")
         whenever(
-                aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
+                aztecEditorFragmentStaticWrapper.getMediaMarkedUploadingInPostContent(
                         context,
                         content
                 )
@@ -181,7 +181,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         val updatedList = listOf("B")
         viewModel.mediaMarkedUploadingOnStartIds = currentList
         whenever(
-                aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
+                aztecEditorFragmentStaticWrapper.getMediaMarkedUploadingInPostContent(
                         context,
                         content
                 )
@@ -203,7 +203,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         val currentList = listOf("A")
         viewModel.mediaMarkedUploadingOnStartIds = currentList
         whenever(
-                aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
+                aztecEditorFragmentStaticWrapper.getMediaMarkedUploadingInPostContent(
                         context,
                         content
                 )
@@ -327,7 +327,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `updates post date when media list has changed`() {
         viewModel.mediaMarkedUploadingOnStartIds = listOf("A")
         whenever(
-                aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
+                aztecEditorFragmentStaticWrapper.getMediaMarkedUploadingInPostContent(
                         context,
                         content
                 )
@@ -502,10 +502,12 @@ class EditPostViewModelTest : BaseUnitTest() {
         setupCurrentTime()
         val newContent = "new content"
         postModel.setContent(newContent)
-        whenever(aztecEditorWrapper.getMediaMarkedUploadingInPostContent(
-                context,
-                newContent
-        )).thenReturn(listOf("new media ID"))
+        whenever(
+                aztecEditorFragmentStaticWrapper.getMediaMarkedUploadingInPostContent(
+                        context,
+                        newContent
+                )
+        ).thenReturn(listOf("new media ID"))
 
         viewModel.savePostLocally(context, postRepository, showAztecEditor, doFinishActivity)
 
@@ -532,7 +534,11 @@ class EditPostViewModelTest : BaseUnitTest() {
         verify(dispatcher).dispatch(actionCaptor.capture())
 
         assertThat(actionCaptor.firstValue.type).isEqualTo(UploadAction.CANCEL_POST)
-        verify(pendingDraftsNotificationsUtils).scheduleNextNotifications(context, postId, currentTime)
+        verify(pendingDraftsNotificationsUtils).scheduleNextNotifications(
+                context,
+                postId,
+                currentTime
+        )
     }
 
     @Test
