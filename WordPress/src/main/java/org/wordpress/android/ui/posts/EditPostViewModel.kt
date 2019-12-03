@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -109,8 +110,11 @@ class EditPostViewModel
         doFinishActivity: Boolean
     ) {
         launch(bgDispatcher) {
+            Log.d("vojta", "savePostLocally")
             if (editPostRepository.postHasEdits()) {
+                Log.d("vojta", "Post has edits")
                 editPostRepository.updateInTransaction { postModel ->
+                    Log.d("vojta", "Updating post in transaction")
                     // Changes have been made - save the post and ask for the post list to refresh
                     // We consider this being "manual save", it will replace some Android "spans" by an html
                     // or a shortcode replacement (for instance for images and galleries)
@@ -159,6 +163,7 @@ class EditPostViewModel
             }
             if (doFinishActivity) {
                 withContext(mainDispatcher) {
+                    Log.d("vojta", "Save action invoked")
                     _onFinish.value = Event(Unit)
                 }
             }
@@ -171,7 +176,9 @@ class EditPostViewModel
         showAztecEditor: Boolean,
         editPostRepository: EditPostRepository
     ) {
+        Log.d("vojta", "updatePostLocallyChangedOnStatusOrMediaChange")
         if (editedPost == null) {
+            Log.d("vojta", "post is null")
             return
         }
         val contentChanged: Boolean
@@ -189,9 +196,13 @@ class EditPostViewModel
                 editedPost.status
         )
         if (!editedPost.isLocalDraft && (contentChanged || statusChanged)) {
+            Log.d(
+                    "vojta",
+                    "really updating post: ${!editedPost.isLocalDraft && (contentChanged || statusChanged)}"
+            )
             editedPost.setIsLocallyChanged(true)
             val currentTime = localeManagerWrapper.getCurrentCalendar()
-            editedPost.setDateLocallyChanged(dateTimeUtils.iso8601FromCalendar(currentTime))
+            editedPost.setDateLocallyChanged(dateTimeUtils.iso8601UTCFromCalendar(currentTime))
         }
     }
 
@@ -202,8 +213,10 @@ class EditPostViewModel
         getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor),
         onSaveAction: (() -> Unit)? = null
     ) {
+        Log.d("vojta", "updateAndSavePostAsync")
         launch {
             val postUpdated = withContext(bgDispatcher) {
+                Log.d("vojta", "Starting post update on the background")
                 (updatePostObject(
                         context,
                         showAztecEditor,
@@ -212,17 +225,20 @@ class EditPostViewModel
                 ) is Success)
                         .also { success ->
                             if (success) {
+                                Log.d("vojta", "Is success so saving to the DB")
                                 savePostToDb(context, postRepository, showAztecEditor)
                             }
                         }
             }
             if (postUpdated) {
+                Log.d("vojta", "Save action invoked")
                 onSaveAction?.invoke()
             }
         }
     }
 
     fun savePostWithDelay() {
+        Log.d("vojta", "Saving post with delay")
         saveJob?.cancel()
         saveJob = launch {
             if (debounceCounter < MAX_UNSAVED_POSTS) {
@@ -243,7 +259,9 @@ class EditPostViewModel
         postRepository: EditPostRepository,
         showAztecEditor: Boolean
     ) {
+        Log.d("vojta", "Saving post to DB")
         if (postRepository.postHasChangesFromDb()) {
+            Log.d("vojta", "Post has changes so really saving")
             postRepository.saveDbSnapshot()
             dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postRepository.getEditablePost()))
 
@@ -263,6 +281,7 @@ class EditPostViewModel
         postRepository: EditPostRepository,
         getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor)
     ): UpdateResult {
+        Log.d("vojta", "updatePostObject")
         if (!postRepository.hasPost()) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.")
             return Error
@@ -287,10 +306,11 @@ class EditPostViewModel
                         val currentTime = localeManagerWrapper.getCurrentCalendar()
                         postModel
                                 .setDateLocallyChanged(
-                                        dateTimeUtils.iso8601FromCalendar(currentTime)
+                                        dateTimeUtils.iso8601UTCFromCalendar(currentTime)
                                 )
                     }
 
+                    Log.d("vojta", "updatePostObject: success - $postTitleOrContentChanged")
                     Success(postTitleOrContentChanged)
                 }
                 is UpdateFromEditor.Failed -> Error
@@ -309,6 +329,7 @@ class EditPostViewModel
         title: String,
         content: String
     ): Boolean {
+        Log.d("vojta", "updatePostContentNewEditor")
         if (editedPost == null) {
             return false
         }
@@ -337,9 +358,10 @@ class EditPostViewModel
             editedPost.setIsLocallyChanged(true)
             val currentTime = localeManagerWrapper.getCurrentCalendar()
             editedPost
-                    .setDateLocallyChanged(dateTimeUtils.iso8601FromCalendar(currentTime))
+                    .setDateLocallyChanged(dateTimeUtils.iso8601UTCFromCalendar(currentTime))
         }
 
+        Log.d("vojta", "updatePostContentNewEditor - ${titleChanged || contentChanged}")
         return titleChanged || contentChanged
     }
 

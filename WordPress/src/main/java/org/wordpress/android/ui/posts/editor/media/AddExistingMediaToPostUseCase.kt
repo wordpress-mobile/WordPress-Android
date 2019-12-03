@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
+import android.util.Log
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.editor.EditorTracker
@@ -24,9 +25,11 @@ class AddExistingMediaToPostUseCase @Inject constructor(
         getMediaModelUseCase
                 .loadMediaByRemoteId(site, mediaIdList)
                 .onEach { media ->
+                    Log.d("vojta", "On each loaded media: $media")
                     editorTracker.trackAddMediaEvent(site, source, media.isVideo)
                 }
                 .let {
+                    Log.d("vojta", "Adding media to editor $it")
                     appendMediaToEditorUseCase.addMediaToEditor(editorMediaListener, it)
                     editorMediaListener.syncPostObjectWithUiAndSaveIt()
                 }

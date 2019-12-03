@@ -588,7 +588,7 @@ public class UploadService extends Service {
             boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
             post.setFeaturedImageId(remoteMediaId);
             post.setIsLocallyChanged(true);
-            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            post.setDateLocallyChanged(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
             if (changesConfirmed) {
                 /*
                  * We are replacing local featured image with a remote version. We need to make sure
@@ -611,7 +611,7 @@ public class UploadService extends Service {
             if (!post.isLocalDraft()) {
                 post.setIsLocallyChanged(true);
             }
-            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            post.setDateLocallyChanged(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
             if (changesConfirmed) {
                 /*
                  * We are replacing image local path with a url. We need to make sure to retain the confirmation
@@ -635,7 +635,7 @@ public class UploadService extends Service {
             if (!post.isLocalDraft()) {
                 post.setIsLocallyChanged(true);
             }
-            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            post.setDateLocallyChanged(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
             if (changesConfirmed) {
                 /*
                  * We are updating media upload status, but we don't make any undesired changes to the post. We need to

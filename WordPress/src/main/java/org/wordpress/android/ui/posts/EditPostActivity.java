@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -124,10 +125,10 @@ import org.wordpress.android.ui.posts.editor.EditorTracker;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
-import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
+import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -441,6 +442,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 if (mEditPostRepository.hasPost()) {
                     if (extras.getBoolean(EXTRA_LOAD_AUTO_SAVE_REVISION)) {
+                        Log.d("vojta", "org.wordpress.android.ui.posts.EditPostActivity.onCreate");
                         mEditPostRepository.updateInTransaction(postModel -> {
                             postModel.setTitle(
                                     TextUtils.isEmpty(postModel.getAutoSaveTitle()) ? postModel
@@ -651,6 +653,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!useAztec || UploadService.hasPendingOrInProgressMediaUploadsForPost(mEditPostRepository.getPost())) {
             return;
         }
+        Log.d("vojta", "org.wordpress.android.ui.posts.EditPostActivity.resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued");
         mEditPostRepository.updateInTransaction(postModel -> {
             String oldContent = postModel.getContent();
             if (!AztecEditorFragment.hasMediaItemsMarkedUploading(EditPostActivity.this, oldContent)
@@ -668,8 +671,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (!postModel.isLocalDraft()) {
                     postModel.setIsLocallyChanged(true);
                 }
-                postModel
-                        .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+                postModel.setDateLocallyChanged(
+                        DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
                 return true;
             }
             return false;
@@ -1763,12 +1766,14 @@ public class EditPostActivity extends AppCompatActivity implements
     private void loadRevision() {
         updatePostLoadingAndDialogState(PostLoadingState.LOADING_REVISION);
         mEditPostRepository.saveForUndo();
+        Log.d("vojta", "EditPostActivity.loadRevision");
         mEditPostRepository.updateInTransaction(postModel -> {
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
             postModel.setIsLocallyChanged(true);
-            postModel
-                    .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            postModel.setDateLocallyChanged(
+                    DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000)
+            );
             return true;
         });
         refreshEditorContent();
@@ -1840,6 +1845,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
         // on API 16 (and 21) with the visual editor.
         new Thread(() -> {
+            Log.d("vojta", "EditPostActivity.uploadPost");
             mEditPostRepository.updateInTransaction(postModel -> {
                 boolean isFirstTimePublish = isFirstTimePublish(publishPost);
                 if (publishPost) {
@@ -2200,6 +2206,7 @@ public class EditPostActivity extends AppCompatActivity implements
         final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
+            Log.d("vojta", "EditPostActivity.setPostContentFromShareAction");
             mEditPostRepository.updateInTransaction(postModel -> {
                 if (title != null) {
                     mEditorFragment.setTitle(title);
@@ -2212,8 +2219,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 // update PostModel
                 postModel.setContent(updatedContent);
                 mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
-                postModel
-                        .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+                postModel.setDateLocallyChanged(
+                        DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
                 return true;
             });
         }
@@ -2245,6 +2252,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setFeaturedImageId(final long mediaId) {
+        Log.d("vojta", "EditPostActivity.setFeaturedImageId");
         mEditPostRepository.updateInTransaction(postModel -> {
             postModel.setFeaturedImageId(mediaId);
             postModel.setIsLocallyChanged(true);
@@ -2809,6 +2817,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (mediaList != null && !mediaList.isEmpty()) {
                 shouldFinishInit = false;
                 mViewModel.setMediaInsertedOnCreation(true);
+                Log.d("vojta", "Adding existing media to editor async from EPA");
                 mEditorMedia.addExistingMediaToEditorAsync(mediaList, AddExistingMediaSource.WP_MEDIA_LIBRARY);
                 // TODO we save the post in `addExistingMediaToEditor` but we don't have access to AfterSavePostListener
                 updateAndSavePostAsync(this::onEditorFinalTouchesBeforeShowing);
@@ -3059,6 +3068,7 @@ public class EditPostActivity extends AppCompatActivity implements
     // EditorMediaListener
     @Override
     public void appendMediaFiles(@NotNull Map<String, ? extends MediaFile> mediaFiles) {
+        Log.d("vojta", "Appending media files: " + mediaFiles);
         mEditorFragment.appendMediaFiles((Map<String, MediaFile>) mediaFiles);
     }
 

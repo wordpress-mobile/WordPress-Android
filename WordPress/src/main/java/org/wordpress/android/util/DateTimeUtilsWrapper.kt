@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class DateTimeUtilsWrapper
 @Inject constructor() {
-    fun iso8601FromCalendar(calendar: Calendar) =
-            DateTimeUtils.iso8601FromTimestamp(calendar.timeInMillis / 1000)
+    fun iso8601UTCFromCalendar(calendar: Calendar): String =
+            DateTimeUtils.iso8601UTCFromTimestamp(calendar.timeInMillis / 1000)
 }
