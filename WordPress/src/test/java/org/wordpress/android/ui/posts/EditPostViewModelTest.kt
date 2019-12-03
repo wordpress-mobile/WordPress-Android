@@ -361,7 +361,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `savePostOnline changes post status to PENDING when user can't publish and post is UNKNOWN, PUBLISHED, SCHEDULED or PRIVATE`() {
+    fun `savePostOnline changes post status to PENDING when user can't publish`() {
         val showAztecEditor = true
         val doFinishActivity = false
         val isFirstTimePublish = true
