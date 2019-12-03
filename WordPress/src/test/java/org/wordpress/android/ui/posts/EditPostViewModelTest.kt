@@ -480,15 +480,12 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `savePostLocally sets locally changed flag when mediaInsertedOnCreation == true`() {
         val showAztecEditor = true
         val doFinishActivity = false
+        setupPostRepository(PUBLISHED)
         whenever(postRepository.postHasEdits()).thenReturn(true)
         viewModel.mediaInsertedOnCreation = true
         setupCurrentTime()
 
         viewModel.savePostLocally(context, postRepository, showAztecEditor, doFinishActivity)
-
-        verify(postRepository).updateInTransaction(transactionCaptor.capture())
-
-        transactionCaptor.firstValue.invoke(postModel)
 
         assertThat(viewModel.mediaInsertedOnCreation).isFalse()
 
@@ -552,6 +549,23 @@ class EditPostViewModelTest : BaseUnitTest() {
         assertThat(finish).isTrue()
     }
 
+    @Test
+    fun `updates post and saves it asynchronously`() {
+        val showAztecEditor = true
+        var saved = false
+        setupPostRepository(PUBLISHED)
+        postModel.setContent("old content")
+        postModel.setTitle("old title")
+
+        viewModel.updateAndSavePostAsync(context, showAztecEditor, postRepository, {
+            PostFields("updated title", "updated content")
+        }, {
+            saved = true
+        })
+
+        assertThat(saved).isTrue()
+    }
+
     private fun setupPostRepository(
         postStatus: PostStatus,
         userCanPublish: Boolean = true
@@ -559,9 +573,13 @@ class EditPostViewModelTest : BaseUnitTest() {
         whenever(uploadUtils.userCanPublish(site)).thenReturn(userCanPublish)
         whenever(postRepository.status).thenReturn(postStatus)
         whenever(postRepository.getPost()).thenReturn(immutablePost)
+        whenever(postRepository.hasPost()).thenReturn(true)
         whenever(postRepository.localSiteId).thenReturn(localSiteId)
         whenever(postRepository.id).thenReturn(postId)
         whenever(siteStore.getSiteByLocalId(localSiteId)).thenReturn(site)
+        whenever(postRepository.updateInTransaction<Any>(any())).then {
+            (it.arguments[0] as ((PostModel) -> Any)).invoke(postModel)
+        }
     }
 
     private fun setupCurrentTime() {

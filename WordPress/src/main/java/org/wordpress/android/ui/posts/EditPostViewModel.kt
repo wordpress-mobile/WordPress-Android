@@ -258,21 +258,21 @@ class EditPostViewModel
 
     fun updatePostObject(
         context: Context,
-        mShowAztecEditor: Boolean,
-        mEditPostRepository: EditPostRepository,
+        showAztecEditor: Boolean,
+        postRepository: EditPostRepository,
         getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor)
     ): UpdateResult {
-        if (!mEditPostRepository.hasPost()) {
+        if (!postRepository.hasPost()) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.")
             return Error
         }
-        return mEditPostRepository.updateInTransaction { postModel ->
+        return postRepository.updateInTransaction { postModel ->
             when (val updateFromEditor = getUpdatedTitleAndContent(postModel.content)) {
                 is PostFields -> {
                     val postTitleOrContentChanged = updatePostContentNewEditor(
                             context,
-                            mShowAztecEditor,
-                            mEditPostRepository,
+                            showAztecEditor,
+                            postRepository,
                             postModel,
                             updateFromEditor.title,
                             updateFromEditor.content
@@ -280,7 +280,7 @@ class EditPostViewModel
 
                     // only makes sense to change the publish date and locally changed date if the Post was actually changed
                     if (postTitleOrContentChanged) {
-                        mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(
+                        postRepository.updatePublishDateIfShouldBePublishedImmediately(
                                 postModel
                         )
                         val currentTime = localeManagerWrapper.getCurrentCalendar()
