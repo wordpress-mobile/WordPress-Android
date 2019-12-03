@@ -2504,7 +2504,24 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (resultCode != Activity.RESULT_OK) {
-            return;
+            // for all media related intents, let editor fragment know about cancellation
+            switch (requestCode) {
+                case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
+                case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
+                case RequestCodes.PHOTO_PICKER:
+                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
+                case RequestCodes.MEDIA_LIBRARY:
+                case RequestCodes.PICTURE_LIBRARY:
+                case RequestCodes.TAKE_PHOTO:
+                case RequestCodes.VIDEO_LIBRARY:
+                case RequestCodes.TAKE_VIDEO:
+                case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
+                    mEditorFragment.mediaSelectionCancelled();
+                    return;
+                default:
+                    // noop
+                    return;
+            }
         }
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO
@@ -3275,13 +3292,13 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     // EditorMediaListener
-
     @Override
-    public void appendMediaFile(@NotNull MediaFile mediaFile, @NotNull String imageUrl) {
-        mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
+    public void appendMediaFiles(@NotNull Map<String, ? extends MediaFile> mediaFiles) {
+        mEditorFragment.appendMediaFiles((Map<String, MediaFile>) mediaFiles);
     }
 
-    @NotNull @Override public PostImmutableModel getImmutablePost() {
+    @NotNull @Override
+    public PostImmutableModel getImmutablePost() {
         return Objects.requireNonNull(mEditPostRepository.getPost());
     }
 

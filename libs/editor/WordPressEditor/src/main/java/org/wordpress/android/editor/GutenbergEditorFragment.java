@@ -61,6 +61,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.wordpress.mobile.WPAndroidGlue.Media.createRNMediaUsingMimeType;
+
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener {
@@ -755,23 +757,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
-        if (getActivity() == null) {
-            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
-            // Activity may have already be gone.
-            // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
-            AppLog.d(T.MEDIA, "appendMediaFile() called but Activity is null! mediaUrl: " + mediaUrl);
-            return;
-        }
-
-        boolean isNetworkUrl = URLUtil.isNetworkUrl(mediaUrl);
-        if (!isNetworkUrl) {
-            mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
-        }
-
-        getGutenbergContainerFragment().appendUploadMediaFile(
-                isNetworkUrl ? Integer.valueOf(mediaFile.getMediaId()) : mediaFile.getId(),
-                isNetworkUrl ? mediaUrl : "file://" + mediaUrl,
-                mediaFile.isVideo());
+        // noop implementation for shared interface with Aztec
     }
 
     @Override
@@ -801,15 +787,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
-            rnMediaList.add(
-                    new Media(
-                            isNetworkUrl
-                                    ? Integer.valueOf(mediaEntry.getValue().getMediaId())
-                                    : mediaEntry.getValue().getId(),
-                            isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey(),
-                            mediaEntry.getValue().getMimeType()
-                    )
-            );
+            int mediaId = isNetworkUrl ? Integer.valueOf(mediaEntry.getValue().getMediaId())
+                    : mediaEntry.getValue().getId();
+            String url = isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey();
+            rnMediaList.add(createRNMediaUsingMimeType(mediaId, url, mediaEntry.getValue().getMimeType()));
         }
 
         getGutenbergContainerFragment().appendUploadMediaFiles(rnMediaList);
@@ -873,6 +854,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return true;
         }
         return false;
+    }
+
+    @Override public void mediaSelectionCancelled() {
+        getGutenbergContainerFragment().mediaSelectionCancelled();
     }
 
     @Override

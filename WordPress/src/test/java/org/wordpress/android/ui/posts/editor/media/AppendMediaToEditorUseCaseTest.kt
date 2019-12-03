@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,27 +17,27 @@ class AppendMediaToEditorUseCaseTest {
     fun `invokes appendMediaFile for all mediaModels`() {
         // Arrange
         val mediaModels = listOf(
-                createMediaModel(),
-                createMediaModel(),
-                createMediaModel()
+                createMediaModel(url = "1"),
+                createMediaModel(url = "2"),
+                createMediaModel(url = "3")
         )
         val editorMediaListener = mock<EditorMediaListener>()
         // Act
         createAppendMediaToEditorUseCase().addMediaToEditor(editorMediaListener, mediaModels)
         // Assert
-        verify(editorMediaListener, times(mediaModels.size)).appendMediaFile(any(), any())
+        verify(editorMediaListener).appendMediaFiles(argThat { this.size == mediaModels.size })
     }
 
     @Test
     fun `uses url if available over filePath`() {
         // Arrange
         val expectedUrl = "test_url"
-        val mediaModels = listOf(createMediaModel(url = expectedUrl))
+        val mediaModels = listOf(createMediaModel(filePath = "test_file_path", url = expectedUrl))
         val editorMediaListener = mock<EditorMediaListener>()
         // Act
         createAppendMediaToEditorUseCase().addMediaToEditor(editorMediaListener, mediaModels)
         // Assert
-        verify(editorMediaListener).appendMediaFile(any(), eq(expectedUrl))
+        verify(editorMediaListener).appendMediaFiles(argThat { this[expectedUrl] != null })
     }
 
     @Test
@@ -51,7 +49,7 @@ class AppendMediaToEditorUseCaseTest {
         // Act
         createAppendMediaToEditorUseCase().addMediaToEditor(editorMediaListener, mediaModels)
         // Assert
-        verify(editorMediaListener).appendMediaFile(any(), eq(expectedFilePath))
+        verify(editorMediaListener).appendMediaFiles(argThat { this[expectedFilePath] != null })
     }
 
     @Test
@@ -62,13 +60,14 @@ class AppendMediaToEditorUseCaseTest {
         // Act
         createAppendMediaToEditorUseCase().addMediaToEditor(editorMediaListener, mediaModels)
         // Assert
-        verify(editorMediaListener, never()).appendMediaFile(any(), any())
+        verify(editorMediaListener).appendMediaFiles(argThat { this.isEmpty() })
     }
 
     @Test
     fun `invokes appendMediaFile with mediafile retrieved from mediaFileFromMediaModel`() {
         // Arrange
-        val mediaModels = listOf(createMediaModel())
+        val url = "expected_url"
+        val mediaModels = listOf(createMediaModel(url = url))
         val mediaFile = mock<MediaFile>()
         val fluxCUtilsWrapper = createFluxCUtilsWrapper(mediaFile)
 
@@ -77,7 +76,7 @@ class AppendMediaToEditorUseCaseTest {
         createAppendMediaToEditorUseCase(fluxCUtilsWrapper = fluxCUtilsWrapper)
                 .addMediaToEditor(editorMediaListener, mediaModels)
         // Assert
-        verify(editorMediaListener).appendMediaFile(eq(mediaFile), any())
+        verify(editorMediaListener).appendMediaFiles(argThat { this[url] == mediaFile })
     }
 
     @Test
@@ -91,7 +90,7 @@ class AppendMediaToEditorUseCaseTest {
         createAppendMediaToEditorUseCase(fluxCUtilsWrapper = fluxCUtilsWrapper)
                 .addMediaToEditor(editorMediaListener, mediaModels)
         // Assert
-        verify(editorMediaListener, never()).appendMediaFile(any(), any())
+        verify(editorMediaListener).appendMediaFiles(argThat { this.isEmpty() })
     }
 
     private companion object Fixtures {
