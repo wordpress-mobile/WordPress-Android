@@ -251,8 +251,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val items: ArrayList<DomainsListItemUiState> = ArrayList()
         if (errorFetchingSuggestions) {
             val errorUiState = DomainsFetchSuggestionsErrorUiState(
-                    messageResId = errorResId
-                            ?: R.string.site_creation_fetch_suggestions_error_unknown,
+                    messageResId = errorResId ?: R.string.site_creation_fetch_suggestions_error_unknown,
                     retryButtonResId = R.string.button_retry
             )
             errorUiState.onItemTapped = onRetry
