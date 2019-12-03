@@ -257,12 +257,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
             errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
         } else {
-            if (data.isNotEmpty())
-                query?.let { value ->
-                    getDomainUnavailableUiState(value, data)?.let {
-                        items.add(it)
-                    }
+            query?.let { value ->
+                getDomainUnavailableUiState(value, data)?.let {
+                    items.add(it)
                 }
+            }
 
             data.forEach { domainName ->
                 val itemUiState = DomainsModelAvailableUiState(
@@ -280,6 +279,10 @@ class SiteCreationDomainsViewModel @Inject constructor(
         query: String,
         domains: List<String>
     ): DomainsModelUiState? {
+        if (domains.isEmpty()) {
+            return null
+        }
+
         val sanitizedQuery = domainSanitizer.sanitizeDomainQuery(query)
 
         val isDomainUnavailable = (domains.find { domain ->
