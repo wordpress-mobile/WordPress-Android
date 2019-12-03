@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.posts.BasicFragmentDialog
@@ -297,7 +298,7 @@ class PagesFragment : Fragment() {
         viewModel.createNewPage.observe(this, Observer {
             QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore, QuickStartTask.CREATE_NEW_PAGE, dispatcher,
                     viewModel.site, quickStartEvent, context)
-            ActivityLauncher.addNewPageForResult(this, viewModel.site)
+            ActivityLauncher.addNewPageForResult(this, viewModel.site, PAGE_FROM_PAGES_LIST)
         })
 
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->

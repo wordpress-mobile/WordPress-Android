@@ -1,2 +1,0 @@
-13.5:
-* Penyunting Blok: Kami memperbaiki masalah ketika pemilihan beberapa media hanya menambahkan satu blok gambar atau video. Ada blok “Media & Teks” baru dan kami menambahkan pilihan Target Tautan (Buka di tab baru) ke Blok Gambar.

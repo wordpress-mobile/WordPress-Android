@@ -5,14 +5,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -56,6 +59,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     private static final String ARG_MAGIC_LINK_SCHEME = "ARG_MAGIC_LINK_SCHEME";
     private static final String ARG_IS_JETPACK_CONNECT = "ARG_IS_JETPACK_CONNECT";
     private static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
+    private static final String ARG_VERIFY_MAGIC_LINK_EMAIL = "ARG_VERIFY_MAGIC_LINK_EMAIL";
 
     private static final String ERROR_KEY = "error";
 
@@ -71,18 +75,21 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
     private boolean mInProgress;
     private boolean mIsJetpackConnect;
+    private boolean mVerifyMagicLinkEmail;
 
     @Inject protected Dispatcher mDispatcher;
 
     @Inject protected LoginAnalyticsListener mAnalyticsListener;
     public static LoginMagicLinkRequestFragment newInstance(String email, AuthEmailPayloadScheme scheme,
-                                                            boolean isJetpackConnect, String jetpackConnectSource) {
+                                                            boolean isJetpackConnect, String jetpackConnectSource,
+                                                            boolean verifyEmail) {
         LoginMagicLinkRequestFragment fragment = new LoginMagicLinkRequestFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, email);
         args.putSerializable(ARG_MAGIC_LINK_SCHEME, scheme);
         args.putBoolean(ARG_IS_JETPACK_CONNECT, isJetpackConnect);
         args.putString(ARG_JETPACK_CONNECT_SOURCE, jetpackConnectSource);
+        args.putBoolean(ARG_VERIFY_MAGIC_LINK_EMAIL, verifyEmail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,6 +114,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             mMagicLinkScheme = (AuthEmailPayloadScheme) getArguments().getSerializable(ARG_MAGIC_LINK_SCHEME);
             mIsJetpackConnect = getArguments().getBoolean(ARG_IS_JETPACK_CONNECT);
             mJetpackConnectSource = getArguments().getString(ARG_JETPACK_CONNECT_SOURCE);
+            mVerifyMagicLinkEmail = getArguments().getBoolean(ARG_VERIFY_MAGIC_LINK_EMAIL);
         }
 
         setHasOptionsMenu(true);
@@ -143,28 +151,49 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
         mAvatarProgressBar = view.findViewById(R.id.avatar_progress);
         ImageView avatarView = view.findViewById(R.id.gravatar);
-        Glide.with(this)
-                .load(GravatarUtils.gravatarFromEmail(mEmail,
-                        getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_login)))
-                .apply(RequestOptions.circleCropTransform())
-                .apply(RequestOptions.placeholderOf(R.drawable.ic_gridicons_user_circle_100dp))
-                .apply(RequestOptions.errorOf(R.drawable.ic_gridicons_user_circle_100dp))
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Drawable> target,
-                                                boolean b) {
-                        mAvatarProgressBar.setVisibility(View.GONE);
-                        return false;
-                    }
 
-                    @Override
-                    public boolean onResourceReady(Drawable drawable, Object o, Target<Drawable> target,
-                                                   DataSource dataSource, boolean b) {
-                        mAvatarProgressBar.setVisibility(View.GONE);
-                        return false;
-                    }
-                })
-                .into(avatarView);
+        // Design changes added to the Woo Magic link sign-in
+        if (mVerifyMagicLinkEmail) {
+            View avatarContainerView = view.findViewById(R.id.avatar_container);
+
+            LayoutParams lp = avatarContainerView.getLayoutParams();
+            lp.width = getContext().getResources().getDimensionPixelSize(R.dimen.magic_link_sent_illustration_sz);
+            lp.height = getContext().getResources().getDimensionPixelSize(R.dimen.magic_link_sent_illustration_sz);
+            avatarContainerView.setLayoutParams(lp);
+
+            mAvatarProgressBar.setVisibility(View.GONE);
+            avatarView.setImageResource(R.drawable.login_email_alert);
+
+            TextView labelTextView = view.findViewById(R.id.label);
+            labelTextView.setText(Html.fromHtml(String.format(getResources().getString(
+                    R.string.login_site_credentials_magic_link_label), mEmail)));
+
+            mRequestMagicLinkButton.setText(getString(R.string.send_verification_email));
+        } else {
+            Glide.with(this)
+                 .load(GravatarUtils.gravatarFromEmail(mEmail,
+                         getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_login)))
+                 .apply(RequestOptions.circleCropTransform())
+                 .apply(RequestOptions.placeholderOf(R.drawable.ic_gridicons_user_circle_100dp))
+                 .apply(RequestOptions.errorOf(R.drawable.ic_gridicons_user_circle_100dp))
+                 .listener(new RequestListener<Drawable>() {
+                     @Override
+                     public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Drawable> target,
+                                                 boolean b) {
+                         mAvatarProgressBar.setVisibility(View.GONE);
+                         return false;
+                     }
+
+                     @Override
+                     public boolean onResourceReady(Drawable drawable, Object o, Target<Drawable> target,
+                                                    DataSource dataSource, boolean b) {
+                         mAvatarProgressBar.setVisibility(View.GONE);
+                         return false;
+                     }
+                 })
+                 .into(avatarView);
+        }
+
         return view;
     }
 

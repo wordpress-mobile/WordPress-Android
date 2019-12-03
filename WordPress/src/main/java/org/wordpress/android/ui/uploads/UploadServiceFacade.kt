@@ -2,6 +2,7 @@ package org.wordpress.android.ui.uploads
 
 import android.content.Context
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import java.util.ArrayList
@@ -19,8 +20,11 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
         context.startService(intent)
     }
 
-    fun isPostUploadingOrQueued(post: PostModel) = UploadService.isPostUploadingOrQueued(post)
-    fun cancelFinalNotification(post: PostModel) = UploadService.cancelFinalNotification(appContext, post)
+    fun isPostUploadingOrQueued(post: PostImmutableModel) =
+            UploadService.isPostUploadingOrQueued(post)
+
+    fun cancelFinalNotification(post: PostImmutableModel) =
+            UploadService.cancelFinalNotification(appContext, post)
 
     fun cancelFinalNotificationForMedia(site: SiteModel) =
             UploadService.cancelFinalNotificationForMedia(appContext, site)
@@ -28,6 +32,10 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
     fun uploadMedia(mediaList: ArrayList<MediaModel>) =
             UploadService.uploadMedia(appContext, mediaList)
 
-    fun getPendingOrInProgressFeaturedImageUploadForPost(post: PostModel): MediaModel? =
+    fun getPendingOrInProgressFeaturedImageUploadForPost(post: PostImmutableModel): MediaModel? =
             UploadService.getPendingOrInProgressFeaturedImageUploadForPost(post)
+
+    fun uploadMediaFromEditor(mediaList: ArrayList<MediaModel>) {
+        UploadService.uploadMediaFromEditor(appContext, mediaList)
+    }
 }

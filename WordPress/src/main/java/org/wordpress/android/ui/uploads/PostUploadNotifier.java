@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -73,7 +74,7 @@ class PostUploadNotifier {
         int mTotalPageItemsIncludedInPostCount;
         int mCurrentPostItem;
         final SparseArrayCompat<Float> mediaItemToProgressMap = new SparseArrayCompat<>();
-        final List<PostModel> mUploadedPostsCounted = new ArrayList<>();
+        final List<PostImmutableModel> mUploadedPostsCounted = new ArrayList<>();
     }
 
     PostUploadNotifier(Context context, UploadService service, SystemNotificationsTracker systemNotificationsTracker) {
@@ -91,12 +92,12 @@ class PostUploadNotifier {
                             .setOnlyAlertOnce(true);
     }
 
-    private void updateForegroundNotification(@Nullable PostModel post) {
+    private void updateForegroundNotification(@Nullable PostImmutableModel post) {
         updateNotificationBuilder(post);
         updateNotificationProgress();
     }
 
-    private void updateNotificationBuilder(@Nullable PostModel post) {
+    private void updateNotificationBuilder(@Nullable PostImmutableModel post) {
         // set the Notification's title and prepare the Notifications message text, i.e. "1/3 Posts, 4/17 media items"
         if (sNotificationData.mTotalMediaItems > 0 && sNotificationData.mTotalPostItems == 0) {
             // only media items are being uploaded
@@ -125,7 +126,7 @@ class PostUploadNotifier {
         }
     }
 
-    private synchronized void startOrUpdateForegroundNotification(@Nullable PostModel post) {
+    private synchronized void startOrUpdateForegroundNotification(@Nullable PostImmutableModel post) {
         updateNotificationBuilder(post);
         if (sNotificationData.mNotificationId == 0) {
             sNotificationData.mNotificationId = (new Random()).nextInt();
@@ -136,7 +137,8 @@ class PostUploadNotifier {
         }
     }
 
-    void removePostInfoFromForegroundNotificationData(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+    void removePostInfoFromForegroundNotificationData(@NonNull PostImmutableModel post,
+                                                      @Nullable List<MediaModel> media) {
         if (sNotificationData.mTotalPostItems > 0) {
             sNotificationData.mTotalPostItems--;
             if (post.isPage()) {
@@ -149,7 +151,7 @@ class PostUploadNotifier {
     }
 
     // Post could have initial media, or not (nullable)
-    void addPostInfoToForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+    void addPostInfoToForegroundNotification(@NonNull PostImmutableModel post, @Nullable List<MediaModel> media) {
         sNotificationData.mTotalPostItems++;
         if (post.isPage()) {
             sNotificationData.mTotalPageItemsIncludedInPostCount++;
@@ -160,7 +162,7 @@ class PostUploadNotifier {
         startOrUpdateForegroundNotification(post);
     }
 
-    void removePostInfoFromForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+    void removePostInfoFromForegroundNotification(@NonNull PostImmutableModel post, @Nullable List<MediaModel> media) {
         removePostInfoFromForegroundNotificationData(post, media);
         startOrUpdateForegroundNotification(post);
     }
@@ -197,11 +199,11 @@ class PostUploadNotifier {
         startOrUpdateForegroundNotification(null);
     }
 
-    void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post) {
+    void incrementUploadedPostCountFromForegroundNotification(@NonNull PostImmutableModel post) {
         incrementUploadedPostCountFromForegroundNotification(post, false);
     }
 
-    void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post, boolean force) {
+    void incrementUploadedPostCountFromForegroundNotification(@NonNull PostImmutableModel post, boolean force) {
         // first we need to check that we only count this post once as "ended" (either successfully or with error)
         // for every error we get. We'll then try to increment the Post count as it's been cancelled/failed because the
         // related media was cancelled or has failed too (i.e. we can't upload a Post with failed media, therefore
@@ -250,8 +252,8 @@ class PostUploadNotifier {
         sNotificationData.mUploadedPostsCounted.clear();
     }
 
-    private boolean isPostAlreadyInPostCount(@NonNull PostModel post) {
-        for (PostModel onePost : sNotificationData.mUploadedPostsCounted) {
+    private boolean isPostAlreadyInPostCount(@NonNull PostImmutableModel post) {
+        for (PostImmutableModel onePost : sNotificationData.mUploadedPostsCounted) {
             if (onePost.getId() == post.getId()) {
                 return true;
             }
@@ -259,13 +261,13 @@ class PostUploadNotifier {
         return false;
     }
 
-    private void addPostToPostCount(@NonNull PostModel post) {
+    private void addPostToPostCount(@NonNull PostImmutableModel post) {
         sNotificationData.mUploadedPostsCounted.add(post);
     }
 
     // cancels the error or success notification (only one of these exist per Post at any given
     // time
-    static void cancelFinalNotification(Context context, @NonNull PostModel post) {
+    static void cancelFinalNotification(Context context, @NonNull PostImmutableModel post) {
         if (context != null) {
             NotificationManager notificationManager =
                     (NotificationManager) SystemServiceFactory.get(context, Context.NOTIFICATION_SERVICE);
@@ -281,7 +283,7 @@ class PostUploadNotifier {
         }
     }
 
-    void updateNotificationSuccessForPost(@NonNull PostModel post, @NonNull SiteModel site,
+    void updateNotificationSuccessForPost(@NonNull PostImmutableModel post, @NonNull SiteModel site,
                                           boolean isFirstTimePublish) {
         if (!WordPress.sAppIsInTheBackground) {
             // only produce success notifications for the user if the app is in the background
@@ -344,7 +346,7 @@ class PostUploadNotifier {
                 .getPendingIntentForNotificationDismiss(mContext, (int) notificationId,
                         notificationType));
 
-        Intent notificationIntent = getNotificationIntent(post, site, notificationId);
+        Intent notificationIntent = getNotificationIntent(post, site);
         notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
 
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
@@ -446,7 +448,7 @@ class PostUploadNotifier {
         doNotify(notificationId, notificationBuilder.build(), notificationType);
     }
 
-    public static long getNotificationIdForPost(PostModel post) {
+    public static long getNotificationIdForPost(PostImmutableModel post) {
         long postIdToUse = post.getRemotePostId();
         if (post.isLocalDraft()) {
             postIdToUse = post.getId();
@@ -491,7 +493,7 @@ class PostUploadNotifier {
                         mContext.getString(R.string.notification_channel_normal_id));
 
         long notificationId = getNotificationIdForPost(post);
-        Intent notificationIntent = getNotificationIntent(post, site, notificationId);
+        Intent notificationIntent = getNotificationIntent(post, site);
         notificationIntent.setAction(String.valueOf(notificationId));
         NotificationType notificationType = NotificationType.POST_UPLOAD_ERROR;
         notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
@@ -535,7 +537,7 @@ class PostUploadNotifier {
     }
 
     @NonNull
-    private Intent getNotificationIntent(@NonNull PostModel post, @NonNull SiteModel site, long notificationId) {
+    private Intent getNotificationIntent(@NonNull PostImmutableModel post, @NonNull SiteModel site) {
         // Tap notification intent (open the post/page list)
         Intent notificationIntent;
         if (post.isPage()) {
@@ -826,7 +828,7 @@ class PostUploadNotifier {
         }
     }
 
-    void setTotalMediaItems(PostModel post, int totalMediaItems) {
+    void setTotalMediaItems(PostImmutableModel post, int totalMediaItems) {
         if (post != null) {
             sNotificationData.mTotalPostItems = 1;
             if (post.isPage()) {
@@ -836,7 +838,7 @@ class PostUploadNotifier {
         sNotificationData.mTotalMediaItems = totalMediaItems;
     }
 
-    private String buildNotificationTitleForPost(PostModel post) {
+    private String buildNotificationTitleForPost(PostImmutableModel post) {
         String postTitle =
                 (post == null || TextUtils.isEmpty(post.getTitle())) ? mContext.getString(R.string.untitled)
                         : post.getTitle();
@@ -851,7 +853,7 @@ class PostUploadNotifier {
         return mContext.getString(R.string.uploading_title);
     }
 
-    private String buildNotificationSubtitleForPost(PostModel post) {
+    private String buildNotificationSubtitleForPost(PostImmutableModel post) {
         String uploadingMessage =
                 (post != null && post.isPage()) ? mContext.getString(R.string.uploading_subtitle_pages_only_one)
                 : mContext.getString(R.string.uploading_subtitle_posts_only_one);

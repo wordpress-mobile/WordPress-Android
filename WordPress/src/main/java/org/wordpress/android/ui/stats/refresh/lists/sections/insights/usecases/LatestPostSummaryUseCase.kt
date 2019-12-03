@@ -27,7 +27,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -41,6 +41,7 @@ class LatestPostSummaryUseCase
     private val latestPostSummaryMapper: LatestPostSummaryMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
+    private val statsUtils: StatsUtils,
     private val contentDescriptionHelper: ContentDescriptionHelper
 ) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher, backgroundDispatcher) {
     override suspend fun loadCachedData(): InsightsLatestPostModel? {
@@ -78,7 +79,7 @@ class LatestPostSummaryUseCase
         if (domainModel != null && domainModel.hasData()) {
             items.add(
                     ValueItem(
-                            domainModel.postViewsCount.toFormattedString(startValue = MILLION),
+                            statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
                             R.string.stats_views,
                             contentDescription = contentDescriptionHelper.buildContentDescription(
                                     R.string.stats_views,
@@ -89,7 +90,7 @@ class LatestPostSummaryUseCase
             if (domainModel.dayViews.isNotEmpty()) {
                 items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
             }
-            val postLikeCount = domainModel.postLikeCount.toFormattedString()
+            val postLikeCount = statsUtils.toFormattedString(domainModel.postLikeCount)
             items.add(
                     ListItemWithIcon(
                             R.drawable.ic_star_white_24dp,
@@ -102,7 +103,7 @@ class LatestPostSummaryUseCase
                             )
                     )
             )
-            val postCommentCount = domainModel.postCommentCount.toFormattedString()
+            val postCommentCount = statsUtils.toFormattedString(domainModel.postCommentCount)
             items.add(
                     ListItemWithIcon(
                             R.drawable.ic_comment_white_24dp,

@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.posts
 
 import dagger.Reusable
-import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.PostImmutableModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import javax.inject.Inject
 
 /**
@@ -13,9 +14,21 @@ import javax.inject.Inject
  */
 @Reusable
 class PostUtilsWrapper @Inject constructor() {
-    fun isPublishable(post: PostModel) = PostUtils.isPublishable(post)
+    fun isPublishable(post: PostImmutableModel) = PostUtils.isPublishable(post)
 
-    fun isPostInConflictWithRemote(post: PostModel) = PostUtils.isPostInConflictWithRemote(post)
+    fun isPostInConflictWithRemote(post: PostImmutableModel) = PostUtils.isPostInConflictWithRemote(post)
 
-    fun isPostCurrentlyBeingEdited(post: PostModel) = PostUtils.isPostCurrentlyBeingEdited(post)
+    fun isPostCurrentlyBeingEdited(post: PostImmutableModel) = PostUtils.isPostCurrentlyBeingEdited(post)
+
+    fun shouldPublishImmediately(postStatus: PostStatus, dateCreated: String) =
+            PostUtils.shouldPublishImmediately(postStatus, dateCreated)
+
+    fun postHasEdits(oldPost: PostImmutableModel?, newPost: PostImmutableModel) =
+            PostUtils.postHasEdits(oldPost, newPost)
+
+    fun isMediaInGutenbergPostBody(postContent: String, localMediaId: String) =
+            PostUtils.isMediaInGutenbergPostBody(postContent, localMediaId)
+
+    fun contentContainsGutenbergBlocks(postContent: String): Boolean =
+            PostUtils.contentContainsGutenbergBlocks(postContent)
 }

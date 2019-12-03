@@ -37,6 +37,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -216,6 +217,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteThemesChanged(OnSiteThemesChanged event) {
+        if (event.site.getId() != mSite.getId()) {
+            // ignore this event as it's not related to the currently selected site
+            return;
+        }
         if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
             // always unset refreshing status to remove progress indicator
             if (mThemeBrowserFragment != null) {
@@ -240,6 +245,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCurrentThemeFetched(OnCurrentThemeFetched event) {
+        if (event.site.getId() != mSite.getId()) {
+            // ignore this event as it's not related to the currently selected site
+            return;
+        }
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error fetching current theme: " + event.error.message);
             ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
@@ -262,6 +271,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemeInstalled(OnThemeInstalled event) {
+        if (event.site.getId() != mSite.getId()) {
+            // ignore this event as it's not related to the currently selected site
+            return;
+        }
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error installing theme: " + event.error.message);
         } else {
@@ -273,6 +286,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemeActivated(OnThemeActivated event) {
+        if (event.site.getId() != mSite.getId()) {
+            // ignore this event as it's not related to the currently selected site
+            return;
+        }
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error activating theme: " + event.error.message);
             ToastUtils.showToast(this, R.string.theme_activation_error, ToastUtils.Duration.SHORT);
@@ -280,6 +297,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             AppLog.d(T.THEMES, "Theme activation successful! New theme: " + event.theme.getName());
 
             mCurrentTheme = mThemeStore.getActiveThemeForSite(event.site);
+            if (mCurrentTheme == null) {
+                CrashLoggingUtils.log("NOT A CRASH: OnThemeActivated event is ignored as `getActiveThemeForSite` "
+                                      + "returned null.");
+                return;
+            }
             updateCurrentThemeView();
 
             Map<String, Object> themeProperties = new HashMap<>();

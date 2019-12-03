@@ -10,7 +10,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
@@ -71,14 +71,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         uploadNextInQueue();
     }
 
-    static boolean hasInProgressMediaUploadsForPost(PostModel postModel) {
-        if (postModel == null) {
-            return false;
-        }
-
+    static boolean hasInProgressMediaUploadsForPost(int postId) {
         synchronized (sInProgressUploads) {
             for (MediaModel queuedMedia : sInProgressUploads) {
-                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                if (queuedMedia.getLocalPostId() == postId) {
                     return true;
                 }
             }
@@ -87,14 +83,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return false;
     }
 
-    static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
-        if (postModel == null) {
-            return false;
-        }
-
+    static boolean hasPendingMediaUploadsForPost(int postId) {
         synchronized (sPendingUploads) {
             for (MediaModel queuedMedia : sPendingUploads) {
-                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                if (queuedMedia.getLocalPostId() == postId) {
                     return true;
                 }
             }
@@ -102,16 +94,12 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return false;
     }
 
-    static boolean hasPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
-        if (postModel == null) {
-            return false;
-        }
-
+    static boolean hasPendingOrInProgressMediaUploadsForPost(int postId) {
         // Check if there are media in the in-progress or the pending queue attached to the given post
-        return hasInProgressMediaUploadsForPost(postModel) || hasPendingMediaUploadsForPost(postModel);
+        return hasInProgressMediaUploadsForPost(postId) || hasPendingMediaUploadsForPost(postId);
     }
 
-    static MediaModel getPendingOrInProgressFeaturedImageUploadForPost(PostModel postModel) {
+    static MediaModel getPendingOrInProgressFeaturedImageUploadForPost(PostImmutableModel postModel) {
         if (postModel == null) {
             return null;
         }
@@ -125,7 +113,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return null;
     }
 
-    public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
+    public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostImmutableModel postModel) {
         if (postModel == null) {
             return Collections.emptyList();
         }
@@ -149,10 +137,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return mediaList;
     }
 
-    static boolean isPendingOrInProgressMediaUpload(@NonNull MediaModel media) {
+    static boolean isPendingOrInProgressMediaUpload(int mediaId) {
         synchronized (sInProgressUploads) {
             for (MediaModel uploadingMedia : sInProgressUploads) {
-                if (uploadingMedia.getId() == media.getId()) {
+                if (uploadingMedia.getId() == mediaId) {
                     return true;
                 }
             }
@@ -160,7 +148,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
         synchronized (sPendingUploads) {
             for (MediaModel queuedMedia : sPendingUploads) {
-                if (queuedMedia.getId() == media.getId()) {
+                if (queuedMedia.getId() == mediaId) {
                     return true;
                 }
             }
@@ -172,9 +160,9 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
      * Returns an overall progress for the given {@param video}, including the video optimization progress. If there is
      * no record for that video, it's assumed to be a completed upload.
      */
-    static float getOverallProgressForVideo(MediaModel video, float uploadProgress) {
-        if (sOptimizationProgressByMediaId.containsKey(video.getId())) {
-            float optimizationProgress = sOptimizationProgressByMediaId.get(video.getId());
+    static float getOverallProgressForVideo(int videoId, float uploadProgress) {
+        if (sOptimizationProgressByMediaId.containsKey(videoId)) {
+            float optimizationProgress = sOptimizationProgressByMediaId.get(videoId);
             return optimizationProgress * 0.5F;
         }
         return 0.5F + (uploadProgress * 0.5F);

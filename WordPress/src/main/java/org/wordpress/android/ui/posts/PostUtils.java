@@ -14,6 +14,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.editor.Utils;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
@@ -43,7 +44,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,7 +58,8 @@ public class PostUtils {
     private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
     private static final String GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:media-text {\"mediaId\":%s";
 
-    public static Map<String, Object> addPostTypeToAnalyticsProperties(PostModel post, Map<String, Object> properties) {
+    public static Map<String, Object> addPostTypeToAnalyticsProperties(PostImmutableModel post,
+                                                                       Map<String, Object> properties) {
         if (properties == null) {
             properties = new HashMap<>();
         }
@@ -139,7 +140,7 @@ public class PostUtils {
         return SHORTCODE_TABLE.contains(shortCode);
     }
 
-    public static void trackSavePostAnalytics(PostModel post, SiteModel site) {
+    public static void trackSavePostAnalytics(PostImmutableModel post, SiteModel site) {
         PostStatus status = PostStatus.fromPost(post);
         Map<String, Object> properties = new HashMap<>();
         PostUtils.addPostTypeToAnalyticsProperties(post, properties);
@@ -163,7 +164,7 @@ public class PostUtils {
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     properties.put("editor_source",
-                            shouldShowGutenbergEditor(post.isLocalDraft(), post, site)
+                            shouldShowGutenbergEditor(post.isLocalDraft(), post.getContent(), site)
                                     ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
                     properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                             PostUtils.contentContainsGutenbergBlocks(post.getContent()));
@@ -182,7 +183,7 @@ public class PostUtils {
         }
     }
 
-    public static void trackOpenEditorAnalytics(PostModel post, SiteModel site) {
+    public static void trackOpenEditorAnalytics(PostImmutableModel post, SiteModel site) {
         Map<String, Object> properties = new HashMap<>();
         PostUtils.addPostTypeToAnalyticsProperties(post, properties);
         if (!post.isLocalDraft()) {
@@ -196,20 +197,20 @@ public class PostUtils {
                 properties);
     }
 
-    public static boolean isPublishable(PostModel post) {
+    public static boolean isPublishable(PostImmutableModel post) {
         return post != null && !(post.getContent().trim().isEmpty()
                                  && post.getExcerpt().trim().isEmpty()
                                  && post.getTitle().trim().isEmpty());
     }
 
-    public static boolean hasEmptyContentFields(PostModel post) {
+    public static boolean hasEmptyContentFields(PostImmutableModel post) {
         return TextUtils.isEmpty(post.getTitle()) && TextUtils.isEmpty(post.getContent());
     }
 
     /**
      * Checks if two posts have differing data
      */
-    public static boolean postHasEdits(@Nullable PostModel oldPost, PostModel newPost) {
+    public static boolean postHasEdits(@Nullable PostImmutableModel oldPost, PostImmutableModel newPost) {
         if (oldPost == null) {
             return newPost != null;
         }
@@ -227,7 +228,7 @@ public class PostUtils {
                                     && newPost.getTagNameList().containsAll(oldPost.getTagNameList())
                                     && oldPost.getCategoryIdList().containsAll(newPost.getCategoryIdList())
                                     && newPost.getCategoryIdList().containsAll(oldPost.getCategoryIdList())
-                                    && PostLocation.equals(oldPost.getLocation(), newPost.getLocation())
+                                    && PostLocation.Companion.equals(oldPost.getLocation(), newPost.getLocation())
                                     && oldPost.getChangesConfirmedContentHashcode() == newPost
                 .getChangesConfirmedContentHashcode()
         );
@@ -297,7 +298,7 @@ public class PostUtils {
     }
 
     static boolean shouldPublishImmediately(PostModel postModel) {
-        if (!shouldPublishImmediatelyOptionBeAvailable(postModel)) {
+        if (!shouldPublishImmediatelyOptionBeAvailable(PostStatus.fromPost(postModel))) {
             return false;
         }
         Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
@@ -306,14 +307,24 @@ public class PostUtils {
         return pubDate == null || !pubDate.after(now);
     }
 
-    static boolean isPublishDateInTheFuture(PostModel postModel) {
-        Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
+    static boolean shouldPublishImmediately(PostStatus postStatus, String dateCreated) {
+        if (!shouldPublishImmediatelyOptionBeAvailable(postStatus)) {
+            return false;
+        }
+        Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
+        Date now = new Date();
+        // Publish immediately for posts that don't have any date set yet and drafts with publish dates in the past
+        return pubDate == null || !pubDate.after(now);
+    }
+
+    static boolean isPublishDateInTheFuture(String dateCreated) {
+        Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
         Date now = new Date();
         return pubDate != null && pubDate.after(now);
     }
 
-    static boolean isPublishDateInThePast(PostModel postModel) {
-        Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
+    static boolean isPublishDateInThePast(String dateCreated) {
+        Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
 
         // just use half an hour before now as a threshold to make sure this is backdated, to avoid false positives
         Calendar cal = Calendar.getInstance();
@@ -327,29 +338,17 @@ public class PostUtils {
         return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
     }
 
+    static boolean shouldPublishImmediatelyOptionBeAvailable(PostStatus postStatus) {
+        return postStatus == PostStatus.DRAFT;
+    }
+
     public static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
         if (shouldPublishImmediately(postModel)) {
             postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
         }
     }
 
-    static boolean updatePostTitleIfDifferent(PostModel post, String newTitle) {
-        if (post.getTitle().compareTo(newTitle) != 0) {
-            post.setTitle(newTitle);
-            return true;
-        }
-        return false;
-    }
-
-    static boolean updatePostContentIfDifferent(PostModel post, String newContent) {
-        if (post.getContent().compareTo(newContent) != 0) {
-            post.setContent(newContent);
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isFirstTimePublish(PostModel post) {
+    public static boolean isFirstTimePublish(PostImmutableModel post) {
         return PostStatus.fromPost(post) == PostStatus.DRAFT
                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
     }
@@ -393,15 +392,15 @@ public class PostUtils {
         return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
     }
 
-    public static boolean shouldShowGutenbergEditor(boolean isNewPost, PostModel post, SiteModel site) {
+    public static boolean shouldShowGutenbergEditor(boolean isNewPost, String postContent, SiteModel site) {
         // Default to Gutenberg
 
-        if (isNewPost || TextUtils.isEmpty(post.getContent())) {
+        if (isNewPost || TextUtils.isEmpty(postContent)) {
             // For a new post, use Gutenberg if the "use for new posts" switch is set
             return SiteUtils.isBlockEditorDefaultForNewPost(site);
         } else {
             // for already existing (and non-empty) posts, open Gutenberg only if the post contains blocks
-            return contentContainsGutenbergBlocks(post.getContent());
+            return contentContainsGutenbergBlocks(postContent);
         }
     }
 
@@ -459,7 +458,7 @@ public class PostUtils {
         return postContent.indexOf(imgBlockHeaderToSearchFor) != -1;
     }
 
-    public static boolean isPostInConflictWithRemote(PostModel post) {
+    public static boolean isPostInConflictWithRemote(PostImmutableModel post) {
         // at this point we know there's a potential version conflict (the post has been modified
         // both locally and on the remote)
         return !post.getLastModified().equals(post.getRemoteLastModified()) && post.isLocallyChanged();
@@ -479,10 +478,12 @@ public class PostUtils {
     public static String getConflictedPostCustomStringForDialog(PostModel post) {
         Context context = WordPress.getContext();
         String firstPart = context.getString(R.string.dialog_confirm_load_remote_post_body);
+        String lastModified =
+                TextUtils.isEmpty(post.getDateLocallyChanged()) ? post.getLastModified() : post.getDateLocallyChanged();
         String secondPart =
                 String.format(context.getString(R.string.dialog_confirm_load_remote_post_body_2),
                         getFormattedDateForLastModified(
-                                context, DateTimeUtils.timestampFromIso8601Millis(post.getLastModified())),
+                                context, DateTimeUtils.timestampFromIso8601Millis(lastModified)),
                         getFormattedDateForLastModified(
                                 context, DateTimeUtils.timestampFromIso8601Millis(post.getRemoteLastModified())));
         return firstPart + secondPart;
@@ -516,15 +517,13 @@ public class PostUtils {
                 DateFormat.SHORT,
                 LocaleManager.getSafeLocale(context));
 
-
-        // The timezone on the website is at GMT
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        dateFormat.setTimeZone(Calendar.getInstance().getTimeZone());
+        timeFormat.setTimeZone(Calendar.getInstance().getTimeZone());
 
         return dateFormat.format(date) + " @ " + timeFormat.format(date);
     }
 
-    public static String getPreviewUrlForPost(RemotePreviewType remotePreviewType, PostModel post) {
+    public static String getPreviewUrlForPost(RemotePreviewType remotePreviewType, PostImmutableModel post) {
         String previewUrl;
 
         switch (remotePreviewType) {
@@ -567,7 +566,7 @@ public class PostUtils {
         post.setChangesConfirmedContentHashcode(post.contentHashcode());
     }
 
-    public static boolean isPostCurrentlyBeingEdited(PostModel post) {
+    public static boolean isPostCurrentlyBeingEdited(PostImmutableModel post) {
         PostEvents.PostOpenedInEditor flag = EventBus.getDefault().getStickyEvent(PostEvents.PostOpenedInEditor.class);
         return flag != null && post != null
                && post.getLocalSiteId() == flag.localSiteId
