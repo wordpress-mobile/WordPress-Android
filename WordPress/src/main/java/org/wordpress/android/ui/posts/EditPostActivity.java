@@ -145,7 +145,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashLoggingUtils;
-import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -177,7 +177,6 @@ import org.wordpress.aztec.util.AztecLog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -323,6 +322,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject PostUtilsWrapper mPostUtils;
     @Inject EditorTracker mEditorTracker;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
 
     private EditPostViewModel mViewModel;
@@ -671,8 +671,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (!postModel.isLocalDraft()) {
                     postModel.setIsLocallyChanged(true);
                 }
-                postModel.setDateLocallyChanged(
-                        DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
+                postModel.setDateLocallyChanged(mDateTimeUtils.currentTimeInIso8601UTC());
                 return true;
             }
             return false;
@@ -1771,9 +1770,7 @@ public class EditPostActivity extends AppCompatActivity implements
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
             postModel.setIsLocallyChanged(true);
-            postModel.setDateLocallyChanged(
-                    DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000)
-            );
+            postModel.setDateLocallyChanged(mDateTimeUtils.currentTimeInIso8601UTC());
             return true;
         });
         refreshEditorContent();
@@ -1853,7 +1850,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     // otherwise we'd have an incorrect value
                     // also re-set the published date in case it was SCHEDULED and they want to publish NOW
                     if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
-                        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
+                        postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601UTC());
                     }
                     postModel.setStatus(PostStatus.PUBLISHED.toString());
                     mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
@@ -2220,7 +2217,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 postModel.setContent(updatedContent);
                 mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
                 postModel.setDateLocallyChanged(
-                        DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
+                        mDateTimeUtils.currentTimeInIso8601UTC());
                 return true;
             });
         }

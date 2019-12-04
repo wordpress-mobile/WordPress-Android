@@ -201,8 +201,7 @@ class EditPostViewModel
                     "really updating post: ${!editedPost.isLocalDraft && (contentChanged || statusChanged)}"
             )
             editedPost.setIsLocallyChanged(true)
-            val currentTime = localeManagerWrapper.getCurrentCalendar()
-            editedPost.setDateLocallyChanged(dateTimeUtils.iso8601UTCFromCalendar(currentTime))
+            editedPost.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
         }
     }
 
@@ -303,11 +302,7 @@ class EditPostViewModel
                         postRepository.updatePublishDateIfShouldBePublishedImmediately(
                                 postModel
                         )
-                        val currentTime = localeManagerWrapper.getCurrentCalendar()
-                        postModel
-                                .setDateLocallyChanged(
-                                        dateTimeUtils.iso8601UTCFromCalendar(currentTime)
-                                )
+                        postModel.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
                     }
 
                     Log.d("vojta", "updatePostObject: success - $postTitleOrContentChanged")
@@ -356,9 +351,7 @@ class EditPostViewModel
 
         if (!editedPost.isLocalDraft && (titleChanged || contentChanged || statusChanged)) {
             editedPost.setIsLocallyChanged(true)
-            val currentTime = localeManagerWrapper.getCurrentCalendar()
-            editedPost
-                    .setDateLocallyChanged(dateTimeUtils.iso8601UTCFromCalendar(currentTime))
+            editedPost.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
         }
 
         Log.d("vojta", "updatePostContentNewEditor - ${titleChanged || contentChanged}")
