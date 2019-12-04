@@ -225,12 +225,12 @@
             android:label="" />
         <activity
             android:name=".ui.pages.PagesActivity"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:launchMode="singleTop"
             android:label="@string/my_site_btn_site_pages" />
         <activity
             android:name=".ui.pages.PageParentActivity"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:label="@string/set_parent" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
