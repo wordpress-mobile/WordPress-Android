@@ -110,7 +110,7 @@ class EditPostPublishSettingsViewModel
     }
 
     fun updatePost(updatedDate: Calendar, postRepository: EditPostRepository?) {
-        postRepository?.updateInTransaction { postModel ->
+        postRepository?.updateAndForget({ postModel ->
             val dateCreated = DateTimeUtils.iso8601FromDate(updatedDate.time)
             postModel.setDateCreated(dateCreated)
             val initialPostStatus = postRepository.status
@@ -135,11 +135,13 @@ class EditPostPublishSettingsViewModel
             }
             postModel.setStatus(finalPostStatus.toString())
             _onPostStatusChanged.value = finalPostStatus
-            val scheduledTime = postSchedulingNotificationStore.getSchedulingReminderPeriod(postRepository.id)
+            val scheduledTime = postSchedulingNotificationStore.getSchedulingReminderPeriod(
+                    postRepository.id
+            )
             updateNotifications(postRepository, scheduledTime)
             updateUiModel(postRepository = postRepository)
             true
-        }
+        })
     }
 
     fun updateUiModel(postRepository: EditPostRepository?) {

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -172,7 +173,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         viewModel.updatePost(futureDate, editPostRepository)
 
-        verify(editPostRepository).updateInTransaction(actionCaptor.capture())
+        verify(editPostRepository).updateAndForget(actionCaptor.capture(), isNull())
         val post = PostModel()
         actionCaptor.firstValue.invoke(post)
 
@@ -205,7 +206,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         viewModel.updatePost(currentCalendar, editPostRepository)
 
-        verify(editPostRepository).updateInTransaction(actionCaptor.capture())
+        verify(editPostRepository).updateAndForget(actionCaptor.capture(), isNull())
         val post = PostModel()
         actionCaptor.firstValue.invoke(post)
 
@@ -248,7 +249,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         viewModel.updatePost(currentCalendar, editPostRepository)
 
-        verify(editPostRepository).updateInTransaction(actionCaptor.capture())
+        verify(editPostRepository).updateAndForget(actionCaptor.capture(), isNull())
         val post = PostModel()
         actionCaptor.firstValue.invoke(post)
 

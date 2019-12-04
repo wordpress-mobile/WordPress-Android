@@ -1,5 +1,10 @@
 package org.wordpress.android.ui.posts
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
@@ -9,19 +14,29 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.fromPost
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.concurrent.write
+import kotlin.coroutines.CoroutineContext
 
 class EditPostRepository
 @Inject constructor(
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val postStore: PostStore,
     private val postUtils: PostUtilsWrapper
-) {
+): CoroutineScope {
+    private var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = backgroundDispatcher + job
     private var post: PostModel? = null
     private var postForUndo: PostModel? = null
     private var postSnapshotWhenEditorOpened: PostModel? = null
@@ -76,6 +91,17 @@ class EditPostRepository
 
     fun updateInTransaction(action: (PostModel) -> Boolean) = lock.write {
         action(post!!)
+    }
+
+    fun updateAndForget(action: (PostModel) -> Boolean, callback: ((Boolean) -> Unit)? = null) {
+        launch(backgroundDispatcher) {
+            val result = updateInTransaction(action)
+            callback?.let {
+                withContext(mainDispatcher) {
+                    callback.invoke(result)
+                }
+            }
+        }
     }
 
     fun replaceInTransaction(action: (PostModel) -> PostModel) = lock.write {
@@ -158,5 +184,9 @@ class EditPostRepository
         lock.write {
             post = postStore.getPostByRemotePostId(remotePostId, site)
         }
+    }
+
+    fun destroy() {
+        job.cancel()
     }
 }

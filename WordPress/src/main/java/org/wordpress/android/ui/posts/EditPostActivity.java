@@ -810,6 +810,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mReactNativeRequestHandler != null) {
             mReactNativeRequestHandler.destroy();
         }
+        mEditPostRepository.destroy();
 
         super.onDestroy();
     }
@@ -2480,16 +2481,18 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setFeaturedImageId(final long mediaId) {
-        mEditPostRepository.updateInTransaction(postModel -> {
+        mEditPostRepository.updateAndForget(postModel -> {
             postModel.setFeaturedImageId(mediaId);
             postModel.setIsLocallyChanged(true);
             return true;
+        }, success -> {
+            savePostAsync(() -> EditPostActivity.this.runOnUiThread(() -> {
+                if (mEditPostSettingsFragment != null) {
+                    mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+                }
+            }));
+            return null;
         });
-        savePostAsync(() -> EditPostActivity.this.runOnUiThread(() -> {
-            if (mEditPostSettingsFragment != null) {
-                mEditPostSettingsFragment.updateFeaturedImage(mediaId);
-            }
-        }));
     }
 
     @Override

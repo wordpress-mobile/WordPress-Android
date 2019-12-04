@@ -662,10 +662,12 @@ public class EditPostSettingsFragment extends Fragment {
     private void updateExcerpt(String excerpt) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updateAndForget(postModel -> {
                 postModel.setExcerpt(excerpt);
-                mExcerptTextView.setText(excerpt);
                 return true;
+            }, success -> {
+                mExcerptTextView.setText(excerpt);
+                return null;
             });
         }
     }
@@ -673,10 +675,12 @@ public class EditPostSettingsFragment extends Fragment {
     private void updateSlug(String slug) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updateAndForget(postModel -> {
                 postModel.setSlug(slug);
-                mSlugTextView.setText(slug);
                 return true;
+            }, success -> {
+                mSlugTextView.setText(slug);
+                return null;
             });
         }
     }
@@ -684,10 +688,12 @@ public class EditPostSettingsFragment extends Fragment {
     private void updatePassword(String password) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updateAndForget(postModel -> {
                 postModel.setPassword(password);
-                mPasswordTextView.setText(password);
                 return true;
+            }, success -> {
+                mPasswordTextView.setText(password);
+                return null;
             });
         }
     }
@@ -698,10 +704,12 @@ public class EditPostSettingsFragment extends Fragment {
         }
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updateAndForget(postModel -> {
                 postModel.setCategoryIdList(categoryList);
-                updateCategoriesTextView();
                 return true;
+            }, success -> {
+                updateCategoriesTextView();
+                return null;
             });
         }
     }
@@ -709,11 +717,13 @@ public class EditPostSettingsFragment extends Fragment {
     public void updatePostStatus(PostStatus postStatus) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updateAndForget(postModel -> {
                 postModel.setStatus(postStatus.toString());
+                return true;
+            }, success -> {
                 updatePostStatusRelatedViews();
                 updateSaveButton();
-                return true;
+                return null;
             });
         }
     }
@@ -721,10 +731,12 @@ public class EditPostSettingsFragment extends Fragment {
     private void updatePostFormat(String postFormat) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updateAndForget(postModel -> {
                 postModel.setPostFormat(postFormat);
-                updatePostFormatTextView();
                 return true;
+            }, success -> {
+                updatePostFormatTextView();
+                return null;
             });
         }
     }
@@ -751,15 +763,17 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updateInTransaction(postModel -> {
+        postRepository.updateAndForget(postModel -> {
             if (!TextUtils.isEmpty(selectedTags)) {
                 String tags = selectedTags.replace("\n", " ");
                 postModel.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
             } else {
                 postModel.setTagNameList(new ArrayList<>());
             }
-            updateTagsTextView();
             return true;
+        }, success -> {
+            updateTagsTextView();
+            return null;
         });
     }
 
@@ -902,10 +916,12 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updateInTransaction(postModel -> {
+        postRepository.updateAndForget(postModel -> {
             postModel.setFeaturedImageId(featuredImageId);
-            updateFeaturedImageView();
             return true;
+        }, success -> {
+            updateFeaturedImageView();
+            return null;
         });
     }
 
@@ -1069,17 +1085,24 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updateInTransaction(postModel -> {
+        postRepository.updateAndForget(postModel -> {
             if (place == null) {
                 postModel.clearLocation();
+                return false;
+            } else {
+                mPostLocation = new PostLocation(place.getLatLng().latitude, place.getLatLng().longitude);
+                postModel.setLocation(mPostLocation);
+                return true;
+            }
+        }, success -> {
+            if (success) {
+                mLocationTextView.setText(place.getAddress());
+            } else {
                 mLocationTextView.setText("");
                 mPostLocation = null;
-                return false;
             }
-            mPostLocation = new PostLocation(place.getLatLng().latitude, place.getLatLng().longitude);
-            postModel.setLocation(mPostLocation);
-            mLocationTextView.setText(place.getAddress());
-            return true;
+            updateFeaturedImageView();
+            return null;
         });
     }
 
