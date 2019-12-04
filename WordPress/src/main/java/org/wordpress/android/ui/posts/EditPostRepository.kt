@@ -32,7 +32,7 @@ class EditPostRepository
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val postStore: PostStore,
     private val postUtils: PostUtilsWrapper
-): CoroutineScope {
+) : CoroutineScope {
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
