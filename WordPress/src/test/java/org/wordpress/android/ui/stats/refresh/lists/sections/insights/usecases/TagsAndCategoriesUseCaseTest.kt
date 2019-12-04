@@ -39,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -47,6 +48,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
@@ -67,6 +69,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                 insightsStore,
                 statsSiteProvider,
                 resourceProvider,
+                statsUtils,
                 tracker,
                 popupMenuHandler,
                 contentDescriptionHelper,
@@ -82,6 +85,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                 any(),
                 any<String>()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Long>(), any())).then { (it.arguments[0] as Long).toString() }
     }
 
     @Test

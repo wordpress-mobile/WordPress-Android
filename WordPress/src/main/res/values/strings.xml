@@ -109,6 +109,7 @@
     <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
     <string name="ok">OK</string>
+    <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -243,6 +244,7 @@
     <string name="page_parent_changed">Page parent has been changed</string>
 
     <!-- posts tab -->
+    <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="untitled">Untitled</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="local_draft">Local draft</string>
@@ -859,6 +861,14 @@
     <string name="stats_site_negative_utc">Site timezone (UTC - %s)</string>
     <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
 
+    <!-- Number suffixes -->
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000">%sQa</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
+
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="stats_bar_chart_content_description">Graph of site views.</string>
@@ -1209,6 +1219,9 @@
 
     <!-- reader -->
     <string name="reader">Reader</string>
+    <string name="reader_filter_all_sites">All sites</string>
+    <string name="reader_filter_sites_title">Sites</string>
+    <string name="reader_filter_tags_title">Tags</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1220,7 +1233,6 @@
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -1549,6 +1561,11 @@
       reader strings
     -->
     <string name="reader_save_for_later_title">Saved posts</string>
+    <string name="reader_save_for_later_display_name">Saved</string>
+    <string name="reader_discover_display_name">Discover</string>
+    <string name="reader_my_likes_display_name">Likes</string>
+    <string name="reader_following_display_name">Following</string>
+    
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="timespan_now">now</string>
 
@@ -1773,6 +1790,9 @@
     <string name="my_site_icon_dialog_remove_button">Remove</string>
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_content_description">Change site icon</string>
+
+    <string name="my_site_bottom_sheet_add_post">Create new post</string>
+    <string name="my_site_bottom_sheet_add_page">Create new page</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -2274,10 +2294,10 @@
     <string name="send_verification_email">Send verification email</string>
     <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
     <string name="enter_site_credentials_instead">Log in with site credentials</string>
-    <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b>%1$s&lt;/b></string>
-    <string name="login_discovery_error_xmlrpc">We were unable to access the &lt;b>XMLRPC file&lt;/b> on your site. You will need to reach out to your host to resolve this.</string>
-    <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b>HTTP Authentication&lt;/b>. You will need to reach out to your host to resolve this.</string>
-    <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b>SSL Certificate&lt;/b>. You will need to reach out to your host to resolve this.</string>
+    <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="login_discovery_error_xmlrpc">We were unable to access the &lt;b&gt;XMLRPC file&lt;/b&gt; on your site. You will need to reach out to your host to resolve this.</string>
+    <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b&gt;HTTP Authentication&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
+    <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b&gt;SSL Certificate&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_generic">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>
@@ -2348,7 +2368,7 @@
     <string name="notification_channel_reminder_id" translatable="false">wpandroid_notification_reminder_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
-    <string name="login_notification_channel_id" content_override="true" translatable="false">@string/notification_channel_normal_id</string>
+    <string content_override="true" name="login_notification_channel_id" translatable="false">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
@@ -2526,7 +2546,7 @@
     <string name="post_list_drafts">Drafts</string>
     <string name="post_list_scheduled">Scheduled</string>
     <string name="post_list_trashed">Trashed</string>
-    <string name="post_list_search_prompt">Search published posts</string>
+    <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 
 
@@ -2589,29 +2609,107 @@
     <string name="app_rating_rate_later">Later</string>
     <string name="app_rating_rate_never">No thanks</string>
 
-    <!-- Gutenberg mobile strings -->
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101" tools:ignore="UnusedResources">Link inserted</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214" tools:ignore="UnusedResources">Add URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136" tools:ignore="UnusedResources">Link Text</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138" tools:ignore="UnusedResources">Add Link Text</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152" tools:ignore="UnusedResources">Remove Link</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128" tools:ignore="UnusedResources">Start writing…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196" tools:ignore="UnusedResources">Choose from device</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197" tools:ignore="UnusedResources">Take a Photo</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198" tools:ignore="UnusedResources">WordPress Media Library</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273" tools:ignore="UnusedResources">Alt Text</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280" tools:ignore="UnusedResources">Clear All Settings</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374" translatable="false" tools:ignore="UnusedResources">@string/editor_failed_to_insert_media_tap_for_options</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26" tools:ignore="UnusedResources">CHOOSE IMAGE</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27" tools:ignore="UnusedResources">Paste URL</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21" tools:ignore="UnusedResources">Unsupported Block</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23" tools:ignore="UnusedResources">Unsupported block type.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27" tools:ignore="UnusedResources">Unsupported</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48" tools:ignore="UnusedResources">Move block up</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55" tools:ignore="UnusedResources">Move block down</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66" tools:ignore="UnusedResources">Remove content</string>
-
     <string name="description_collapse">Collapse</string>
     <string name="description_expand">Expand</string>
+    
+    
+    <!--Autogenerated:Gutenberg Native-->
+    <string name="gutenberg_native_add_a_description" tools:ignore="UnusedResources">"Add a description"</string>
+    <string name="gutenberg_native_add_annotation" tools:ignore="UnusedResources">"Add annotation"</string>
+    <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">"ADD BLOCK HERE"</string>
+    <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">"ADD IMAGE"</string>
+    <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">"ADD IMAGE OR VIDEO"</string>
+    <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">"Add link text"</string>
+    <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">"Add URL"</string>
+    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">"ADD VIDEO"</string>
+    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">"Alt Text"</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">"An unknown error occurred. Please try again."</string>
+    <string name="gutenberg_native_annotations_sidebar" tools:ignore="UnusedResources">"Annotations Sidebar"</string>
+    <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">"Choose from device"</string>
+    <string name="gutenberg_native_clear_all_settings" tools:ignore="UnusedResources">"Clear All Settings"</string>
+    <string name="gutenberg_native_content" tools:ignore="UnusedResources">"Content…"</string>
+    <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">"Current value is %s"</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources">"Double tap and hold to edit"</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">"Double tap to add a block"</string>
+    <!-- translators: accessibility text (hint for focusing a slider) -->
+    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider" tools:ignore="UnusedResources">"Double tap to change the value using slider"</string>
+    <!-- translators: accessibility text -->
+    <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources">"Double tap to edit this value"</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources">"Double tap to move the block down"</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources">"Double tap to move the block up"</string>
+    <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">"Double tap to redo last change"</string>
+    <string name="gutenberg_native_double_tap_to_remove_the_block" tools:ignore="UnusedResources">"Double tap to remove the block"</string>
+    <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">"Double tap to select"</string>
+    <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">"Double tap to select a video"</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources">"Double tap to select an image"</string>
+    <!-- translators: accessibility text (hint for switches) -->
+    <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources">"Double tap to toggle setting"</string>
+    <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">"Double tap to undo last change"</string>
+    <string name="gutenberg_native_empty" tools:ignore="UnusedResources">"Empty"</string>
+    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options" tools:ignore="UnusedResources">"Failed to insert media.\nPlease tap for options."</string>
+    <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">"Help icon"</string>
+    <string name="gutenberg_native_here_is_the_panel_content" tools:ignore="UnusedResources">"Here is the panel content!"</string>
+    <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">"Hide keyboard"</string>
+    <!-- translators: accessibility text. %s: image caption. -->
+    <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">"Image caption. %s"</string>
+    <!-- translators: accessibility text. 1: heading level. 2: heading content. -->
+    <string name="gutenberg_native_level_1_s_2_s" tools:ignore="UnusedResources">"Level %1$s. %2$s"</string>
+    <!-- translators: accessibility text. %s: heading level. -->
+    <string name="gutenberg_native_level_s_empty" tools:ignore="UnusedResources">"Level %s. Empty."</string>
+    <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">"Link inserted"</string>
+    <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">"Link text"</string>
+    <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">"Move block down"</string>
+    <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">"Move block down from row %1$s to row %2$s"</string>
+    <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources">"Move block up"</string>
+    <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">"Move block up from row %1$s to row %2$s"</string>
+    <string name="gutenberg_native_my_document_setting_panel" tools:ignore="UnusedResources">"My Document Setting Panel"</string>
+    <string name="gutenberg_native_my_post_publish_panel" tools:ignore="UnusedResources">"My post publish panel"</string>
+    <string name="gutenberg_native_my_post_status_info" tools:ignore="UnusedResources">"My post status info"</string>
+    <string name="gutenberg_native_my_pre_publish_panel" tools:ignore="UnusedResources">"My pre publish panel"</string>
+    <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">"Navigate Up"</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">"No application can handle this request. Please install a Web browser."</string>
+    <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">"Open Settings"</string>
+    <!-- translators: accessibility text. %s: Page break text. -->
+    <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">"Page break block. %s"</string>
+    <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">"Paste URL"</string>
+    <!-- translators: accessibility text. empty post title. -->
+    <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">"Post title. Empty"</string>
+    <!-- translators: accessibility text. %s: text content of the post title. -->
+    <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources">"Post title. %s"</string>
+    <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">"Problem displaying block"</string>
+    <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">"Problem opening the video"</string>
+    <string name="gutenberg_native_remove_annotations" tools:ignore="UnusedResources">"Remove annotations"</string>
+    <!-- translators: accessibility text. %s: current block position (number). -->
+    <string name="gutenberg_native_remove_block_at_row_s" tools:ignore="UnusedResources">"Remove block at row %s"</string>
+    <string name="gutenberg_native_reset" tools:ignore="UnusedResources">"RESET"</string>
+    <string name="gutenberg_native_reset_block" tools:ignore="UnusedResources">"Reset Block"</string>
+    <string name="gutenberg_native_row_d" tools:ignore="UnusedResources">"Row %d."</string>
+    <!-- translators: accessibility text. %s: block name. -->
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">"%s Block"</string>
+    <!-- translators: accessibility text for the media block empty state. %s: media type -->
+    <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">"%s block. Empty"</string>
+    <!-- translators: accessibility text for blocks with invalid content. %d: localized block title -->
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">"%s block. This block has invalid content"</string>
+    <!-- translators: %s: Name of the block -->
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android" tools:ignore="UnusedResources">"'%s' isn't yet supported on WordPress for Android"</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">"'%s' isn't yet supported on WordPress for iOS"</string>
+    <!-- translators: Checkbox toggle label -->
+    <string name="gutenberg_native_show_section" tools:ignore="UnusedResources">"Show section"</string>
+    <string name="gutenberg_native_sidebar_title_plugin" tools:ignore="UnusedResources">"Sidebar title plugin"</string>
+    <string name="gutenberg_native_size" tools:ignore="UnusedResources">"Size"</string>
+    <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">"Start writing…"</string>
+    <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">"Take a Photo"</string>
+    <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">"Take a Photo or Video"</string>
+    <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">"Take a Video"</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">"Tap here to show help"</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">"Tap to hide the keyboard"</string>
+    <string name="gutenberg_native_title" tools:ignore="UnusedResources">"Title:"</string>
+    <string name="gutenberg_native_translate" tools:ignore="UnusedResources">"Translate"</string>
+    <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">"Ungroup"</string>
+    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">"Unsupported"</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m" tools:ignore="UnusedResources">"We are working hard to add more blocks with each release. In the meantime, you can also edit this post on the web."</string>
+    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">"WordPress Media Library"</string>
+    <!--/Autogenerated:Gutenberg Native-->
 </resources>

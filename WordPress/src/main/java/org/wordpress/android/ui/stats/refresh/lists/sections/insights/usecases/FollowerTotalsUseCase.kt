@@ -24,7 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.F
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -36,6 +36,7 @@ class FollowerTotalsUseCase
     private val publicizeStore: PublicizeStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val statsUtils: StatsUtils,
     private val popupMenuHandler: ItemPopupMenuHandler
 ) : StatelessUseCase<Map<FollowerType, Int>>(FOLLOWER_TOTALS, mainDispatcher, bgDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_follower_totals))
@@ -151,7 +152,7 @@ class FollowerTotalsUseCase
                         ListItemWithIcon(
                                 icon = getIcon(it.key),
                                 textResource = title,
-                                value = it.value.toFormattedString(),
+                                value = statsUtils.toFormattedString(it.value),
                                 showDivider = domainModel.entries.indexOf(it) < domainModel.size - 1,
                                 contentDescription = contentDescriptionHelper.buildContentDescription(
                                         title,

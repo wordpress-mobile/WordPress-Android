@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-15 13:59:08+0000
+Translation-Revision-Date: 2019-11-22 01:21:31+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="reader_empty_saved_posts_content_description">أنقر فوق الزرّ \"حفظ المقالات\" لحفظ مقالةٍ في قائمتك.</string>
+    <string name="reader_acessibility_list_loaded">\"تم تحميل القائمة بعناصر %1$d.\"</string>
     <string name="notifications_tab_dialog_switch_desc">التنبيهات</string>
     <string name="master_switch_default_title_off">إيقاف التشغيل</string>
     <string name="master_switch_default_title_on">تشغيل</string>
@@ -213,7 +215,6 @@ Language: ar
     <string name="stats_management_news_card_message">اختر الإحصائيات التي ستراها، والتركيز على البيانات التي تهمك أكثر. أنقر على %1$s في الجزء السفلي من الإحصائيات لتخصيص إحصائياتك.</string>
     <string name="stats_manage_your_stats">إدارة إحصائياتك</string>
     <string name="history_fetching_revisions">جاري جلب المراجعات…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">فشلت عملية إدراج وسائط.\nيرجى النقر على الخيارات.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">فشلت عملية إدراج وسائط.\nيرجى النقر على إعادة المحاولة.</string>
     <string name="editor_uploading_draft">جاري رفع مسودّتك</string>
     <string name="post_uploading_draft">رفع المسودّة</string>
@@ -293,26 +294,6 @@ Language: ar
     <string name="stats_site_not_loaded_yet">الموقع لم يتم تحميله بعد</string>
     <string name="stats_more_posts">مقالات أكثر</string>
     <string name="stats_fewer_posts">مقالات أقل</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">إزالة المحتوى</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">تحريك المكوّن لأسفل</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">تحريك المكوّن لأعلى</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">إضافة مكوّن هنا</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">غير مدعوم</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">نوع المكوّن غير مدعوم.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">مكوّن غير مدعوم</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">لصق الرابط</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">اختيار صورة</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">مسح كل الإعدادات</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">النص البديل</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">مكتبة وسائط ووردبريس</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">التقاط صورة</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">الاختيار من الجهاز</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">البدء بالكتابة…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">إزالة الرابط</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">إضافة نصّ للرابط</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">نص الرابط</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">إضافة رابط</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">تمّ إدراج الرابط</string>
     <string name="new_site_creation_preview_back_pressed_warning">قد تفقد التغييرات التي تجريها. هل أنت متأكد أنك تريد الخروج؟</string>
     <string name="plans_loading_error_with_cache_button">استعراض الخطط على أية حال</string>
     <string name="plans_loading_error_with_cache_subtitle">الاتصال بالانترنت مطلوب لاستعراض الخطط، لذلك قد تكون التفاصيل قديمة وغير محدثة.</string>
@@ -507,7 +488,7 @@ Language: ar
     <string name="pages_pending">في انتظار المراجعة</string>
     <string name="pages_open_page_error">الصفحة المحددة غير متاحة</string>
     <string name="news_card_announcement_action_sample_announcement">[اقرأ المزيد]</string>
-    <string name="news_card_announcement_content_sample_announcement">[ألا يوجد وقت للقراءة الآن؟ لا توجد مشكلة: حفظ المنشورات كلما تقوم بالنشر.]</string>
+    <string name="news_card_announcement_content_sample_announcement">[ألا يوجد وقت للقراءة الآن؟ لا توجد مشكلة: حفظ المقالات إلى حين أن تفعل ذلك.]</string>
     <string name="news_card_announcement_title_sample_announcement">[ميزة جديدة متوفرة]</string>
     <string name="pages_empty_trashed">ليس لديك أي صفحات تم نقلها إلى سلة المهملات</string>
     <string name="pages_empty_scheduled">ليس لديك أي صفحات مجدولة</string>

@@ -29,12 +29,8 @@ class AppendMediaToEditorUseCase @Inject constructor(private val fluxCUtilsWrapp
                         }
                     }
                 }
-                .forEach { (urlToUse, mediaFile) ->
-                    editorMediaListener.appendMediaFile(
-                            mediaFile,
-                            urlToUse
-                    )
-                }
+                .toMap()
+                .let { mediaList -> editorMediaListener.appendMediaFiles(mediaList) }
     }
 }
 

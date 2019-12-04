@@ -47,6 +47,7 @@ class AllTimeWidgetUpdater
         val hasToken = accountStore.hasAccessToken()
         val views = RemoteViews(context.packageName, widgetUtils.getLayout(colorMode))
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_all_time_stats))
+        val widgetHasData = appPrefsWrapper.hasAppWidgetData(appWidgetId)
         if (networkAvailable && siteModel != null && hasToken) {
             widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
             siteModel.let {
@@ -65,7 +66,7 @@ class AllTimeWidgetUpdater
                     ALL_TIME_VIEWS,
                     isWideView
             )
-        } else {
+        } else if (!widgetHasData || !hasToken || siteModel == null) {
             widgetUtils.showError(
                     widgetManager,
                     views,

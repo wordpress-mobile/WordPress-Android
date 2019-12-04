@@ -11,6 +11,14 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_137"
+msgid ""
+"13.7:\n"
+"* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.\n"
+"\n"
+"* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.\n"
+msgstr ""
+
 msgctxt "release_note_136"
 msgid ""
 "13.6:\n"
@@ -18,12 +26,6 @@ msgid ""
 "- Bugs in page list ordering are fixed, so pages always appear in alphabetical order.\n"
 "- Block editor updates: Added support for Pexels images and image alignment options.\n"
 "\n"
-msgstr ""
-
-msgctxt "release_note_135"
-msgid ""
-"13.5:\n"
-"* Block Editor: We fixed an issue when multiple media selection added only one image or video block. There’s a new “Media & Text” block and we’ve added a Link Target (Open in new tab) option to the Image Block.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

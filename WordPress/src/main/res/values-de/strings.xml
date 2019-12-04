@@ -1,11 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-13 00:54:10+0000
+Translation-Revision-Date: 2019-11-23 20:35:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_wordpress_media_library">„WordPress-Mediathek“</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">„Wir arbeiten intensiv daran, mit jedem Release mehr Blöcke hinzuzufügen. In der Zwischenzeit kannst du diesen Beitrag auch im Web bearbeiten.“</string>
+    <string name="gutenberg_native_unsupported">„Nicht unterstützt“</string>
+    <string name="gutenberg_native_ungroup">„Gruppierung aufheben“</string>
+    <string name="gutenberg_native_translate">„Übersetzen“</string>
+    <string name="gutenberg_native_title">„Titel:“</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard">„Zum Ausblenden der Tastatur hier tippen“</string>
+    <string name="gutenberg_native_tap_here_to_show_help">„Zum Anzeigen der Hilfe hier tippen“</string>
+    <string name="gutenberg_native_take_a_video">„Ein Video aufnehmen“</string>
+    <string name="gutenberg_native_take_a_photo_or_video">„Ein Foto oder Video aufnehmen“</string>
+    <string name="gutenberg_native_take_a_photo">„Ein Foto aufnehmen“</string>
+    <string name="gutenberg_native_start_writing">„Fang an zu schreiben…“</string>
+    <string name="gutenberg_native_size">„Größe“</string>
+    <string name="gutenberg_native_sidebar_title_plugin">„Plugin für Seitenleistentitel“</string>
+    <string name="gutenberg_native_show_section">„Abschnitt anzeigen“</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">„\'%s\' wird in WordPress für iOS noch nicht unterstützt“</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">„\'%s\' wird in WordPress für Android noch nicht unterstützt“</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content">„Block %s. Dieser Block hat ungültigen Inhalt“</string>
+    <string name="gutenberg_native_s_block_empty">„Block %s. Leer“</string>
+    <string name="gutenberg_native_s_block">„Block %s“</string>
+    <string name="gutenberg_native_row_d">„Zeile %d.“</string>
+    <string name="gutenberg_native_reset_block">„Block zurücksetzen“</string>
+    <string name="gutenberg_native_reset">„ZURÜCKSETZEN“</string>
+    <string name="gutenberg_native_remove_block_at_row_s">„Block in Zeile %s entfernen“</string>
+    <string name="gutenberg_native_remove_annotations">„Anmerkungen entfernen“</string>
+    <string name="gutenberg_native_problem_opening_the_video">„Problem beim Öffnen des Videos“</string>
+    <string name="gutenberg_native_problem_displaying_block">„Problem beim Anzeigen des Blocks“</string>
+    <string name="gutenberg_native_post_title_s">„Beitragstitel. %s“</string>
+    <string name="gutenberg_native_post_title_empty">„Beitragstitel. Leer“</string>
+    <string name="gutenberg_native_paste_url">„URL einfügen“</string>
+    <string name="gutenberg_native_page_break_block_s">„Seitenumbruch-Block. %s“</string>
+    <string name="gutenberg_native_open_settings">„Einstellungen öffnen“</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">„Diese Anfrage kann von keiner Anwendung verarbeitet werden. Installiere bitte einen Webbrowser.“</string>
+    <string name="gutenberg_native_navigate_up">„Nach oben“</string>
+    <string name="gutenberg_native_my_pre_publish_panel">„Mein Bereich vor der Veröffentlichung“</string>
+    <string name="gutenberg_native_my_post_status_info">„Meine Beitragsstatus-Informationen“</string>
+    <string name="gutenberg_native_my_post_publish_panel">„Mein Bereich nach der Veröffentlichung“</string>
+    <string name="gutenberg_native_my_document_setting_panel">„Mein Bereich für Dokumenteinstellungen“</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">„Block von Zeile %1$s in Zeile %2$s nach oben bewegen“</string>
+    <string name="gutenberg_native_move_block_up">„Block nach oben verschieben“</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">„Block von Zeile %1$s in Zeile %2$s nach unten bewegen“</string>
+    <string name="gutenberg_native_move_block_down">„Block nach unten verschieben“</string>
+    <string name="gutenberg_native_link_text">„Linktext“</string>
+    <string name="gutenberg_native_link_inserted">„Link eingefügt“</string>
+    <string name="gutenberg_native_level_s_empty">„Ebene %s. Leer.“</string>
+    <string name="gutenberg_native_level_1_s_2_s">„Ebene %1$s. %2$s“</string>
+    <string name="gutenberg_native_image_caption_s">„Bildunterschrift. %s“</string>
+    <string name="gutenberg_native_hide_keyboard">„Tastatur ausblenden“</string>
+    <string name="gutenberg_native_here_is_the_panel_content">„Hier ist der Bereichsinhalt!“</string>
+    <string name="gutenberg_native_help_icon">„Hilfe-Icon“</string>
+    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">„Das Einfügen von Medien ist fehlgeschlagen.\nFür Optionen bitte hier tippen.“</string>
+    <string name="gutenberg_native_empty">„Leer“</string>
+    <string name="gutenberg_native_double_tap_to_undo_last_change">„Zum Rückgängigmachen der letzten Änderung zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_to_toggle_setting">„Zum Umschalten der Einstellung zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image">„Zum Auswählen eines Bilds zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_to_select_a_video">„Zum Auswählen eines Videos zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_to_select">„Zum Auswählen zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_to_remove_the_block">„Zum Entfernen des Blocks zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_to_redo_last_change">„Zum Wiederholen der letzten Änderung zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up">„Zum nach oben Verschieben des Blocks zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down">„Zum nach unten Verschieben des Blocks zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_to_edit_this_value">„Zum Bearbeiten dieses Werts zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">„Zum Ändern des Werts mit dem Slider zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block">„Zum Hinzufügen eines Blocks zweimal tippen“</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">„Zum Bearbeiten zweimal tippen und gedrückt halten“</string>
+    <string name="gutenberg_native_current_value_is_s">„Der aktuelle Wert ist %s“</string>
+    <string name="gutenberg_native_content">„Inhalt…“</string>
+    <string name="gutenberg_native_clear_all_settings">„Alle Einstellungen löschen“</string>
+    <string name="gutenberg_native_choose_from_device">„Vom Gerät auswählen“</string>
+    <string name="gutenberg_native_annotations_sidebar">„Seitenleiste für Anmerkungen“</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">„Ein unbekannter Fehler ist aufgetreten. Bitte versuche es erneut.“</string>
+    <string name="gutenberg_native_alt_text">„Alt-Text“</string>
+    <string name="gutenberg_native_add_video">„VIDEO HINZUFÜGEN“</string>
+    <string name="gutenberg_native_add_url">„URL hinzufügen“</string>
+    <string name="gutenberg_native_add_link_text">„Linktext hinzufügen“</string>
+    <string name="gutenberg_native_add_image_or_video">„BILD ODER VIDEO HINZUFÜGEN“</string>
+    <string name="gutenberg_native_add_image">„BILD HINZUFÜGEN“</string>
+    <string name="gutenberg_native_add_block_here">„HIER BLOCK HINZUFÜGEN“</string>
+    <string name="gutenberg_native_add_annotation">„Anmerkung hinzufügen“</string>
+    <string name="gutenberg_native_add_a_description">„Eine Beschreibung hinzufügen“</string>
+    <string name="reader_empty_saved_posts_content_description">Tippe auf den Button „Hinzufügen, um Beiträge zu speichern“, um einen Beitrag in deiner Liste zu speichern.</string>
+    <string name="reader_acessibility_list_loaded">„Die Liste wurde mit %1$d Einträgen geladen.“</string>
     <string name="notifications_tab_dialog_switch_desc">Benachrichtigungen</string>
     <string name="master_switch_default_title_off">Aus</string>
     <string name="master_switch_default_title_on">Ein</string>
@@ -95,7 +177,7 @@ Language: de
     <string name="navigate_back_desc">Zurück gehen</string>
     <string name="navigate_forward_desc">Vorwärts gehen</string>
     <string name="calendar_scheduled_post_description">„%s“ ist für die Veröffentlichung auf „%s“ in deiner WordPress-Applikation geplant. \n %s</string>
-    <string name="calendar_scheduled_post_title">WordPress Geplanter Beitrag: „%s“</string>
+    <string name="calendar_scheduled_post_title">Von WordPress geplanter Beitrag: „%s“</string>
     <string name="notification_post_will_be_published_in_ten_minutes">„%s“ wird in 10 Minuten veröffentlicht</string>
     <string name="notification_post_will_be_published_in_one_hour">„%s“ wird in 1 Stunde veröffentlicht</string>
     <string name="notification_post_has_been_published">„%s“ wurde veröffentlicht</string>
@@ -140,7 +222,7 @@ Language: de
     <string name="link_dialog_button_remove_link">Link entfernen</string>
     <string name="link_dialog_title">Link einfügen</string>
     <string name="post_settings_retry_featured_image">Hochladen erneut starten</string>
-    <string name="post_settings_featured_image_uploading_tap_for_options">Medien werden hochgeladen.\nFür Optionen hier tippen.</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Medien werden hochgeladen.\nFür Optionen bitte hier tippen.</string>
     <string name="link_open_new_window">Link in neuem Fenster/Tab öffnen</string>
     <string name="post_list_search_prompt">Veröffentlichte Beiträge suchen</string>
     <string name="stats_widget_error_no_access_token">Um deine Statistiken anzuzeigen, melde dich beim WordPress.com-Konto an.</string>
@@ -213,7 +295,6 @@ Language: de
     <string name="stats_management_news_card_message">Wähle aus, welche Statistiken du sehen möchtest, und konzentriere dich auf die Daten, die für dich am Wichtigsten sind. Tippe unten in Einsichten auf %1$s, um deine Statistiken anzupassen.</string>
     <string name="stats_manage_your_stats">Deine Statistiken verwalten</string>
     <string name="history_fetching_revisions">Revisionen werden abgerufen…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Medien hochladen fehlgeschlagen.\nBitte tippen für Optionen.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Medien einfügen fehlgeschlagen.\nBitte tippen für neuen Versuch.</string>
     <string name="editor_uploading_draft">Dein Entwurf wird hochgeladen</string>
     <string name="post_uploading_draft">Entwurf wird hochgeladen</string>
@@ -293,26 +374,6 @@ Language: de
     <string name="stats_site_not_loaded_yet">Website noch nicht geladen</string>
     <string name="stats_more_posts">Mehr Beiträge</string>
     <string name="stats_fewer_posts">Weniger Beiträge</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Inhalt entfernen</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Block nach unten verschieben</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Block nach oben verschieben</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">HIER BLOCK HINZUFÜGEN</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Nicht unterstützt</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Nicht unterstützter Blocktyp.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Nicht unterstützter Block</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL einfügen</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">WÄHLE EIN BILD AUS</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Alle Einstellungen löschen</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alt-Text</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress-Mediathek</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Nimm ein Foto auf</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Aus einem Gerät auswählen</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Fang an zu schreiben…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Link entfernen</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Linktext hinzufügen</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Linktext</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">URL einfügen</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link eingefügt</string>
     <string name="new_site_creation_preview_back_pressed_warning">Du kannst deinen Fortschritt verlieren. Bist du sicher, dass du abbrechen willst?</string>
     <string name="plans_loading_error_with_cache_button">Pläne trotzdem ansehen</string>
     <string name="plans_loading_error_with_cache_subtitle">Für die Ansicht von Plänen ist eine Internetverbindung erforderlich, so dass Details möglicherweise nicht mehr aktuell sind.</string>
@@ -1725,7 +1786,7 @@ Language: de
     <string name="me_disconnect_from_wordpress_com">Bei WordPress.com abmelden</string>
     <string name="me_btn_login_logout">Anmelden/Abmelden</string>
     <string name="me_connect_to_wordpress_com">Bei WordPress.com anmelden</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\" wurde nicht ausgeblendet, denn es ist die aktuelle Webseite</string>
+    <string name="site_picker_cant_hide_current_site">„%s“ wurde nicht ausgeblendet, denn es ist die aktuelle Website</string>
     <string name="me_btn_support">Hilfe &amp; Support</string>
     <string name="account_settings">Konto-Einstellungen</string>
     <string name="site_picker_create_wpcom">WordPress.com Website erstellen</string>

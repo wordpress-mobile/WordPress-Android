@@ -1,4 +1,0 @@
-13.6:
-- Hemos actualizado el color de la barra de navegación a blanco en Android 8.1 y superior.
-- Los fallos en el orden de la lista de páginas han sido corregidos, por lo que las páginas siempre aparecen en orden alfabético.
-- Actualizaciones del editor de bloques: Añadida compatibilidad para imágenes de Pexels y opciones de alineación de imágenes.

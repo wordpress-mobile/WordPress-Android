@@ -26,7 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUs
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -52,6 +52,7 @@ constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val contentDescriptionHelper: ContentDescriptionHelper,
     private val localeManagerWrapper: LocaleManagerWrapper,
+    private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<FileDownloadsModel>(
         FILE_DOWNLOADS,
@@ -122,7 +123,7 @@ constructor(
             items.addAll(domainModel.fileDownloads.mapIndexed { index, fileDownloads ->
                 ListItemWithIcon(
                         text = fileDownloads.filename,
-                        value = fileDownloads.downloads.toFormattedString(),
+                        value = statsUtils.toFormattedString(fileDownloads.downloads),
                         showDivider = index < domainModel.fileDownloads.size - 1,
                         contentDescription = contentDescriptionHelper.buildContentDescription(
                                 header,
@@ -163,6 +164,7 @@ constructor(
         private val statsSiteProvider: StatsSiteProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper,
         private val contentDescriptionHelper: ContentDescriptionHelper,
+        private val statsUtils: StatsUtils,
         private val localeManagerWrapper: LocaleManagerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
@@ -176,6 +178,7 @@ constructor(
                         analyticsTracker,
                         contentDescriptionHelper,
                         localeManagerWrapper,
+                        statsUtils,
                         useCaseMode
                 )
     }

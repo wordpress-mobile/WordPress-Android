@@ -42,7 +42,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -57,6 +57,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: AuthorsUseCase
     private val firstAuthorViews = 20
     private val secondAuthorViews = 40
@@ -76,6 +77,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 selectedDateProvider,
                 tracker,
                 contentDescriptionHelper,
+                statsUtils,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -93,10 +95,11 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         )).thenReturn(contentDescription)
         whenever(contentDescriptionHelper.buildContentDescription(
                 any(),
-                any<String>(),
+                any(),
                 any(),
                 any<Int>()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
@@ -289,7 +292,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     ): ExpandableItem {
         assertThat(item.type).isEqualTo(EXPANDABLE_ITEM)
         assertThat((item as ExpandableItem).header.text).isEqualTo(label)
-        assertThat(item.header.value).isEqualTo(views.toFormattedString())
+        assertThat(item.header.value).isEqualTo(views.toString())
         assertThat(item.header.iconUrl).isEqualTo(icon)
         assertThat(item.header.barWidth).isEqualTo(bar)
         assertThat(item.header.contentDescription).isEqualTo(contentDescription)

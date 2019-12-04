@@ -1,5 +1,0 @@
-13.6:
-- Kami memperbarui warna bilah navigasi menjadi putih di Android 8.1 dan yang lebih tinggi.
-- Bug di pengurutan daftar halaman telah diperbaiki, sehingga halaman selalu ditampilkan dalam urutan alfabet.
-* Pembaruan penyunting blok: Dukungan yang ditambahkan untuk gambar Pexels dan pilihan penyelarasan gambar.
-
