@@ -847,19 +847,20 @@
         <item name="android:background">@color/neutral_10</item>
     </style>
 
-    <style name="ActionableEmptyStateTitle" parent="TextAppearance.AppCompat">
+    <style name="ActionableEmptyStateTitle">
         <item name="android:layout_marginBottom">@dimen/margin_medium</item>
         <item name="android:layout_marginEnd">@dimen/actionable_empty_view_text_margin_horizontal</item>
         <item name="android:layout_marginStart">@dimen/actionable_empty_view_text_margin_horizontal</item>
         <item name="android:maxWidth">@dimen/actionable_empty_view_text_maximum_width</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:textAppearance">@dimen/text_sz_extra_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
     </style>
 
     <style name="ActionableEmptyStateSubtitle" parent="@style/ActionableEmptyStateTitle">
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="ActionableEmptyStateButton" parent="WordPress.Button.Primary">
