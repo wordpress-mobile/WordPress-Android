@@ -14,12 +14,18 @@
         <item name="colorOnBackground">@android:color/white</item>
         <item name="colorOnSurface">@android:color/white</item>
         <item name="colorOnError">@android:color/black</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
 
         <item name="wpColorText">@android:color/white</item>
         <item name="wpColorTextSubtle">@color/neutral_50</item>
         <item name="wpColorError">@color/error_50</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
+        <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
+
+        <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
+        <item name="tabStyle">@style/WordPress.TabLayout</item>
+        <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Dark</item>
 
         <item name="actionOverflowMenuStyle">
             @style/Widget.MaterialComponents.PopupMenu.Overflow.Dark
@@ -71,6 +77,15 @@
 
     <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
         <item name="android:elevation">@dimen/appbar_elevation</item>
+    </style>
+
+    <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:backgroundTint">@color/pink_50</item>
+        <item name="tint">?attr/colorOnSurface</item>
     </style>
 
 </resources>
