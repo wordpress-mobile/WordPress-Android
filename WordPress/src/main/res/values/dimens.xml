@@ -45,6 +45,10 @@
     <dimen name="default_cardview_radius">2dp</dimen>
     <dimen name="default_cardview_elevation">2dp</dimen>
 
+    <!-- bottom navigation bar -->
+    <dimen name="bottom_nav_bar_icon_size">24dp</dimen>
+    <dimen name="bottom_nav_bar_badge_size">12dp</dimen>
+
     <!-- featured image in post list -->
     <dimen name="postlist_featured_image_height">98dp</dimen>
 
@@ -441,5 +445,8 @@
     <!--preferences master switch -->
     <dimen name="notifications_tab_dialog_toolbar_content_offset">24dp</dimen>
     <dimen name="notifications_settings_dialog_divider_height">1dp</dimen>
+    
+    <!--Main bottom sheet icon size -->
+    <dimen name="main_bottom_sheet_list_row_icon_size">32dp</dimen>
 
 </resources>

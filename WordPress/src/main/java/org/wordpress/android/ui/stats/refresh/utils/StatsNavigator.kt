@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_STATS
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.StatsViewType.ANNUAL_STATS
@@ -59,7 +60,9 @@ class StatsNavigator
 ) {
     fun navigate(activity: FragmentActivity, target: NavigationTarget) {
         when (target) {
-            is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false)
+            is AddNewPost -> {
+                ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false, POST_FROM_STATS)
+            }
             is ViewPost -> {
                 StatsUtils.openPostInReaderOrInAppWebview(
                         activity,
