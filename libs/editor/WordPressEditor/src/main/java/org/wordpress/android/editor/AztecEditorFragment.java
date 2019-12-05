@@ -2061,7 +2061,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         clearMetaSpans(builder);
         parser.syncVisualNewlinesOfBlockElements(builder);
         Format.postProcessSpannedText(builder, true);
-        return EndOfBufferMarkerAdder.removeEndOfTextMarker(parser.toHtml(builder, false, false));
+        return EndOfBufferMarkerAdder.removeEndOfTextMarker(parser.toHtml(builder, false));
     }
 
     private static void clearMetaSpans(Spannable text) {
