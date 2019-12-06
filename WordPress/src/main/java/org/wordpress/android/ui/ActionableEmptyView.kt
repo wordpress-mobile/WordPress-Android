@@ -137,6 +137,13 @@ class ActionableEmptyView : LinearLayout {
         layout.layoutParams = params
     }
 
+    /**
+     * Announces the empty view when the empty state occur. Due to the formatting of subtitle text in certain
+     * circumstances TalkBack isn't able to properly make it's announcement so in cases like these the content
+     * description is dynamically added before doing so. Since the appropriate measure is to rely on the TextView's
+     * text as the content for announcement the content description of the subtitle is cleared so that the subtitle
+     * text can be default.
+     */
     fun announceEmptyStateForAccessibility() {
         val subTitle = if (!TextUtils.isEmpty(subtitle.contentDescription)) {
             subtitle.contentDescription
@@ -145,5 +152,7 @@ class ActionableEmptyView : LinearLayout {
         }
 
         announceForAccessibility("${title.text}.$subTitle")
+
+        subtitle.contentDescription = null
     }
 }
