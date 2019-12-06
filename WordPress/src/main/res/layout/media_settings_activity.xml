@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
-    android:fitsSystemWindows="false">
+    android:focusableInTouchMode="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="false"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="false"
-            app:contentScrim="@color/primary"
+            app:contentScrim="?attr/wpColorAppBar"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -35,12 +30,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/media_settings_background"
-                    android:scaleType="centerCrop"
                     android:contentDescription="@string/media_settings_image_preview_desc"
+                    android:scaleType="centerCrop"
                     tools:layout_height="224dp"
                     tools:src="@drawable/ic_audio_white_24dp"
-                    tools:tint="@color/neutral_30" >
-                </ImageView>
+                    tools:tint="@color/neutral_30" />
 
                 <ImageView
                     android:id="@+id/image_gradient_scrim"
@@ -56,19 +50,18 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:src="@drawable/ic_play_white_black_24dp"
                     android:contentDescription="@string/media_settings_play"
+                    android:src="@drawable/ic_play_white_black_24dp"
+                    android:visibility="gone"
                     tools:visibility="visible" />
             </FrameLayout>
 
-            <androidx.appcompat.widget.Toolbar
-                android:background="@null"
+            <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                android:background="@null"
+     />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -85,14 +78,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_extra_large"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="@dimen/default_cardview_radius"
-                app:cardElevation="@dimen/card_elevation">
+                app:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -103,28 +94,28 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:paddingTop="@dimen/margin_extra_large"
                         android:paddingStart="@dimen/media_settings_margin"
+                        android:paddingTop="@dimen/margin_extra_large"
                         android:paddingEnd="@dimen/media_settings_margin">
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/margin_large"
                             android:layout_marginStart="@dimen/margin_small"
+                            android:layout_marginBottom="@dimen/margin_large"
                             android:text="@string/media_edit_customize_card_caption"
-                            android:textColor="@color/primary_50"
+                            android:textColor="?attr/colorPrimary"
                             android:textSize="@dimen/text_sz_large"
                             android:textStyle="bold" />
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_small"
                             android:text="@string/image_size" />
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/image_size_hint"
                             style="@style/MediaSettings.Value"
                             android:layout_width="wrap_content"
@@ -138,10 +129,10 @@
                             style="@style/Widget.AppCompat.SeekBar.Discrete"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_large"
-                            tools:max="3"
                             android:layout_marginStart="-8dp"
-                            android:layout_marginEnd="-8dp"/>
+                            android:layout_marginTop="@dimen/margin_large"
+                            android:layout_marginEnd="-8dp"
+                            tools:max="3" />
 
                     </LinearLayout>
 
@@ -157,16 +148,16 @@
                         android:paddingStart="@dimen/media_settings_margin"
                         android:paddingEnd="@dimen/media_settings_margin">
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/alignment_spinner_label"
                             style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/margin_small"
                             android:layout_marginStart="@dimen/margin_small"
+                            android:layout_marginBottom="@dimen/margin_small"
                             android:text="@string/image_alignment" />
 
-                        <Spinner
+                        <androidx.appcompat.widget.AppCompatSpinner
                             android:id="@+id/alignment_spinner"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -185,16 +176,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/margin_extra_large"
                         android:paddingStart="@dimen/media_settings_margin"
-                        android:paddingEnd="@dimen/media_settings_margin">
+                        android:paddingEnd="@dimen/media_settings_margin"
+                        android:paddingBottom="@dimen/margin_extra_large">
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/edit_link_container"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:importantForAccessibility="no"
                             android:hint="@string/media_edit_link_text"
+                            android:importantForAccessibility="no"
                             app:theme="@style/MediaSettings.TextInputTheme">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -203,8 +194,8 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="top|start"
                                 android:hint="@string/media_edit_link_text"
-                                android:textColorHint="@android:color/transparent"
                                 android:inputType="textUri"
+                                android:textColorHint="@android:color/transparent"
                                 tools:text="edit_link" />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -220,103 +211,93 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/card1"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="@dimen/default_cardview_radius"
-                app:cardElevation="@dimen/card_elevation">
+                app:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/margin_extra_large"
+                    android:paddingStart="@dimen/media_settings_margin"
                     android:paddingTop="@dimen/margin_extra_large"
                     android:paddingEnd="@dimen/media_settings_margin"
-                    android:paddingStart="@dimen/media_settings_margin">
+                    android:paddingBottom="@dimen/margin_extra_large">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_large"
                         android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginBottom="@dimen/margin_large"
                         android:text="@string/media_edit_file_details_card_caption"
-                        android:textColor="@color/primary_50"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="@dimen/text_sz_large"
                         android:textStyle="bold" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/MediaSettings.TextInputStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:importantForAccessibility="no"
                         android:hint="@string/media_edit_title_text"
-                        app:theme="@style/MediaSettings.TextInputTheme">
+                        android:importantForAccessibility="no">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/media_edit_title_text"
-                            android:textColorHint="@android:color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
+                            android:textColorHint="@android:color/transparent"
                             tools:text="edit_title" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/edit_caption_container"
-                        style="@style/MediaSettings.TextInputStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:importantForAccessibility="no"
                         android:hint="@string/media_edit_caption_text"
-                        app:theme="@style/MediaSettings.TextInputTheme">
+                        android:importantForAccessibility="no">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_caption"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/media_edit_caption_text"
-                            android:textColorHint="@android:color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
+                            android:textColorHint="@android:color/transparent"
                             tools:text="edit_caption" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/edit_alt_text_layout"
-                        style="@style/MediaSettings.TextInputStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:importantForAccessibility="no"
                         android:hint="@string/media_edit_alttext_text"
-                        app:theme="@style/MediaSettings.TextInputTheme">
+                        android:importantForAccessibility="no">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_alt_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/media_edit_alttext_text"
-                            android:textColorHint="@android:color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
+                            android:textColorHint="@android:color/transparent"
                             tools:text="edit_alt_text" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/edit_description_container"
-                        style="@style/MediaSettings.TextInputStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:importantForAccessibility="no"
                         android:hint="@string/media_edit_description_text"
-                        app:theme="@style/MediaSettings.TextInputTheme">
+                        android:importantForAccessibility="no">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_description"
@@ -324,42 +305,41 @@
                             android:layout_height="wrap_content"
                             android:gravity="top|start"
                             android:hint="@string/media_edit_description_text"
-                            android:textColorHint="@android:color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
                             android:lines="3"
+                            android:textColorHint="@android:color/transparent"
                             tools:text="edit_description" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/card2"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="@dimen/default_cardview_radius"
-                app:cardElevation="@dimen/card_elevation">
+                app:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/margin_small"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/margin_extra_large"
-                    android:paddingTop="@dimen/margin_extra_large">
+                    android:paddingTop="@dimen/margin_extra_large"
+                    android:paddingBottom="@dimen/margin_extra_large">
 
                     <!-- url -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:focusable="true">
-                        <TextView
+                        android:focusable="true"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
                             style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -369,7 +349,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
-                            <TextView
+                            <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/text_url"
                                 style="@style/MediaSettings.Value"
                                 android:layout_width="match_parent"
@@ -380,22 +360,19 @@
                                 android:singleLine="true"
                                 tools:text="text_url" />
 
-                        <TextView
-                            android:id="@+id/text_copy_url"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/margin_extra_large"
-                            android:background="@drawable/button_frame"
-                            android:paddingBottom="@dimen/margin_small"
-                            android:paddingTop="@dimen/margin_small"
-                            android:text="@string/copy"
-                            android:textAllCaps="true"
-                            android:textColor="?attr/wpColorText"
-                            android:textSize="@dimen/text_sz_medium"
-                            android:paddingEnd="@dimen/margin_extra_large"
-                            android:paddingStart="@dimen/margin_extra_large"/></RelativeLayout></LinearLayout>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/text_copy_url"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="@dimen/margin_extra_large"
+                                android:text="@string/copy" />
+
+
+                        </RelativeLayout>
+                    </LinearLayout>
 
                     <View
                         style="@style/MediaSettings.Divider"
@@ -406,21 +383,23 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:focusable="true">
-                        <TextView
+                        android:focusable="true"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
                             style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/media_edit_filename_caption" />
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/text_filename"
                             style="@style/MediaSettings.Value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             tools:text="text_filename" />
                     </LinearLayout>
+
                     <View
                         style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
@@ -430,21 +409,23 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:focusable="true">
-                            <TextView
-                                style="@style/MediaSettings.Label"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/media_edit_filetype_caption" />
+                        android:focusable="true"
+                        android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/text_filetype"
-                                style="@style/MediaSettings.Value"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                tools:text="text_filetype" />
+                        <com.google.android.material.textview.MaterialTextView
+                            style="@style/MediaSettings.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/media_edit_filetype_caption" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/text_filetype"
+                            style="@style/MediaSettings.Value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="text_filetype" />
                     </LinearLayout>
+
                     <View
                         android:id="@+id/divider_filetype"
                         style="@style/MediaSettings.Divider"
@@ -455,23 +436,25 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:focusable="true">
-                            <TextView
-                                android:id="@+id/text_image_dimensions_label"
-                                style="@style/MediaSettings.Label"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/media_edit_image_dimensions_caption" />
+                        android:focusable="true"
+                        android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/text_image_dimensions"
-                                style="@style/MediaSettings.Value"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                tools:text="text_image_dimensions" />
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/text_image_dimensions_label"
+                            style="@style/MediaSettings.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/media_edit_image_dimensions_caption" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/text_image_dimensions"
+                            style="@style/MediaSettings.Value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="text_image_dimensions" />
 
                     </LinearLayout>
+
                     <View
                         android:id="@+id/divider_dimensions"
                         style="@style/MediaSettings.Divider"
@@ -482,22 +465,24 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:focusable="true">
-                        <TextView
+                        android:focusable="true"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/text_duration_label"
                             style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/media_edit_duration_caption" />
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/text_duration"
                             style="@style/MediaSettings.Value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             tools:text="text_image_dimensions" />
                     </LinearLayout>
+
                     <View
                         android:id="@+id/divider_duration"
                         style="@style/MediaSettings.Divider"
@@ -508,16 +493,17 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:focusable="true">
-                        <TextView
+                        android:focusable="true"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/text_upload_date_label"
                             style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/media_edit_upload_date_caption" />
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/text_upload_date"
                             style="@style/MediaSettings.Value"
                             android:layout_width="wrap_content"
@@ -526,7 +512,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </RelativeLayout>
 
@@ -538,13 +524,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/fab_margin"
         android:contentDescription="@string/fab_content_description_preview"
+        android:src="@drawable/ic_fullscreen_white_24dp"
         android:visibility="gone"
-        app:backgroundTint="@color/accent"
         app:elevation="8dp"
-        app:fabSize="normal"
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="bottom|right|end"
-        android:src="@drawable/ic_fullscreen_white_24dp"
         tools:visibility="visible" />
 
     <ProgressBar
@@ -555,12 +539,6 @@
         android:elevation="@dimen/card_elevation"
         android:textAppearance="?android:attr/progressBarStyle"
         android:visibility="gone"
-        tools:visibility="visible" >
-    </ProgressBar>
-
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

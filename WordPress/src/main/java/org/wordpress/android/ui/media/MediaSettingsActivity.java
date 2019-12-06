@@ -45,12 +45,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.greenrobot.eventbus.EventBus;
@@ -74,6 +74,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -219,7 +220,7 @@ public class MediaSettingsActivity extends AppCompatActivity
 
         setContentView(R.layout.media_settings_activity);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+       setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
@@ -269,6 +270,19 @@ public class MediaSettingsActivity extends AppCompatActivity
         // only show title when toolbar is collapsed
         final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        collapsingToolbar.setCollapsedTitleTextColor(
+                getResources().getColorStateList(
+                        ContextExtensionsKt.getColorResIdFromAttribute(this, R.attr.colorOnPrimarySurface)));
+
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
+
+        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
+        int elevatedColor = elevationOverlayProvider
+                .compositeOverlayIfNeeded(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar),
+                        appbarElevation);
+
+        collapsingToolbar.setContentScrimColor(elevatedColor);
+
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             int mScrollRange = -1;
 
