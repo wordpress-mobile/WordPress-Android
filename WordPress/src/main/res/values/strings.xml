@@ -2194,6 +2194,7 @@
     <string name="photo_picker_image_thumbnail_selected">Image selected</string>
     <string name="photo_picker_image_thumbnail_unselected">Image unselected</string>
     <string name="stock_media_picker_search_hint">Search free photo library</string>
+    <string name="stock_media_picker_list_content_description">Photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
 
