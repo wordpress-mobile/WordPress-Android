@@ -475,7 +475,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                    && !TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
             endProgress();
             populateViews();
-        } else if (event.causeOfChange == AccountAction.PUSH_SETTINGS && mSignupEpilogueListener != null) {
+        } else if (event.causeOfChange == AccountAction.PUSH_SETTINGS) {
             mHasMadeUpdates = true;
 
             if (mIsUpdatingDisplayName) {
@@ -503,7 +503,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             + event.error.type + " - " + event.error.message);
             endProgress();
             showErrorDialog(getString(R.string.signup_epilogue_error_generic));
-        } else if (mSignupEpilogueListener != null) {
+        } else {
             mHasMadeUpdates = true;
             AnalyticsTracker.track(mIsEmailSignup
                     ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED
