@@ -521,9 +521,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected boolean changedUsername() {
-        final String savedUsername = mAccount.getAccount().getUserName();
-        final String initialUsername = getArguments().getString(ARG_USERNAME);
-        return !TextUtils.equals(!TextUtils.isEmpty(savedUsername) ? savedUsername : initialUsername, mUsername);
+        return !TextUtils.equals(mAccount.getAccount().getUserName(), mUsername);
     }
 
     /**
