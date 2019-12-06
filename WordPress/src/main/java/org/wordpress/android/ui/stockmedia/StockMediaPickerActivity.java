@@ -53,6 +53,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PhotoPickerUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -702,6 +703,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             boolean isSelected = isItemSelected(position);
             setItemSelected(holder, position, !isSelected);
             notifySelectionCountChanged();
+            PhotoPickerUtils.announceSelectedImageForAccessibility(holder.mImageView, !isSelected);
         }
 
         @SuppressWarnings("unused")
