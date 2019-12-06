@@ -32,8 +32,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentManager;
@@ -174,7 +172,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         setContentView(R.layout.media_browser_activity);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        setSupportActionBar(findViewById(R.id.toolbar_main));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
@@ -284,10 +282,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private void setupTabs() {
         if (shouldShowTabs()) {
-            int normalColor = ContextCompat.getColor(this, R.color.primary_30);
-            int selectedColor = ContextCompat.getColor(this, android.R.color.white);
-            mTabLayout.setTabTextColors(normalColor, selectedColor);
-
             mTabLayout.removeAllTabs();
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_all)); // FILTER_ALL
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_images)); // FILTER_IMAGES
