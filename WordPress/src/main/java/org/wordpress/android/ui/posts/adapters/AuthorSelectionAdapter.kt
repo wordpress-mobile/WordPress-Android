@@ -154,8 +154,6 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
             } else {
                 itemView.setBackgroundColor(elevatedSurfaceColor)
             }
-
-
         }
     }
 }
