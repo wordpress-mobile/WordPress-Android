@@ -10,8 +10,8 @@
         android:id="@+id/image_thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/photo_picker_image_thumbnail_content_description"
         android:background="@drawable/photo_picker_item_background"
-        android:contentDescription="@null"
         android:scaleType="centerCrop" />
 
     <TextView
