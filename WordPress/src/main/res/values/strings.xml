@@ -2191,6 +2191,8 @@
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
+    <string name="photo_picker_image_thumbnail_selected">Image selected</string>
+    <string name="photo_picker_image_thumbnail_unselected">Image unselected</string>
     <string name="stock_media_picker_search_hint">Search free photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>

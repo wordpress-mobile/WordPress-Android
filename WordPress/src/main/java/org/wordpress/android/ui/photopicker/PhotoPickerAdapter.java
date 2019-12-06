@@ -356,6 +356,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
                     int position = getAdapterPosition();
                     if (isValidPosition(position)) {
                         toggleItemSelected(position);
+                        announceSelectedItemForAccessibility(mImgThumbnail, isItemSelected(position));
                     }
                 }
             });
@@ -379,6 +380,16 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             });
 
             ViewUtils.addCircularShadowOutline(mTxtSelectionCount);
+        }
+    }
+
+    private static void announceSelectedItemForAccessibility(@NonNull ImageView imgThumbnail, boolean itemSelected) {
+        if (itemSelected) {
+            imgThumbnail.announceForAccessibility(
+                    imgThumbnail.getContext().getString(R.string.photo_picker_image_thumbnail_selected));
+        } else {
+            imgThumbnail.announceForAccessibility(
+                    imgThumbnail.getContext().getString(R.string.photo_picker_image_thumbnail_unselected));
         }
     }
 
