@@ -513,10 +513,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected boolean changedDisplayName() {
-        final String savedDisplayName = mAccount.getAccount().getDisplayName();
-        final String initialDisplayName = getArguments().getString(ARG_DISPLAY_NAME);
-        return !TextUtils.equals(!TextUtils.isEmpty(savedDisplayName)
-                ? savedDisplayName : initialDisplayName, mDisplayName);
+        return !TextUtils.equals(mAccount.getAccount().getDisplayName(), mDisplayName);
     }
 
     protected boolean changedPassword() {
