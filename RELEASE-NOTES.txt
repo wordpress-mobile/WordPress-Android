@@ -5,7 +5,6 @@
 -----
 * Modified Blog Post search to search for posts under all categories.
 * Block editor: Add support for Preformatted block.
- 
 * Block editor: New Spacer block to create white space between two blocks.
 
 13.7
