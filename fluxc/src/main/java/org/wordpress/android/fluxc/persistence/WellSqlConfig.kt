@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 93
+        return 94
     }
 
     override fun getDbName(): String {
@@ -1020,6 +1020,20 @@ open class WellSqlConfig : DefaultWellConfig {
                 92 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductModel ADD DATE_ON_SALE_FROM TEXT")
                     db.execSQL("ALTER TABLE WCProductModel ADD DATE_ON_SALE_TO TEXT")
+                }
+                93 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL(
+                            "CREATE TABLE WCProductShippingClassModel(" +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_SHIPPING_CLASS_ID INTEGER," +
+                                    "NAME TEXT NOT NULL," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "DESCRIPTION TEXT NOT NULL," +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
+                                    "UNIQUE (REMOTE_SHIPPING_CLASS_ID, LOCAL_SITE_ID) " +
+                                    "ON CONFLICT REPLACE)"
+                    )
                 }
             }
         }
