@@ -81,6 +81,7 @@
                 style="@style/PostSettingsCardViewInnerLayout">
 
                 <TextView
+                    android:id="@+id/post_settings_categories_and_tags_header"
                     style="@style/PostSettingsSectionHeader"
                     android:text="@string/post_settings_categories_and_tags"/>
 
@@ -128,6 +129,7 @@
                 style="@style/PostSettingsCardViewInnerLayout">
 
                 <TextView
+                    android:id="@+id/post_settings_featured_image_header"
                     style="@style/PostSettingsSectionHeader"
                     android:text="@string/post_settings_featured_image"/>
 
@@ -245,6 +247,7 @@
                 style="@style/PostSettingsCardViewInnerLayout">
 
                 <TextView
+                    android:id="@+id/post_settings_more_options_header"
                     style="@style/PostSettingsSectionHeader"
                     android:text="@string/post_settings_more_options"/>
 

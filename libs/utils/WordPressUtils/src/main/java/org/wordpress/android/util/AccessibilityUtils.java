@@ -1,7 +1,14 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+import android.view.View;
 import android.view.accessibility.AccessibilityManager;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.view.AccessibilityDelegateCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -25,5 +32,23 @@ public class AccessibilityUtils {
     public static int getSnackbarDuration(Context ctx, int defaultDuration) {
         return defaultDuration == Snackbar.LENGTH_INDEFINITE ? Snackbar.LENGTH_INDEFINITE
                 : isAccessibilityEnabled(ctx) ? SNACKBAR_WITH_ACTION_DURATION_IN_MILLIS : defaultDuration;
+    }
+
+    public static void disableHintAnnouncement(@NonNull TextView textView) {
+        ViewCompat.setAccessibilityDelegate(textView, new AccessibilityDelegateCompat() {
+            @Override public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
+                super.onInitializeAccessibilityNodeInfo(host, info);
+                info.setHintText(null);
+            }
+        });
+    }
+
+    public static void enableAccessibilityHeading(@NonNull View view) {
+        ViewCompat.setAccessibilityDelegate(view, new AccessibilityDelegateCompat() {
+            @Override public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
+                super.onInitializeAccessibilityNodeInfo(host, info);
+                info.setHeading(true);
+            }
+        });
     }
 }
