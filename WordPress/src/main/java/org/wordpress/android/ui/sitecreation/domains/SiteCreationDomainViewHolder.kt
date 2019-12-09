@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.domains
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
@@ -11,20 +12,30 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
+import org.wordpress.android.ui.utils.UiHelpers
 
 sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
-        RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
+        RecyclerView.ViewHolder(
+                LayoutInflater.from(parent.context).inflate(
+                        layout,
+                        parent,
+                        false
+                )
+        ) {
     abstract fun onBind(uiState: DomainsListItemUiState)
 
     class DomainSuggestionItemViewHolder(
-        parentView: ViewGroup
+        parentView: ViewGroup,
+        private val uiHelpers: UiHelpers
     ) : SiteCreationDomainViewHolder(parentView, R.layout.site_creation_domains_item) {
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
-        private val suggestion = itemView.findViewById<RadioButton>(R.id.domain_suggestion)
+        private val suggestion = itemView.findViewById<TextView>(R.id.domain_suggestion)
+        private val suggestionRadioButton = itemView.findViewById<RadioButton>(R.id.domain_suggestion_radio_button)
+        private val domainUnavailability = itemView.findViewById<TextView>(R.id.domain_unavailability)
         private var onDomainSelected: (() -> Unit)? = null
 
         init {
-            suggestion.buttonTintList = ContextCompat.getColorStateList(
+            suggestionRadioButton.buttonTintList = ContextCompat.getColorStateList(
                     parentView.context,
                     R.color.neutral_10_primary_40_selector
             )
@@ -35,9 +46,14 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
 
         override fun onBind(uiState: DomainsListItemUiState) {
             uiState as DomainsModelUiState
-            onDomainSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
+            if (uiState.clickable) {
+                onDomainSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
+            }
             suggestion.text = uiState.name
-            suggestion.isChecked = uiState.checked
+            suggestionRadioButton.isChecked = uiState.checked
+            suggestionRadioButton.visibility = if (uiState.radioButtonVisibility) View.VISIBLE else View.INVISIBLE
+            container.isEnabled = uiState.clickable
+            uiHelpers.setTextOrHide(domainUnavailability, uiState.subTitle)
         }
     }
 

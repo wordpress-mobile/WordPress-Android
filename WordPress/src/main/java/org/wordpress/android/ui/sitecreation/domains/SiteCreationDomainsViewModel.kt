@@ -26,12 +26,15 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelUnavailabilityUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -46,6 +49,7 @@ private const val ERROR_CONTEXT = "domains"
 class SiteCreationDomainsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
+    private val domainSanitizer: SiteCreationDomainSanitizer,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -156,7 +160,10 @@ class SiteCreationDomainsViewModel @Inject constructor(
             }
         } else {
             tracker.trackErrorShown(ERROR_CONTEXT, SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
-            updateUiStateToContent(query, Error(listState, errorMessageResId = R.string.no_network_message))
+            updateUiStateToContent(
+                    query,
+                    Error(listState, errorMessageResId = R.string.no_network_message)
+            )
         }
     }
 
@@ -181,7 +188,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
              * domain names into two, one part for the domain names that start with the current query plus `.` and the
              * other part for the others. We then combine them back again into a single list.
              */
-            val domainNames = event.suggestions.map { it.domain_name }.partition { it.startsWith("${query.value}.") }
+            val domainNames = event.suggestions.map { it.domain_name }
+                    .partition { it.startsWith("${query.value}.") }
                     .toList().flatten()
             updateUiStateToContent(query, Success(domainNames))
         }
@@ -216,8 +224,10 @@ class SiteCreationDomainsViewModel @Inject constructor(
     ): DomainsUiContentState {
         // Only treat it as an error if the search is user initiated
         val isError = isNonEmptyUserQuery(query) && state is Error
+
         val items = createSuggestionsUiStates(
                 onRetry = { updateQueryInternal(query) },
+                query = query?.value,
                 data = state.data,
                 errorFetchingSuggestions = isError,
                 errorResId = if (isError) (state as Error).errorMessageResId else null
@@ -233,6 +243,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     private fun createSuggestionsUiStates(
         onRetry: () -> Unit,
+        query: String?,
         data: List<String>,
         errorFetchingSuggestions: Boolean,
         @StringRes errorResId: Int?
@@ -246,8 +257,14 @@ class SiteCreationDomainsViewModel @Inject constructor(
             errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
         } else {
+            query?.let { value ->
+                getDomainUnavailableUiState(value, data)?.let {
+                    items.add(it)
+                }
+            }
+
             data.forEach { domainName ->
-                val itemUiState = DomainsModelUiState(
+                val itemUiState = DomainsModelAvailableUiState(
                         domainName,
                         checked = domainName == selectedDomain
                 )
@@ -256,6 +273,30 @@ class SiteCreationDomainsViewModel @Inject constructor(
             }
         }
         return items
+    }
+
+    private fun getDomainUnavailableUiState(
+        query: String,
+        domains: List<String>
+    ): DomainsModelUiState? {
+        if (domains.isEmpty()) {
+            return null
+        }
+
+        val sanitizedQuery = domainSanitizer.sanitizeDomainQuery(query)
+
+        val isDomainUnavailable = (domains.find { domain ->
+            domain.startsWith("$sanitizedQuery.")
+        }).isNullOrEmpty()
+
+        return if (isDomainUnavailable) {
+            DomainsModelUnavailabilityUiState(
+                    "$sanitizedQuery.wordpress.com",
+                    UiStringRes(R.string.new_site_creation_unavailable_domain)
+            )
+        } else {
+            null
+        }
     }
 
     private fun createHeaderUiState(
@@ -317,8 +358,25 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     sealed class DomainsListItemUiState {
         var onItemTapped: (() -> Unit)? = null
+        open val clickable: Boolean = false
 
-        data class DomainsModelUiState(val name: String, val checked: Boolean) : DomainsListItemUiState()
+        sealed class DomainsModelUiState(
+            open val name: String,
+            open val checked: Boolean,
+            val radioButtonVisibility: Boolean,
+            open val subTitle: UiString? = null,
+            override val clickable: Boolean
+        ) : DomainsListItemUiState() {
+            data class DomainsModelAvailableUiState(
+                override val name: String,
+                override val checked: Boolean
+            ) : DomainsModelUiState(name, checked, true, clickable = true)
+
+            data class DomainsModelUnavailabilityUiState(
+                override val name: String,
+                override val subTitle: UiString
+            ) : DomainsModelUiState(name, false, false, subTitle, false)
+        }
 
         data class DomainsFetchSuggestionsErrorUiState(
             @StringRes val messageResId: Int,
