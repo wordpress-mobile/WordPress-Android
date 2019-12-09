@@ -33,6 +33,7 @@ import org.wordpress.android.login.R;
  */
 public class WPLoginInputRow extends RelativeLayout {
     private static final String KEY_SUPER_STATE = "wplogin_input_row_super_state";
+    private String mErrMsg;
 
     public interface OnEditorCommitListener {
         void onEditorCommit();
@@ -207,10 +208,16 @@ public class WPLoginInputRow extends RelativeLayout {
 
     public void setError(@Nullable final CharSequence error) {
         mTextInputLayout.setError(error);
+        if (error != null) mErrMsg = error.toString();
         if (error == null) {
             mTextInputLayout.setErrorEnabled(false);
         }
     }
+
+    public String getError() {
+        return mErrMsg;
+    }
+
 
     private static class SavedState extends BaseSavedState {
         private Parcelable mEditTextState;

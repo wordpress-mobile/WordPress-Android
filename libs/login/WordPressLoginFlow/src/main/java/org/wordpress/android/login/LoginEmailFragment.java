@@ -64,10 +64,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final String KEY_IS_SOCIAL = "KEY_IS_SOCIAL";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
+    private static final String KEY_EMAIL_ERROR_MSG = "KEY_EMAIL_ERROR_MSG";
     private static final String LOG_TAG = LoginEmailFragment.class.getSimpleName();
     private static final int GOOGLE_API_CLIENT_ID = 1002;
     private static final int EMAIL_CREDENTIALS_REQUEST_CODE = 25100;
 
+    private static final String ARG_HIDE_LOGIN_BY_SITE_OPTION = "ARG_HIDE_LOGIN_BY_SITE_OPTION";
     private static final String ARG_LOGIN_SITE_URL = "ARG_LOGIN_SITE_URL";
 
     public static final String TAG = "login_email_fragment_tag";
@@ -77,6 +79,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private GoogleApiClient mGoogleApiClient;
     private String mGoogleEmail;
     private String mRequestedEmail;
+    private String mErrmsg;
     private boolean mIsSocialLogin;
 
     protected WPLoginInputRow mEmailInput;
@@ -84,7 +87,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     protected boolean mIsDisplayingEmailHints;
     protected String mLoginSiteUrl;
 
-    public static LoginEmailFragment newInstance(String url) {
+    public static LoginEmailFragment newInstance(Boolean hideLoginWithSiteOption, String url) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putString(ARG_LOGIN_SITE_URL, url);
@@ -283,6 +286,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     public void onStart() {
         super.onStart();
+        if (mErrmsg != null) {
+            mEmailInput.setError(mErrmsg);
+        }
+
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(LoginEmailFragment.this)
                 .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, LoginEmailFragment.this)
@@ -312,6 +319,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mIsSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
             mIsDisplayingEmailHints = savedInstanceState.getBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS);
             mHasDismissedEmailHints = savedInstanceState.getBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS);
+            mErrmsg = savedInstanceState.getString(KEY_EMAIL_ERROR_MSG);
         } else {
             mAnalyticsListener.trackEmailFormViewed();
         }
@@ -326,6 +334,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         outState.putBoolean(KEY_IS_SOCIAL, mIsSocialLogin);
         outState.putBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS, mIsDisplayingEmailHints);
         outState.putBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS, mHasDismissedEmailHints);
+        outState.putString(KEY_EMAIL_ERROR_MSG, mEmailInput.getError());
     }
 
     protected void next(String email) {
