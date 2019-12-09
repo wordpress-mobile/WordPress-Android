@@ -2356,6 +2356,14 @@
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
+    <!-- Post-Signup Interstitial -->
+    <string name="post_signup_interstitial_title">Welcome to WordPress</string>
+    <string name="post_signup_interstitial_subtitle">Whatever you want to create or share, we’ll help you do it right here.</string>
+    <string name="post_signup_interstitial_create_new_site">Create a new site</string>
+    <string name="post_signup_interstitial_add_self_hosted_site">Add a self-hosted site</string>
+    <string name="post_signup_interstitial_not_right_now">Not right now</string>
+    <string name="content_description_person_building_website">Person building website</string>
+
     <!-- Android O notification channels, these show in the Android app settings -->
     <string name="notification_channel_general_title">General</string>
     <string name="notification_channel_important_title">Important</string>
