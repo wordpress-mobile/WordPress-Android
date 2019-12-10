@@ -1,5 +1,8 @@
 13.9
 -----
+* Block Editor: New block "Gallery". You can now create image galleries using WordPress Media library.
+* Block Editor: Add support for the Preformatted block.
+* Block Editor: Add support for changing Settings in the List Block.
  
 13.8
 -----
