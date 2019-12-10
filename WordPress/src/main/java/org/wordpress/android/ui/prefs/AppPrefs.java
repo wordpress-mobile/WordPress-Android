@@ -17,6 +17,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -51,6 +52,8 @@ public class AppPrefs {
         // last selected tag in the reader
         READER_TAG_NAME,
         READER_TAG_TYPE,
+        // last selected subfilter in the reader
+        READER_SUBFILTER,
 
         // title of the last active page in ReaderSubsActivity
         READER_SUBS_PAGE_TITLE,
@@ -310,6 +313,15 @@ public class AppPrefs {
                    .remove(DeletablePrefKey.READER_TAG_TYPE.name())
                    .apply();
         }
+    }
+
+    public static SubfilterListItem getReaderSubfilter() {
+        String json = getString(DeletablePrefKey.READER_SUBFILTER);
+        return SubfilterListItem.fromJson(json);
+    }
+
+    public static void setReaderSubfilter(@NonNull SubfilterListItem filter) {
+        setString(DeletablePrefKey.READER_SUBFILTER, filter.toJson());
     }
 
     /**
