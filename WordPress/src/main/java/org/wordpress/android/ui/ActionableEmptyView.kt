@@ -152,7 +152,9 @@ class ActionableEmptyView : LinearLayout {
         }
 
         announceForAccessibility("${title.text}.$subTitle")
+    }
 
+    fun resetSubTitleContentDescription() {
         subtitle.contentDescription = null
     }
 }
