@@ -21,8 +21,8 @@ Language: tr
     <string name="gutenberg_native_size">Boyut</string>
     <string name="gutenberg_native_sidebar_title_plugin">Kenar çubuğu başlık eklentisi</string>
     <string name="gutenberg_native_show_section">Bölümü göster</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\"\'%s\' henüz iOS için WordPress\'te desteklenmiyor”</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\"\'%s’ henüz Android için WordPress\'te desteklenmiyor”</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\' henüz iOS için WordPress\'te desteklenmiyor</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s’ henüz Android için WordPress\'te desteklenmiyor</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s bloku. Bu blok geçersiz içerik barındırıyor</string>
     <string name="gutenberg_native_s_block_empty">%s bloku. Boş</string>
     <string name="gutenberg_native_s_block">%s Bloku</string>
