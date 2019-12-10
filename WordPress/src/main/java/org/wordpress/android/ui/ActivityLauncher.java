@@ -197,6 +197,13 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewReader(Context context) {
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
+
     public static void viewReaderInNewStack(Context context) {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
@@ -260,10 +267,7 @@ public class ActivityLauncher {
         }
         ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
 
-        Intent intent = new Intent(context, WPMainActivity.class);
-        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
+        viewReader(context);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
