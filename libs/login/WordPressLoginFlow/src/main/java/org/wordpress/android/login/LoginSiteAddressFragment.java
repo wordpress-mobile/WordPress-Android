@@ -47,12 +47,14 @@ import dagger.android.support.AndroidSupportInjection;
 public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment implements TextWatcher,
         OnEditorCommitListener, LoginBaseDiscoveryFragment.LoginBaseDiscoveryListener {
     private static final String KEY_REQUESTED_SITE_ADDRESS = "KEY_REQUESTED_SITE_ADDRESS";
+    private static final String KEY_EMAIL_ERROR_MSG = "KEY_EMAIL_ERROR_MSG";
 
     public static final String TAG = "login_site_address_fragment_tag";
 
     private WPLoginInputRow mSiteAddressInput;
 
     private String mRequestedSiteAddress;
+    private String mErrmsg;
 
     private LoginSiteAddressValidator mLoginSiteAddressValidator;
 
@@ -88,6 +90,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         // important for accessibility - talkback
         getActivity().setTitle(R.string.site_address_login_title);
         mSiteAddressInput = rootView.findViewById(R.id.login_site_address_row);
+
         if (BuildConfig.DEBUG) {
             mSiteAddressInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_WEBSITE_URL);
         }
@@ -135,6 +138,9 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
         if (savedInstanceState != null) {
             mRequestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS);
+            mErrmsg = savedInstanceState.getString(KEY_EMAIL_ERROR_MSG);
+            if (mErrmsg != null)
+                mSiteAddressInput.setError(mErrmsg);
         } else {
             mAnalyticsListener.trackUrlFormViewed();
         }
@@ -162,6 +168,16 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_REQUESTED_SITE_ADDRESS, mRequestedSiteAddress);
+        outState.putString(KEY_EMAIL_ERROR_MSG, mSiteAddressInput.getError());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mErrmsg != null) {
+            mSiteAddressInput.setError(mErrmsg);
+        }
+        return;
     }
 
     @Override public void onDestroyView() {

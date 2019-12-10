@@ -33,6 +33,7 @@ public abstract class LoginBaseDiscoveryFragment extends LoginBaseFormFragment<L
         // Start the discovery process
         mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(
                 mLoginBaseDiscoveryListener.getRequestedSiteAddress()));
+
     }
 
     @SuppressWarnings("unused")
