@@ -9,7 +9,7 @@ Language: fr
     <string name="gutenberg_native_wordpress_media_library">Bibliothèque de médias WordPress</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Nous travaillons dur pour ajouter des blocs supplémentaires avec chaque nouvelle version. En attendant, vous pouvez également éditer cet article sur le Web.</string>
     <string name="gutenberg_native_unsupported">Non pris en charge</string>
-    <string name="gutenberg_native_ungroup">« Dégrouper »\"</string>
+    <string name="gutenberg_native_ungroup">Dégrouper</string>
     <string name="gutenberg_native_translate">Traduire</string>
     <string name="gutenberg_native_title">Titre :</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Appuyer pour cacher le clavier</string>
@@ -25,7 +25,7 @@ Language: fr
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' n\'est pas encore pris en charge sur WordPress pour Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Le contenu de ce bloc n\'est pas valide</string>
     <string name="gutenberg_native_s_block_empty">Bloc %s. Vide</string>
-    <string name="gutenberg_native_s_block">« Bloc %s\"</string>
+    <string name="gutenberg_native_s_block">Bloc %s</string>
     <string name="gutenberg_native_row_d">Ligne %d.</string>
     <string name="gutenberg_native_reset_block">Réinitialiser le bloc</string>
     <string name="gutenberg_native_reset">RÉINITIALISER</string>
