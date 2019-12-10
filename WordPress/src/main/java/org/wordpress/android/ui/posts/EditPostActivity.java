@@ -2812,17 +2812,12 @@ public class EditPostActivity extends AppCompatActivity implements
             // removing this from the intent so it doesn't insert the media items again on each Activity re-creation
             getIntent().removeExtra(EXTRA_INSERT_MEDIA);
             if (mediaList != null && !mediaList.isEmpty()) {
-                shouldFinishInit = false;
                 mViewModel.setMediaInsertedOnCreation(true);
                 mEditorMedia.addExistingMediaToEditorAsync(mediaList, AddExistingMediaSource.WP_MEDIA_LIBRARY);
-                // TODO we save the post in `addExistingMediaToEditor` but we don't have access to AfterSavePostListener
-                updateAndSavePostAsync(this::onEditorFinalTouchesBeforeShowing);
             }
         }
 
-        if (shouldFinishInit) {
-            onEditorFinalTouchesBeforeShowing();
-        }
+        onEditorFinalTouchesBeforeShowing();
     }
 
     private void onEditorFinalTouchesBeforeShowing() {
