@@ -18,7 +18,7 @@ Language: sq_AL
     <string name="gutenberg_native_take_a_photo_or_video">Bëni Foto ose Video</string>
     <string name="gutenberg_native_take_a_photo">Bëni një Foto</string>
     <string name="gutenberg_native_start_writing">Nisni të shkruani…</string>
-    <string name="gutenberg_native_size">Madhësi“”</string>
+    <string name="gutenberg_native_size">Madhësi</string>
     <string name="gutenberg_native_sidebar_title_plugin">Shtojcë titulli anështylle</string>
     <string name="gutenberg_native_show_section">Shfaq ndarje</string>
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\' nuk mbulohet ende nga WordPress-i për iOS</string>
