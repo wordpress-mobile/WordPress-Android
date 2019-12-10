@@ -139,8 +139,9 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         if (savedInstanceState != null) {
             mRequestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS);
             mErrmsg = savedInstanceState.getString(KEY_EMAIL_ERROR_MSG);
-            if (mErrmsg != null)
+            if (mErrmsg != null) {
                 mSiteAddressInput.setError(mErrmsg);
+            }
         } else {
             mAnalyticsListener.trackUrlFormViewed();
         }
