@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
@@ -12,6 +14,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.viewmodel.Event
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.inject.Inject
 import kotlin.concurrent.write
@@ -75,8 +78,28 @@ class EditPostRepository
 
     private val lock = ReentrantReadWriteLock()
 
-    fun <T> updateInTransaction(action: (PostModel) -> T) = lock.write {
-        action(post!!)
+    private val _postChanged = MutableLiveData<Event<PostImmutableModel>>()
+    val postChanged: LiveData<Event<PostImmutableModel>> = _postChanged
+
+    fun <T> updateInTransaction(action: (PostModel) -> T): T {
+        val result = lock.write {
+            action(post!!)
+        }
+        post?.let {
+            _postChanged.postValue(Event(it))
+        }
+        return result
+    }
+
+    fun updatePost(action: (PostModel) -> Boolean) {
+        val isUpdated = lock.write {
+            action(post!!)
+        }
+        if (isUpdated) {
+            post?.let {
+                _postChanged.postValue(Event(it))
+            }
+        }
     }
 
     fun replaceInTransaction(action: (PostModel) -> PostModel) = lock.write {
@@ -147,9 +170,14 @@ class EditPostRepository
     fun postHasEdits() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post!!)
 
     fun updateStatus(status: PostStatus) {
-        updateInTransaction {
-            it.setStatus(status.toString())
-            true
+        updatePost {
+            val updatedPost = status.toString()
+            if (it.status != updatedPost) {
+                it.setStatus(updatedPost)
+                true
+            } else {
+                false
+            }
         }
     }
 

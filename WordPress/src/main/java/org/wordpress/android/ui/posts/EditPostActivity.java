@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -124,10 +125,10 @@ import org.wordpress.android.ui.posts.editor.EditorTracker;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
-import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
+import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -183,6 +184,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -441,20 +443,21 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 if (mEditPostRepository.hasPost()) {
                     if (extras.getBoolean(EXTRA_LOAD_AUTO_SAVE_REVISION)) {
-                        mEditPostRepository.updateInTransaction(postModel -> {
-                            postModel.setTitle(
-                                    TextUtils.isEmpty(postModel.getAutoSaveTitle()) ? postModel
-                                            .getTitle()
-                                            : postModel.getAutoSaveTitle());
-                            postModel.setContent(
-                                    TextUtils.isEmpty(postModel.getAutoSaveContent()) ? postModel
-                                            .getContent()
-                                            : postModel.getAutoSaveContent());
-                            postModel.setExcerpt(
-                                    TextUtils.isEmpty(postModel.getAutoSaveExcerpt()) ? postModel
-                                            .getExcerpt()
-                                            : postModel.getAutoSaveExcerpt());
-                            return true;
+                        Log.d("vojta", "org.wordpress.android.ui.posts.EditPostActivity.onCreate");
+                        mEditPostRepository.updatePost(postModel -> {
+                            boolean updateTitle = !TextUtils.isEmpty(postModel.getAutoSaveTitle());
+                            if (updateTitle) {
+                                postModel.setTitle(postModel.getAutoSaveTitle());
+                            }
+                            boolean updateContent = !TextUtils.isEmpty(postModel.getAutoSaveContent());
+                            if (updateContent) {
+                                postModel.setContent(postModel.getAutoSaveContent());
+                            }
+                            boolean updateExcerpt = !TextUtils.isEmpty(postModel.getAutoSaveExcerpt());
+                            if (updateExcerpt) {
+                                postModel.setExcerpt(postModel.getAutoSaveExcerpt());
+                            }
+                            return updateTitle || updateContent || updateExcerpt;
                         });
                     }
 
@@ -612,6 +615,10 @@ public class EditPostActivity extends AppCompatActivity implements
             finish();
             return null;
         }));
+        mEditPostRepository.getPostChanged().observe(this, postEvent -> postEvent.applyIfNotHandled(post -> {
+            mViewModel.savePostToDb(this, mEditPostRepository, mShowAztecEditor);
+            return null;
+        }));
     }
 
     private void initializePostObject() {
@@ -651,7 +658,8 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!useAztec || UploadService.hasPendingOrInProgressMediaUploadsForPost(mEditPostRepository.getPost())) {
             return;
         }
-        mEditPostRepository.updateInTransaction(postModel -> {
+        Log.d("vojta", "org.wordpress.android.ui.posts.EditPostActivity.resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued");
+        mEditPostRepository.updatePost(postModel -> {
             String oldContent = postModel.getContent();
             if (!AztecEditorFragment.hasMediaItemsMarkedUploading(EditPostActivity.this, oldContent)
                 // we need to make sure items marked failed are still failed or not as well
@@ -1446,11 +1454,9 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void savePostOnlineAndFinishAsync(
-            boolean isFirstTimePublish,
-            boolean doFinishActivity
+            boolean isFirstTimePublish
     ) {
-        mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mShowAztecEditor, mSite,
-                doFinishActivity);
+        mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mShowAztecEditor, mSite);
     }
 
     private void onUploadSuccess(MediaModel media) {
@@ -1566,7 +1572,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void updateAndSavePostAsync() {
-        updateAndSavePostAsync(null);
+        mViewModel.updatePostAsync(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor);
     }
 
     private void updateAndSavePostAsync(final AfterSavePostListener listener) {
@@ -1720,7 +1726,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
             case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
-                savePostOnlineAndFinishAsync(isFirstTimePublish(false), true);
+                savePostOnlineAndFinishAsync(isFirstTimePublish(false));
+                mViewModel.finish();
                 break;
             case TAG_GB_INFORMATIVE_DIALOG:
                 // no op
@@ -1762,7 +1769,8 @@ public class EditPostActivity extends AppCompatActivity implements
     private void loadRevision() {
         updatePostLoadingAndDialogState(PostLoadingState.LOADING_REVISION);
         mEditPostRepository.saveForUndo();
-        mEditPostRepository.updateInTransaction(postModel -> {
+        Log.d("vojta", "EditPostActivity.loadRevision");
+        mEditPostRepository.updatePost(postModel -> {
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
             postModel.setIsLocallyChanged(true);
@@ -1838,7 +1846,8 @@ public class EditPostActivity extends AppCompatActivity implements
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
         // on API 16 (and 21) with the visual editor.
         new Thread(() -> {
-            mEditPostRepository.updateInTransaction(postModel -> {
+            AtomicBoolean doFinish = new AtomicBoolean(false);
+            mEditPostRepository.updatePost(postModel -> {
                 boolean isFirstTimePublish = isFirstTimePublish(publishPost);
                 if (publishPost) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
@@ -1858,13 +1867,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 }
 
-                boolean postUpdateSuccessful = updatePostObject();
-                if (!postUpdateSuccessful) {
-                    // just return, since the only case updatePostObject() can fail is when the editor
-                    // fragment is not added to the activity
-                    mEditorFragment.hideSavingProgressDialog();
-                    return false;
-                }
+//                boolean postUpdateSuccessful = updatePostObject();
+//                if (!postUpdateSuccessful) {
+//                    // just return, since the only case updatePostObject() can fail is when the editor
+//                    // fragment is not added to the activity
+//                    mEditorFragment.hideSavingProgressDialog();
+//                    return false;
+//                }
 
                 boolean isPublishable = mPostUtils.isPublishable(postModel);
 
@@ -1885,10 +1894,12 @@ public class EditPostActivity extends AppCompatActivity implements
                                != null) {
                             EditPostActivity.this.runOnUiThread(this::showRemoveFailedUploadsDialog);
                         } else {
-                            savePostOnlineAndFinishAsync(isFirstTimePublish, true);
+                            doFinish.set(true);
+                            savePostOnlineAndFinishAsync(isFirstTimePublish);
                         }
                     } else {
-                        savePostLocallyAndFinishAsync(true);
+                        doFinish.set(true);
+                        savePostLocallyAndFinishAsync();
                     }
                 } else {
                     mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened(postModel);
@@ -1900,6 +1911,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
                 return true;
             });
+            if (doFinish.get()) {
+                mViewModel.finish();
+            }
         }).start();
     }
 
@@ -1960,13 +1974,19 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
                         && isNotRestarting && isWpComOrIsLocalDraft) {
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                    savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
+                    savePostOnlineAndFinishAsync(isFirstTimePublish);
+                    if (doFinish) {
+                        mViewModel.finish();
+                    }
                 } else {
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                     if (forceSave) {
-                        savePostOnlineAndFinishAsync(false, false);
+                        savePostOnlineAndFinishAsync(false);
                     } else {
-                        savePostLocallyAndFinishAsync(doFinish);
+                        savePostLocallyAndFinishAsync();
+                        if (doFinish) {
+                            mViewModel.finish();
+                        }
                     }
                 }
             } else {
@@ -2015,8 +2035,8 @@ public class EditPostActivity extends AppCompatActivity implements
         return mEditorFragment.hasFailedMediaUploads() || mEditorFragment.isActionInProgress();
     }
 
-    private void savePostLocallyAndFinishAsync(boolean doFinishActivity) {
-        mViewModel.savePostLocally(this, mEditPostRepository, mShowAztecEditor, doFinishActivity);
+    private void savePostLocallyAndFinishAsync() {
+        mViewModel.savePostLocally(this, mEditPostRepository, mShowAztecEditor);
     }
 
     /**
@@ -2198,7 +2218,8 @@ public class EditPostActivity extends AppCompatActivity implements
         final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
-            mEditPostRepository.updateInTransaction(postModel -> {
+            Log.d("vojta", "EditPostActivity.setPostContentFromShareAction");
+            mEditPostRepository.updatePost(postModel -> {
                 if (title != null) {
                     mEditorFragment.setTitle(title);
                     postModel.setTitle(title);

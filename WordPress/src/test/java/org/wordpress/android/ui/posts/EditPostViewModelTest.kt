@@ -374,8 +374,7 @@ class EditPostViewModelTest : BaseUnitTest() {
                     context,
                     postRepository,
                     showAztecEditor,
-                    site,
-                    doFinishActivity
+                    site
             )
 
             verify(postRepository).updateStatus(PENDING)
@@ -396,8 +395,7 @@ class EditPostViewModelTest : BaseUnitTest() {
                     context,
                     postRepository,
                     showAztecEditor,
-                    site,
-                    doFinishActivity
+                    site
             )
 
             verify(postRepository, never()).updateStatus(any())
@@ -418,8 +416,7 @@ class EditPostViewModelTest : BaseUnitTest() {
                 context,
                 postRepository,
                 showAztecEditor,
-                site,
-                doFinishActivity
+                site
         )
         verify(postRepository).saveDbSnapshot()
 
@@ -442,8 +439,7 @@ class EditPostViewModelTest : BaseUnitTest() {
                 context,
                 postRepository,
                 showAztecEditor,
-                site,
-                doFinishActivity
+                site
         )
 
         verify(dispatcher, never()).dispatch(any())
@@ -467,8 +463,7 @@ class EditPostViewModelTest : BaseUnitTest() {
                 context,
                 postRepository,
                 showAztecEditor,
-                site,
-                doFinishActivity
+                site
         )
 
         verify(postUtils).trackSavePostAnalytics(immutablePost, site)
@@ -486,7 +481,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         viewModel.mediaInsertedOnCreation = true
         setupCurrentTime()
 
-        viewModel.savePostLocally(context, postRepository, showAztecEditor, doFinishActivity)
+        viewModel.savePostLocally(context, postRepository, showAztecEditor)
 
         assertThat(viewModel.mediaInsertedOnCreation).isFalse()
 
@@ -509,7 +504,7 @@ class EditPostViewModelTest : BaseUnitTest() {
                 )
         ).thenReturn(listOf("new media ID"))
 
-        viewModel.savePostLocally(context, postRepository, showAztecEditor, doFinishActivity)
+        viewModel.savePostLocally(context, postRepository, showAztecEditor)
 
         verify(postRepository).updateInTransaction(transactionCaptor.capture())
 
@@ -529,7 +524,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         whenever(postRepository.id).thenReturn(postId)
         whenever(postRepository.dateLocallyChanged).thenReturn(currentTime)
 
-        viewModel.savePostLocally(context, postRepository, showAztecEditor, doFinishActivity)
+        viewModel.savePostLocally(context, postRepository, showAztecEditor)
 
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -551,7 +546,7 @@ class EditPostViewModelTest : BaseUnitTest() {
             it.applyIfNotHandled { finish = true }
         }
 
-        viewModel.savePostLocally(context, postRepository, showAztecEditor, doFinishActivity)
+        viewModel.savePostLocally(context, postRepository, showAztecEditor)
 
         assertThat(finish).isTrue()
     }
@@ -594,6 +589,6 @@ class EditPostViewModelTest : BaseUnitTest() {
         now.set(2019, 10, 10, 10, 10, 0)
         now.timeZone = TimeZone.getTimeZone("UTC")
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(now)
-        whenever(dateTimeUtils.iso8601FromCalendar(now)).thenReturn(currentTime)
+        whenever(dateTimeUtils.currentTimeInIso8601UTC()).thenReturn(currentTime)
     }
 }

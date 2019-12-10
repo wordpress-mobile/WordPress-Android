@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -63,8 +64,7 @@ class EditPostViewModel
         context: Context,
         editPostRepository: EditPostRepository,
         showAztecEditor: Boolean,
-        site: SiteModel,
-        doFinishActivity: Boolean
+        site: SiteModel
     ) {
         launch(bgDispatcher) {
             // mark as pending if the user doesn't have publishing rights
@@ -94,23 +94,20 @@ class EditPostViewModel
                     context,
                     editPostRepository.id
             )
-            if (doFinishActivity) {
-                withContext(mainDispatcher) {
-                    _onFinish.value = Event(Unit)
-                }
-            }
         }
     }
 
     fun savePostLocally(
         context: Context,
         editPostRepository: EditPostRepository,
-        showAztecEditor: Boolean,
-        doFinishActivity: Boolean
+        showAztecEditor: Boolean
     ) {
         launch(bgDispatcher) {
+            Log.d("vojta", "savePostLocally")
             if (editPostRepository.postHasEdits()) {
+                Log.d("vojta", "Post has edits")
                 editPostRepository.updateInTransaction { postModel ->
+                    Log.d("vojta", "Updating post in transaction")
                     // Changes have been made - save the post and ask for the post list to refresh
                     // We consider this being "manual save", it will replace some Android "spans" by an html
                     // or a shortcode replacement (for instance for images and galleries)
@@ -157,11 +154,6 @@ class EditPostViewModel
                                 editPostRepository.dateLocallyChanged
                         )
             }
-            if (doFinishActivity) {
-                withContext(mainDispatcher) {
-                    _onFinish.value = Event(Unit)
-                }
-            }
         }
     }
 
@@ -171,7 +163,9 @@ class EditPostViewModel
         showAztecEditor: Boolean,
         editPostRepository: EditPostRepository
     ) {
+        Log.d("vojta", "updatePostLocallyChangedOnStatusOrMediaChange")
         if (editedPost == null) {
+            Log.d("vojta", "post is null")
             return
         }
         val contentChanged: Boolean
@@ -189,6 +183,10 @@ class EditPostViewModel
                 editedPost.status
         )
         if (!editedPost.isLocalDraft && (contentChanged || statusChanged)) {
+            Log.d(
+                    "vojta",
+                    "really updating post: ${!editedPost.isLocalDraft && (contentChanged || statusChanged)}"
+            )
             editedPost.setIsLocallyChanged(true)
             editedPost.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
         }
@@ -199,10 +197,12 @@ class EditPostViewModel
         showAztecEditor: Boolean,
         postRepository: EditPostRepository,
         getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor),
-        onSaveAction: (() -> Unit)? = null
+        onSaveAction: (() -> Unit)
     ) {
+        Log.d("vojta", "updateAndSavePostAsync")
         launch {
             val postUpdated = withContext(bgDispatcher) {
+                Log.d("vojta", "Starting post update on the background")
                 (updatePostObject(
                         context,
                         showAztecEditor,
@@ -211,17 +211,20 @@ class EditPostViewModel
                 ) is Success)
                         .also { success ->
                             if (success) {
+                                Log.d("vojta", "Is success so saving to the DB")
                                 savePostToDb(context, postRepository, showAztecEditor)
                             }
                         }
             }
             if (postUpdated) {
-                onSaveAction?.invoke()
+                Log.d("vojta", "Save action invoked")
+                onSaveAction()
             }
         }
     }
 
     fun savePostWithDelay() {
+        Log.d("vojta", "Saving post with delay")
         saveJob?.cancel()
         saveJob = launch {
             if (debounceCounter < MAX_UNSAVED_POSTS) {
@@ -242,7 +245,9 @@ class EditPostViewModel
         postRepository: EditPostRepository,
         showAztecEditor: Boolean
     ) {
+        Log.d("vojta", "Saving post to DB")
         if (postRepository.postHasChangesFromDb()) {
+            Log.d("vojta", "Post has changes so really saving")
             postRepository.saveDbSnapshot()
             dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postRepository.getEditablePost()))
 
@@ -262,6 +267,7 @@ class EditPostViewModel
         postRepository: EditPostRepository,
         getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor)
     ): UpdateResult {
+        Log.d("vojta", "updatePostObject")
         if (!postRepository.hasPost()) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.")
             return Error
@@ -286,9 +292,44 @@ class EditPostViewModel
                         postModel.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
                     }
 
+                    Log.d("vojta", "updatePostObject: success - $postTitleOrContentChanged")
                     Success(postTitleOrContentChanged)
                 }
                 is UpdateFromEditor.Failed -> Error
+            }
+        }
+    }
+
+    fun updatePostAsync(
+        context: Context,
+        showAztecEditor: Boolean,
+        postRepository: EditPostRepository,
+        getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor)
+    ) {
+        launch(bgDispatcher) {
+            postRepository.updatePost { postModel ->
+                when (val updateFromEditor = getUpdatedTitleAndContent(postModel.content)) {
+                    is PostFields -> {
+                        val postTitleOrContentChanged = updatePostContentNewEditor(
+                                context,
+                                showAztecEditor,
+                                postRepository,
+                                postModel,
+                                updateFromEditor.title,
+                                updateFromEditor.content
+                        )
+
+                        // only makes sense to change the publish date and locally changed date if the Post was actually changed
+                        if (postTitleOrContentChanged) {
+                            postRepository.updatePublishDateIfShouldBePublishedImmediately(
+                                    postModel
+                            )
+                            postModel.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
+                        }
+                        postTitleOrContentChanged
+                    }
+                    is UpdateFromEditor.Failed -> false
+                }
             }
         }
     }
@@ -304,6 +345,7 @@ class EditPostViewModel
         title: String,
         content: String
     ): Boolean {
+        Log.d("vojta", "updatePostContentNewEditor")
         if (editedPost == null) {
             return false
         }
@@ -333,6 +375,7 @@ class EditPostViewModel
             editedPost.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
         }
 
+        Log.d("vojta", "updatePostContentNewEditor - ${titleChanged || contentChanged}")
         return titleChanged || contentChanged
     }
 
@@ -357,6 +400,10 @@ class EditPostViewModel
         )
 
         return mediaMarkedUploadingOnStartIds != currentUploadingMedia.sorted()
+    }
+
+    fun finish() {
+        _onFinish.postValue(Event(Unit))
     }
 
     sealed class UpdateResult {

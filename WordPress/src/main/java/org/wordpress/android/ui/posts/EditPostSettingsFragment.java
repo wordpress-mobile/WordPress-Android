@@ -662,7 +662,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updateExcerpt(String excerpt) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updatePost(postModel -> {
                 postModel.setExcerpt(excerpt);
                 mExcerptTextView.setText(excerpt);
                 return true;
@@ -673,7 +673,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updateSlug(String slug) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updatePost(postModel -> {
                 postModel.setSlug(slug);
                 mSlugTextView.setText(slug);
                 return true;
@@ -684,7 +684,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updatePassword(String password) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updatePost(postModel -> {
                 postModel.setPassword(password);
                 mPasswordTextView.setText(password);
                 return true;
@@ -698,7 +698,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updatePost(postModel -> {
                 postModel.setCategoryIdList(categoryList);
                 updateCategoriesTextView();
                 return true;
@@ -709,7 +709,7 @@ public class EditPostSettingsFragment extends Fragment {
     public void updatePostStatus(PostStatus postStatus) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updatePost(postModel -> {
                 postModel.setStatus(postStatus.toString());
                 updatePostStatusRelatedViews();
                 updateSaveButton();
@@ -721,7 +721,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updatePostFormat(String postFormat) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateInTransaction(postModel -> {
+            editPostRepository.updatePost(postModel -> {
                 postModel.setPostFormat(postFormat);
                 updatePostFormatTextView();
                 return true;
@@ -751,7 +751,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updateInTransaction(postModel -> {
+        postRepository.updatePost(postModel -> {
             if (!TextUtils.isEmpty(selectedTags)) {
                 String tags = selectedTags.replace("\n", " ");
                 postModel.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
@@ -902,7 +902,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updateInTransaction(postModel -> {
+        postRepository.updatePost(postModel -> {
             postModel.setFeaturedImageId(featuredImageId);
             updateFeaturedImageView();
             return true;
@@ -1069,7 +1069,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updateInTransaction(postModel -> {
+        postRepository.updatePost(postModel -> {
             if (place == null) {
                 postModel.clearLocation();
                 mLocationTextView.setText("");
