@@ -25,7 +25,7 @@ Language: ko_KR
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\"\'%s’은(는) Android용 워드프레스에서 아직 지원되지 않습니다.”</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">\"%s 블록. 이 블록에는 잘못된 내용이 있습니다.”</string>
     <string name="gutenberg_native_s_block_empty">\"%s 블록. 비어 있음”</string>
-    <string name="gutenberg_native_s_block">\"%s 블록\"</string>
+    <string name="gutenberg_native_s_block">%s 블록</string>
     <string name="gutenberg_native_row_d">\"%d개 행.”</string>
     <string name="gutenberg_native_reset_block">“블록 리셋”</string>
     <string name="gutenberg_native_reset">“리셋”</string>
@@ -51,7 +51,7 @@ Language: ko_KR
     <string name="gutenberg_native_link_text">“링크 텍스트”</string>
     <string name="gutenberg_native_link_inserted">“링크 삽입됨”</string>
     <string name="gutenberg_native_level_s_empty">\"%s단계. 비어 있음.”</string>
-    <string name="gutenberg_native_level_1_s_2_s">\"%1$s 단계. %2$s \"</string>
+    <string name="gutenberg_native_level_1_s_2_s">%1$s 단계. %2$s </string>
     <string name="gutenberg_native_image_caption_s">“이미지 캡션. %s \"</string>
     <string name="gutenberg_native_hide_keyboard">“키보드 감추기”</string>
     <string name="gutenberg_native_here_is_the_panel_content">“패널 콘텐츠입니다!”</string>
