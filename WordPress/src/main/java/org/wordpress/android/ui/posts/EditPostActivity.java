@@ -1453,9 +1453,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void savePostOnlineAndFinishAsync(
-            boolean isFirstTimePublish
-    ) {
+    private void savePostOnline(boolean isFirstTimePublish) {
         mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mShowAztecEditor, mSite);
     }
 
@@ -1726,7 +1724,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
             case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
-                savePostOnlineAndFinishAsync(isFirstTimePublish(false));
+                savePostOnline(isFirstTimePublish(false));
                 mViewModel.finish();
                 break;
             case TAG_GB_INFORMATIVE_DIALOG:
@@ -1842,13 +1840,13 @@ public class EditPostActivity extends AppCompatActivity implements
         // Let's show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
         mEditorFragment.showSavingProgressDialogIfNeeded();
 
-        // Update post, save to db and publish in its own Thread, because 1. update can be pretty slow with a lot of
-        // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
-        // on API 16 (and 21) with the visual editor.
+        // TODO it's safe to remove this thread
         new Thread(() -> {
-            AtomicBoolean doFinish = new AtomicBoolean(false);
+            AtomicBoolean saveOnline = new AtomicBoolean(false);
+            AtomicBoolean saveLocally = new AtomicBoolean(false);
+            AtomicBoolean isFirstTimePublish = new AtomicBoolean(false);
             mEditPostRepository.updatePost(postModel -> {
-                boolean isFirstTimePublish = isFirstTimePublish(publishPost);
+                isFirstTimePublish.set(isFirstTimePublish(publishPost));
                 if (publishPost) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
                     // otherwise we'd have an incorrect value
@@ -1894,12 +1892,10 @@ public class EditPostActivity extends AppCompatActivity implements
                                != null) {
                             EditPostActivity.this.runOnUiThread(this::showRemoveFailedUploadsDialog);
                         } else {
-                            doFinish.set(true);
-                            savePostOnlineAndFinishAsync(isFirstTimePublish);
+                            saveOnline.set(true);
                         }
                     } else {
-                        doFinish.set(true);
-                        savePostLocallyAndFinishAsync();
+                        saveLocally.set(true);
                     }
                 } else {
                     mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened(postModel);
@@ -1911,7 +1907,12 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
                 return true;
             });
-            if (doFinish.get()) {
+            if (saveOnline.get()) {
+                savePostOnline(isFirstTimePublish.get());
+                mViewModel.finish();
+            }
+            if (saveLocally.get()) {
+                savePostLocally();
                 mViewModel.finish();
             }
         }).start();
@@ -1974,16 +1975,16 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
                         && isNotRestarting && isWpComOrIsLocalDraft) {
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                    savePostOnlineAndFinishAsync(isFirstTimePublish);
+                    savePostOnline(isFirstTimePublish);
                     if (doFinish) {
                         mViewModel.finish();
                     }
                 } else {
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                     if (forceSave) {
-                        savePostOnlineAndFinishAsync(false);
+                        savePostOnline(false);
                     } else {
-                        savePostLocallyAndFinishAsync();
+                        savePostLocally();
                         if (doFinish) {
                             mViewModel.finish();
                         }
@@ -2035,7 +2036,7 @@ public class EditPostActivity extends AppCompatActivity implements
         return mEditorFragment.hasFailedMediaUploads() || mEditorFragment.isActionInProgress();
     }
 
-    private void savePostLocallyAndFinishAsync() {
+    private void savePostLocally() {
         mViewModel.savePostLocally(this, mEditPostRepository, mShowAztecEditor);
     }
 

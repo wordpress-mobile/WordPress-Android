@@ -2,6 +2,11 @@ package org.wordpress.android.ui.posts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
@@ -11,20 +16,31 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.fromPost
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.concurrent.write
+import kotlin.coroutines.CoroutineContext
 
 class EditPostRepository
 @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val postStore: PostStore,
-    private val postUtils: PostUtilsWrapper
-) {
+    private val postUtils: PostUtilsWrapper,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+) : CoroutineScope {
+    protected var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = mainDispatcher + job
+
     private var post: PostModel? = null
     private var postForUndo: PostModel? = null
     private var postSnapshotWhenEditorOpened: PostModel? = null
@@ -92,12 +108,16 @@ class EditPostRepository
     }
 
     fun updatePost(action: (PostModel) -> Boolean) {
-        val isUpdated = lock.write {
-            action(post!!)
-        }
-        if (isUpdated) {
-            post?.let {
-                _postChanged.postValue(Event(it))
+        launch {
+            val isUpdated = withContext(bgDispatcher) {
+                lock.write {
+                    action(post!!)
+                }
+            }
+            if (isUpdated) {
+                post?.let {
+                    _postChanged.value = Event(it)
+                }
             }
         }
     }
