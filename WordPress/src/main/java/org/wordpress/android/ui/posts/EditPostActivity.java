@@ -1865,14 +1865,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 }
 
-//                boolean postUpdateSuccessful = updatePostObject();
-//                if (!postUpdateSuccessful) {
-//                    // just return, since the only case updatePostObject() can fail is when the editor
-//                    // fragment is not added to the activity
-//                    mEditorFragment.hideSavingProgressDialog();
-//                    return false;
-//                }
-
                 boolean isPublishable = mPostUtils.isPublishable(postModel);
 
                 AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + postModel.getTitle());
@@ -2265,16 +2257,9 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setFeaturedImageId(final long mediaId) {
-        mEditPostRepository.updateInTransaction(postModel -> {
-            postModel.setFeaturedImageId(mediaId);
-            postModel.setIsLocallyChanged(true);
-            return true;
-        });
-        updateAndSavePostAsync(() -> {
-            if (mEditPostSettingsFragment != null) {
-                mEditPostSettingsFragment.updateFeaturedImage(mediaId);
-            }
-        });
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+        }
     }
 
     @Override

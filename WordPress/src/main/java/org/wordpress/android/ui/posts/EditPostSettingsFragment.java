@@ -904,9 +904,10 @@ public class EditPostSettingsFragment extends Fragment {
         }
         postRepository.updatePost(postModel -> {
             postModel.setFeaturedImageId(featuredImageId);
-            updateFeaturedImageView();
+            postModel.setIsLocallyChanged(true);
             return true;
         });
+        updateFeaturedImageView();
     }
 
     private void clearFeaturedImage() {
