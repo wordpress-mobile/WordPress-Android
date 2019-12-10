@@ -2229,6 +2229,7 @@
     <!-- If any of these appear unused, be sure to check the same string in the login library -
     it may be used there and keeping it here is required for translation. -->
     <string name="log_in">Log In</string>
+    <string name="login_promo_viewpager_content_description">Introduction</string>
     <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
     <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
     <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
