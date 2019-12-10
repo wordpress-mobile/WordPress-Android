@@ -17,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.news.NewsManager
 import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
@@ -45,8 +47,10 @@ class ReaderPostListViewModelTest {
      */
     @Mock private lateinit var initialTag: ReaderTag
     @Mock private lateinit var otherTag: ReaderTag
+    @Mock private lateinit var savedTag: ReaderTag
     @Mock private lateinit var newsTracker: NewsTracker
     @Mock private lateinit var newsTrackerHelper: NewsTrackerHelper
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
 
     private lateinit var viewModel: ReaderPostListViewModel
     private val liveData = MutableLiveData<NewsItem>()
@@ -54,7 +58,21 @@ class ReaderPostListViewModelTest {
     @Before
     fun setUp() {
         whenever(newsManager.newsItemSource()).thenReturn(liveData)
-        viewModel = ReaderPostListViewModel(newsManager, newsTracker, newsTrackerHelper, TEST_DISPATCHER)
+        whenever(savedTag.tagTitle).thenReturn("tag-title")
+        val tag = Tag(
+                tag = savedTag,
+                onClickAction = null
+        )
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            whenever(appPrefsWrapper.getReaderSubfilter()).thenReturn(tag)
+        }
+        viewModel = ReaderPostListViewModel(
+                newsManager,
+                newsTracker,
+                newsTrackerHelper,
+                TEST_DISPATCHER,
+                appPrefsWrapper
+        )
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
     }
@@ -163,7 +181,11 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun getCurrentSubfilterReturnsDefaultAtStart() {
-        assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(SiteAll::class.java)
+        if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(SiteAll::class.java)
+        } else {
+            assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(Tag::class.java)
+        }
     }
 
     @Test
