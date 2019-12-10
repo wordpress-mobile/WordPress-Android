@@ -52,7 +52,6 @@ class EditPostViewModel
 ) : ScopedViewModel(mainDispatcher) {
     private var debounceCounter = 0
     private var saveJob: Job? = null
-    var mediaInsertedOnCreation: Boolean = false
     var mediaMarkedUploadingOnStartIds: List<String> = listOf()
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
     val onSavePostTriggered: LiveData<Event<Unit>> = _onSavePostTriggered
@@ -168,17 +167,11 @@ class EditPostViewModel
             Log.d("vojta", "post is null")
             return
         }
-        val contentChanged: Boolean
-        if (mediaInsertedOnCreation) {
-            mediaInsertedOnCreation = false
-            contentChanged = true
-        } else {
-            contentChanged = isCurrentMediaMarkedUploadingDifferentToOriginal(
+        val contentChanged: Boolean = isCurrentMediaMarkedUploadingDifferentToOriginal(
                     context,
                     showAztecEditor,
                     editedPost.content
             )
-        }
         val statusChanged: Boolean = editPostRepository.hasStatusChangedFromWhenEditorOpened(
                 editedPost.status
         )
@@ -307,7 +300,7 @@ class EditPostViewModel
         getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor)
     ) {
         launch(bgDispatcher) {
-            postRepository.updatePost { postModel ->
+            postRepository.updatePostAsync({ postModel ->
                 when (val updateFromEditor = getUpdatedTitleAndContent(postModel.content)) {
                     is PostFields -> {
                         val postTitleOrContentChanged = updatePostContentNewEditor(
@@ -330,7 +323,7 @@ class EditPostViewModel
                     }
                     is UpdateFromEditor.Failed -> false
                 }
-            }
+            })
         }
     }
 
@@ -351,18 +344,13 @@ class EditPostViewModel
         }
         val titleChanged = editedPost.title != title
         editedPost.setTitle(title)
-        val contentChanged: Boolean
-        when {
-            mediaInsertedOnCreation -> {
-                mediaInsertedOnCreation = false
-                contentChanged = true
-            }
+        val contentChanged: Boolean = when {
             isCurrentMediaMarkedUploadingDifferentToOriginal(
                     context,
                     showAztecEditor,
                     editedPost.content
-            ) -> contentChanged = true
-            else -> contentChanged = editedPost.content != content
+            ) -> true
+            else -> editedPost.content != content
         }
         if (contentChanged) {
             editedPost.setContent(content)

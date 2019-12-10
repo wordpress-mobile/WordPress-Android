@@ -444,7 +444,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (mEditPostRepository.hasPost()) {
                     if (extras.getBoolean(EXTRA_LOAD_AUTO_SAVE_REVISION)) {
                         Log.d("vojta", "org.wordpress.android.ui.posts.EditPostActivity.onCreate");
-                        mEditPostRepository.updatePost(postModel -> {
+                        mEditPostRepository.updateInTransaction(postModel -> {
                             boolean updateTitle = !TextUtils.isEmpty(postModel.getAutoSaveTitle());
                             if (updateTitle) {
                                 postModel.setTitle(postModel.getAutoSaveTitle());
@@ -659,7 +659,7 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
         Log.d("vojta", "org.wordpress.android.ui.posts.EditPostActivity.resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued");
-        mEditPostRepository.updatePost(postModel -> {
+        mEditPostRepository.updatePostAsync(postModel -> {
             String oldContent = postModel.getContent();
             if (!AztecEditorFragment.hasMediaItemsMarkedUploading(EditPostActivity.this, oldContent)
                 // we need to make sure items marked failed are still failed or not as well
@@ -680,7 +680,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 return true;
             }
             return false;
-        });
+        }, null);
     }
 
     @Override
@@ -1090,7 +1090,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mEditorPhotoPicker.hidePhotoPicker();
         } else {
             mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-            savePostAndOptionallyFinish(true);
+            savePostAndOptionallyFinish(true, false);
         }
 
         return true;
@@ -1129,7 +1129,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     savePostAndOptionallyFinish(false, true);
                 } else {
                     updatePostLoadingAndDialogState(PostLoadingState.UPLOADING_FOR_PREVIEW, post);
-                    savePostAndOptionallyFinish(false);
+                    savePostAndOptionallyFinish(false, false);
                 }
             }
 
@@ -1214,7 +1214,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
                     mPostEditorAnalyticsSession.switchEditor(Editor.CLASSIC);
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                    savePostAndOptionallyFinish(true);
+                    savePostAndOptionallyFinish(true, false);
                 } else {
                     logWrongMenuState("Wrong state in menu_switch_to_aztec: menu should not be visible.");
                 }
@@ -1227,7 +1227,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     mRestartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG;
                     mPostEditorAnalyticsSession.switchEditor(Editor.GUTENBERG);
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                    savePostAndOptionallyFinish(true);
+                    savePostAndOptionallyFinish(true, false);
                 } else {
                     logWrongMenuState("Wrong state in menu_switch_to_gutenberg: menu should not be visible.");
                 }
@@ -1259,7 +1259,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 findViewById(R.id.editor_activity),
                 R.string.editor_uploading_post);
         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-        savePostAndOptionallyFinish(false);
+        savePostAndOptionallyFinish(false, false);
     }
 
     private boolean performSecondaryAction() {
@@ -1768,26 +1768,28 @@ public class EditPostActivity extends AppCompatActivity implements
         updatePostLoadingAndDialogState(PostLoadingState.LOADING_REVISION);
         mEditPostRepository.saveForUndo();
         Log.d("vojta", "EditPostActivity.loadRevision");
-        mEditPostRepository.updatePost(postModel -> {
+        mEditPostRepository.updatePostAsync(postModel -> {
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
             postModel.setIsLocallyChanged(true);
             postModel.setDateLocallyChanged(mDateTimeUtils.currentTimeInIso8601UTC());
             return true;
+        }, postModel -> {
+            refreshEditorContent();
+            WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
+                      .setAction(getString(R.string.undo), view -> {
+                          AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
+                          RemotePostPayload payload =
+                                  new RemotePostPayload(mEditPostRepository.getPostForUndo(), mSite);
+                          mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                          mEditPostRepository.undo();
+                          refreshEditorContent();
+                      })
+                      .show();
+
+            updatePostLoadingAndDialogState(PostLoadingState.NONE);
+            return null;
         });
-        refreshEditorContent();
-
-        WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
-                  .setAction(getString(R.string.undo), view -> {
-                      AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
-                      RemotePostPayload payload = new RemotePostPayload(mEditPostRepository.getPostForUndo(), mSite);
-                      mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                      mEditPostRepository.undo();
-                      refreshEditorContent();
-                  })
-                  .show();
-
-        updatePostLoadingAndDialogState(PostLoadingState.NONE);
     }
 
     private boolean isNewPost() {
@@ -1827,7 +1829,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                ToastUtils.showToast(EditPostActivity.this,
                                                     getString(R.string.toast_saving_post_as_draft));
                                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                               savePostAndOptionallyFinish(true);
+                               savePostAndOptionallyFinish(true, false);
                            })
                    .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
                            (dialog, id) -> mDispatcher
@@ -1845,7 +1847,7 @@ public class EditPostActivity extends AppCompatActivity implements
             AtomicBoolean saveOnline = new AtomicBoolean(false);
             AtomicBoolean saveLocally = new AtomicBoolean(false);
             AtomicBoolean isFirstTimePublish = new AtomicBoolean(false);
-            mEditPostRepository.updatePost(postModel -> {
+            mEditPostRepository.updatePostAsync(postModel -> {
                 isFirstTimePublish.set(isFirstTimePublish(publishPost));
                 if (publishPost) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
@@ -1898,15 +1900,17 @@ public class EditPostActivity extends AppCompatActivity implements
                     });
                 }
                 return true;
+            }, postModel -> {
+                if (saveOnline.get()) {
+                    savePostOnline(isFirstTimePublish.get());
+                    mViewModel.finish();
+                }
+                if (saveLocally.get()) {
+                    savePostLocally();
+                    mViewModel.finish();
+                }
+                return null;
             });
-            if (saveOnline.get()) {
-                savePostOnline(isFirstTimePublish.get());
-                mViewModel.finish();
-            }
-            if (saveLocally.get()) {
-                savePostLocally();
-                mViewModel.finish();
-            }
         }).start();
     }
 
@@ -1920,10 +1924,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(R.string.editor_remove_failed_uploads),
                 null);
         removeFailedUploadsDialog.show(getSupportFragmentManager(), TAG_FAILED_MEDIA_UPLOADS_DIALOG);
-    }
-
-    private void savePostAndOptionallyFinish(final boolean doFinish) {
-        savePostAndOptionallyFinish(doFinish, false);
     }
 
     private void savePostAndOptionallyFinish(final boolean doFinish, final boolean forceSave) {
@@ -1956,6 +1956,7 @@ public class EditPostActivity extends AppCompatActivity implements
             definitelyDeleteBackspaceDeletedMediaItems();
 
             if (shouldSave) {
+                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
                 /*
                  * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
@@ -1965,22 +1966,15 @@ public class EditPostActivity extends AppCompatActivity implements
                  */
                 boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mEditPostRepository.isLocalDraft();
                 if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
-                        && isNotRestarting && isWpComOrIsLocalDraft) {
-                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+                    && isNotRestarting && isWpComOrIsLocalDraft) {
                     savePostOnline(isFirstTimePublish);
-                    if (doFinish) {
-                        mViewModel.finish();
-                    }
+                } else if (forceSave) {
+                    savePostOnline(false);
                 } else {
-                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                    if (forceSave) {
-                        savePostOnline(false);
-                    } else {
-                        savePostLocally();
-                        if (doFinish) {
-                            mViewModel.finish();
-                        }
-                    }
+                    savePostLocally();
+                }
+                if (doFinish) {
+                    mViewModel.finish();
                 }
             } else {
                 // discard post if new & empty
@@ -2212,21 +2206,23 @@ public class EditPostActivity extends AppCompatActivity implements
         final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
             Log.d("vojta", "EditPostActivity.setPostContentFromShareAction");
-            mEditPostRepository.updatePost(postModel -> {
+            mEditPostRepository.updatePostAsync(postModel -> {
                 if (title != null) {
-                    mEditorFragment.setTitle(title);
                     postModel.setTitle(title);
                 }
                 // Create an <a href> element around links
 
                 final String updatedContent = AutolinkUtils.autoCreateLinks(text);
-                mEditorFragment.setContent(updatedContent);
                 // update PostModel
                 postModel.setContent(updatedContent);
                 mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
                 postModel.setDateLocallyChanged(
                         mDateTimeUtils.currentTimeInIso8601UTC());
                 return true;
+            }, postModel -> {
+                mEditorFragment.setTitle(postModel.getTitle());
+                mEditorFragment.setContent(postModel.getContent());
+                return null;
             });
         }
 
@@ -2812,7 +2808,6 @@ public class EditPostActivity extends AppCompatActivity implements
             // removing this from the intent so it doesn't insert the media items again on each Activity re-creation
             getIntent().removeExtra(EXTRA_INSERT_MEDIA);
             if (mediaList != null && !mediaList.isEmpty()) {
-                mViewModel.setMediaInsertedOnCreation(true);
                 mEditorMedia.addExistingMediaToEditorAsync(mediaList, AddExistingMediaSource.WP_MEDIA_LIBRARY);
             }
         }

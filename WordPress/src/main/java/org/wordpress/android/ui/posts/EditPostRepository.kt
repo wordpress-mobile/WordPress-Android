@@ -107,7 +107,7 @@ class EditPostRepository
         return result
     }
 
-    fun updatePost(action: (PostModel) -> Boolean) {
+    fun updatePostAsync(action: (PostModel) -> Boolean, onSuccess: ((PostImmutableModel) -> Unit)? = null) {
         launch {
             val isUpdated = withContext(bgDispatcher) {
                 lock.write {
@@ -117,6 +117,7 @@ class EditPostRepository
             if (isUpdated) {
                 post?.let {
                     _postChanged.value = Event(it)
+                    onSuccess?.invoke(it)
                 }
             }
         }
@@ -190,7 +191,7 @@ class EditPostRepository
     fun postHasEdits() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post!!)
 
     fun updateStatus(status: PostStatus) {
-        updatePost {
+        updatePostAsync({
             val updatedPost = status.toString()
             if (it.status != updatedPost) {
                 it.setStatus(updatedPost)
@@ -198,7 +199,7 @@ class EditPostRepository
             } else {
                 false
             }
-        }
+        })
     }
 
     fun loadPostByLocalPostId(postId: Int) {
