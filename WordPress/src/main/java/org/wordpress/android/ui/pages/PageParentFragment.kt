@@ -38,10 +38,14 @@ class PageParentFragment : Fragment() {
     private lateinit var viewModel: PageParentViewModel
 
     private val listStateKey = "list_state"
+    private val searchKey = "search_query"
 
     private var linearLayoutManager: LinearLayoutManager? = null
     private var saveButton: MenuItem? = null
     private lateinit var searchActionMenuItem: MenuItem
+
+    private lateinit var searchView: SearchView
+    private var previousSearchString: String? = null
 
     private var pageId: Long? = null
 
@@ -73,16 +77,13 @@ class PageParentFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        savedInstanceState?.run { previousSearchString = savedInstanceState.getString(searchKey) }
     }
 
-    @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.page_parent_menu, menu)
-
-        // make the icons for overflow menuItems visible
-        val m = menu as MenuBuilder
-        m.setOptionalIconsVisible(true)
 
         searchActionMenuItem = checkNotNull(menu.findItem(R.id.action_search_parent)) {
             "Menu does not contain mandatory search item"
@@ -148,7 +149,7 @@ class PageParentFragment : Fragment() {
             }
         })
 
-        val searchView = searchActionMenuItem.actionView as SearchView
+        searchView = searchActionMenuItem.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 viewModel.onSearch(query)
@@ -160,6 +161,12 @@ class PageParentFragment : Fragment() {
                 return true
             }
         })
+
+        if (previousSearchString != null && previousSearchString!!.isNotEmpty()) {
+            searchActionMenuItem.expandActionView()
+            searchView.setQuery(previousSearchString, true)
+            searchView.requestFocus()
+        }
     }
 
     private fun setupObservers() {
@@ -178,6 +185,8 @@ class PageParentFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         linearLayoutManager?.let { outState.putParcelable(listStateKey, it.onSaveInstanceState()) }
+        previousSearchString = searchView.query.toString()
+        outState.putString(searchKey, previousSearchString)
         super.onSaveInstanceState(outState)
     }
 
