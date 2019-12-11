@@ -594,6 +594,6 @@ class EditPostViewModelTest : BaseUnitTest() {
         now.set(2019, 10, 10, 10, 10, 0)
         now.timeZone = TimeZone.getTimeZone("UTC")
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(now)
-        whenever(dateTimeUtils.iso8601FromCalendar(now)).thenReturn(currentTime)
+        whenever(dateTimeUtils.currentTimeInIso8601UTC()).thenReturn(currentTime)
     }
 }
