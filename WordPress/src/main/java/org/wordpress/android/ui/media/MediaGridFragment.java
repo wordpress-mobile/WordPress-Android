@@ -41,6 +41,7 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -801,6 +802,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             MenuItem mnuConfirm = menu.findItem(R.id.mnu_confirm_selection);
             mnuConfirm.setVisible(mBrowserType.isPicker());
             mnuConfirm.setContentDescription(getString(R.string.media_multi_select_confirm_action));
+
+            AccessibilityUtils.setActionModeDoneButtonContentDescription(getActivity(), getString(R.string.cancel));
             return true;
         }
 

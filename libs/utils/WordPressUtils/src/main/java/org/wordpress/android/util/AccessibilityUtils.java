@@ -1,7 +1,13 @@
 package org.wordpress.android.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -25,5 +31,22 @@ public class AccessibilityUtils {
     public static int getSnackbarDuration(Context ctx, int defaultDuration) {
         return defaultDuration == Snackbar.LENGTH_INDEFINITE ? Snackbar.LENGTH_INDEFINITE
                 : isAccessibilityEnabled(ctx) ? SNACKBAR_WITH_ACTION_DURATION_IN_MILLIS : defaultDuration;
+    }
+
+    public static void setActionModeDoneButtonContentDescription(@Nullable final Activity activity,
+                                                                 @NonNull final String contentDescription) {
+        if (activity != null) {
+            View decorView = activity.getWindow().getDecorView();
+
+            decorView.post(new Runnable() {
+                @Override public void run() {
+                    View doneButton = activity.findViewById(androidx.appcompat.R.id.action_mode_close_button);
+
+                    if (doneButton != null) {
+                        doneButton.setContentDescription(contentDescription);
+                    }
+                }
+            });
+        }
     }
 }
