@@ -400,9 +400,6 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
-        mEditorMedia.start(mSite, this);
-        startObserving();
-
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -507,6 +504,9 @@ public class EditPostActivity extends AppCompatActivity implements
             showErrorAndFinish(R.string.post_not_found);
             return;
         }
+
+        mEditorMedia.start(mSite, this);
+        startObserving();
 
         QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.PUBLISH_POST,
                 mDispatcher, mSite, this);
