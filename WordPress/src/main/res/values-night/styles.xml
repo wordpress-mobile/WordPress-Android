@@ -85,8 +85,13 @@
     </style>
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="android:backgroundTint">@color/pink_50</item>
+        <item name="android:backgroundTint">?attr/colorSecondaryVariant</item>
         <item name="tint">?attr/colorOnSurface</item>
+    </style>
+
+       <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">?attr/colorSecondaryVariant</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
 </resources>
