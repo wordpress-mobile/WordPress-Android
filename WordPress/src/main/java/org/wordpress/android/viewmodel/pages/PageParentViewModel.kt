@@ -54,25 +54,8 @@ class PageParentViewModel
     private var _isSearchInUse = false
 
     val filteredPages: LiveData<List<PageItem>> = mergeAsyncNotNull(defaultScope, _pages, _searchQuery) { list, query ->
-        if (query.isEmpty()) {
-            list
-        } else {
-            val filtered = list.filter { pageItem ->
-                (pageItem.type != PARENT) || //keep the TOP_LEVEL_PARENT and DIVIDER types
-                        (pageItem.type == PARENT &&
-                                (pageItem as ParentPage).title.toLowerCase(Locale.getDefault()).contains(
-                                        query.toLowerCase(Locale.getDefault())
-                                ))
-            }
-            //if there are no matching PARENT pages, add a PageItem to notify user
-            if (filtered.any { it.type == PARENT }) {
-                filtered
-            } else {
-                listOf(
-                        filtered.elementAt(0),
-                        Divider(resourceProvider.getString(string.set_parent_no_match, query)))
-            }
-        }
+        _isSearchInUse = query.isNotEmpty()
+        filterListByQuery(list, query)
     }
 
     fun start(site: SiteModel, pageId: Long) {
@@ -169,5 +152,27 @@ class PageParentViewModel
             grandchildren += getChildren(it, pages)
         }
         return children + grandchildren
+    }
+
+    internal fun filterListByQuery(list: List<PageItem>, query: String): List<PageItem> {
+        if (query.isEmpty()) {
+            return list
+        } else {
+            val filtered = list.filter { pageItem ->
+                (pageItem.type != PARENT) || //keep the TOP_LEVEL_PARENT and DIVIDER types
+                        (pageItem.type == PARENT &&
+                                (pageItem as ParentPage).title.toLowerCase(Locale.getDefault()).contains(
+                                        query.toLowerCase(Locale.getDefault())
+                                ))
+            }
+            //if there are no matching PARENT pages, add a PageItem to notify user
+            return if (filtered.any { it.type == PARENT }) {
+                filtered
+            } else {
+                listOf(
+                        filtered.elementAt(0),
+                        Divider(resourceProvider.getString(string.set_parent_no_match, query)))
+            }
+        }
     }
 }
