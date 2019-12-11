@@ -32,6 +32,7 @@ public class WPPermissionUtils {
     public static final int EDITOR_LOCATION_PERMISSION_REQUEST_CODE = 50;
     public static final int EDITOR_MEDIA_PERMISSION_REQUEST_CODE = 60;
     public static final int EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE = 70;
+    public static final int READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE = 80;
 
     /**
      * called by the onRequestPermissionsResult() of various activities and fragments - tracks

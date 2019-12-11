@@ -67,6 +67,8 @@ public class SiteSettingsModel {
     private static final String POSTS_PER_PAGE_COLUMN_NAME = "postsPerPage";
     private static final String AMP_SUPPORTED_COLUMN_NAME = "ampSupported";
     private static final String AMP_ENABLED_COLUMN_NAME = "ampEnabled";
+    private static final String JETPACK_SEARCH_SUPPORTED_COLUMN_NAME = "jetpackSearchSupported";
+    private static final String JETPACK_SEARCH_ENABLED_COLUMN_NAME = "jetpackSearchEnabled";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
 
@@ -96,6 +98,10 @@ public class SiteSettingsModel {
                                                  + " add " + AMP_ENABLED_COLUMN_NAME + " BOOLEAN;";
     public static final String ADD_AMP_SUPPORTED = "alter table " + SETTINGS_TABLE_NAME
                                                    + " add " + AMP_SUPPORTED_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_JETPACK_SEARCH_ENABLED = "alter table " + SETTINGS_TABLE_NAME
+                                                 + " add " + JETPACK_SEARCH_ENABLED_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_JETPACK_SEARCH_SUPPORTED = "alter table " + SETTINGS_TABLE_NAME
+                                                   + " add " + JETPACK_SEARCH_SUPPORTED_COLUMN_NAME + " BOOLEAN;";
     public static final String ADD_SITE_ICON = "alter table " + SETTINGS_TABLE_NAME
                                                + " add " + SITE_ICON_COLUMN_NAME + " INTEGER;";
 
@@ -186,6 +192,8 @@ public class SiteSettingsModel {
     public int postsPerPage;
     public boolean ampSupported;
     public boolean ampEnabled;
+    public boolean jetpackSearchSupported;
+    public boolean jetpackSearchEnabled;
     public String quotaDiskSpace;
 
     @Override
@@ -228,6 +236,8 @@ public class SiteSettingsModel {
                && postsPerPage == otherModel.postsPerPage
                && ampEnabled == otherModel.ampEnabled
                && ampSupported == otherModel.ampSupported
+               && jetpackSearchEnabled == otherModel.jetpackSearchEnabled
+               && jetpackSearchSupported == otherModel.jetpackSearchSupported
                && maxLinks == otherModel.maxLinks
                && equals(defaultPostFormat, otherModel.defaultPostFormat)
                && holdForModeration != null
@@ -291,6 +301,8 @@ public class SiteSettingsModel {
         postsPerPage = other.postsPerPage;
         ampSupported = other.ampSupported;
         ampEnabled = other.ampEnabled;
+        jetpackSearchSupported = other.jetpackSearchSupported;
+        jetpackSearchEnabled = other.jetpackSearchEnabled;
         if (other.holdForModeration != null) {
             holdForModeration = new ArrayList<>(other.holdForModeration);
         }
@@ -353,6 +365,8 @@ public class SiteSettingsModel {
         postsPerPage = getIntFromCursor(cursor, POSTS_PER_PAGE_COLUMN_NAME);
         ampSupported = getBooleanFromCursor(cursor, AMP_SUPPORTED_COLUMN_NAME);
         ampEnabled = getBooleanFromCursor(cursor, AMP_ENABLED_COLUMN_NAME);
+        jetpackSearchSupported = getBooleanFromCursor(cursor, JETPACK_SEARCH_SUPPORTED_COLUMN_NAME);
+        jetpackSearchEnabled = getBooleanFromCursor(cursor, JETPACK_SEARCH_ENABLED_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
@@ -443,6 +457,8 @@ public class SiteSettingsModel {
         values.put(POSTS_PER_PAGE_COLUMN_NAME, postsPerPage);
         values.put(AMP_SUPPORTED_COLUMN_NAME, ampSupported);
         values.put(AMP_ENABLED_COLUMN_NAME, ampEnabled);
+        values.put(JETPACK_SEARCH_SUPPORTED_COLUMN_NAME, jetpackSearchSupported);
+        values.put(JETPACK_SEARCH_ENABLED_COLUMN_NAME, jetpackSearchEnabled);
 
         String moderationKeys = "";
         if (holdForModeration != null) {

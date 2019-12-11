@@ -82,8 +82,6 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
     private TextView mLoginLogoutTextView;
     private View mMyProfileView;
     private View mAccountSettingsView;
-    private View mNotificationsView;
-    private View mNotificationsDividerView;
     private ProgressDialog mDisconnectProgressDialog;
     private ScrollView mScrollView;
 
@@ -138,8 +136,6 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         mLoginLogoutTextView = rootView.findViewById(R.id.me_login_logout_text_view);
         mMyProfileView = rootView.findViewById(R.id.row_my_profile);
         mAccountSettingsView = rootView.findViewById(R.id.row_account_settings);
-        mNotificationsView = rootView.findViewById(R.id.row_notifications);
-        mNotificationsDividerView = rootView.findViewById(R.id.me_notifications_divider);
         mScrollView = rootView.findViewById(R.id.scroll_view);
 
         OnClickListener showPickerListener = new View.OnClickListener() {
@@ -171,13 +167,6 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewAppSettings(getActivity());
-            }
-        });
-
-        mNotificationsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewNotificationsSettings(getActivity());
             }
         });
 
@@ -281,8 +270,6 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
             mUsernameTextView.setVisibility(View.VISIBLE);
             mAvatarCard.setVisibility(View.VISIBLE);
             mMyProfileView.setVisibility(View.VISIBLE);
-            mNotificationsView.setVisibility(View.VISIBLE);
-            mNotificationsDividerView.setVisibility(View.VISIBLE);
 
             final String avatarUrl = constructGravatarUrl(mAccountStore.getAccount());
             loadAvatar(avatarUrl, null);
@@ -303,8 +290,6 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
             mProgressBar.setVisibility(View.GONE);
             mMyProfileView.setVisibility(View.GONE);
             mAccountSettingsView.setVisibility(View.GONE);
-            mNotificationsView.setVisibility(View.GONE);
-            mNotificationsDividerView.setVisibility(View.GONE);
             mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
         }
     }

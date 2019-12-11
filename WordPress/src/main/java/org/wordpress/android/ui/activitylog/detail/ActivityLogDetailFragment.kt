@@ -14,6 +14,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.tools.FormattableRange
+import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.BasicFragmentDialog
@@ -75,6 +76,12 @@ class ActivityLogDetailFragment : Fragment() {
                     notificationsUtilsWrapper.getSpannableContentForRanges(it, activityMessage, { range ->
                         viewModel.onRangeClicked(range)
                     }, false)
+                }
+
+                val noteBlockSpans = spannable?.getSpans(0, spannable.length, NoteBlockClickableSpan::class.java)
+
+                noteBlockSpans?.forEach {
+                    it.enableColors(activity)
                 }
 
                 uiHelpers.setTextOrHide(activityMessage, spannable)
@@ -146,11 +153,13 @@ class ActivityLogDetailFragment : Fragment() {
     private fun onRewindButtonClicked(item: ActivityLogDetailModel) {
         val dialog = BasicFragmentDialog()
         item.rewindId?.let {
-            dialog.initialize(it,
+            dialog.initialize(
+                    it,
                     getString(R.string.activity_log_rewind_site),
                     getString(R.string.activity_log_rewind_dialog_message, item.createdDate, item.createdTime),
                     getString(R.string.activity_log_rewind_site),
-                    getString(R.string.cancel))
+                    getString(R.string.cancel)
+            )
             dialog.show(fragmentManager, it)
         }
     }

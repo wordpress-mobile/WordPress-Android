@@ -6,7 +6,6 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
 import android.view.View
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.notifications.blocks.BlockType.BASIC
@@ -26,8 +25,7 @@ class GeneratedNoteBlock(
 
         // Process Ranges to add links and text formatting
         val formattableRange = FormattableRange(null, null, null, null, pingbackUrl, null)
-        val clickableSpan = object : NoteBlockClickableSpan(WordPress.getContext(), formattableRange,
-                true, false) {
+        val clickableSpan = object : NoteBlockClickableSpan(formattableRange, true, false) {
             override fun onClick(widget: View) {
                 clickListener.onNoteBlockTextClicked(this)
             }

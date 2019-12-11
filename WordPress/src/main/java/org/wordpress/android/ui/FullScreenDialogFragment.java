@@ -43,6 +43,7 @@ public class FullScreenDialogFragment extends DialogFragment {
     private OnConfirmListener mOnConfirmListener;
     private OnDismissListener mOnDismissListener;
     private String mAction;
+    private MenuItem mActionItem;
     private String mSubtitle;
     private String mTitle;
     private Toolbar mToolbar;
@@ -70,6 +71,8 @@ public class FullScreenDialogFragment extends DialogFragment {
         void confirm(@Nullable Bundle result);
 
         void dismiss();
+
+        void setActionEnabled(boolean enabled);
     }
 
     public interface OnConfirmListener {
@@ -108,7 +111,7 @@ public class FullScreenDialogFragment extends DialogFragment {
             getChildFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(R.anim.full_screen_dialog_fragment_none, 0, 0,
-                                         R.anim.full_screen_dialog_fragment_none)
+                            R.anim.full_screen_dialog_fragment_none)
                     .add(R.id.full_screen_dialog_fragment_content, mFragment)
                     .commitNow();
         }
@@ -131,6 +134,12 @@ public class FullScreenDialogFragment extends DialogFragment {
             @Override
             public void dismiss() {
                 FullScreenDialogFragment.this.dismiss();
+            }
+
+            @Override public void setActionEnabled(boolean enabled) {
+                if (mActionItem != null) {
+                    mActionItem.setEnabled(enabled);
+                }
             }
         };
     }
@@ -198,7 +207,7 @@ public class FullScreenDialogFragment extends DialogFragment {
     public int show(FragmentTransaction transaction, String tag) {
         initBuilderArguments();
         transaction.setCustomAnimations(R.anim.full_screen_dialog_fragment_slide_up, 0, 0,
-                                        R.anim.full_screen_dialog_fragment_slide_down);
+                R.anim.full_screen_dialog_fragment_slide_down);
         return transaction.add(android.R.id.content, this, tag).addToBackStack(null).commit();
     }
 
@@ -268,9 +277,9 @@ public class FullScreenDialogFragment extends DialogFragment {
 
         if (!mAction.isEmpty()) {
             Menu menu = mToolbar.getMenu();
-            MenuItem action = menu.add(0, ID_ACTION, 0, this.mAction);
-            action.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            action.setOnMenuItemClickListener(
+            mActionItem = menu.add(0, ID_ACTION, 0, this.mAction);
+            mActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            mActionItem.setOnMenuItemClickListener(
                     new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
@@ -455,11 +464,11 @@ public class FullScreenDialogFragment extends DialogFragment {
         /**
          * Set {@link Fragment} to be added as dialog, which must implement {@link FullScreenDialogContent}.
          *
-         * @param contentClass Fragment class to be instantiated
+         * @param contentClass     Fragment class to be instantiated
          * @param contentArguments arguments to be added to Fragment
          * @return {@link Builder} object to allow for chaining of calls to set methods
          * @throws IllegalArgumentException if content class does not implement
-         * {@link FullScreenDialogContent} interface
+         *                                  {@link FullScreenDialogContent} interface
          */
         public Builder setContent(Class<? extends Fragment> contentClass, @Nullable Bundle contentArguments) {
             if (!FullScreenDialogContent.class.isAssignableFrom(contentClass)) {

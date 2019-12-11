@@ -13,6 +13,6 @@
     android:paddingStart="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_large"
     android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-    android:textColor="@color/neutral_50"
+    android:textColor="?attr/wpColorTextSubtle"
     tools:text="Now" >
 </org.wordpress.android.widgets.WPTextView>

@@ -3,12 +3,14 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
@@ -40,7 +42,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -56,6 +58,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: ReferrersUseCase
     private val firstGroupViews = 50
     private val secondGroupViews = 30
@@ -63,16 +66,19 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     private val referrer = Referrer("Referrer 1", 20, "referrer.jpg", "referrer.com")
     private val group = Group("group2", "Group 2", "group2.jpg", "group2.com", secondGroupViews, listOf(referrer))
     private val contentDescription = "title, views"
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = ReferrersUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
                 tracker,
                 contentDescriptionHelper,
+                statsUtils,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -88,6 +94,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 any<String>(),
                 any()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
@@ -242,7 +249,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     ): ExpandableItem {
         assertThat(item.type).isEqualTo(EXPANDABLE_ITEM)
         assertThat((item as ExpandableItem).header.text).isEqualTo(label)
-        assertThat(item.header.value).isEqualTo(views.toFormattedString())
+        assertThat(item.header.value).isEqualTo(views.toString())
         assertThat(item.header.iconUrl).isEqualTo(icon)
         assertThat(item.header.contentDescription).isEqualTo(contentDescription)
         return item

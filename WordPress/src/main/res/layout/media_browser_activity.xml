@@ -46,7 +46,7 @@
             android:minHeight="@dimen/quota_bar_text_minimum_height"
             android:textAllCaps="true"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-            android:textColor="@color/neutral"
+            android:textColor="?attr/wpColorTextSubtle"
             tools:text="19.5% of 3 GB used" >
         </TextView>
 

@@ -1,10 +1,12 @@
 package org.wordpress.android.util.analytics
 
+import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import javax.inject.Inject
 
+@Reusable
 class AnalyticsTrackerWrapper
 @Inject constructor() {
     fun track(stat: Stat) {

@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -7,6 +10,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
@@ -15,6 +19,7 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import java.util.Locale
+import java.util.TimeZone
 
 class StatsDateFormatterTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
@@ -160,5 +165,62 @@ class StatsDateFormatterTest : BaseUnitTest() {
         val parsedDate = statsDateFormatter.printGranularDate(unparsedDate, MONTHS)
 
         assertThat(parsedDate).isEqualTo("Pro, 2018")
+    }
+
+    @Test
+    fun `prints neutral UTC when site timezone does not match current timezone and site timezone is GMT`() {
+        val site = SiteModel()
+        site.timezone = "GMT"
+        whenever(localeManagerWrapper.getTimeZone()).thenReturn(TimeZone.getTimeZone("GMT-5:30"))
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
+        val expectedTimeZone = "UTC"
+        whenever(resourceProvider.getString(any(), any())).thenReturn(expectedTimeZone)
+
+        val printedTimeZone = statsDateFormatter.printTimeZone(site)
+
+        assertThat(printedTimeZone).isEqualTo(expectedTimeZone)
+        verify(resourceProvider).getString(eq(R.string.stats_site_neutral_utc), eq("0"))
+    }
+
+    @Test
+    fun `prints negative UTC when site timezone does not match current timezone and site timezone is negative GMT`() {
+        val site = SiteModel()
+        site.timezone = "-1.5"
+        whenever(localeManagerWrapper.getTimeZone()).thenReturn(TimeZone.getTimeZone("GMT-5:30"))
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
+        val expectedTimeZone = "UTC"
+        whenever(resourceProvider.getString(any(), any())).thenReturn(expectedTimeZone)
+
+        val printedTimeZone = statsDateFormatter.printTimeZone(site)
+
+        assertThat(printedTimeZone).isEqualTo(expectedTimeZone)
+        verify(resourceProvider).getString(eq(R.string.stats_site_negative_utc), eq("1:30"))
+    }
+
+    @Test
+    fun `prints positive UTC when site timezone does not match current timezone and site timezone is positive GMT`() {
+        val site = SiteModel()
+        site.timezone = "2.25"
+        whenever(localeManagerWrapper.getTimeZone()).thenReturn(TimeZone.getTimeZone("GMT-5:30"))
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
+        val expectedTimeZone = "UTC"
+        whenever(resourceProvider.getString(any(), any())).thenReturn(expectedTimeZone)
+
+        val printedTimeZone = statsDateFormatter.printTimeZone(site)
+
+        assertThat(printedTimeZone).isEqualTo(expectedTimeZone)
+        verify(resourceProvider).getString(eq(R.string.stats_site_positive_utc), eq("2:15"))
+    }
+
+    @Test
+    fun `returns empty timezone when the site timezone matches current timezone`() {
+        val site = SiteModel()
+        site.timezone = "GMT"
+        whenever(localeManagerWrapper.getTimeZone()).thenReturn(TimeZone.getTimeZone("GMT"))
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
+
+        val printedTimeZone = statsDateFormatter.printTimeZone(site)
+
+        assertThat(printedTimeZone).isNull()
     }
 }

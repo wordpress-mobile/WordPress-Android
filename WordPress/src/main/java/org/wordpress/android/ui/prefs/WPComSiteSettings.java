@@ -68,8 +68,12 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String JP_PROTECT_WHITELIST_KEY = "jetpack_protect_whitelist";
     // Jetpack modules
     private static final String SERVE_IMAGES_FROM_OUR_SERVERS = "photon";
+    private static final String SERVE_STATIC_FILES_FROM_OUR_SERVERS = "photon-cdn";
     private static final String LAZY_LOAD_IMAGES = "lazy-images";
     private static final String SHARING_MODULE = "sharedaddy";
+
+    private static final String AD_FREE_VIDEO_HOSTING_MODULE = "videopress";
+    private static final String SEARCH_MODULE = "search";
 
     private static final String START_OF_WEEK_KEY = "start_of_week";
     private static final String DATE_FORMAT_KEY = "date_format";
@@ -78,6 +82,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String POSTS_PER_PAGE_KEY = "posts_per_page";
     private static final String AMP_SUPPORTED_KEY = "amp_is_supported";
     private static final String AMP_ENABLED_KEY = "amp_is_enabled";
+    private static final String JETPACK_SEARCH_ENABLED_KEY = "jetpack_search_enabled";
+    private static final String JETPACK_SEARCH_SUPPORTED_KEY = "jetpack_search_supported";
     private static final String COMMENT_LIKES = "comment-likes";
 
     // WP.com REST keys used to GET certain site settings
@@ -125,10 +131,13 @@ class WPComSiteSettings extends SiteSettingsInterface {
         if (mSite.isJetpackConnected()) {
             pushJetpackMonitorSettings();
             pushJetpackProtectAndSsoSettings();
-            if (supportsJetpackSpeedUpSettings(mSite)) {
+            if (supportsJetpackSiteAcceleratorSettings(mSite)) {
                 pushServeImagesFromOurServersModuleSettings();
+                pushServeStaticFilesFromOurServersModuleSettings();
                 pushLazyLoadModule();
             }
+            pushImprovedSearchModule();
+            pushAdFreeVideoHostingModule();
         }
 
         pushWpSettings();
@@ -152,7 +161,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
         }
     }
 
-    static boolean supportsJetpackSpeedUpSettings(SiteModel site) {
+    static boolean supportsJetpackSiteAcceleratorSettings(SiteModel site) {
         return SiteUtils.checkMinimalJetpackVersion(site, SPEED_UP_SETTINGS_JETPACK_VERSION);
     }
 
@@ -334,17 +343,30 @@ class WPComSiteSettings extends SiteSettingsInterface {
                                     case SERVE_IMAGES_FROM_OUR_SERVERS:
                                         mRemoteJpSettings.serveImagesFromOurServers = isActive;
                                         break;
+                                    case SERVE_STATIC_FILES_FROM_OUR_SERVERS:
+                                        mRemoteJpSettings.serveStaticFilesFromOurServers = isActive;
+                                        break;
                                     case LAZY_LOAD_IMAGES:
                                         mRemoteJpSettings.lazyLoadImages = isActive;
                                         break;
                                     case SHARING_MODULE:
                                         mRemoteJpSettings.sharingEnabled = isActive;
                                         break;
+                                    case SEARCH_MODULE:
+                                        mRemoteJpSettings.improvedSearch = isActive;
+                                        break;
+                                    case AD_FREE_VIDEO_HOSTING_MODULE:
+                                        mRemoteJpSettings.adFreeVideoHosting = isActive;
+                                        break;
                                 }
                             }
                             mJpSettings.serveImagesFromOurServers = mRemoteJpSettings.serveImagesFromOurServers;
+                            mJpSettings.serveStaticFilesFromOurServers =
+                                    mRemoteJpSettings.serveStaticFilesFromOurServers;
                             mJpSettings.lazyLoadImages = mRemoteJpSettings.lazyLoadImages;
                             mJpSettings.sharingEnabled = mRemoteJpSettings.sharingEnabled;
+                            mJpSettings.improvedSearch = mRemoteJpSettings.improvedSearch;
+                            mJpSettings.adFreeVideoHosting = mRemoteJpSettings.adFreeVideoHosting;
                         }
                         onFetchResponseReceived(null);
                     }
@@ -490,6 +512,33 @@ class WPComSiteSettings extends SiteSettingsInterface {
         }
     }
 
+    private void pushServeStaticFilesFromOurServersModuleSettings() {
+        ++mSaveRequestCount;
+        // The API returns 400 if we try to sync the same value twice so we need to keep it locally.
+        if (mJpSettings.serveStaticFilesFromOurServers != mRemoteJpSettings.serveStaticFilesFromOurServers) {
+            final boolean fallbackValue = mRemoteJpSettings.serveStaticFilesFromOurServers;
+            mRemoteJpSettings.serveStaticFilesFromOurServers = mJpSettings.serveStaticFilesFromOurServers;
+            WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
+                    mSite.getSiteId(), SERVE_STATIC_FILES_FROM_OUR_SERVERS, mJpSettings.serveStaticFilesFromOurServers,
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Jetpack module updated - Serve static files from our servers");
+                            onSaveResponseReceived(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            mRemoteJpSettings.serveStaticFilesFromOurServers = fallbackValue;
+                            error.printStackTrace();
+                            AppLog.w(AppLog.T.API,
+                                    "Error updating Jetpack module - Serve static files from our servers: " + error);
+                            onSaveResponseReceived(error);
+                        }
+                    });
+        }
+    }
+
     private void pushLazyLoadModule() {
         ++mSaveRequestCount;
         // The API returns 400 if we try to sync the same value twice so we need to keep it locally.
@@ -509,6 +558,57 @@ class WPComSiteSettings extends SiteSettingsInterface {
                             mRemoteJpSettings.lazyLoadImages = fallbackValue;
                             error.printStackTrace();
                             AppLog.w(AppLog.T.API, "Error updating Jetpack module - Lazy load images: " + error);
+                            onSaveResponseReceived(error);
+                        }
+                    });
+        }
+    }
+
+    private void pushImprovedSearchModule() {
+        ++mSaveRequestCount;
+        // The API returns 400 if we try to sync the same value twice so we need to keep it locally.
+        if (mJpSettings.improvedSearch != mRemoteJpSettings.improvedSearch) {
+            final boolean fallbackValue = mRemoteJpSettings.improvedSearch;
+            mRemoteJpSettings.improvedSearch = mJpSettings.improvedSearch;
+            WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
+                    mSite.getSiteId(), SEARCH_MODULE, mJpSettings.improvedSearch, new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Jetpack module updated - Improved search");
+                            onSaveResponseReceived(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            mRemoteJpSettings.improvedSearch = fallbackValue;
+                            error.printStackTrace();
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack module - Improved search: " + error);
+                            onSaveResponseReceived(error);
+                        }
+                    });
+        }
+    }
+
+    private void pushAdFreeVideoHostingModule() {
+        ++mSaveRequestCount;
+        // The API returns 400 if we try to sync the same value twice so we need to keep it locally.
+        if (mJpSettings.adFreeVideoHosting != mRemoteJpSettings.adFreeVideoHosting) {
+            final boolean fallbackValue = mRemoteJpSettings.adFreeVideoHosting;
+            mRemoteJpSettings.adFreeVideoHosting = mJpSettings.adFreeVideoHosting;
+            WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
+                    mSite.getSiteId(), AD_FREE_VIDEO_HOSTING_MODULE, mJpSettings.adFreeVideoHosting,
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Jetpack module updated - Videopress");
+                            onSaveResponseReceived(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            mRemoteJpSettings.adFreeVideoHosting = fallbackValue;
+                            error.printStackTrace();
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack module - Videopress: " + error);
                             onSaveResponseReceived(error);
                         }
                     });
@@ -593,6 +693,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.postsPerPage = settingsObject.optInt(POSTS_PER_PAGE_KEY, 0);
         mRemoteSettings.ampSupported = settingsObject.optBoolean(AMP_SUPPORTED_KEY, false);
         mRemoteSettings.ampEnabled = settingsObject.optBoolean(AMP_ENABLED_KEY, false);
+        mRemoteSettings.jetpackSearchSupported = settingsObject.optBoolean(JETPACK_SEARCH_SUPPORTED_KEY, false);
+        mRemoteSettings.jetpackSearchEnabled = settingsObject.optBoolean(JETPACK_SEARCH_ENABLED_KEY, false);
 
         boolean reblogsDisabled = settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, false);
         boolean likesDisabled = settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, false);
@@ -779,6 +881,12 @@ class WPComSiteSettings extends SiteSettingsInterface {
         }
         if (mSettings.ampEnabled != mRemoteSettings.ampEnabled) {
             params.put(AMP_ENABLED_KEY, String.valueOf(mSettings.ampEnabled));
+        }
+        if (mSettings.jetpackSearchSupported != mRemoteSettings.jetpackSearchSupported) {
+            params.put(JETPACK_SEARCH_SUPPORTED_KEY, String.valueOf(mSettings.jetpackSearchSupported));
+        }
+        if (mSettings.jetpackSearchEnabled != mRemoteSettings.jetpackSearchEnabled) {
+            params.put(JETPACK_SEARCH_ENABLED_KEY, String.valueOf(mSettings.jetpackSearchEnabled));
         }
 
         return params;

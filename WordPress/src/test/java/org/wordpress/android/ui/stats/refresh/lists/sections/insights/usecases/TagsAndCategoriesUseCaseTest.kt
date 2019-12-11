@@ -4,12 +4,14 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
@@ -37,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -45,6 +48,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
@@ -56,13 +60,16 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     private val singleTag = TagModel(listOf(firstTag), singleTagViews)
     private val categoryViews: Long = 20
     private val contentDescription = "title, views"
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = TagsAndCategoriesUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 insightsStore,
                 statsSiteProvider,
                 resourceProvider,
+                statsUtils,
                 tracker,
                 popupMenuHandler,
                 contentDescriptionHelper,
@@ -78,6 +85,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                 any(),
                 any<String>()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Long>(), any())).then { (it.arguments[0] as Long).toString() }
     }
 
     @Test

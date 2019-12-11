@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.posts
 
 import androidx.annotation.ColorRes
 import org.wordpress.android.fluxc.model.LocalOrRemoteId
+import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
@@ -15,9 +16,34 @@ sealed class PostListItemType {
         val onSelected: () -> Unit
     ) : PostListItemType()
 
-    class LoadingItem(val localOrRemoteId: LocalOrRemoteId) : PostListItemType()
+    class LoadingItem(val localOrRemoteId: LocalOrRemoteId, val options: LoadingItemOptions) : PostListItemType()
     object EndListIndicatorItem : PostListItemType()
+    data class SectionHeaderItem(val type: PostListType) : PostListItemType()
 }
+
+sealed class LoadingItemOptions(
+    val showEditButton: Boolean,
+    val showViewButton: Boolean,
+    val showMoreButton: Boolean,
+    val showMoveToDraftButton: Boolean,
+    val showDeletePermanentlyButton: Boolean
+)
+
+object LoadingItemDefaultPost : LoadingItemOptions(
+        showEditButton = true,
+        showViewButton = true,
+        showMoreButton = true,
+        showMoveToDraftButton = false,
+        showDeletePermanentlyButton = false
+)
+
+object LoadingItemTrashedPost : LoadingItemOptions(
+        showEditButton = false,
+        showViewButton = false,
+        showMoreButton = false,
+        showMoveToDraftButton = true,
+        showDeletePermanentlyButton = true
+)
 
 data class PostListItemUiStateData(
     val remotePostId: RemotePostId,
@@ -30,7 +56,8 @@ data class PostListItemUiStateData(
     val statuses: List<UiString>,
     val statusesDelimiter: UiString,
     val progressBarState: PostListItemProgressBar,
-    val showOverlay: Boolean
+    val showOverlay: Boolean,
+    val disableRippleEffect: Boolean
 )
 
 sealed class PostListItemProgressBar(val visibility: Boolean) {

@@ -1,4 +1,0 @@
-13.0 :
-* Améliorations de l'éditeur de blocs : l'éditeur est automatiquement activé lorsque vous ouvrez un bloc article (à moins que vous n’ayez décidé du contraire lors de la v12.9) ou vous pouvez l'activer sur une base par site.
-* Améliorations de l'accessibilité : les lecteurs d'écran peuvent désormais lire davantage de l'écran de statistiques.
-* Améliorations de l'ergonomie générale : la connexion est plus rapide, les couleurs sont plus uniformes d'un écran à l’autre et les corrections de bug ont mis fin à certains plantages.

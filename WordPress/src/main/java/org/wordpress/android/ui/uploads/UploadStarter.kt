@@ -10,21 +10,23 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.UploadActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.testing.OpenForTesting
-import org.wordpress.android.ui.posts.PostUtilsWrapper
+import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
+import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.DO_NOTHING
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.skip
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import javax.inject.Inject
@@ -33,10 +35,10 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 /**
- * Automatically uploads local drafts.
+ * Automatically remote-auto-save or upload all local modifications to posts.
  *
  * Auto-uploads happen when the app is placed in the foreground or when the internet connection is restored. In
- * addition to this, call sites can also request an immediate execution by calling [upload].
+ * addition to this, call sites can also request an immediate execution by calling [checkConnectionAndUpload].
  *
  * The method [activateAutoUploading] must be called once, preferably during app creation, for the auto-uploads to work.
  */
@@ -47,19 +49,18 @@ class UploadStarter @Inject constructor(
      * The Application context
      */
     private val context: Context,
+    private val dispatcher: Dispatcher,
     private val postStore: PostStore,
-    private val pageStore: PageStore,
     private val siteStore: SiteStore,
-    private val uploadStore: UploadStore,
+    private val uploadActionUseCase: UploadActionUseCase,
+    private val tracker: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val uploadServiceFacade: UploadServiceFacade,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val postUtilsWrapper: PostUtilsWrapper,
     private val connectionStatus: LiveData<ConnectionStatus>
 ) : CoroutineScope {
     private val job = Job()
-    private val MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES = 10
 
     override val coroutineContext: CoroutineContext get() = job + bgDispatcher
 
@@ -113,7 +114,7 @@ class UploadStarter @Inject constructor(
     }
 
     /**
-     * If there is an internet connection, uploads all local drafts belonging to [sites].
+     * If there is an internet connection, uploads all posts with local changes belonging to [sites].
      *
      * This coroutine will suspend until all the [upload] operations have completed. If one of them fails, all query
      * and queuing attempts ([upload]) will be canceled. The exception will be thrown by this method.
@@ -132,28 +133,50 @@ class UploadStarter @Inject constructor(
 
     /**
      * This is meant to be used by [checkConnectionAndUpload] only.
+     *
+     * The method needs to be synchronized from the following reasons. When the app comes to foreground both
+     * `queueUploadFromAllSites` and `queueUploadFromSite` are invoked. The problem is that they can run in parallel
+     * and `uploadServiceFacade.isPostUploadingOrQueued(it)` might return out-of-date result and a same post is added
+     * twice.
      */
+    @Synchronized
     private suspend fun upload(site: SiteModel) = coroutineScope {
-        val posts = async { postStore.getLocalDraftPosts(site) }
-        val pages = async { pageStore.getLocalDraftPages(site) }
-
-        val postsAndPages = posts.await() + pages.await()
-
-        postsAndPages
-                .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
-                .filter { postUtilsWrapper.isPublishable(it) }
-                .filter {
-                    uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES
+        postStore.getPostsWithLocalChanges(site)
+                .asSequence()
+                .map { post ->
+                    val action = uploadActionUseCase.getAutoUploadAction(post, site)
+                    Pair(post, action)
                 }
-                .filter { PostStatus.DRAFT.toString() == it.status }
-                .forEach { localDraft ->
+                .filter { (_, action) ->
+                    action != DO_NOTHING
+                }
+                .toList()
+                .forEach { (post, action) ->
+                    trackAutoUploadAction(action, post.status)
+                    AppLog.d(
+                            AppLog.T.POSTS,
+                            "UploadStarter for post title: ${post.title}, action: $action"
+                    )
+                    dispatcher.dispatch(
+                            UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(
+                                    post
+                            )
+                    )
                     uploadServiceFacade.uploadPost(
                             context = context,
-                            post = localDraft,
-                            trackAnalytics = false,
-                            publish = false,
-                            isRetry = true
+                            post = post,
+                            trackAnalytics = false
                     )
                 }
+    }
+
+    private fun trackAutoUploadAction(action: UploadAction, status: String) {
+        tracker.track(
+                Stat.AUTO_UPLOAD_POST_INVOKED,
+                mapOf(
+                        "upload_action" to action.toString(),
+                        "post_status" to status
+                )
+        )
     }
 }

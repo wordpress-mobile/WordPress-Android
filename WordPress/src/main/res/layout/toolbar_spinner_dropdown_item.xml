@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/margin_large"
-    android:textColor="@color/neutral_70"
+    android:textColor="?attr/wpColorText"
     android:textSize="@dimen/text_sz_large"
     android:textAlignment="viewStart"
     android:gravity="start"

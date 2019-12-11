@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
 
 /**
@@ -55,11 +56,17 @@ fun <T> mergeNotNull(
 
 /**
  * Merges two LiveData sources using a given function. The function returns an object of a new type.
+ * @param bgDispatcher context to run the merger function in
  * @param sourceA first source
  * @param sourceB second source
  * @return new data source
  */
-fun <T, U, V> mergeNotNull(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T, U) -> V): LiveData<V> {
+fun <T, U, V> mergeAsyncNotNull(
+    scope: CoroutineScope,
+    sourceA: LiveData<T>,
+    sourceB: LiveData<U>,
+    merger: suspend (T, U) -> V
+): LiveData<V> {
     val mediator = MediatorLiveData<Pair<T?, U?>>()
     mediator.addSource(sourceA) {
         if (mediator.value?.first != it) {
@@ -71,7 +78,7 @@ fun <T, U, V> mergeNotNull(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (
             mediator.value = mediator.value?.first to it
         }
     }
-    return mediator.map { (dataA, dataB) ->
+    return mediator.mapAsync(scope) { (dataA, dataB) ->
         if (dataA != null && dataB != null) {
             merger(dataA, dataB)
         } else {
@@ -181,6 +188,21 @@ fun <Key, Value> combineMap(sources: Map<Key, LiveData<Value>>): MediatorLiveDat
 fun <T, U> LiveData<T>.map(mapper: (T) -> U?): MediatorLiveData<U> {
     val result = MediatorLiveData<U>()
     result.addSource(this) { x -> result.value = x?.let { mapper(x) } }
+    return result
+}
+
+/**
+ * A wrapper of the map utility method that is null safe and runs the mapping on a background thread
+ * @param scope defines the scope to run mapping in
+ */
+fun <T, U> LiveData<T>.mapAsync(scope: CoroutineScope, mapper: suspend (T) -> U?): MediatorLiveData<U> {
+    val result = MediatorLiveData<U>()
+    result.addSource(this) { x ->
+        scope.launch {
+            val mappedValue = x?.let { mapper(x) }
+            result.postValue(mappedValue)
+        }
+    }
     return result
 }
 

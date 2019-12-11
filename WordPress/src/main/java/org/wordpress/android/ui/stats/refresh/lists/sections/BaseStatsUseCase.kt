@@ -1,13 +1,17 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Error
@@ -18,11 +22,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam.SITE
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.distinct
-import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Do not override this class directly. Use StatefulUseCase or StatelessUseCase instead.
@@ -30,36 +32,21 @@ import org.wordpress.android.viewmodel.Event
 abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     val type: StatsType,
     private val mainDispatcher: CoroutineDispatcher,
+    private val backgroundDispatcher: CoroutineDispatcher,
     private val defaultUiState: UI_STATE,
-    private val inputParams: List<UseCaseParam> = listOf(SITE)
-) {
-    private val domainState = MutableLiveData<UseCaseState>()
-    private val domainModel = MutableLiveData<DOMAIN_MODEL>()
-    protected val uiState = MediatorLiveData<UI_STATE>()
-    val liveData: LiveData<UseCaseModel> = merge(
-            domainModel.distinct(),
-            domainState,
-            uiState
-    ) { data, domainState, uiState ->
-        val currentData = data?.let { buildUiModel(data, uiState ?: defaultUiState) }
-        try {
-            when (domainState) {
-                LOADING -> {
-                    UseCaseModel(type, data = currentData, stateData = buildLoadingItem(), state = LOADING)
-                }
-                ERROR -> {
-                    UseCaseModel(type, data = currentData, stateData = buildErrorItem(), state = ERROR)
-                }
-                SUCCESS -> {
-                    UseCaseModel(type, data = currentData)
-                }
-                EMPTY, null -> UseCaseModel(type, state = EMPTY, stateData = buildEmptyItem())
-            }
-        } catch (e: Exception) {
-            AppLog.e(AppLog.T.STATS, e)
-            UseCaseModel(type, state = ERROR, stateData = buildErrorItem())
-        }
-    }.distinct()
+    private val fetchParams: List<UseCaseParam> = listOf(),
+    private val uiUpdateParams: List<UseCaseParam> = listOf()
+) : CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = backgroundDispatcher
+
+    private var domainState: UseCaseState = LOADING
+    private var domainModel: DOMAIN_MODEL? = null
+    private var uiState: UI_STATE = defaultUiState
+    private var updateJob: Job? = null
+
+    private val _liveData = MutableLiveData<UseCaseModel>()
+    val liveData: LiveData<UseCaseModel> = _liveData
 
     private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
     val navigationTarget: LiveData<Event<NavigationTarget>> = mutableNavigationTarget
@@ -70,34 +57,32 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * @param forced is true when we want to get fresh data and skip the cache
      */
     suspend fun fetch(refresh: Boolean, forced: Boolean) {
-        val firstLoad = domainModel.value == null
+        val firstLoad = domainModel == null
         var emptyDb = false
         if (firstLoad) {
-            withContext(mainDispatcher) {
-                updateUseCaseState(LOADING)
-            }
+            updateUseCaseState(LOADING)
         }
-        if (firstLoad || domainState.value == LOADING) {
+        if (domainState == LOADING) {
             val cachedData = loadCachedData()
-            withContext(mainDispatcher) {
-                if (cachedData != null) {
-                    domainModel.value = cachedData
-                } else {
-                    emptyDb = true
-                }
+            if (cachedData != null) {
+                domainModel = cachedData
+                updateState()
+            } else {
+                emptyDb = true
             }
         }
-        if (firstLoad || refresh || domainState.value != SUCCESS || emptyDb) {
-            withContext(mainDispatcher) {
-                updateUseCaseState(LOADING)
-            }
+        if (refresh || domainState != SUCCESS || emptyDb) {
+            updateUseCaseState(LOADING)
             val state = fetchRemoteData(forced)
             evaluateState(state)
         }
     }
 
     suspend fun onParamsChange(param: UseCaseParam) {
-        if (inputParams.contains(param)) {
+        if (uiUpdateParams.any { it == param }) {
+            onUiState()
+        }
+        if (fetchParams.any { it == param }) {
             fetch(refresh = true, forced = false)
         }
     }
@@ -108,10 +93,9 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             is Data -> {
                 if (!state.cached) {
                     val updatedCachedData = loadCachedData()
-                    withContext(mainDispatcher) {
-                        if (domainModel.value != updatedCachedData) {
-                            domainModel.value = updatedCachedData
-                        }
+                    if (domainModel != updatedCachedData) {
+                        domainModel = updatedCachedData
+                        updateState()
                     }
                 }
                 SUCCESS
@@ -119,9 +103,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             is Empty -> EMPTY
             is Loading -> LOADING
         }
-        withContext(mainDispatcher) {
-            updateUseCaseState(useCaseState)
-        }
+        updateUseCaseState(useCaseState)
     }
 
     /**
@@ -129,7 +111,8 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * @param newState
      */
     fun onUiState(newState: UI_STATE? = null) {
-        uiState.value = newState ?: uiState.value
+        uiState = newState ?: uiState
+        updateState()
     }
 
     /**
@@ -137,16 +120,17 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * @param update function
      */
     fun updateUiState(update: (UI_STATE) -> UI_STATE) {
-        val previousState = uiState.value ?: defaultUiState
+        val previousState = uiState ?: defaultUiState
         val updatedState = update(previousState)
         if (previousState != updatedState) {
-            uiState.value = updatedState
+            onUiState(updatedState)
         }
     }
 
     private fun updateUseCaseState(newState: UseCaseState) {
-        if (domainState.value != newState) {
-            domainState.value = newState
+        if (domainState != newState) {
+            domainState = newState
+            updateState()
         }
     }
 
@@ -154,9 +138,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * Clears the LiveData value when we switch the current Site so we don't show the old data for a new site
      */
     fun clear() {
-        domainModel.postValue(null)
-        domainState.postValue(LOADING)
-        uiState.postValue(null)
+        domainModel = null
+        domainState = LOADING
+        uiState = defaultUiState
+        updateState()
     }
 
     /**
@@ -200,6 +185,45 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         return buildLoadingItem() + listOf(BlockListItem.Empty(textResource = R.string.stats_no_data_yet))
     }
 
+    private fun updateState() {
+        updateJob?.let { job ->
+            if (job.isActive) {
+                job.cancel()
+            }
+        }
+
+        updateJob = launch {
+            delay(50)
+            val currentData = domainModel?.let { buildUiModel(it, uiState) }
+
+            val useCaseModel = try {
+                when (domainState) {
+                    LOADING -> {
+                        UseCaseModel(
+                                type,
+                                data = currentData,
+                                stateData = buildLoadingItem(),
+                                state = LOADING
+                        )
+                    }
+                    ERROR -> {
+                        UseCaseModel(type, data = currentData, stateData = buildErrorItem(), state = ERROR)
+                    }
+                    SUCCESS -> {
+                        UseCaseModel(type, data = currentData)
+                    }
+                    EMPTY -> UseCaseModel(type, state = EMPTY, stateData = buildEmptyItem())
+                }
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.STATS, e)
+                UseCaseModel(type, state = ERROR, stateData = buildErrorItem())
+            }
+            withContext(mainDispatcher) {
+                _liveData.value = useCaseModel
+            }
+        }
+    }
+
     sealed class State<DOMAIN_MODEL> {
         data class Error<DOMAIN_MODEL>(val error: String) : State<DOMAIN_MODEL>()
         data class Data<DOMAIN_MODEL>(val model: DOMAIN_MODEL, val cached: Boolean = false) : State<DOMAIN_MODEL>()
@@ -225,8 +249,15 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     abstract class StatelessUseCase<DOMAIN_MODEL>(
         type: StatsType,
         mainDispatcher: CoroutineDispatcher,
-        inputParams: List<UseCaseParam> = listOf(SITE)
-    ) : BaseStatsUseCase<DOMAIN_MODEL, NotUsedUiState>(type, mainDispatcher, NotUsedUiState, inputParams) {
+        backgroundDispatcher: CoroutineDispatcher,
+        inputParams: List<UseCaseParam> = listOf()
+    ) : BaseStatsUseCase<DOMAIN_MODEL, NotUsedUiState>(
+            type,
+            mainDispatcher,
+            backgroundDispatcher,
+            NotUsedUiState,
+            inputParams
+    ) {
         /**
          * Transforms given domain model into the UI model
          * @param domainModel domain model coming from FluxC
@@ -249,8 +280,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         VIEW_ALL
     }
 
-    enum class UseCaseParam {
-        SITE,
-        SELECTED_DATE
+    sealed class UseCaseParam {
+        data class SelectedDateParam(val statsSection: StatsSection) : UseCaseParam()
     }
 }

@@ -18,7 +18,7 @@
         android:gravity="start"
         android:textAlignment="viewStart"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-        android:textColor="@color/neutral_70"
+        android:textColor="?attr/wpColorText"
         tools:text="Feature Name">
     </org.wordpress.android.widgets.WPTextView>
 

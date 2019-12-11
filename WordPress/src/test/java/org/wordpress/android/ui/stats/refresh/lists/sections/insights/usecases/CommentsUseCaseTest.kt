@@ -4,12 +4,14 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel.Post
@@ -37,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 class CommentsUseCaseTest : BaseUnitTest() {
@@ -46,6 +49,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: CommentsUseCase
     private val postId: Long = 10
     private val postTitle = "Post"
@@ -55,13 +59,16 @@ class CommentsUseCaseTest : BaseUnitTest() {
     private val totalCount = 50
     private val blockItemCount = 6
     private val contentDescription = "title, views"
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = CommentsUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 insightsStore,
                 statsSiteProvider,
                 popupMenuHandler,
+                statsUtils,
                 contentDescriptionHelper
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -70,6 +77,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
                 any<String>(),
                 any()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

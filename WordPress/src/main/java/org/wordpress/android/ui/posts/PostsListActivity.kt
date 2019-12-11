@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -25,6 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityId
@@ -36,15 +39,20 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
+import org.wordpress.android.ui.uploads.UploadActionUseCase
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.redirectContextClickToLongPressListener
-import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
+const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
 
 class PostsListActivity : AppCompatActivity(),
         BasicDialogPositiveClickInterface,
@@ -53,6 +61,13 @@ class PostsListActivity : AppCompatActivity(),
     @Inject internal lateinit var siteStore: SiteStore
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
+    @Inject internal lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
+    @Inject internal lateinit var previewStateHelper: PreviewStateHelper
+    @Inject internal lateinit var progressDialogHelper: ProgressDialogHelper
+    @Inject internal lateinit var dispatcher: Dispatcher
+    @Inject internal lateinit var uploadActionUseCase: UploadActionUseCase
+    @Inject internal lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
@@ -70,6 +85,8 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var toggleViewLayoutMenuItem: MenuItem
 
     private var restorePreviousSearch = false
+
+    private var progressDialog: ProgressDialog? = null
 
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -117,9 +134,15 @@ class PostsListActivity : AppCompatActivity(),
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
+        val initPreviewState = if (savedInstanceState == null) {
+            PostListRemotePreviewState.NONE
+        } else {
+            PostListRemotePreviewState.fromInt(savedInstanceState.getInt(STATE_KEY_PREVIEW_STATE, 0))
+        }
+
         setupActionBar()
         setupContent()
-        initViewModel()
+        initViewModel(initPreviewState)
         loadIntentData(intent)
     }
 
@@ -172,9 +195,9 @@ class PostsListActivity : AppCompatActivity(),
         pager.adapter = postsPagerAdapter
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(initPreviewState: PostListRemotePreviewState) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListMainViewModel::class.java)
-        viewModel.start(site)
+        viewModel.start(site, initPreviewState)
 
         viewModel.viewState.observe(this, Observer { state ->
             state?.let {
@@ -204,7 +227,12 @@ class PostsListActivity : AppCompatActivity(),
 
         viewModel.postListAction.observe(this, Observer { postListAction ->
             postListAction?.let { action ->
-                handlePostListAction(this@PostsListActivity, action)
+                handlePostListAction(
+                        this@PostsListActivity,
+                        action,
+                        remotePreviewLogicHelper,
+                        previewStateHelper
+                )
             }
         })
         viewModel.selectTab.observe(this, Observer { tabIndex ->
@@ -220,6 +248,13 @@ class PostsListActivity : AppCompatActivity(),
         viewModel.snackBarMessage.observe(this, Observer {
             it?.let { snackBarHolder -> showSnackBar(snackBarHolder) }
         })
+        viewModel.previewState.observe(this, Observer {
+            progressDialog = progressDialogHelper.updateProgressDialogState(
+                    this,
+                    progressDialog,
+                    it.progressDialogUiState,
+                    uiHelpers)
+        })
         viewModel.dialogAction.observe(this, Observer {
             it?.show(this, supportFragmentManager, uiHelpers)
         })
@@ -231,7 +266,9 @@ class PostsListActivity : AppCompatActivity(),
                 handleUploadAction(
                         uploadAction,
                         this@PostsListActivity,
-                        findViewById(R.id.coordinator)
+                        findViewById(R.id.coordinator),
+                        uploadActionUseCase,
+                        uploadUtilsWrapper
                 )
             }
         })
@@ -239,21 +276,22 @@ class PostsListActivity : AppCompatActivity(),
 
     private fun showSnackBar(holder: SnackbarMessageHolder) {
         findViewById<View>(R.id.coordinator)?.let { parent ->
-            val message = getString(holder.messageRes)
-            val duration = Snackbar.LENGTH_LONG
-            val snackBar = WPSnackbar.make(parent, message, duration)
-            if (holder.buttonTitleRes != null) {
-                snackBar.setAction(getString(holder.buttonTitleRes)) {
-                    holder.buttonAction()
-                }
-            }
-            snackBar.addCallback(object : Snackbar.Callback() {
-                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                    holder.onDismissAction()
-                    super.onDismissed(transientBottomBar, event)
-                }
-            })
-            snackBar.show()
+            snackbarSequencer.enqueue(
+                    SnackbarItem(
+                            SnackbarItem.Info(
+                                view = parent,
+                                textRes = UiStringRes(holder.messageRes),
+                                duration = Snackbar.LENGTH_LONG
+                            ),
+                            holder.buttonTitleRes?.let {
+                                SnackbarItem.Action(
+                                    textRes = UiStringRes(holder.buttonTitleRes),
+                                    clickListener = OnClickListener { holder.buttonAction() }
+                                )
+                            },
+                            dismissCallback = { _, _ -> holder.onDismissAction() }
+                    )
+            )
         }
     }
 
@@ -284,6 +322,8 @@ class PostsListActivity : AppCompatActivity(),
             }
 
             viewModel.handleEditPostResult(data)
+        } else if (requestCode == RequestCodes.REMOTE_PREVIEW_POST) {
+            viewModel.handleRemotePreviewClosing()
         }
     }
 
@@ -400,6 +440,9 @@ class PostsListActivity : AppCompatActivity(),
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
+        viewModel.previewState.value?.let {
+            outState.putInt(STATE_KEY_PREVIEW_STATE, it.value)
+        }
     }
 
     // BasicDialogFragment Callbacks

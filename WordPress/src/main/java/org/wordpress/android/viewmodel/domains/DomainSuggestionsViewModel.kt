@@ -7,6 +7,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -17,6 +18,7 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.helpers.Debouncer
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -25,11 +27,13 @@ import kotlin.properties.Delegates
 typealias DomainSuggestionsListState = ListState<DomainSuggestionResponse>
 
 class DomainSuggestionsViewModel @Inject constructor(
+    private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
     private val debouncer: Debouncer
 ) : ViewModel() {
     lateinit var site: SiteModel
     private var isStarted = false
+    private var isQueryTrackingCompleted = false
 
     private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
     val suggestionsLiveData: LiveData<DomainSuggestionsListState>
@@ -57,6 +61,11 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
+            if (isStarted && !isQueryTrackingCompleted) {
+                isQueryTrackingCompleted = true
+                analyticsTracker.track(Stat.DOMAIN_CREDIT_SUGGESTION_QUERIED)
+            }
+
             debouncer.debounce(Void::class.java, {
                 fetchSuggestions()
             }, SEARCH_QUERY_DELAY_MS, TimeUnit.MILLISECONDS)
@@ -86,8 +95,8 @@ class DomainSuggestionsViewModel @Inject constructor(
             return
         }
         this.site = site
-        isStarted = true
         initializeDefaultSuggestions()
+        isStarted = true
     }
 
     private fun initializeDefaultSuggestions() {

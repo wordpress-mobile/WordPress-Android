@@ -262,7 +262,7 @@ public class NotificationsUtils {
         if (rangesArray != null) {
             for (FormattableRange range : rangesArray) {
                 NoteBlockClickableSpan clickableSpan =
-                        new NoteBlockClickableSpan(WordPress.getContext(), range, shouldLink, isFooter) {
+                        new NoteBlockClickableSpan(range, shouldLink, isFooter) {
                     @Override
                     public void onClick(View widget) {
                         if (onNoteBlockTextClickListener != null) {

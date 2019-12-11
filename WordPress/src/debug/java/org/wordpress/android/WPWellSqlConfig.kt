@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.persistence.WellSqlConfig
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 
-class WPWellSqlConfig(context: Context?) : WellSqlConfig(context) {
+class WPWellSqlConfig(context: Context) : WellSqlConfig(context) {
     /**
      * Detect when the database is downgraded in debug builds, and if the build flag is set recreate all the tables
      * and show a toast alerting to the downgrade. The sole purpose of this is to avoid the hassle of devs switching
@@ -32,7 +32,7 @@ class WPWellSqlConfig(context: Context?) : WellSqlConfig(context) {
             toast.setGravity(Gravity.CENTER, 0, 0)
             toast.show()
 
-            reset(helper)
+            helper?.let { reset(it) }
         } else {
             super.onDowngrade(db, helper, oldVersion, newVersion)
         }

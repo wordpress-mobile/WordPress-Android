@@ -10,6 +10,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_S
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
@@ -26,7 +27,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -34,13 +35,15 @@ import javax.inject.Named
 class LatestPostSummaryUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val latestPostStore: LatestPostInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val latestPostSummaryMapper: LatestPostSummaryMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
+    private val statsUtils: StatsUtils,
     private val contentDescriptionHelper: ContentDescriptionHelper
-) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher) {
+) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher, backgroundDispatcher) {
     override suspend fun loadCachedData(): InsightsLatestPostModel? {
         return latestPostStore.getLatestPostInsights(statsSiteProvider.siteModel)
     }
@@ -76,7 +79,7 @@ class LatestPostSummaryUseCase
         if (domainModel != null && domainModel.hasData()) {
             items.add(
                     ValueItem(
-                            domainModel.postViewsCount.toFormattedString(startValue = MILLION),
+                            statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
                             R.string.stats_views,
                             contentDescription = contentDescriptionHelper.buildContentDescription(
                                     R.string.stats_views,
@@ -87,7 +90,7 @@ class LatestPostSummaryUseCase
             if (domainModel.dayViews.isNotEmpty()) {
                 items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
             }
-            val postLikeCount = domainModel.postLikeCount.toFormattedString()
+            val postLikeCount = statsUtils.toFormattedString(domainModel.postLikeCount)
             items.add(
                     ListItemWithIcon(
                             R.drawable.ic_star_white_24dp,
@@ -100,7 +103,7 @@ class LatestPostSummaryUseCase
                             )
                     )
             )
-            val postCommentCount = domainModel.postCommentCount.toFormattedString()
+            val postCommentCount = statsUtils.toFormattedString(domainModel.postCommentCount)
             items.add(
                     ListItemWithIcon(
                             R.drawable.ic_comment_white_24dp,

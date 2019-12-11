@@ -59,6 +59,7 @@ class FollowersUseCase(
 ) : BaseStatsUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
         FOLLOWERS,
         mainDispatcher,
+        bgDispatcher,
         FollowersUiState(isLoading = true)
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_ITEM_COUNT
@@ -179,7 +180,7 @@ class FollowersUseCase(
     private fun buildTitle() = Title(R.string.stats_view_followers, menuAction = this::onMenuClick)
 
     private fun loadMore() {
-        GlobalScope.launch(bgDispatcher) {
+        launch {
             val state = fetchData(true, PagedMode(itemsToLoad, true))
             evaluateState(state)
         }

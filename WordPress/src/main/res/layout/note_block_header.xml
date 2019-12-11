@@ -43,7 +43,7 @@
                     android:ellipsize="end"
                     android:includeFontPadding="false"
                     android:singleLine="true"
-                    android:textColor="@color/neutral_70"
+                    android:textColor="?attr/wpColorText"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="Bob Ross" />
 

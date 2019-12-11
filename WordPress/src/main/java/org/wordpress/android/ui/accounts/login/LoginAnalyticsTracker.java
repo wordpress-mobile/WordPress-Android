@@ -136,7 +136,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
 
     @Override
     public void trackSignupGoogleButtonTapped() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_GOOGLE_BUTTON_TAPPED);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_TAPPED);
     }
 
     @Override

@@ -24,7 +24,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -48,6 +52,7 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListe
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
@@ -114,6 +119,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private String mInterceptedUri;
 
     @Inject AccountStore mAccountStore;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    private ReaderCommentListViewModel mViewModel;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -137,6 +144,25 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.reader_activity_comment_list);
+        mViewModel = mViewModelFactory.create(ReaderCommentListViewModel.class);
+
+        mViewModel.getScrollTo().observe(this, scrollPositionEvent -> {
+            ScrollPosition content = scrollPositionEvent.getContentIfNotHandled();
+            LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+            if (content != null && layoutManager != null) {
+                if (content.isSmooth()) {
+                    RecyclerView.SmoothScroller smoothScrollerToTop = new LinearSmoothScroller(this) {
+                        @Override protected int getVerticalSnapPreference() {
+                            return LinearSmoothScroller.SNAP_TO_START;
+                        }
+                    };
+                    smoothScrollerToTop.setTargetPosition(content.getPosition());
+                    layoutManager.startSmoothScroll(smoothScrollerToTop);
+                } else {
+                    ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(content.getPosition(), 0);
+                }
+            }
+        });
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -386,12 +412,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         if (mReplyToCommentId != 0) {
             getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false);
             getCommentAdapter().notifyDataSetChanged();
-            mRecyclerView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scrollToCommentId(mReplyToCommentId);
-                }
-            }, 300);
+            scrollToCommentId(mReplyToCommentId);
 
             // reset to replying to the post when user hasn't entered any text and hits
             // the back button in the editText to hide the soft keyboard
@@ -510,7 +531,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
                             doDirectOperation();
                         } else if (mRestorePosition > 0) {
-                            mRecyclerView.scrollToPosition(mRestorePosition);
+                            mViewModel.scrollToPosition(mRestorePosition, false);
                         }
                         mRestorePosition = 0;
                         checkEmptyView();
@@ -693,7 +714,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private void scrollToCommentId(long commentId) {
         int position = getCommentAdapter().positionOfCommentId(commentId);
         if (position > -1) {
-            mRecyclerView.scrollToPosition(position);
+            mViewModel.scrollToPosition(position, false);
         }
     }
 
@@ -703,7 +724,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private void smoothScrollToCommentId(long commentId) {
         int position = getCommentAdapter().positionOfCommentId(commentId);
         if (position > -1) {
-            mRecyclerView.smoothScrollToPosition(position);
+            mViewModel.scrollToPosition(position, true);
         }
     }
 

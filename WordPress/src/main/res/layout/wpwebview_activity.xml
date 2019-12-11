@@ -21,12 +21,6 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <include
-        layout="@layout/progress_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        tools:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/preview_container"
@@ -40,6 +34,14 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/navbar_container"
             android:layout_alignParentTop="true"/>
+
+        <include
+            layout="@layout/progress_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/navbar_container"
+            android:layout_alignParentTop="true"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/desktop_preview_hint"

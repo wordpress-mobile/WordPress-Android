@@ -1,6 +1,6 @@
 package org.wordpress.android;
 
-import android.os.Build;
+import android.os.Build.VERSION_CODES;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -14,7 +14,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(application = TestApplication.class, sdk = Build.VERSION_CODES.JELLY_BEAN)
+@Config(application = TestApplication.class, sdk = VERSION_CODES.LOLLIPOP)
 public class RobolectricSetupTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();

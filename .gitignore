@@ -84,3 +84,5 @@ fastlane/screenshots_orig
 /fastlane/promo_screenshots
 /fastlane/metadata/tmp
 sentry.properties
+
+WordPress/release.jks

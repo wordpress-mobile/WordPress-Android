@@ -5,12 +5,14 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
@@ -32,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -43,16 +46,20 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: LatestPostSummaryUseCase
+    @InternalCoroutinesApi
     @Before
     fun setUp() = test {
         useCase = LatestPostSummaryUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 insightsStore,
                 statsSiteProvider,
                 latestPostSummaryMapper,
                 tracker,
                 popupMenuHandler,
+                statsUtils,
                 contentDescriptionHelper
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -61,6 +68,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 any(),
                 any<Int>()
         )).thenReturn("likes: 10")
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

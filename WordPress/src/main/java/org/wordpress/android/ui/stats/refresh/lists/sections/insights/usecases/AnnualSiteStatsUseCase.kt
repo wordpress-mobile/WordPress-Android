@@ -6,6 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
@@ -30,6 +31,7 @@ private const val VISIBLE_ITEMS = 1
 
 class AnnualSiteStatsUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val mostPopularStore: MostPopularInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val selectedDateProvider: SelectedDateProvider,
@@ -37,7 +39,7 @@ class AnnualSiteStatsUseCase(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val useCaseMode: UseCaseMode
-) : StatelessUseCase<YearsInsightsModel>(ANNUAL_SITE_STATS, mainDispatcher) {
+) : StatelessUseCase<YearsInsightsModel>(ANNUAL_SITE_STATS, mainDispatcher, backgroundDispatcher) {
     override suspend fun loadCachedData(): YearsInsightsModel? {
         val dbModel = mostPopularStore.getYearsInsights(statsSiteProvider.siteModel)
         return if (dbModel?.years?.isNotEmpty() == true) dbModel else null
@@ -114,6 +116,7 @@ class AnnualSiteStatsUseCase(
     class AnnualSiteStatsUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val mostPopularStore: MostPopularInsightsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val annualStatsMapper: AnnualStatsMapper,
@@ -124,6 +127,7 @@ class AnnualSiteStatsUseCase(
         override fun build(useCaseMode: UseCaseMode) =
                 AnnualSiteStatsUseCase(
                         mainDispatcher,
+                        backgroundDispatcher,
                         mostPopularStore,
                         statsSiteProvider,
                         selectedDateProvider,

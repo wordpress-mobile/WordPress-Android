@@ -14,7 +14,7 @@ public class MasterbarComponent {
     }
 
     public MasterbarComponent clickBlogPosts() {
-        clickOn(R.id.row_blog_posts);
+        clickOn(R.id.quick_action_posts_button);
         return this;
     }
 }

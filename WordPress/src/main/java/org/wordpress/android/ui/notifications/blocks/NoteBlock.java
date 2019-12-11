@@ -230,6 +230,11 @@ public class NoteBlock {
                     noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);
                     noteBlockHolder.getTextView().setPadding(0, 0, 0, 0);
                 }
+
+                NoteBlockClickableSpan[] spans = noteText.getSpans(0, noteText.length(), NoteBlockClickableSpan.class);
+                for (NoteBlockClickableSpan span : spans) {
+                    span.enableColors(view.getContext());
+                }
                 noteBlockHolder.getTextView().setText(noteText);
                 noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
             }

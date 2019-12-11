@@ -87,7 +87,7 @@
                 android:singleLine="true"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 tools:text="1d ago" >
             </org.wordpress.android.widgets.WPTextView>
 

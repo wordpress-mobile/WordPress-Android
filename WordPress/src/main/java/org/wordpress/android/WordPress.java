@@ -20,6 +20,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -72,6 +73,7 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -148,6 +150,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject UploadStarter mUploadStarter;
     @Inject StatsWidgetUpdaters mStatsWidgetUpdaters;
     @Inject StatsStore mStatsStore;
+    @Inject SystemNotificationsTracker mSystemNotificationsTracker;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -217,6 +220,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         long startDate = SystemClock.elapsedRealtime();
 
         CrashLoggingUtils.startCrashLogging(getContext());
+
+        // This call needs be made before accessing any methods in android.webkit package
+        setWebViewDataDirectorySuffixOnAndroidP();
 
         initWellSql();
 
@@ -309,6 +315,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
         // It will upload local draft or published posts with local changes to the server.
         UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
+
+        mSystemNotificationsTracker.checkSystemNotificationsState();
     }
 
     protected void initWorkManager() {
@@ -663,6 +671,34 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     /*
+     * Since Android P:
+     * "Apps can no longer share a single WebView data directory across processes.
+     * If your app has more than one process using WebView, CookieManager, or any other API in the android.webkit
+     * package, your app will crash when the second process calls a WebView method."
+     *
+     * (see https://developer.android.com/about/versions/pie/android-9.0-migration)
+     *
+     * Also here: https://developer.android.com/about/versions/pie/android-9.0-changes-28#web-data-dirs
+     *
+     * "If your app must use instances of WebView in more than one process, you must assign a unique data
+     * directory suffix for each process, using the WebView.setDataDirectorySuffix() method, before
+     * using a given instance of WebView in that process."
+     *
+     * While we don't explicitly use a different process other than the default, making the directory suffix be
+     * the actual process name will ensure there's one directory per process, should the Application's
+     * onCreate() method be called from a different process any time.
+     *
+    */
+    private void setWebViewDataDirectorySuffixOnAndroidP() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            String procName = getProcessName();
+            if (!TextUtils.isEmpty(procName)) {
+                WebView.setDataDirectorySuffix(procName);
+            }
+        }
+    }
+
+    /*
      * enable caching for HttpUrlConnection
      * http://developer.android.com/training/efficient-downloads/redundant_redundant.html
      */
@@ -859,7 +895,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             }
 
             // Let's migrate the old editor preference if available in AppPrefs to the remote backend
-            SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mContext, mDispatcher);
+            SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mAccountStore, mSiteStore, mDispatcher);
 
             if (mFirstActivityResumed) {
                 deferredInit();

@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
@@ -31,7 +30,6 @@ public class FooterNoteBlock extends NoteBlock {
         }
 
         mClickableSpan = new NoteBlockClickableSpan(
-                WordPress.getContext(),
                 rangeObject,
                 false,
                 true
@@ -56,7 +54,13 @@ public class FooterNoteBlock extends NoteBlock {
 
         // Note text
         if (!TextUtils.isEmpty(getNoteText())) {
-            noteBlockHolder.getTextView().setText(getNoteText());
+            Spannable spannable = getNoteText();
+            NoteBlockClickableSpan[] spans = spannable.getSpans(0, spannable.length(), NoteBlockClickableSpan.class);
+            for (NoteBlockClickableSpan span : spans) {
+                span.enableColors(view.getContext());
+            }
+
+            noteBlockHolder.getTextView().setText(spannable);
             noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
         } else {
             noteBlockHolder.getTextView().setVisibility(View.GONE);

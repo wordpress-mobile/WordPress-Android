@@ -37,6 +37,7 @@ import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -151,7 +152,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
         mColorAuthor = ContextCompat.getColor(context, R.color.primary_40);
-        mColorNotAuthor = ContextCompat.getColor(context, R.color.neutral_70);
+        mColorNotAuthor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
         mColorHighlight = ContextCompat.getColor(context, R.color.neutral_0);
 
         setHasStableIds(true);

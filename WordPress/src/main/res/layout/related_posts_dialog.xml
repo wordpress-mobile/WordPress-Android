@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/site_settings_rp_switch_title"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/wpColorText"
             android:textSize="@dimen/text_sz_large"
             android:textAlignment="viewStart"
             android:theme="@style/SwitchBlueMedium"
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/site_settings_rp_switch_summary"
-            android:textColor="@color/neutral"
+            android:textColor="?attr/wpColorTextSubtle"
             android:textSize="@dimen/text_sz_small"/>
 
         <CheckBox
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_sz_medium"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:text="@string/site_settings_rp_preview1_title"
                 android:fontFamily="sans-serif-light" />
 
@@ -120,7 +120,7 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:text="@string/site_settings_rp_preview1_site" />
 
             <ImageView
@@ -137,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_sz_medium"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:text="@string/site_settings_rp_preview2_title"
                 android:fontFamily="sans-serif-light" />
 
@@ -148,7 +148,7 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:text="@string/site_settings_rp_preview2_site" />
 
             <ImageView
@@ -165,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_sz_medium"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:text="@string/site_settings_rp_preview3_title"
                 android:fontFamily="sans-serif-light" />
 
@@ -176,7 +176,7 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:text="@string/site_settings_rp_preview3_site"/>
         </LinearLayout>
 

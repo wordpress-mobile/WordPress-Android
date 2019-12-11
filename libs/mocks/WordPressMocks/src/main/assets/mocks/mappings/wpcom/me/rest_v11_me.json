@@ -1,7 +1,7 @@
 {
     "scenarioName": "auth",
     "request": {
-        "urlPattern": "/rest/v1.1/me(\\?|/|$).*",
+        "urlPattern": "/rest/v1.1/me(/)?($|\\?.*)",
         "method": "GET"
     },
     "response": {

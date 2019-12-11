@@ -115,7 +115,9 @@ public class AppPrefs {
         NEWS_CARD_SHOWN_VERSION,
         AVATAR_VERSION,
         GUTENBERG_DEFAULT_FOR_NEW_POSTS,
+        USER_IN_GUTENBERG_ROLLOUT_GROUP,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
+        GUTENBERG_OPT_IN_DIALOG_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
 
@@ -125,7 +127,11 @@ public class AppPrefs {
         // Widget settings
         STATS_WIDGET_SELECTED_SITE_ID,
         STATS_WIDGET_COLOR_MODE,
-        STATS_WIDGET_DATA_TYPE
+        STATS_WIDGET_DATA_TYPE,
+        STATS_WIDGET_HAS_DATA,
+
+        // Keep the local_blog_id + local_post_id values that have HW Acc. turned off
+        AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
     }
 
     /**
@@ -139,20 +145,11 @@ public class AppPrefs {
         // index of the last app-version
         LAST_APP_VERSION_INDEX,
 
-        // visual editor available
-        VISUAL_EDITOR_AVAILABLE,
-
-        // visual editor enabled
-        VISUAL_EDITOR_ENABLED,
-
         // aztec editor enabled
         AZTEC_EDITOR_ENABLED,
 
         // aztec editor toolbar expanded state
         AZTEC_EDITOR_TOOLBAR_EXPANDED,
-
-        // When we need to show the async promo dialog
-        ASYNC_PROMO_REQUIRED,
 
         BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
 
@@ -199,7 +196,10 @@ public class AppPrefs {
         IS_GUTENBERG_WARNING_DIALOG_DISABLED,
 
         // used to indicate that user dont want to see the Gutenberg informative dialog anymore
-        IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED
+        IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED,
+
+        // indicates whether the system notifications are enabled for the app
+        SYSTEM_NOTIFICATIONS_ENABLED
     }
 
     private static SharedPreferences prefs() {
@@ -463,37 +463,6 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, isExpanded);
     }
 
-    // Visual Editor
-    public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
-        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
-        AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_HYBRID_TOGGLED_ON : Stat.EDITOR_HYBRID_TOGGLED_OFF);
-    }
-
-    public static void setVisualEditorAvailable(boolean visualEditorAvailable) {
-        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, visualEditorAvailable);
-        if (visualEditorAvailable) {
-            AnalyticsTracker.track(Stat.EDITOR_HYBRID_ENABLED);
-        }
-    }
-
-    public static boolean isVisualEditorAvailable() {
-        // hardcode the Visual editor availability to "false". Aztec and Gutenberg are the only ones supported now.
-        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, true);
-    }
-
-    public static boolean isVisualEditorEnabled() {
-        // hardcode the Visual editor enable to "false". Aztec and Gutenberg are the only ones supported now.
-        return false;
-    }
-
-    public static boolean isAsyncPromoRequired() {
-        return getBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, true);
-    }
-
-    public static void setAsyncPromoRequired(boolean required) {
-        setBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, required);
-    }
-
     public static boolean shouldShowBookmarksSavedLocallyDialog() {
         return getBoolean(UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, true);
     }
@@ -640,11 +609,19 @@ public class AppPrefs {
         return !"".equals(getString(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS));
     }
 
+    public static boolean isUserInGutenbergRolloutGroup() {
+        return getBoolean(DeletablePrefKey.USER_IN_GUTENBERG_ROLLOUT_GROUP, false);
+    }
+
+    public static void setUserInGutenbergRolloutGroup() {
+        setBoolean(DeletablePrefKey.USER_IN_GUTENBERG_ROLLOUT_GROUP, true);
+    }
+
     public static void removeAppWideEditorPreference() {
         remove(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS);
     }
 
-    public static boolean shouldShowGutenbergInfoPopup(String siteURL) {
+    public static boolean shouldShowGutenbergInfoPopupForTheNewPosts(String siteURL) {
         if (TextUtils.isEmpty(siteURL)) {
             return false;
         }
@@ -662,14 +639,14 @@ public class AppPrefs {
             if (urls.contains(siteURL)) {
                 flag = true;
                 // remove the flag from Prefs
-                setShowGutenbergInfoPopup(siteURL, false);
+                setShowGutenbergInfoPopupForTheNewPosts(siteURL, false);
             }
         }
 
         return flag;
     }
 
-    public static void setShowGutenbergInfoPopup(String siteURL, boolean show) {
+    public static void setShowGutenbergInfoPopupForTheNewPosts(String siteURL, boolean show) {
         if (TextUtils.isEmpty(siteURL)) {
             return;
         }
@@ -695,6 +672,49 @@ public class AppPrefs {
 
         SharedPreferences.Editor editor = prefs().edit();
         editor.putStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), newUrls);
+        editor.apply();
+    }
+
+    public static boolean isGutenbergInfoPopupDisplayed(String siteURL) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return false;
+        }
+
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name(), null);
+        } catch (ClassCastException exp) {
+            // no operation - This should not happen.
+            return false;
+        }
+
+        return urls != null && urls.contains(siteURL);
+    }
+
+    public static void setGutenbergInfoPopupDisplayed(String siteURL) {
+        if (isGutenbergInfoPopupDisplayed(siteURL)) {
+            return;
+        }
+        if (TextUtils.isEmpty(siteURL)) {
+            return;
+        }
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name(), null);
+        } catch (ClassCastException exp) {
+            // nope - this should never happens
+            return;
+        }
+
+        Set<String> newUrls = new HashSet<>();
+        // re-add the old urls here
+        if (urls != null) {
+            newUrls.addAll(urls);
+        }
+        newUrls.add(siteURL);
+
+        SharedPreferences.Editor editor = prefs().edit();
+        editor.putStringSet(DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name(), newUrls);
         editor.apply();
     }
 
@@ -878,14 +898,6 @@ public class AppPrefs {
         setInt(DeletablePrefKey.AVATAR_VERSION, version);
     }
 
-    public static void setGutenbergInformativeDialogDisabled(Boolean isDisabled) {
-        setBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, isDisabled);
-    }
-
-    public static boolean isGutenbergInformativeDialogDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, false);
-    }
-
     @NonNull public static AuthorFilterSelection getAuthorFilterSelection() {
         long id = getLong(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, AuthorFilterSelection.getDefaultValue().getId());
         return AuthorFilterSelection.fromId(id);
@@ -937,19 +949,75 @@ public class AppPrefs {
         return DeletablePrefKey.STATS_WIDGET_COLOR_MODE.name() + appWidgetId;
     }
 
-    public static void setStatsWidgetDatatTypeId(int dataTypeId, int appWidgetId) {
-        prefs().edit().putInt(getDatatTypeIdWidgetKey(appWidgetId), dataTypeId).apply();
+    public static void setStatsWidgetDataTypeId(int dataTypeId, int appWidgetId) {
+        prefs().edit().putInt(getDataTypeIdWidgetKey(appWidgetId), dataTypeId).apply();
     }
 
-    public static int getStatsWidgetDatatTypeId(int appWidgetId) {
-        return prefs().getInt(getDatatTypeIdWidgetKey(appWidgetId), -1);
+    public static int getStatsWidgetDataTypeId(int appWidgetId) {
+        return prefs().getInt(getDataTypeIdWidgetKey(appWidgetId), -1);
     }
 
-    public static void removeStatsWidgetDatatTypeId(int appWidgetId) {
-        prefs().edit().remove(getDatatTypeIdWidgetKey(appWidgetId)).apply();
+    public static void removeStatsWidgetDataTypeId(int appWidgetId) {
+        prefs().edit().remove(getDataTypeIdWidgetKey(appWidgetId)).apply();
     }
 
-    @NonNull private static String getDatatTypeIdWidgetKey(int appWidgetId) {
+    @NonNull private static String getDataTypeIdWidgetKey(int appWidgetId) {
         return DeletablePrefKey.STATS_WIDGET_DATA_TYPE.name() + appWidgetId;
+    }
+
+    public static void setStatsWidgetHasData(boolean hasData, int appWidgetId) {
+        prefs().edit().putBoolean(getHasDataWidgetKey(appWidgetId), hasData).apply();
+    }
+
+    public static boolean getStatsWidgetHasData(int appWidgetId) {
+        return prefs().getBoolean(getHasDataWidgetKey(appWidgetId), false);
+    }
+
+    public static void removeStatsWidgetHasData(int appWidgetId) {
+        prefs().edit().remove(getHasDataWidgetKey(appWidgetId)).apply();
+    }
+
+    @NonNull private static String getHasDataWidgetKey(int appWidgetId) {
+        return DeletablePrefKey.STATS_WIDGET_HAS_DATA.name() + appWidgetId;
+    }
+
+    public static void setSystemNotificationsEnabled(boolean enabled) {
+        setBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, enabled);
+    }
+
+    public static boolean getSystemNotificationsEnabled() {
+        return getBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, true);
+    }
+
+    private static List<String> getPostWithHWAccelerationOff() {
+        String idsAsString = getString(DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS, "");
+        return Arrays.asList(idsAsString.split(","));
+    }
+
+    /*
+     * adds a local site ID to the top of list of recently chosen sites
+     */
+    public static void addPostWithHWAccelerationOff(int localSiteId, int localPostId) {
+        if (localSiteId == 0 || localPostId == 0 || isPostWithHWAccelerationOff(localSiteId, localPostId)) {
+            return;
+        }
+        String key = localSiteId + "-" + localPostId;
+        List<String> currentIds = new ArrayList<>(getPostWithHWAccelerationOff());
+        currentIds.add(key);
+        // store in prefs
+        String idsAsString = TextUtils.join(",", currentIds);
+        setString(DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS, idsAsString);
+    }
+
+    public static boolean isPostWithHWAccelerationOff(int localSiteId, int localPostId) {
+        if (localSiteId == 0 || localPostId == 0) {
+            return false;
+        }
+        List<String> currentIds = getPostWithHWAccelerationOff();
+        String key = localSiteId + "-" + localPostId;
+        if (currentIds.contains(key)) {
+            return true;
+        }
+        return false;
     }
 }

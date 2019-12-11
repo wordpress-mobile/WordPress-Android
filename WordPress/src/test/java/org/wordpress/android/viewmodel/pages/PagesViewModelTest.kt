@@ -2,11 +2,7 @@ package org.wordpress.android.viewmodel.pages
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,7 +24,6 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.test
-import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
@@ -50,7 +45,6 @@ class PagesViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var actionPerformer: ActionPerformer
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
-    @Mock lateinit var uploadStarter: UploadStarter
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
@@ -61,10 +55,11 @@ class PagesViewModelTest {
     fun setUp() {
         viewModel = PagesViewModel(
                 pageStore = pageStore,
+                postStore = mock(),
                 dispatcher = dispatcher,
                 actionPerfomer = actionPerformer,
                 networkUtils = networkUtils,
-                uploadStarter = uploadStarter,
+                previewStateHelper = mock(),
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
                 eventBusWrapper = mock()
@@ -156,34 +151,6 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun `when started, it uploads all local drafts`() = runBlocking {
-        // Arrange
-        setUpPageStoreWithEmptyPages()
-
-        // Act
-        viewModel.start(site)
-
-        // Assert
-        verify(uploadStarter, times(1)).queueUploadFromSite(eq(site))
-        verifyNoMoreInteractions(uploadStarter)
-    }
-
-    @Test
-    fun `when pulling to refresh, it uploads all local drafts`() = runBlocking {
-        // Arrange
-        setUpPageStoreWithEmptyPages()
-        viewModel.start(site)
-
-        // Act
-        viewModel.onPullToRefresh()
-
-        // Assert
-        // We get 2 calls because the `viewModel.start()` also requests an upload
-        verify(uploadStarter, times(2)).queueUploadFromSite(eq(site))
-        verifyNoMoreInteractions(uploadStarter)
-    }
-
-    @Test
     fun `when a page is being uploaded, page actions are disabled`() = test {
         // Arrange
         setUpPageStoreWithEmptyPages()
@@ -236,8 +203,8 @@ class PagesViewModelTest {
 
     private companion object Fixtures {
         fun createPostModel() = PostModel().apply {
-            id = 1_001
-            remotePostId = 2_034
+            setId(1_001)
+            setRemotePostId(2_034)
             setIsPage(true)
         }
     }

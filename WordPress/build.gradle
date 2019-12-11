@@ -16,7 +16,7 @@ repositories {
     jcenter()
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://giphy.bintray.com/giphy-sdk" }
-    maven { url "https://jitpack.io" }
+    maven { url "https://www.jitpack.io" }
 }
 
 apply plugin: 'com.android.application'
@@ -49,8 +49,15 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-186"
-        versionCode 769
+        archivesBaseName = "$applicationId"
+
+        // Allow versionName to be overridden with property. e.g. -PversionName=1234
+        if (project.hasProperty("versionName")) {
+            versionName project.property("versionName")
+        } else {
+            versionName "alpha-199"
+        }
+        versionCode 803
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -60,6 +67,7 @@ android {
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
+        buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -74,14 +82,19 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
-            versionName "13.1-rc-1"
-            versionCode 768
+            // Only set the release version if one isn't provided
+            if (!project.hasProperty("versionName")) {
+                versionName "13.8-rc-1"
+            }
+            versionCode 802
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
+            buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
@@ -107,6 +120,7 @@ android {
     testOptions {
         unitTests {
             includeAndroidResources = true
+            returnDefaultValues = true
         }
     }
 
@@ -171,13 +185,16 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
 
+    implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation 'com.android.installreferrer:installreferrer:1.0'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.automattic:rest:1.0.7'
+    implementation ('com.automattic:rest:1.0.7') {
+        exclude group: 'com.mcxiaoke.volley'
+    }
     implementation 'org.wordpress:graphview:3.4.0'
     implementation 'org.wordpress:persistentedittext:1.0.2'
     implementation 'org.wordpress:emailchecker2:1.1.0'
@@ -190,16 +207,17 @@ dependencies {
         exclude group: 'com.squareup.okhttp3'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    kapt 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    kapt 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.robolectric:robolectric:3.6.1'
-    testImplementation 'org.robolectric:shadows-multidex:3.6.1'
+    testImplementation 'org.robolectric:robolectric:4.3'
+    testImplementation 'org.robolectric:shadows-multidex:4.3'
     testImplementation 'org.mockito:mockito-core:2.23.0'
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
     testImplementation 'org.assertj:assertj-core:3.11.1'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1'
 
     androidTestImplementation 'org.mockito:mockito-android:2.27.0'
     androidTestImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
@@ -223,7 +241,7 @@ dependencies {
     }
     androidTestImplementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 
-    androidTestImplementation project(path:':libs:mocks:WordPressMocks')
+    androidTestImplementation project(path:':WordPressMocks')
 
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test:rules:1.1.0'
@@ -249,7 +267,9 @@ dependencies {
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
     implementation project(path:':libs:utils:WordPressUtils')
-    implementation project(path:':libs:networking:WordPressNetworking')
+    implementation (project(path:':libs:networking:WordPressNetworking')) {
+        exclude group: "com.android.volley"
+    }
     implementation project(path:':libs:analytics:WordPressAnalytics')
     implementation project(path:':libs:editor:WordPressEditor')
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
@@ -259,10 +279,6 @@ dependencies {
 
     implementation (group: 'com.zendesk', name: 'support', version: '2.0.0') {
         exclude group: 'com.google.dagger'
-    }
-
-    implementation('com.giphy.sdk:core:1.0.2@aar') {
-        transitive = true
     }
 
     lintChecks 'org.wordpress:lint:1.0.1'
@@ -279,6 +295,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+
+    implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:2.0.1'
 }
 
 configurations.all {
@@ -366,7 +384,7 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     android {
         signingConfigs {
             release {
-                storeFile = file(project.storeFile.replaceFirst("^~", System.getProperty("user.home")))
+                storeFile = rootProject.file(project.storeFile)
                 storePassword = project.storePassword
                 keyAlias = project.keyAlias
                 keyPassword = project.keyPassword

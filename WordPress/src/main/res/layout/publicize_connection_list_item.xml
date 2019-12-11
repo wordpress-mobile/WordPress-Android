@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:textColor="@color/neutral_70"
+        android:textColor="?attr/wpColorText"
         android:textSize="@dimen/publicize_name_size"
         android:layout_marginStart="@dimen/publicize_name_margin"/>
 

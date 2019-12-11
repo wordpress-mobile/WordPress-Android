@@ -91,6 +91,10 @@
 
         <!-- Account activities -->
         <activity
+            android:name=".ui.main.MeActivity"
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/me_section_screen_title" />
+        <activity
             android:name=".ui.accounts.LoginActivity"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
@@ -193,11 +197,6 @@
 
         <!-- Posts activities -->
         <activity
-            android:name=".editor.legacy.EditLinkActivity"
-            android:label="@string/create_a_link"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"
-            android:windowSoftInputMode="stateVisible" />
-        <activity
             android:name=".ui.posts.EditPostActivity"
             android:theme="@style/Calypso.ActionMode.Dark"
             android:windowSoftInputMode="stateHidden|adjustResize">
@@ -233,10 +232,6 @@
             android:name=".ui.pages.PageParentActivity"
             android:theme="@style/Calypso.NoActionBar"
             android:label="@string/set_parent" />
-        <activity
-            android:name=".ui.posts.PostPreviewActivity"
-            android:label="@string/preview_post"
-            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:theme="@style/CalypsoTheme" />
@@ -563,19 +558,6 @@
             android:name=".ui.prefs.MyProfileActivity"
             android:label="@string/my_profile"
             android:theme="@style/CalypsoTheme" />
-
-        <activity android:name=".ui.VisualEditorOptionsReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="editor"
-                    android:scheme="wordpress" />
-            </intent-filter>
-        </activity>
 
         <!-- Lib activities-->
         <activity

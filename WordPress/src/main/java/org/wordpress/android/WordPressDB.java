@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 66;
+    private static final int DATABASE_VERSION = 67;
 
 
     // Warning renaming DATABASE_NAME could break previous App backups (see: xml/backup_scheme.xml)
@@ -119,8 +119,6 @@ public class WordPressDB {
                 PeopleTable.createTables(mDb);
             case 45:
             case 46:
-                AppPrefs.setVisualEditorAvailable(true);
-                AppPrefs.setVisualEditorEnabled(true);
             case 47:
                 PeopleTable.reset(mDb);
             case 48:
@@ -151,7 +149,6 @@ public class WordPressDB {
                 mDb.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
             case 59:
                 // Enable Aztec for all users
-                AppPrefs.setVisualEditorEnabled(false);
                 AppPrefs.setAztecEditorEnabled(true);
             case 60:
                 // add Start of Week site setting as part of #betterjetpackxp
@@ -174,6 +171,10 @@ public class WordPressDB {
             case 65:
                 // add external users only to publicize services table
                 PublicizeTable.resetServicesTable(mDb);
+            case 66:
+                // add Jetpack search site setting
+                mDb.execSQL(SiteSettingsModel.ADD_JETPACK_SEARCH_SUPPORTED);
+                mDb.execSQL(SiteSettingsModel.ADD_JETPACK_SEARCH_ENABLED);
         }
         mDb.setVersion(DATABASE_VERSION);
     }

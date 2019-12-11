@@ -113,9 +113,9 @@ abstract class StatsListViewModel(
         }
     }
 
-    fun onDateChanged() {
+    fun onDateChanged(selectedSection: StatsSection) {
         launch {
-            statsUseCase.onDateChanged()
+            statsUseCase.onDateChanged(selectedSection)
         }
     }
 
@@ -140,8 +140,13 @@ abstract class StatsListViewModel(
 
     sealed class UiModel {
         data class Success(val data: List<StatsBlock>) : UiModel()
-        class Error(val message: Int = R.string.stats_loading_error) : UiModel()
-        object Empty : UiModel()
+        data class Error(val message: Int = R.string.stats_loading_error) : UiModel()
+        data class Empty(
+            val title: Int,
+            val subtitle: Int? = null,
+            val image: Int? = null,
+            val showButton: Boolean = false
+        ) : UiModel()
     }
 
     fun onTypesChanged() {

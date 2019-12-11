@@ -10,5 +10,5 @@
     android:padding="@dimen/margin_extra_large"
     android:text="@string/activity_log_limited_content_on_free_plan"
     android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-    android:textColor="@color/neutral_50" >
+    android:textColor="?attr/wpColorTextSubtle" >
 </org.wordpress.android.widgets.WPTextView>

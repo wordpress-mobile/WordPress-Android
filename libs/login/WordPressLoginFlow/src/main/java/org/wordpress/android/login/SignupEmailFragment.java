@@ -45,9 +45,9 @@ import org.wordpress.android.util.NetworkUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import dagger.android.support.AndroidSupportInjection;
-
 import static android.app.Activity.RESULT_OK;
+
+import dagger.android.support.AndroidSupportInjection;
 
 public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
@@ -143,14 +143,24 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
         super.onAttach(context);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    @Override public void onStart() {
+        super.onStart();
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(SignupEmailFragment.this)
                 .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, SignupEmailFragment.this)
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            if (mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.disconnect();
+            }
+        }
     }
 
     @Override
@@ -190,11 +200,6 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     public void onDetach() {
         super.onDetach();
         mLoginListener = null;
-
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.stopAutoManage(getActivity());
-            mGoogleApiClient.disconnect();
-        }
     }
 
     private String getCleanedEmail() {
@@ -266,7 +271,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                             } else {
                                 mAnalyticsListener.trackSignupEmailToLogin();
                                 mLoginListener.showSignupToLoginMessage();
-                                mLoginListener.gotWpcomEmail(event.value);
+                                mLoginListener.gotWpcomEmail(event.value, false);
                                 // Kill connections with FluxC and this fragment since the flow is changing to login.
                                 mDispatcher.unregister(this);
                                 getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();

@@ -23,7 +23,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:textColor="@color/neutral_70"
+        android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_medium"
         tools:text="user_login"
         android:layout_marginStart="@dimen/margin_medium"/>

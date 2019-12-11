@@ -6,6 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -24,12 +25,13 @@ import kotlin.math.roundToInt
 class MostPopularInsightsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val mostPopularStore: MostPopularInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val dateUtils: DateUtils,
     private val resourceProvider: ResourceProvider,
     private val popupMenuHandler: ItemPopupMenuHandler
-) : StatelessUseCase<InsightsMostPopularModel>(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
+) : StatelessUseCase<InsightsMostPopularModel>(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher, backgroundDispatcher) {
     override suspend fun loadCachedData(): InsightsMostPopularModel? {
         return mostPopularStore.getMostPopularInsights(statsSiteProvider.siteModel)
     }
@@ -52,6 +54,7 @@ class MostPopularInsightsUseCase
         return listOf(buildTitle(), Empty())
     }
 
+    @ExperimentalStdlibApi
     override fun buildUiModel(domainModel: InsightsMostPopularModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())

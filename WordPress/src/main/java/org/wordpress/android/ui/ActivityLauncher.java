@@ -10,8 +10,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
@@ -21,6 +19,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
@@ -37,10 +36,10 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
-import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
+import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -55,8 +54,9 @@ import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PostPreviewActivity;
+import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
@@ -72,6 +72,7 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -88,6 +89,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
@@ -118,11 +120,7 @@ public class ActivityLauncher {
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.activity_slide_in_from_left,
-                R.anim.do_nothing);
-        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
+        activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
     public static void showPhotoPickerForResult(Activity activity,
@@ -150,17 +148,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, StockMediaPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(StockMediaPickerActivity.KEY_REQUEST_CODE, requestCode);
-
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    public static void showGiphyPickerForResult(Activity activity, @NonNull SiteModel site, int requestCode) {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("from", activity.getClass().getSimpleName());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_ACCESSED, properties);
-
-        Intent intent = new Intent(activity, GiphyPickerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
 
         activity.startActivityForResult(intent, requestCode);
     }
@@ -303,9 +290,9 @@ public class ActivityLauncher {
         StatsViewAllActivity.startForInsights(context, statsType, localSiteId);
     }
 
-    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType,
-                                            int localSiteId) {
-        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, localSiteId);
+    public static void viewAllGranularStats(Context context, StatsGranularity granularity, SelectedDate selectedDate,
+                                            StatsViewType statsType, int localSiteId) {
+        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, selectedDate, localSiteId);
     }
 
     public static void viewInsightsManagement(Context context, int localSiteId) {
@@ -343,6 +330,17 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
+        if (site == null) {
+            AppLog.e(T.POSTS, "Site cannot be null when opening posts");
+            AnalyticsTracker.track(
+                    POST_LIST_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Posts because of the null SiteModel"
+            );
+            ToastUtils.showToast(context, R.string.posts_cannot_be_started, ToastUtils.Duration.SHORT);
+            return;
+        }
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
@@ -477,7 +475,8 @@ public class ActivityLauncher {
             } else if (!TextUtils.isEmpty(site.getUsername()) && !TextUtils.isEmpty(site.getPassword())) {
                 // Show self-hosted sites as authenticated since we should have the username & password
                 WPWebViewActivity
-                        .openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false, true);
+                        .openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false, true,
+                                false);
             } else {
                 // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
                 // connected through REST API.
@@ -495,29 +494,22 @@ public class ActivityLauncher {
         openUrlExternal(context, site.getAdminUrl());
     }
 
-    public static void viewPostPreviewForResult(Activity activity, SiteModel site, PostModel post) {
-        if (post == null) {
-            return;
-        }
-
-        Intent intent = new Intent(activity, PostPreviewActivity.class);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
-        intent.putExtra(WordPress.SITE, site);
-        activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
+    public static void addNewPostForResult(
+            Activity activity,
+            SiteModel site,
+            boolean isPromo,
+            PagePostCreationSourcesDetail source
+    ) {
+        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source);
     }
 
-    public static void viewPagePreview(@NonNull Fragment fragment, @NonNull PageModel page) {
-        Intent intent = new Intent(fragment.getContext(), PostPreviewActivity.class);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
-        intent.putExtra(WordPress.SITE, page.getSite());
-        fragment.startActivity(intent);
-    }
-
-    public static void addNewPostForResult(Activity activity, SiteModel site, boolean isPromo) {
-        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo);
-    }
-
-    public static void addNewPostForResult(Intent intent, Activity activity, SiteModel site, boolean isPromo) {
+    public static void addNewPostForResult(
+            Intent intent,
+            Activity activity,
+            SiteModel site,
+            boolean isPromo,
+            PagePostCreationSourcesDetail source
+    ) {
         if (site == null) {
             return;
         }
@@ -525,14 +517,26 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
+        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
-        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId());
+        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId(), false);
+    }
+
+    public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post,
+                                               boolean loadAutoSaveRevision) {
+        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId(),
+                loadAutoSaveRevision);
     }
 
     public static void editPostOrPageForResult(Intent intent, Activity activity, SiteModel site, int postLocalId) {
+        editPostOrPageForResult(intent, activity, site, postLocalId, false);
+    }
+
+    public static void editPostOrPageForResult(Intent intent, Activity activity, SiteModel site, int postLocalId,
+                                               boolean loadAutoSaveRevision) {
         if (site == null) {
             return;
         }
@@ -542,6 +546,8 @@ public class ActivityLauncher {
         // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
         // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, postLocalId);
+        intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
+
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -557,52 +563,127 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void addNewPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site) {
+    public static void addNewPageForResult(
+            @NonNull Activity activity,
+            @NonNull SiteModel site,
+            @NonNull PagePostCreationSourcesDetail source
+    ) {
+        Intent intent = new Intent(activity, EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
+    public static void addNewPageForResult(
+            @NonNull Fragment fragment,
+            @NonNull SiteModel site,
+            @NonNull PagePostCreationSourcesDetail source) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void viewHistoryDetailForResult(Activity activity, Revision revision, ArrayList<Revision> revisions) {
+    public static void viewHistoryDetailForResult(Activity activity, Revision revision, List<Revision> revisions) {
         Intent intent = new Intent(activity, HistoryDetailActivity.class);
         intent.putExtra(HistoryDetailContainerFragment.EXTRA_REVISION, revision);
-        intent.putParcelableArrayListExtra(HistoryDetailContainerFragment.EXTRA_REVISIONS, revisions);
+        intent.putParcelableArrayListExtra(HistoryDetailContainerFragment.EXTRA_REVISIONS, new ArrayList<>(revisions));
         activity.startActivityForResult(intent, RequestCodes.HISTORY_DETAIL);
     }
 
     /*
      * Load the post preview as an authenticated URL so stats aren't bumped
      */
-    public static void browsePostOrPage(Context context, SiteModel site, PostModel post) {
+    public static void browsePostOrPage(Context context, SiteModel site, PostImmutableModel post) {
+        browsePostOrPageEx(context, site, post, RemotePreviewType.NOT_A_REMOTE_PREVIEW);
+    }
+
+    public static void previewPostOrPageForResult(
+            Activity activity,
+            SiteModel site,
+            PostImmutableModel post,
+            RemotePreviewType remotePreviewType
+    ) {
+        browsePostOrPageEx(activity, site, post, remotePreviewType);
+    }
+
+    private static void browsePostOrPageEx(
+            Context context,
+            SiteModel site,
+            PostImmutableModel post,
+            RemotePreviewType remotePreviewType) {
         if (site == null || post == null || TextUtils.isEmpty(post.getLink())) {
             return;
         }
 
-        // always add the preview parameter to avoid bumping stats when viewing posts
-        String url = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
+        if (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                        && TextUtils.isEmpty(post.getAutoSavePreviewUrl())) {
+            return;
+        }
+
+        String url = PostUtils.getPreviewUrlForPost(remotePreviewType, post);
+
         String shareableUrl = post.getLink();
         String shareSubject = post.getTitle();
+        boolean startPreviewForResult = remotePreviewType != RemotePreviewType.NOT_A_REMOTE_PREVIEW;
+
         if (site.isWPCom()) {
-            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject, true);
-        } else if (site.isJetpackConnected()) {
+            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(
+                    context,
+                    url,
+                    shareableUrl,
+                    shareSubject,
+                    true,
+                    startPreviewForResult);
+        } else if (site.isJetpackConnected() && site.isUsingWpComRestApi()) {
             WPWebViewActivity
-                    .openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce(), true);
+                    .openJetpackBlogPostPreview(
+                            context,
+                            url,
+                            shareableUrl,
+                            shareSubject,
+                            site.getFrameNonce(),
+                            true,
+                            startPreviewForResult);
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
             // from the passed URL, and internally redirects to it. EX:Published posts on a site with Plain
             // permalink structure settings.
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
-            WPWebViewActivity
-                    .openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()}, true, true);
+            WPWebViewActivity.openUrlByUsingBlogCredentials(
+                    context,
+                    site,
+                    post,
+                    url,
+                    new String[]{post.getLink()},
+                    true,
+                    true,
+                    startPreviewForResult);
         }
+    }
+
+    public static void showActionableEmptyView(
+            Context context,
+            WPWebViewUsageCategory actionableState,
+            String postTitle
+    ) {
+        WPWebViewActivity.openActionableEmptyViewDirectly(context, actionableState, postTitle);
     }
 
     public static void viewMyProfile(Context context) {
         Intent intent = new Intent(context, MyProfileActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
+        context.startActivity(intent);
+    }
+
+    public static void viewMeActivity(Context context) {
+        Intent intent = new Intent(context, MeActivity.class);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
         context.startActivity(intent);
     }
 

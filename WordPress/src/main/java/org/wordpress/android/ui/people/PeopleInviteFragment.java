@@ -30,6 +30,7 @@ import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -513,7 +514,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         TextView textView = (TextView) mUsernameButtons.get(username).findViewById(R.id.username);
         textView.setTextColor(ContextCompat.getColor(getActivity(),
-                validationResultMessage == null ? R.color.neutral_70
+                validationResultMessage == null ? ContextExtensionsKt
+                        .getColorResIdFromAttribute(getActivity(), R.attr.wpColorText)
                         : (validationResultMessage.equals(FLAG_SUCCESS) ? R.color.primary_50 : R.color.error_50)));
     }
 

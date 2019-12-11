@@ -5,10 +5,14 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
+import org.wordpress.android.ui.CommentFullScreenDialogFragment;
+import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
+import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
+import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
 import org.wordpress.android.ui.stats.refresh.StatsFragment;
@@ -17,11 +21,12 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailFragment;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetColorSelectionDialogFragment;
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetDataTypeSelectionDialogFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetDataTypeSelectionDialogFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetSiteSelectionDialogFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureFragment;
 import org.wordpress.android.util.wizard.WizardManager;
+import org.wordpress.android.viewmodel.ContextProvider;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
@@ -37,8 +42,8 @@ public abstract class ApplicationModule {
     abstract Context bindContext(Application application);
 
     @Provides
-    public static NewsService provideLocalNewsService(Context context) {
-        return new LocalNewsService(context);
+    public static NewsService provideLocalNewsService(ContextProvider contextProvider) {
+        return new LocalNewsService(contextProvider);
     }
 
     @ContributesAndroidInjector
@@ -77,8 +82,21 @@ public abstract class ApplicationModule {
     @ContributesAndroidInjector
     abstract StatsWidgetDataTypeSelectionDialogFragment contributeDataTypeSelectionDialogFragment();
 
+    @ContributesAndroidInjector
+    abstract CommentFullScreenDialogFragment contributecommentFullScreenDialogFragment();
+
+    @ContributesAndroidInjector
+    abstract UsernameChangerFullScreenDialogFragment contributeUsernameChangerFullScreenDialogFragment();
+
+    @ContributesAndroidInjector
+    abstract SettingsUsernameChangerFragment contributeSettingsUsernameChangerFragment();
+
+    @ContributesAndroidInjector
+    abstract ReaderPostWebViewCachingFragment contributeReaderPostWebViewCachingFragment();
+
     @Provides
-    public static WizardManager<SiteCreationStep> provideWizardManager(SiteCreationStepsProvider stepsProvider) {
+    public static WizardManager<SiteCreationStep> provideWizardManager(
+            SiteCreationStepsProvider stepsProvider) {
         return new WizardManager<>(stepsProvider.getSteps());
     }
 

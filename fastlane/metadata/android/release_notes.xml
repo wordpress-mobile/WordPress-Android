@@ -1,108 +1,90 @@
-<ar>
-13.0:
-* تحسينات مُحرّر المكوّنات: يتم تمكين المحرر تلقائيًا عند فتح مقالة مكوّن (إلا إذا قمت بالإلغاء في الإصدار 12.9)، أو يمكنك تمكينه على أساس كل موقع.
-* تحسينات إمكانية الوصول: يمكن الآن لقرّاء الشاشة قراءة المزيد بشاشة الإحصائيات.
-* تحسينات عامة لقابلية الاستخدام: تسجيل الدخول أسرع، والألوان أكثر تناسقًا عبر الشاشات، وإصلاح الأخطاء ووضع حد لبعض الأعطال.
-</ar>
 <de-DE>
-13.0:
-* Verbesserungen am Block-Editor: Der Editor wird automatisch aktiviert, wenn du einen Blockbeitrag öffnest (wenn du dies nicht in Version 12.9 deaktiviert hast), oder du kannst ihn für jede einzelne Website aktivieren.
-* Verbesserungen der Bedienungshilfen: Screenreader können jetzt mehr Inhalte des Statistikbildschirms erkennen.
-* Allgemeine Verbesserungen der Benutzerfreundlichkeit: Die Anmeldung funktioniert schneller, die Farben sind konsistenter auf allen Bildschirmen und Fehlerbehebungen beseitigen die Ursachen einiger Abstürze.
+13.7:
+* Updates im Block-Editor: Nicht unterstützte Blöcke zeigen jetzt einen Titel an, Indikatoren für neue Blöcke werden sowohl in leeren Editoren als auch nach dem letzten Block angezeigt, Hinzufügen von Links aus bestehenden URLs in deiner Zwischenablage, Medien- und Textblöcke haben jetzt mehr Ausrichtungsoptionen, Bildblöcke sind jetzt für die Vorschau im Vollbildmodus antippbar.
+
+* Allgemeine Verbesserungen: Einige Fehler und Abstürze wurden behoben, im Reader gibt es einen besseren Support für den TalkBack-Screenreader.
 </de-DE>
 <en-US>
-13.0:
-* Block editor improvements: the editor is auto-enabled when you open a block post (unless you opted out in v12.9), or you can enable it on a per-site basis.
-* Accessibility improvements: screen readers can now read more of the stats screen.
-* General usability improvements: logging in is speedier, colors are more consistent across screens, and bug fixes put an end to some crashes.
+13.7:
+* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.
+
+* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.
 </en-US>
 <es-ES>
-13.0
-* Mejoras en el editor de bloques: el editor se activa automáticamente cuando abres un bloque de entradas (salvo que lo hayas desactivado en la versión 12.9) o puedes activarlo en base a cada sitio.
-*Mejoras de accesibilidad: los lectores de pantalla ahora pueden leer mejor la pantalla de estadísticas.
-* Mejoras de uso general: el acceso es rapidísimo, los colores son más consistentes entre pantallas y las correcciones de fallos ponen fin a algunos errores.
+13.7:
+* Actualizaciones del editor de bloques: ahora, los bloques no compatibles muestran un título, los indicadores de nuevos bloques se muestran tanto en los editores vacíos como después del último bloque, añadir enlaces a las URLs existentes en tu portapapeles, los bloques de medios y texto tienen más opciones de alineación, los bloques de imagen se pueden tocar para obtener una vista previa a pantalla completa.
+
+* Mejoras generales: corregidos algunos fallos y roturas y añadido una mejor compatibilidad para el lector de pantalla TalkBack en el lector.
 </es-ES>
 <fr-CA>
-13.0 :
-* Améliorations de l'éditeur de blocs : l'éditeur est automatiquement activé lorsque vous ouvrez un bloc article (à moins que vous n’ayez décidé du contraire lors de la v12.9) ou vous pouvez l'activer sur une base par site.
-* Améliorations de l'accessibilité : les lecteurs d'écran peuvent désormais lire davantage de l'écran de statistiques.
-* Améliorations de l'ergonomie générale : la connexion est plus rapide, les couleurs sont plus uniformes d'un écran à l’autre et les corrections de bug ont mis fin à certains plantages.
+13.7 :
+*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
+
+* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-CA>
 <fr-FR>
-13.0 :
-* Améliorations de l'éditeur de blocs : l'éditeur est automatiquement activé lorsque vous ouvrez un bloc article (à moins que vous n’ayez décidé du contraire lors de la v12.9) ou vous pouvez l'activer sur une base par site.
-* Améliorations de l'accessibilité : les lecteurs d'écran peuvent désormais lire davantage de l'écran de statistiques.
-* Améliorations de l'ergonomie générale : la connexion est plus rapide, les couleurs sont plus uniformes d'un écran à l’autre et les corrections de bug ont mis fin à certains plantages.
+13.7 :
+*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
+
+* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-FR>
 <iw-IL>
-13.0:
-* שיפורים בעורך הבלוקים: העורך מופעל באופן אוטומטי כאשר פותחים פוסט עם בלוק (אלא אם עזבת בגרסה 12.9) ואפשר גם להגדיר את ההפעלה שלו לכל אתר בנפרד.
-* שיפורים בנגישות: קוראי מסך יכולים כעת לקרוא פרטים נוספים במסך של הנתונים הסטטיסטיים.
-* שיפורים כלליים בשימושיות: ההתחברות מהירה יותר, הצבעים אחידים יותר במסכים השונים ותיקנו כמה באגים שגרמו לקריסות.
+13.7:
+* עדכונים בעורך הבלוקים: בלוקים שלא נתמכים כעת מציגים כותרת, סממנים של בלוקים חדשים מוצגים בעורכים ריקים ולאחר הבלוק האחרון, הוספה של קישורים אפשרית מכתובות URL שנמצאות בלוח שלך, בלוקים של טקסט ומדיה כוללים אפשרויות יישור נוספות, ניתן להקיש על בלוקים של תמונה לתצוגה במסך מלא.
+
+* שיפורים כלליים: תיקנו כמה באגים וקריסות ושיפרנו את התמיכה בקורא של מסך TalkBack ב-Reader.
 </iw-IL>
 <id>
-13.0:
-* Peningkatan penyunting blok: penyunting diaktifkan otomatis saat Anda membuka pos blok (kecuali Anda tidak memilihnya di v12.9), atau Anda dapat mengaktifkannya untuk setiap situs.
-* Peningkatan aksesibilitas: pembaca layar kini dapat membaca lebih banyak layar statistik.
-* Peningkatan kegunaan umum: login lebih cepat, warna lebih konsisten antarlayar, dan perbaikan bug mengakhiri sejumlah masalah crash.
+13.7.
+* Pembaruan penyunting blok: blok yang tidak didukung kini menampilkan judul, indikator blok baru ditampilkan baik di penyunting kosong maupun setelah blok terakhir, menambahkan tautan dari URL yang sudah ada di papan klip Anda, blok Media dan Teks memiliki lebih banyak pilihan perataan, blok gambar kini dapat diketuk untuk pratinjau layar penuh.
+
+* Penyempurnaan umum: memperbaiki beberapa bug dan kesalahan, serta menambahkan dukungan pembaca layar TalkBack yang lebih baik di Pembaca.
 </id>
-<it-IT>
-13.0:
-* Miglioramenti all'editor dei blocchi: l'editor viene abilitato automaticamente quando si apre un articolo a blocchi (salvo disattivazione nella versione v12.9). In alternativa è possibile abilitarlo su singoli siti.
-* Miglioramenti dell'accessibilità: i lettori di schermo possono ora leggere una maggiore quantità della schermata delle statistiche.
-* Miglioramenti della fruibilità generale: l'accesso è più veloce, i colori sono più coerenti tra le diverse schermate e la correzione di alcuni errori ha eliminato alcuni arresti anomali.
-</it-IT>
 <ja-JP>
-13.0:
-* ブロックエディターの改善 :ブロック投稿を開くと、エディターが自動的に有効になります (v12.9でオプトアウトした場合を除く)。サイトごとに有効にすることもできます。
-* アクセシビリティの改善 :スクリーンリーダーで、より多くの統計画面を読み込めるようになりました。
-* 一般的なユーザビリティの向上 :ログインが迅速化され、画面全体の色の一貫性が向上し、バグの修正により一部のクラッシュが解消されました。
+13.7:
+* ブロックエディターの更新 :サポート対象外のブロックにタイトルが表示されるようになり、新しいブロックインジケータが空のエディターと最後のブロック後の両方に表示され、リンクを追加するとクリップボードで既存の URL から抽出され、メディアブロックとテキストブロックに他の配置オプションが追加され、画像ブロックをタップするとフルスクリーンのプレビューが可能になります。
+
+* 一般的な改善 :いくつかのバグとクラッシュが修正され、TalkBack 画面の読者サポートが Reader で改善されました。
 </ja-JP>
 <ko-KR>
-13.0:
-* 블록 편집기 개선 사항: 블록 글을 열 때(v12.9에서 옵트아웃하지 않은 경우) 편집기가 자동으로 활성화되거나 사이트별로 활성화할 수 있습니다.
-* 접근성 개선 사항: 이제 화면 판독기에서 더 많은 통계 화면을 읽을 수 있습니다.
-* 일반적인 유용성 개선 사항: 로그인 속도가 빨라지고 화면 전체 색상의 일관성이 높아졌으며 버그 수정 덕분에 일부 충돌이 더 이상 발생하지 않습니다.
+13.7:
+* 블록 편집기 업데이트: 지원되지 않는 블록에 이제 제목이 표시됨, 새 블록 표시기가 빈 편집기와 마지막 블록 뒤에 모두 표시됨, 링크를 추가하면 클립보드의 기존 URL에서 가져옴, 미디어 및 텍스트 블록에 정렬 옵션이 추가됨, 이미지 블록을 탭하여 전체 화면으로 미리보기 가능.
+
+* 일반 개선 사항 : 일부 버그 및 충돌을 수정하고 리더에서 더 나은 TalkBack 화면 판독기 지원을 추가했습니다.
 </ko-KR>
 <nl-NL>
-13.0:
-* Verbeteringen aan de blok-editor: De editor is automatisch ingeschakeld als je een blokbericht opent (tenzij je je hebt uitgeschreven in v12.9), of je kunt het per site inschakelen.
-* Verbeteringen aan de toegankelijkheid: Schermlezers kunnen nu meer zien van het statistiekenscherm.
-* algemene verbeteringen voor gebruik Inloggen gaat sneller, kleuren zijn consistenter over de schermen verdeeld, en bugfixes hebben sommige crashes beëindigd.
+13.7:
+* Updates van de blokeditor: in niet-ondersteunde blokken wordt nu een titel weergegeven, indicators van nieuwe blokken worden zowel in lege editors als na het laatste blok weergegeven, links kunnen worden toegevoegd vanuit bestaande URL's in je klembord, de blokken Media en Tekst bevatten nu meer opties voor uitlijning, er kan op afbeeldingsblokken worden getikt voor weergave op volledig scherm.
+
+* Algemene verbeteringen: een paar bugs en crashes zijn opgelost en er is verbeterde ondersteuning voor de TalkBack-schermreader in de Reader.
 </nl-NL>
-<pt-BR>
-13.0:
-* Melhorias no editor de blocos: o editor é aberto automaticamente ao abrir um post com blocos (a menos que você tenha desativado isso na versão 12.9). Você também pode configurar o editor por site.
-* Melhorias de acessibilidade: agora leitores de tela podem ler mais informações em estatísticas.
-* Melhorias gerais: acessar o aplicativo agora é mais rápido, atualizamos as cores para ter mais consistência e corrigimos erros que causavam falhas no aplicativo.
-</pt-BR>
 <ru-RU>
-13.0:
-* Улучшения в редакторе блоков: при открытии записи с блоками редактор блоков будет включен автоматически (если только вы не отказались в версии 12.9), вы также можете включить его для отдельных сайтов.
-* Улучшения доступности: программы чтения с экрана теперь могут прочесть больше с экрана статистики.
-* Общие улучшения использования: вход теперь работает быстрее, цветовая схема более целостна при переходе между экранами, исправления ошибок приводящих к падению приложения.
+13.7:
+* Обновления для редактора блоков: для неподдерживаемых блоков показывается их название, индикаторы нового блока показываются и в пустом редакторе и после последнего блока, добавление ссылки может использовать содержимое буфера обмена, мультимедиа и текстовые блоки имеют больше возможностей выравнивания, блоки изображений можно развернуть на полноэкранный просмотр при нажатии.
+
+* Общие улучшения: исправлены некоторые ошибки и падения, добавлена поддержка чтения с экрана TalkBack в Чтиво.
 </ru-RU>
 <sv-SE>
-13.0:
-* Förbättringar i blockredigeraren: redigeraren aktiveras automatiskt när du öppnar ett inlägg som använder block (om du inte stängde av detta i version 12.9). Du kan ocks[ aktivera detta för vissa webbplatser.
-* Tillgänglighetsförbättringar: nu kan skärmläsare läsa mer av informationen i statistikvyn.
-* Allmänna användbarhetsförbättringar: inloggning går snabbare, färgerna stämmer bättre överens mellan olika vyer och några felrättningar har satt stopp för ett antal situationer med programkrascher.
+13.7:
+* Blockredigeraren: block utan stöd har nu en särskild rubrik, nya indikatorer visar tomma redigerare och slutet på sista blocket, vid tillägg av ny länk hämtas eventuell URL i urklippet, media- och textblock har fler justeringsalternativ, man kan klicka på bildblock för förhandsvisning i fullskärm.
+
+* Allmänna förbättringar: korrigerat olika fel och programkrascher och förbättrat stödet för skärmläsaren TalkBack i läsaren.
 </sv-SE>
 <tr-TR>
-13.0:
-* Blok düzenleyici iyileştirmeleri: Düzenleyici, bir blok gönderisini açtığınızda otomatik olarak etkinleştirilebilir (12.9 sürümünde hizmeti kapatmadıysanız) veya bunu site bazında etkinleştirebilirsiniz.
-* Erişilebilirlik iyileştirmeleri: Ekran okuyucular artık istatistik ekranından daha fazla içerik okuyabiliyor.
-* Genel kullanılabilirlik iyileştirmeleri: Oturum açma işlemi daha hızlı, renkler ekranlarda daha tutarlı ve hata düzeltmeleri bazı kilitlenmeleri giderdi.
+13.7:
+* Blok düzenleyici güncellemeleri: desteklenmeyen bloklarda artık bir başlık görüntülenir, yeni blok göstergeleri hem boş düzenleyicilerde hem de son bloktan sonra gösterilir, bağlantılar eklendiğinde panodaki mevcut URL'lerden alınır, Ortam ve Metin bloklarında daha fazla hizalama seçeneği bulunur, görsel bloklarına dokunularak tam ekran önizleme yapılabilir.
+
+* Genel iyileştirmeler: Bazı hatalar ve kilitlenme durumları düzeltildi, Okuyucu'daki TalkBack ekran okuyucu desteği geliştirildi.
 </tr-TR>
 <zh-CN>
-13.0：
-* 区块编辑器改进：当您打开一篇区块文章时，编辑器会自动启用（除非您选择退出 v12.9）。您还可以根据每个站点启用它。
-* 访问方面的改进：屏幕阅读器现在可以阅读统计数据屏幕中的更多信息。
-* 通用性方面的改进：登录速度更快，屏幕颜色更一致，错误修复解决了一些崩溃问题。
+13.7：
+* 更新了区块编辑器：不支持的区块现可显示标题；新区块指示器同时显示在空白编辑器中和最后一个区块之后；添加从剪贴板的现有 URL 中提取的链接；“媒体和文本”区块具有更多对齐选项；轻点“图片”区块可进行全屏预览。
+
+* 常规改进：修复了一些错误和崩溃，并在阅读器中添加了更好的 TalkBack 屏幕阅读器支持。
 </zh-CN>
 <zh-TW>
-13.0：
-* 改善區塊編輯器：編輯器會在你開啟區塊文章 (除非你選擇退出 v12.9) 時自動啟用，你也可以為每個網站啟用編輯器。
-* 改善協助工具：螢幕閱讀器現在可以讀取更多統計資料畫面。
-* 改善一般可用性：登入更快速、色彩在螢幕顯示上更一致，且部分當機錯誤也已修正。
+13.7：
+* 區塊編輯器更新：不支援的區塊現在會顯示標題；在空白編輯器內和前一個區塊之後，都會顯示新區塊指標；你可從剪貼簿拖入現有網址以新增連結；媒體和文字區塊可提供更多對齊選項；點選圖片區塊即可進行全螢幕預覽。
+
+* 一般改善項目：修正一些錯誤和故障情況，並為讀取器新增更完善的 TalkBack 螢幕讀取器支援。
 </zh-TW>

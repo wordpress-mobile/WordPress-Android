@@ -16,7 +16,7 @@
         android:checkMarkTint="@color/neutral"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:textColor="@color/neutral_70"
+        android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_large"
         tools:text="Pony Category" />
 </org.wordpress.android.widgets.CheckedLinearLayout>

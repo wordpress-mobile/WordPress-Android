@@ -32,7 +32,7 @@
             android:ellipsize="end"
             android:gravity="end|center_vertical"
             android:maxLines="1"
-            android:textColor="@color/neutral"
+            android:textColor="?attr/wpColorTextSubtle"
             android:textSize="@dimen/text_sz_small"
             tools:text="role"/>
 
@@ -43,7 +43,7 @@
             android:layout_toStartOf="@id/person_role"
             android:gravity="start"
             android:textAlignment="viewStart"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/wpColorText"
             android:textSize="@dimen/text_sz_large"
             tools:text="display_name"/>
 
@@ -55,7 +55,7 @@
             android:layout_toStartOf="@id/person_role"
             android:gravity="start"
             android:textAlignment="viewStart"
-            android:textColor="@color/neutral"
+            android:textColor="?attr/wpColorTextSubtle"
             android:textSize="@dimen/text_sz_medium"
             tools:text="username"/>
 
@@ -69,7 +69,7 @@
             android:layout_toStartOf="@id/person_role"
             android:gravity="start"
             android:textAlignment="viewStart"
-            android:textColor="@color/neutral"
+            android:textColor="?attr/wpColorTextSubtle"
             android:textSize="@dimen/text_sz_small"
             tools:text="Since {date}"/>
 

@@ -3,12 +3,16 @@ package org.wordpress.android.viewmodel.domains
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.domains.DomainProductDetails
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 class DomainRegistrationMainViewModelTest : BaseUnitTest() {
+    @Mock lateinit var tracker: AnalyticsTrackerWrapper
+
     private lateinit var viewModel: DomainRegistrationMainViewModel
 
     private val testDomainProductDetails = DomainProductDetails(76, "testdomain.blog")
@@ -16,7 +20,7 @@ class DomainRegistrationMainViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        viewModel = DomainRegistrationMainViewModel()
+        viewModel = DomainRegistrationMainViewModel(tracker)
         viewModel.start()
     }
 

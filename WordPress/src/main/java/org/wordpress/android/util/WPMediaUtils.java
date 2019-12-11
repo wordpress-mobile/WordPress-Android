@@ -41,7 +41,7 @@ public class WPMediaUtils {
     public static final int OPTIMIZE_VIDEO_MAX_WIDTH = 1280;
     public static final int OPTIMIZE_VIDEO_ENCODER_BITRATE_KB = 3000;
 
-    public static Uri getOptimizedMedia(Activity activity, String path, boolean isVideo) {
+    public static Uri getOptimizedMedia(Context context, String path, boolean isVideo) {
         if (isVideo) {
             return null;
         }
@@ -57,7 +57,7 @@ public class WPMediaUtils {
             return null;
         }
 
-        String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeDimension, quality);
+        String optimizedPath = ImageUtils.optimizeImage(context, path, resizeDimension, quality);
         if (optimizedPath == null) {
             AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);
@@ -68,12 +68,12 @@ public class WPMediaUtils {
         return null;
     }
 
-    public static Uri fixOrientationIssue(Activity activity, String path, boolean isVideo) {
+    public static Uri fixOrientationIssue(Context context, String path, boolean isVideo) {
         if (isVideo) {
             return null;
         }
 
-        String rotatedPath = ImageUtils.rotateImageIfNecessary(activity, path);
+        String rotatedPath = ImageUtils.rotateImageIfNecessary(context, path);
         if (rotatedPath != null) {
             return Uri.parse(rotatedPath);
         }
@@ -94,10 +94,10 @@ public class WPMediaUtils {
      * 3) The user has granted storage access to the app.
      * This is because we don't want to ask so much things to users the first time they try to add a picture to the app.
      *
-     * @param act The host activity
+     * @param context The context
      * @return true if we should advertise the feature, false otherwise.
      */
-    public static boolean shouldAdvertiseImageOptimization(final Activity act) {
+    public static boolean shouldAdvertiseImageOptimization(final Context context) {
         boolean isPromoRequired = AppPrefs.isImageOptimizePromoRequired();
         if (!isPromoRequired) {
             return false;
@@ -105,7 +105,7 @@ public class WPMediaUtils {
 
         // Check we can access storage before asking for optimizing image
         boolean hasStoreAccess = ContextCompat.checkSelfPermission(
-                act, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+                context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         if (!hasStoreAccess) {
             return false;
         }
@@ -118,7 +118,7 @@ public class WPMediaUtils {
         void done();
     }
 
-    public static void advertiseImageOptimization(final Activity activity,
+    public static void advertiseImageOptimization(final Context context,
                                                   final OnAdvertiseImageOptimizationListener listener) {
         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -143,7 +143,7 @@ public class WPMediaUtils {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(activity, R.style.Calypso_Dialog_Alert));
+                new ContextThemeWrapper(context, R.style.Calypso_Dialog_Alert));
         builder.setTitle(org.wordpress.android.R.string.image_optimization_promo_title);
         builder.setMessage(org.wordpress.android.R.string.image_optimization_promo_desc);
         builder.setPositiveButton(R.string.turn_on, onClickListener);
@@ -220,6 +220,11 @@ public class WPMediaUtils {
                                         RequestCodes.VIDEO_LIBRARY);
     }
 
+    public static void launchMediaLibrary(Activity activity, boolean multiSelect) {
+        activity.startActivityForResult(prepareMediaLibraryIntent(activity, multiSelect),
+                RequestCodes.MEDIA_LIBRARY);
+    }
+
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
@@ -227,6 +232,16 @@ public class WPMediaUtils {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
+    }
+
+    private static Intent prepareMediaLibraryIntent(Context context, boolean multiSelect) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/*", "video/*"});
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        return Intent.createChooser(intent, context.getString(R.string.pick_media));
     }
 
     public static void launchVideoCamera(Activity activity) {

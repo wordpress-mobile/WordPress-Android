@@ -3,12 +3,14 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.SearchTermsModel
@@ -37,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -51,21 +54,25 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: SearchTermsUseCase
     private val searchTerm = SearchTerm("search term", 10)
     private val contentDescription = "title, views"
 
     private val limitMode = Top(ITEMS_TO_LOAD)
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = SearchTermsUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
                 tracker,
                 contentDescriptionHelper,
+                statsUtils,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -86,6 +93,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                 any<String>(),
                 any()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test

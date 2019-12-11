@@ -25,11 +25,16 @@ import org.wordpress.android.ui.posts.PostListAction.ViewStats
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_MORE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
@@ -52,12 +57,14 @@ class PostActionHandler(
     private val postStore: PostStore,
     private val postListDialogHelper: PostListDialogHelper,
     private val doesPostHaveUnhandledConflict: (PostModel) -> Boolean,
+    private val hasUnhandledAutoSave: (PostModel) -> Boolean,
     private val triggerPostListAction: (PostListAction) -> Unit,
     private val triggerPostUploadAction: (PostUploadAction) -> Unit,
     private val invalidateList: () -> Unit,
     private val checkNetworkConnection: () -> Boolean,
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
-    private val showToast: (ToastMessageHolder) -> Unit
+    private val showToast: (ToastMessageHolder) -> Unit,
+    private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit
 ) {
     private val criticalPostActionTracker = CriticalPostActionTracker(onStateChanged = {
         invalidateList.invoke()
@@ -75,7 +82,18 @@ class PostActionHandler(
             }
             BUTTON_SUBMIT -> publishPost(post.id)
             BUTTON_VIEW -> triggerPostListAction.invoke(ViewPost(site, post))
-            BUTTON_PREVIEW -> triggerPostListAction.invoke(PreviewPost(site, post))
+            BUTTON_PREVIEW -> triggerPostListAction.invoke(
+                    PreviewPost(
+                            site = site,
+                            post = post,
+                            triggerPreviewStateUpdate = triggerPreviewStateUpdate,
+                            showToast = showToast,
+                            messageMediaUploading = ToastMessageHolder(
+                                    R.string.editor_toast_uploading_please_wait,
+                                    ToastUtils.Duration.SHORT
+                            )
+                    )
+            )
             BUTTON_STATS -> triggerPostListAction.invoke(ViewStats(site, post))
             BUTTON_TRASH -> {
                 if (post.isLocallyChanged) {
@@ -84,12 +102,20 @@ class PostActionHandler(
                     trashPost(post)
                 }
             }
-            BUTTON_DELETE -> {
+            BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
+            }
+            BUTTON_CANCEL_PENDING_AUTO_UPLOAD -> {
+                cancelPendingAutoUpload(post)
             }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
         }
+    }
+
+    private fun cancelPendingAutoUpload(post: PostModel) {
+        val msgRes = UploadUtils.cancelPendingAutoUpload(post, dispatcher)
+        showSnackbar.invoke(SnackbarMessageHolder(msgRes))
     }
 
     fun newPost() {
@@ -104,6 +130,13 @@ class PostActionHandler(
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
             triggerPostUploadAction(EditPostResult(site, post, data) { publishPost(localPostId) })
+        }
+    }
+
+    fun handleRemotePreview(localPostId: Int, remotePreviewType: RemotePreviewType) {
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            triggerPostListAction.invoke(PostListAction.RemotePreviewPost(site, post, remotePreviewType))
         }
     }
 
@@ -122,7 +155,7 @@ class PostActionHandler(
         if (!checkNetworkConnection.invoke()) {
             return
         }
-        post.status = DRAFT.toString()
+        post.setStatus(DRAFT.toString())
         dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
 
         val localPostId = LocalId(post.id)
@@ -138,9 +171,15 @@ class PostActionHandler(
     }
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
-        // first of all, check whether this post is in Conflicted state.
+        // first of all, check whether this post is in Conflicted state with a more recent remote version
         if (doesPostHaveUnhandledConflict.invoke(post)) {
             postListDialogHelper.showConflictedPostResolutionDialog(post)
+            return
+        }
+
+        // Then check if an autosave revision is available
+        if (hasUnhandledAutoSave.invoke(post)) {
+            postListDialogHelper.showAutoSaveRevisionDialog(post)
             return
         }
 
@@ -153,7 +192,7 @@ class PostActionHandler(
             // post itself when they finish (since we're about to edit it again)
             UploadService.cancelQueuedPostUpload(post)
         }
-        triggerPostListAction.invoke(PostListAction.EditPost(site, post))
+        triggerPostListAction.invoke(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
     }
 
     fun deletePost(localPostId: Int) {

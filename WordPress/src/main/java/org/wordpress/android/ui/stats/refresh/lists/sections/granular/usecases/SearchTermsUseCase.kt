@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.time.SearchTermsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.SEARCH_TERMS
 import org.wordpress.android.fluxc.store.stats.time.SearchTermsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewSearchTerms
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -25,7 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUs
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -39,15 +40,18 @@ class SearchTermsUseCase
 constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val store: SearchTermsStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<SearchTermsModel>(
         SEARCH_TERMS,
         mainDispatcher,
+        backgroundDispatcher,
         selectedDateProvider,
         statsSiteProvider,
         statsGranularity
@@ -103,7 +107,7 @@ constructor(
             val mappedSearchTerms = domainModel.searchTerms.mapIndexed { index, searchTerm ->
                 ListItemWithIcon(
                         text = searchTerm.text,
-                        value = searchTerm.views.toFormattedString(),
+                        value = statsUtils.toFormattedString(searchTerm.views),
                         showDivider = index < domainModel.searchTerms.size - 1,
                         contentDescription = contentDescriptionHelper.buildContentDescription(
                                 header,
@@ -117,7 +121,7 @@ constructor(
                 items.add(
                         ListItemWithIcon(
                                 textResource = R.string.stats_search_terms_unknown_search_terms,
-                                value = domainModel.unknownSearchCount.toFormattedString(),
+                                value = statsUtils.toFormattedString(domainModel.unknownSearchCount),
                                 showDivider = false,
                                 contentDescription = contentDescriptionHelper.buildContentDescription(
                                         header,
@@ -155,21 +159,25 @@ constructor(
     class SearchTermsUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val store: SearchTermsStore,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsSiteProvider: StatsSiteProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val statsUtils: StatsUtils,
         private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 SearchTermsUseCase(
                         granularity,
                         mainDispatcher,
+                        backgroundDispatcher,
                         store,
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
                         contentDescriptionHelper,
+                        statsUtils,
                         useCaseMode
                 )
     }

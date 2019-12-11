@@ -5,9 +5,7 @@ import androidx.test.espresso.action.ViewActions;
 
 import org.wordpress.android.R;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -15,6 +13,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -28,6 +27,7 @@ import static org.wordpress.android.support.WPSupportUtils.withIndex;
 
 public class EditorPage {
     private static ViewInteraction publishButton = onView(withId(R.id.menu_primary_action));
+    private static ViewInteraction optionsButton = onView(withContentDescription("More options"));
     private static ViewInteraction editor = onView(withId(R.id.aztec));
     private static ViewInteraction titleField = onView(allOf(withId(R.id.title),
             withHint("Title")));
@@ -53,10 +53,10 @@ public class EditorPage {
     // Image needs a little time to be uploaded after entering the image
     public void enterImage() {
         // Click on add media button
-        String addMediaButtonId = "media_button_container";
+        String addMediaButtonId = "id/media_button_container";
         clickOn(addMediaButtonId);
 
-        String mediaBarButtonId = "media_bar_button_library";
+        String mediaBarButtonId = "id/media_bar_button_library";
         clickOn(mediaBarButtonId);
 
         if (isElementDisplayed(allowMediaAccessButton)) {
@@ -82,8 +82,8 @@ public class EditorPage {
     }
 
     public void openSettings() {
-        openActionBarOverflowOrOptionsMenu(getApplicationContext());
-        clickOn(onView(withText("Post settings")));
+        clickOn(optionsButton);
+        clickOn("Post settings");
     }
 
     public void addACategory(String category) {

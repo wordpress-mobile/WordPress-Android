@@ -1,4 +1,0 @@
-13.0
-* Mejoras en el editor de bloques: el editor se activa automáticamente cuando abres un bloque de entradas (salvo que lo hayas desactivado en la versión 12.9) o puedes activarlo en base a cada sitio.
-*Mejoras de accesibilidad: los lectores de pantalla ahora pueden leer mejor la pantalla de estadísticas.
-* Mejoras de uso general: el acceso es rapidísimo, los colores son más consistentes entre pantallas y las correcciones de fallos ponen fin a algunos errores.

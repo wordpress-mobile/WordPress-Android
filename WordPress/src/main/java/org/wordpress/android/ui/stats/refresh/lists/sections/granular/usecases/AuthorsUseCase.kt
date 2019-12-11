@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.time.AuthorsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.AUTHORS
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
@@ -34,8 +35,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -49,15 +50,18 @@ class AuthorsUseCase
 constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val authorsStore: AuthorsStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<AuthorsModel, SelectedAuthor>(
         AUTHORS,
         mainDispatcher,
+        backgroundDispatcher,
         statsSiteProvider,
         selectedDateProvider,
         statsGranularity,
@@ -113,7 +117,7 @@ constructor(
                         iconStyle = AVATAR,
                         text = author.name,
                         barWidth = getBarWidth(author.views, maxViews),
-                        value = author.views.toFormattedString(),
+                        value = statsUtils.toFormattedString(author.views),
                         showDivider = index < domainModel.authors.size - 1,
                         contentDescription = contentDescriptionHelper.buildContentDescription(
                                 header,
@@ -132,7 +136,7 @@ constructor(
                         items.addAll(author.posts.map { post ->
                             ListItemWithIcon(
                                     text = post.title,
-                                    value = post.views.toFormattedString(),
+                                    value = statsUtils.toFormattedString(post.views),
                                     iconStyle = if (author.avatarUrl != null) EMPTY_SPACE else NORMAL,
                                     textStyle = LIGHT,
                                     showDivider = false,
@@ -198,21 +202,25 @@ constructor(
     class AuthorsUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val authorsStore: AuthorsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val statsUtils: StatsUtils,
         private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 AuthorsUseCase(
                         granularity,
                         mainDispatcher,
+                        backgroundDispatcher,
                         authorsStore,
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
                         contentDescriptionHelper,
+                        statsUtils,
                         useCaseMode
                 )
     }

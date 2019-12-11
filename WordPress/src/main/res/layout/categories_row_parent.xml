@@ -15,7 +15,7 @@
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/neutral_50"
+        android:textColor="?attr/wpColorTextSubtle"
         android:paddingStart="4dp"
         android:paddingEnd="4dp"/>
 </LinearLayout>

@@ -5,17 +5,29 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
 sealed class PostListAction {
-    class EditPost(val site: SiteModel, val post: PostModel) : PostListAction()
+    class EditPost(val site: SiteModel, val post: PostModel, val loadAutoSaveRevision: Boolean) : PostListAction()
     class NewPost(val site: SiteModel, val isPromo: Boolean = false) : PostListAction()
-    class PreviewPost(val site: SiteModel, val post: PostModel) : PostListAction()
+    class PreviewPost(
+        val site: SiteModel,
+        val post: PostModel,
+        val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
+        val showToast: (ToastMessageHolder) -> Unit,
+        val messageMediaUploading: ToastMessageHolder
+    ) : PostListAction()
+    class RemotePreviewPost(
+        val site: SiteModel,
+        val post: PostModel,
+        val remotePreviewType: RemotePreviewType
+    ) : PostListAction()
     class RetryUpload(
         val post: PostModel,
-        val trackAnalytics: Boolean = PostUtils.isFirstTimePublish(post),
-        val publish: Boolean = false,
-        val retry: Boolean = true
+        val trackAnalytics: Boolean = PostUtils.isFirstTimePublish(post)
     ) : PostListAction()
 
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
@@ -23,25 +35,37 @@ sealed class PostListAction {
     class DismissPendingNotification(val pushId: Int) : PostListAction()
 }
 
-fun handlePostListAction(activity: FragmentActivity, action: PostListAction) {
+fun handlePostListAction(
+    activity: FragmentActivity,
+    action: PostListAction,
+    remotePreviewLogicHelper: RemotePreviewLogicHelper,
+    previewStateHelper: PreviewStateHelper
+) {
     when (action) {
         is PostListAction.EditPost -> {
-            ActivityLauncher.editPostOrPageForResult(activity, action.site, action.post)
+            ActivityLauncher.editPostOrPageForResult(activity, action.site, action.post, action.loadAutoSaveRevision)
         }
         is PostListAction.NewPost -> {
-            ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo)
+            ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo, POST_FROM_POSTS_LIST)
         }
         is PostListAction.PreviewPost -> {
-            ActivityLauncher.viewPostPreviewForResult(activity, action.site, action.post)
+            val helperFunctions = previewStateHelper.getUploadStrategyFunctions(activity, action)
+            remotePreviewLogicHelper.runPostPreviewLogic(
+                    activity = activity,
+                    site = action.site,
+                    post = action.post,
+                    helperFunctions = helperFunctions
+            )
+        }
+        is PostListAction.RemotePreviewPost -> {
+            ActivityLauncher.previewPostOrPageForResult(activity, action.site, action.post, action.remotePreviewType)
         }
         is PostListAction.RetryUpload -> {
             // restart the UploadService with retry parameters
-            val intent = UploadService.getUploadPostServiceIntent(
+            val intent = UploadService.getRetryUploadServiceIntent(
                     activity,
                     action.post,
-                    action.trackAnalytics,
-                    action.publish,
-                    action.retry
+                    action.trackAnalytics
             )
             activity.startService(intent)
         }

@@ -1,15 +1,20 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import android.content.Context
 import android.text.format.DateFormat
 import android.text.format.DateUtils
 import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
+import org.wordpress.android.viewmodel.ContextProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 
-class DateUtils @Inject constructor(private val context: Context) {
+class DateUtils @Inject constructor(
+    private val contextProvider: ContextProvider,
+    private val localeManagerWrapper: LocaleManagerWrapper
+) {
+    @ExperimentalStdlibApi
     fun getWeekDay(dayOfTheWeek: Int): String {
         val c = Calendar.getInstance()
         c.firstDayOfWeek = Calendar.MONDAY
@@ -24,12 +29,12 @@ class DateUtils @Inject constructor(private val context: Context) {
             6 -> c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
         }
 
-        val formatter = SimpleDateFormat("EEEE", Locale.getDefault())
-        return formatter.format(c.time).capitalize()
+        val formatter = SimpleDateFormat("EEEE", localeManagerWrapper.getLocale())
+        return formatter.format(c.time).capitalizeWithLocaleWithoutLint(localeManagerWrapper.getLocale())
     }
 
     fun getHour(hour: Int): String {
-        val formatter = DateFormat.getTimeFormat(context)
+        val formatter = DateFormat.getTimeFormat(contextProvider.getContext())
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, hour)
         c.set(Calendar.MINUTE, 0)
@@ -38,7 +43,7 @@ class DateUtils @Inject constructor(private val context: Context) {
 
     fun formatDateTime(dateIso8601: String): String {
         return DateUtils.formatDateTime(
-                context,
+                contextProvider.getContext(),
                 DateTimeUtils.timestampFromIso8601Millis(dateIso8601),
                 getDateTimeFlags()
         )

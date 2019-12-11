@@ -29,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.WPSnackbar
@@ -55,12 +56,13 @@ class StatsFragment : DaggerFragment() {
 
         val nonNullActivity = checkNotNull(activity)
 
-        initializeViewModels(nonNullActivity, savedInstanceState == null)
+        initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
         initializeViews(nonNullActivity)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(WordPress.LOCAL_SITE_ID, activity?.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0)
+        viewModel.onSaveInstanceState(outState)
         super.onSaveInstanceState(outState)
     }
 
@@ -75,8 +77,14 @@ class StatsFragment : DaggerFragment() {
         }
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, isFirstStart: Boolean) {
+    private fun initializeViewModels(
+        activity: FragmentActivity,
+        isFirstStart: Boolean,
+        savedInstanceState: Bundle?
+    ) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewModel::class.java)
+
+        viewModel.onRestoreInstanceState(savedInstanceState)
 
         setupObservers(activity)
 
@@ -131,8 +139,13 @@ class StatsFragment : DaggerFragment() {
             )
         })
 
-        viewModel.siteChanged.observe(this, Observer {
-            viewModel.onSiteChanged()
+        viewModel.siteChanged.observe(this, Observer { siteChangedEvent ->
+            siteChangedEvent?.applyIfNotHandled {
+                when (this) {
+                    is SiteUpdateResult.SiteConnected -> viewModel.onSiteChanged()
+                    is SiteUpdateResult.NotConnectedJetpackSite -> getActivity()?.finish()
+                }
+            }
         })
 
         viewModel.hideToolbar.observe(this, Observer { event ->

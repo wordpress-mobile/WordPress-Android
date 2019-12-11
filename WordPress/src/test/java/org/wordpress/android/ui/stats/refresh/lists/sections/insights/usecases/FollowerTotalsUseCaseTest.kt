@@ -3,12 +3,14 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -27,13 +29,17 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 
 class FollowerTotalsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var followersStore: FollowersStore
     @Mock lateinit var publicizeStore: PublicizeStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: FollowerTotalsUseCase
 
@@ -45,15 +51,18 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
             false)
     private val contentDescription = "title, views"
 
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = FollowerTotalsUseCase(
                 Dispatchers.Unconfined,
-                Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 followersStore,
                 publicizeStore,
                 statsSiteProvider,
-                contentDescriptionHelper
+                contentDescriptionHelper,
+                statsUtils,
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
 
@@ -64,10 +73,11 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
                 any(),
                 any<Int>()
         )).thenReturn(contentDescription)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
-    fun `maps follower totals to U`() = test {
+    fun `maps follower totals to UI model`() = test {
         val forced = false
         val refresh = true
 
@@ -107,6 +117,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
         assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_follower_totals)
+        assertThat(item.menuAction).isNotNull
     }
 
     private suspend fun loadFollowerTotalsData(refresh: Boolean, forced: Boolean): UseCaseModel {

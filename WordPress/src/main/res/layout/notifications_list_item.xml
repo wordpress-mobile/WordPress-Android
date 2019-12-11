@@ -17,7 +17,7 @@
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingTop="@dimen/margin_large"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-        android:textColor="@color/neutral_50"
+        android:textColor="?attr/wpColorTextSubtle"
         android:visibility="gone"
         tools:text="Today"
         tools:visibility="visible" >
@@ -45,25 +45,23 @@
 
             <ImageView
                 android:id="@+id/note_avatar"
-                android:contentDescription="@null"
+                android:layout_width="@dimen/activity_log_icon_size"
                 android:layout_height="@dimen/activity_log_icon_size"
                 android:layout_marginEnd="@dimen/activity_log_icon_margin"
                 android:layout_marginTop="@dimen/margin_small"
-                android:layout_width="@dimen/activity_log_icon_size"
-                tools:src="@drawable/bg_oval_neutral_30_user_32dp" >
-            </ImageView>
+                android:contentDescription="@null"
+                tools:src="@drawable/bg_oval_neutral_30_user_32dp" />
 
-            <org.wordpress.android.widgets.NoticonTextView
+            <ImageView
                 android:id="@+id/note_icon"
-                android:background="@drawable/bg_oval_primary_40_stroke_notification_unread"
-                android:gravity="center"
+                android:layout_width="@dimen/note_icon_sz"
                 android:layout_height="@dimen/note_icon_sz"
                 android:layout_marginStart="@dimen/notifications_note_icon_margin"
                 android:layout_marginTop="@dimen/notifications_note_icon_margin"
-                android:layout_width="@dimen/note_icon_sz"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" >
-            </org.wordpress.android.widgets.NoticonTextView>
+                android:background="@drawable/bg_oval_primary_40_stroke_notification_unread"
+                android:importantForAccessibility="no"
+                android:gravity="center"
+                android:padding="4dp" />
 
         </FrameLayout>
 
@@ -92,7 +90,7 @@
                 android:layout_width="fill_parent"
                 android:maxLines="2"
                 android:textAlignment="viewStart"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="Bob Ross commented on your post Happy Trees" >
             </org.wordpress.android.widgets.WPTextView>

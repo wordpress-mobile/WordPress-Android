@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/one_line_list_item_height"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/white"
+    android:elevation="@dimen/appbar_elevation">
+
+    <LinearLayout
+        android:id="@+id/filter_selection"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="?selectableItemBackgroundBorderless"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/view">
+
+        <ImageView
+            android:id="@+id/filter_list_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_filter_list_white_24dp"
+            android:tint="@color/neutral_70"
+            android:background="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/selected_filter_name"
+            style="@style/SiteTagFilteredTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:singleLine="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/filter_list_button"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/reader_filter_all_sites" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="@dimen/list_divider_height"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@color/divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/filter_settings_button"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/filter_settings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@null"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:src="@drawable/ic_cog_white_24dp"
+        android:tint="@color/neutral_70"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

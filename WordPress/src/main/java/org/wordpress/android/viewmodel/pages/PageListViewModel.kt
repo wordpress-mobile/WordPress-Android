@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -18,6 +17,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -28,8 +28,10 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
@@ -37,11 +39,17 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBL
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import javax.inject.Inject
+import javax.inject.Named
+
+private const val MAX_TOPOLOGICAL_PAGE_COUNT = 100
+private const val DEFAULT_INDENT = 0
 
 class PageListViewModel @Inject constructor(
     private val mediaStore: MediaStore,
-    private val dispatcher: Dispatcher
-) : ViewModel() {
+    private val dispatcher: Dispatcher,
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
+) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Pair<List<PageItem>, Boolean>> = Transformations.map(_pages) {
         Pair(it, isSitePhotonCapable)
@@ -55,7 +63,7 @@ class PageListViewModel @Inject constructor(
 
     private lateinit var pagesViewModel: PagesViewModel
 
-    private val featuredImageMap = HashMap<Long, String>()
+    private val featuredImageMap = mutableMapOf<Long, String>()
 
     private val isSitePhotonCapable: Boolean by lazy {
         SiteUtils.isPhotonCapable(pagesViewModel.site)
@@ -117,7 +125,9 @@ class PageListViewModel @Inject constructor(
     }
 
     fun onItemTapped(pageItem: Page) {
-        pagesViewModel.onItemTapped(pageItem)
+        if (pageItem.tapActionEnabled) {
+            pagesViewModel.onItemTapped(pageItem)
+        }
     }
 
     fun onEmptyListNewPageButtonTapped() {
@@ -141,9 +151,9 @@ class PageListViewModel @Inject constructor(
         }
     }
 
-    private fun loadPagesAsync(pages: List<PageModel>) = GlobalScope.launch {
+    private fun loadPagesAsync(pages: List<PageModel>) = launch {
         val pageItems = pages
-                .sortedBy { it.title }
+                .sortedBy { it.title.toLowerCase(localeManagerWrapper.getLocale()) }
                 .filter { listType.pageStatuses.contains(it.status) }
                 .let {
                     when (listType) {
@@ -211,7 +221,13 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        return topologicalSort(pages, listType = PUBLISHED)
+        val shouldSortTopologically = pages.size < MAX_TOPOLOGICAL_PAGE_COUNT
+        val sortedPages = if (shouldSortTopologically) {
+            topologicalSort(pages, listType = PUBLISHED)
+        } else {
+            pages.sortedByDescending { it.date }
+        }
+        return sortedPages
                 .map {
                     val labels = mutableListOf<Int>()
                     if (it.status == PageStatus.PRIVATE)
@@ -219,7 +235,12 @@ class PageListViewModel @Inject constructor(
                     if (it.hasLocalChanges)
                         labels.add(R.string.local_changes)
 
-                    PublishedPage(it.remoteId, it.title, it.date, labels, getPageItemIndent(it),
+                    val pageItemIndent = if (shouldSortTopologically) {
+                        getPageItemIndent(it)
+                    } else {
+                        DEFAULT_INDENT
+                    }
+                    PublishedPage(it.remoteId, it.title, it.date, labels, pageItemIndent,
                             getFeaturedImageUrl(it.featuredImageId), actionsEnabled)
                 }
     }

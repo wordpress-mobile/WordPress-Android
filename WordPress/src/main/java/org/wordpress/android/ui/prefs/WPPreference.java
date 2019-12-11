@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.ContextExtensionsKt;
 
 public class WPPreference extends Preference implements PreferenceHint {
     private String mHint;
@@ -41,7 +42,9 @@ public class WPPreference extends Preference implements PreferenceHint {
         TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
         if (titleView != null) {
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
-            titleView.setTextColor(res.getColor(isEnabled() ? R.color.neutral_70 : R.color.neutral_20));
+            titleView.setTextColor(res.getColor(
+                    isEnabled() ? ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorText)
+                            : R.color.neutral_20));
         }
         if (summaryView != null) {
             summaryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_medium));

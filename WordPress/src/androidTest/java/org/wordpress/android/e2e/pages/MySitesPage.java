@@ -31,7 +31,6 @@ public class MySitesPage {
 
     public void switchSite() {
         clickOn(R.id.switch_site);
-
         chooseSiteLabel.check(matches(withText("Choose site")));
     }
 
@@ -47,6 +46,6 @@ public class MySitesPage {
     }
 
     public void startNewPost() {
-        clickOn("fab_button");
+        clickOn("id/fab_button");
     }
 }

@@ -36,6 +36,8 @@ public class ReaderWebView extends WebView {
         boolean onUrlClick(String url);
 
         boolean onImageUrlClick(String imageUrl, View view, int x, int y);
+
+        boolean onFileDownloadClick(String fileUrl);
     }
 
     public interface ReaderCustomViewListener {
@@ -100,6 +102,12 @@ public class ReaderWebView extends WebView {
             // Enable third-party cookies since they are disabled by default;
             // we need third-party cookies to support authenticated images
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
+            this.setDownloadListener(
+                    (url, userAgent, contentDisposition, mimetype, contentLength) -> {
+                        if (hasUrlClickListener()) {
+                            mUrlClickListener.onFileDownloadClick(url);
+                        }
+                    });
         }
     }
 

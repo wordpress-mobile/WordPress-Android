@@ -75,15 +75,30 @@
 
                 <org.wordpress.android.widgets.PostListButton
                     style="@style/PostListRowSkeletonButton"
+                    android:id="@+id/skeleton_button_edit"
                     wp:wpPostButtonType="edit"/>
 
                 <org.wordpress.android.widgets.PostListButton
                     style="@style/PostListRowSkeletonButton"
+                    android:id="@+id/skeleton_button_view"
                     wp:wpPostButtonType="view"/>
 
                 <org.wordpress.android.widgets.PostListButton
                     style="@style/PostListRowSkeletonButton"
+                    android:id="@+id/skeleton_button_more"
                     wp:wpPostButtonType="more"/>
+
+                <org.wordpress.android.widgets.PostListButton
+                    style="@style/PostListRowSkeletonButton"
+                    android:id="@+id/skeleton_button_move_to_draft"
+                    android:visibility="gone"
+                    wp:wpPostButtonType="moveToDraft"/>
+
+                <org.wordpress.android.widgets.PostListButton
+                    style="@style/PostListRowSkeletonButton"
+                    android:id="@+id/skeleton_button_delete_permanently"
+                    android:visibility="gone"
+                    wp:wpPostButtonType="deletePermanently"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>

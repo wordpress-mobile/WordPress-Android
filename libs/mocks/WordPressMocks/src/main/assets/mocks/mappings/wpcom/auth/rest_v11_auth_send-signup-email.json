@@ -2,7 +2,7 @@
     "scenarioName": "auth",
     "newScenarioState": "signed-up",
     "request": {
-        "urlPath": "/rest/v1.1/auth/send-signup-email/",
+        "urlPattern": "/rest/v1.1/auth/send-signup-email.*",
         "method": "POST"
     },
     "response": {

@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:layout_marginStart="@dimen/page_item_horizontal_padding"
-        android:textColor="@color/neutral_50"
+        android:textColor="?attr/wpColorTextSubtle"
         android:textSize="14sp"
         tools:text="First part of pages" />
 

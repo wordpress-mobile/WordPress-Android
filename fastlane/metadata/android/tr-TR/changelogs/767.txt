@@ -1,4 +1,0 @@
-13.0:
-* Blok düzenleyici iyileştirmeleri: Düzenleyici, bir blok gönderisini açtığınızda otomatik olarak etkinleştirilebilir (12.9 sürümünde hizmeti kapatmadıysanız) veya bunu site bazında etkinleştirebilirsiniz.
-* Erişilebilirlik iyileştirmeleri: Ekran okuyucular artık istatistik ekranından daha fazla içerik okuyabiliyor.
-* Genel kullanılabilirlik iyileştirmeleri: Oturum açma işlemi daha hızlı, renkler ekranlarda daha tutarlı ve hata düzeltmeleri bazı kilitlenmeleri giderdi.

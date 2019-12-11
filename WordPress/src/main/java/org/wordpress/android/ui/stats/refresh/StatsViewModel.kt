@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.content.Intent
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -32,7 +33,6 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam.SITE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
@@ -86,6 +86,19 @@ class StatsViewModel
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
         start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod, restart)
+    }
+
+    fun onSaveInstanceState(outState: Bundle) {
+        selectedDateProvider.onSaveInstanceState(outState)
+    }
+
+    fun onRestoreInstanceState(savedState: Bundle?) {
+        if (savedState != null) {
+            selectedDateProvider.onRestoreInstanceState(savedState)
+        } else {
+            selectedDateProvider.clear()
+            statsSiteProvider.reset()
+        }
     }
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
@@ -162,7 +175,9 @@ class StatsViewModel
 
     fun onSiteChanged() {
         loadData {
-            listUseCases.values.forEach { it.onParamChanged(SITE) }
+            listUseCases.values.forEach {
+                it.refreshData(true)
+            }
         }
     }
 
@@ -185,13 +200,12 @@ class StatsViewModel
     override fun onCleared() {
         super.onCleared()
         _showSnackbarMessage.value = null
-        selectedDateProvider.clear()
-        statsSiteProvider.reset()
     }
 
     data class DateSelectorUiModel(
         val isVisible: Boolean = false,
         val date: String? = null,
+        val timeZone: String? = null,
         val enableSelectPrevious: Boolean = false,
         val enableSelectNext: Boolean = false
     )

@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodDa
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEGATIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
@@ -19,7 +20,6 @@ import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.Date
 import javax.inject.Inject
 
 const val LIST_ITEM_COUNT = 7
@@ -30,7 +30,8 @@ class ViewsWidgetListViewModel
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val overviewMapper: OverviewMapper,
     private val resourceProvider: ResourceProvider,
-    private val statsDateFormatter: StatsDateFormatter
+    private val statsDateFormatter: StatsDateFormatter,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     private var siteId: Int? = null
     private var colorMode: Color = Color.LIGHT
@@ -49,15 +50,13 @@ class ViewsWidgetListViewModel
         siteId?.apply {
             val site = siteStore.getSiteByLocalId(this)
             if (site != null) {
-                val currentDate = Date()
                 runBlocking {
-                    visitsAndViewsStore.fetchVisits(site, DAYS, Top(OVERVIEW_ITEMS_TO_LOAD), currentDate)
+                    visitsAndViewsStore.fetchVisits(site, DAYS, Top(OVERVIEW_ITEMS_TO_LOAD))
                 }
                 val visitsAndViewsModel = visitsAndViewsStore.getVisits(
                         site,
                         DAYS,
-                        LimitMode.All,
-                        currentDate
+                        LimitMode.All
                 )
                 val periods = visitsAndViewsModel?.dates?.asReversed() ?: listOf()
                 val uiModels = periods.mapIndexed { index, periodData ->
@@ -66,6 +65,9 @@ class ViewsWidgetListViewModel
                 if (uiModels != data) {
                     mutableData.clear()
                     mutableData.addAll(uiModels)
+                    appWidgetId?.let {
+                        appPrefsWrapper.setAppWidgetHasData(true, it)
+                    }
                 }
             } else {
                 appWidgetId?.let { nonNullAppWidgetId ->

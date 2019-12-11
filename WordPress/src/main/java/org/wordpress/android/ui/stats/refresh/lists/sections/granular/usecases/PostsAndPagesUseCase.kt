@@ -7,11 +7,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.HOMEPAGE
+import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.OTHER
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.PAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.POST
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.POSTS_AND_PAGES
 import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_HOME_PAGE
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_POST
@@ -31,8 +33,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUs
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -46,15 +48,18 @@ class PostsAndPagesUseCase
 constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val postsAndPageViewsStore: PostAndPageViewsStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<PostAndPageViewsModel>(
         POSTS_AND_PAGES,
         mainDispatcher,
+        backgroundDispatcher,
         selectedDateProvider,
         statsSiteProvider,
         statsGranularity
@@ -110,12 +115,12 @@ constructor(
             items.addAll(domainModel.views.mapIndexed { index, viewsModel ->
                 val icon = when (viewsModel.type) {
                     POST -> R.drawable.ic_posts_white_24dp
-                    HOMEPAGE, PAGE -> R.drawable.ic_pages_white_24dp
+                    OTHER, HOMEPAGE, PAGE -> R.drawable.ic_pages_white_24dp
                 }
                 ListItemWithIcon(
                         icon = icon,
                         text = viewsModel.title,
-                        value = viewsModel.views.toFormattedString(),
+                        value = statsUtils.toFormattedString(viewsModel.views),
                         showDivider = index < domainModel.views.size - 1,
                         barWidth = getBarWidth(viewsModel.views, maxViews),
                         navigationAction = create(
@@ -154,7 +159,7 @@ constructor(
     private fun onLinkClicked(params: LinkClickParams) {
         val type = when (params.postType) {
             POST -> ITEM_TYPE_POST
-            PAGE, HOMEPAGE -> ITEM_TYPE_HOME_PAGE
+            OTHER, PAGE, HOMEPAGE -> ITEM_TYPE_HOME_PAGE
         }
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, statsGranularity)
         navigateTo(
@@ -177,21 +182,25 @@ constructor(
     class PostsAndPagesUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val postsAndPageViewsStore: PostAndPageViewsStore,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsSiteProvider: StatsSiteProvider,
         private val contentDescriptionHelper: ContentDescriptionHelper,
+        private val statsUtils: StatsUtils,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 PostsAndPagesUseCase(
                         granularity,
                         mainDispatcher,
+                        backgroundDispatcher,
                         postsAndPageViewsStore,
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
                         contentDescriptionHelper,
+                        statsUtils,
                         useCaseMode
                 )
     }

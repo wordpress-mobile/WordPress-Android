@@ -24,7 +24,9 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
+import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.setVisible
 import javax.inject.Inject
 
 class StatsListFragment : DaggerFragment() {
@@ -146,39 +148,37 @@ class StatsListFragment : DaggerFragment() {
 
     private fun setupObservers(activity: FragmentActivity) {
         viewModel.uiModel.observe(this, Observer {
-            if (it != null) {
-                when (it) {
-                    is UiModel.Success -> {
-                        updateInsights(it.data)
+            when (it) {
+                is UiModel.Success -> {
+                    updateInsights(it.data)
+                }
+                is UiModel.Error, null -> {
+                    recyclerView.visibility = View.GONE
+                    statsErrorView.visibility = View.VISIBLE
+                    statsEmptyView.visibility = View.GONE
+                }
+                is UiModel.Empty -> {
+                    recyclerView.visibility = View.GONE
+                    statsEmptyView.visibility = View.VISIBLE
+                    statsErrorView.visibility = View.GONE
+                    statsEmptyView.title.setText(it.title)
+                    if (it.subtitle != null) {
+                        statsEmptyView.subtitle.setText(it.subtitle)
+                    } else {
+                        statsEmptyView.subtitle.text = ""
                     }
-                    is UiModel.Error -> {
-                        recyclerView.visibility = View.GONE
-                        statsErrorView.visibility = View.VISIBLE
-                        statsEmptyView.visibility = View.GONE
+                    if (it.image != null) {
+                        statsEmptyView.image.setImageResource(it.image)
+                    } else {
+                        statsEmptyView.image.setImageDrawable(null)
                     }
-                    is UiModel.Empty -> {
-                        recyclerView.visibility = View.GONE
-                        statsEmptyView.visibility = View.VISIBLE
-                        statsErrorView.visibility = View.GONE
-                    }
+                    statsEmptyView.button.setVisible(it.showButton)
                 }
             }
         })
 
         viewModel.dateSelectorData.observe(this, Observer { dateSelectorUiModel ->
-            val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
-            if (date_selection_toolbar.visibility != dateSelectorVisibility) {
-                date_selection_toolbar.visibility = dateSelectorVisibility
-            }
-            selectedDateTextView.text = dateSelectorUiModel?.date ?: ""
-            val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
-            if (previousDateButton.isEnabled != enablePreviousButton) {
-                previousDateButton.isEnabled = enablePreviousButton
-            }
-            val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
-            if (nextDateButton.isEnabled != enableNextButton) {
-                nextDateButton.isEnabled = enableNextButton
-            }
+            drawDateSelector(dateSelectorUiModel)
         })
 
         viewModel.navigationTarget.observe(this, Observer { event ->
@@ -188,8 +188,8 @@ class StatsListFragment : DaggerFragment() {
         })
 
         viewModel.selectedDate.observe(this, Observer { event ->
-            if (event?.getContentIfNotHandled() != null) {
-                viewModel.onDateChanged()
+            if (event != null) {
+                viewModel.onDateChanged(event.selectedSection)
             }
         })
 

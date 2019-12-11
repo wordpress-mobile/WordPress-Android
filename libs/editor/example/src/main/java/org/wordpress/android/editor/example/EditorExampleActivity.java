@@ -1,6 +1,5 @@
 package org.wordpress.android.editor.example;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,24 +8,29 @@ import android.view.DragEvent;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 
+import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
+import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.aztec.Html.ImageGetter;
+import org.wordpress.aztec.Html.VideoThumbnailGetter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-public class EditorExampleActivity extends AppCompatActivity implements EditorFragmentListener,
+public class EditorExampleActivity extends FragmentActivity implements EditorFragmentListener,
         EditorDragAndDropListener {
     public static final String EDITOR_PARAM = "EDITOR_PARAM";
     public static final String TITLE_PARAM = "TITLE_PARAM";
@@ -57,11 +61,15 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getIntent().getIntExtra(EDITOR_PARAM, USE_NEW_EDITOR) == USE_NEW_EDITOR) {
-            ToastUtils.showToast(this, R.string.starting_new_editor);
-            setContentView(R.layout.activity_new_editor);
+            ToastUtils.showToast(this, R.string.starting_aztec_editor);
+            setContentView(R.layout.activity_aztec_editor);
         } else {
-            ToastUtils.showToast(this, R.string.starting_legacy_editor);
-            setContentView(R.layout.activity_legacy_editor);
+            Fragment fragment = GutenbergEditorFragment.newInstance("", "", true, "us-en");
+            ToastUtils.showToast(this, R.string.starting_gutenberg_editor);
+            setContentView(R.layout.activity_gutenberg_editor);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.postEditor, fragment);
+            ft.commit();
         }
 
         mFailedUploads = new HashMap<>();
@@ -73,12 +81,39 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
         if (fragment instanceof EditorFragmentAbstract) {
             mEditorFragment = (EditorFragmentAbstract) fragment;
         }
+        if (fragment instanceof AztecEditorFragment) {
+            // Fake loaders
+            ((AztecEditorFragment) mEditorFragment).setAztecImageLoader(new ImageGetter() {
+                @Override
+                public void loadImage(String source, Callbacks callbacks, int maxWidth) {
+
+                }
+
+                @Override
+                public void loadImage(String source, Callbacks callbacks, int maxWidth,
+                                      int minWidth) {
+
+                }
+            });
+            ((AztecEditorFragment) mEditorFragment).setAztecVideoLoader(new VideoThumbnailGetter() {
+                @Override
+                public void loadVideoThumbnail(String source, Callbacks callbacks, int maxWidth) {
+
+                }
+
+                @Override
+                public void loadVideoThumbnail(String source, Callbacks callbacks, int maxWidth,
+                                               int minWidth) {
+
+                }
+            });
+        }
     }
 
     @Override
     public void onBackPressed() {
-        Fragment fragment =  getFragmentManager()
-                .findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
+        Fragment fragment =
+                getSupportFragmentManager().findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
             ((ImageSettingsDialogFragment) fragment).dismissFragment();
         } else {
@@ -180,70 +215,6 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
         }
     }
 
-    @Override
-    public void onSettingsClicked() {
-        // TODO
-    }
-
-    @Override
-    public void onAddMediaClicked() {
-        // TODO
-    }
-
-    @Override
-    public void onMediaRetryClicked(String mediaId) {
-        if (mFailedUploads.containsKey(mediaId)) {
-            simulateFileUpload(mediaId, mFailedUploads.get(mediaId));
-        }
-    }
-
-    @Override
-    public void onMediaUploadCancelClicked(String mediaId) {
-
-    }
-
-    @Override
-    public void onFeaturedImageChanged(long mediaId) {
-
-    }
-
-    @Override
-    public void onVideoPressInfoRequested(String videoId) {
-
-    }
-
-    @Override
-    public String onAuthHeaderRequested(String url) {
-        return "";
-    }
-
-    @Override
-    public void onEditorFragmentInitialized() {
-        // arbitrary setup
-        mEditorFragment.setFeaturedImageSupported(true);
-        mEditorFragment.setDebugModeEnabled(true);
-
-        // get title and content and draft switch
-        String title = getIntent().getStringExtra(TITLE_PARAM);
-        String content = getIntent().getStringExtra(CONTENT_PARAM);
-        boolean isLocalDraft = getIntent().getBooleanExtra(DRAFT_PARAM, true);
-        mEditorFragment.setTitle(title);
-        mEditorFragment.setContent(content);
-        mEditorFragment.setTitlePlaceholder(getIntent().getStringExtra(TITLE_PLACEHOLDER_PARAM));
-        mEditorFragment.setContentPlaceholder(getIntent().getStringExtra(CONTENT_PLACEHOLDER_PARAM));
-        mEditorFragment.setLocalDraft(isLocalDraft);
-    }
-
-    @Override
-    public void saveMediaFile(MediaFile mediaFile) {
-        // TODO
-    }
-
-    @Override
-    public void onTrackableEvent(TrackableEvent event) {
-        AppLog.d(T.EDITOR, "Trackable event: " + event);
-    }
-
     private void simulateFileUpload(final String mediaId, final String mediaUrl) {
         Thread thread = new Thread() {
             @Override
@@ -337,12 +308,102 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     }
 
     @Override
+    public void onEditorFragmentInitialized() {
+
+    }
+
+    @Override
+    public void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks) {
+
+    }
+
+    @Override
+    public void onAddMediaClicked() {
+
+    }
+
+    @Override
+    public void onAddMediaImageClicked() {
+
+    }
+
+    @Override
+    public void onAddMediaVideoClicked() {
+
+    }
+
+    @Override
+    public void onAddPhotoClicked() {
+
+    }
+
+    @Override
+    public void onCapturePhotoClicked() {
+
+    }
+
+    @Override
+    public void onAddVideoClicked() {
+
+    }
+
+    @Override
+    public void onCaptureVideoClicked() {
+
+    }
+
+    @Override
+    public boolean onMediaRetryClicked(String mediaId) {
+        return false;
+    }
+
+    @Override
+    public void onMediaRetryAllClicked(Set<String> mediaIdSet) {
+
+    }
+
+    @Override
+    public void onMediaUploadCancelClicked(String mediaId) {
+
+    }
+
+    @Override
+    public void onMediaDeleted(String mediaId) {
+
+    }
+
+    @Override
+    public void onUndoMediaCheck(String undoedContent) {
+
+    }
+
+    @Override
+    public void onVideoPressInfoRequested(String videoId) {
+
+    }
+
+    @Override
+    public String onAuthHeaderRequested(String url) {
+        return null;
+    }
+
+    @Override
+    public void onTrackableEvent(TrackableEvent event) {
+
+    }
+
+    @Override
+    public void onHtmlModeToggledInToolbar() {
+
+    }
+
+    @Override
     public void onMediaDropped(ArrayList<Uri> mediaUri) {
-        // TODO
+
     }
 
     @Override
     public void onRequestDragAndDropPermissions(DragEvent dragEvent) {
-        // TODO
+
     }
 }

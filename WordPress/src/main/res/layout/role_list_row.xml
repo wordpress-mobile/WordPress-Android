@@ -28,7 +28,7 @@
         android:layout_marginEnd="@dimen/dlp_text_margin_end"
         android:layout_marginStart="@dimen/dlp_text_margin_start"
         android:layout_toEndOf="@id/radio"
-        android:textColor="@color/neutral_70"
+        android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_large"
         tools:text="Main Text"/>
 

@@ -1,13 +1,18 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
@@ -23,28 +28,39 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Quick
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 
 class TodayStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: TodayInsightsStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var site: SiteModel
+    @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: TodayStatsUseCase
     private val views = 10
     private val visitors = 15
     private val likes = 20
     private val comments = 30
+    private val site = SiteModel()
+    private val siteId = 1L
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = TodayStatsUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 insightsStore,
                 statsSiteProvider,
+                statsWidgetUpdaters,
+                statsUtils,
                 popupMenuHandler
         )
+        site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
@@ -69,6 +85,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
             assertViewsAndVisitors(this[1])
             assertLikesAndComments(this[2])
         }
+        verify(statsWidgetUpdaters, times(2)).updateTodayWidget(siteId)
     }
 
     @Test

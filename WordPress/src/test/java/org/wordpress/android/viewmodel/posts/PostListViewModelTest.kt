@@ -59,6 +59,7 @@ class PostListViewModelTest : BaseUnitTest() {
                 uploadStarter = uploadStarter,
                 readerUtilsWrapper = mock(),
                 connectionStatus = mock(),
+                uploadUtilsWrapper = mock(),
                 uiDispatcher = TEST_DISPATCHER,
                 bgDispatcher = TEST_DISPATCHER
         )
@@ -108,6 +109,7 @@ class PostListViewModelTest : BaseUnitTest() {
                 postActionHandler = mock(),
                 getUploadStatus = mock(),
                 doesPostHaveUnhandledConflict = mock(),
+                hasAutoSave = mock(),
                 getFeaturedImageUrl = mock(),
                 postFetcher = mock()
         )

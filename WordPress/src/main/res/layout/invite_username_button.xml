@@ -14,7 +14,7 @@
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
-        android:textColor="@color/neutral_70"
+        android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_medium"
         android:layout_marginEnd="5dp"/>
 

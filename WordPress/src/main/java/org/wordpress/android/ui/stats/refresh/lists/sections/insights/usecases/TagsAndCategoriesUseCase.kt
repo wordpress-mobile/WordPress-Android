@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.stats.insights.TagsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
@@ -30,8 +31,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -43,9 +44,11 @@ private const val VIEW_ALL_ITEM_COUNT = 1000
 class TagsAndCategoriesUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val tagsStore: TagsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val resourceProvider: ResourceProvider,
+    private val statsUtils: StatsUtils,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val contentDescriptionHelper: ContentDescriptionHelper,
@@ -53,6 +56,7 @@ class TagsAndCategoriesUseCase
 ) : BaseStatsUseCase<TagsModel, TagsAndCategoriesUiState>(
         TAGS_AND_CATEGORIES,
         mainDispatcher,
+        backgroundDispatcher,
         TagsAndCategoriesUiState(null)
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
@@ -143,7 +147,7 @@ class TagsAndCategoriesUseCase
         return ListItemWithIcon(
                 icon = getIcon(item.type),
                 text = item.name,
-                value = tag.views.toFormattedString(),
+                value = statsUtils.toFormattedString(tag.views),
                 barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick),
@@ -171,7 +175,7 @@ class TagsAndCategoriesUseCase
         return ListItemWithIcon(
                 icon = R.drawable.ic_folder_multiple_white_24dp,
                 text = text,
-                value = tag.views.toFormattedString(),
+                value = statsUtils.toFormattedString(tag.views),
                 barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
                 contentDescription = contentDescriptionHelper.buildContentDescription(
@@ -218,9 +222,11 @@ class TagsAndCategoriesUseCase
     class TagsAndCategoriesUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val tagsStore: TagsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val resourceProvider: ResourceProvider,
+        private val statsUtils: StatsUtils,
         private val analyticsTracker: AnalyticsTrackerWrapper,
         private val contentDescriptionHelper: ContentDescriptionHelper,
         private val popupMenuHandler: ItemPopupMenuHandler
@@ -228,9 +234,11 @@ class TagsAndCategoriesUseCase
         override fun build(useCaseMode: UseCaseMode) =
                 TagsAndCategoriesUseCase(
                         mainDispatcher,
+                        backgroundDispatcher,
                         tagsStore,
                         statsSiteProvider,
                         resourceProvider,
+                        statsUtils,
                         analyticsTracker,
                         popupMenuHandler,
                         contentDescriptionHelper,

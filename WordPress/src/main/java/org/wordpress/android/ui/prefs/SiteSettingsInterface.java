@@ -612,6 +612,22 @@ public abstract class SiteSettingsInterface {
         mSettings.ampEnabled = enabled;
     }
 
+    public boolean getJetpackSearchSupported() {
+        return mSettings.jetpackSearchSupported;
+    }
+
+    public void setJetpackSearchSupported(boolean supported) {
+        mSettings.jetpackSearchSupported = supported;
+    }
+
+    public boolean getJetpackSearchEnabled() {
+        return mSettings.jetpackSearchEnabled;
+    }
+
+    public void setJetpackSearchEnabled(boolean enabled) {
+        mSettings.jetpackSearchEnabled = enabled;
+    }
+
     public boolean isJetpackMonitorEnabled() {
         return mJpSettings.monitorActive;
     }
@@ -685,12 +701,36 @@ public abstract class SiteSettingsInterface {
         return mJpSettings.serveImagesFromOurServers;
     }
 
+    void enableServeStaticFilesFromOurServers(boolean enabled) {
+        mJpSettings.serveStaticFilesFromOurServers = enabled;
+    }
+
+    boolean isServeStaticFilesFromOurServersEnabled() {
+        return mJpSettings.serveStaticFilesFromOurServers;
+    }
+
     void enableLazyLoadImages(boolean enabled) {
         mJpSettings.lazyLoadImages = enabled;
     }
 
     boolean isLazyLoadImagesEnabled() {
         return mJpSettings.lazyLoadImages;
+    }
+
+    void enableAdFreeHosting(boolean enabled) {
+        mJpSettings.adFreeVideoHosting = enabled;
+    }
+
+    boolean isAdFreeHostingEnabled() {
+        return mJpSettings.adFreeVideoHosting;
+    }
+
+    void enableImprovedSearch(boolean enabled) {
+        mJpSettings.improvedSearch = enabled;
+    }
+
+    boolean isImprovedSearchEnabled() {
+        return mJpSettings.improvedSearch;
     }
 
     public boolean isSharingModuleEnabled() {

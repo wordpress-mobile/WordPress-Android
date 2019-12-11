@@ -12,6 +12,6 @@
     android:minHeight="?attr/listPreferredItemHeight"
     android:padding="@dimen/margin_extra_large"
     android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-    android:textColor="@color/neutral_50"
+    android:textColor="?attr/wpColorTextSubtle"
     tools:text="Post Created on September 19, 2018 at 8:51am" >
 </org.wordpress.android.widgets.WPTextView>

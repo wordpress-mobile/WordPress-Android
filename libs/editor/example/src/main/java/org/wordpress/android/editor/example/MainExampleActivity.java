@@ -7,12 +7,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import org.wordpress.android.editor.Utils;
-import org.wordpress.android.editor.example.EditorExampleActivity;
 
-public class MainExampleActivity extends AppCompatActivity {
+public class MainExampleActivity extends Activity {
     private Activity mActivity;
 
     @Override
@@ -21,7 +18,7 @@ public class MainExampleActivity extends AppCompatActivity {
         mActivity = this;
         setContentView(R.layout.activity_example);
 
-        Button newEditorPost1 = (Button) findViewById(R.id.new_editor_post_1);
+        Button newEditorPost1 = (Button) findViewById(R.id.aztec_editor_post_1);
         newEditorPost1.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
                 Intent intent = new Intent(MainExampleActivity.this, EditorExampleActivity.class);
@@ -39,7 +36,7 @@ public class MainExampleActivity extends AppCompatActivity {
             }
         });
 
-        Button newEditorPostEmpty = (Button) findViewById(R.id.new_editor_post_empty);
+        Button newEditorPostEmpty = (Button) findViewById(R.id.aztec_editor_post_empty);
         newEditorPostEmpty.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
                 Intent intent = new Intent(MainExampleActivity.this, EditorExampleActivity.class);
@@ -56,7 +53,7 @@ public class MainExampleActivity extends AppCompatActivity {
             }
         });
 
-        Button legacyEditorPost1Local = (Button) findViewById(R.id.legacy_editor_post_1_local);
+        Button legacyEditorPost1Local = (Button) findViewById(R.id.gutenberg_editor_post_1_local);
         legacyEditorPost1Local.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
                 Intent intent = new Intent(MainExampleActivity.this, EditorExampleActivity.class);
@@ -70,7 +67,7 @@ public class MainExampleActivity extends AppCompatActivity {
             }
         });
 
-        Button legacyEditorPost1Remote = (Button) findViewById(R.id.legacy_editor_post_1_remote);
+        Button legacyEditorPost1Remote = (Button) findViewById(R.id.gutenberg_editor_post_1_remote);
         legacyEditorPost1Remote.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
                 Intent intent = new Intent(MainExampleActivity.this, EditorExampleActivity.class);

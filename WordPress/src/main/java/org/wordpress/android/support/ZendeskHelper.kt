@@ -17,9 +17,11 @@ import org.wordpress.android.login.BuildConfig
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DeviceUtils
+import org.wordpress.android.util.LanguageUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.SiteUtils
@@ -35,7 +37,6 @@ import zendesk.support.UiConfig
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
-import java.util.Locale
 import java.util.Timer
 import kotlin.concurrent.schedule
 
@@ -145,6 +146,7 @@ class ZendeskHelper(
             zendeskNeedsToBeEnabledError
         }
         requireIdentity(context, selectedSite) {
+            AnalyticsTracker.track(Stat.SUPPORT_NEW_REQUEST_VIEWED)
             RequestActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         }
@@ -165,6 +167,7 @@ class ZendeskHelper(
             zendeskNeedsToBeEnabledError
         }
         requireIdentity(context, selectedSite) {
+            AnalyticsTracker.track(Stat.SUPPORT_TICKET_LIST_VIEWED)
             RequestListActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         }
@@ -362,6 +365,7 @@ private fun buildZendeskCustomFields(
     } else {
         "not_selected"
     }
+
     return listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
             CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(allSites)),
@@ -369,7 +373,7 @@ private fun buildZendeskCustomFields(
             CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
             CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context)),
-            CustomField(TicketFieldIds.appLanguage, Locale.getDefault().language),
+            CustomField(TicketFieldIds.appLanguage, LanguageUtils.getPatchedCurrentDeviceLanguage(context)),
             CustomField(TicketFieldIds.sourcePlatform, ZendeskConstants.sourcePlatform)
     )
 }
@@ -455,7 +459,7 @@ private fun getNetworkInformation(context: Context): String {
     return listOf(
             "${ZendeskConstants.networkTypeLabel} $networkType",
             "${ZendeskConstants.networkCarrierLabel} $carrierName",
-            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.toUpperCase()}"
+            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.toUpperCase(context.currentLocale)}"
     ).joinToString(separator = "\n")
 }
 

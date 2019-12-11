@@ -14,7 +14,7 @@
         android:maxLines="1"
         android:minHeight="@dimen/min_touch_target_sz"
         android:padding="@dimen/margin_extra_large"
-        android:textColor="@color/neutral_70"
+        android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_large"
         tools:text="text_tag"
         android:textAlignment="viewStart"

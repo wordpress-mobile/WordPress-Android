@@ -6,6 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -13,21 +14,25 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import javax.inject.Inject
 import javax.inject.Named
 
 class AllTimeStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val allTimeStore: AllTimeInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsDateFormatter: StatsDateFormatter,
+    private val statsWidgetUpdaters: StatsWidgetUpdaters,
+    private val statsUtils: StatsUtils,
     private val popupMenuHandler: ItemPopupMenuHandler
-) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher) {
+) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher, backgroundDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_all_time_stats))
 
     override fun buildEmptyItem(): List<BlockListItem> {
@@ -35,6 +40,7 @@ class AllTimeStatsUseCase
     }
 
     override suspend fun loadCachedData(): InsightsAllTimeModel? {
+        statsWidgetUpdaters.updateAllTimeWidget(statsSiteProvider.siteModel.siteId)
         return allTimeStore.getAllTimeInsights(statsSiteProvider.siteModel)
     }
 
@@ -68,8 +74,8 @@ class AllTimeStatsUseCase
         } else {
             items.add(
                     QuickScanItem(
-                            Column(R.string.stats_views, domainModel.views.toFormattedString()),
-                            Column(R.string.stats_visitors, domainModel.visitors.toFormattedString())
+                            Column(R.string.stats_views, statsUtils.toFormattedString(domainModel.views)),
+                            Column(R.string.stats_visitors, statsUtils.toFormattedString(domainModel.visitors))
                     )
             )
             val tooltip = if (domainModel.viewsBestDay.isNotEmpty()) {
@@ -79,10 +85,10 @@ class AllTimeStatsUseCase
             }
             items.add(
                     QuickScanItem(
-                            Column(R.string.posts, domainModel.posts.toFormattedString()),
+                            Column(R.string.posts, statsUtils.toFormattedString(domainModel.posts)),
                             Column(
                                     R.string.stats_insights_best_ever,
-                                    domainModel.viewsBestDayTotal.toFormattedString(),
+                                    statsUtils.toFormattedString(domainModel.viewsBestDayTotal),
                                     tooltip
                             )
                     )

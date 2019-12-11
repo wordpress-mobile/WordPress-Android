@@ -101,11 +101,11 @@ If you have questions or just want to say hi, join the [WordPress Slack](https:/
 
 ## Documentation
 
-- [Coding Style](https://github.com/wordpress-mobile/WordPress-Android/wiki/Coding-Style) - guidelines and validation and auto-formatting tools
-- [Pull Request Guidelines](https://github.com/wordpress-mobile/WordPress-Android/wiki/Pull-Request-Guidelines) - branch naming and how to write good pull requests
-- [Subtree'd Library Projects](https://github.com/wordpress-mobile/WordPress-Android/wiki/Subtree'd-Library-Projects) - how to deal with subtree dependencies
+- [Coding Style](docs/coding-style.md) - guidelines and validation and auto-formatting tools
+- [Pull Request Guidelines](docs/pull-request-guidelines.md) - branch naming and how to write good pull requests
+- [Subtree'd Library Projects](docs/subtreed-library-projects.md) - how to deal with subtree dependencies
 
-Please read our [Wiki](https://github.com/wordpress-mobile/WordPress-Android/wiki) for more. 
+Please read the [docs](docs/) for more. 
 
 ## Resources
 

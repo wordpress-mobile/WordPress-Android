@@ -25,7 +25,7 @@
         android:paddingTop="@dimen/margin_large"
         android:singleLine="true"
         android:textAlignment="viewStart"
-        android:textColor="@color/neutral_70"
+        android:textColor="?attr/wpColorText"
         android:textColorHint="@color/neutral_30"
         tools:drawableStart="@drawable/ic_search_white_24dp"
         tools:drawableTint="@color/neutral_30"

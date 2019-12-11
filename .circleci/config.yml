@@ -1,6 +1,8 @@
 orbs:
-  android: wordpress-mobile/android@0.0.27
-  bundle-install: toshimaru/bundle-install@0.1.1
+  # Using 1.0 of the Orbs means it will use the latest 1.0.x version from https://github.com/wordpress-mobile/circleci-orbs
+  android: wordpress-mobile/android@1.0
+  git: wordpress-mobile/git@1.0
+  bundle-install: toshimaru/bundle-install@0.3.1
   slack: circleci/slack@2.5.0
 
 commands:
@@ -17,7 +19,7 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - checkout
+      - git/shallow-checkout
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -30,7 +32,7 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - checkout
+      - git/shallow-checkout
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -53,12 +55,47 @@ jobs:
             fi 
       - android/save-gradle-cache
       - android/save-lint-results
+  Installable Build:
+    executor:
+      name: android/default
+      api-version: "28"
+    steps:
+      - git/shallow-checkout
+      - bundle-install/bundle-install:
+          cache_key_prefix: installable-build
+      - run:
+          name: Copy Secrets
+          command: bundle exec fastlane run configure_apply
+      - android/restore-gradle-cache
+      - run:
+          name: Build APK
+          command: |
+            if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+              PR_NUMBER=$(basename $CIRCLE_PULL_REQUEST)
+              PREFIX="pr-${PR_NUMBER}"
+            else
+              PREFIX="$CIRCLE_BRANCH"
+            fi
+
+            VERSION_NAME="${PREFIX}-build-${CIRCLE_BUILD_NUM}"
+            echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
+
+            ./gradlew --stacktrace assembleVanillaRelease -PversionName="$VERSION_NAME"
+      - android/save-gradle-cache
+      - run:
+          name: Prepare APK
+          command: |
+            mkdir -p Artifacts
+            mv WordPress/build/outputs/apk/vanilla/release/org.wordpress.android-vanilla-release.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
+      - store_artifacts:
+          path: Artifacts
+          destination: Artifacts
   connected-tests:
     executor:
       name: android/default
       api-version: "28"
     steps:
-      - checkout
+      - git/shallow-checkout
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -70,23 +107,24 @@ jobs:
       - android/firebase-test:
           key-file: .circleci/.firebase.secrets.json
           type: instrumentation
-          apk-path: WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk
-          test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk
+          apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
+          test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk
           test-targets: notPackage org.wordpress.android.ui.screenshots
           device: model=Nexus5X,version=26,locale=en,orientation=portrait
           project: api-project-108380595987
           timeout: 10m
           results-history-name: CircleCI WordPress Connected Tests
       - android/save-gradle-cache
-      - slack/status:
-          fail_only: 'true'
-          failure_message: ':red_circle: WordPress Android end to end tests have failed!\nSee https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670'
   strings-check:
     docker:
-      - image: circleci/ruby:2.3
+      - image: circleci/ruby:2.5.5
     steps:
-      - checkout
-      - bundle-install/bundle-install
+      - git/shallow-checkout
+      - run:
+          name: Install bundler
+          command: gem install bundler --version 2.0.2 
+      - bundle-install/bundle-install:
+          cache_key_prefix: strings-check
       - run:
           name: Validate login strings
           command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
@@ -97,13 +135,11 @@ workflows:
       - strings-check
       - test
       - lint
-  nightly:
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
+      - Installable Build:
           filters:
             branches:
-              only:
-                - develop
-    jobs:
-      - connected-tests
+              ignore: /pull\/[0-9]+/
+      - connected-tests:
+          filters:
+            branches:
+              ignore: /pull\/[0-9]+/

@@ -17,7 +17,7 @@
         app:tabPaddingEnd="@dimen/margin_extra_large"
         app:tabPaddingStart="@dimen/margin_extra_large"
         app:tabSelectedTextColor="@color/primary"
-        app:tabTextColor="@color/neutral_50"
+        app:tabTextColor="?attr/wpColorTextSubtle"
         app:theme="@style/Base.Widget.Design.TabLayout"/>
 
     <View

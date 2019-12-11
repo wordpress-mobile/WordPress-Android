@@ -1,4 +1,0 @@
-13.0:
-* Miglioramenti all'editor dei blocchi: l'editor viene abilitato automaticamente quando si apre un articolo a blocchi (salvo disattivazione nella versione v12.9). In alternativa è possibile abilitarlo su singoli siti.
-* Miglioramenti dell'accessibilità: i lettori di schermo possono ora leggere una maggiore quantità della schermata delle statistiche.
-* Miglioramenti della fruibilità generale: l'accesso è più veloce, i colori sono più coerenti tra le diverse schermate e la correzione di alcuni errori ha eliminato alcuni arresti anomali.

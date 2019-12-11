@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_AVERAGE_VIEWS_PER_DAY
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_MONTHS_AND_YEARS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_RECENT_WEEKS
+import org.wordpress.android.ui.stats.StatsViewType.FILE_DOWNLOADS
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.ui.stats.StatsViewType.GEOVIEWS
 import org.wordpress.android.ui.stats.StatsViewType.INSIGHTS_ALL_TIME
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUs
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.CountryViewsUseCase.CountryViewsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.FileDownloadsUseCase.FileDownloadsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.ReferrersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
@@ -157,6 +159,8 @@ class StatsViewAllViewModelFactory(
                         .build(granularity, VIEW_ALL), R.string.stats_view_search_terms)
                 VIDEO_PLAYS -> Pair(granularFactories.first { it is VideoPlaysUseCaseFactory }
                         .build(granularity, VIEW_ALL), R.string.stats_view_videos)
+                FILE_DOWNLOADS -> Pair(granularFactories.first { it is FileDownloadsUseCaseFactory }
+                        .build(granularity, VIEW_ALL), R.string.stats_file_downloads)
                 else -> throw InvalidParameterException("Invalid granular stats type: ${type.name}")
             }
         }

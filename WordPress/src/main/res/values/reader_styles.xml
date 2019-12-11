@@ -15,7 +15,7 @@
         <item name="android:textColorLink">@color/link_reader</item>
     </style>
     <style name="ReaderTextView.Label" parent="ReaderTextView">
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
     <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
@@ -25,7 +25,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">3</item>
         <item name="android:fontFamily">serif</item>
@@ -38,7 +38,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
@@ -47,7 +47,7 @@
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:drawableTint">@color/neutral</item>
         <item name="android:drawableStart">@drawable/ic_time_neutral_400_16dp</item>
     </style>
@@ -56,13 +56,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
     </style>
 
     <!-- EditTexts -->
     <style name="ReaderEditText" parent="android:Widget.EditText">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColorHint">@color/neutral_40</item>
+        <item name="android:textColorHint">@color/neutral_50</item>
     </style>
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
         <item name="android:background">@android:color/transparent</item>

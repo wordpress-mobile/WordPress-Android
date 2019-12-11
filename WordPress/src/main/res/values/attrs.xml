@@ -3,6 +3,13 @@
 
     <attr name="longClickHint" format="string" />
 
+    <!-- Semantic colors -->
+    <attr name="wpColorText" format="reference|color" />
+    <attr name="wpColorTextSubtle" format="reference|color" />
+    <attr name="wpColorError" format="reference|color" />
+
+    <attr name="wpColorWarningDark" format="reference|color" />
+
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
         <attr name="summaryLines" format="integer" />
@@ -10,6 +17,11 @@
         <attr name="longClickHint" />
         <attr name="dialogMessage" format="string" />
         <attr name="iconTint" format="color" />
+        <attr name="switchThumbTint" format="integer" />
+        <attr name="switchTrackTint" format="integer" />
+        <attr name="preferenceTextColor" format="color" />
+        <attr name="backgroundColorChecked" format="color" />
+        <attr name="backgroundColorUnchecked" format="color" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->
@@ -95,6 +107,8 @@
             <enum name="submit" value="10" />
             <enum name="retry" value="11" />
             <enum name="moveToDraft" value="12" />
+            <enum name="deletePermanently" value="13"/>
+            <enum name="cancelPendingAutoUpload" value="14"/>
         </attr>
     </declare-styleable>
 
@@ -131,6 +145,8 @@
 
         <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
         <attr name="wpToolbarDisableScrollGestures" format="boolean"/>
+        <!-- Optional: Default to false. Activate filtering by Tabs instead of Spinner -->
+        <attr name="wpUseTabsForFiltering" format="boolean"/>
     </declare-styleable>
 
     <!--
@@ -155,6 +171,23 @@
             <enum name="views" value="0"/>
             <enum name="allTime" value="1"/>
             <enum name="today" value="2"/>
+        </attr>
+    </declare-styleable>
+
+    <!--
+        Master Switch Toolbar View
+    -->
+    <declare-styleable name="PrefMasterSwitchToolbarView">
+        <attr name="masterTitleOn" format="reference" />
+        <attr name="masterTitleOff" format="reference" />
+        <attr name="masterContentDescription" format="reference" />
+        <attr name="masterHintOn" format="reference" />
+        <attr name="masterHintOff" format="reference" />
+        <attr name="masterContentInsetStart" format="dimension" />
+        <attr name="masterOffsetEnd" format="dimension" />
+        <attr name="masterViewStyle" format="enum">
+            <enum name="highlighted" value="0" />
+            <enum name="normal" value="1" />
         </attr>
     </declare-styleable>
 </resources>

@@ -8,7 +8,8 @@ public enum MediaBrowserType {
     GRAVATAR_IMAGE_PICKER, // select a single image as a gravatar
     SITE_ICON_PICKER, // select a single image as a site icon
     GUTENBERG_IMAGE_PICKER, // select image from Gutenberg editor
-    GUTENBERG_VIDEO_PICKER; // select video from Gutenberg editor
+    GUTENBERG_VIDEO_PICKER, // select video from Gutenberg editor
+    GUTENBERG_SINGLE_MEDIA_PICKER; // select multiple images or videos to insert into a post
 
     public boolean isPicker() {
         return this != BROWSER;
@@ -20,6 +21,10 @@ public enum MediaBrowserType {
 
     public boolean isSingleImagePicker() {
         return this == FEATURED_IMAGE_PICKER || this == GRAVATAR_IMAGE_PICKER || this == SITE_ICON_PICKER;
+    }
+
+    public boolean isSingleMediaPicker() {
+        return this == GUTENBERG_SINGLE_MEDIA_PICKER;
     }
 
     public boolean canMultiselect() {

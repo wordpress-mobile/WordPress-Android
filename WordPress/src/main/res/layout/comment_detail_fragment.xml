@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_large"
                 android:paddingBottom="@dimen/margin_large"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:textColorLink="@color/link_reader"
                 android:background="@android:color/white"
                 android:textIsSelectable="false"
