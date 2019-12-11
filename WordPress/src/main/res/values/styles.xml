@@ -208,21 +208,6 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="MediaSettings.TextInputStyle">
-        <item name="android:layout_marginTop">@dimen/margin_medium</item>
-    </style>
-
-    <style name="MediaSettings.TextInputTheme" parent="ThemeOverlay.AppCompat.Light">
-        <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/neutral_40</item>
-        <!-- Header color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorControlNormal">@color/neutral</item>
-        <item name="colorControlActivated">@color/primary_50</item>
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:gravity">start</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-    </style>
-
     <style name="MediaSettings.Divider">
         <item name="android:background">?android:attr/listDivider</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
