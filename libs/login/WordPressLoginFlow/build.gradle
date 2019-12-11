@@ -57,8 +57,8 @@ dependencies {
         }
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 
     // Dagger
     implementation 'com.google.dagger:dagger:2.22.1'

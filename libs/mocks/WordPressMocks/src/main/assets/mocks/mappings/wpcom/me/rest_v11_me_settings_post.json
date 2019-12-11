@@ -6,7 +6,9 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "password": ""
+            "password": "",
+            "user_login": "e2eflowsignuptestingmobile",
+            "display_name": "Eeflowsignuptestingmobile"
         },
         "headers": {
             "Content-Type": "application/json",
