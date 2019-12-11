@@ -2,7 +2,7 @@ package org.wordpress.android.ui.accounts
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.post_signup_interstitial_activity.*
+import kotlinx.android.synthetic.main.post_signup_interstitial_default.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 
