@@ -54,6 +54,7 @@ import dagger.android.support.AndroidSupportInjection;
 public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment implements TextWatcher,
         OnEditorCommitListener, LoginBaseDiscoveryFragment.LoginBaseDiscoveryListener {
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
+    private static final String KEY_LOGIN_STARTED = "KEY_LOGIN_STARTED";
     private static final String KEY_REQUESTED_USERNAME = "KEY_REQUESTED_USERNAME";
     private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
@@ -77,6 +78,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     private boolean mAuthFailed;
     private boolean mLoginFinished;
+    private boolean mLoginStarted;
 
     private String mRequestedUsername;
     private String mRequestedPassword;
@@ -241,6 +243,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
         if (savedInstanceState != null) {
             mLoginFinished = savedInstanceState.getBoolean(KEY_LOGIN_FINISHED);
+            mLoginStarted = savedInstanceState.getBoolean(KEY_LOGIN_STARTED);
 
             mRequestedUsername = savedInstanceState.getString(KEY_REQUESTED_USERNAME);
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
@@ -266,6 +269,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_LOGIN_FINISHED, mLoginFinished);
+        outState.putBoolean(KEY_LOGIN_STARTED, mLoginStarted);
         outState.putString(KEY_REQUESTED_USERNAME, mRequestedUsername);
         outState.putString(KEY_REQUESTED_PASSWORD, mRequestedPassword);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
@@ -291,6 +295,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
             return;
         }
 
+        mLoginStarted = true;
         startProgress();
 
         mRequestedUsername = getCleanedUsername();
@@ -509,6 +514,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         }
 
         if (event.isError()) {
+            mLoginStarted = false;
             if (mRequestedUsername == null) {
                 // just bail since the operation was cancelled
                 return;
@@ -563,11 +569,12 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (!isAdded() || mLoginFinished) {
+        if (!isAdded() || mLoginFinished || !mLoginStarted) {
             return;
         }
 
         if (event.isError()) {
+            mLoginStarted = false;
             if (mRequestedUsername == null) {
                 // just bail since the operation was cancelled
                 return;

@@ -111,7 +111,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun initAdapter() {
-        val adapter = SiteCreationDomainsAdapter()
+        val adapter = SiteCreationDomainsAdapter(uiHelpers)
         recyclerView.adapter = adapter
     }
 
