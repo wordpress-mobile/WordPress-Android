@@ -38,7 +38,7 @@ class PageParentViewModelTest {
         viewModel = PageParentViewModel(
                 pageStore = pageStore,
                 resourceProvider = resourceProvider,
-                defaultScope =TEST_SCOPE)
+                defaultScope = TEST_SCOPE)
         listOfParents = setUpPagesList()
     }
 

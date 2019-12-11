@@ -160,7 +160,7 @@ class PageParentViewModel
             val filtered = list.filter { pageItem ->
                 (pageItem.type != PARENT) || // keep the TOP_LEVEL_PARENT and DIVIDER types
                         (pageItem.type == PARENT &&
-                                (pageItem as ParentPage).title.contains(query,true))
+                                (pageItem as ParentPage).title.contains(query, true))
             }
             // if there are no matching PARENT pages, add a PageItem to notify user
             return if (filtered.any { it.type == PARENT }) {
