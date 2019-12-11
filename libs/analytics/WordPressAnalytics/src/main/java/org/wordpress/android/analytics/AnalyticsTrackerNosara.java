@@ -1204,6 +1204,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_social_error_unknown_user";
             case LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE:
                 return "login_wpcom_background_service_update";
+            case PAGES_SET_PARENT_SEARCH_ACCESSED:
+                return "site_pages_set_parent_search_accessed";
+            case PAGES_SET_PARENT_SEARCH_CLOSED:
+                return "site_pages_set_parent_search_closed";
             case PAGES_SET_PARENT_CHANGES_SAVED:
                 return "site_pages_set_parent_changes_saved";
             case PAGES_ADD_PAGE:

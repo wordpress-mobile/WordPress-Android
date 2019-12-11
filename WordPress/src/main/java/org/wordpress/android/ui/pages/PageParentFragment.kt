@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.pages
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +11,6 @@ import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -170,7 +168,7 @@ class PageParentFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.filteredPages.observe(this, Observer { pages ->
+        viewModel.pages.observe(this, Observer { pages ->
             pages?.let { setPages(pages) }
         })
 

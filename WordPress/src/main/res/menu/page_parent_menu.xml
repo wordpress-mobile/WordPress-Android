@@ -9,7 +9,8 @@
 
     <item
         android:id="@+id/action_search_parent"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:iconTint="@color/black"
         app:showAsAction="collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:title="@string/search"/>

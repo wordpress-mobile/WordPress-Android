@@ -25,7 +25,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.mergeAsyncNotNull
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,8 +34,13 @@ class PageParentViewModel
     private val resourceProvider: ResourceProvider,
     @param:Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) : ViewModel() {
-    private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     private val _searchQuery: MutableLiveData<String> = MutableLiveData<String>().apply { value = "" }
+
+    private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
+    val pages: LiveData<List<PageItem>> = mergeAsyncNotNull(defaultScope, _pages, _searchQuery) { list, query ->
+        isSearchInUse = query.isNotEmpty()
+        filterListByQuery(list, query)
+    }
 
     private lateinit var _currentParent: ParentPage
     val currentParent: ParentPage
@@ -51,12 +55,7 @@ class PageParentViewModel
     private lateinit var site: SiteModel
     private var isStarted: Boolean = false
     private var page: PageModel? = null
-    private var _isSearchInUse = false
-
-    val filteredPages: LiveData<List<PageItem>> = mergeAsyncNotNull(defaultScope, _pages, _searchQuery) { list, query ->
-        _isSearchInUse = query.isNotEmpty()
-        filterListByQuery(list, query)
-    }
+    private var isSearchInUse = false
 
     fun start(site: SiteModel, pageId: Long) {
         this.site = site
@@ -121,14 +120,14 @@ class PageParentViewModel
     }
 
     fun onSearchExpanded() {
-        if (!_isSearchInUse) {
+        if (!isSearchInUse) {
             AnalyticsUtils.trackWithSiteDetails(PAGES_SET_PARENT_SEARCH_ACCESSED, site)
-            _isSearchInUse = true
+            isSearchInUse = true
         }
     }
 
     fun onSearchCollapsed() {
-        _isSearchInUse = false
+        isSearchInUse = false
         AnalyticsUtils.trackWithSiteDetails(PAGES_SET_PARENT_SEARCH_CLOSED, site)
     }
 
@@ -136,7 +135,7 @@ class PageParentViewModel
         val properties = mutableMapOf(
                 "page_id" to page?.remoteId as Any,
                 "new_parent_id" to currentParent.id,
-                "from_search" to _isSearchInUse
+                "from_search" to isSearchInUse
         )
         AnalyticsUtils.trackWithSiteDetails(PAGES_SET_PARENT_CHANGES_SAVED, site, properties)
     }
@@ -161,9 +160,7 @@ class PageParentViewModel
             val filtered = list.filter { pageItem ->
                 (pageItem.type != PARENT) || // keep the TOP_LEVEL_PARENT and DIVIDER types
                         (pageItem.type == PARENT &&
-                                (pageItem as ParentPage).title.toLowerCase(Locale.getDefault()).contains(
-                                        query.toLowerCase(Locale.getDefault())
-                                ))
+                                (pageItem as ParentPage).title.contains(query,true))
             }
             // if there are no matching PARENT pages, add a PageItem to notify user
             return if (filtered.any { it.type == PARENT }) {
