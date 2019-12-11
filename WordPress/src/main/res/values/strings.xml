@@ -231,6 +231,7 @@
     <string name="page_settings">Page settings</string>
     <string name="pages">Pages</string>
     <string name="set_parent">Set Parent</string>
+    <string name="set_parent_no_match">No page with title matching \'%s\'</string>
     <string name="page_delete_error">There was a problem deleting the page</string>
     <string name="page_status_change_error">There was a problem changing the page status</string>
     <string name="page_parent_change_error">There was a problem changing the page parent</string>

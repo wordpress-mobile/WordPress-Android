@@ -20,8 +20,10 @@ import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.ui.pages.PageItem.Type.PARENT
 import org.wordpress.android.ui.pages.PageItem.Type.TOP_LEVEL_PARENT
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.mergeAsyncNotNull
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -32,7 +34,7 @@ class PageParentViewModel
     @param:Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val pages: LiveData<List<PageItem>> = _pages
+    private val _searchQuery: MutableLiveData<String> = MutableLiveData<String>().apply { value = "" }
 
     private lateinit var _currentParent: ParentPage
     val currentParent: ParentPage
@@ -47,6 +49,28 @@ class PageParentViewModel
     private lateinit var site: SiteModel
     private var isStarted: Boolean = false
     private var page: PageModel? = null
+
+    val filteredPages: LiveData<List<PageItem>> = mergeAsyncNotNull(defaultScope, _pages, _searchQuery) { list, query ->
+        if (query.isEmpty()) {
+            list
+        } else {
+            val filtered = list.filter { pageItem ->
+                (pageItem.type != PARENT) || //keep the TOP_LEVEL_PARENT and DIVIDER types
+                        (pageItem.type == PARENT &&
+                                (pageItem as ParentPage).title.toLowerCase(Locale.getDefault()).contains(
+                                        query.toLowerCase(Locale.getDefault())
+                                ))
+            }
+            //if there are no matching PARENT pages, add a PageItem to notify user
+            if (filtered.any { it.type == PARENT }) {
+                filtered
+            } else {
+                listOf(
+                        filtered.elementAt(0),
+                        Divider(resourceProvider.getString(string.set_parent_no_match, query)))
+            }
+        }
+    }
 
     fun start(site: SiteModel, pageId: Long) {
         this.site = site
@@ -93,6 +117,8 @@ class PageParentViewModel
 
         _pages.postValue(parents)
     }
+
+    fun onSearch(searchQuery: String) = _searchQuery.postValue(searchQuery.trim())
 
     fun onParentSelected(page: ParentPage) {
         _currentParent.isSelected = false
