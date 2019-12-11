@@ -265,7 +265,6 @@
 
     <!--theme browser-->
     <dimen name="theme_browser_default_column_width">320dp</dimen>
-    <dimen name="theme_browser_separator_thickness">1dp</dimen>
     <dimen name="theme_browser_more_button_height">40dp</dimen>
     <dimen name="theme_browser_more_button_width">48dp</dimen>
     <dimen name="theme_browser_header_button_height">50dp</dimen>
