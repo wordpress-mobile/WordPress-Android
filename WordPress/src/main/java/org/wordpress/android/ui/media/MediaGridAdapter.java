@@ -29,6 +29,7 @@ import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.PhotoPickerUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -341,6 +342,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     if (canSelectPosition(position)) {
                         setInMultiSelect(true);
                         toggleItemSelected(GridViewHolder.this, position);
+                        PhotoPickerUtils.announceSelectedImageForAccessibility(mImageView, isItemSelected(position));
                     }
                 }
             });
