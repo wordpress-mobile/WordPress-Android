@@ -38,6 +38,10 @@ public abstract class LoginBaseDiscoveryFragment extends LoginBaseFormFragment<L
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDiscoverySucceeded(OnDiscoveryResponse event) {
+        if (mLoginBaseDiscoveryListener == null) {
+            return;
+        }
+
         // hold the URL in a variable to use below otherwise it gets cleared up by endProgress
         // bail if user canceled
         String mRequestedSiteAddress = mLoginBaseDiscoveryListener.getRequestedSiteAddress();
