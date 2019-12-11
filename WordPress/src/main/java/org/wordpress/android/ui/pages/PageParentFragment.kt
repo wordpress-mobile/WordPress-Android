@@ -80,7 +80,7 @@ class PageParentFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.page_parent_menu, menu)
 
-        //make the icons for overflow menuItems visible
+        // make the icons for overflow menuItems visible
         val m = menu as MenuBuilder
         m.setOptionalIconsVisible(true)
 

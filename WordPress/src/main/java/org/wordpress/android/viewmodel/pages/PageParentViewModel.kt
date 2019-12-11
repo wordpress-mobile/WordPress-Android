@@ -159,13 +159,13 @@ class PageParentViewModel
             return list
         } else {
             val filtered = list.filter { pageItem ->
-                (pageItem.type != PARENT) || //keep the TOP_LEVEL_PARENT and DIVIDER types
+                (pageItem.type != PARENT) || // keep the TOP_LEVEL_PARENT and DIVIDER types
                         (pageItem.type == PARENT &&
                                 (pageItem as ParentPage).title.toLowerCase(Locale.getDefault()).contains(
                                         query.toLowerCase(Locale.getDefault())
                                 ))
             }
-            //if there are no matching PARENT pages, add a PageItem to notify user
+            // if there are no matching PARENT pages, add a PageItem to notify user
             return if (filtered.any { it.type == PARENT }) {
                 filtered
             } else {
