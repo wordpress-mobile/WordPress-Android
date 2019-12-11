@@ -160,9 +160,9 @@ class PageParentFragment : Fragment() {
             }
         })
 
-        if (previousSearchString != null && previousSearchString!!.isNotEmpty()) {
+        previousSearchString?.run {
             searchActionMenuItem.expandActionView()
-            searchView.setQuery(previousSearchString, true)
+            searchView.setQuery(this, true)
             searchView.requestFocus()
         }
     }
