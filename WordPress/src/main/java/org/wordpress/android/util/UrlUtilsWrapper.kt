@@ -18,4 +18,8 @@ class UrlUtilsWrapper @Inject constructor() {
     fun addUrlSchemeIfNeeded(url: String, addHttps: Boolean): String {
         return UrlUtils.addUrlSchemeIfNeeded(url, addHttps)
     }
+
+    fun getHost(urlString: String?): String {
+        return UrlUtils.getHost(urlString)
+    }
 }
