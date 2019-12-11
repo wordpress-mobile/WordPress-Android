@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.pages
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -8,8 +9,11 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -37,6 +41,7 @@ class PageParentFragment : Fragment() {
 
     private var linearLayoutManager: LinearLayoutManager? = null
     private var saveButton: MenuItem? = null
+    private lateinit var searchActionMenuItem: MenuItem
 
     private var pageId: Long? = null
 
@@ -70,12 +75,23 @@ class PageParentFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.page_parent_menu, menu)
 
+        //make the icons for overflow menuItems visible
+        val m = menu as MenuBuilder
+        m.setOptionalIconsVisible(true)
+
+        searchActionMenuItem = checkNotNull(menu.findItem(R.id.action_search_parent)) {
+            "Menu does not contain mandatory search item"
+        }
+
         saveButton = menu.findItem(R.id.save_parent)
         viewModel.isSaveButtonVisible.value?.let { saveButton?.isVisible = it }
+
+        initializeSearchView()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -119,8 +135,35 @@ class PageParentFragment : Fragment() {
         }
     }
 
+    private fun initializeSearchView() {
+        searchActionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                viewModel.onSearchExpanded()
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                viewModel.onSearchCollapsed()
+                return true
+            }
+        })
+
+        val searchView = searchActionMenuItem.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.onSearch(query)
+                return true
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                viewModel.onSearch(query)
+                return true
+            }
+        })
+    }
+
     private fun setupObservers() {
-        viewModel.pages.observe(this, Observer { pages ->
+        viewModel.filteredPages.observe(this, Observer { pages ->
             pages?.let { setPages(pages) }
         })
 
