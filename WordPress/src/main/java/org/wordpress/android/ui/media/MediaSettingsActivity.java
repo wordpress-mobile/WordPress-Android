@@ -2,14 +2,12 @@ package org.wordpress.android.ui.media;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -21,7 +19,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.view.ContextThemeWrapper;
 import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,12 +41,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -220,7 +219,7 @@ public class MediaSettingsActivity extends AppCompatActivity
 
         setContentView(R.layout.media_settings_activity);
 
-       setSupportActionBar(findViewById(R.id.toolbar));
+        setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
@@ -614,7 +613,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         } else {
             mDescriptionView.setText(mMedia.getDescription());
 
-            findViewById(R.id.card1).setVisibility(View.GONE);
+            findViewById(R.id.media_customisation_options).setVisibility(View.GONE);
             findViewById(R.id.edit_link_container).setVisibility(View.GONE);
         }
 
@@ -1069,18 +1068,14 @@ public class MediaSettingsActivity extends AppCompatActivity
             resId = R.string.confirm_delete_media_image;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert))
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
                 .setMessage(resId)
                 .setCancelable(true).setPositiveButton(
-                        isMediaFromEditor() ? R.string.remove : R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (isMediaFromEditor()) {
-                                    removeMediaFromPost();
-                                } else {
-                                    deleteMedia();
-                                }
+                        isMediaFromEditor() ? R.string.remove : R.string.delete, (dialog, which) -> {
+                            if (isMediaFromEditor()) {
+                                removeMediaFromPost();
+                            } else {
+                                deleteMedia();
                             }
                         }).setNegativeButton(R.string.cancel, null);
 
