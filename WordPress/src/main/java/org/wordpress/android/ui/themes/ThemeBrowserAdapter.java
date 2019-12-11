@@ -172,7 +172,8 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private void configureCardView(ThemeViewHolder themeViewHolder, boolean isCurrent) {
         if (isCurrent) {
             ColorStateList color =
-                    ColorStateList.valueOf(ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorOnPrimarySurface));
+                    ColorStateList
+                            .valueOf(ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorOnPrimarySurface));
             themeViewHolder.mDetailsView
                     .setBackgroundColor(
                             ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorPrimary));
