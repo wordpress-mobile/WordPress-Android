@@ -8,6 +8,8 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SET_PARENT_CHANGES_SAVED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SET_PARENT_SEARCH_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SET_PARENT_SEARCH_CLOSED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
@@ -49,6 +51,7 @@ class PageParentViewModel
     private lateinit var site: SiteModel
     private var isStarted: Boolean = false
     private var page: PageModel? = null
+    private var _isSearchInUse = false
 
     val filteredPages: LiveData<List<PageItem>> = mergeAsyncNotNull(defaultScope, _pages, _searchQuery) { list, query ->
         if (query.isEmpty()) {
@@ -134,10 +137,23 @@ class PageParentViewModel
         _saveParent.asyncCall()
     }
 
+    fun onSearchExpanded() {
+        if (!_isSearchInUse) {
+            AnalyticsUtils.trackWithSiteDetails(PAGES_SET_PARENT_SEARCH_ACCESSED, site)
+            _isSearchInUse = true
+        }
+    }
+
+    fun onSearchCollapsed() {
+        _isSearchInUse = false
+        AnalyticsUtils.trackWithSiteDetails(PAGES_SET_PARENT_SEARCH_CLOSED, site)
+    }
+
     private fun trackSaveEvent() {
         val properties = mutableMapOf(
                 "page_id" to page?.remoteId as Any,
-                "new_parent_id" to currentParent.id
+                "new_parent_id" to currentParent.id,
+                "from_search" to _isSearchInUse
         )
         AnalyticsUtils.trackWithSiteDetails(PAGES_SET_PARENT_CHANGES_SAVED, site, properties)
     }
