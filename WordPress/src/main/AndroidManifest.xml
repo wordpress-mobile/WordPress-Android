@@ -310,7 +310,7 @@
             android:name=".ui.media.MediaSettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:label="@string/media_settings_screen_title"
-            android:theme="@style/WordPress.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar.TranslucentStatus" />
 
         <!-- Theme Activities -->
         <activity
