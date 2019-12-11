@@ -6,4 +6,11 @@
         android:id="@+id/save_parent"
         android:title="@string/save"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_search_parent"
+        android:icon="@drawable/ic_search_black_24dp"
+        app:showAsAction="collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        android:title="@string/search"/>
 </menu>
