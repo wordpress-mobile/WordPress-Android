@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.people;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,6 +45,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -121,7 +123,7 @@ public class PeopleListFragment extends Fragment {
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view);
         mFilteredRecyclerView = rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView
-                .addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
+                .addItemDecoration(new PeopleItemDecoration(getActivity()));
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
         mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
 
@@ -478,11 +480,22 @@ public class PeopleListFragment extends Fragment {
 
     // Taken from http://stackoverflow.com/a/27037230
     private class PeopleItemDecoration extends RecyclerView.ItemDecoration {
-        private Drawable mDivider;
+        private InsetDrawable mDivider;
 
         // use a custom drawable
-        PeopleItemDecoration(Context context, int resId) {
-            mDivider = ContextCompat.getDrawable(context, resId);
+        PeopleItemDecoration(Context context) {
+            int[] attrs = {android.R.attr.listDivider};
+            TypedArray ta = context.obtainStyledAttributes(attrs);
+            Drawable drawable = ta.getDrawable(0);
+            ta.recycle();
+
+            int inset = context.getResources().getDimensionPixelOffset(R.dimen.people_list_divider_left_margin);
+
+            if (RtlUtils.isRtl(context)) {
+                mDivider = new InsetDrawable(drawable, 0, 0, inset, 0);
+            } else {
+                mDivider = new InsetDrawable(drawable, inset, 0, 0, 0);
+            }
         }
 
         @Override
