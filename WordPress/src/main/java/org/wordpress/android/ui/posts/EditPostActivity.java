@@ -616,7 +616,7 @@ public class EditPostActivity extends AppCompatActivity implements
             return null;
         }));
         mEditPostRepository.getPostChanged().observe(this, postEvent -> postEvent.applyIfNotHandled(post -> {
-            mViewModel.savePostToDb(this, mEditPostRepository, mShowAztecEditor);
+            mViewModel.savePostToDb(this, mEditPostRepository, mShowAztecEditor, mSite);
             return null;
         }));
     }
@@ -1578,7 +1578,8 @@ public class EditPostActivity extends AppCompatActivity implements
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
             return;
         }
-        mViewModel.updateAndSavePostAsync(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor,
+        mViewModel.updateAndSavePostAsync(this, mShowAztecEditor, mEditPostRepository, mSite,
+                this::updateFromEditor,
                 () -> {
                     if (listener != null) {
                         listener.onPostSave();
@@ -1992,7 +1993,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean shouldSavePost() {
-        boolean hasChanges = mEditPostRepository.postHasEdits();
+        boolean hasChanges = mEditPostRepository.postWasChangedInCurrentSession();
         boolean isPublishable = mEditPostRepository.isPostPublishable();
 
         // if post was modified during this editing session, save it
@@ -2023,7 +2024,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void savePostLocally() {
-        mViewModel.savePostLocally(this, mEditPostRepository, mShowAztecEditor);
+        mViewModel.savePostLocally(this, mEditPostRepository, mShowAztecEditor, mSite);
     }
 
     /**

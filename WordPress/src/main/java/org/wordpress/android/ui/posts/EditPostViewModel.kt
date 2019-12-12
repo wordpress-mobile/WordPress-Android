@@ -26,7 +26,6 @@ import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -41,7 +40,6 @@ class EditPostViewModel
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
     private val aztecEditorFragmentStaticWrapper: AztecEditorFragmentStaticWrapper,
-    private val localeManagerWrapper: LocaleManagerWrapper,
     private val siteStore: SiteStore,
     private val uploadUtils: UploadUtilsWrapper,
     private val postUtils: PostUtilsWrapper,
@@ -64,100 +62,38 @@ class EditPostViewModel
         showAztecEditor: Boolean,
         site: SiteModel
     ) {
-        launch(bgDispatcher) {
-            // mark as pending if the user doesn't have publishing rights
-            if (!uploadUtils.userCanPublish(site)) {
-                when (editPostRepository.status) {
-                    PostStatus.UNKNOWN,
-                    PostStatus.PUBLISHED,
-                    PostStatus.SCHEDULED,
-                    PostStatus.PRIVATE ->
-                        editPostRepository.updateStatus(PostStatus.PENDING)
-                    PostStatus.DRAFT,
-                    PostStatus.PENDING,
-                    PostStatus.TRASHED -> {
-                    }
-                }
-            }
+        savePostToDb(context, editPostRepository, showAztecEditor, site)
+        postUtils.trackSavePostAnalytics(
+                editPostRepository.getPost(),
+                siteStore.getSiteByLocalId(editPostRepository.localSiteId)
+        )
 
-            savePostToDb(context, editPostRepository, showAztecEditor)
-            postUtils.trackSavePostAnalytics(
-                    editPostRepository.getPost(),
-                    siteStore.getSiteByLocalId(editPostRepository.localSiteId)
-            )
+        uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
 
-            uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
-
-            pendingDraftsNotificationsUtils.cancelPendingDraftAlarms(
-                    context,
-                    editPostRepository.id
-            )
-        }
+        pendingDraftsNotificationsUtils.cancelPendingDraftAlarms(
+                context,
+                editPostRepository.id
+        )
     }
 
     fun savePostLocally(
         context: Context,
         editPostRepository: EditPostRepository,
-        showAztecEditor: Boolean
-    ) {
-        launch(bgDispatcher) {
-            Log.d("vojta", "savePostLocally")
-            if (editPostRepository.postHasEdits()) {
-                Log.d("vojta", "Post has edits")
-                editPostRepository.updateInTransaction { postModel ->
-                    Log.d("vojta", "Updating post in transaction")
-                    // Changes have been made - save the post and ask for the post list to refresh
-                    // We consider this being "manual save", it will replace some Android "spans" by an html
-                    // or a shortcode replacement (for instance for images and galleries)
-
-                    // Update the post object directly, without re-fetching the fields from the EditorFragment
-                    updatePostLocallyChangedOnStatusOrMediaChange(
-                            context,
-                            postModel,
-                            showAztecEditor,
-                            editPostRepository
-                    )
-                    true
-                }
-                savePostToDb(context, editPostRepository, showAztecEditor)
-
-                // now set the pending notification alarm to be triggered in the next day, week, and month
-                pendingDraftsNotificationsUtils
-                        .scheduleNextNotifications(
-                                context,
-                                editPostRepository.id,
-                                editPostRepository.dateLocallyChanged
-                        )
-            }
-        }
-    }
-
-    private fun updatePostLocallyChangedOnStatusOrMediaChange(
-        context: Context,
-        editedPost: PostModel?,
         showAztecEditor: Boolean,
-        editPostRepository: EditPostRepository
+        site: SiteModel
     ) {
-        Log.d("vojta", "updatePostLocallyChangedOnStatusOrMediaChange")
-        if (editedPost == null) {
-            Log.d("vojta", "post is null")
-            return
-        }
-        val contentChanged: Boolean = isCurrentMediaMarkedUploadingDifferentToOriginal(
-                    context,
-                    showAztecEditor,
-                    editedPost.content
-            )
-        val statusChanged: Boolean = editPostRepository.hasStatusChangedFromWhenEditorOpened(
-                editedPost.status
-        )
-        if (!editedPost.isLocalDraft && (contentChanged || statusChanged)) {
-            Log.d(
-                    "vojta",
-                    "really updating post: ${!editedPost.isLocalDraft && (contentChanged || statusChanged)}"
-            )
-            editedPost.setIsLocallyChanged(true)
-            editedPost.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
+        Log.d("vojta", "savePostLocally")
+        if (editPostRepository.postWasChangedInCurrentSession()) {
+            Log.d("vojta", "Post has edits")
+            savePostToDb(context, editPostRepository, showAztecEditor, site)
+
+            // now set the pending notification alarm to be triggered in the next day, week, and month
+            pendingDraftsNotificationsUtils
+                    .scheduleNextNotifications(
+                            context,
+                            editPostRepository.id,
+                            editPostRepository.dateLocallyChanged
+                    )
         }
     }
 
@@ -165,6 +101,7 @@ class EditPostViewModel
         context: Context,
         showAztecEditor: Boolean,
         postRepository: EditPostRepository,
+        site: SiteModel,
         getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor),
         onSaveAction: (() -> Unit)
     ) {
@@ -181,7 +118,7 @@ class EditPostViewModel
                         .also { success ->
                             if (success) {
                                 Log.d("vojta", "Is success so saving to the DB")
-                                savePostToDb(context, postRepository, showAztecEditor)
+                                savePostToDb(context, postRepository, showAztecEditor, site)
                             }
                         }
             }
@@ -212,20 +149,40 @@ class EditPostViewModel
     fun savePostToDb(
         context: Context,
         postRepository: EditPostRepository,
-        showAztecEditor: Boolean
+        showAztecEditor: Boolean,
+        site: SiteModel
     ) {
         Log.d("vojta", "Saving post to DB")
         if (postRepository.postHasChangesFromDb()) {
+            val post = checkNotNull(postRepository.getEditablePost())
+            // mark as pending if the user doesn't have publishing rights
+            if (!uploadUtils.userCanPublish(site)) {
+                when (postRepository.status) {
+                    PostStatus.UNKNOWN,
+                    PostStatus.PUBLISHED,
+                    PostStatus.SCHEDULED,
+                    PostStatus.PRIVATE ->
+                        post.setStatus(PostStatus.PENDING.toString())
+                    PostStatus.DRAFT,
+                    PostStatus.PENDING,
+                    PostStatus.TRASHED -> {
+                    }
+                }
+            }
+            post.setIsLocallyChanged(true)
+            post.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
             Log.d("vojta", "Post has changes so really saving")
             postRepository.saveDbSnapshot()
-            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postRepository.getEditablePost()))
+            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
 
             if (showAztecEditor) {
                 // update the list of uploading ids
-                mediaMarkedUploadingOnStartIds = aztecEditorFragmentStaticWrapper.getMediaMarkedUploadingInPostContent(
-                        context,
-                        postRepository.content
-                )
+                launch(bgDispatcher) {
+                    mediaMarkedUploadingOnStartIds = aztecEditorFragmentStaticWrapper.getMediaMarkedUploadingInPostContent(
+                            context,
+                            postRepository.content
+                    )
+                }
             }
         }
     }

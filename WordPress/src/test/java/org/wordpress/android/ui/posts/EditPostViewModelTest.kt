@@ -81,7 +81,6 @@ class EditPostViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 dispatcher,
                 aztecEditorFragmentStaticWrapper,
-                localeManagerWrapper,
                 siteStore,
                 uploadUtils,
                 postUtils,
@@ -373,11 +372,10 @@ class EditPostViewModelTest : BaseUnitTest() {
                     isFirstTimePublish,
                     context,
                     postRepository,
-                    showAztecEditor,
-                    site
+                    showAztecEditor
             )
 
-            verify(postRepository).updateStatus(PENDING)
+            verify(postRepository).setStatus(PENDING)
         }
     }
 
@@ -394,11 +392,10 @@ class EditPostViewModelTest : BaseUnitTest() {
                     isFirstTimePublish,
                     context,
                     postRepository,
-                    showAztecEditor,
-                    site
+                    showAztecEditor
             )
 
-            verify(postRepository, never()).updateStatus(any())
+            verify(postRepository, never()).setStatus(any())
         }
     }
 
@@ -415,8 +412,7 @@ class EditPostViewModelTest : BaseUnitTest() {
                 isFirstTimePublish,
                 context,
                 postRepository,
-                showAztecEditor,
-                site
+                showAztecEditor
         )
         verify(postRepository).saveDbSnapshot()
 
@@ -438,8 +434,7 @@ class EditPostViewModelTest : BaseUnitTest() {
                 isFirstTimePublish,
                 context,
                 postRepository,
-                showAztecEditor,
-                site
+                showAztecEditor
         )
 
         verify(dispatcher, never()).dispatch(any())
@@ -462,8 +457,7 @@ class EditPostViewModelTest : BaseUnitTest() {
                 isFirstTimePublish,
                 context,
                 postRepository,
-                showAztecEditor,
-                site
+                showAztecEditor
         )
 
         verify(postUtils).trackSavePostAnalytics(immutablePost, site)
@@ -477,7 +471,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         val showAztecEditor = true
         val doFinishActivity = false
         setupPostRepository(PUBLISHED)
-        whenever(postRepository.postHasEdits()).thenReturn(true)
+        whenever(postRepository.postWasChangedInCurrentSession()).thenReturn(true)
         viewModel.mediaInsertedOnCreation = true
         setupCurrentTime()
 
@@ -493,7 +487,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `savePostLocally sets locally changed flag when media marked uploading changed`() {
         val showAztecEditor = true
         val doFinishActivity = false
-        whenever(postRepository.postHasEdits()).thenReturn(true)
+        whenever(postRepository.postWasChangedInCurrentSession()).thenReturn(true)
         setupCurrentTime()
         val newContent = "new content"
         postModel.setContent(newContent)
@@ -520,7 +514,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `savePostLocally sets post status as cancelled and schedules notification`() {
         val showAztecEditor = true
         val doFinishActivity = false
-        whenever(postRepository.postHasEdits()).thenReturn(true)
+        whenever(postRepository.postWasChangedInCurrentSession()).thenReturn(true)
         whenever(postRepository.id).thenReturn(postId)
         whenever(postRepository.dateLocallyChanged).thenReturn(currentTime)
 
@@ -540,7 +534,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `savePostLocally finishes when the flag is set`() {
         val showAztecEditor = true
         val doFinishActivity = true
-        whenever(postRepository.postHasEdits()).thenReturn(false)
+        whenever(postRepository.postWasChangedInCurrentSession()).thenReturn(false)
         var finish = false
         viewModel.onFinish.observeForever {
             it.applyIfNotHandled { finish = true }

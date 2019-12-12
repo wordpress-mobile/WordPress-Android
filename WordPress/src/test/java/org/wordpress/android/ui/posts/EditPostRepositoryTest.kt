@@ -435,11 +435,11 @@ class EditPostRepositoryTest {
 
         editPostRepository.savePostSnapshotWhenEditorOpened()
 
-        assertThat(editPostRepository.postHasEdits()).isFalse()
+        assertThat(editPostRepository.postWasChangedInCurrentSession()).isFalse()
 
         editPostRepository.setInTransaction { secondPost }
 
-        assertThat(editPostRepository.postHasEdits()).isTrue()
+        assertThat(editPostRepository.postWasChangedInCurrentSession()).isTrue()
     }
 
     @Test

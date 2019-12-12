@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -36,7 +37,7 @@ class EditPostRepository
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
-    protected var job: Job = Job()
+    private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
         get() = mainDispatcher + job
@@ -102,12 +103,19 @@ class EditPostRepository
             action(post!!)
         }
         post?.let {
-            _postChanged.postValue(Event(it))
+            runBlocking {
+                launch {
+                    _postChanged.value = Event(it)
+                }
+            }
         }
         return result
     }
 
-    fun updatePostAsync(action: (PostModel) -> Boolean, onSuccess: ((PostImmutableModel) -> Unit)? = null) {
+    fun updatePostAsync(
+        action: (PostModel) -> Boolean,
+        onSuccess: ((PostImmutableModel) -> Unit)? = null
+    ) {
         launch {
             val isUpdated = withContext(bgDispatcher) {
                 lock.write {
@@ -165,10 +173,11 @@ class EditPostRepository
         this.post = postForUndo?.clone()
     }
 
-    fun postHasChangesFromDb(): Boolean =
-            postSnapshotForDb == null ||
-                    post != postSnapshotForDb ||
-                    post?.changesConfirmedContentHashcode != postSnapshotForDb?.changesConfirmedContentHashcode
+    fun postHasChangesFromDb(): Boolean {
+        checkNotNull(postSnapshotForDb) { "Post snapshot from DB cannot be null at this point" }
+        return post != postSnapshotForDb ||
+                post?.changesConfirmedContentHashcode != postSnapshotForDb?.changesConfirmedContentHashcode
+    }
 
     fun saveDbSnapshot() {
         postSnapshotForDb = post?.clone()
@@ -190,29 +199,28 @@ class EditPostRepository
         return postSnapshotWhenEditorOpened?.status != null && postStatus != postSnapshotWhenEditorOpened?.status
     }
 
-    fun postHasEdits() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post!!)
+    fun postWasChangedInCurrentSession() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post!!)
 
-    fun updateStatus(status: PostStatus) {
-        updatePostAsync({
+    fun setStatus(status: PostStatus) {
+        checkNotNull(post, { "Post cannot be null when setting status" }).let {
             val updatedPost = status.toString()
             if (it.status != updatedPost) {
                 it.setStatus(updatedPost)
-                true
-            } else {
-                false
             }
-        })
+        }
     }
 
     fun loadPostByLocalPostId(postId: Int) {
         lock.write {
             post = postStore.getPostByLocalPostId(postId)
+            saveDbSnapshot()
         }
     }
 
     fun loadPostByRemotePostId(remotePostId: Long, site: SiteModel) {
         lock.write {
             post = postStore.getPostByRemotePostId(remotePostId, site)
+            saveDbSnapshot()
         }
     }
 }
