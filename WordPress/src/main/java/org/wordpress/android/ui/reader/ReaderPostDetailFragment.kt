@@ -292,7 +292,7 @@ class ReaderPostDetailFragment : Fragment(),
         return post != null
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         menu!!.clear()
         inflater!!.inflate(R.menu.reader_detail, menu)

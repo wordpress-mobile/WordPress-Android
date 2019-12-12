@@ -39,11 +39,11 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(WPMainActivityViewModel::class.java)
 
         viewModel.mainActions.observe(this, Observer {
-            (dialog.create_actions_recycler_view.adapter as? AddContentAdapter)?.update(it ?: listOf())
+            (dialog?.create_actions_recycler_view?.adapter as? AddContentAdapter)?.update(it ?: listOf())
         })
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
