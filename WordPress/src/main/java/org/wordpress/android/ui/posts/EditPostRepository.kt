@@ -166,7 +166,9 @@ class EditPostRepository
     }
 
     fun postHasChangesFromDb(): Boolean =
-            postSnapshotForDb == null || post != postSnapshotForDb
+            postSnapshotForDb == null ||
+                    post != postSnapshotForDb ||
+                    post?.changesConfirmedContentHashcode != postSnapshotForDb?.changesConfirmedContentHashcode
 
     fun saveDbSnapshot() {
         postSnapshotForDb = post?.clone()
