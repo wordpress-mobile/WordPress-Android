@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
-import org.wordpress.android.fluxc.generated.UploadActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -121,29 +120,6 @@ class EditPostViewModel
                     true
                 }
                 savePostToDb(context, editPostRepository, showAztecEditor)
-
-                // For self-hosted sites, when exiting the editor without uploading, the `PostUploadModel
-                // .uploadState`
-                // can get stuck in `PENDING`. This happens in this scenario:
-                //
-                // 1. The user edits an existing post
-                // 2. Adds an image -- this creates the `PostUploadModel` as `PENDING`
-                // 3. Exits the editor by tapping on Back (not saving or publishing)
-                //
-                // If the `uploadState` is stuck at `PENDING`, the Post List will indefinitely show a “Queued post”
-                // label.
-                //
-                // The `uploadState` does not get stuck on `PENDING` for WPCom because the app will automatically
-                // start a remote auto-save when the editor exits. Hence, the `PostUploadModel` eventually gets
-                // updated.
-                //
-                // Marking the `PostUploadModel` as `CANCELLED` when exiting should be fine for all site types since
-                // we do not currently have any special handling for cancelled uploads. Eventually, the user will
-                // restart them and the `uploadState` will be corrected.
-                //
-                // See `PostListUploadStatusTracker` and `PostListItemUiStateHelper.createUploadUiState` for how
-                // the Post List determines what label to use.
-                dispatcher.dispatch(UploadActionBuilder.newCancelPostAction(editPostRepository.getEditablePost()))
 
                 // now set the pending notification alarm to be triggered in the next day, week, and month
                 pendingDraftsNotificationsUtils

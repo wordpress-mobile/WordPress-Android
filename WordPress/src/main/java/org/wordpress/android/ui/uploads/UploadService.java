@@ -976,7 +976,11 @@ public class UploadService extends Service {
         // This done for pending as well as cancelled and failed posts
         for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
             if (mPostUtilsWrapper.isPostCurrentlyBeingEdited(postModel)) {
-                // don't touch a Post that is being currently open in the Editor.
+                // Don't upload a Post that is being currently open in the Editor.
+                // This fixes the issue on self-hosted sites when you have a queued post which couldn't be
+                // remote autosaved. When you try to leave the editor without saving it will get stuck in queued
+                // upload state. In case of the post still being edited we cancel any ongoing upload post action.
+                mDispatcher.dispatch(UploadActionBuilder.newCancelPostAction(post));
                 continue;
             }
 
