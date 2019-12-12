@@ -11,7 +11,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.graphics.ColorUtils
 import com.google.android.material.elevation.ElevationOverlayProvider
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -137,6 +136,7 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
             super.bind(state, imageManager, uiHelpers)
             val context = itemView.context
 
+            // Because it's a custom popup list we need to manage colors of list items manually
             val elevationOverlayProvider = ElevationOverlayProvider(context)
             val appbarElevation = context.resources.getDimension(R.dimen.appbar_elevation)
             val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
@@ -145,7 +145,8 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
 
             val selectedColor = ColorUtils
                     .setAlphaComponent(
-                            context.getColorFromAttribute(attr.colorOnSurface), 50
+                            context.getColorFromAttribute(R.attr.colorOnSurface),
+                            context.resources.getInteger(R.integer.custom_popup_selected_list_item_opacity_dec)
                     )
 
             text.text = uiHelpers.getTextOfUiString(context, state.text)
