@@ -10,8 +10,8 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:layout_marginStart="@dimen/page_item_horizontal_padding"
-        android:textColor="?attr/wpColorTextSubtle"
-        android:textSize="14sp"
+        android:textAppearance="?attr/textAppearanceSubtitle2"
+        android:textColor="?attr/wpColorOnSurfaceMedium"
         tools:text="First part of pages" />
 
 </FrameLayout>
