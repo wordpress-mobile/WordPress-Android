@@ -3,6 +3,6 @@
        android:insetLeft="@dimen/people_list_divider_left_margin">
     <shape>
         <solid android:color="@color/neutral_0"/>
-        <size android:height="@dimen/people_list_divider_height"/>
+        <size android:height="@dimen/divider_size"/>
     </shape>
 </inset>
