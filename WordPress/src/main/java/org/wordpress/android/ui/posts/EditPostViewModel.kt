@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -63,37 +65,12 @@ class EditPostViewModel
         site: SiteModel
     ) {
         savePostToDb(context, editPostRepository, showAztecEditor, site)
-        postUtils.trackSavePostAnalytics(
-                editPostRepository.getPost(),
-                siteStore.getSiteByLocalId(editPostRepository.localSiteId)
-        )
-
-        uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
-
-        pendingDraftsNotificationsUtils.cancelPendingDraftAlarms(
-                context,
-                editPostRepository.id
-        )
-    }
-
-    fun savePostLocally(
-        context: Context,
-        editPostRepository: EditPostRepository,
-        showAztecEditor: Boolean,
-        site: SiteModel
-    ) {
-        Log.d("vojta", "savePostLocally")
-        if (editPostRepository.postWasChangedInCurrentSession()) {
-            Log.d("vojta", "Post has edits")
-            savePostToDb(context, editPostRepository, showAztecEditor, site)
-
-            // now set the pending notification alarm to be triggered in the next day, week, and month
-            pendingDraftsNotificationsUtils
-                    .scheduleNextNotifications(
-                            context,
-                            editPostRepository.id,
-                            editPostRepository.dateLocallyChanged
-                    )
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            postUtils.trackSavePostAnalytics(
+                    editPostRepository.getPost(),
+                    siteStore.getSiteByLocalId(editPostRepository.localSiteId)
+            )
+            uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
         }
     }
 
@@ -171,6 +148,7 @@ class EditPostViewModel
             }
             post.setIsLocallyChanged(true)
             post.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
+            handlePendingDraftNotifications(context, postRepository)
             Log.d("vojta", "Post has changes so really saving")
             postRepository.saveDbSnapshot()
             dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
@@ -184,6 +162,26 @@ class EditPostViewModel
                     )
                 }
             }
+        }
+    }
+
+    private fun handlePendingDraftNotifications(
+        context: Context,
+        editPostRepository: EditPostRepository
+    ) {
+        if (editPostRepository.status == DRAFT) {
+            // now set the pending notification alarm to be triggered in the next day, week, and month
+            pendingDraftsNotificationsUtils
+                    .scheduleNextNotifications(
+                            context,
+                            editPostRepository.id,
+                            editPostRepository.dateLocallyChanged
+                    )
+        } else {
+            pendingDraftsNotificationsUtils.cancelPendingDraftAlarms(
+                    context,
+                    editPostRepository.id
+            )
         }
     }
 

@@ -104,7 +104,7 @@ class EditPostRepository
         }
         post?.let {
             runBlocking {
-                launch {
+                launch(mainDispatcher) {
                     _postChanged.value = Event(it)
                 }
             }

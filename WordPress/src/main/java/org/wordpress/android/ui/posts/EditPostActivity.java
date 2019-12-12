@@ -359,6 +359,7 @@ public class EditPostActivity extends AppCompatActivity implements
             post.setStatus(PostStatus.DRAFT.toString());
             return post;
         });
+        mEditPostRepository.saveDbSnapshot();
         EventBus.getDefault().postSticky(
                 new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(), mEditPostRepository.getId()));
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
@@ -1846,7 +1847,6 @@ public class EditPostActivity extends AppCompatActivity implements
         // TODO it's safe to remove this thread
         new Thread(() -> {
             AtomicBoolean saveOnline = new AtomicBoolean(false);
-            AtomicBoolean saveLocally = new AtomicBoolean(false);
             AtomicBoolean isFirstTimePublish = new AtomicBoolean(false);
             mEditPostRepository.updatePostAsync(postModel -> {
                 isFirstTimePublish.set(isFirstTimePublish(publishPost));
@@ -1880,17 +1880,14 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Hide the progress dialog now
                 mEditorFragment.hideSavingProgressDialog();
                 if (isPublishable) {
-                    if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                    boolean networkAvailable = NetworkUtils.isNetworkAvailable(getBaseContext());
+                    boolean hasFailedUploads = mEditorFragment.hasFailedMediaUploads()
+                                               || mFeaturedImageHelper.getFailedFeaturedImageUpload(postModel) != null;
+                    if (networkAvailable && hasFailedUploads) {
                         // Show an Alert Dialog asking the user if they want to remove all failed media before upload
-                        if (mEditorFragment.hasFailedMediaUploads()
-                            || mFeaturedImageHelper.getFailedFeaturedImageUpload(postModel)
-                               != null) {
-                            EditPostActivity.this.runOnUiThread(this::showRemoveFailedUploadsDialog);
-                        } else {
-                            saveOnline.set(true);
-                        }
+                        EditPostActivity.this.runOnUiThread(this::showRemoveFailedUploadsDialog);
                     } else {
-                        saveLocally.set(true);
+                        saveOnline.set(true);
                     }
                 } else {
                     mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened(postModel);
@@ -1904,10 +1901,6 @@ public class EditPostActivity extends AppCompatActivity implements
             }, postModel -> {
                 if (saveOnline.get()) {
                     savePostOnline(isFirstTimePublish.get());
-                    mViewModel.finish();
-                }
-                if (saveLocally.get()) {
-                    savePostLocally();
                     mViewModel.finish();
                 }
                 return null;
@@ -1971,8 +1964,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     savePostOnline(isFirstTimePublish);
                 } else if (forceSave) {
                     savePostOnline(false);
-                } else {
-                    savePostLocally();
                 }
                 if (doFinish) {
                     mViewModel.finish();
@@ -2021,10 +2012,6 @@ public class EditPostActivity extends AppCompatActivity implements
      */
     private boolean hasFailedMedia() {
         return mEditorFragment.hasFailedMediaUploads() || mEditorFragment.isActionInProgress();
-    }
-
-    private void savePostLocally() {
-        mViewModel.savePostLocally(this, mEditPostRepository, mShowAztecEditor, mSite);
     }
 
     /**
