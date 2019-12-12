@@ -3,13 +3,14 @@ package org.wordpress.android.ui.people;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -40,8 +41,7 @@ public class RoleSelectDialogFragment extends DialogFragment {
             stringRoles[i] = inviteRoles.get(i).getDisplayName();
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setTitle(R.string.role);
         builder.setItems(stringRoles, new DialogInterface.OnClickListener() {
             @Override
