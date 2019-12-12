@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -108,6 +111,15 @@ public class PersonDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.person_detail_fragment, container, false);
+
+        Toolbar toolbar = rootView.findViewById(R.id.toolbar_main);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(null);
+        }
 
         mAvatarImageView = rootView.findViewById(R.id.person_avatar);
         mDisplayNameTextView = rootView.findViewById(R.id.person_display_name);
@@ -218,9 +230,9 @@ public class PersonDetailFragment extends Fragment {
         }
 
         RoleChangeDialogFragment dialog = RoleChangeDialogFragment.newInstance(person.getPersonID(),
-                                                                               mSiteStore.getSiteByLocalId(
-                                                                                       mLocalTableBlogId),
-                                                                               person.getRole());
+                mSiteStore.getSiteByLocalId(
+                        mLocalTableBlogId),
+                person.getRole());
         dialog.show(getFragmentManager(), null);
     }
 
