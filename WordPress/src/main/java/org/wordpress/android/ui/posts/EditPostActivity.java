@@ -223,7 +223,6 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
-    public static final String EXTRA_IS_DISCARDABLE = "isDiscardable";
     public static final String EXTRA_RESTART_EDITOR = "isSwitchingEditors";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -610,8 +609,8 @@ public class EditPostActivity extends AppCompatActivity implements
             updateAndSavePostAsync();
             return null;
         }));
-        mViewModel.getOnFinish().observe(this, finishEvent -> finishEvent.applyIfNotHandled(unit -> {
-            saveResult(true, false, false);
+        mViewModel.getOnFinish().observe(this, finishEvent -> finishEvent.applyIfNotHandled(isSavedOnline -> {
+            saveResult(true, !isSavedOnline);
             removePostOpenInEditorStickyEvent();
             finish();
             return null;
@@ -1454,8 +1453,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void savePostOnline(boolean isFirstTimePublish) {
-        mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mShowAztecEditor, mSite);
+    private boolean savePostOnline(boolean isFirstTimePublish) {
+        return mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mShowAztecEditor, mSite);
     }
 
     private void onUploadSuccess(MediaModel media) {
@@ -1726,8 +1725,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
             case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
-                savePostOnline(isFirstTimePublish(false));
-                mViewModel.finish();
+                boolean isSavedOnline = mViewModel.retryUpload(isFirstTimePublish(false), this, mEditPostRepository);
+                mViewModel.finish(isSavedOnline);
                 break;
             case TAG_GB_INFORMATIVE_DIALOG:
                 // no op
@@ -1798,7 +1797,7 @@ public class EditPostActivity extends AppCompatActivity implements
         return mIsNewPost;
     }
 
-    private void saveResult(boolean saved, boolean discardable, boolean savedLocally) {
+    private void saveResult(boolean saved, boolean savedLocally) {
         Intent i = getIntent();
         i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
@@ -1806,7 +1805,6 @@ public class EditPostActivity extends AppCompatActivity implements
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mEditPostRepository.getId());
         i.putExtra(EXTRA_POST_REMOTE_ID, mEditPostRepository.getRemotePostId());
-        i.putExtra(EXTRA_IS_DISCARDABLE, discardable);
         i.putExtra(EXTRA_RESTART_EDITOR, mRestartEditorOption.name());
         i.putExtra(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
         i.putExtra(EXTRA_IS_NEW_POST, mIsNewPost);
@@ -1875,7 +1873,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
 
                 // if post was modified or has unsaved local changes and is publishable, save it
-                saveResult(isPublishable, false, false);
+                saveResult(isPublishable, false);
 
                 // Hide the progress dialog now
                 mEditorFragment.hideSavingProgressDialog();
@@ -1900,8 +1898,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 return true;
             }, postModel -> {
                 if (saveOnline.get()) {
-                    savePostOnline(isFirstTimePublish.get());
-                    mViewModel.finish();
+                    boolean savedOnline = savePostOnline(isFirstTimePublish.get());
+                    mViewModel.finish(savedOnline);
                 }
                 return null;
             });
@@ -1944,7 +1942,7 @@ public class EditPostActivity extends AppCompatActivity implements
             boolean shouldSync = isPublishable || !isNewPost();
 
             if (doFinish) {
-                saveResult(shouldSave && shouldSync, isDiscardable(), false);
+                saveResult(shouldSave && shouldSync, false);
             }
 
             definitelyDeleteBackspaceDeletedMediaItems();
@@ -1959,14 +1957,15 @@ public class EditPostActivity extends AppCompatActivity implements
                   * user didn't confirm the changes in this code path.
                  */
                 boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mEditPostRepository.isLocalDraft();
+                boolean isSavedOnline = false;
                 if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
                     && isNotRestarting && isWpComOrIsLocalDraft) {
-                    savePostOnline(isFirstTimePublish);
+                    isSavedOnline = savePostOnline(isFirstTimePublish);
                 } else if (forceSave) {
-                    savePostOnline(false);
+                    isSavedOnline = savePostOnline(false);
                 }
                 if (doFinish) {
-                    mViewModel.finish();
+                    mViewModel.finish(isSavedOnline);
                 }
             } else {
                 // discard post if new & empty

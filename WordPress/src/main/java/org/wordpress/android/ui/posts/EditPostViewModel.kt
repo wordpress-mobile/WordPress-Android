@@ -27,7 +27,7 @@ import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -47,15 +47,16 @@ class EditPostViewModel
     private val postUtils: PostUtilsWrapper,
     private val pendingDraftsNotificationsUtils: PendingDraftsNotificationsUtilsWrapper,
     private val uploadService: UploadServiceFacade,
-    private val dateTimeUtils: DateTimeUtilsWrapper
+    private val dateTimeUtils: DateTimeUtilsWrapper,
+    private val networkUtils: NetworkUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var debounceCounter = 0
     private var saveJob: Job? = null
     var mediaMarkedUploadingOnStartIds: List<String> = listOf()
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
     val onSavePostTriggered: LiveData<Event<Unit>> = _onSavePostTriggered
-    private val _onFinish = MutableLiveData<Event<Unit>>()
-    val onFinish: LiveData<Event<Unit>> = _onFinish
+    private val _onFinish = MutableLiveData<Event<Boolean>>()
+    val onFinish: LiveData<Event<Boolean>> = _onFinish
 
     fun savePostOnline(
         isFirstTimePublish: Boolean,
@@ -63,14 +64,30 @@ class EditPostViewModel
         editPostRepository: EditPostRepository,
         showAztecEditor: Boolean,
         site: SiteModel
-    ) {
+    ): Boolean {
         savePostToDb(context, editPostRepository, showAztecEditor, site)
-        if (NetworkUtils.isNetworkAvailable(context)) {
+        return if (networkUtils.isNetworkAvailable()) {
             postUtils.trackSavePostAnalytics(
                     editPostRepository.getPost(),
                     siteStore.getSiteByLocalId(editPostRepository.localSiteId)
             )
             uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
+            true
+        } else {
+            false
+        }
+    }
+
+    fun retryUpload(
+        isFirstTimePublish: Boolean,
+        context: Context,
+        editPostRepository: EditPostRepository
+    ): Boolean {
+        return if (networkUtils.isNetworkAvailable()) {
+            uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
+            true
+        } else {
+            false
         }
     }
 
@@ -321,8 +338,8 @@ class EditPostViewModel
         return mediaMarkedUploadingOnStartIds != currentUploadingMedia.sorted()
     }
 
-    fun finish() {
-        _onFinish.postValue(Event(Unit))
+    fun finish(savedOnline: Boolean) {
+        _onFinish.postValue(Event(savedOnline))
     }
 
     sealed class UpdateResult {
