@@ -18,8 +18,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider.BlockItemUiModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -27,17 +29,27 @@ class AllTimeWidgetBlockListViewModelTest {
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var allTimeStore: AllTimeInsightsStore
     @Mock private lateinit var resourceProvider: ResourceProvider
+    @Mock private lateinit var statsUtils: StatsUtils
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var context: Context
     @Mock private lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var viewModel: AllTimeWidgetBlockListViewModel
     private val siteId: Int = 15
     private val appWidgetId: Int = 1
     private val color = Color.LIGHT
     @Before
     fun setUp() {
-        viewModel = AllTimeWidgetBlockListViewModel(siteStore, allTimeStore, resourceProvider, allTimeWidgetUpdater)
+        viewModel = AllTimeWidgetBlockListViewModel(
+                siteStore,
+                allTimeStore,
+                resourceProvider,
+                allTimeWidgetUpdater,
+                appPrefsWrapper,
+                statsUtils
+        )
         viewModel.start(siteId, color, appWidgetId)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
@@ -71,6 +83,7 @@ class AllTimeWidgetBlockListViewModelTest {
         Assertions.assertThat(viewModel.data).hasSize(2)
         assertListItem(viewModel.data[0], viewsKey, views, visitorsKey, visitors)
         assertListItem(viewModel.data[1], postsKey, posts, bestKey, viewsBestDayTotal)
+        verify(appPrefsWrapper).setAppWidgetHasData(true, appWidgetId)
     }
 
     @Test

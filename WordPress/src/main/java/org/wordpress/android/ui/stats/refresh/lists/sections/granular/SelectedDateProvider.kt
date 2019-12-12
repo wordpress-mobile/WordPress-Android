@@ -127,7 +127,10 @@ class SelectedDateProvider
     }
 
     fun onDateLoadingFailed(statsGranularity: StatsGranularity) {
-        val statsSection = statsGranularity.toStatsSection()
+        onDateLoadingFailed(statsGranularity.toStatsSection())
+    }
+
+    fun onDateLoadingFailed(statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.dateValue != null && !selectedDate.error) {
             updateSelectedDate(selectedDate.copy(error = true, loading = false), statsSection)

@@ -5,11 +5,11 @@ buildscript {
     }
 
     ext {
-        aztecVersion = 'v1.3.31'
+        aztecVersion = 'v1.3.36'
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.android.tools.build:gradle:3.5.1'
     }
 }
 
@@ -67,9 +67,9 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0-beta01'
+    implementation 'com.google.android.material:material:1.1.0-beta02'
     implementation 'org.apache.commons:commons-lang3:3.5'
-    implementation 'com.mcxiaoke.volley:library:1.0.18'
+    implementation 'com.android.volley:volley:1.1.1'
     implementation 'org.wordpress:utils:1.22'
 
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion") {
@@ -81,7 +81,7 @@ dependencies {
     if (rootProject.ext.has("buildGutenbergFromSource") && rootProject.ext.buildGutenbergFromSource) {
         implementation (project(':react-native-gutenberg-bridge')) {
             exclude group: 'com.squareup.okhttp3'
-            exclude group: "com.mcxiaoke.volley"
+            exclude group: "com.android.volley"
             exclude group: 'com.google.code.findbugs'
         }
     } else {
@@ -89,7 +89,7 @@ dependencies {
             // Inheriting RN's okhttp version can interfere with FluxC SSL handling
             // See https://github.com/wordpress-mobile/WordPress-Android/issues/9032 and https://github.com/wordpress-mobile/WordPress-FluxC-Android/issues/919
             exclude group: 'com.squareup.okhttp3'
-            exclude group: "com.mcxiaoke.volley"
+            exclude group: "com.android.volley"
             exclude group: 'com.google.code.findbugs'
         }
     }

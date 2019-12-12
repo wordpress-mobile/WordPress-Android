@@ -2,11 +2,13 @@ package org.wordpress.android.ui.posts;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private Editor mCurrentEditor;
     private boolean mHasUnsupportedBlocks = false;
     private Outcome mOutcome = null;
+    private boolean mHWAccOff = false;
 
     enum Editor {
         GUTENBERG,
@@ -48,7 +51,7 @@ public class PostEditorAnalyticsSession implements Serializable {
         PUBLISH
     }
 
-    PostEditorAnalyticsSession(Editor editor, PostModel post, SiteModel site, boolean isNewPost) {
+    PostEditorAnalyticsSession(Editor editor, PostImmutableModel post, SiteModel site, boolean isNewPost) {
         // fill in which the current Editor is
         mCurrentEditor = editor;
 
@@ -77,6 +80,8 @@ public class PostEditorAnalyticsSession implements Serializable {
         } else {
             mContentType = "classic";
         }
+
+        mHWAccOff = AppPrefs.isPostWithHWAccelerationOff(site.getId(), post.getId());
     }
 
     public void start(ArrayList<Object> unsupportedBlocksList) {
@@ -132,6 +137,8 @@ public class PostEditorAnalyticsSession implements Serializable {
         properties.put(KEY_BLOG_TYPE, mBlogType);
         properties.put(KEY_SESSION_ID, mSessionId);
         properties.put(KEY_HAS_UNSUPPORTED_BLOCKS, mHasUnsupportedBlocks ? "1" : "0");
+        properties.put(AnalyticsUtils.EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY, mHWAccOff ? "1" : "0");
+
         return properties;
     }
 }

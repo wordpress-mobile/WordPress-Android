@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-02 17:25:47+0000
+Translation-Revision-Date: 2019-10-25 16:46:48+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="pick_media">Adicionar imagem ou vídeo</string>
+    <string name="error_post_not_submitted_retrying">Não foi possível enviar este post para revisão, mas tentaremos novamente mais tarde.</string>
+    <string name="error_post_not_scheduled_retrying">Não foi possível agendar esse post, mas tentaremos novamente mais tarde.</string>
+    <string name="error_post_not_published_retrying_private">Não foi possível publicar esse post privado, mas tentaremos novamente mais tarde.</string>
+    <string name="error_post_not_published_retrying">Não foi possível publicar esse post, mas tentaremos novamente mais tarde.</string>
+    <string name="error_post_not_submitted">Não foi possível concluir essa ação,  e não enviou esse post para revisão.</string>
+    <string name="error_post_not_scheduled">Não foi possível concluir essa ação,  e não agendou esse post.</string>
+    <string name="error_post_not_published_private">Não foi possível concluir essa ação,  e não publicou esse post privado.</string>
+    <string name="error_post_not_published">Não foi possível concluir essa ação,  e não publicou esse post.</string>
+    <string name="error_media_recover_post_not_submitted">Não foi possível enviar essa mídia, e não enviou esse post para revisão.</string>
+    <string name="error_media_recover_post_not_scheduled">Não foi possível enviar essa mídia, e não enviou agendou esse post.</string>
+    <string name="error_media_recover_post_not_published_private">Não foi possível enviar essa mídia, e não publicou esse post privado.</string>
+    <string name="error_media_recover_post_not_published">Não foi possível enviar essa mídia, e não enviou publicou esse post.</string>
+    <string name="error_media_recover_post">Não foi possível enviar essa mídia.</string>
+    <string name="error_generic_error_retrying">Não foi possível concluir essa ação, mas tentaremos novamente mais tarde.</string>
+    <string name="error_generic_error">Não foi possível concluir essa ação.</string>
+    <string name="error_preview_empty_draft">Não é possível visualizar um rascunho vazio</string>
+    <string name="error_preview_empty_page">Não é possível visualizar uma página vazia</string>
+    <string name="error_preview_empty_post">Não é possível visualizar um post vazio</string>
+    <string name="preview_unavailable_self_hosted_sites">Visualização indisponível</string>
+    <string name="remote_preview_operation_error">Erro ao tentar salvar o post antes da visualização</string>
+    <string name="post_preview_remote_auto_saving_post">Gerando pré-visualização…</string>
+    <string name="post_preview_saving_draft">Salvando…</string>
+    <string name="local_post_autosave_revision_available">Você fez alterações não salvas nesse post</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">A versão deste aplicativo</string>
+    <string name="dialog_confirm_autosave_restore_button">A versão de outro dispositivo</string>
+    <string name="dialog_confirm_autosave_body_second_part">A partir deste aplicativo\nSalvo em %s\n\nA partir de outro dispositivo\nSalvo em %s\n</string>
+    <string name="dialog_confirm_autosave_body_first_part">Você fez alterações nesse post recentemente mas não as salvou. Escolha uma versão para carregar:\n</string>
+    <string name="dialog_confirm_autosave_title">Qual versão você gostaria de editar?</string>
+    <string name="button_delete_permanently">Excluir permanentemente</string>
+    <string name="post_waiting_for_connection_draft_cancel">Não salvaremos as últimas alterações em seu rascunho.</string>
+    <string name="post_waiting_for_connection_scheduled_cancel">Não agendaremos essas alterações.</string>
+    <string name="post_waiting_for_connection_pending_cancel">Não enviaremos essas alterações para revisão.</string>
+    <string name="post_waiting_for_connection_publish_cancel">Não publicaremos essas alterações.</string>
+    <string name="post_waiting_for_connection_draft">Salvaremos seu rascunho quando o dispositivo se conectar novamente.</string>
+    <string name="post_waiting_for_connection_private">Publicaremos seu post privado quando o dispositivo se conectar novamente.</string>
+    <string name="post_waiting_for_connection_scheduled">Agendaremos seu post quando o dispositivo se conectar novamente.</string>
+    <string name="post_waiting_for_connection_pending">Enviaremos seu post para revisão quando o dispositivo se conectar novamente.</string>
+    <string name="post_waiting_for_connection_publish">Publicaremos o post quando o dispositivo se conectar novamente.</string>
     <string name="settings_username_changer_snackbar_cancel">Esta ação não pode ser cancelada. Talvez o nome de usuário já tenha sido atualizado.</string>
     <string name="settings_username_changer_toast_content">Seu novo nome de usuário é %1$s</string>
     <string name="settings_username_changer_progress_dialog">Salvando nome de usuário…</string>
@@ -78,18 +117,12 @@ Language: pt_BR
     <string name="stats_bar_chart_content_description">Gráfico das visualizações do site.</string>
     <string name="stats_loading_card">Carregando os dados do cartão selecionado.</string>
     <string name="site_settings_editor">Editor</string>
-    <string name="dialog_gutenberg_informative_description_page">Você está usando o editor de blocos para criar novas páginas no momento. Deseja usar o editor clássico por padrão? Acesse as configurações do site.</string>
-    <string name="dialog_gutenberg_informative_description_post">Você está usando o editor de blocos para criar novos posts no momento. Deseja usar o editor clássico por padrão? Acesse as configurações do site.</string>
     <string name="description_expand">Expandir</string>
     <string name="description_collapse">Recolher</string>
     <string name="editor_retry_failed_uploads">Tentar enviar novamente</string>
     <string name="editor_toast_failed_uploads">Não foi possível enviar alguns arquivos de mídia. Você não pode salvar ou publicar\nseu post nesse estado.</string>
     <string name="my_site_verify_your_email_without_email">Verifique seu e-mail. As instruções foram enviadas para lá</string>
     <string name="my_site_verify_your_email">Verifique seu e-mail. As instruções foram enviadas para %s</string>
-    <string name="error_media_recover_post_not_submitted">Não foi possível enviar a mídia. Post não enviado.</string>
-    <string name="error_media_recover_post_not_scheduled">Não foi possível enviar a mídia. Post não agendado.</string>
-    <string name="error_media_recover_post_not_published">Não foi possível enviar a mídia. Post não publicado.</string>
-    <string name="error_media_recover_post">Não foi possível enviar a mídia</string>
     <string name="link_dialog_button_cancel">Cancelar</string>
     <string name="link_dialog_button_ok">OK</string>
     <string name="link_dialog_edit_hint">http(s)://</string>
@@ -169,7 +202,6 @@ Language: pt_BR
     <string name="stats_management_news_card_message">Escolha as estatísticas que você deseja ver e foque nos dados mais importantes para você. Clique em %1$s na parte inferior da tela para personalizar suas estatísticas.</string>
     <string name="stats_manage_your_stats">Gerenciar suas estatísticas</string>
     <string name="history_fetching_revisions">Coletando revisões…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Falha ao inserir a mídia.\nClique para ver mais opções.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Falha ao inserir a mídia.\nClique para ver tentar novamente.</string>
     <string name="editor_uploading_draft">Seu rascunho está sendo enviado para o site</string>
     <string name="post_uploading_draft">Enviando rascunho</string>
@@ -249,26 +281,6 @@ Language: pt_BR
     <string name="stats_site_not_loaded_yet">O site não foi carregado ainda</string>
     <string name="stats_more_posts">Mais posts</string>
     <string name="stats_fewer_posts">Menos posts</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Remover conteúdo</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Mover o bloco para baixo</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Mover o bloco para cima</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">ADICIONAR BLOCO AQUI</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Não suportado</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Tipo de bloco não suportado.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Bloco não suportado</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Colar URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ESCOLHER A IMAGEM</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Limpar todas as configurações</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Texto alternativo</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Biblioteca de mídia do WordPress</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Tirar uma foto</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Escolher no dispositivo</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Comece a escrever…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Remover link</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Adicionar texto do link</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Texto do link</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Adicionar URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link inserido</string>
     <string name="new_site_creation_preview_back_pressed_warning">Você pode perder seu progresso. Tem certeza de que deseja sair?</string>
     <string name="plans_loading_error_with_cache_button">Ver os planos assim mesmo</string>
     <string name="plans_loading_error_with_cache_subtitle">É necessário ter uma conexão com a internet para ver os planos. Então as informações podem estar desatualizadas.</string>
@@ -455,16 +467,11 @@ Language: pt_BR
     <string name="history_empty_subtitle_post">Assim que você fizer alterações em seu post, você poderá ver o histórico dele aqui</string>
     <string name="history_empty_subtitle_page">Assim que você fizer alterações em sua página, você poderá ver o histórico dela aqui</string>
     <string name="description_user">Avatar do usuário</string>
-    <string name="async_promo_description_schedule_page">Agora você pode sair do editor e sua página será salva e agendada automaticamente. Teste agora!</string>
-    <string name="async_promo_description_publish_post">Agora você pode sair do editor e seu post será salvo e agendado automaticamente. Teste agora!</string>
-    <string name="async_promo_description_publish_page">Agora você pode sair do editor e sua página será salva e agendada automaticamente. Teste agora!</string>
     <string name="image_size_full_label">Tamanho completo</string>
     <string name="image_size_large_label">Grande</string>
     <string name="image_size_medium_label">Médio</string>
     <string name="image_size_thumbnail_label">Miniatura</string>
     <string name="menu_history">Histórico</string>
-    <string name="async_promo_schedule_now">Agendar agora</string>
-    <string name="async_promo_title_schedule">Agende sem preocupações</string>
     <string name="pages_pending">Pendente de revisão</string>
     <string name="pages_open_page_error">A página selecionada não está disponível</string>
     <string name="news_card_announcement_action_sample_announcement">[Leia mais]</string>
@@ -785,7 +792,6 @@ Language: pt_BR
     <string name="version_with_name_param">Versão %s</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Editor(a): %s</string>
-    <string name="async_promo_publish_now">Publicar agora</string>
     <string name="notification_sound_has_invalid_path">O som escolhido não tem um caminho válido. Escolha outro.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d páginas / posts restantes</string>
@@ -963,7 +969,6 @@ Language: pt_BR
     <string name="login_empty_password">Digite uma senha</string>
     <string name="login_text_otp_another">Ao invés disso, enviar por mensagem de texto um outro código para mim.</string>
     <string name="enter_verification_code_sms">Enviamos uma mensagem de texto para o número de telefone com final %s. Digite o código de verificação do SMS.</string>
-    <string name="error_generic_error">Não foi possível realizar a operação</string>
     <string name="image_size">Tamanho</string>
     <string name="uploading_subtitle_media_only_one">1 arquivo restante</string>
     <string name="uploading_subtitle_media_only">%1$d de %2$d arquivos restantes</string>
@@ -1065,9 +1070,6 @@ Language: pt_BR
     <string name="error_media_canceled">O upload da mídia foi cancelado</string>
     <string name="error_upload_page_media_param">Ocorreu um erro durante o upload da mídia desta página: %s.</string>
     <string name="error_upload_page_param">Ocorreu um erro durante o upload desta página: %s.</string>
-    <string name="async_promo_link">Como isso funciona?</string>
-    <string name="async_promo_description_schedule_post">Agora você pode sair do editor e seu post será salvo e agendado automaticamente. Teste agora!</string>
-    <string name="async_promo_title_publish">Publique sem preocupações</string>
     <string name="editor_uploading_post">Seu post está sendo enviado</string>
     <string name="uploading_media">Fazendo upload da mídia…</string>
     <string name="page_scheduled">Página agendada</string>
@@ -1168,8 +1170,6 @@ Language: pt_BR
     <string name="media_images">Imagens</string>
     <string name="media_all">Todos</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s teve o acesso às suas fotos negado. Edite suas permissões e habilite %2$s para corrigir.</string>
-    <string name="format_bar_description_link">Link</string>
-    <string name="format_bar_description_media">Mídia</string>
     <string name="reader_view_comments">Ver comentários</string>
     <string name="site_settings_video_quality_hint">Qualidade dos vídeos. Valores maiores significam vídeos com mais qualidade.</string>
     <string name="site_settings_video_width_hint">Redimensiona vídeos nos posts para este tamanho</string>
@@ -1297,7 +1297,6 @@ Language: pt_BR
     <string name="xmlrpc_endpoint_forbidden_error">Não foi possível conectar. Recebemos um erro 403 ao tentar acessar o arquivo XMLRPC de seu site.\nO aplicativo necessita dessa conexão para se comunicar com seu site.\nEntre em contato com sua hospedagem para corrigir esse problema.</string>
     <string name="xmlrpc_post_blocked_error">Não foi possível conectar. Seu servidor está bloqueando solicitações POST e\n       o aplicativo precisa delas para se comunicar com o seu site. Entre em contato com seu servidor para resolver este problema.</string>
     <string name="reader_hint_search_followed_sites">Buscar sites seguidos</string>
-    <string name="visual_editor_disabled">Editor visual desativado</string>
     <string name="pending_draft_one_generic">Não o deixe de lado! \"%1$s\" está esperando ser publicado.</string>
     <string name="pending_draft_one_month">Não o deixe de lado! \"%1$s\" está esperando ser publicado.</string>
     <string name="pending_draft_one_week_2">\"%1$s\" ainda é um rascunho. Lembre-se de publicá-lo!</string>
@@ -1364,28 +1363,12 @@ Language: pt_BR
     <string name="error_fetch_email_followers_list">Não foi possível recuperar os seguidores por e-mail do site</string>
     <string name="error_fetch_followers_list">Não foi possível recuperar os seguidos do site</string>
     <string name="editor_failed_uploads_switch_html">Alguns envios de mídia falharam. Você pode mudar para o modo de HTML no lugar. Remover todos os envios falhados e continuar?</string>
-    <string name="image_thumbnail">Imagem em míniatura</string>
-    <string name="visual_editor">Editor visual</string>
-    <string name="format_bar_description_html">HTML</string>
-    <string name="format_bar_description_ol">Lista ordenada</string>
-    <string name="format_bar_description_ul">Lista não ordenada</string>
-    <string name="format_bar_description_more">Leia mais</string>
-    <string name="format_bar_description_quote">Bloco de citação</string>
-    <string name="format_bar_description_strike">Riscado</string>
-    <string name="format_bar_description_underline">Sublinhado</string>
-    <string name="format_bar_description_italic">Itálico</string>
-    <string name="format_bar_description_bold">Negrito</string>
     <string name="image_width">Largura</string>
     <string name="image_link_to">Link para</string>
-    <string name="image_alt_text">Texto alternativo</string>
     <string name="image_caption">Legenda</string>
     <string name="image_settings_save_toast">Salvar alterações</string>
     <string name="image_settings_dismiss_dialog_title">Descartar alterações não salvas?</string>
     <string name="stop_upload_dialog_title">Parar envio?</string>
-    <string name="alert_error_adding_media">Um erro ocorreu algo inserir o arquivo de mídia</string>
-    <string name="alert_action_while_uploading">Você esta no momento enviando um arquivo de mídia. Aguarde até o processo ser completo.</string>
-    <string name="alert_insert_image_html_mode">Não é possível inserir arquivo de mídia diretamente no modo HTML. Mude de volta para o modo visual.</string>
-    <string name="uploading_gallery_placeholder">Enviando galeria…</string>
     <string name="tap_to_try_again">Toque para tentar novamente!</string>
     <string name="invite_sent">Convite enviado com sucesso.</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -1410,7 +1393,6 @@ Language: pt_BR
     <string name="reader_hint_post_search">Pesquisar no WordPress</string>
     <string name="reader_title_related_post_detail">Post relacionado</string>
     <string name="preview_screen_links_disabled">Os links são desabilitados na tela de visualização</string>
-    <string name="draft_explainer">Este post é um rascunho que ainda não foi publicado</string>
     <string name="send">Enviar</string>
     <string name="person_removed">%1$s removido com sucesso</string>
     <string name="user_remove_confirmation_message">Caso você remova %1$s, o usuário não irá mais ser capaz de acessar este site, mas o conteúdo que foi criado por %1$s será mantido no site.\n\nAinda gostaria de remover este usuário?</string>
@@ -1430,7 +1412,6 @@ Language: pt_BR
     <string name="logging_in">Fazendo login</string>
     <string name="enter_your_password_instead">Digite sua senha ao invés disso</string>
     <string name="web_address_dialog_hint">Exibido ao público quando você comentar.</string>
-    <string name="new_editor_reflection_error">O editor visual não é compatível com seu dispositivo. Ele foi\n        desativado automaticamente.</string>
     <string name="capture_or_pick_photo">Tirar or selecionar uma foto</string>
     <string name="plans">Planos</string>
     <string name="plan">Plano</string>
@@ -1510,10 +1491,6 @@ Language: pt_BR
     <string name="error_refresh_comments_showing_older">Não foi possível atualizar os comentários no momento. Comentários mais antigos estão sendo exibidos</string>
     <string name="post_settings_set_featured_image">Configurar imagem destacada</string>
     <string name="post_settings_featured_image">Imagem destacada</string>
-    <string name="visual_editor_enabled">Editor visual ativado</string>
-    <string name="editor_content_placeholder">Compartilhe sua história aqui…</string>
-    <string name="editor_page_title_placeholder">Título da página</string>
-    <string name="editor_post_title_placeholder">Título do post</string>
     <string name="email_address">Endereço de e-mail</string>
     <string name="dlg_sure_to_delete_comments">Excluir estes comentários permanentemente?</string>
     <string name="dlg_sure_to_delete_comment">Excluir este comentário permanentemente?</string>
@@ -1684,8 +1661,6 @@ Language: pt_BR
     <string name="reader_short_like_count_one">1 curtida</string>
     <string name="reader_menu_tags">Editar tags e sites</string>
     <string name="reader_title_post_detail">Post do leitor</string>
-    <string name="local_draft_explainer">Este post é um rascunho local que ainda não foi publicado</string>
-    <string name="local_changes_explainer">Este post teve alterações locais que ainda não foram publicadas</string>
     <string name="notifications_push_summary">Configurações de notificações que são exibidas em seu dispositivo.</string>
     <string name="notifications_email_summary">Configurações de notificações que são enviadas ao e-mail vinculado à sua conta.</string>
     <string name="notifications_tab_summary">Configurações de notificações que são exibidas na guia Notificações.</string>
@@ -1870,8 +1845,6 @@ Language: pt_BR
     <string name="category_name">Nome da categoria</string>
     <string name="add_new_category">Adicionar nova categoria</string>
     <string name="view_in_browser">Exibir no navegador</string>
-    <string name="preview_post">Visualizar post</string>
-    <string name="preview_page">Visualizar página</string>
     <string name="remove_account">Remover site</string>
     <string name="toast_comment_unedited">Comentário não foi alterado</string>
     <string name="content_required">Comentário obrigatório</string>
@@ -1899,10 +1872,8 @@ Language: pt_BR
     <string name="delete_post">Excluir post?</string>
     <string name="post_settings">Configurações do post</string>
     <string name="file_not_found">Não foi possível encontrar o arquivo de mídia para enviar. Ele foi excluído ou movido?</string>
-    <string name="horizontal_alignment">Alinhamento horizontal</string>
     <string name="local_draft">Rascunho local</string>
     <string name="page_settings">Configurações de página</string>
-    <string name="create_a_link">Criar um link</string>
     <string name="link_enter_url_text">Vincular texto (opcional)</string>
     <string name="cannot_delete_multi_media_items">No momento, não é possível excluir algumas mídias. Tente novamente mais tarde.</string>
     <string name="media_error_no_permission">Você não tem permissões para visualizar a biblioteca de mídia</string>
@@ -1917,7 +1888,6 @@ Language: pt_BR
     <string name="reader_empty_posts_in_tag_updating">Coletando posts…</string>
     <string name="cant_share_no_visible_blog">Você não pode compartilhar no WordPress sem um blog visível</string>
     <string name="comment_spammed">Comentário marcado como spam</string>
-    <string name="video">Vídeo</string>
     <string name="reader_label_reply">Responder</string>
     <string name="reader_likes_multi">%,d pessoas curtiram isso</string>
     <string name="reader_likes_you_and_multi">Você e %,d outros curtiram isso</string>
@@ -1974,7 +1944,6 @@ Language: pt_BR
     <string name="httpuser">Usuário HTTP</string>
     <string name="error_media_upload">Ocorreu um erro durante o envio de mídia</string>
     <string name="publish_date">Publicar</string>
-    <string name="post_content">Conteúdo (Toque para adicionar texto e mídia)</string>
     <string name="incorrect_credentials">Usuário ou senha incorreta.</string>
     <string name="log_in">Fazer login</string>
     <string name="username">Usuário</string>
@@ -1982,15 +1951,11 @@ Language: pt_BR
     <string name="reader">Leitor</string>
     <string name="anonymous">Anônimo</string>
     <string name="posts">Posts</string>
-    <string name="width">Largura</string>
-    <string name="caption">Legenda (opcional)</string>
     <string name="pages">Páginas</string>
     <string name="no_network_title">Não há rede disponível </string>
-    <string name="featured_in_post">Incluir imagem no conteúdo do post</string>
     <string name="ok">OK</string>
     <string name="blogusername">usrenamedoblog</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Enviando…</string>
     <string name="app_title">WordPress para Android</string>
     <string name="tos">Termos de Serviço</string>
     <string name="version">Versão</string>

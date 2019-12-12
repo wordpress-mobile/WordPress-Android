@@ -1,6 +1,0 @@
-13.3:
-* Ora le tue statistiche sono più responsive.
-* Ora puoi modificare il tuo nome utente nelle Impostazioni account.
-* Desideri modificare le impostazioni delle prestazioni di Jetpack? Fallo dall'app!
-* Se hai oltre di 100 pagine sul sito, le elencheremo in ordine cronologico per un accesso più rapido.
-* Abbiamo aggiunto molti aggiornamenti all'editor dei blocchi, come RTF nei sottotitoli, aggiunte ai blocchi più intuitive e salvataggi automatici del contenuto dopo due secondi di inattività.

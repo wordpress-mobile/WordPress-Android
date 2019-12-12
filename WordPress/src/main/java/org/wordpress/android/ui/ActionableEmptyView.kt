@@ -1,6 +1,7 @@
 package org.wordpress.android.ui
 
 import android.content.Context
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
@@ -36,7 +37,11 @@ class ActionableEmptyView : LinearLayout {
         initView(context, attrs)
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
+            context,
+            attrs,
+            defStyle
+    ) {
         initView(context, attrs)
     }
 
@@ -55,9 +60,17 @@ class ActionableEmptyView : LinearLayout {
         bottomImage = layout.findViewById(R.id.bottom_image)
 
         attrs.let {
-            val typedArray = context.obtainStyledAttributes(it, R.styleable.ActionableEmptyView, 0, 0)
+            val typedArray = context.obtainStyledAttributes(
+                    it,
+                    R.styleable.ActionableEmptyView,
+                    0,
+                    0
+            )
 
-            val imageResource = typedArray.getResourceId(R.styleable.ActionableEmptyView_aevImage, 0)
+            val imageResource = typedArray.getResourceId(
+                    R.styleable.ActionableEmptyView_aevImage,
+                    0
+            )
             val titleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevTitle)
             val subtitleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevSubtitle)
             val buttonAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevButton)
@@ -99,17 +112,43 @@ class ActionableEmptyView : LinearLayout {
         val params: RelativeLayout.LayoutParams
 
         if (isSearching) {
-            params = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-            layout.setPadding(0, context.resources.getDimensionPixelSize(R.dimen.margin_extra_extra_large), 0, 0)
+            params = RelativeLayout.LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+            )
+            layout.setPadding(
+                    0,
+                    context.resources.getDimensionPixelSize(R.dimen.margin_extra_extra_large),
+                    0,
+                    0
+            )
 
             image.visibility = View.GONE
             button.visibility = View.GONE
         } else {
-            params = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            params = RelativeLayout.LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.MATCH_PARENT
+            )
             layout.setPadding(0, 0, 0, 0)
         }
 
         params.topMargin = topMargin
         layout.layoutParams = params
+    }
+
+    /**
+     * Announces the empty view when the empty state occurs. Due to the formatting of subtitle text in certain
+     * circumstances TalkBack isn't able to properly make it's announcement so in cases like these the content
+     * description is dynamically added before doing so.
+     */
+    fun announceEmptyStateForAccessibility() {
+        val subTitle = if (!TextUtils.isEmpty(subtitle.contentDescription)) {
+            subtitle.contentDescription
+        } else {
+            subtitle.text
+        }
+
+        announceForAccessibility("${title.text}.$subTitle")
     }
 }

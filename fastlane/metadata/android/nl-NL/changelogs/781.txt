@@ -1,6 +1,0 @@
-13.3:
-* Je statistieken zijn een stuk overzichtelijker geworden.
-* Je kunt nu je gebruikersnaam in de Accountinstellingen wijzigen.
-* Wil je de instellingen voor Jetpack-prestaties aanpassen? Doe dit nu direct vanuit de app!
-* Als je een actieve schrijver bent met meer dan 100 pagina's op je site vermelden wij ze chronologisch, zodat je ze sneller kunt openen.
-* We hebben veel upgrades toegevoegd aan de blok-editor, zoals rich-text in ondertitelingen, meer intuïtieve bloktoevoegingen en het automatisch opslaan van content na twee seconden inactiviteit.

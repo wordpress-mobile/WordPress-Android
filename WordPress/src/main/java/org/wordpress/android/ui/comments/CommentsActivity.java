@@ -164,7 +164,7 @@ public class CommentsActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
 
-        Fragment fragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
+        Fragment fragment = ReaderPostDetailFragment.Companion.newInstance(remoteBlogId, postId);
         FragmentTransaction ft = fm.beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         ft.add(R.id.layout_fragment_container, fragment, tagForFragment)

@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-01 14:54:13+0000
+Translation-Revision-Date: 2019-11-13 01:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Notifiche</string>
+    <string name="master_switch_default_title_off">Disattivo</string>
+    <string name="master_switch_default_title_on">Attivo</string>
+    <string name="notifications_tab_dialog_master_off_message">La disattivazione delle notifiche per questo sito ne comporterà la disattivazione della visualizzazione nella scheda delle notifiche per questo sito. Puoi regolare il tipo di notifica da vedere dopo aver attivato le notifiche per questo sito.</string>
+    <string name="notifications_tab_dialog_master_off_title">Per vedere le notifiche sulla scheda delle notifiche per questo sito, attiva le notifiche per questo sito.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Abilita la visualizzazione delle notifiche sulla scheda delle notifiche per questo sito</string>
+    <string name="notifications_tab_dialog_master_hint_on">Disabilita la visualizzazione delle notifiche sulla scheda delle notifiche per questo sito</string>
+    <string name="notifications_tab_dialog_master_status_off">Notifiche per questo sito</string>
+    <string name="notifications_tab_dialog_master_status_on">Notifiche per questo sito</string>
+    <string name="dialog_gutenberg_informative_description_page">Ora stai usando l\'editor dei blocchi per le nuove pagine, u2014 fantastico. Se desideri passare all\'editor classico, vai a \"Il mio sito\" > \"Impostazioni del sito\".</string>
+    <string name="dialog_gutenberg_informative_description_post">Ora stai usando l\'editor dei blocchi per i nuovi articoli, u2014 fantastico. Se desideri passare all\'editor classico, vai a \"Il mio sito\" > \"Impostazioni del sito\".</string>
+    <string name="pick_media">Aggiungi immagine o video</string>
+    <string name="error_post_not_submitted_retrying">Impossibile inviare questo articolo per la revisione, riproveremo più tardi. </string>
+    <string name="error_post_not_scheduled_retrying">Impossibile pianificare questo articolo, riproveremo più tardi.</string>
+    <string name="error_post_not_published_retrying_private">Impossibile pubblicare questo articolo privato, riproveremo più tardi.</string>
+    <string name="error_post_not_published_retrying">Impossibile pubblicare questo articolo, riproveremo più tardi.</string>
+    <string name="error_post_not_submitted">Impossibile completare questa azione e inviare questo articolo per la revisione.</string>
+    <string name="error_post_not_scheduled">Impossibile completare questa azione e pianificare questo articolo.</string>
+    <string name="error_post_not_published_private">Impossibile completare questa azione e pubblicare questo articolo privato.</string>
+    <string name="error_post_not_published">Impossibile completare questa azione e pubblicare questo articolo.</string>
+    <string name="error_media_recover_post_not_submitted">Impossibile caricare questo elemento multimediale e inviare questo articolo per la revisione. </string>
+    <string name="error_media_recover_post_not_scheduled">Impossibile caricare questo elemento multimediale e pianificare questo articolo.</string>
+    <string name="error_media_recover_post_not_published_private">Impossibile caricare questo elemento multimediale e pubblicare questo articolo privato.</string>
+    <string name="error_media_recover_post_not_published">Impossibile caricare questo elemento multimediale e pubblicare questo articolo.</string>
+    <string name="error_media_recover_post">Impossibile caricare questo elemento multimediale.</string>
+    <string name="error_generic_error_retrying">Impossibile completare questa azione, riproveremo più tardi. </string>
+    <string name="error_generic_error">Impossibile completare questa azione.</string>
+    <string name="error_preview_empty_draft">Impossibile visualizzare in anteprima una bozza vuota</string>
+    <string name="error_preview_empty_page">Impossibile visualizzare in anteprima una pagina vuota</string>
+    <string name="error_preview_empty_post">Impossibile visualizzare in anteprima un articolo vuoto</string>
+    <string name="preview_unavailable_self_hosted_sites">Anteprima non disponibile</string>
+    <string name="remote_preview_operation_error">Errore durante il tentativo di salvataggio dell\'articolo prima dell\'anteprima</string>
+    <string name="post_preview_remote_auto_saving_post">Generazione dell\'anteprima in corso…</string>
+    <string name="post_preview_saving_draft">Salvataggio in corso…</string>
+    <string name="local_post_autosave_revision_available">Hai apportato modifiche non salvate a questo articolo</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">La versione da quest\'app</string>
+    <string name="dialog_confirm_autosave_restore_button">La versione da un altro dispositivo</string>
+    <string name="dialog_confirm_autosave_body_second_part">Da quest\'app\nSalvato su %s\n\nDa un altro dispositivo\nSalvato su %s\n</string>
+    <string name="dialog_confirm_autosave_body_first_part">Di recente hai apportato modifiche a questo articolo ma non le hai salvate. Scegli una versione da caricare:\n\n</string>
+    <string name="dialog_confirm_autosave_title">Quale versione desideri modificare?</string>
+    <string name="button_delete_permanently">Cancella definitivamente</string>
+    <string name="post_waiting_for_connection_draft_cancel">Non salveremo le ultime modifiche alla tua bozza.</string>
+    <string name="post_waiting_for_connection_scheduled_cancel">Non pianificheremo queste modifiche.</string>
+    <string name="post_waiting_for_connection_pending_cancel">Non invieremo queste modifiche per la revisione. </string>
+    <string name="post_waiting_for_connection_publish_cancel"> Non pubblicheremo queste modifiche.</string>
+    <string name="post_waiting_for_connection_draft">Salveremo la tua bozza quando il dispositivo sarà di nuovo online</string>
+    <string name="post_waiting_for_connection_private">Pubblicheremo il tuo articolo privato quando il dispositivo sarà di nuovo online.</string>
+    <string name="post_waiting_for_connection_scheduled">Pianificheremo il tuo articolo quando il dispositivo sarà di nuovo online.</string>
+    <string name="post_waiting_for_connection_pending">Invieremo il tuo articolo per la revisione quando il dispositivo sarà di nuovo online.</string>
+    <string name="post_waiting_for_connection_publish">Pubblicheremo l\'articolo privato quando il dispositivo sarà di nuovo online.</string>
     <string name="settings_username_changer_snackbar_cancel">Questa azione non può essere annullata. Il nome utente potrebbe essere già stato aggiornato.</string>
     <string name="settings_username_changer_toast_content">Il tuo nuovo nome utente è %1$s</string>
     <string name="settings_username_changer_progress_dialog">Salvataggio nome utente in corso…</string>
@@ -78,18 +128,12 @@ Language: it
     <string name="stats_bar_chart_content_description">Grafico delle visualizzazioni del sito.</string>
     <string name="stats_loading_card">Caricamento dei dati della carta selezionata.</string>
     <string name="site_settings_editor">Editor</string>
-    <string name="dialog_gutenberg_informative_description_page">Stai attualmente usando l\'editor dei blocchi per creare nuove pagine. Desideri utilizzare l\'editor classico per impostazione predefinita? Vai a Impostazioni del sito.</string>
-    <string name="dialog_gutenberg_informative_description_post">Stai attualmente usando l\'editor dei blocchi per creare nuovi articoli. Desideri utilizzare l\'editor classico per impostazione predefinita? Vai a Impostazioni del sito.</string>
     <string name="description_expand">Espandi</string>
     <string name="description_collapse">Comprimi</string>
     <string name="editor_retry_failed_uploads">Riprova caricamento</string>
     <string name="editor_toast_failed_uploads">Alcuni caricamenti di file multimediali non sono riusciti. Non puoi salvare o pubblicare\n l\'articolo in questo stato.</string>
     <string name="my_site_verify_your_email_without_email">Verifica il tuo indirizzo e-mail. Le istruzioni sono state inviate per e-mail</string>
     <string name="my_site_verify_your_email">Verifica il tuo indirizzo e-mail. Le istruzioni sono state inviate a %s</string>
-    <string name="error_media_recover_post_not_submitted">Impossibile caricare file multimediali. Articolo non inviato.</string>
-    <string name="error_media_recover_post_not_scheduled">Impossibile caricare file multimediali. Articolo non pianificato.</string>
-    <string name="error_media_recover_post_not_published">Impossibile caricare file multimediali. Articolo non pubblicato.</string>
-    <string name="error_media_recover_post">Impossibile caricare file multimediali</string>
     <string name="link_dialog_button_cancel">Annulla</string>
     <string name="link_dialog_button_ok">OK</string>
     <string name="link_dialog_edit_hint">http(s)://</string>
@@ -169,7 +213,6 @@ Language: it
     <string name="stats_management_news_card_message">Scegli quali statistiche vedere e concentrati sui dati più importanti per te. Per personalizzare le tue statistiche, tocca %1$s nella parte inferiore di Panoramica.</string>
     <string name="stats_manage_your_stats">Gestisci le tue statistiche</string>
     <string name="history_fetching_revisions">Recupero delle revisioni in corso…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Inserimento file multimediali non riuscito.\nTocca per le opzioni.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Inserimento file multimediali non riuscito.\nTocca per riprovare.</string>
     <string name="editor_uploading_draft">La tua bozza è in caricamento</string>
     <string name="post_uploading_draft">Caricamento della bozza</string>
@@ -249,26 +292,6 @@ Language: it
     <string name="stats_site_not_loaded_yet">Sito non ancora caricato</string>
     <string name="stats_more_posts">Più articoli</string>
     <string name="stats_fewer_posts">Meno articoli</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Rimuovi contenuto</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Sposta blocco giù</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Sposta blocco su</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">AGGIUNGI BLOCCO QUI</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Non supportato</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Tipo blocco non supportato.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Blocco non supportato</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Incolla URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">SCEGLI IMMAGINE</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Cancella tutte le impostazioni</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Testo Alt</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Libreria multimediale WordPress</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Scatta una foto</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Scegli da dispositivo</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Inizia a scrivere…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Rimuovi link</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Aggiungi testo del link</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Testo del link</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Aggiungi URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link inserito</string>
     <string name="new_site_creation_preview_back_pressed_warning">Potresti perdere i tuoi progressi. Desideri uscire?</string>
     <string name="plans_loading_error_with_cache_button">Visualizza piani in ogni caso</string>
     <string name="plans_loading_error_with_cache_subtitle">Per visualizzare i Piani è richiesta una connessione Internet, pertanto i dettagli potrebbero non essere aggiornati.</string>
@@ -455,16 +478,11 @@ Language: it
     <string name="history_empty_subtitle_post">Quando fai delle modifiche al tuo articolo, sarai in grado di vedere qui la cronologia.</string>
     <string name="history_empty_subtitle_page">Quando fai delle modifiche alla tiua pagina, sarai in grado di vedere qui la cronologia.</string>
     <string name="description_user">Avatar utente</string>
-    <string name="async_promo_description_schedule_page">Ora puoi abbandonare l’editor e la pagina verrà salvata e programmata dietro le quinte! Prova!</string>
-    <string name="async_promo_description_publish_post">Ora puoi abbandonare l’editor e il post verrà salvato e pubblicato dietro le quinte! Prova!</string>
-    <string name="async_promo_description_publish_page">Ora puoi abbandonare l’editor e la pagina verrà salvata e pubblicata dietro le quinte! Prova!</string>
     <string name="image_size_full_label">Dimensione reale</string>
     <string name="image_size_large_label">Grande</string>
     <string name="image_size_medium_label">Media</string>
     <string name="image_size_thumbnail_label">Miniatura</string>
     <string name="menu_history">Cronologia</string>
-    <string name="async_promo_schedule_now">Programma ora</string>
-    <string name="async_promo_title_schedule">Programma con Confidence</string>
     <string name="pages_pending">In attesa di revisione</string>
     <string name="pages_open_page_error">La pagina selezionata non è disponibile</string>
     <string name="news_card_announcement_action_sample_announcement">[Continua a leggere]</string>
@@ -785,7 +803,6 @@ Language: it
     <string name="version_with_name_param">Versione %s</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Editore: %s</string>
-    <string name="async_promo_publish_now">Pubblica ora</string>
     <string name="notification_sound_has_invalid_path">Il suono scelto ha un percorso non valido. Scegline un altro.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d pagine/post rimanenti</string>
@@ -962,7 +979,6 @@ Language: it
     <string name="login_empty_password">Inserisci una password</string>
     <string name="login_text_otp_another">Inviami invece un messaggio con un altro codice.</string>
     <string name="enter_verification_code_sms">Abbiamo inviato un messaggio di testo al numero di telefono che termina in %s. Inserisci il codice di verifica contenuto nell\'SMS.</string>
-    <string name="error_generic_error">Impossibile eseguire l\'operazione</string>
     <string name="image_size">Dimensione</string>
     <string name="uploading_subtitle_media_only_one">1 file rimanente</string>
     <string name="uploading_subtitle_media_only">%1$d di %2$d file rimanenti</string>
@@ -1064,9 +1080,6 @@ Language: it
     <string name="error_media_canceled">Caricamento file multimediali annullato</string>
     <string name="error_upload_page_media_param">Si è verificato un errore nel caricamento del media in questa pagina:  %s.</string>
     <string name="error_upload_page_param">Si è verificato un errore nel caricamento di questa pagina: %s. </string>
-    <string name="async_promo_link">Come funziona?</string>
-    <string name="async_promo_description_schedule_post">Ora puoi uscire dall\'\'editor e il tuo articolo sarà salvato e programmato dietro le quinte! Provaci!</string>
-    <string name="async_promo_title_publish">Pubblica con Confidence</string>
     <string name="editor_uploading_post">Il tuo articolo è stato caricato</string>
     <string name="uploading_media">Caricamento del media…</string>
     <string name="page_scheduled">Pagina programmata</string>
@@ -1167,8 +1180,6 @@ Language: it
     <string name="media_images">Immagini</string>
     <string name="media_all">Tutto</string>
     <string name="photo_picker_soft_ask_permissions_denied">A %1$s è stato negato l\'accesso alle tue foto. Per risolvere questo problema, modifica le tue autorizzazioni e attiva %2$s.</string>
-    <string name="format_bar_description_link">Link</string>
-    <string name="format_bar_description_media">Media</string>
     <string name="reader_view_comments">Visualizza commenti</string>
     <string name="site_settings_video_quality_hint">Qualità dei video. Valori più alti comportano una migliore qualità dei video.</string>
     <string name="site_settings_video_width_hint">Ridimensiona i video negli articoli secondo queste dimensioni</string>
@@ -1296,7 +1307,6 @@ Language: it
     <string name="xmlrpc_endpoint_forbidden_error">Non è possibile connettersi. Abbiamo ricevuto un messaggio di errore 403 durante il tentativo di accedere\n all\'endpoint XMLRPC del tuo sito. Per l\'app questo è necessario per comunicare con il tuo sito. Contatta il tuo host per risolvere\n questo problema.</string>
     <string name="xmlrpc_post_blocked_error">Non è possibile connettersi. Il tuo host sta bloccando le richieste POST ma queste sono necessarie al corretto funzionamento dell\'app\n per comunicare con il tuo sito. Contatta il tuo fornitore del servizio di hosting per risolvere questo problema.</string>
     <string name="reader_hint_search_followed_sites">Ricerca nei siti che segui</string>
-    <string name="visual_editor_disabled">Editor visuale disabilitato</string>
     <string name="pending_draft_one_generic">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
     <string name="pending_draft_one_month">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' rimane una bozza. Ricordati di pubblicarlo!</string>
@@ -1363,28 +1373,12 @@ Language: it
     <string name="error_fetch_email_followers_list">Non è possibile recuperare l\'email dei follower del sito</string>
     <string name="error_fetch_followers_list">Non è possibile recuperare i follower del sito</string>
     <string name="editor_failed_uploads_switch_html">Il caricamento di alcuni elementi multimediali non è andato a buon fine. Non puoi passare alla modalità HTML\n        in questo momento. Vuoi rimuovere i caricamenti falliti e proseguire?</string>
-    <string name="image_thumbnail">Immagine in minaitura</string>
-    <string name="visual_editor">Editor visuale</string>
-    <string name="format_bar_description_html">Modalità HTML</string>
-    <string name="format_bar_description_ol">Lista numerata</string>
-    <string name="format_bar_description_ul">Lista puntata</string>
-    <string name="format_bar_description_more">Leggi tutto</string>
-    <string name="format_bar_description_quote">Citazione</string>
-    <string name="format_bar_description_strike">Barrato</string>
-    <string name="format_bar_description_underline">Sottolineato</string>
-    <string name="format_bar_description_italic">Corsivo</string>
-    <string name="format_bar_description_bold">Grassetto</string>
     <string name="image_width">Larghezza</string>
     <string name="image_link_to">Link a</string>
-    <string name="image_alt_text">Testo alternativo</string>
     <string name="image_caption">Didascalia</string>
     <string name="image_settings_save_toast">Modifiche salvate</string>
     <string name="image_settings_dismiss_dialog_title">Elimina le modifiche non salvate?</string>
     <string name="stop_upload_dialog_title">Ferma il caricamento?</string>
-    <string name="alert_error_adding_media">Durante l\'inserimento di un elemento multimediale si è verificato un errore.</string>
-    <string name="alert_action_while_uploading">Stai attualmente caricando un elemento multimediale. Attendi il suo completamento.</string>
-    <string name="alert_insert_image_html_mode">Impossibile inserire direttamente elementi multimediali in modalità HTML.Passa alla modalità visuale.</string>
-    <string name="uploading_gallery_placeholder">Caricamento della galleria…</string>
     <string name="tap_to_try_again">Tocca per provare di nuovo!</string>
     <string name="invite_sent">Invito inviato con successo</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -1409,7 +1403,6 @@ Language: it
     <string name="reader_hint_post_search">Cerca in WordPress</string>
     <string name="reader_title_related_post_detail">Articoli correlati</string>
     <string name="preview_screen_links_disabled">I link sono disabilitati nella schermata di anteprima</string>
-    <string name="draft_explainer">Questo articolo è un bozza che non è stata ancora pubblicata</string>
     <string name="send">Invia</string>
     <string name="person_removed">\@%1$s è stato rimosso correttamente</string>
     <string name="user_remove_confirmation_message">Se rimuovi %1$s, questo utente non sarà più in grado di accedere a questo sito ma qualsiasi contenuto creato da %1$s rimarrà disponibile sul sito.\n\nVuoi davvero rimuovere questo utente?</string>
@@ -1429,7 +1422,6 @@ Language: it
     <string name="logging_in">Sto entrando</string>
     <string name="enter_your_password_instead">Oppure inserisci la tua password</string>
     <string name="web_address_dialog_hint">Mostrato pubblicamente quando si commenta.</string>
-    <string name="new_editor_reflection_error">L\'editor visuale non è compatibile con il tuo device. &amp;Egrave; stato automaticamente disabilitato.</string>
     <string name="capture_or_pick_photo">Catturare o selezionare una foto</string>
     <string name="plans">Piani</string>
     <string name="plan">Piano</string>
@@ -1509,10 +1501,6 @@ Language: it
     <string name="error_refresh_comments_showing_older">Impossibile aggiornare i commenti in questo momento, vengono visualizzati i commenti precedenti</string>
     <string name="post_settings_set_featured_image">Imposta Immagine in Evidenza</string>
     <string name="post_settings_featured_image">Immagine in evidenza</string>
-    <string name="visual_editor_enabled">Editor visuale abilitato</string>
-    <string name="editor_content_placeholder">Condividi la tua storia qui…</string>
-    <string name="editor_page_title_placeholder">Titolo della pagina</string>
-    <string name="editor_post_title_placeholder">Titolo dell\'articolo</string>
     <string name="email_address">Indirizzo email</string>
     <string name="dlg_sure_to_delete_comments">Eliminare in modo permanente questi commenti?</string>
     <string name="dlg_sure_to_delete_comment">Eliminare in modo permanente questo commento?</string>
@@ -1683,8 +1671,6 @@ Language: it
     <string name="reader_short_like_count_one">1 Mi piace</string>
     <string name="reader_menu_tags">Modifica tag e siti</string>
     <string name="reader_title_post_detail">Reader articoli</string>
-    <string name="local_draft_explainer">Questo articolo è una bozza locale che non è stata pubblicata</string>
-    <string name="local_changes_explainer">Questo articolo contiene modifiche locali che non sono state pubblicate</string>
     <string name="notifications_push_summary">Impostazioni per le notifiche visualizzate sul dispositivo.</string>
     <string name="notifications_email_summary">Impostazioni per le notifiche inviate all\'email associata al tuo account.</string>
     <string name="notifications_tab_summary">Impostazioni per le notifiche visualizzate nella scheda Notifiche.</string>
@@ -1869,8 +1855,6 @@ Language: it
     <string name="category_name">Nome categoria</string>
     <string name="add_new_category">Aggiungi nuova categoria</string>
     <string name="view_in_browser">Visualizza nel browser</string>
-    <string name="preview_post">Anteprima articolo</string>
-    <string name="preview_page">Anteprima pagina</string>
     <string name="remove_account">Rimuovi sito</string>
     <string name="toast_comment_unedited">Il commento non è stato modificato</string>
     <string name="content_required">Il commento è richiesto</string>
@@ -1898,10 +1882,8 @@ Language: it
     <string name="delete_post">Eliminare l\'articolo?</string>
     <string name="post_settings">Impostazioni articolo</string>
     <string name="file_not_found">Impossibile trovare il file da caricare. È stato eliminato o spostato?</string>
-    <string name="horizontal_alignment">Allineamento orizzontale</string>
     <string name="local_draft">Bozza locale</string>
     <string name="page_settings">Impostazioni pagina</string>
-    <string name="create_a_link">Crea un link</string>
     <string name="link_enter_url_text">Testo link (facoltativo)</string>
     <string name="cannot_delete_multi_media_items">Impossibile eliminare il file al momento. Riprova in seguito.</string>
     <string name="media_error_no_permission">Non disponi dell\'autorizzazione a visualizzare la libreria multimediale</string>
@@ -1916,7 +1898,6 @@ Language: it
     <string name="reader_empty_posts_in_tag_updating">Recupero post in corso…</string>
     <string name="cant_share_no_visible_blog">Non è possibile condividere su WordPress senza un blog visibile</string>
     <string name="comment_spammed">Commento contrassegnato come spam</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Rispondi</string>
     <string name="reader_likes_multi">Piace a %,d persone</string>
     <string name="reader_likes_you_and_multi">Piace a te e ad altri %,d</string>
@@ -1973,7 +1954,6 @@ Language: it
     <string name="httpuser">Nome utente HTTP</string>
     <string name="error_media_upload">Si è verificato un errore durante il caricamento</string>
     <string name="publish_date">Pubblica</string>
-    <string name="post_content">Contenuto (tocca per aggiungere testo e file multimediali)</string>
     <string name="incorrect_credentials">Nome utente o password errati</string>
     <string name="log_in">Accedi</string>
     <string name="username">Nome utente</string>
@@ -1981,15 +1961,11 @@ Language: it
     <string name="reader">Reader</string>
     <string name="anonymous">Anonimo</string>
     <string name="posts">Articoli</string>
-    <string name="width">Larghezza</string>
-    <string name="caption">Didascalia (facoltativa)</string>
     <string name="pages">Pagine</string>
     <string name="no_network_title">Nessuna rete disponibile</string>
-    <string name="featured_in_post">Includi immagine nel contenuto dell\'articolo</string>
     <string name="ok">OK</string>
     <string name="blogusername">nomeutenteblog</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Caricamento…</string>
     <string name="app_title">WordPress per Android</string>
     <string name="tos">Condizioni del servizio</string>
     <string name="version">Versione</string>

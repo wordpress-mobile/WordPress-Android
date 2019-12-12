@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class ReaderTag implements Serializable, FilterCriteria {
     public static final String FOLLOWING_PATH = "/read/following";
+    public static final String LIKED_PATH = "/read/liked";
     public static final String DISCOVER_PATH = String.format(Locale.US, "read/sites/%d/posts",
             ReaderConstants.DISCOVER_SITE_ID);
 
@@ -25,6 +26,8 @@ public class ReaderTag implements Serializable, FilterCriteria {
     private String mTagTitle; // title, used for default tags
     private String mEndpoint; // endpoint for updating posts with this tag
 
+    private boolean mIsDefaultTag;
+
     public final ReaderTagType tagType;
 
     public ReaderTag(String slug,
@@ -32,6 +35,15 @@ public class ReaderTag implements Serializable, FilterCriteria {
                      String title,
                      String endpoint,
                      ReaderTagType tagType) {
+        this(slug, displayName, title, endpoint, tagType, false);
+    }
+
+    public ReaderTag(String slug,
+                     String displayName,
+                     String title,
+                     String endpoint,
+                     ReaderTagType tagType,
+                     boolean isDefaultTag) {
         // we need a slug since it's used to uniquely ID the tag (including setting it as the
         // primary key in the tag table)
         if (TextUtils.isEmpty(slug)) {
@@ -50,6 +62,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
         setTagTitle(title);
         setEndpoint(endpoint);
         this.tagType = tagType;
+        mIsDefaultTag = isDefaultTag;
     }
 
     public String getEndpoint() {
@@ -76,7 +89,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return StringUtils.notNullStr(mTagDisplayName);
     }
 
-    private void setTagDisplayName(String displayName) {
+    public void setTagDisplayName(String displayName) {
         this.mTagDisplayName = StringUtils.notNullStr(displayName);
     }
 
@@ -154,11 +167,15 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     public boolean isPostsILike() {
-        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/liked");
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(LIKED_PATH);
     }
 
     public boolean isFollowedSites() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(FOLLOWING_PATH);
+    }
+
+    public boolean isDefaultTag() {
+        return tagType == ReaderTagType.DEFAULT && mIsDefaultTag;
     }
 
     public boolean isBookmarked() {

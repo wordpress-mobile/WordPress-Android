@@ -131,6 +131,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    private static final String AZTEC_EDITOR_NAME = "aztec";
     private static final String ATTR_TAPPED_MEDIA_PREDICATE = "tapped_media_predicate";
 
     private static final String ATTR_ALIGN = "align";
@@ -194,6 +195,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
+    private View mFragmentView;
+
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -219,6 +222,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
+        mFragmentView = view;
 
         mTitle = view.findViewById(R.id.title);
         mContent = view.findViewById(R.id.aztec);
@@ -553,6 +557,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return;
         }
         mTitle.setText(text);
+    }
+
+    @NonNull
+    @Override
+    public String getEditorName() {
+        return AZTEC_EDITOR_NAME;
     }
 
     @Override
@@ -1099,7 +1109,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    @Override public void appendMediaFiles(Map<String, MediaFile> mediaList) { }
+    @Override public void appendMediaFiles(Map<String, MediaFile> mediaList) {
+        for (Map.Entry<String, MediaFile> pair : mediaList.entrySet()) {
+            appendMediaFile(pair.getValue(), pair.getKey(), null);
+        }
+    }
 
     private Drawable getLoadingMediaErrorPlaceholder(String msg) {
         if (TextUtils.isEmpty(msg)) {
@@ -1159,14 +1173,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void setTitlePlaceholder(CharSequence placeholderText) {
-    }
-
-    @Override
-    public void setContentPlaceholder(CharSequence placeholderText) {
-    }
-
-    @Override
     public boolean showSavingProgressDialogIfNeeded() {
         return false;
     }
@@ -1174,6 +1180,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public boolean hideSavingProgressDialog() {
         return false;
+    }
+
+    @Override public void mediaSelectionCancelled() {
+        // noop implementation for shared interface with block editor
     }
 
     @Override
@@ -2346,5 +2356,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void setExternalLogger(AztecLog.ExternalLogger logger) {
         mContent.setExternalLogger(logger);
+    }
+
+    public void disableHWAcceleration() {
+        mFragmentView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 }

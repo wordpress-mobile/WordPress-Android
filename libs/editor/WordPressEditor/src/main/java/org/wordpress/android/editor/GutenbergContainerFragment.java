@@ -5,12 +5,14 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
@@ -46,9 +48,18 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnReattachQueryListener onReattachQueryListener,
                                   OnEditorMountListener onEditorMountListener,
                                   OnEditorAutosaveListener onEditorAutosaveListener,
-                                  OnAuthHeaderRequestedListener onAuthHeaderRequestedListener) {
-        mWPAndroidGlueCode.attachToContainer(viewGroup, onMediaLibraryButtonListener, onReattachQueryListener,
-                onEditorMountListener, onEditorAutosaveListener, onAuthHeaderRequestedListener);
+                                  OnAuthHeaderRequestedListener onAuthHeaderRequestedListener,
+                                  RequestExecutor fetchExecutor,
+        OnImageFullscreenPreviewListener onImageFullscreenPreviewListener) {
+            mWPAndroidGlueCode.attachToContainer(
+                    viewGroup,
+                    onMediaLibraryButtonListener,
+                    onReattachQueryListener,
+                    onEditorMountListener,
+                    onEditorAutosaveListener,
+                    onAuthHeaderRequestedListener,
+                    fetchExecutor,
+                    onImageFullscreenPreviewListener);
     }
 
     @Override
@@ -124,20 +135,8 @@ public class GutenbergContainerFragment extends Fragment {
         return mWPAndroidGlueCode.getTitle(onGetContentTimeout);
     }
 
-    public void appendMediaFile(int mediaId, final String mediaUrl, final boolean isVideo) {
-        mWPAndroidGlueCode.appendMediaFile(mediaId, mediaUrl, isVideo);
-    }
-
-    public void appendMediaFiles(ArrayList<Media> mediaList) {
-        mWPAndroidGlueCode.appendMediaFiles(mediaList);
-    }
-
     public void showDevOptionsDialog() {
         mWPAndroidGlueCode.showDevOptionsDialog();
-    }
-
-    public void appendUploadMediaFile(final int mediaId, final String mediaUri, final boolean isVideo) {
-        mWPAndroidGlueCode.appendUploadMediaFile(mediaId, mediaUri, isVideo);
     }
 
     public void appendUploadMediaFiles(ArrayList<Media> mediaList) {
@@ -158,5 +157,9 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void clearMediaFileURL(final int mediaId) {
         mWPAndroidGlueCode.clearMediaFileURL(mediaId);
+    }
+
+    public void mediaSelectionCancelled() {
+        mWPAndroidGlueCode.mediaSelectionCancelled();
     }
 }

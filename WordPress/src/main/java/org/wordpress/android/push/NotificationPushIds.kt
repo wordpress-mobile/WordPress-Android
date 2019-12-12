@@ -1,0 +1,12 @@
+package org.wordpress.android.push
+
+object NotificationPushIds {
+    const val PUSH_NOTIFICATION_ID = 10000
+    const val AUTH_PUSH_NOTIFICATION_ID = 20000
+    const val GROUP_NOTIFICATION_ID = 30000
+    const val ACTIONS_RESULT_NOTIFICATION_ID = 40000
+    const val ACTIONS_PROGRESS_NOTIFICATION_ID = 50000
+    const val PENDING_DRAFTS_NOTIFICATION_ID = 600001
+    const val QUICK_START_REMINDER_NOTIFICATION_ID = 4001
+    const val ZENDESK_PUSH_NOTIFICATION_ID = 1999999999
+}

@@ -1,6 +1,0 @@
-13.3:
-* Statistiksidan är mycket responsivare.
-* Nu kan du ändra ditt användarnamn under kontoinställningarna.
-* Vill du justera prestandainställningarna för Jetpack? Gör det direkt i appen!
-* Om du är en aktiv publicist med fler än 100 sidor listar vi dem i kronologisk ordning för snabbare åtkomst.
-* Vi har förbättrat många saker i blockredigeraren, såsom textformatering i beskrivningstexter för video, tillägg av mer intuitiva block, samt autosparande av innehållet efter två sekunders inaktivitet.

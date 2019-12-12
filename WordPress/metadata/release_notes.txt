@@ -1,6 +1,3 @@
-* Add Remote Preview support for posts and pages.
-* Trashed posts must now be restoreded before editing or previewing them.
-* It's now easier to see and resolve post conflicts.
-* Fixed: Clicking on "Publish" on a private post sometimes published the post as public
-* Unsaved changes to posts and pages are automatically backed up on all devices.
-* Fixed an issue editing links
+* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.
+
+* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.

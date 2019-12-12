@@ -54,6 +54,7 @@ class MostPopularInsightsUseCase
         return listOf(buildTitle(), Empty())
     }
 
+    @ExperimentalStdlibApi
     override fun buildUiModel(domainModel: InsightsMostPopularModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())

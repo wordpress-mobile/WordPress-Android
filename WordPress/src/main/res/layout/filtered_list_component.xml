@@ -24,11 +24,27 @@
                 android:id="@+id/filter_spinner"
                 style="@style/FilteredRecyclerViewSpinner.WordPress"
                 android:layout_width="wrap_content"
+                android:minHeight="@dimen/min_touch_target_sz"
                 android:layout_height="wrap_content"
                 android:overlapAnchor="false"
                 tools:ignore="UnusedAttribute"/>
 
         </androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:background="@color/primary"
+            android:layout_gravity="start"
+            android:layout_height="@dimen/tab_height"
+            android:layout_width="match_parent"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@android:color/white"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="@android:color/white"
+            app:theme="@style/Base.Widget.Design.TabLayout"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -46,10 +62,16 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical"
+                android:importantForAccessibility="no"
+                />
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
-
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/empty_view"

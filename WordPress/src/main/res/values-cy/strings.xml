@@ -20,7 +20,6 @@ Language: cy_GB
     <string name="confirm">Cadarnhau</string>
     <string name="xmlrpc_post_blocked_error">Methu cysylltu. Mae eich gwesteiwr yn rhwystro ceisiadau POST, ac mae\'r ap angen\n       hynny er mwyn cyfathrebu â\'ch gwefan. Cysylltwch â eich gwesteiwr i ddatrys y broblem.</string>
     <string name="reader_hint_search_followed_sites">Chwilio drwy\'r gwefannau rwy\'n eu dilyn</string>
-    <string name="visual_editor_disabled">Golygydd Gweledol wedi ei analluogi</string>
     <string name="pending_draft_one_generic">Peidiwch â\'i adael! Mae \'%1$s\' disgwyl cael ei gyhoeddi.</string>
     <string name="pending_draft_one_month">Peidiwch â\'i adael! Mae \'%1$s\' disgwyl cael ei gyhoeddi.</string>
     <string name="pending_draft_one_week_2">Mae \'%1$s\' yn ddrafft o hyd. Cofiwch ei gyhoeddi!</string>
@@ -87,23 +86,12 @@ Language: cy_GB
     <string name="error_fetch_email_followers_list">Methu adfer dilynwr e-bost y wefan</string>
     <string name="error_fetch_followers_list">Methu adfer dilynwr y wefan</string>
     <string name="editor_failed_uploads_switch_html">Mae rhai lwythi cyfryngau wedi methu. Nid oes modd newid i\'r modd HTML\n       yn y cyflwr hwn. Tynnu pob cyfrwng sydd wedi methu a pharhau?</string>
-    <string name="visual_editor">Golygydd gweledol</string>
-    <string name="image_thumbnail">Llun bach delwedd</string>
-    <string name="format_bar_description_strike">Llinell Drwodd</string>
-    <string name="format_bar_description_italic">Italig</string>
-    <string name="format_bar_description_underline">Tanlinellu</string>
     <string name="image_settings_save_toast">Mae\'r newidiadau wedi eu cadw</string>
     <string name="image_caption">Egluryn</string>
-    <string name="image_alt_text">Testun Amgen</string>
     <string name="image_link_to">Cyswllt i</string>
     <string name="image_width">Lled</string>
-    <string name="format_bar_description_bold">Trwm</string>
     <string name="image_settings_dismiss_dialog_title">Dileu\'r newidiadau heb eu cadw?</string>
     <string name="stop_upload_dialog_title">Atal y llwytho?</string>
-    <string name="alert_error_adding_media">Digwyddodd gwall wrth fewnosod y cyfrwng</string>
-    <string name="alert_action_while_uploading">Rydych wrthi\'n llwytho cyfrwng. Arhoswch nes i hyn orffen.</string>
-    <string name="alert_insert_image_html_mode">Nid oes modd mewnosod y cyfrwng yn uniongyrchol yn y modd HTML.Ewch i\'r modd gweledol</string>
-    <string name="uploading_gallery_placeholder">Llwytho\'r oriel…</string>
     <string name="invite_sent">wedi anfon gwahoddiad yn llwyddiannus</string>
     <string name="tap_to_try_again">Tapiwch i geisio eto!</string>
     <string name="invite_error_some_failed">Wedi anfon y gwahoddiad ond digwyddodd gwall(au)!</string>
@@ -126,7 +114,6 @@ Language: cy_GB
     <string name="dlg_confirm_clear_search_history">Clirio hanes chwilio?</string>
     <string name="reader_title_related_post_detail">Cofnodion Perthnasol</string>
     <string name="preview_screen_links_disabled">Mae dolenni wedi eu hanalluogi ar y sgrin rhagolwg</string>
-    <string name="draft_explainer">Mae\'r cofnod yn ddrafft sydd heb ei gyhoeddi</string>
     <string name="send">Anfon</string>
     <string name="user_remove_confirmation_message">Os ydych am dynnu %1$s, ni fydd y defnyddiwr yn gallu cael mynediad at y wefan, ond bydd unrhyw gynnwys crëwyd gan %1$s yn aros ar y wefan.\n\nYdych chi dal eisiau tynnu\'r defnyddiwr yma?</string>
     <string name="person_removed">Wedi tynnu %1$s yn llwyddiannus</string>
@@ -146,7 +133,6 @@ Language: cy_GB
     <string name="logging_in">Mewngofnodi</string>
     <string name="enter_your_password_instead">Rhowch eich cyfrinair yn hytrach</string>
     <string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
-    <string name="new_editor_reflection_error">Nid yw\'r golygydd gweledol yn gydnaws â\'ch dyfais. Cafodd\n         ei analluogi\'n awtomatig.</string>
     <string name="capture_or_pick_photo">Cipio neu ddewis llun</string>
     <string name="export_your_content_message">Bydd cofnodion, tudalennau a gosodiadau yn cael eu e-bost atoch i %s.</string>
     <string name="plan">Cynllun</string>
@@ -219,10 +205,6 @@ Language: cy_GB
     <string name="primary_site">Prif wefan</string>
     <string name="editor_toast_uploading_please_wait">Rydych wrthi\'n llwytho cyfryngau. Arhoswch nes i hyn orffen.</string>
     <string name="error_refresh_comments_showing_older">Nid oes modd adnewyddu sylwadau ar hyn o bryd - yn dangos sylwadau hŷn</string>
-    <string name="visual_editor_enabled">Galluogwyd y Golygydd Gweledol</string>
-    <string name="editor_content_placeholder">Rhanwch eich stori yma…</string>
-    <string name="editor_page_title_placeholder">Teitl Tudalen</string>
-    <string name="editor_post_title_placeholder">Teitl Cofnod</string>
     <string name="email_address">Cyfeiriad e-bost</string>
     <string name="dlg_sure_to_delete_comments">Dileu\'r sylwadau hyn yn barhaol?</string>
     <string name="dlg_sure_to_delete_comment">Dileu\'r sylwadau hyn yn barhaol?</string>
@@ -383,8 +365,6 @@ Language: cy_GB
     <string name="reader_label_follow_count">%,d dilynnwr</string>
     <string name="reader_short_like_count_none">Hoffi</string>
     <string name="reader_title_post_detail">Cofnod Darllennydd</string>
-    <string name="local_draft_explainer">Mae\'r cofnod yn ddrafft lleol sydd heb ei gyhoeddi</string>
-    <string name="local_changes_explainer">Mae gan y cofnod newidiadau lleol sydd heb eu cyhoeddi</string>
     <string name="notifications_push_summary">Gosodiadau hysbysiadau sy\'n ymddangos ar eich dyfais.</string>
     <string name="notifications_email_summary">Gosodiadau hysbysiadau sy\'n cael eu hanfon at e-bost sy\'n gysylltiedig â\'ch cyfrif.</string>
     <string name="notifications_tab_summary">Gosodiadau hysbysiadau sy\'n ymddangos ar y tab Hysbysiadau.</string>
@@ -546,8 +526,6 @@ Language: cy_GB
     <string name="category_name">Enw categori</string>
     <string name="add_new_category">Ychwanegu categori newydd</string>
     <string name="view_in_browser">Gweld mewn porwr</string>
-    <string name="preview_post">Rhagolwg post</string>
-    <string name="preview_page">Rhagolwg tudalen</string>
     <string name="remove_account">Tynnu\'r blog</string>
     <string name="toast_comment_unedited">Nid yw\'r sylw wedi newid</string>
     <string name="content_required">Mae angen sylw</string>
@@ -572,8 +550,6 @@ Language: cy_GB
     <string name="comment_status_unapproved">Dan ystyriaeth</string>
     <string name="comment_status_approved">Cymeradwy</string>
     <string name="post_settings">Gosodiadau cofnodion</string>
-    <string name="horizontal_alignment">Alinio llorweddol</string>
-    <string name="create_a_link">Creu dolen</string>
     <string name="page_settings">Gosodiadau tudalen</string>
     <string name="local_draft">Drafft lleol</string>
     <string name="link_enter_url_text">Testun dolen (dewisol)</string>
@@ -591,7 +567,6 @@ Language: cy_GB
     <string name="reader_empty_posts_in_tag_updating">Estyn cofnodion…</string>
     <string name="cant_share_no_visible_blog">Nid oes modd rhannu i WordPress heb flog gweladwy</string>
     <string name="reader_label_reply">Ateb</string>
-    <string name="video">Fideo</string>
     <string name="comment_spammed">Mae\'r sylw hwn wedi ei farcio fel sbam</string>
     <string name="reader_likes_you_and_multi">Rydych chi a %,d o bobl eraill yn hoffi hwn</string>
     <string name="reader_likes_multi">%,d o pobl yn hoffi hwn</string>
@@ -647,7 +622,6 @@ Language: cy_GB
     <string name="httpuser">Enw defnyddiwr HTTP</string>
     <string name="error_media_upload">Digwyddodd gwall wrth lwytho\'r cyfrwng</string>
     <string name="publish_date">Cyhoeddi</string>
-    <string name="post_content">Cynnwys (tapiwch i ychwanegu testun a chyfrwng)</string>
     <string name="incorrect_credentials">Enw cyfrif neu gyfrinair anghywir.</string>
     <string name="password">Cyfrinair</string>
     <string name="username">Enw defnyddiwr</string>
@@ -655,14 +629,10 @@ Language: cy_GB
     <string name="anonymous">Di-enw</string>
     <string name="posts">Cofnodion</string>
     <string name="pages">Tudalennau</string>
-    <string name="caption">Egluryn (dewisol)</string>
-    <string name="width">Lled</string>
     <string name="no_network_title">Dim rhwydwaith ar gael</string>
-    <string name="featured_in_post">Cynnwys delwedd yng nghynnwys y cofnod</string>
     <string name="blogusername">blogusername</string>
     <string name="ok">Iawn</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Llwytho…</string>
     <string name="version">Fersiwn</string>
     <string name="tos">Amodau Gwasanaeth</string>
     <string name="app_title">WordPress ar gyfer Android</string>

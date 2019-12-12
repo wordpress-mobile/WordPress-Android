@@ -62,7 +62,7 @@
     <!-- EditTexts -->
     <style name="ReaderEditText" parent="android:Widget.EditText">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColorHint">@color/neutral_40</item>
+        <item name="android:textColorHint">@color/neutral_50</item>
     </style>
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
         <item name="android:background">@android:color/transparent</item>

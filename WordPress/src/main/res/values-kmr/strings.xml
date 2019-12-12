@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-09-07 08:49:49+0000
+Translation-Revision-Date: 2019-10-14 10:15:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: ku_TR
@@ -55,18 +55,12 @@ Language: ku_TR
     <string name="stats_bar_chart_content_description">Grafîka dîtinên malperê. </string>
     <string name="stats_loading_card">Daneya karta bijartî tê barkirin</string>
     <string name="site_settings_editor">Sererastker</string>
-    <string name="dialog_gutenberg_informative_description_page">Tu vê gavê sererastkera blokê bi kar tînî ji bo çêkirina rûpelên nû. Tu dixwazî ku sererastkera klasîk wek jixweber bi kar bînî? Here Sazkariyên Malperê. </string>
-    <string name="dialog_gutenberg_informative_description_post">Tu vêga sererastkera blokê bi kar tînî ji bo çêkirina şandiyên nû. Tu dixwazî ku sererastkera klasîk wek jixweber bi kar bînî? Serî li Sazkariyên Malperê bide.</string>
     <string name="description_expand">Fireh bike</string>
     <string name="description_collapse">Teng bike</string>
     <string name="editor_retry_failed_uploads">Hilxistinê dîsa biceribîne</string>
     <string name="editor_toast_failed_uploads">Hilxistina hinek medyayan bi serneket. Di vê rewşê de \ntu nikare şandiya xwe biweşîne an jî tomar bike.</string>
     <string name="my_site_verify_your_email_without_email">Navnîşana epeyama xwe piştrast bike - rêname bo epeyama te hat şandin</string>
     <string name="my_site_verify_your_email">Navnîşana epeyama xwe piştrast bike - rêname bo %s hate şandin</string>
-    <string name="error_media_recover_post_not_submitted">Medya nehat hilxistin. Şandî radest nebû.</string>
-    <string name="error_media_recover_post_not_scheduled">Medya nehat hilxistin. Şandî demsaz nebû.</string>
-    <string name="error_media_recover_post_not_published">Medya nehat hilxistin. Şandî nehat weşandin.</string>
-    <string name="error_media_recover_post">Medya nehat hilxistin</string>
     <string name="link_dialog_button_cancel">Betal</string>
     <string name="link_dialog_button_ok">BAŞ e</string>
     <string name="link_dialog_edit_hint">http(s)://</string>
@@ -146,7 +140,6 @@ Language: ku_TR
     <string name="stats_management_news_card_message">Rêjejimarên(statîstîkên) ku dixwazî bibînî bibijêre û bala xwe bide agahiyên bi kêrî te tên. Ji bo rêjejimaran(statîstîkan) xwemalî bikî, bitepîne %1$s di binê \"Kûrbînî\"yê de.</string>
     <string name="stats_manage_your_stats">Rêjejimarên xwe bi rê ve bibe</string>
     <string name="history_fetching_revisions">Guherto tê anîn…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Tevlîkirina medyayê bi serneket.\nJi bo vebijêrkan, bitepîne.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Tevlîkirina medyayê bi serneket.\nJi bo ceribandineke din, bitepîne.</string>
     <string name="editor_uploading_draft">Reşnivîsa te tê hilxistin</string>
     <string name="post_uploading_draft">Reşnivîs tê hilxistin</string>
@@ -226,26 +219,6 @@ Language: ku_TR
     <string name="stats_site_not_loaded_yet">Malper hîn nehatiye barkirin</string>
     <string name="stats_more_posts">Şandiyên bêhtir</string>
     <string name="stats_fewer_posts">Şandiyên kêmtir</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Naverokê rake</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Blokê bikişîne jêr</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Blokê bikişîne jor</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">BLOKÊ TEVLÎ VIR BIKE</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Bêpiştgirî</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Cûreya blokê ya bêpiştgirî</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Bloka Bêpiştgirî</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL pêve bizeliqîne</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">WÊNE HILBIJÊRE</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Hemû Sazkariyan Paqij Bike</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Hemû Nivîs</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Pirtûkxaneya Medyayê ya WordPressê</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Wêneyekî Bikişîne</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Ji amûrê hilbijêre</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Dest bi nivîsê bike…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Girêdanê Rake</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Nivîsa Girêdanê Tevlî Bike</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Nivîsa Girêdanê</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">URL tevlî bike</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Girêdan hate tevlîkirin</string>
     <string name="new_site_creation_preview_back_pressed_warning">Gengaz e tu pêşveçûnê winda bike. Bi rastî jî tu dixwazî derkeve?</string>
     <string name="plans_loading_error_with_cache_button">Dîsa jî Planan Nîşan Bide</string>
     <string name="plans_loading_error_with_cache_subtitle">Ji bo dîtina Planan girêdana torekê pêwîst e, ji ber wê dibe ku hûrgilî kevn bin.</string>
@@ -432,16 +405,11 @@ Language: ku_TR
     <string name="history_empty_subtitle_post">Dema te guhertinek li ser şandiya xwe kir, tê bikaribî raboriyê li vir bibînî</string>
     <string name="history_empty_subtitle_page">Dema te guhertinek li ser rûpela xwe kir, tê bikaribî raboriyê li vir bibînî</string>
     <string name="description_user">Avatara bikarhêner</string>
-    <string name="async_promo_description_schedule_page">Tu dikare êdî ji serrastgehê derkeve dê rûpela te di paşbergehê de demsazkirinê û tomarkirinê bike! Ka biceribîne!</string>
-    <string name="async_promo_description_publish_post">Tu dikare êdî ji serrastgehê derkeve dê şandiya te di paşbergehê de were tomarkirin û weşandin! Ka biceribîne!</string>
-    <string name="async_promo_description_publish_page">Tu dikare êdî ji serrastgehê derkeve dê rûpela te di paşbergehê de were tomarkirin û weşandin! Ka biceribîne!</string>
     <string name="image_size_full_label">Mezinahiya Tije</string>
     <string name="image_size_large_label">Mezin</string>
     <string name="image_size_medium_label">Navîn</string>
     <string name="image_size_thumbnail_label">Wêneya biçûk</string>
     <string name="menu_history">Raborî</string>
-    <string name="async_promo_schedule_now">Niha demsaz bike</string>
-    <string name="async_promo_title_schedule">Bi Ewlehî Demsazkirin</string>
     <string name="pages_pending">Vekolîna Hilawîstî</string>
     <string name="pages_open_page_error">Rûpela hilbijartî ne li berdeste</string>
     <string name="news_card_announcement_action_sample_announcement">(Zêdetir bixwîne)</string>
@@ -762,7 +730,6 @@ Language: ku_TR
     <string name="version_with_name_param">Guherto %s</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Weşanger: %s</string>
-    <string name="async_promo_publish_now">Niha biweşîne</string>
     <string name="notification_sound_has_invalid_path">Rêya dengê hilbijartî ne derbasdar e. Ji kerema xwe yeka din hilbijêre.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d rûpel / şandî maye</string>
@@ -854,6 +821,7 @@ Language: ku_TR
     <string name="my_site_add_new_site">Malpera nû tevlî bike</string>
     <string name="my_site_create_new_site">Ji bo karsazî, kovar an jî bologeke şexsî malpereke nû biafirîne; an jî bi sazkirineke WordPressê ya heyî re girê bidin.</string>
     <string name="notifications_jetpack_connection_setup_info">Ji bo agahiyên kêrhatî ji malpera te ya WordPressê bê amûra te, divê tu pêveka Jetpackê saz bike. Tu dixwazî Jetpackê saz bikî?</string>
+    <string name="site_settings_lazy_load_images">Wêneyên dereng barkirinê</string>
     <string name="stats_jetpack_connection_setup">Jetpackê Bisazîne</string>
     <string name="plugin_chevron_icon_content_description">Nivîsê biguherîne</string>
     <string name="plugin_info_your_version">Guhertoya WordPressa Te</string>
@@ -939,7 +907,6 @@ Language: ku_TR
     <string name="login_empty_password">Ji kerema xwe pêborînekê têxîne</string>
     <string name="login_text_otp_another">Ji min re kodeke din bişîne.</string>
     <string name="enter_verification_code_sms">Em ji telefona te yê ku bi %s re diqede re peyameke nivîsî şandin. Xêra xwe koda rastandinê yê di SMSê de têkeve.</string>
-    <string name="error_generic_error">Kirarî nehat pêk anîn</string>
     <string name="image_size">Mezinahî</string>
     <string name="uploading_subtitle_media_only_one">Pelgeyek maye</string>
     <string name="uploading_subtitle_media_only">Ji %2$d pelgeyan %1$d maye</string>
@@ -1041,9 +1008,6 @@ Language: ku_TR
     <string name="error_media_canceled">Hilxistina medyayê hate betalkirin</string>
     <string name="error_upload_page_media_param">Hilxistina medyayê di vê rûpelê de rastî çewtiyekê hat: %s.</string>
     <string name="error_upload_page_param">Di hilxistina vê rûpelê de çewtiyek pêk hat: %s.</string>
-    <string name="async_promo_link">Ev çawa dixebite?</string>
-    <string name="async_promo_description_schedule_post">Tu aniha dikarî sererastkerê biterikînî, û wê şandiya te li pişt sehneyê were qeydkirin û demsazkirin. Ka carek biceribîne!</string>
-    <string name="async_promo_title_publish">Bi Bawerî Biweşîne</string>
     <string name="editor_uploading_post">Şandiya te tê hilxistin</string>
     <string name="uploading_media">Medya tê hilxistin</string>
     <string name="page_scheduled">Rûpel hat demsazkirin</string>
@@ -1144,8 +1108,6 @@ Language: ku_TR
     <string name="media_images">Wêne</string>
     <string name="media_all">Hemû</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s red kir ku bigihe wêneyên te. Bo çarekirina vê, destûrên xwe biguherîne û %2$s veke.</string>
-    <string name="format_bar_description_link">Girêdan</string>
-    <string name="format_bar_description_media">Medya</string>
     <string name="reader_view_comments">Şîroveyan bibîne</string>
     <string name="site_settings_video_quality_hint">Qalîteya vîdyoyan. Nirxên bilindtir tê wateya vîdyoyên qalîteya çêtir.</string>
     <string name="site_settings_video_width_hint">Mezinahiya vîdeoyên di şandiyê de dike bi qasî vê mezinahiyê</string>
@@ -1273,7 +1235,6 @@ Language: ku_TR
     <string name="xmlrpc_endpoint_forbidden_error">Nikare were girêdan. Em çewtiya 403 wergirtin gava ku diceribandin\n        xwe bigihînin nuqteya dawîn ya XMLRPC. Hewcehiya sepanê pê heye da ku bi malpera te re têkiliyê deyîne. Bo çareserkirina vê pirsgirêkê\n        têkiliyê deyîne bi hewandera xwe re.</string>
     <string name="xmlrpc_post_blocked_error">Nikare were girêdan. Hewandera te daxwazên POSTê asteng dike, \n        û hewcedariya sepanê pê heye ji bo ku bi malpera te re têkiliyê deyîne. Ji bo çareserkirina vê pirsgirêkê bi pêşkêşkera hewangeha xwe re têkiliyê deyîne.</string>
     <string name="reader_hint_search_followed_sites">Li malperên şopandî bigere</string>
-    <string name="visual_editor_disabled">Serastkera dîtbatî hat neçalakkirin</string>
     <string name="pending_draft_one_generic">Wê daliqandî nehêle! \'%1$s\' li benda weşandinê te.</string>
     <string name="pending_draft_one_month">Wê daliqandî nehêle! \'%1$s\' li benda weşandinê te.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' wek reşnivîs ma. Weşandina wê ji bîr neke!</string>
@@ -1340,28 +1301,12 @@ Language: ku_TR
     <string name="error_fetch_email_followers_list">Şopînerên epeyama malperê bi şûnde nehat</string>
     <string name="error_fetch_followers_list">Şopînerên malperê bi şûnde nehatin</string>
     <string name="editor_failed_uploads_switch_html">Hilxistina hinek medayayan bi serneket. Li vê herêmê tu nikarî\n derbasî moda HTMLê bibe. Bila hemû hilxistin û serneketin werin rakirin û pevajo bidome?</string>
-    <string name="image_thumbnail">Wênok</string>
-    <string name="visual_editor">Serastkera Dîtbarî</string>
-    <string name="format_bar_description_html">HTML</string>
-    <string name="format_bar_description_ol">Lîsteya bi Rêz</string>
-    <string name="format_bar_description_ul">Lîsteya bê Rêz</string>
-    <string name="format_bar_description_more">Bêhtir Bixwîne</string>
-    <string name="format_bar_description_quote">Jêgirtina Blokê</string>
-    <string name="format_bar_description_strike">Xêzkirî</string>
-    <string name="format_bar_description_underline">Binî xêzkirî</string>
-    <string name="format_bar_description_italic">Xwar(italic)</string>
-    <string name="format_bar_description_bold">Qalind</string>
     <string name="image_width">Firehî</string>
     <string name="image_link_to">Giredan</string>
-    <string name="image_alt_text">Nivîsa alternatîf</string>
     <string name="image_caption">Binnivîs</string>
     <string name="image_settings_save_toast">Guhertin hatin tomarkirin</string>
     <string name="image_settings_dismiss_dialog_title">Bila guhertinên netomarkirî were avêtin?</string>
     <string name="stop_upload_dialog_title">Bila hilxistin raweste?</string>
-    <string name="alert_error_adding_media">Di tevlîkirina medyayê de çewtiyek rû da</string>
-    <string name="alert_action_while_uploading">Aniha tu medyayê hildixîne, Ji kerema xwe heta ku biqede bisekîne.</string>
-    <string name="alert_insert_image_html_mode">Di moda HTMLê de medya rasterast nayê tevlîkirin. Ji kerema xwe vegere moda dîîtbarî.</string>
-    <string name="uploading_gallery_placeholder">Pêşangeh tê hilxistin…</string>
     <string name="tap_to_try_again">Ji bo dîsa biceribîne, bitepîne</string>
     <string name="invite_sent">Vexwendin bi serkeftî hat şandin</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -1386,7 +1331,6 @@ Language: ku_TR
     <string name="reader_hint_post_search">Li ser WordPress bigere</string>
     <string name="reader_title_related_post_detail">Şandiya Têkildar</string>
     <string name="preview_screen_links_disabled">Girêdanên li ser ekrana pêşdîtinê neçalak in</string>
-    <string name="draft_explainer">Ev nivîs reşnivîseke neweşandî ye</string>
     <string name="send">Bişîne</string>
     <string name="person_removed">%1$s bi serkeftî hat rakirin</string>
     <string name="user_remove_confirmation_message">Heke tu bikarhêner %1$s rake, ew dê nikaribe bigihêje vê malperê lê naverokên ji hêla   %1$s wî/ê hatiye afirandin dê li malperê bimîne.\n\nDîsa jî tu dixwazî vî/ê bikarhênerî/ê rake?</string>
@@ -1406,7 +1350,6 @@ Language: ku_TR
     <string name="logging_in">Têketin pêk tê</string>
     <string name="enter_your_password_instead">Li şûnê pêborîna xwe têxîne</string>
     <string name="web_address_dialog_hint">Dema te şîrove kir wê her kes bibîne</string>
-    <string name="new_editor_reflection_error">Serastkera dîtbarî bi amûra te re ne lihevhatî ye.\nBi otomatîk hate neçalakkirin.</string>
     <string name="capture_or_pick_photo">Wêne hilbijêre an jî bikşîne</string>
     <string name="plans">Plan</string>
     <string name="plan">Plan</string>
@@ -1486,10 +1429,6 @@ Language: ku_TR
     <string name="error_refresh_comments_showing_older">Şîrove vê gavê nayê nûkirin - şîroveyên kevn tên nîşandan</string>
     <string name="post_settings_set_featured_image">Wêneya bijarde saz bike</string>
     <string name="post_settings_featured_image">Wêneya Bijarde</string>
-    <string name="visual_editor_enabled">Serastkera dîtbarî hat çalakkirin</string>
-    <string name="editor_content_placeholder">Çîroka xwe li vir parve bike…</string>
-    <string name="editor_page_title_placeholder">Sernava Rûpelê</string>
-    <string name="editor_post_title_placeholder">Sernava Şandiyê</string>
     <string name="email_address">Navnîşana epeyamê</string>
     <string name="dlg_sure_to_delete_comments">Bila ev şîrove bi awayekî mayînde werin jêbirin?</string>
     <string name="dlg_sure_to_delete_comment">Bila ev şîrove bi awayekî mayînde were jêbirin?</string>
@@ -1660,8 +1599,6 @@ Language: ku_TR
     <string name="reader_short_like_count_one">Ecibandinek</string>
     <string name="reader_menu_tags">Malper û etîketan serrast bike</string>
     <string name="reader_title_post_detail">Şandiya xwînerê</string>
-    <string name="local_draft_explainer">Ev şandî reşnivîseke herêmî ye ku nehatiye weşandin</string>
-    <string name="local_changes_explainer">Ev şandî xwediyê guhertinên herêmî ne ku ew nehatine weşandin</string>
     <string name="notifications_push_summary">Sazkariyên bo danezanên ku li ser amûra te tê xuyan</string>
     <string name="notifications_email_summary">Sazkariyên ji bo danezanên ku ji epeyama te ya girêdayî hesaba te hatiye şandin</string>
     <string name="notifications_tab_summary">Sazkariyên ji bo danezanên ku di hilpekîna Danezanan de têne xuyan</string>
@@ -1846,8 +1783,6 @@ Language: ku_TR
     <string name="category_name">Navê kategoriyê</string>
     <string name="add_new_category">Kategoriya nû tevlî bike</string>
     <string name="view_in_browser">Di gerokê de bibîne</string>
-    <string name="preview_post">Şandiyê pêş bibîne</string>
-    <string name="preview_page">Rûpelê pêş bibîne</string>
     <string name="remove_account">Malperê rake</string>
     <string name="toast_comment_unedited">Şîrove nehate guherandin</string>
     <string name="content_required">Şîrove pêwîst e</string>
@@ -1875,10 +1810,8 @@ Language: ku_TR
     <string name="delete_post">Şandiyê jê bibe?</string>
     <string name="post_settings">Sazkariyên şandiyê</string>
     <string name="file_not_found">Pelgeya ji bo hilxistinê nikare bibîne. Ew hatiye jêbirin an neqlkirin?</string>
-    <string name="horizontal_alignment">Hîzakirina asoyî</string>
     <string name="local_draft">Reşnivîsa Cîgehî</string>
     <string name="page_settings">Sazkariyên rûpelê</string>
-    <string name="create_a_link">Girêdanekê biafirîne</string>
     <string name="link_enter_url_text">Metna girêdanê (li gor daxwazê)</string>
     <string name="cannot_delete_multi_media_items">Di vê deme de hinek medya nehate jêbirin. Piştre dîsa biceribîne.</string>
     <string name="media_error_no_permission">Destûra te nîn e ji bo dîtina kitêbxaneya medyayê</string>
@@ -1893,7 +1826,6 @@ Language: ku_TR
     <string name="reader_empty_posts_in_tag_updating">Şandî tên anîn…</string>
     <string name="cant_share_no_visible_blog">Tu nikarî bi WordPressê parve bikî bêyî blogeke berçav</string>
     <string name="comment_spammed">Şîrove wekî nexwestî hat nîşankirin</string>
-    <string name="video">Vîdyo</string>
     <string name="reader_label_reply">Bibersivîne</string>
     <string name="reader_likes_multi">%,d kes ev eciband</string>
     <string name="reader_likes_you_and_multi">Te û %,d kesên din ev eciband</string>
@@ -1950,7 +1882,6 @@ Language: ku_TR
     <string name="httpuser">Navê bikarhêner yê HTTP</string>
     <string name="error_media_upload">Di hilbarkirina medyayê de çewtiyek rû da.</string>
     <string name="publish_date">Biweşîne</string>
-    <string name="post_content">Naverok (bo tevlîkirina nivîs û medya bitepîne)</string>
     <string name="incorrect_credentials">Navê bikarhêner an jî pêborîna çewt.</string>
     <string name="log_in">Têkevê</string>
     <string name="username">Navê bikarhêner</string>
@@ -1958,15 +1889,11 @@ Language: ku_TR
     <string name="reader">Xwîner</string>
     <string name="anonymous">Gelêrî</string>
     <string name="posts">Şandî</string>
-    <string name="width">Firehî</string>
-    <string name="caption">Sernûçe (li gor daxwazê)</string>
     <string name="pages">Rûpel</string>
     <string name="no_network_title">Tora berdest nîn e</string>
-    <string name="featured_in_post">Wêneyê têxe naveroka şandiyê</string>
     <string name="ok">BAŞ e</string>
     <string name="blogusername">blognavêbikarhêner</string>
     <string name="link_enter_url">Navnîşan</string>
-    <string name="uploading">Tê Hilbarkirin…</string>
     <string name="app_title">WordPress ji bo Android</string>
     <string name="tos">Mercên Xizmetê</string>
     <string name="version">Guherto</string>

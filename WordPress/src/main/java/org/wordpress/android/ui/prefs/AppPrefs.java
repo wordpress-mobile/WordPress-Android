@@ -115,6 +115,7 @@ public class AppPrefs {
         NEWS_CARD_SHOWN_VERSION,
         AVATAR_VERSION,
         GUTENBERG_DEFAULT_FOR_NEW_POSTS,
+        USER_IN_GUTENBERG_ROLLOUT_GROUP,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
 
@@ -126,7 +127,11 @@ public class AppPrefs {
         // Widget settings
         STATS_WIDGET_SELECTED_SITE_ID,
         STATS_WIDGET_COLOR_MODE,
-        STATS_WIDGET_DATA_TYPE
+        STATS_WIDGET_DATA_TYPE,
+        STATS_WIDGET_HAS_DATA,
+
+        // Keep the local_blog_id + local_post_id values that have HW Acc. turned off
+        AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
     }
 
     /**
@@ -604,6 +609,14 @@ public class AppPrefs {
         return !"".equals(getString(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS));
     }
 
+    public static boolean isUserInGutenbergRolloutGroup() {
+        return getBoolean(DeletablePrefKey.USER_IN_GUTENBERG_ROLLOUT_GROUP, false);
+    }
+
+    public static void setUserInGutenbergRolloutGroup() {
+        setBoolean(DeletablePrefKey.USER_IN_GUTENBERG_ROLLOUT_GROUP, true);
+    }
+
     public static void removeAppWideEditorPreference() {
         remove(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS);
     }
@@ -936,20 +949,36 @@ public class AppPrefs {
         return DeletablePrefKey.STATS_WIDGET_COLOR_MODE.name() + appWidgetId;
     }
 
-    public static void setStatsWidgetDatatTypeId(int dataTypeId, int appWidgetId) {
-        prefs().edit().putInt(getDatatTypeIdWidgetKey(appWidgetId), dataTypeId).apply();
+    public static void setStatsWidgetDataTypeId(int dataTypeId, int appWidgetId) {
+        prefs().edit().putInt(getDataTypeIdWidgetKey(appWidgetId), dataTypeId).apply();
     }
 
-    public static int getStatsWidgetDatatTypeId(int appWidgetId) {
-        return prefs().getInt(getDatatTypeIdWidgetKey(appWidgetId), -1);
+    public static int getStatsWidgetDataTypeId(int appWidgetId) {
+        return prefs().getInt(getDataTypeIdWidgetKey(appWidgetId), -1);
     }
 
-    public static void removeStatsWidgetDatatTypeId(int appWidgetId) {
-        prefs().edit().remove(getDatatTypeIdWidgetKey(appWidgetId)).apply();
+    public static void removeStatsWidgetDataTypeId(int appWidgetId) {
+        prefs().edit().remove(getDataTypeIdWidgetKey(appWidgetId)).apply();
     }
 
-    @NonNull private static String getDatatTypeIdWidgetKey(int appWidgetId) {
+    @NonNull private static String getDataTypeIdWidgetKey(int appWidgetId) {
         return DeletablePrefKey.STATS_WIDGET_DATA_TYPE.name() + appWidgetId;
+    }
+
+    public static void setStatsWidgetHasData(boolean hasData, int appWidgetId) {
+        prefs().edit().putBoolean(getHasDataWidgetKey(appWidgetId), hasData).apply();
+    }
+
+    public static boolean getStatsWidgetHasData(int appWidgetId) {
+        return prefs().getBoolean(getHasDataWidgetKey(appWidgetId), false);
+    }
+
+    public static void removeStatsWidgetHasData(int appWidgetId) {
+        prefs().edit().remove(getHasDataWidgetKey(appWidgetId)).apply();
+    }
+
+    @NonNull private static String getHasDataWidgetKey(int appWidgetId) {
+        return DeletablePrefKey.STATS_WIDGET_HAS_DATA.name() + appWidgetId;
     }
 
     public static void setSystemNotificationsEnabled(boolean enabled) {
@@ -958,5 +987,37 @@ public class AppPrefs {
 
     public static boolean getSystemNotificationsEnabled() {
         return getBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, true);
+    }
+
+    private static List<String> getPostWithHWAccelerationOff() {
+        String idsAsString = getString(DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS, "");
+        return Arrays.asList(idsAsString.split(","));
+    }
+
+    /*
+     * adds a local site ID to the top of list of recently chosen sites
+     */
+    public static void addPostWithHWAccelerationOff(int localSiteId, int localPostId) {
+        if (localSiteId == 0 || localPostId == 0 || isPostWithHWAccelerationOff(localSiteId, localPostId)) {
+            return;
+        }
+        String key = localSiteId + "-" + localPostId;
+        List<String> currentIds = new ArrayList<>(getPostWithHWAccelerationOff());
+        currentIds.add(key);
+        // store in prefs
+        String idsAsString = TextUtils.join(",", currentIds);
+        setString(DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS, idsAsString);
+    }
+
+    public static boolean isPostWithHWAccelerationOff(int localSiteId, int localPostId) {
+        if (localSiteId == 0 || localPostId == 0) {
+            return false;
+        }
+        List<String> currentIds = getPostWithHWAccelerationOff();
+        String key = localSiteId + "-" + localPostId;
+        if (currentIds.contains(key)) {
+            return true;
+        }
+        return false;
     }
 }

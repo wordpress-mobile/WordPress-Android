@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-25 16:31:35+0000
+Translation-Revision-Date: 2019-10-12 09:20:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
@@ -11,7 +11,6 @@ Language: gl_ES
     <string name="domain_contact_information_city_hint">Cidade</string>
     <string name="domain_contact_information_address_hint_two">Enderezo 2</string>
     <string name="history_fetching_revisions">Recuperando revisións…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Fallo ao insertar os medios.\nPor favor, toca para ver as opcións.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Fallo ao insertar os medios.\nPor favor, toca para volver a intentalo.</string>
     <string name="editor_uploading_draft">O teu borrador estase subindo</string>
     <string name="post_uploading_draft">Subindo borrador</string>
@@ -26,6 +25,7 @@ Language: gl_ES
     <string name="stats_insights_management_title">Só ves as estatísticas máis relevantes. Engade e organiza os teus detalles abaixo.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estatísticas anuais do sitio</string>
+    <string name="stats_view_follower_totals">Total de seguidores</string>
     <string name="domain_suggestions_fetch_error">Non se puideron cargar as suxerencias de dominios</string>
     <string name="domain_suggestions_search_hint">Teclea unha palabra clave para máis ideas</string>
     <string name="domains_suggestions_empty_list">Non se encontraron suxerencias</string>
@@ -90,22 +90,6 @@ Language: gl_ES
     <string name="stats_site_not_loaded_yet">O sitio aínda non se cargou</string>
     <string name="stats_more_posts">Máis entradas</string>
     <string name="stats_fewer_posts">Menos entradas</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Eliminar contido</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Mover bloque abaixo</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Mover bloque arriba</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">ENGADIR BLOQUE AQUÍ</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Non compatible</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Tipo de bloque non compatible.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Bloque non compatible</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Pegar URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ELIXIR IMAXE</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Baleirar todos os axustes</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Texto alt</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Biblioteca de medios de WordPress</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Fai unha foto</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Elixir do dispositivo</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Empeza a escribir…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Eliminar enlace</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>
     <string name="stats_insights_path">Path</string>
@@ -146,9 +130,18 @@ Language: gl_ES
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
+    <string name="media_encoder_quality_100">Máxima</string>
+    <string name="media_encoder_quality_95">Moi alta</string>
+    <string name="media_encoder_quality_90">Alta</string>
+    <string name="media_encoder_quality_85">Media</string>
+    <string name="media_encoder_quality_80">Baixa</string>
+    <string name="media_upload_state_uploaded">Subida</string>
     <string name="media_upload_state_failed">Fallou a subida.</string>
     <string name="media_upload_state_deleted">Borrado</string>
     <string name="media_upload_state_deleting">Eliminando</string>
+    <string name="media_upload_state_uploading">Subindo</string>
+    <string name="media_upload_state_queued">En cola</string>
+    <string name="keep_editing">Seguir editando</string>
     <string name="retry">Reintentar</string>
     <string name="confirm">Confirmar</string>
     <string name="reader_photo_by">Foto de %s</string>
@@ -211,28 +204,12 @@ Language: gl_ES
     <string name="error_fetch_email_followers_list">Non foi posible obter os seguidores do sitio por correo electrónico</string>
     <string name="error_fetch_followers_list">Non foi posible obter os seguidores do sitio</string>
     <string name="editor_failed_uploads_switch_html">Fallou a carga dalgúns ficheiros. Nesta situación non podes cambiar a modo HTML\nQueres borrar todas as cargas que fallaron e continuar?</string>
-    <string name="image_thumbnail">Miniatura</string>
-    <string name="visual_editor">Editor visual</string>
-    <string name="format_bar_description_html">Modo HTML</string>
-    <string name="format_bar_description_ol">Lista ordenada</string>
-    <string name="format_bar_description_ul">Lista sen orde</string>
-    <string name="format_bar_description_more">Inserir máis</string>
-    <string name="format_bar_description_quote">Cita</string>
-    <string name="format_bar_description_strike">Riscado</string>
-    <string name="format_bar_description_underline">Subliñado</string>
-    <string name="format_bar_description_italic">Cursiva</string>
-    <string name="format_bar_description_bold">Grosa</string>
     <string name="image_width">Largo</string>
     <string name="image_link_to">Ligar a</string>
-    <string name="image_alt_text">Texto alternativo</string>
     <string name="image_caption">Lenda</string>
     <string name="image_settings_save_toast">Cambios gardados</string>
     <string name="image_settings_dismiss_dialog_title">Descartar os cambios sen gardar?</string>
     <string name="stop_upload_dialog_title">Suspender a carga?</string>
-    <string name="alert_error_adding_media">Houbo un erro na inserción do ficheiro</string>
-    <string name="alert_action_while_uploading">Estanse a cargar os ficheiros. Por favor, espera a que o proceso termine.</string>
-    <string name="alert_insert_image_html_mode">Non se poden inserir ficheiros directamente no modo HTML. Hai que volver ao modo visual.</string>
-    <string name="uploading_gallery_placeholder">Cargando a galería…</string>
     <string name="tap_to_try_again">Pulsa para tentalo outra vez!</string>
     <string name="invite_sent">Invitación enviada con éxito</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -257,7 +234,6 @@ Language: gl_ES
     <string name="reader_hint_post_search">Buscar en WordPress</string>
     <string name="reader_title_related_post_detail">Artigos relacionados</string>
     <string name="preview_screen_links_disabled">Os enlaces están inhabilitados na vista previa</string>
-    <string name="draft_explainer">Este artigo é un borrador sen publicar</string>
     <string name="send">Enviar</string>
     <string name="person_removed">%1$s foi eliminado</string>
     <string name="user_remove_confirmation_message">Se eliminas a %1$s, o usuario non poderá acceder máis a este sitio, aínda que todos os contidos creados por %1$s permanecerán nel.\n\nQueres aínda así eliminar a este usuario?</string>
@@ -277,7 +253,6 @@ Language: gl_ES
     <string name="logging_in">Conectando</string>
     <string name="enter_your_password_instead">Introduce o teu contrasinal se non</string>
     <string name="web_address_dialog_hint">Móstrase publicamente no teus comentarios.</string>
-    <string name="new_editor_reflection_error">O editor visual non é compatible co teu dispositivo. Foi\ndesactivado automaticamente.</string>
     <string name="capture_or_pick_photo">Fai ou escolle unha foto</string>
     <string name="plans">Plans</string>
     <string name="plan">Plan</string>
@@ -357,10 +332,6 @@ Language: gl_ES
     <string name="error_refresh_comments_showing_older">Non foi posible actualizar os comentarios neste momento - mostrando comentarios antigos</string>
     <string name="post_settings_set_featured_image">Poñer como imaxe destacada</string>
     <string name="post_settings_featured_image">Imaxe destacada</string>
-    <string name="visual_editor_enabled">Editor visual habilitado</string>
-    <string name="editor_content_placeholder">Comparte aquí as túas anécdotas…</string>
-    <string name="editor_page_title_placeholder">Título da páxina</string>
-    <string name="editor_post_title_placeholder">Título do artigo</string>
     <string name="email_address">Correo electrónico</string>
     <string name="dlg_sure_to_delete_comments">Eliminar definitivamente estes comentarios?</string>
     <string name="dlg_sure_to_delete_comment">Eliminar definitivamente este comentario?</string>
@@ -531,8 +502,6 @@ Language: gl_ES
     <string name="reader_short_like_count_one">1 \"gústame\"</string>
     <string name="reader_menu_tags">Editar etiquetas e blogues</string>
     <string name="reader_title_post_detail">Artigo da Guía de Lectura</string>
-    <string name="local_draft_explainer">Este artigo é un borrador local aínda sen publicar</string>
-    <string name="local_changes_explainer">Este artigo ten cambios locais aínda sen publicar</string>
     <string name="notifications_push_summary">Configuración de notificacións que aparece no teu dispositivo</string>
     <string name="notifications_email_summary">Configuración de notificacións enviada ao correo electrónico asociado á túa conta.</string>
     <string name="notifications_tab_summary">Configuración de notificacións que aparece na lapela de notificacións</string>
@@ -716,8 +685,6 @@ Language: gl_ES
     <string name="category_name">Nome da categoría</string>
     <string name="add_new_category">Engadir categoría nova</string>
     <string name="view_in_browser">Ver no navegador</string>
-    <string name="preview_post">Vista previa do artigo</string>
-    <string name="preview_page">Vista previa da páxina</string>
     <string name="remove_account">Borrar o sitio</string>
     <string name="toast_comment_unedited">O comentario non foi modificado</string>
     <string name="content_required">Fai falla un comentario</string>
@@ -745,10 +712,8 @@ Language: gl_ES
     <string name="delete_post">Eliminar o artigo</string>
     <string name="post_settings">Configuración do artigo</string>
     <string name="file_not_found">Non foi posible atopar o ficheiro para cargar. Terá sido eliminado ou movido?</string>
-    <string name="horizontal_alignment">Aliñamento horizontal</string>
     <string name="local_draft">Borrador local</string>
     <string name="page_settings">Configuración da páxina</string>
-    <string name="create_a_link">Crear un enlace</string>
     <string name="link_enter_url_text">Texto do enlace (opcional)</string>
     <string name="cannot_delete_multi_media_items">Non se poden eliminar algún ficheiros neste momento. Téntao de novo máis tarde.</string>
     <string name="media_error_no_permission">Non tes permiso para ver a Biblioteca Multimedia</string>
@@ -762,7 +727,6 @@ Language: gl_ES
     <string name="reader_empty_posts_in_tag_updating">Á procura de artigos…</string>
     <string name="cant_share_no_visible_blog">Non podes compartir en WordPress se non tes algún blogue visible</string>
     <string name="comment_spammed">Comentario sinalado como spam</string>
-    <string name="video">Vídeo</string>
     <string name="reader_label_reply">Responder</string>
     <string name="reader_likes_multi">A %,d persoas gustoulles isto</string>
     <string name="reader_likes_you_and_multi">A ti e a outros %,d gustoulles isto</string>
@@ -819,7 +783,6 @@ Language: gl_ES
     <string name="httpuser">usuario HTTP</string>
     <string name="error_media_upload">Houbo un erro mentres se cargaba o ficheiro</string>
     <string name="publish_date">Publicar</string>
-    <string name="post_content">Contido (pulsa para engadir texto e ficheiros)</string>
     <string name="incorrect_credentials">Nome de usuario ou contrasinal incorrecto</string>
     <string name="log_in">Iniciar sesión</string>
     <string name="username">Nome de usuario</string>
@@ -827,15 +790,11 @@ Language: gl_ES
     <string name="reader">Guía de Lectura</string>
     <string name="anonymous">Anónimo</string>
     <string name="posts">Artigos</string>
-    <string name="width">Largo</string>
-    <string name="caption">Lenda (opcional)</string>
     <string name="pages">Páxinas</string>
     <string name="no_network_title">Non hai rede dispoñible</string>
-    <string name="featured_in_post">Incluír una imaxe no contido do artigo</string>
     <string name="ok">Vale</string>
     <string name="blogusername">usuario</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Cargando…</string>
     <string name="app_title">WordPress para Android</string>
     <string name="tos">Termos de servizo</string>
     <string name="version">Versión</string>

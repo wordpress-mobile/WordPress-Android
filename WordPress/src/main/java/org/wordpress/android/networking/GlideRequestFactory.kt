@@ -1,14 +1,11 @@
 package org.wordpress.android.networking
 
-import android.util.Base64
 import com.android.volley.Request
 import com.android.volley.Request.Priority
 import com.bumptech.glide.integration.volley.VolleyRequestFactory
 import com.bumptech.glide.integration.volley.VolleyStreamFetcher
 import com.bumptech.glide.load.data.DataFetcher.DataCallback
-import org.wordpress.android.fluxc.network.HTTPAuthManager
-import org.wordpress.android.fluxc.network.UserAgent
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPUrlUtils
 import java.io.InputStream
@@ -21,9 +18,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class GlideRequestFactory @Inject constructor(
-    private val accessToken: AccessToken,
-    private val httpAuthManager: HTTPAuthManager,
-    private val userAgent: UserAgent
+    private val authenticationUtils: AuthenticationUtils
 ) : VolleyRequestFactory {
     override fun create(
         url: String,
@@ -40,20 +35,10 @@ class GlideRequestFactory @Inject constructor(
     }
 
     private fun addAuthHeaders(url: String, currentHeaders: Map<String, String>): MutableMap<String, String> {
+        val authenticationHeaders = authenticationUtils.getAuthHeaders(url)
         val headers = currentHeaders.toMutableMap()
-        headers["User-Agent"] = userAgent.userAgent
-        if (WPUrlUtils.safeToAddWordPressComAuthToken(url)) {
-            if (accessToken.exists()) {
-                headers["Authorization"] = "Bearer " + accessToken.get()
-            }
-        } else {
-            // Check if we had HTTP Auth credentials for the root url
-            val httpAuthModel = httpAuthManager.getHTTPAuthModel(url)
-            if (httpAuthModel != null) {
-                val creds = String.format("%s:%s", httpAuthModel.username, httpAuthModel.password)
-                val auth = "Basic " + Base64.encodeToString(creds.toByteArray(), Base64.NO_WRAP)
-                headers["Authorization"] = auth
-            }
+        authenticationHeaders.entries.forEach { (key, value) ->
+            headers[key] = value
         }
         return headers
     }

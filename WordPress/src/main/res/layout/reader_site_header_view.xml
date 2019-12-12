@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_blog_name"
-            android:textColor="@color/neutral_40"
+            android:textColor="@color/neutral_50"
             android:textSize="@dimen/text_sz_small"
             tools:text="text_domain"
             android:layout_toStartOf="@+id/follow_button"
@@ -103,7 +103,7 @@
                 android:id="@+id/text_blog_follow_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/neutral_40"
+                android:textColor="@color/neutral_50"
                 android:textSize="@dimen/text_sz_small"
                 tools:text="12 followers" />
 

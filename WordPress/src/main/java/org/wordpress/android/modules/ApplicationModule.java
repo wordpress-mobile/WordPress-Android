@@ -12,6 +12,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.Countr
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
+import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
 import org.wordpress.android.ui.stats.refresh.StatsFragment;
@@ -89,6 +90,9 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract SettingsUsernameChangerFragment contributeSettingsUsernameChangerFragment();
+
+    @ContributesAndroidInjector
+    abstract ReaderPostWebViewCachingFragment contributeReaderPostWebViewCachingFragment();
 
     @Provides
     public static WizardManager<SiteCreationStep> provideWizardManager(

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-16 08:16:44+0000
+Translation-Revision-Date: 2019-10-11 08:50:23+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: sk
@@ -22,18 +22,6 @@ Language: sk
     <string name="app_rating_rate_now">Ohodnotiť teraz</string>
     <string name="stats_more_posts">Viac príspevkov</string>
     <string name="stats_fewer_posts">Menej príspevkov</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Odstrániť obsah</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Posunúť blok nižšie</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Posunúť blok vyššie</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">VLOŽTE BLOK TU</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Nepodporované</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Vložte URL adresu</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">VYBERTE OBRÁZOK</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Začnite písať…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Odstrániť odkaz</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Text odkazu</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Pridať URL adresu</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link vložený</string>
     <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
     <string name="quick_start_sites_type_subtitle">%1$d z %2$d kompletné</string>
     <string name="quick_start_sites">Ďalšie kroky</string>
@@ -134,16 +122,11 @@ Language: sk
     <string name="history_empty_subtitle_post">Keď spravíte zmeny vo svojom článku, zobrazí sa vám história</string>
     <string name="history_empty_subtitle_page">Keď spravíte zmeny na stránke, zobrazí sa vám história</string>
     <string name="description_user">Avatar používateľa</string>
-    <string name="async_promo_description_schedule_page">Môžete opustiť editor a vaša stránka sa uloží a naplánuje na pozadí! Vyskúšajte to!</string>
-    <string name="async_promo_description_publish_post">Môžete opustiť editor a váš článok sa uloží a zverejní na pozadí! Vyskúšajte to!</string>
-    <string name="async_promo_description_publish_page">Môžete opustiť editor a vaša stránka sa uloží a zverejní na pozadí! Vyskúšajte to!</string>
     <string name="image_size_full_label">Plná veľkosť</string>
     <string name="image_size_large_label">Veľké</string>
     <string name="image_size_medium_label">Stredné</string>
     <string name="image_size_thumbnail_label">Miniatúra</string>
     <string name="menu_history">História</string>
-    <string name="async_promo_schedule_now">Naplánovať teraz</string>
-    <string name="async_promo_title_schedule">Nsaplánovať s funkciou Spoľahlivosť</string>
     <string name="pages_pending">Nepotvrdená recenzia</string>
     <string name="pages_open_page_error">Vybraná stránka nie je dostupná</string>
     <string name="news_card_announcement_action_sample_announcement">[Prečítať viac]</string>
@@ -455,7 +438,6 @@ Language: sk
     <string name="version_with_name_param">Verzia %s</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Vydavateľ: %s</string>
-    <string name="async_promo_publish_now">Publikovať okamžite</string>
     <string name="notification_sound_has_invalid_path">Zvolený zvuk má neplatnú cestu. Vyberte iný.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d zostávajúcich stránok / príspevkov</string>
@@ -547,6 +529,7 @@ Language: sk
     <string name="my_site_add_new_site">Pridať novú webovú stránku</string>
     <string name="my_site_create_new_site">Vytvorte novú webovú stránku pre vašu firmu, magazín alebo osobný blog, alebo pripojte existujúcu WordPress inštaláciu.</string>
     <string name="notifications_jetpack_connection_setup_info">Ak chcete získať užitočné upozornenia vo vašom zariadení z webovej stránky WordPress, musíte nainštalovať plugin Jetpack. Chcete nastaviť Jetpack?</string>
+    <string name="site_settings_lazy_load_images">Pomalé načítavanie obrázkov</string>
     <string name="stats_jetpack_connection_setup">Nainštalovať Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Prepnúť text</string>
     <string name="plugin_info_your_version">Vaša WordPress verzia</string>
@@ -632,7 +615,6 @@ Language: sk
     <string name="login_empty_password">Prosím zadajte heslo </string>
     <string name="login_text_otp_another">Pošlite mi druhý kód.</string>
     <string name="enter_verification_code_sms">Poslali sme správu na telefónne číslo končiace sa %s. Prosím vložte verifikačný kód z SMS. </string>
-    <string name="error_generic_error">Operáciu sa nepodarilo vykonať</string>
     <string name="image_size">Veľkosť</string>
     <string name="uploading_subtitle_media_only_one">1 súbor zostáva</string>
     <string name="uploading_subtitle_media_only">%1$d z %2$d súborov zostáva</string>
@@ -734,9 +716,6 @@ Language: sk
     <string name="error_media_canceled">Načítavanie médií sa zrušilo.</string>
     <string name="error_upload_page_media_param">Došlo k chybe pri načítavaní médiá na tejto stránke: %s.</string>
     <string name="error_upload_page_param">Došlo k chybe pri načítavaní tejto stránky: %s.</string>
-    <string name="async_promo_link">Ako to funguje?</string>
-    <string name="async_promo_description_schedule_post">Môžete opustiť editor a váš článok sa uloží a zverejní na pozadí! Vyskúšajte to!</string>
-    <string name="async_promo_title_publish">Zverejniť s funkciou Spoľahlivosť</string>
     <string name="editor_uploading_post">Váš článok sa načítáva</string>
     <string name="uploading_media">Načítavanie médií…</string>
     <string name="page_scheduled">Naplánovaná stránka</string>
@@ -836,8 +815,6 @@ Language: sk
     <string name="media_images">Obrázky</string>
     <string name="media_all">Všetko</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s bol zamietnutý prístup k vašim fotografiám. Ak to chcete napraviť, upravte svoje povolenia a zapnite %2$s.</string>
-    <string name="format_bar_description_link">Odkaz</string>
-    <string name="format_bar_description_media">Médiá</string>
     <string name="reader_view_comments">Zobraziť komentáre</string>
     <string name="site_settings_video_quality_hint">Kvalita videí. Čím vyššie hodnoty, tým kvalitnejšie videá.</string>
     <string name="site_settings_video_width_hint">Zmeňte veľkosť článkov na požadovanú veľkosť</string>
@@ -965,7 +942,6 @@ Language: sk
     <string name="xmlrpc_endpoint_forbidden_error">Nepodarilo sa pripojiť. Došlo k chybe 403, keď ste sa snažili dostať na webovú stránku XMLRPC koncový bod. Aplikácia ho vyžaduje, aby mohla komunikovať s vašou webovou stránkou. Kontaktujte svojho hosta, aby vyriešil problém.</string>
     <string name="xmlrpc_post_blocked_error">Nemožno pripojiť. Váš hostiteľ blokuje žiadosti ČLÁNOK. Aplikácia potrebuje to potrebuje na komunikáciu s vašou webovou stránkou. Kontaktujte hostiteľa, aby vyriešil tento problém.</string>
     <string name="reader_hint_search_followed_sites">Hľadajte sledované webové stránky</string>
-    <string name="visual_editor_disabled">Zablokovaný vizuálny editor</string>
     <string name="pending_draft_one_generic">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_month">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_week_2">%1$s\' zostáva ako koncept. Pripomenúť na zverjnenie!</string>
@@ -1032,28 +1008,12 @@ Language: sk
     <string name="error_fetch_email_followers_list">Nemožno získať e-mailové adresy odoberateľov webovej stránky.</string>
     <string name="error_fetch_followers_list">Nemožno získať e-mailové adresy odoberateľov webovej stránky.</string>
     <string name="editor_failed_uploads_switch_html">Nahrávanie niektorých médií zlyhalo. Nemôžete prepnúť do HTML módu v tomto štádiu. Odstrániť všetky zlyhané nahrávania a pokračovať?</string>
-    <string name="image_thumbnail">Obrázok miniatúry</string>
-    <string name="visual_editor">Vizuálny editor</string>
-    <string name="format_bar_description_html">HTML</string>
-    <string name="format_bar_description_ol">Zoradený zoznam</string>
-    <string name="format_bar_description_ul">Nezoradený zoznam</string>
-    <string name="format_bar_description_more">Čítať viac</string>
-    <string name="format_bar_description_quote">Bloková citácia</string>
-    <string name="format_bar_description_strike">Prečiarknutie</string>
-    <string name="format_bar_description_underline">Podčiarknutie</string>
-    <string name="format_bar_description_italic">Kurzíva</string>
-    <string name="format_bar_description_bold">Tučné</string>
     <string name="image_width">Šírka</string>
     <string name="image_link_to">Odkaz na</string>
-    <string name="image_alt_text">Alt text</string>
     <string name="image_caption">Titulok</string>
     <string name="image_settings_save_toast">Zmeny uložené</string>
     <string name="image_settings_dismiss_dialog_title">Zahodiť neuložené zmeny?</string>
     <string name="stop_upload_dialog_title">Zastaviť nahrávanie?</string>
-    <string name="alert_error_adding_media">Nastala chyba pri vkladaní súboru</string>
-    <string name="alert_action_while_uploading">Práve nahrávate súbory. Počkajte na dokončenie.</string>
-    <string name="alert_insert_image_html_mode">V HTML móde nemôžete vkladať súbory. Prepnite sa späť do vizuálneho módu.</string>
-    <string name="uploading_gallery_placeholder">Nahrávanie galérie…</string>
     <string name="tap_to_try_again">Ťuknite a skúste ešte raz!</string>
     <string name="invite_sent">Pozvánka úspešne odoslaná</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -1078,7 +1038,6 @@ Language: sk
     <string name="reader_hint_post_search">Prehľadávať WordPress</string>
     <string name="reader_title_related_post_detail">Podobný článok</string>
     <string name="preview_screen_links_disabled">Linky sú deaktivované v náhľade</string>
-    <string name="draft_explainer">Tento článok je koncept, ktorý nebol publikovaný</string>
     <string name="send">Odoslať</string>
     <string name="person_removed">%1$s úspešne odstránený</string>
     <string name="user_remove_confirmation_message">Ak odstránite %1$s, tento používateľ nebude môcť vstúpiť na webovú stránku, ale obsah vytvorený používateľom %1$s ostane na stránke.\n\nNaozaj chcete odstrániť tohto používateľa?</string>
@@ -1098,7 +1057,6 @@ Language: sk
     <string name="logging_in">Prihlasovanie</string>
     <string name="enter_your_password_instead">Zadajte heslo</string>
     <string name="web_address_dialog_hint">Zobraziť verejne, keď píšete komentáre.</string>
-    <string name="new_editor_reflection_error">Vizuálny editor nie je kompatibilný s vašim zariadením. Bol automaticky zablokovaný.</string>
     <string name="capture_or_pick_photo">Odfoť alebo vyber fotku</string>
     <string name="plans">Paušály</string>
     <string name="plan">Paušál</string>
@@ -1178,10 +1136,6 @@ Language: sk
     <string name="error_refresh_comments_showing_older">Komentáre sa nepodarilo aktualizovať v tejto chvíli - zobrazujú sa staršie komentáre</string>
     <string name="post_settings_set_featured_image">Nastaviť odporúčaný obrázok</string>
     <string name="post_settings_featured_image">Odporúčaný obrázok</string>
-    <string name="visual_editor_enabled">Vizuálny editor povolený</string>
-    <string name="editor_content_placeholder">Zdieľaj svoj príbeh tu…</string>
-    <string name="editor_page_title_placeholder">Nadpis stránky</string>
-    <string name="editor_post_title_placeholder">Nadpis článku</string>
     <string name="email_address">Emailová adresa</string>
     <string name="dlg_sure_to_delete_comments">Trvale odstrániť tieto komentáre?</string>
     <string name="dlg_sure_to_delete_comment">Trvale odstrániť tento komentár?</string>
@@ -1349,8 +1303,6 @@ Language: sk
     <string name="reader_short_like_count_one">1 lajk</string>
     <string name="reader_menu_tags">Upraviť značky a webové stránky</string>
     <string name="reader_title_post_detail">Článok čítačky</string>
-    <string name="local_draft_explainer">Tento článok je koncept, ktorý nebol zverejnený</string>
-    <string name="local_changes_explainer">Tento má úpravy, ktoré neboli zverejnené</string>
     <string name="notifications_push_summary">Nastavenia upozornení zobrazujúcich sa na vašom zariadení.</string>
     <string name="notifications_email_summary">Nastavenia upozornení odosielaných na e-mail, ktorý je spojený s vašim účtom.</string>
     <string name="notifications_tab_summary">Nastavenia upozornení zobrazujúcich sa v záložke Upozornenia.</string>
@@ -1535,8 +1487,6 @@ Language: sk
     <string name="category_name">Názov kategórie</string>
     <string name="add_new_category">Pridať novú kategóriu</string>
     <string name="view_in_browser">Pozrieť v prehliadači</string>
-    <string name="preview_post">Pozrieť náhľad príspevku</string>
-    <string name="preview_page">Náhľad stránky</string>
     <string name="remove_account">Odstrániť webovú stránku</string>
     <string name="toast_comment_unedited">Komentáre neboli zmenené</string>
     <string name="content_required">Vyžaduje sa komentár</string>
@@ -1564,10 +1514,8 @@ Language: sk
     <string name="delete_post">Vymazať príspevok?</string>
     <string name="post_settings">Nastavenia príspevku</string>
     <string name="file_not_found">Nepodarilo sa nájsť súbor na nahrávanie. Bol odstránený alebo presunutý?</string>
-    <string name="horizontal_alignment">Horizontálne zarovnanie</string>
     <string name="local_draft">Lokálny koncept </string>
     <string name="page_settings">Nastavenia stránky</string>
-    <string name="create_a_link">Vytvoriť odkaz</string>
     <string name="link_enter_url_text">Text odkazu (voliteľný)</string>
     <string name="cannot_delete_multi_media_items">Niektoré súbory nie je možné teraz zmazať. skúste neskôr.</string>
     <string name="media_error_no_permission">Nemáte práva na zobrazenie knižnice súborov</string>
@@ -1582,7 +1530,6 @@ Language: sk
     <string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
     <string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
     <string name="comment_spammed">Komentáre označené ako spam</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Odpovedať</string>
     <string name="reader_likes_multi">počet ľudí, ktorým sa to páči: %,d</string>
     <string name="reader_likes_you_and_multi">Vy a niekoľkí ďalší (%,d) ste to lajkli</string>
@@ -1639,7 +1586,6 @@ Language: sk
     <string name="httpuser">HTTP používateľské meno</string>
     <string name="error_media_upload">Pri nahrávaní multimédií sa vyskytla chyba</string>
     <string name="publish_date">Zverejniť</string>
-    <string name="post_content">Obsah (kliknutím pridajte text a súbor)</string>
     <string name="incorrect_credentials">Nesprávne používatelské meno alebo heslo.</string>
     <string name="log_in">Prihlásiť sa</string>
     <string name="username">Používatelské meno</string>
@@ -1647,15 +1593,11 @@ Language: sk
     <string name="reader">Čitateľ</string>
     <string name="anonymous">Anonymný</string>
     <string name="posts">Príspevky</string>
-    <string name="width">Šírka</string>
-    <string name="caption">Titulok (voliteľný)</string>
     <string name="pages">Podstránky</string>
     <string name="no_network_title">Sieť nedostupná</string>
-    <string name="featured_in_post">Vložiť obrázok do príspevku</string>
     <string name="ok">OK</string>
     <string name="blogusername">Používateľské meno</string>
     <string name="link_enter_url">URL adresa</string>
-    <string name="uploading">Nahrávanie…</string>
     <string name="app_title">WordPress pre Android</string>
     <string name="tos">Zmluvné podmienky</string>
     <string name="version">Verzia</string>

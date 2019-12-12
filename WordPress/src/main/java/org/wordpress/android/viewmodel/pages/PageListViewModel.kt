@@ -28,6 +28,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -46,6 +47,7 @@ private const val DEFAULT_INDENT = 0
 class PageListViewModel @Inject constructor(
     private val mediaStore: MediaStore,
     private val dispatcher: Dispatcher,
+    private val localeManagerWrapper: LocaleManagerWrapper,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
@@ -151,7 +153,7 @@ class PageListViewModel @Inject constructor(
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
         val pageItems = pages
-                .sortedBy { it.title }
+                .sortedBy { it.title.toLowerCase(localeManagerWrapper.getLocale()) }
                 .filter { listType.pageStatuses.contains(it.status) }
                 .let {
                     when (listType) {

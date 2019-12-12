@@ -44,7 +44,7 @@
             android:paddingBottom="@dimen/margin_large"
             android:paddingTop="@dimen/margin_large"
             android:text="@string/notification_settings_followed_dialog_notification_posts_description"
-            android:textColor="@color/neutral_40"
+            android:textColor="@color/neutral_50"
             android:textSize="@dimen/text_sz_medium" >
         </org.wordpress.android.widgets.WPTextView>
 

@@ -102,11 +102,6 @@ public class EditorFragmentAbstractTest {
         }
 
         @Override
-        public void setTitlePlaceholder(CharSequence text) {
-
-        }
-
-        @Override
         public LiveData<Editable> getTitleOrContentChanged() {
             return null;
         }
@@ -119,11 +114,6 @@ public class EditorFragmentAbstractTest {
         @Override
         public boolean hideSavingProgressDialog() {
             return false;
-        }
-
-        @Override
-        public void setContentPlaceholder(CharSequence text) {
-
         }
     }
 }

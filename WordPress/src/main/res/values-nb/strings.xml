@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-02 21:21:31+0000
+Translation-Revision-Date: 2019-11-14 12:55:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Varsler</string>
+    <string name="master_switch_default_title_off">Av</string>
+    <string name="master_switch_default_title_on">På</string>
+    <string name="notifications_tab_dialog_master_off_message">Å skru av varslinger for dette nettstedet vil deaktivere visning av varslinger på varslingsfanen for dette nettstedet. Du kan finjustere hva slags varslinger du vil se etter å ha skrudd på varslinger dette nettstedet.</string>
+    <string name="notifications_tab_dialog_master_off_title">For å se varslinger på varslingsfanen for dette nettstedet, skru på varslinger for dette nettstedet.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Aktiver visning av varslinger på varslingsfanen for dette nettstedet</string>
+    <string name="notifications_tab_dialog_master_hint_on">Deaktiver visning av varslinger  på varslingsfanen for dette nettstedet.</string>
+    <string name="notifications_tab_dialog_master_status_off">Varslinger for dette nettstedet</string>
+    <string name="notifications_tab_dialog_master_status_on">Varslinger for dette nettstedet</string>
+    <string name="dialog_gutenberg_informative_description_page">Du bruker nå blokkredigering for nye sider u2014 flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">Du bruker nå blokkredigering for nye innlegg u2014 flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
+    <string name="pick_media">Legg til bilde eller video</string>
+    <string name="error_post_not_submitted_retrying">Vi kunne ikke sende dette innlegget til gjennomgang, men vi vil prøve igjen senere.</string>
+    <string name="error_post_not_scheduled_retrying">Vi kunne ikke planlegge dette innlegget, men vi vil prøve igjen senere.</string>
+    <string name="error_post_not_published_retrying_private">Vi kunne ikke publisere dette private innlegget, men vi vil prøve igjen senere.</string>
+    <string name="error_post_not_published_retrying">Vi kunne ikke publisere dette innlegget, men vi vil prøve igjen senere.</string>
+    <string name="error_post_not_submitted">Vi kunne ikke fullføre denne handlingen, og sendte ikke dette innlegget til gjennomgang.</string>
+    <string name="error_post_not_scheduled">Vi kunne ikke fullføre denne handlingen, og planla ikke dette innlegget.</string>
+    <string name="error_post_not_published_private">Vi kunne ikke fullføre denne handlingen, og publiserte ikke dette private innlegget.</string>
+    <string name="error_post_not_published">Vi kunne ikke fullføre denne handlingen, og publiserte ikke dette innlegget.</string>
+    <string name="error_media_recover_post_not_submitted">Vi kunne ikke laste opp denne mediefilen, og sendte ikke dette innlegget til gjennomgang.</string>
+    <string name="error_media_recover_post_not_scheduled">Vi kunne ikke laste opp denne mediefilen, og planla ikke dette innlegget.</string>
+    <string name="error_media_recover_post_not_published_private">Vi kunne ikke laste opp denne mediefilen, og publiserte ikke dette private innlegget.</string>
+    <string name="error_media_recover_post_not_published">Vi kunne ikke laste opp denne mediefilen, og publiserte ikke dette innlegget.</string>
+    <string name="error_media_recover_post">Vi kunne ikke laste opp denne mediefilen.</string>
+    <string name="error_generic_error_retrying">Vi kunne ikke fullføre denne handlingen, men vi vil prøve igjen senere.</string>
+    <string name="error_generic_error">Vi kunne ikke fullføre denne handlingen.</string>
+    <string name="error_preview_empty_draft">Kan ikke forhåndsvise en tom kladd</string>
+    <string name="error_preview_empty_page">Kan ikke forhåndsvise en tom side</string>
+    <string name="error_preview_empty_post">Kan ikke forhåndsvise et tomt innlegg</string>
+    <string name="preview_unavailable_self_hosted_sites">Forhåndsvisning utilgjengelig</string>
+    <string name="remote_preview_operation_error">Feil under forsøk på å lagre innlegg før forhåndsvisning</string>
+    <string name="post_preview_remote_auto_saving_post">Genererer forhåndsvisning…</string>
+    <string name="post_preview_saving_draft">Lagrer</string>
+    <string name="local_post_autosave_revision_available">Du har gjort endringer som ikke er lagret på dette innlegget</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">Versjonen fra denne appen</string>
+    <string name="dialog_confirm_autosave_restore_button">Versjonen fra en annen enhet</string>
+    <string name="dialog_confirm_autosave_body_second_part">Fra denne appen\nLagret %s\n\nFra annen enhet\nLagret %s\n</string>
+    <string name="dialog_confirm_autosave_body_first_part">Du gjorde nylig endringer på dette innlegget, men lagret dem ikke. Velg en versjon å laste:\n</string>
+    <string name="dialog_confirm_autosave_title">Hvilken versjon vil du redigere?</string>
+    <string name="button_delete_permanently">Slett permanent</string>
+    <string name="post_waiting_for_connection_draft_cancel">Vi kunne ikke lagre de siste endringene på din kladd.</string>
+    <string name="post_waiting_for_connection_scheduled_cancel">Vi vil ikke planlegge disse endringene.</string>
+    <string name="post_waiting_for_connection_pending_cancel">Vi vil ikke sende disse endringene til gjennomgang.</string>
+    <string name="post_waiting_for_connection_publish_cancel">Vi vil ikke publisere disse endringene.</string>
+    <string name="post_waiting_for_connection_draft">Vi vil lagre din kladd når din enhet er tilbake på nettet</string>
+    <string name="post_waiting_for_connection_private">Vi vil publisere ditt private innlegg når din enhet er tilbake på nettet.</string>
+    <string name="post_waiting_for_connection_scheduled">Vi vil planlegge ditt innlegg når din enhet er tilbake på nettet.</string>
+    <string name="post_waiting_for_connection_pending">Vi vil sende ditt innlegg til gjennomgang når din enhet er tilbake på nettet.</string>
+    <string name="post_waiting_for_connection_publish">Vi vil publisere ditt innlegg når din enhet er tilbake på nettet.</string>
     <string name="settings_username_changer_snackbar_cancel">Denne handlingen kan ikke avbrytes. Brukernavnet kan allerede være oppdatert.</string>
     <string name="settings_username_changer_toast_content">Ditt nye brukernavn er %1$s</string>
     <string name="settings_username_changer_progress_dialog">Lagrer brukernavn…</string>
@@ -16,10 +66,20 @@ Language: nb_NO
     <string name="site_settings_jetpack_performance_settings_hint">Se og endre dine ytelsesinnstillinger i Jetpack.</string>
     <string name="site_settings_performance_and_speed">Ytelse og hastighet</string>
     <string name="site_settings_more">Mer</string>
+    <string name="site_settings_improved_search_summary">Erstatt WordPress sin innebygde søkefunksjon med en forbedret søkeopplevelse</string>
+    <string name="site_settings_improved_search">Forbedret søk</string>
+    <string name="site_settings_jetpack_search">Jetpack-søk</string>
+    <string name="site_settings_ad_free_video_hosting">Reklamefri videobetjening</string>
     <string name="site_settings_media">Media</string>
+    <string name="site_settings_site_accelerator_summary">Last sider raskere ved å la Jetpack optimalisere dine bilder og statiske filer (som CSS og JavaScript).</string>
+    <string name="site_settings_faster_static_files">Raskere statiske filer</string>
+    <string name="site_settings_faster_images">Raskere bilder</string>
     <string name="site_settings_site_accelerator_off">Av</string>
     <string name="site_settings_site_accelerator_on">På</string>
+    <string name="site_settings_site_accelerator">Nettstedsaksellerator</string>
+    <string name="site_settings_lazy_load_images_summary">Forbedre farten på ditt nettsted ved bare å laste bilder som er synlige på skjermen.</string>
     <string name="site_settings_performance">Ytelse</string>
+    <string name="notification_settings_moved_notices">Innstillinger for varsling finnes nå under fanen Varslinger.</string>
     <string name="stats_file_downloads_value_label">Nedlastinger</string>
     <string name="stats_file_downloads_title_label">Fil</string>
     <string name="stats_file_downloads">Filnedlastinger</string>
@@ -34,7 +94,15 @@ Language: nb_NO
     <string name="share_desc">Del</string>
     <string name="navigate_back_desc">Gå tilbake</string>
     <string name="navigate_forward_desc">Gå forover</string>
+    <string name="calendar_scheduled_post_description">\"%s\" planlagt for publisering den \"%s\" i din WordPress-app\n%s</string>
+    <string name="calendar_scheduled_post_title">WordPress planlagt innlegg: \"%s\"</string>
+    <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" vil bli publiser om 10 minutter</string>
+    <string name="notification_post_will_be_published_in_one_hour">\"%s\" vil bli publisert om en time</string>
+    <string name="notification_post_has_been_published">\"%s\" har blitt publisert</string>
+    <string name="notification_scheduled_post_ten_minute_reminder">Planlagt innlegg: 10 minutters påminnelse</string>
+    <string name="notification_scheduled_post_one_hour_reminder">Planlagt innlegg: 1 times påminnelse</string>
     <string name="notification_scheduled_post">Planlagt innlegg</string>
+    <string name="post_notification_error">Varsling kan ikke opprettes når publiseringsdatoen er i fortiden.</string>
     <string name="post_notification_when_published">Når publisert</string>
     <string name="post_notification_ten_minutes_before">10 minutter før</string>
     <string name="post_notification_one_hour_before">1 time før</string>
@@ -60,18 +128,12 @@ Language: nb_NO
     <string name="stats_bar_chart_content_description">Diagram for nettstedsvisninger.</string>
     <string name="stats_loading_card">Laster inn valgte kortdata</string>
     <string name="site_settings_editor">Redigering</string>
-    <string name="dialog_gutenberg_informative_description_page">Du bruker for tiden blokkredigering for å lage nye sider. Ønsker du å bruke klassisk redigering som standard? Gå til innstillinger for nettstedet.</string>
-    <string name="dialog_gutenberg_informative_description_post">Du bruker for tiden blokkredigering for å lage nye innlegg. Ønsker du å bruke klassisk redigering som standard? Gå til innstillinger for nettstedet.</string>
     <string name="description_expand">Uttvid</string>
     <string name="description_collapse">Trekk sammen</string>
     <string name="editor_retry_failed_uploads">Prøv å laste opp på nytt</string>
     <string name="editor_toast_failed_uploads">Noen medieopplastinger mislyktes. Du kan ikke lagre eller publisere ditt innlegg i denne situasjonen.</string>
     <string name="my_site_verify_your_email_without_email">Bekreft din e-postadresse - instruksjoner er sendt til din e-post</string>
     <string name="my_site_verify_your_email">Bekreft din e-postadresse - instruksjoner er sendt til %s</string>
-    <string name="error_media_recover_post_not_submitted">Kunne ikke laste opp media. Innlegg ikke sendt inn.</string>
-    <string name="error_media_recover_post_not_scheduled">Kunne ikke laste opp media. Innlegg ikke planlagt.</string>
-    <string name="error_media_recover_post_not_published">Kunne ikke laste opp media. Innlegg ikke publisert.</string>
-    <string name="error_media_recover_post">Kunne ikke laste opp media</string>
     <string name="link_dialog_button_cancel">Avbryt</string>
     <string name="link_dialog_button_ok">OK</string>
     <string name="link_dialog_edit_hint">http(s)://</string>
@@ -149,7 +211,6 @@ Language: nb_NO
     <string name="stats_management_news_card_message">Vekg hvilken statistikk å se og fokuser på de data du bryr deg mest om. Trykk %1$s i bunnen av innsikter for å tilpasse din statistikk.</string>
     <string name="stats_manage_your_stats">Behandle din statistikk</string>
     <string name="history_fetching_revisions">Henter revisjoner…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Mislyktes i å sette inn menia.\nVennligst trykk for alternativer.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Mislyktes i å sette inn media.\nVennligst trykk for å prøve igjen.</string>
     <string name="editor_uploading_draft">Din kladd lastes opp</string>
     <string name="post_uploading_draft">Laster opp kladd</string>
@@ -229,26 +290,6 @@ Language: nb_NO
     <string name="stats_site_not_loaded_yet">Nettstedet er ikke lastet inn ennå</string>
     <string name="stats_more_posts">Flere innlegg</string>
     <string name="stats_fewer_posts">Færre innlegg</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Fjern innhold</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Flytt blokk ned</string>
-    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Flytt blokk opp</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">Legg til blokk her</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Ikke støttet</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Ikke støttet blokktype.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Ikke støttet blokk</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Lim inn URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">Velg bilde</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Tilbakestil alle innstillinger</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alt-tekst</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Mediebiblioteket i WordPress</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Ta en bilde</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Velg fra enheten</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Start å skrive…</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Fjern lenke</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Legg til lenketekst</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Lenketekst</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Legg til URL</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Lenke satt inn</string>
     <string name="new_site_creation_preview_back_pressed_warning">Din kan miste din fremdrift. Er du sikker på at du vil gå ut?</string>
     <string name="plans_loading_error_with_cache_button">Se pakker likevel</string>
     <string name="plans_loading_error_with_cache_subtitle">En Internet-forbindelse er nødvendig for å vise pakker, så detaljer kan være utdatert.</string>
@@ -432,16 +473,11 @@ Language: nb_NO
     <string name="history_empty_subtitle_post">Når du gjør endringer i ditt innlegg vil du kunne se historikken her</string>
     <string name="history_empty_subtitle_page">Når du gjør endringer på din side vil du kunne se historikken her</string>
     <string name="description_user">Bruker-avatar</string>
-    <string name="async_promo_description_schedule_page">Du kan nå forlate redigeringsverktøyet og din side vil bli lagret og planlagt i bakgrunnen! Prøv det ut!</string>
-    <string name="async_promo_description_publish_post">Du kan nå forlate redigeringsverktøyet og ditt innlegg vil bli lagret og publisert i bakgrunnen! Prøv det ut! </string>
-    <string name="async_promo_description_publish_page">Du kan nå forlate redigeringsverktøyet og din side vil bli lagret og publisert i bakgrunnen! Prøv det ut! </string>
     <string name="image_size_full_label">Full størrelse</string>
     <string name="image_size_large_label">Stor</string>
     <string name="image_size_medium_label">Middels</string>
     <string name="image_size_thumbnail_label">Miniatyrbilde</string>
     <string name="menu_history">Historikk</string>
-    <string name="async_promo_schedule_now">Planlegg nå</string>
-    <string name="async_promo_title_schedule">Planlegg med tillit</string>
     <string name="pages_pending">Venter på gennomgang</string>
     <string name="pages_open_page_error">Den valgte siden er ikke tilgjengelig</string>
     <string name="news_card_announcement_action_sample_announcement">[Les mer]</string>
@@ -745,7 +781,6 @@ Language: nb_NO
     <string name="version_with_name_param">Versjn %s</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Utgiver: %s</string>
-    <string name="async_promo_publish_now">Publiser nå</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d sider / innlegg gjenstår</string>
     <string name="uploading_subtitle_pages_only_one">1 side gjenstår</string>
@@ -810,6 +845,7 @@ Language: nb_NO
     <string name="signup_epilogue_heading">Ny konto</string>
     <string name="signup_epilogue_error_button_positive">Prøv igjen</string>
     <string name="signup_epilogue_error_button_negative">Tilbakestill</string>
+    <string name="signup_epilogue_error_avatar">Det oppsto problemer med å laste opp din avatar.</string>
     <string name="signup_email_header">For å lage din nye brukerkonto på WordPres.com, vennligst oppgi dn epost-adresse.</string>
     <string name="signup_email_error_generic">Det opsto problemer med å kontrollere din e-postadresse.</string>
     <string name="sign_up">Registrer deg på WordPress.com</string>
@@ -884,6 +920,7 @@ Language: nb_NO
     <string name="plugin_icon_content_description">Utvidelsesikon</string>
     <string name="plugin_home_page">Utvidelsens hjemmeside</string>
     <string name="wordpress_dot_org_plugin_page">WordPress.org-utvidelsesside</string>
+    <string name="plugin_remove_dialog_message">Er du sikker på at du vil fjerne %1$s fra %2$s?\n\nDette vil deaktivere utvidelsen og slette alle tilknyttede filer og data.</string>
     <string name="plugin_remove_dialog_title">Fjerner utvidelsen</string>
     <string name="plugin_remove_progress_dialog_message">Fjerner %s …</string>
     <string name="plugin_disable_progress_dialog_message">Skrur av %s …</string>
@@ -913,7 +950,6 @@ Language: nb_NO
     <string name="login_empty_password">Vennligst skriv inn et passord</string>
     <string name="login_text_otp_another">Send meg en annen kode i stedet.</string>
     <string name="enter_verification_code_sms">Vi sendte en tekstmelding til telefonnummeret som slutter på %s. Vennligst oppgi bekreftelseskoden o SMS-en.</string>
-    <string name="error_generic_error">Kunne ikke utføre operasjonen</string>
     <string name="image_size">Størrelse</string>
     <string name="uploading_subtitle_media_only_one">1 fil igjen</string>
     <string name="uploading_subtitle_media_only">%1$d av %2$d filer igjen</string>
@@ -1013,9 +1049,6 @@ Language: nb_NO
     <string name="error_media_canceled">Opplasting av medie ble avbrutt</string>
     <string name="error_upload_page_media_param">Det var en feil under opplastning av mediene i denne siden: %s.</string>
     <string name="error_upload_page_param">Det var en feil under opplastning av denne siden: %s.</string>
-    <string name="async_promo_link">Hvordan fungerer det?</string>
-    <string name="async_promo_description_schedule_post">Du kan forlate redigeringen, og innlegget ditt vil lagres og vente bak kulissene! Prøv det ut, da vel!</string>
-    <string name="async_promo_title_publish">Publiser med trygghet</string>
     <string name="editor_uploading_post">Innlegget ditt lastes opp</string>
     <string name="uploading_media">Laster opp medie …</string>
     <string name="page_scheduled">Siden har blitt planlagt</string>
@@ -1116,8 +1149,6 @@ Language: nb_NO
     <string name="media_images">Bilder</string>
     <string name="media_all">Alle</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s ble nektet tilgang til bildene dine. For å fikse dette, rediger tillatelsene dine og skru på %2$s.</string>
-    <string name="format_bar_description_link">Lenke</string>
-    <string name="format_bar_description_media">Medie</string>
     <string name="reader_view_comments">Vis kommentarer</string>
     <string name="site_settings_video_quality_hint">Kvaliteten til videoer. Høyere verdier = bedre kvalitet.</string>
     <string name="site_settings_video_width_hint">Endrer størrelsen til videoer i innlegg til denne størrelsen</string>
@@ -1245,7 +1276,6 @@ Language: nb_NO
     <string name="xmlrpc_endpoint_forbidden_error">Klarte ikke å koble til. Vi mottok en 403-feil når vi prøvde å få tilgang til ditt nettsteds XMLRPC-sluttpunkt.\nAppen behøver det for å kunne kommunisere med nettstedet ditt. Kontakt verten din for å løse dette problemet.</string>
     <string name="xmlrpc_post_blocked_error">Klarte ikke å koble til. Verten din blokkerer POST-forespørsler, og appen trenger den for\nå kunne kommunisere med nettstedet ditt. Kontakt verten din for å løse dette problemet.</string>
     <string name="reader_hint_search_followed_sites">Søk i fulgte nettsteder</string>
-    <string name="visual_editor_disabled">Visuell redigerer deaktivert</string>
     <string name="pending_draft_one_generic">Ikke la den henge og slenge! \'%1$s\' venter på å bli publisert.</string>
     <string name="pending_draft_one_month">Ikke la den daffe rundt! \'%1$s\' venter på å bli publisert.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' er fortsatt et utkast. Husk på å publisere den!</string>
@@ -1312,28 +1342,12 @@ Language: nb_NO
     <string name="error_fetch_email_followers_list">Kunne ikke hente inn nettstedets E-postfølgere</string>
     <string name="error_fetch_followers_list">Kunne ikke hente inn nettstedets følgere</string>
     <string name="editor_failed_uploads_switch_html">Noen medieopplastninger har mislyktes. Du kan ikke bytte til HTML-modus i\n  denne tilstanden. Vil du fjerne alle mislykkede opplastninger og fortsette?</string>
-    <string name="image_thumbnail">Miniatyrbilde</string>
-    <string name="visual_editor">Visuell redigerer</string>
-    <string name="format_bar_description_html">HTML</string>
-    <string name="format_bar_description_ol">Sortert liste</string>
-    <string name="format_bar_description_ul">Usortert liste</string>
-    <string name="format_bar_description_more">Les mer</string>
-    <string name="format_bar_description_quote">Blokksitering</string>
-    <string name="format_bar_description_strike">Gjennomstreking</string>
-    <string name="format_bar_description_underline">Understreking</string>
-    <string name="format_bar_description_italic">Kursiv</string>
-    <string name="format_bar_description_bold">Fet</string>
     <string name="image_width">Bredde</string>
     <string name="image_link_to">Lenke til</string>
-    <string name="image_alt_text">Alternativ tekst</string>
     <string name="image_caption">Bildetekst</string>
     <string name="image_settings_save_toast">Endringene er lagret</string>
     <string name="image_settings_dismiss_dialog_title">Vil du forkaste ulagrede endringer?</string>
     <string name="stop_upload_dialog_title">Vil du avbryte opplastningen?</string>
-    <string name="alert_error_adding_media">En feil oppstod under innsmetting av medie</string>
-    <string name="alert_action_while_uploading">Du laster for øyeblikket opp medier. Vennligst vent på at dette blir ferdig.</string>
-    <string name="alert_insert_image_html_mode">Kan ikke sette inn medier direkte når du er i HTML-modus. Vennligst bytt tilbake til visuell modus.</string>
-    <string name="uploading_gallery_placeholder">Laster opp et galleri …</string>
     <string name="tap_to_try_again">Trykk for å prøve igjen!</string>
     <string name="invite_sent">Invitasjonenssendingen var vellykket</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -1358,7 +1372,6 @@ Language: nb_NO
     <string name="reader_hint_post_search">Søk i WordPress</string>
     <string name="reader_title_related_post_detail">Relatert innlegg</string>
     <string name="preview_screen_links_disabled">Lenker er deaktivert på forhåndsvisningsskjermen</string>
-    <string name="draft_explainer">Dette innlegget er et utkast som ikke har blitt publisert</string>
     <string name="send">Send</string>
     <string name="person_removed">%1$s ble vellykket fjernet</string>
     <string name="user_remove_confirmation_message">Hvis du fjerner %1$s, vil den brukeren ikke lenger få tilgang til dette nettstedet, men alt innhold som ble laget av %1$s vil forbli på nettstedet.\n\nVil du fortsatt fjerne denne brukeren?</string>
@@ -1378,7 +1391,6 @@ Language: nb_NO
     <string name="logging_in">Logger inn</string>
     <string name="enter_your_password_instead">Skriv inn passordet ditt istedet</string>
     <string name="web_address_dialog_hint">Vises offentlig når du kommenterer.</string>
-    <string name="new_editor_reflection_error">Den visuelle redigereren er ikke kompatibel med\n   enheten din. Den ble automatisk skrudd av.</string>
     <string name="capture_or_pick_photo">Ta eller velg et bilde</string>
     <string name="plans">Planer</string>
     <string name="plan">Plan</string>
@@ -1458,10 +1470,6 @@ Language: nb_NO
     <string name="error_refresh_comments_showing_older">Kommentarene kunne ikke bli oppfrisket for øyeblikket, så vi viser eldre kommentarer istedet</string>
     <string name="post_settings_set_featured_image">Velg fremhevet bilde</string>
     <string name="post_settings_featured_image">Fremhevet bilde</string>
-    <string name="visual_editor_enabled">Visuell redigerer aktivert</string>
-    <string name="editor_content_placeholder">Del historien din her …</string>
-    <string name="editor_page_title_placeholder">Sidens tittel</string>
-    <string name="editor_post_title_placeholder">Innleggets tittel</string>
     <string name="email_address">E-postadresse</string>
     <string name="dlg_sure_to_delete_comments">Vil du permanent slette disse kommentarene?</string>
     <string name="dlg_sure_to_delete_comment">Vil du permanent slette denne kommentaren?</string>
@@ -1632,8 +1640,6 @@ Language: nb_NO
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_menu_tags">Rediger stikkord og nettsteder</string>
     <string name="reader_title_post_detail">Leser-innlegg</string>
-    <string name="local_draft_explainer">Dette innlegget er en lokal kladd som ikke er publisert</string>
-    <string name="local_changes_explainer">Dette innlegget har lokale endringer som ikke er publisert</string>
     <string name="notifications_push_summary">Innstillinger for notifikasjoner som dukker opp på din enhet.</string>
     <string name="notifications_email_summary">Innstillinger for notifikasjoner som sendes til din kontotilknyttede E-postadresse.</string>
     <string name="notifications_tab_summary">Innstillinger for notifikasjoner som dukker opp i notifikasjonsfanen.</string>
@@ -1818,8 +1824,6 @@ Language: nb_NO
     <string name="category_name">Kategorinavn</string>
     <string name="add_new_category">Legg til ny kategori</string>
     <string name="view_in_browser">Åpne i nettleseren</string>
-    <string name="preview_post">Forhåndsvis innlegg</string>
-    <string name="preview_page">Forhåndsvis side</string>
     <string name="remove_account">Fjern nettsted</string>
     <string name="toast_comment_unedited">Kommentaren har ikke endret seg</string>
     <string name="content_required">Kommentering er påkrevd</string>
@@ -1847,10 +1851,8 @@ Language: nb_NO
     <string name="delete_post">Slette innlegg?</string>
     <string name="post_settings">Innleggsinnstillinger</string>
     <string name="file_not_found">Klarte ikke å finne filen som skulle lastes opp. Ble den kanskje slettet eller flyttet?</string>
-    <string name="horizontal_alignment">Loddrett posisjonering</string>
     <string name="local_draft">Lokalt utkast</string>
     <string name="page_settings">Sideinnstillinger</string>
-    <string name="create_a_link">Lag en lenke</string>
     <string name="link_enter_url_text">Lenketekst (valgfritt)</string>
     <string name="cannot_delete_multi_media_items">Noen medier kan ikke bli slettet for øyeblikket. Prøv igjen senere.</string>
     <string name="media_error_no_permission">Du har ikke tillatelse til å se mediebiblioteket</string>
@@ -1864,7 +1866,6 @@ Language: nb_NO
     <string name="reader_empty_posts_in_tag_updating">Henter innlegg …</string>
     <string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uten en synlig blogg</string>
     <string name="comment_spammed">Kommentar merket som useriøs</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Svar</string>
     <string name="reader_likes_multi">%,d personer liker dette</string>
     <string name="reader_likes_you_and_multi">Du og %,d andre liker dette</string>
@@ -1921,7 +1922,6 @@ Language: nb_NO
     <string name="httpuser">HTTP-brukernavn</string>
     <string name="error_media_upload">Det oppsto en feil under opplasting av media.</string>
     <string name="publish_date">Publiser</string>
-    <string name="post_content">Innhold (trykk for å legge til tekst eller media)</string>
     <string name="incorrect_credentials">Feil brukernavn eller passord</string>
     <string name="log_in">Logg inn</string>
     <string name="username">Brukernavn</string>
@@ -1929,15 +1929,11 @@ Language: nb_NO
     <string name="reader">Nettleser</string>
     <string name="anonymous">Anonym</string>
     <string name="posts">Innlegg</string>
-    <string name="width">Bredde</string>
-    <string name="caption">Bildetekst (valgfritt)</string>
     <string name="pages">Sider</string>
     <string name="no_network_title">Ingen nettverk tilgjengelige</string>
-    <string name="featured_in_post">Legg til bilde i innlegget</string>
     <string name="ok">OK</string>
     <string name="blogusername">Bloggbrukernavn</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Laster opp …</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">Lisens</string>
     <string name="version">Versjon</string>

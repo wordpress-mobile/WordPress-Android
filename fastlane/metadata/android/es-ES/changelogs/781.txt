@@ -1,6 +1,0 @@
-13.3:
-* Tus estadísticas se han vuelto mucho más adaptables.
-* Ahora puedes cambiar tu nombre de usuario en los ajustes de la cuenta.
-* ¿Retocando los ajustes de rendimiento de Jetpack? ¡Hazlo directamente desde la aplicación!
-* Si eres un editor prolífico con más de 100 páginas en tu sitio, las listaremos cronológicamente para un acceso más rápido.
-* Hemos añadido muchas actualizaciones al editor de bloques, como el estilo de texto enriquecido en los títulos de los vídeos, adiciones de bloques más intuitivas y guardado automático del contenido tras dos segundos de inactividad.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-21 11:52:29+0000
+Translation-Revision-Date: 2019-10-15 10:29:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: el_GR
@@ -10,10 +10,6 @@ Language: el_GR
     <string name="post_list_published">Δημοσιευμένα</string>
     <string name="post_list_author_everyone">Όλοι</string>
     <string name="post_list_author_me">Εγώ</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Μη υποστηριζόμενο</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Εναλλακτικό κείμενο</string>
-    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Κείμενο συνδέσμου</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Εισάγετε URL</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
     <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="quick_start_sites">Επόμενα βήματα</string>
@@ -108,9 +104,8 @@ Language: el_GR
     <string name="image_size_full_label">Πλήρες μέγεθος</string>
     <string name="image_size_large_label">Μεγάλο</string>
     <string name="image_size_medium_label">Μέτριο</string>
-    <string name="image_size_thumbnail_label">Επιλεγμένη εικόνα</string>
+    <string name="image_size_thumbnail_label">Μικρογραφία</string>
     <string name="menu_history">Ιστορία</string>
-    <string name="async_promo_schedule_now">Προγραμματίστε τώρα</string>
     <string name="pages_pending">Εκκρεμής αναθεώρηση</string>
     <string name="pages_open_page_error">Η επιλεγμένη σελίδα δεν είναι διαθέσιμη</string>
     <string name="news_card_announcement_action_sample_announcement">[Περισσότερα]</string>
@@ -282,7 +277,6 @@ Language: el_GR
     <string name="version_with_name_param">Έκδοση %s</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Εκδότης: %s</string>
-    <string name="async_promo_publish_now">Δημοσίευση τώρα</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_mixed_post_singular_media_one">1 άρθρο και 1 αρχείο απομένουν</string>
     <string name="uploading_subtitle_mixed_page_singular_media_one">1 σελίδα και 1 αρχείο απομένουν</string>
@@ -443,7 +437,6 @@ Language: el_GR
     <string name="add_media_progress">Προσθήκη πολυμέσων</string>
     <string name="reader_excerpt_link">Επισκεφθείτε το %s για περισσότερα</string>
     <string name="error_post_does_not_exist">Αυτό το άρθρο δεν υπάρχει πια</string>
-    <string name="async_promo_link">Πως δουλεύει;</string>
     <string name="editor_uploading_post">Το άρθρο σας μεταφορτώνεται</string>
     <string name="uploading_media">Μεταφόρτωση πολυμέσων …</string>
     <string name="button_retry">Προσπαθήστε ξανά</string>
@@ -491,8 +484,6 @@ Language: el_GR
     <string name="media_documents">Κείμενα</string>
     <string name="media_images">Εικόνες</string>
     <string name="media_all">Όλα</string>
-    <string name="format_bar_description_link">Σύνδεσμος</string>
-    <string name="format_bar_description_media">Πολυμέσα</string>
     <string name="reader_view_comments">Εμφάνιση σχολίων</string>
     <string name="site_settings_optimize_videos">Βελτιστοποίηση Βίντεο</string>
     <string name="report_bug">Αναφορά σφάλματος</string>
@@ -595,7 +586,6 @@ Language: el_GR
     <string name="xmlrpc_endpoint_forbidden_error">Αδυναμία σύνδεσης. Λάβαμε ένα σφάλμα 403 προσπαθώντας να προσπελάσουμε\nτο σημείο επαφής XMLRPC του ιστοτόπου σας. Η εφαρμογή το χρειάζεται ώστε επικοινωνήσει με τον ιστότοπό σας. Επικοινωνήστε με τον πάροχο φιλοξενίας σας για να λύσετε\nαυτό το πρόβλημα.</string>
     <string name="xmlrpc_post_blocked_error">Αδυναμία σύνδεσης. Ο πάροχος φιλοξενίας σας μπλοκάρει τα αιτήματα POST και η εφαρμογή τα χρειάζεται\nώστε να επικοινωνήσει με τον ιστότοπό σας. Επικοινωνήστε με τον πάροχο φιλοξενίας σας για να λύσετε αυτό το πρόβλημα.</string>
     <string name="reader_hint_search_followed_sites">Αναζήτηση σε παρακολουθούμενους ιστότοπους.</string>
-    <string name="visual_editor_disabled">Ο Επεξεργαστής είναι απενεργοποημένος</string>
     <string name="pending_draft_one_generic">Μην το αφήνετε να εκκρεμεί! Το \'%1$s\' περιμένει να δημοσιευτεί.</string>
     <string name="pending_draft_one_month">Μην το αφήνετε να εκκρεμεί! Το \'%1$s\' περιμένει να δημοσιευτεί.</string>
     <string name="pending_draft_one_week_2">Το \'%1$s\' παραμένει προσχέδιο. Θυμηθείτε να το δημοσιεύσετε!</string>
@@ -662,28 +652,12 @@ Language: el_GR
     <string name="error_fetch_email_followers_list">Αδυναμία ανάκτησης ακολούθων μέσω e-mail</string>
     <string name="error_fetch_followers_list">Αδυναμία ανάκτησης ακολούθων ιστοτόπου</string>
     <string name="editor_failed_uploads_switch_html">Μερικές μεταφορτώσεις πολυμέσων απέτυχαν. Δεν μπορείτε να μεταβείτε σε λειτουργία HTML \n        σε αυτή την κατάσταση. Αφαίρεση όλων των αποτυχημένων μεταφορτώσεων και συνέχεια;</string>
-    <string name="image_thumbnail">Μικρογραφία εικόνας</string>
-    <string name="visual_editor">Κειμενογράφος</string>
-    <string name="format_bar_description_html">Λειτουργία HTML</string>
-    <string name="format_bar_description_ol">Αριθμητική λίστα</string>
-    <string name="format_bar_description_ul">Λίστα με κουκκίδες</string>
-    <string name="format_bar_description_more">Διαβάστε περισσότερα</string>
-    <string name="format_bar_description_quote">Παράθεμα</string>
-    <string name="format_bar_description_strike">Διεγραμμένα</string>
-    <string name="format_bar_description_underline">Υπογράμμιση</string>
-    <string name="format_bar_description_italic">Πλάγια</string>
-    <string name="format_bar_description_bold">Έντονα</string>
     <string name="image_width">Πλάτος</string>
     <string name="image_link_to">Σύνδεση στο</string>
-    <string name="image_alt_text">Εναλλακτικό κείμενο</string>
     <string name="image_caption">Λεζάντα</string>
     <string name="image_settings_save_toast">Οι αλλαγές αποθηκεύτηκαν</string>
     <string name="image_settings_dismiss_dialog_title">Απόρριψη μη αποθηκευμένων αλλαγών;</string>
     <string name="stop_upload_dialog_title">Διακοπή μεταφόρτωσης;</string>
-    <string name="alert_error_adding_media">Παρουσιάστηκε σφάλμα κατά την εισαγωγή πολυμέσων</string>
-    <string name="alert_action_while_uploading">Αυτή την στιγμή μεταφορτώνετε πολυμέσα. Παρακαλώ περιμένετε μέχρι να ολοκληρωθεί.</string>
-    <string name="alert_insert_image_html_mode">Δεν μπορείτε να προσθέσετε πολυμέσα απευθείας σε λειτουργία HTML. Παρακαλώ επιστρέψτε σε λειτουργία κειμενογράφου.</string>
-    <string name="uploading_gallery_placeholder">Μεταφόρτωση συλλογής…</string>
     <string name="tap_to_try_again">Πατήστε για να δοκιμάσετε ξανά!</string>
     <string name="invite_sent">Η πρόσκληση στάλθηκε επιτυχώς</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -708,7 +682,6 @@ Language: el_GR
     <string name="reader_hint_post_search">Αναζήτηση στο WordPress</string>
     <string name="reader_title_related_post_detail">Σχετικό Άρθρο</string>
     <string name="preview_screen_links_disabled">Οι σύνδεσμοι είναι απενεργοποιημένοι στην οθόνη προεπισκόπησης</string>
-    <string name="draft_explainer">Αυτό το άρθρο είναι ένα προσχέδιο που δεν έχει δημοσιευθεί</string>
     <string name="send">Αποστολή</string>
     <string name="person_removed">Ο %1$s αφαιρέθηκε επιτυχώς</string>
     <string name="user_remove_confirmation_message">Αν αφαιρέσετε τον %1$s, αυτός ο χρήστης δεν θα μπορεί πλέον να συνδεθεί σε αυτό τον ιστότοπο αλλά ό,τι περιεχόμενο δημιουργήθηκε από τον %1$s θα παραμείνει στον ιστότοπο.\n\nΘέλετε ακόμη να αφαιρέσετε το χρήστη;</string>
@@ -728,7 +701,6 @@ Language: el_GR
     <string name="logging_in">Γίνεται σύνδεση</string>
     <string name="enter_your_password_instead">Εναλλακτικά, εισάγετε το συνθηματικό σας</string>
     <string name="web_address_dialog_hint">Εμφανίζεται δημοσίως όταν σχολιάζετε.</string>
-    <string name="new_editor_reflection_error">Ο κειμενογράφος δεν είναι συμβατός με τη συσκευή σας.\nΑπενεργοποιήθηκε αυτόματα.</string>
     <string name="capture_or_pick_photo">Τραβήξτε ή επιλέξτε φωτογραφία</string>
     <string name="plans">Προγράμματα</string>
     <string name="plan">Πρόγραμμα</string>
@@ -772,7 +744,7 @@ Language: el_GR
     <string name="post_format_gallery">Βιβλιοθήκη πολυμέσων</string>
     <string name="post_format_chat">Συζήτηση</string>
     <string name="post_format_audio">Ήχος</string>
-    <string name="post_format_aside">Πλευρικό</string>
+    <string name="post_format_aside">Μικροάρθρο</string>
     <string name="notif_events">Πληροφορίες για μαθήματα και εκδηλώσεις του WordPress.com (διαδικτυακά και φυσικά).</string>
     <string name="notif_surveys">Ευκαιρίες συμμετοχής σε έρευνες και δημοσκοπήσεις του WordPress.com.</string>
     <string name="notif_tips">Συμβουλές για να αξιοποιήσετε στο μέγιστο το WordPress.com.</string>
@@ -808,10 +780,6 @@ Language: el_GR
     <string name="error_refresh_comments_showing_older">Δεν ήταν δυνατή η ανανέωση των σχολίων αυτή τη στιγμή - εμφάνιση παλαιότερων σχολίων</string>
     <string name="post_settings_set_featured_image">Ορισμός προβαλλόμενης εικόνας</string>
     <string name="post_settings_featured_image">Προβαλλόμενη Εικόνα</string>
-    <string name="visual_editor_enabled">Ο οπτικοποιημένος επεξεργαστής ενεργοποιήθηκε</string>
-    <string name="editor_content_placeholder">Μοιραστείτε την ιστορία σας εδώ…</string>
-    <string name="editor_page_title_placeholder">Τίτλος Σελίδας</string>
-    <string name="editor_post_title_placeholder">Τίτλος Άρθρου</string>
     <string name="email_address">Διεύθυνση email</string>
     <string name="dlg_sure_to_delete_comments">Να διαγραφούν οριστικά αυτά τα σχόλια;</string>
     <string name="dlg_sure_to_delete_comment">Οριστική διαγραφή αυτού του σχολίου;</string>
@@ -982,8 +950,6 @@ Language: el_GR
     <string name="reader_short_like_count_one">1 \"Like\"</string>
     <string name="reader_menu_tags">Επεξεργασία ετικετών και ιστότοπων</string>
     <string name="reader_title_post_detail">Άρθρο Αναγνώστη</string>
-    <string name="local_draft_explainer">Αυτό το άρθρο είναι ένα τοπικό προσχέδιο που δεν έχει δημοσιευτεί</string>
-    <string name="local_changes_explainer">Αυτό το άρθρο έχει τοπικές αλλαγές που δεν έχουν δημοσιευθεί</string>
     <string name="notifications_push_summary">Ρυθμίσεις για τις ειδοποιήσεις που εμφανίζονται στη συσκευή σας.</string>
     <string name="notifications_email_summary">Ρυθμίσεις για τις ειδοποιήσεις που στέλνονται στο email που είναι συνδεδεμένο με το λογαριασμό σας.</string>
     <string name="notifications_tab_summary">Ρυθμίσεις για τις ειδοποιήσεις που εμφανίζονται στην καρτέλα Ειδοποιήσεις.</string>
@@ -1166,8 +1132,6 @@ Language: el_GR
     <string name="category_name">Όνομα κατηγορίας</string>
     <string name="add_new_category">Προσθήκη νέας κατηγορίας</string>
     <string name="view_in_browser">Προβολή στον περιηγητή</string>
-    <string name="preview_post">Προεπισκόπηση άρθρου</string>
-    <string name="preview_page">Προεπισκόπηση σελίδας</string>
     <string name="remove_account">Αφαίρεση ιστότοπου</string>
     <string name="toast_comment_unedited">Το σχόλιο δεν έχει αλλάξει</string>
     <string name="content_required">Απαιτείται σχόλιο</string>
@@ -1195,10 +1159,8 @@ Language: el_GR
     <string name="delete_post">Διαγραφή ανάρτησης;</string>
     <string name="post_settings">Ρυθμίσεις άρθρου</string>
     <string name="file_not_found">Αδυναμία εύρεσης του αρχείου πολυμέσων για μεταφόρτωση. Μήπως διαγράφηκε ή μετακινήθηκε;</string>
-    <string name="horizontal_alignment">Οριζόντια ευθυγράμμιση</string>
     <string name="local_draft">Τοπικό προσχέδιο</string>
     <string name="page_settings">Ρυθμίσεις σελίδας</string>
-    <string name="create_a_link">Δημιουργία συνδέσμου</string>
     <string name="link_enter_url_text">Κείμενο συνδέσμου (προαιρετικά)</string>
     <string name="cannot_delete_multi_media_items">Μερικά πολυμέσα δεν ήταν δυνατόν να διαγραφούν αυτή τη στιγμή. Δοκιμάστε ξανά αργότερα.</string>
     <string name="media_error_no_permission">Δεν έχετε δικαίωμα προβολής της βιβλιοθήκης πολυμέσων</string>
@@ -1213,7 +1175,6 @@ Language: el_GR
     <string name="reader_empty_posts_in_tag_updating">Γίνεται λήψη άρθρων…</string>
     <string name="cant_share_no_visible_blog">Δε μπορείτε να μοιραστείτε στο WordPress χωρίς ένα ορατό ιστολόγιο</string>
     <string name="comment_spammed">Το σχόλιο αυτό έχει σημειωθεί ως ανεπιθύμητο</string>
-    <string name="video">Βίντεο</string>
     <string name="reader_label_reply">Απάντηση</string>
     <string name="reader_likes_multi">Αυτό αρέσει σε %,d ανθρώπους</string>
     <string name="reader_likes_you_and_multi">Αυτό αρέσει σε εσάς και σε άλλους %,d</string>
@@ -1270,7 +1231,6 @@ Language: el_GR
     <string name="httpuser">Όνομα χρήστη HTTP</string>
     <string name="error_media_upload">Ένα σφάλμα συνέβη κατά το ανέβασμα των πολυμέσων</string>
     <string name="publish_date">Δημοσίευση</string>
-    <string name="post_content">Περιεχόμενο (πατήστε για να προσθέσετε κείμενο και πολυμέσα)</string>
     <string name="incorrect_credentials">Λανθασμένος συνδυασμός ονόματος χρήστη και κωδικού.</string>
     <string name="log_in">Σύνδεση</string>
     <string name="username">Ψευδώνυμο</string>
@@ -1278,15 +1238,11 @@ Language: el_GR
     <string name="reader">Αναγνώστης</string>
     <string name="anonymous">Ανώνυμος</string>
     <string name="posts">Άρθρα</string>
-    <string name="width">Πλάτος</string>
-    <string name="caption">Λεζάντα (προαιρετική)</string>
     <string name="pages">Σελίδες</string>
     <string name="no_network_title">Το διαδίκτυο δεν είναι διαθέσιμο</string>
-    <string name="featured_in_post">Συμπεριλάβετε την εικόνα στο περιεχόμενο του άρθρου</string>
     <string name="ok">ΟΚ</string>
     <string name="blogusername">όνομα χρήστη ιστολογίου</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Γίνεται μεταφόρτωση</string>
     <string name="app_title">WordPress για Android</string>
     <string name="tos">Όροι Χρήσης</string>
     <string name="version">Έκδοση</string>

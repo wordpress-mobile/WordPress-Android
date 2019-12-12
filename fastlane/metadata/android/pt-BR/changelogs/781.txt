@@ -1,6 +1,0 @@
-13.3:
-* Suas estatísticas estão mais responsivas.
-* Agora você pode mudar o nome de usuário em Configurações da conta.
-* Ajustando suas configurações de desempenho do Jetpack? Faça direto pelo aplicativo!
-* Caso você tenha mais de 100 páginas em seu site, elas serão exibidas em ordem cronológica para facilitar o acesso.
-* Adicionamos várias melhorias ao editor de blocos como edição de texto em legendas de vídeos, adição de blocos mais intuitiva e salvamento automático de conteúdo após 2 segundos de inatividade.

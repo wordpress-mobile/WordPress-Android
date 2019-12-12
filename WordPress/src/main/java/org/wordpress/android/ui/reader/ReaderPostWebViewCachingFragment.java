@@ -8,24 +8,30 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.utils.FeaturedImageUtils;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
+
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 
 /**
  * Fragment responsible for caching post content into WebView.
  * Caching happens on UI thread, so any configuration change will restart it from scratch.
  */
-public class ReaderPostWebViewCachingFragment extends Fragment {
+public class ReaderPostWebViewCachingFragment extends DaggerFragment {
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_POST_ID = "post_id";
 
     private long mBlogId;
     private long mPostId;
+
+    @Inject FeaturedImageUtils mFeaturedImageUtils;
 
     public static ReaderPostWebViewCachingFragment newInstance(long blogId, long postId) {
         ReaderPostWebViewCachingFragment fragment = new ReaderPostWebViewCachingFragment();
@@ -63,7 +69,8 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
                 }
             });
 
-            ReaderPostRenderer rendered = new ReaderPostRenderer((ReaderWebView) view, post);
+            ReaderPostRenderer rendered =
+                    new ReaderPostRenderer((ReaderWebView) view, post, mFeaturedImageUtils);
             rendered.beginRender(); // rendering will cache post content using native WebView implementation.
         } else {
             // abort mission if no network is available

@@ -1,136 +1,90 @@
-<ar>
-13.3:
-* أصبحت الإحصائيات الخاصة بك أكثر استجابة بكثير.
-* يمكنك الآن تغيير اسم المستخدم الخاص بك في إعدادات الحساب.
-* تودّ التغيير والتبديل في إعدادات الأداء Jetpack الخاص بك؟ قم بذلك مباشرة من التطبيق!
-* إذا كنت ناشرًا كثير النشر ولديك أكثر من 100 صفحة على موقعك، فسوف ندرجها زمنياً للوصول إليها بشكل أسرع.
-* لقد أضفنا العديد من الترقيات إلى محرر المكوّنات (Block Editor)، مثل تصميم النص الغني في التسميات التوضيحية للفيديو وإضافات مكوّن أكثر سهولة، وحفظ المحتوى التلقائي بعد ثانيتين من عدم النشاط.
-</ar>
 <de-DE>
-13.3:
-* Deine Statistiken sind jetzt noch reaktionsfähiger.
-* Du kannst jetzt deinen Benutzernamen in den Kontoeinstellungen ändern.
-* Du möchtest die Einstellungen deiner Jetpack-Performance optimieren? Jetzt kannst du das direkt in der App tun!
-* Wenn du ein produktiver Publisher mit mehr als 100 Seiten auf deiner Website bist, listen wir sie für schnelleren Zugriff chronologisch auf.
-* Wir haben dem Block-Editor viele Upgrades hinzugefügt, wie Rich Text-Stile in Videountertiteln, intuitivere Blockfunktionen und die automatische Inhaltsspeicherung nach 2 Sekunden Inaktivität.
+13.7:
+* Updates im Block-Editor: Nicht unterstützte Blöcke zeigen jetzt einen Titel an, Indikatoren für neue Blöcke werden sowohl in leeren Editoren als auch nach dem letzten Block angezeigt, Hinzufügen von Links aus bestehenden URLs in deiner Zwischenablage, Medien- und Textblöcke haben jetzt mehr Ausrichtungsoptionen, Bildblöcke sind jetzt für die Vorschau im Vollbildmodus antippbar.
+
+* Allgemeine Verbesserungen: Einige Fehler und Abstürze wurden behoben, im Reader gibt es einen besseren Support für den TalkBack-Screenreader.
 </de-DE>
 <en-US>
-13.3:
-* Your stats have just become a lot more responsive.
-* You can now change your username in Account Settings.
-* Tweaking your Jetpack performance settings? Do it directly from the app!
-* If you’re a prolific publisher with more than 100 pages on your site, we’ll list them chronologically for faster access.
-* We’ve added many upgrades to the Block Editor, like rich-text styling in video captions, more intuitive block additions, and automatic content saves after two seconds of inactivity.
+13.7:
+* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.
+
+* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.
 </en-US>
 <es-ES>
-13.3:
-* Tus estadísticas se han vuelto mucho más adaptables.
-* Ahora puedes cambiar tu nombre de usuario en los ajustes de la cuenta.
-* ¿Retocando los ajustes de rendimiento de Jetpack? ¡Hazlo directamente desde la aplicación!
-* Si eres un editor prolífico con más de 100 páginas en tu sitio, las listaremos cronológicamente para un acceso más rápido.
-* Hemos añadido muchas actualizaciones al editor de bloques, como el estilo de texto enriquecido en los títulos de los vídeos, adiciones de bloques más intuitivas y guardado automático del contenido tras dos segundos de inactividad.
+13.7:
+* Actualizaciones del editor de bloques: ahora, los bloques no compatibles muestran un título, los indicadores de nuevos bloques se muestran tanto en los editores vacíos como después del último bloque, añadir enlaces a las URLs existentes en tu portapapeles, los bloques de medios y texto tienen más opciones de alineación, los bloques de imagen se pueden tocar para obtener una vista previa a pantalla completa.
+
+* Mejoras generales: corregidos algunos fallos y roturas y añadido una mejor compatibilidad para el lector de pantalla TalkBack en el lector.
 </es-ES>
 <fr-CA>
-13.3 :
-* Vos statistiques ont considérablement gagné en fluidité.
-* Vous pouvez désormais modifier votre nom d'utilisateur dans les paramètres de votre compte.
-* Vous souhaitez modifier vos paramètres de performances Jetpack ? Faites-le directement dans l'application !
-* Si vous êtes prolifique et que vous avez publié plus de 100 pages sur votre site, nous les listerons par ordre chronologique pour permettre d'y accéder plus rapidement.
-* Nous avons ajouté de nombreuses mises à niveau à l'éditeur de blocs : notamment des styles de texte enrichi pour les légendes vidéo, des fonctionnalités de bloc plus intuitives et l'enregistrement automatique du contenu après deux secondes d'inactivité.
+13.7 :
+*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
+
+* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-CA>
 <fr-FR>
-13.3 :
-* Vos statistiques ont considérablement gagné en fluidité.
-* Vous pouvez désormais modifier votre nom d'utilisateur dans les paramètres de votre compte.
-* Vous souhaitez modifier vos paramètres de performances Jetpack ? Faites-le directement dans l'application !
-* Si vous êtes prolifique et que vous avez publié plus de 100 pages sur votre site, nous les listerons par ordre chronologique pour permettre d'y accéder plus rapidement.
-* Nous avons ajouté de nombreuses mises à niveau à l'éditeur de blocs : notamment des styles de texte enrichi pour les légendes vidéo, des fonctionnalités de bloc plus intuitives et l'enregistrement automatique du contenu après deux secondes d'inactivité.
+13.7 :
+*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
+
+* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-FR>
 <iw-IL>
-13.3:
-* הנתונים הסטטיסטיים שלך עכשיו ריספונסיביים יותר.
-* כעת אפשר לשנות את שם המשתמש בהגדרות החשבון.
-* רוצה לשנות את הגדרות הביצועים של Jetpack? אפשר לבצע את הפעולה ישירות באפליקציה!
-* אם פרסמת מעל 100 עמודים של תוכן באתר שלך, אנחנו נציג אותם ברשימה בסדר כרונולוגי כדי לאפשר לך גישה מהירה יותר.
-* הוספנו שדרוגים לעורך הבלוקים, כגון סגנון של טקסט עשיר בכיתוב לווידאו, תוספות אינטואיטיביות יותר לבלוקים ושמירה אוטומטית של תכון אחרי שתי שניות של חוסר פעילות.
+13.7:
+* עדכונים בעורך הבלוקים: בלוקים שלא נתמכים כעת מציגים כותרת, סממנים של בלוקים חדשים מוצגים בעורכים ריקים ולאחר הבלוק האחרון, הוספה של קישורים אפשרית מכתובות URL שנמצאות בלוח שלך, בלוקים של טקסט ומדיה כוללים אפשרויות יישור נוספות, ניתן להקיש על בלוקים של תמונה לתצוגה במסך מלא.
+
+* שיפורים כלליים: תיקנו כמה באגים וקריסות ושיפרנו את התמיכה בקורא של מסך TalkBack ב-Reader.
 </iw-IL>
 <id>
-13.3:
-* Statistik Anda kini menjadi jauh lebih responsif.
-* Sekarang Anda dapat mengubah nama pengguna di Pengaturan Akun.
-* Ingin menyesuaikan pengaturan performa Jetpack? Lakukan langsung dari aplikasi!
-* Jika Anda adalah penerbit yang giat dengan lebih dari 100 halaman di situs, kami akan mencantumkannya secara kronologis demi akses yang lebih cepat.
-* Kami telah menambahkan banyak peningkatan untuk Penyunting Blok, seperti pengaturan gaya kaya teks dalam keterangan video, penambahan blok yang lebih intuitif, dan penyimpanan konten otomatis setelah tidak aktif selama dua detik.
+13.7.
+* Pembaruan penyunting blok: blok yang tidak didukung kini menampilkan judul, indikator blok baru ditampilkan baik di penyunting kosong maupun setelah blok terakhir, menambahkan tautan dari URL yang sudah ada di papan klip Anda, blok Media dan Teks memiliki lebih banyak pilihan perataan, blok gambar kini dapat diketuk untuk pratinjau layar penuh.
+
+* Penyempurnaan umum: memperbaiki beberapa bug dan kesalahan, serta menambahkan dukungan pembaca layar TalkBack yang lebih baik di Pembaca.
 </id>
-<it-IT>
-13.3:
-* Ora le tue statistiche sono più responsive.
-* Ora puoi modificare il tuo nome utente nelle Impostazioni account.
-* Desideri modificare le impostazioni delle prestazioni di Jetpack? Fallo dall'app!
-* Se hai oltre di 100 pagine sul sito, le elencheremo in ordine cronologico per un accesso più rapido.
-* Abbiamo aggiunto molti aggiornamenti all'editor dei blocchi, come RTF nei sottotitoli, aggiunte ai blocchi più intuitive e salvataggi automatici del contenuto dopo due secondi di inattività.
-</it-IT>
 <ja-JP>
-13.3:
-* 統計のレスポンシブを増加しました。
-* 「アカウント設定」でユーザー名を変更できるようになりました。
-* Jetpack のパフォーマンスの設定をアプリから直接カスタマイズできるようになりました。
-* 100を超えるページがあるサイトの場合、素早くページにアクセスできるように作成順で一覧表示するようにしました。
-* ブロックエディターに、リッチテキストによる動画のキャプション、より直感的なブロックの追加、操作しない状態が2秒続く場合のコンテンツの自動保存など、多くのアップグレードが追加されました。
+13.7:
+* ブロックエディターの更新 :サポート対象外のブロックにタイトルが表示されるようになり、新しいブロックインジケータが空のエディターと最後のブロック後の両方に表示され、リンクを追加するとクリップボードで既存の URL から抽出され、メディアブロックとテキストブロックに他の配置オプションが追加され、画像ブロックをタップするとフルスクリーンのプレビューが可能になります。
+
+* 一般的な改善 :いくつかのバグとクラッシュが修正され、TalkBack 画面の読者サポートが Reader で改善されました。
 </ja-JP>
 <ko-KR>
-13.3:
-* 통계 반응이 더 빨라졌습니다.
-* 이제 계정 설정에서 사용자명을 변경할 수 있습니다.
-* 젯팩 성능 설정을 수정하시겠어요? 앱에서 직접 수정해 보세요!
-* 사이트에 100페이지가 넘는 많은 글을 게시하는 경우 더 빠르게 액세스할 수 있도록 글이 시간 순서대로 나열됩니다.
-* 비디오 캡션의 리치 텍스트 스타일링, 보다 직관적인 블록 추가 및 2초 동안 활동이 없는 경우 자동으로 콘텐츠 저장과 같은 다양한 업그레이드가 블록 편집기에 추가되었습니다.
+13.7:
+* 블록 편집기 업데이트: 지원되지 않는 블록에 이제 제목이 표시됨, 새 블록 표시기가 빈 편집기와 마지막 블록 뒤에 모두 표시됨, 링크를 추가하면 클립보드의 기존 URL에서 가져옴, 미디어 및 텍스트 블록에 정렬 옵션이 추가됨, 이미지 블록을 탭하여 전체 화면으로 미리보기 가능.
+
+* 일반 개선 사항 : 일부 버그 및 충돌을 수정하고 리더에서 더 나은 TalkBack 화면 판독기 지원을 추가했습니다.
 </ko-KR>
 <nl-NL>
-13.3:
-* Je statistieken zijn een stuk overzichtelijker geworden.
-* Je kunt nu je gebruikersnaam in de Accountinstellingen wijzigen.
-* Wil je de instellingen voor Jetpack-prestaties aanpassen? Doe dit nu direct vanuit de app!
-* Als je een actieve schrijver bent met meer dan 100 pagina's op je site vermelden wij ze chronologisch, zodat je ze sneller kunt openen.
-* We hebben veel upgrades toegevoegd aan de blok-editor, zoals rich-text in ondertitelingen, meer intuïtieve bloktoevoegingen en het automatisch opslaan van content na twee seconden inactiviteit.
+13.7:
+* Updates van de blokeditor: in niet-ondersteunde blokken wordt nu een titel weergegeven, indicators van nieuwe blokken worden zowel in lege editors als na het laatste blok weergegeven, links kunnen worden toegevoegd vanuit bestaande URL's in je klembord, de blokken Media en Tekst bevatten nu meer opties voor uitlijning, er kan op afbeeldingsblokken worden getikt voor weergave op volledig scherm.
+
+* Algemene verbeteringen: een paar bugs en crashes zijn opgelost en er is verbeterde ondersteuning voor de TalkBack-schermreader in de Reader.
 </nl-NL>
-<pt-BR>
-13.3:
-* Suas estatísticas estão mais responsivas.
-* Agora você pode mudar o nome de usuário em Configurações da conta.
-* Ajustando suas configurações de desempenho do Jetpack? Faça direto pelo aplicativo!
-* Caso você tenha mais de 100 páginas em seu site, elas serão exibidas em ordem cronológica para facilitar o acesso.
-* Adicionamos várias melhorias ao editor de blocos como edição de texto em legendas de vídeos, adição de blocos mais intuitiva e salvamento automático de conteúdo após 2 segundos de inatividade.
-</pt-BR>
 <ru-RU>
-13.3:
-* Экран статистики более адаптивен.
-* Вы можете сменить имя пользователя в настройках учетной записи.
-* Настройки производительности Jetpack можно сделать прямо из приложения!
-* Если вы являетесь плодовитым издателем с более чем 100 страницами на вашем сайте, мы перечислим их в хронологическом порядке для более быстрого доступа.
-* Множество обновлений для редактора блоков, например стилизация rich text в подписях для видео, более интуитивное добавление блоков, автоматическое сохранение содержимого после 2 секунд неактивности.
+13.7:
+* Обновления для редактора блоков: для неподдерживаемых блоков показывается их название, индикаторы нового блока показываются и в пустом редакторе и после последнего блока, добавление ссылки может использовать содержимое буфера обмена, мультимедиа и текстовые блоки имеют больше возможностей выравнивания, блоки изображений можно развернуть на полноэкранный просмотр при нажатии.
+
+* Общие улучшения: исправлены некоторые ошибки и падения, добавлена поддержка чтения с экрана TalkBack в Чтиво.
 </ru-RU>
 <sv-SE>
-13.3:
-* Statistiksidan är mycket responsivare.
-* Nu kan du ändra ditt användarnamn under kontoinställningarna.
-* Vill du justera prestandainställningarna för Jetpack? Gör det direkt i appen!
-* Om du är en aktiv publicist med fler än 100 sidor listar vi dem i kronologisk ordning för snabbare åtkomst.
-* Vi har förbättrat många saker i blockredigeraren, såsom textformatering i beskrivningstexter för video, tillägg av mer intuitiva block, samt autosparande av innehållet efter två sekunders inaktivitet.
+13.7:
+* Blockredigeraren: block utan stöd har nu en särskild rubrik, nya indikatorer visar tomma redigerare och slutet på sista blocket, vid tillägg av ny länk hämtas eventuell URL i urklippet, media- och textblock har fler justeringsalternativ, man kan klicka på bildblock för förhandsvisning i fullskärm.
+
+* Allmänna förbättringar: korrigerat olika fel och programkrascher och förbättrat stödet för skärmläsaren TalkBack i läsaren.
 </sv-SE>
 <tr-TR>
-13.3:
-* İstatistikleriniz çok daha duyarlı hale geldi.
-* Artık kullanıcı adınızı hesap ayarlarından değiştirebilirsiniz.
-* Jetpack performans ayarlarınızı değiştirmek? Doğrudan uygulamadan yapın!
-* Sitenizde 100'den fazla sayfa bulunan üretken bir yayıncıysanız, daha hızlı erişim için kronolojik olarak listeleyeceğiz.
-* Video başlıklarındaki zengin metin stili, daha sezgisel blok eklemeleri ve iki saniye kullanılmadığında otomatik içerik tasarrufu gibi, Blok düzenleyiciye birçok yükseltme ekledik.
+13.7:
+* Blok düzenleyici güncellemeleri: desteklenmeyen bloklarda artık bir başlık görüntülenir, yeni blok göstergeleri hem boş düzenleyicilerde hem de son bloktan sonra gösterilir, bağlantılar eklendiğinde panodaki mevcut URL'lerden alınır, Ortam ve Metin bloklarında daha fazla hizalama seçeneği bulunur, görsel bloklarına dokunularak tam ekran önizleme yapılabilir.
+
+* Genel iyileştirmeler: Bazı hatalar ve kilitlenme durumları düzeltildi, Okuyucu'daki TalkBack ekran okuyucu desteği geliştirildi.
 </tr-TR>
+<zh-CN>
+13.7：
+* 更新了区块编辑器：不支持的区块现可显示标题；新区块指示器同时显示在空白编辑器中和最后一个区块之后；添加从剪贴板的现有 URL 中提取的链接；“媒体和文本”区块具有更多对齐选项；轻点“图片”区块可进行全屏预览。
+
+* 常规改进：修复了一些错误和崩溃，并在阅读器中添加了更好的 TalkBack 屏幕阅读器支持。
+</zh-CN>
 <zh-TW>
-13.3：
-* 你的統計資料已具備更靈敏的回應能力。
-* 你現在可在「帳號設定」中變更你的使用者名稱。
-* 想修改你的 Jetpack 效能設定嗎？直接從應用程式操作就行了！
-* 如果你是多產的文章作者且網站擁有超過 100 個頁面，我們會依時間順序排列文章，讓使用者能夠更快存取。
-* 我們已對區塊編輯器進行許多更新，例如視訊字幕可使用 Rich Text 樣式、更直覺化的區塊新增項目，以及閒置兩秒後自動儲存內容。
+13.7：
+* 區塊編輯器更新：不支援的區塊現在會顯示標題；在空白編輯器內和前一個區塊之後，都會顯示新區塊指標；你可從剪貼簿拖入現有網址以新增連結；媒體和文字區塊可提供更多對齊選項；點選圖片區塊即可進行全螢幕預覽。
+
+* 一般改善項目：修正一些錯誤和故障情況，並為讀取器新增更完善的 TalkBack 螢幕讀取器支援。
 </zh-TW>

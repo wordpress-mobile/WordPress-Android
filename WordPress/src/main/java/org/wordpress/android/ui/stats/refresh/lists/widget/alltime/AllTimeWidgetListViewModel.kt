@@ -6,9 +6,10 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -16,7 +17,9 @@ class AllTimeWidgetListViewModel
 @Inject constructor(
     private val siteStore: SiteStore,
     private val allTimeStore: AllTimeInsightsStore,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val statsUtils: StatsUtils
 ) {
     private var siteId: Int? = null
     private var colorMode: Color = Color.LIGHT
@@ -41,6 +44,9 @@ class AllTimeWidgetListViewModel
                     if (uiModels != data) {
                         mutableData.clear()
                         mutableData.addAll(uiModels)
+                        appWidgetId?.let {
+                            appPrefsWrapper.setAppWidgetHasData(true, it)
+                        }
                     }
                 }
             } else {
@@ -64,25 +70,25 @@ class AllTimeWidgetListViewModel
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_views),
-                        domainModel.views.toFormattedString(ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.views, ONE_THOUSAND)
                 ),
                 AllTimeItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_visitors),
-                        domainModel.visitors.toFormattedString(ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.visitors, ONE_THOUSAND)
                 ),
                 AllTimeItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.posts),
-                        domainModel.posts.toFormattedString(ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.posts, ONE_THOUSAND)
                 ),
                 AllTimeItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_insights_best_ever),
-                        domainModel.viewsBestDayTotal.toFormattedString(ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.viewsBestDayTotal, ONE_THOUSAND)
                 )
         )
     }
