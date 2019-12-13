@@ -376,7 +376,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 int position = getAdapterPosition();
                 if (isValidPosition(position)) {
                     if (isItemSelectedByPosition(position)) {
-                        AccessibilityUtils.setImageViewAsSelectedForAccessibility(imageView,
+                        PhotoPickerUtils.setImageViewContentDescriptionAsSelectedForAccessibility(imageView,
                                 imageView.getContext().getString(R.string.photo_picker_image_thumbnail_selected));
                     }
                 }
