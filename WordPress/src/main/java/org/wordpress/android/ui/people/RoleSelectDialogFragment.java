@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.people;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -43,18 +42,15 @@ public class RoleSelectDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setTitle(R.string.role);
-        builder.setItems(stringRoles, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (!isAdded()) {
-                    return;
-                }
+        builder.setItems(stringRoles, (dialog, which) -> {
+            if (!isAdded()) {
+                return;
+            }
 
-                if (getTargetFragment() instanceof OnRoleSelectListener) {
-                    ((OnRoleSelectListener) getTargetFragment()).onRoleSelected(inviteRoles.get(which));
-                } else if (getActivity() instanceof OnRoleSelectListener) {
-                    ((OnRoleSelectListener) getActivity()).onRoleSelected(inviteRoles.get(which));
-                }
+            if (getTargetFragment() instanceof OnRoleSelectListener) {
+                ((OnRoleSelectListener) getTargetFragment()).onRoleSelected(inviteRoles.get(which));
+            } else if (getActivity() instanceof OnRoleSelectListener) {
+                ((OnRoleSelectListener) getActivity()).onRoleSelected(inviteRoles.get(which));
             }
         });
 

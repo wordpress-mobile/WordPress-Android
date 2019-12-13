@@ -191,11 +191,12 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(getContext());
         float cardElevation = getResources().getDimension(R.dimen.card_elevation);
-        int elevatedSurfaceColor =
-                elevationOverlayProvider.compositeOverlay(ContextExtensionsKt
-                        .getColorFromAttribute(getContext(), R.attr.wpColorAppBar), cardElevation);
+        int appBarColor =
+                elevationOverlayProvider
+                        .compositeOverlay(ContextExtensionsKt.getColorFromAttribute(getContext(), R.attr.wpColorAppBar),
+                                cardElevation);
 
-        mToolbar.setBackgroundColor(elevatedSurfaceColor);
+        mToolbar.setBackgroundColor(appBarColor);
 
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
         if (mToolbarDisableScrollGestures) {
