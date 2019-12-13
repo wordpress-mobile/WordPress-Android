@@ -2,16 +2,23 @@ package org.wordpress.android.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.AccessibilityDelegateCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import static android.content.Context.ACCESSIBILITY_SERVICE;
+import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED;
 
 public class AccessibilityUtils {
     private static final int SNACKBAR_WITH_ACTION_DURATION_IN_MILLIS = 10000;
@@ -48,5 +55,17 @@ public class AccessibilityUtils {
                 }
             });
         }
+    }
+
+    public static void addPopulateAccessibilityEventFocusedListener(final View target, final AccessibilityEventListener listener) {
+        ViewCompat.setAccessibilityDelegate(target, new AccessibilityDelegateCompat() {
+
+            @Override public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
+                if (event.getEventType() == TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
+                    listener.onResult(event);
+                }
+                super.onPopulateAccessibilityEvent(host, event);
+            }
+        });
     }
 }
