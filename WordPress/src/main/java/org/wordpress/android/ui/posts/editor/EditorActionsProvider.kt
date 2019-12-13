@@ -38,7 +38,7 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                     // TODO if this log won't appear in Sentry, we should start throwing IllegalStateException
                     //  instead of returning a valid action.
                     remoteLoggingUtils.log(
-                            "User shouldn't be able to open a public post in an editor " +
+                            "User shouldn't be able to open a public ($postStatus) post in an editor " +
                                     "without publishing rights."
                     )
                     PrimaryEditorAction.SUBMIT_FOR_REVIEW
@@ -79,7 +79,7 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                     // TODO if this log won't appear in Sentry, we should start throwing IllegalStateException
                     //  instead of returning a valid action.
                     remoteLoggingUtils.log(
-                            "User shouldn't be able to open a public post in an editor " +
+                            "User shouldn't be able to open a public ($postStatus) post in an editor " +
                                     "without publishing rights."
                     )
                     SecondaryEditorAction.NONE
