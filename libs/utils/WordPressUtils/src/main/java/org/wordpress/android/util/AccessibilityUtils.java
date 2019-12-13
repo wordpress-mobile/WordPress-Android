@@ -12,6 +12,8 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.wordpress.android.util.AppLog.T;
+
 import static android.content.Context.ACCESSIBILITY_SERVICE;
 
 public class AccessibilityUtils {
@@ -35,7 +37,7 @@ public class AccessibilityUtils {
     }
 
     public static void disableHintAnnouncement(@NonNull TextView textView) {
-        ViewCompat.setAccessibilityDelegate(textView, new AccessibilityDelegateCompat() {
+        setAccessibilityDelegateSafely(textView, new AccessibilityDelegateCompat() {
             @Override public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
                 super.onInitializeAccessibilityNodeInfo(host, info);
                 info.setHintText(null);
@@ -44,11 +46,24 @@ public class AccessibilityUtils {
     }
 
     public static void enableAccessibilityHeading(@NonNull View view) {
-        ViewCompat.setAccessibilityDelegate(view, new AccessibilityDelegateCompat() {
+        setAccessibilityDelegateSafely(view, new AccessibilityDelegateCompat() {
             @Override public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
                 super.onInitializeAccessibilityNodeInfo(host, info);
                 info.setHeading(true);
             }
         });
+    }
+
+    public static void setAccessibilityDelegateSafely(View view,
+                                                      AccessibilityDelegateCompat accessibilityDelegateCompat) {
+        if (ViewCompat.hasAccessibilityDelegate(view)) {
+            final String errorMessage = "View already has an AccessibilityDelegate.";
+            if (PackageUtils.isDebugBuild()) {
+                throw new RuntimeException(errorMessage);
+            }
+            AppLog.e(T.UTILS, errorMessage);
+        } else {
+            ViewCompat.setAccessibilityDelegate(view, accessibilityDelegateCompat);
+        }
     }
 }
