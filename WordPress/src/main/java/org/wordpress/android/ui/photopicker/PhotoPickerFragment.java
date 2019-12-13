@@ -486,7 +486,6 @@ public class PhotoPickerFragment extends Fragment {
             mActionMode = null;
             showBottomBar();
             getAdapter().clearSelection();
-            getView().announceForAccessibility(getString(R.string.media_multi_select_clear_action));
         }
     }
 
