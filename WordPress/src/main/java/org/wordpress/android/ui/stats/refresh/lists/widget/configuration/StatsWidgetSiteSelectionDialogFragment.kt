@@ -39,12 +39,12 @@ class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(StatsSiteSelectionViewModel::class.java)
         viewModel.sites.observe(this, Observer {
-            (dialog?.recycler_view?.adapter as? StatsWidgetSiteAdapter)?.update(it ?: listOf())
+            (requireDialog().recycler_view.adapter as? StatsWidgetSiteAdapter)?.update(it ?: listOf())
         })
         viewModel.hideSiteDialog.observe(this, Observer {
             it?.applyIfNotHandled {
-                if (dialog?.isShowing == true) {
-                    dialog?.dismiss()
+                if (requireDialog().isShowing == true) {
+                    requireDialog().dismiss()
                 }
             }
         })

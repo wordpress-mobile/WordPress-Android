@@ -52,7 +52,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(ReaderPostListViewModel::class.java)
 
         viewModel.subFilters.observe(this, Observer {
-            (dialog?.filter_recycler_view?.adapter as? SubfilterListAdapter)?.update(it ?: listOf())
+            (requireDialog().filter_recycler_view.adapter as? SubfilterListAdapter)?.update(it ?: listOf())
         })
         viewModel.loadSubFilters()
         performUpdate()

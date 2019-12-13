@@ -39,7 +39,7 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(WPMainActivityViewModel::class.java)
 
         viewModel.mainActions.observe(this, Observer {
-            (dialog?.create_actions_recycler_view?.adapter as? AddContentAdapter)?.update(it ?: listOf())
+            (requireDialog().create_actions_recycler_view.adapter as? AddContentAdapter)?.update(it ?: listOf())
         })
     }
 

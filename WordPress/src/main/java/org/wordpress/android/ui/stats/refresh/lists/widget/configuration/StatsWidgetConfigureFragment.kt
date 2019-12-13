@@ -102,13 +102,13 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
 
         siteSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetSiteSelectionDialogFragment().show(fragmentManager!!, "stats_site_selection_fragment")
+                StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
             }
         })
 
         colorSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetColorSelectionDialogFragment().show(fragmentManager!!, "stats_view_mode_selection_fragment")
+                StatsWidgetColorSelectionDialogFragment().show(requireFragmentManager(), "stats_view_mode_selection_fragment")
             }
         })
 
