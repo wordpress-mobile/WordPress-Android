@@ -76,6 +76,10 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
     @Inject SiteStore mSiteStore;
 
+    private int mNormalUsernameColor;
+    private int mAddedUsernameColor;
+    private int mErrorUsernameColor;
+
     public static PeopleInviteFragment newInstance(SiteModel site) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
         Bundle bundle = new Bundle();
@@ -157,6 +161,10 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.people);
         }
+
+        mNormalUsernameColor = ContextExtensionsKt.getColorResIdFromAttribute(getActivity(), R.attr.colorOnSurface);
+        mAddedUsernameColor = ContextExtensionsKt.getColorResIdFromAttribute(getActivity(), R.attr.colorPrimary);
+        mErrorUsernameColor = ContextExtensionsKt.getColorResIdFromAttribute(getActivity(), R.attr.wpColorError);
 
         return rootView;
     }
@@ -526,11 +534,10 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             return;
         }
 
-        TextView textView = (TextView) mUsernameButtons.get(username).findViewById(R.id.username);
+        TextView textView = mUsernameButtons.get(username).findViewById(R.id.username);
         textView.setTextColor(ContextCompat.getColor(getActivity(),
-                validationResultMessage == null ? ContextExtensionsKt
-                        .getColorResIdFromAttribute(getActivity(), R.attr.wpColorText)
-                        : (validationResultMessage.equals(FLAG_SUCCESS) ? R.color.primary_50 : R.color.error_50)));
+                validationResultMessage == null ? mNormalUsernameColor
+                        : (validationResultMessage.equals(FLAG_SUCCESS) ? mAddedUsernameColor : mErrorUsernameColor)));
     }
 
     private

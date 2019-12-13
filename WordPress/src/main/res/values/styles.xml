@@ -17,7 +17,7 @@
         <item name="colorOnError">@android:color/white</item>
 
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorAccent">?attr/colorSecondary</item>
         <item name="colorControlActivated">@color/primary_30</item>
 
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>

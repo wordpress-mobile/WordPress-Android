@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
@@ -94,7 +95,7 @@ public class PersonDetailFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(ARG_CURRENT_USER_ID, mCurrentUserId);
         outState.putLong(ARG_PERSON_ID, mPersonId);
@@ -146,7 +147,7 @@ public class PersonDetailFragment extends Fragment {
         refreshPersonDetails();
     }
 
-    public void refreshPersonDetails() {
+    void refreshPersonDetails() {
         if (!isAdded()) {
             return;
         }
@@ -197,7 +198,7 @@ public class PersonDetailFragment extends Fragment {
         }
     }
 
-    public void setPersonDetails(long personID, int localTableBlogID) {
+    void setPersonDetails(long personID, int localTableBlogID) {
         mPersonId = personID;
         mLocalTableBlogId = localTableBlogID;
         refreshPersonDetails();
@@ -209,12 +210,7 @@ public class PersonDetailFragment extends Fragment {
         boolean isCurrentUser = mCurrentUserId == mPersonId;
         boolean canChangeRole = (site != null) && !isCurrentUser && site.getHasCapabilityPromoteUsers();
         if (canChangeRole) {
-            mRoleContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showRoleChangeDialog();
-                }
-            });
+            mRoleContainer.setOnClickListener(v -> showRoleChangeDialog());
         } else {
             // Remove the selectableItemBackground if the user can't be edited
             mRoleContainer.setBackground(null);
@@ -237,7 +233,7 @@ public class PersonDetailFragment extends Fragment {
     }
 
     // used to optimistically update the role
-    public void changeRole(String newRole) {
+    void changeRole(String newRole) {
         mRoleTextView.setText(RoleUtils.getDisplayName(newRole, mUserRoles));
     }
 
@@ -248,7 +244,7 @@ public class PersonDetailFragment extends Fragment {
         mDisplayNameTextView.setPadding(0, newPadding, 0, 0);
     }
 
-    public Person loadPerson() {
+    Person loadPerson() {
         return PeopleTable.getPerson(mPersonId, mLocalTableBlogId, mPersonType);
     }
 }
