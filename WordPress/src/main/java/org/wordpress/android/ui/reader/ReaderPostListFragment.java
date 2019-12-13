@@ -218,6 +218,7 @@ public class ReaderPostListFragment extends Fragment
     @Inject ImageManager mImageManager;
     @Inject QuickStartStore mQuickStartStore;
     @Inject UiHelpers mUiHelpers;
+    @Inject ReaderTracker mReaderTracker;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -482,6 +483,8 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
+        AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = " + mIsTopLevel + "]");
+        mReaderTracker.stop(mIsTopLevel ? ReaderTrackerInfo.ReaderTopLevelList.class : ReaderTrackerInfo.ReaderFilteredList.class);
         if (mBookmarksSavedLocallyDialog != null) {
             mBookmarksSavedLocallyDialog.dismiss();
         }
@@ -491,6 +494,8 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count [mIsTopLevel = " + mIsTopLevel + "]");
+        mReaderTracker.start(mIsTopLevel ? ReaderTrackerInfo.ReaderTopLevelList.class : ReaderTrackerInfo.ReaderFilteredList.class);
         checkPostAdapter();
 
         if (mWasPaused) {
