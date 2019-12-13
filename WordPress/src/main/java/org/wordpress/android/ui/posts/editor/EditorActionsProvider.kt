@@ -23,7 +23,15 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                 PostStatus.DRAFT,
                 PostStatus.PENDING,
                 PostStatus.UNKNOWN -> PrimaryEditorAction.SUBMIT_FOR_REVIEW
-                PostStatus.TRASHED -> PrimaryEditorAction.SAVE
+                PostStatus.TRASHED -> {
+                    // TODO if this log won't appear in Sentry, we should start throwing IllegalStateException
+                    //  instead of returning a valid action.
+                    remoteLoggingUtils.log(
+                            "User shouldn't be able to open a trashed post in an editor " +
+                                    "without publishing rights."
+                    )
+                    PrimaryEditorAction.SAVE
+                }
                 PostStatus.PUBLISHED,
                 PostStatus.SCHEDULED,
                 PostStatus.PRIVATE -> {
@@ -31,7 +39,7 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                     //  instead of returning a valid action.
                     remoteLoggingUtils.log(
                             "User shouldn't be able to open a public post in an editor " +
-                                    "without the publishing rights."
+                                    "without publishing rights."
                     )
                     PrimaryEditorAction.SUBMIT_FOR_REVIEW
                 }
@@ -56,7 +64,15 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                 PostStatus.DRAFT,
                 PostStatus.PENDING,
                 PostStatus.UNKNOWN -> SecondaryEditorAction.NONE
-                PostStatus.TRASHED -> SecondaryEditorAction.SAVE_AS_DRAFT
+                PostStatus.TRASHED -> {
+                    // TODO if this log won't appear in Sentry, we should start throwing IllegalStateException
+                    //  instead of returning a valid action.
+                    remoteLoggingUtils.log(
+                            "User shouldn't be able to open a trashed post in an editor " +
+                                    "without publishing rights."
+                    )
+                    SecondaryEditorAction.SAVE_AS_DRAFT
+                }
                 PostStatus.PUBLISHED,
                 PostStatus.SCHEDULED,
                 PostStatus.PRIVATE -> {
@@ -64,7 +80,7 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                     //  instead of returning a valid action.
                     remoteLoggingUtils.log(
                             "User shouldn't be able to open a public post in an editor " +
-                                    "without the publishing rights."
+                                    "without publishing rights."
                     )
                     SecondaryEditorAction.NONE
                 }

@@ -94,13 +94,12 @@ class EditorActionsProviderTest {
     }
 
     @Test
-    fun `Verify actions of a TRASHED post when the user doesn't have publishing rights`() {
+    fun `Verify an error is logged when the user doesn't have publishing rights and works with a TRASHED post`() {
         // Arrange & Act
-        val (primaryAction, secondaryAction) =
+        val (_, _) =
                 getPrimaryAndSecondaryActions(PostStatus.TRASHED, userCanPublish = false)
         // Assert
-        assertThat(primaryAction).isEqualTo(PrimaryEditorAction.SAVE)
-        assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.SAVE_AS_DRAFT)
+        verify(crashLoggingUtilsWrapper, times(2)).log(any<String?>())
     }
 
     @Test
