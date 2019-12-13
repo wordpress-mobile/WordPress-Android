@@ -24,6 +24,8 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
@@ -98,6 +100,16 @@ public class ReaderPostListActivity extends AppCompatActivity {
         if (savedInstanceState != null && savedInstanceState.containsKey(ReaderConstants.KEY_ACTIVITY_TITLE)) {
             setTitle(savedInstanceState.getString(ReaderConstants.KEY_ACTIVITY_TITLE));
         }
+    }
+
+    @Override protected void onResume() {
+        AppLog.d(T.READER, "TRACK READER ReaderPostListActivity > START Count");
+        super.onResume();
+    }
+
+    @Override protected void onPause() {
+        AppLog.d(T.READER, "TRACK READER ReaderPostListActivity > STOP Count");
+        super.onPause();
     }
 
     @Override
