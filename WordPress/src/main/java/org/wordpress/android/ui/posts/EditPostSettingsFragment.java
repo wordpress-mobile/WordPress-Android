@@ -127,6 +127,7 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mCategoriesTagsHeaderTextView;
     private TextView mFeaturedImageHeaderTextView;
     private TextView mMoreOptionsHeaderTextView;
+    private TextView mPublishHeaderTextView;
     private ImageView mFeaturedImageView;
     private ImageView mLocalFeaturedImageView;
     private Button mFeaturedImageButton;
@@ -265,7 +266,8 @@ public class EditPostSettingsFragment extends Fragment {
         mCategoriesTagsHeaderTextView = rootView.findViewById(R.id.post_settings_categories_and_tags_header);
         mMoreOptionsHeaderTextView = rootView.findViewById(R.id.post_settings_more_options_header);
         mFeaturedImageHeaderTextView = rootView.findViewById(R.id.post_settings_featured_image_header);
-        
+        mPublishHeaderTextView = rootView.findViewById(R.id.post_settings_publish);
+
         mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
         mLocalFeaturedImageView = rootView.findViewById(R.id.post_featured_image_local);
         mFeaturedImageButton = rootView.findViewById(R.id.post_add_featured_image_button);
@@ -452,6 +454,7 @@ public class EditPostSettingsFragment extends Fragment {
         AccessibilityUtils.enableAccessibilityHeading(mCategoriesTagsHeaderTextView);
         AccessibilityUtils.enableAccessibilityHeading(mFeaturedImageHeaderTextView);
         AccessibilityUtils.enableAccessibilityHeading(mMoreOptionsHeaderTextView);
+        AccessibilityUtils.enableAccessibilityHeading(mPublishHeaderTextView);
     }
 
     private void retryFeaturedImageUpload(@NonNull SiteModel site, @NonNull PostImmutableModel post) {
