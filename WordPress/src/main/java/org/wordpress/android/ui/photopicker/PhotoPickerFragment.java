@@ -462,6 +462,9 @@ public class PhotoPickerFragment extends Fragment {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            MenuItem confirmMenuItem = menu.findItem(R.id.mnu_confirm_selection);
+            confirmMenuItem.setContentDescription(getString(R.string.media_multi_select_confirm_action));
+
             AccessibilityUtils.setActionModeDoneButtonContentDescription(getActivity(), getString(R.string.cancel));
             return false;
         }
@@ -483,6 +486,7 @@ public class PhotoPickerFragment extends Fragment {
             mActionMode = null;
             showBottomBar();
             getAdapter().clearSelection();
+            getView().announceForAccessibility(getString(R.string.media_multi_select_clear_action));
         }
     }
 
