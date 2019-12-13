@@ -45,6 +45,11 @@ public class AccessibilityUtils {
         });
     }
 
+    /**
+     * When the minsdk is 28 this can be replaced by adding android:accessibilityHeading="true" as a property to the
+     * view's xml declaration.
+     * @param view that will become a heading.
+     */
     public static void enableAccessibilityHeading(@NonNull View view) {
         setAccessibilityDelegateSafely(view, new AccessibilityDelegateCompat() {
             @Override public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
