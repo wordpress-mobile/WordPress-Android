@@ -2,18 +2,14 @@ package org.wordpress.android.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
