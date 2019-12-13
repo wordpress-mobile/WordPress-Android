@@ -1434,6 +1434,7 @@ public class ReaderPostListFragment extends Fragment
         int heightToolbar = getActivity().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
         int heightTabs = getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
         mActionableEmptyView.updateLayoutForSearch(false, getEmptyViewTopMargin());
+        mActionableEmptyView.subtitle.setContentDescription(null);
         boolean isSearching = false;
         String title;
         String description = null;
