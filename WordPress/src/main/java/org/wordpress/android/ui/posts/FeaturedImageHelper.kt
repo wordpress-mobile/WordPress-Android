@@ -85,6 +85,7 @@ internal class FeaturedImageHelper @Inject constructor(
             media.localPostId = localPostId
         } else {
             AppLog.e(T.MEDIA, "Upload featured image can't be invoked without a valid local post id.")
+            return false
         }
         media.markedLocallyAsFeatured = true
 
