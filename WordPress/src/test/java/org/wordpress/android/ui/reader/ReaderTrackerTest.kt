@@ -28,7 +28,12 @@ class ReaderTrackerTest {
     @Test
     fun `trackers are initialized on initTrackers`() {
         tracker.initTrackers()
-        val expected = ReaderTrackersProvider(dateProvider).getTrackers().associateBy( {it.key}, { it.accumulatedTime })
+        val expected =  mapOf(
+                "time_in_main_reader" to 0,
+                "time_in_reader_filtered_list" to 0,
+                "time_in_reader_paged_post" to 0
+        )
+
         assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
     }
 
@@ -58,6 +63,81 @@ class ReaderTrackerTest {
                 "time_in_reader_filtered_list" to Int.MAX_VALUE - 2,
                 "time_in_reader_paged_post" to Int.MAX_VALUE - 3
         )
+        assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `trackers accumulates as expected in multiple sessions`() {
+        tracker.initTrackers()
+
+        val numRep = 10
+
+        for (i in 0 until numRep) {
+            val startPoint = Date()
+
+            whenever(dateProvider.getCurrentTime()).thenReturn(startPoint)
+
+            tracker.start(ReaderTrackerInfo.ReaderTopLevelList::class.java)
+            tracker.start(ReaderTrackerInfo.ReaderFilteredList::class.java)
+            tracker.start(ReaderTrackerInfo.ReaderPagedPosts::class.java)
+
+            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 1))
+            tracker.stop(ReaderTrackerInfo.ReaderTopLevelList::class.java)
+
+            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 2))
+            tracker.stop(ReaderTrackerInfo.ReaderFilteredList::class.java)
+
+            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 3))
+            tracker.stop(ReaderTrackerInfo.ReaderPagedPosts::class.java)
+        }
+
+        val expected = mapOf(
+                "time_in_main_reader" to (1 * numRep),
+                "time_in_reader_filtered_list" to (2 * numRep),
+                "time_in_reader_paged_post" to (3 * numRep)
+        )
+        assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `trackers resets on initTrackers after multiple sessions`() {
+        tracker.initTrackers()
+
+        val numRep = 10
+
+        for (i in 0 until numRep) {
+            val startPoint = Date()
+
+            whenever(dateProvider.getCurrentTime()).thenReturn(startPoint)
+
+            tracker.start(ReaderTrackerInfo.ReaderTopLevelList::class.java)
+            tracker.start(ReaderTrackerInfo.ReaderFilteredList::class.java)
+            tracker.start(ReaderTrackerInfo.ReaderPagedPosts::class.java)
+
+            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 1))
+            tracker.stop(ReaderTrackerInfo.ReaderTopLevelList::class.java)
+
+            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 2))
+            tracker.stop(ReaderTrackerInfo.ReaderFilteredList::class.java)
+
+            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 3))
+            tracker.stop(ReaderTrackerInfo.ReaderPagedPosts::class.java)
+        }
+
+        var expected = mapOf(
+                "time_in_main_reader" to (1 * numRep),
+                "time_in_reader_filtered_list" to (2 * numRep),
+                "time_in_reader_paged_post" to (3 * numRep)
+        )
+        assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
+
+        expected =  mapOf(
+                "time_in_main_reader" to 0,
+                "time_in_reader_filtered_list" to 0,
+                "time_in_reader_paged_post" to 0
+        )
+
+        tracker.initTrackers()
         assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
     }
 
