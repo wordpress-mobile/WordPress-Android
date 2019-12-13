@@ -15,6 +15,7 @@
         android:scaleType="centerCrop" />
 
     <TextView
+        android:importantForAccessibility="no"
         android:id="@+id/text_selection_count"
         android:layout_width="@dimen/media_selection_dot"
         android:layout_height="@dimen/media_selection_dot"
