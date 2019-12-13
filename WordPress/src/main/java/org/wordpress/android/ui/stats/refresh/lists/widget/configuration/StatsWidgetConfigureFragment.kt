@@ -108,7 +108,8 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
 
         colorSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetColorSelectionDialogFragment().show(requireFragmentManager(), "stats_view_mode_selection_fragment")
+                StatsWidgetColorSelectionDialogFragment().show(requireFragmentManager(),
+                        "stats_view_mode_selection_fragment")
             }
         })
 
