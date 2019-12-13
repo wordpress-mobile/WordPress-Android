@@ -20,6 +20,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -381,6 +382,29 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             });
 
             ViewUtils.addCircularShadowOutline(mTxtSelectionCount);
+            addImageSelectedToAccessibilityFocusedEvent(mImgThumbnail);
+        }
+
+        private void addImageSelectedToAccessibilityFocusedEvent(ImageView imageView) {
+            AccessibilityUtils.addPopulateAccessibilityEventFocusedListener(imageView, event -> {
+                int position = getAdapterPosition();
+                if (isValidPosition(position)) {
+                    String imageSelectedText = imageView.getContext()
+                                                        .getString(R.string.photo_picker_image_thumbnail_selected);
+
+                    if (isItemSelected(position)) {
+                        if (!imageView.getContentDescription().toString().contains(imageSelectedText)) {
+                            imageView.setContentDescription(
+                                    imageView.getContentDescription() + " "
+                                    + imageSelectedText);
+                        }
+                    } else {
+                        imageView.setContentDescription(imageView.getContentDescription()
+                                                                 .toString().replace(imageSelectedText,
+                                        ""));
+                    }
+                }
+            });
         }
     }
 
