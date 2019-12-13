@@ -801,7 +801,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             MenuItem mnuConfirm = menu.findItem(R.id.mnu_confirm_selection);
             mnuConfirm.setVisible(mBrowserType.isPicker());
-            mnuConfirm.setContentDescription(getString(R.string.media_multi_select_confirm_action));
 
             AccessibilityUtils.setActionModeDoneButtonContentDescription(getActivity(), getString(R.string.cancel));
             return true;

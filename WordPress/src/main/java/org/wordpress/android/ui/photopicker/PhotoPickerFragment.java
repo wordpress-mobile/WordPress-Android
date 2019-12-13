@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -462,9 +463,6 @@ public class PhotoPickerFragment extends Fragment {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            MenuItem confirmMenuItem = menu.findItem(R.id.mnu_confirm_selection);
-            confirmMenuItem.setContentDescription(getString(R.string.media_multi_select_confirm_action));
-
             AccessibilityUtils.setActionModeDoneButtonContentDescription(getActivity(), getString(R.string.cancel));
             return false;
         }
