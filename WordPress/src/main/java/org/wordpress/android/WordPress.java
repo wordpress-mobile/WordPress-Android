@@ -820,7 +820,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         }
 
         public void onAppGoesToBackground() {
-            AppLog.d(T.READER, "TRACK READER WordPress > STOP Count");
             AppLog.i(T.UTILS, "App goes to background");
             if (sAppIsInTheBackground) {
                 return;
@@ -859,7 +858,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
          * 2. the app was in background and is now foreground
          */
         public void onAppComesFromBackground() {
-            AppLog.d(T.READER, "TRACK READER WordPress > START Count");
             mReaderTracker.initTrackers();
             AppLog.i(T.UTILS, "App comes from background");
             if (!sAppIsInTheBackground) {

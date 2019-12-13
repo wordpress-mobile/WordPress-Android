@@ -281,16 +281,6 @@ class ReaderPostDetailFragment : Fragment(),
         return view
     }
 
-    override fun onResume() {
-        AppLog.d(T.READER, "TRACK READER ReaderPostDetailFragment > START Count")
-        super.onResume()
-    }
-
-    override fun onPause() {
-        AppLog.d(T.READER, "TRACK READER ReaderPostDetailFragment > STOP Count")
-        super.onPause()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         if (view != null) {
