@@ -47,6 +47,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaRetainedFragment.StockMediaRetainedData;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -604,6 +605,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
             holder.mImageView.setContentDescription(media.getTitle());
 
+
             boolean isSelected = isItemSelected(position);
             holder.mSelectionCountTextView.setSelected(isSelected);
             if (enableMultiselect()) {
@@ -628,6 +630,23 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             if (mCanLoadMore && position == getItemCount() - 1) {
                 fetchStockMedia(mSearchQuery, mNextPage);
             }
+            addImageSelectedToAccessibilityFocusedEvent(holder.mImageView, position);
+        }
+
+        private void addImageSelectedToAccessibilityFocusedEvent(ImageView imageView, int position) {
+            AccessibilityUtils.addPopulateAccessibilityEventFocusedListener(imageView, event -> {
+                if (isValidPosition(position)) {
+                    if (isItemSelected(position)) {
+                        final String imageSelectedText = imageView.getContext().getString(
+                                R.string.photo_picker_image_thumbnail_selected);
+                        if (!imageView.getContentDescription().toString().contains(imageSelectedText)) {
+                            imageView.setContentDescription(
+                                    imageView.getContentDescription() + " "
+                                    + imageSelectedText);
+                        }
+                    }
+                }
+            });
         }
 
         boolean isValidPosition(int position) {
