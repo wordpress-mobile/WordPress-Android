@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,5 +64,21 @@ public class AccessibilityUtils {
                 super.onPopulateAccessibilityEvent(host, event);
             }
         });
+    }
+
+    /**
+     * Used to modify an ImageView's content description to mark it as selected. Checks to ensure it hasn't been marked
+     * as such in the current session.
+     *
+     * @param imageView         that will be marked as selected
+     * @param imageSelectedText text that will be appended to the current content description.
+     */
+    public static void setImageViewAsSelectedForAccessibility(@NonNull final ImageView imageView,
+                                                              @NonNull final String imageSelectedText) {
+        if (!imageView.getContentDescription().toString().contains(imageSelectedText)) {
+            imageView.setContentDescription(
+                    imageView.getContentDescription() + " "
+                    + imageSelectedText);
+        }
     }
 }
