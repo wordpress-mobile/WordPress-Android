@@ -4,10 +4,11 @@ import androidx.annotation.StringRes
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.util.CrashLoggingUtilsWrapper
 import javax.inject.Inject
 
 @Reusable
-class EditorActionsProvider @Inject constructor() {
+class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: CrashLoggingUtilsWrapper) {
     fun getPrimaryAction(postStatus: PostStatus, userCanPublish: Boolean): PrimaryEditorAction {
         return if (userCanPublish) {
             when (postStatus) {
@@ -19,13 +20,21 @@ class EditorActionsProvider @Inject constructor() {
         } else {
             // User doesn't have publishing permissions
             when (postStatus) {
-                PostStatus.SCHEDULED,
                 PostStatus.DRAFT,
                 PostStatus.PENDING,
-                PostStatus.PRIVATE,
-                PostStatus.PUBLISHED,
                 PostStatus.UNKNOWN -> PrimaryEditorAction.SUBMIT_FOR_REVIEW
                 PostStatus.TRASHED -> PrimaryEditorAction.SAVE
+                PostStatus.PUBLISHED,
+                PostStatus.SCHEDULED,
+                PostStatus.PRIVATE -> {
+                    // TODO if this log won't appear in Sentry, we should start throwing IllegalStateException
+                    //  instead of returning a valid action.
+                    remoteLoggingUtils.log(
+                            "User shouldn't be able to open a public post in an editor " +
+                                    "without the publishing rights."
+                    )
+                    PrimaryEditorAction.SUBMIT_FOR_REVIEW
+                }
             }
         }
     }
@@ -44,13 +53,21 @@ class EditorActionsProvider @Inject constructor() {
         } else {
             // User doesn't have publishing permissions
             when (postStatus) {
-                PostStatus.SCHEDULED,
                 PostStatus.DRAFT,
                 PostStatus.PENDING,
-                PostStatus.PRIVATE,
-                PostStatus.PUBLISHED,
                 PostStatus.UNKNOWN -> SecondaryEditorAction.NONE
                 PostStatus.TRASHED -> SecondaryEditorAction.SAVE_AS_DRAFT
+                PostStatus.PUBLISHED,
+                PostStatus.SCHEDULED,
+                PostStatus.PRIVATE -> {
+                    // TODO if this log won't appear in Sentry, we should start throwing IllegalStateException
+                    //  instead of returning a valid action.
+                    remoteLoggingUtils.log(
+                            "User shouldn't be able to open a public post in an editor " +
+                                    "without the publishing rights."
+                    )
+                    SecondaryEditorAction.NONE
+                }
             }
         }
     }
