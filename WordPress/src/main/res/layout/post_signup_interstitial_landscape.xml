@@ -26,7 +26,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.45" />
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -34,6 +34,7 @@
         android:text="@string/post_signup_interstitial_title"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:fixWidowWords="true"
         app:layout_constraintBottom_toTopOf="@+id/subtitle_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -41,7 +42,7 @@
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintWidth_max="@dimen/post_signup_interstitial_max_width" />
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/subtitle_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -49,6 +50,7 @@
         android:text="@string/post_signup_interstitial_subtitle"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        app:fixWidowWords="true"
         app:layout_constraintBottom_toTopOf="@+id/create_new_site_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
