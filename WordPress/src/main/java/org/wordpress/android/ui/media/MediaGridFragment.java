@@ -821,7 +821,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             getAdapter().setInMultiSelect(false);
             WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.status_bar);
             mActionMode = null;
-            getView().announceForAccessibility(getString(R.string.media_multi_select_clear_action));
         }
     }
 }
