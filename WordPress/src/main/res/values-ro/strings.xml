@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-25 13:20:00+0000
+Translation-Revision-Date: 2019-12-04 08:25:56+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="login_discovery_error_generic">Nu am putut să-ți accesăm situl. Pentru a rezolva acest lucru, va trebui să contactezi serviciul tău de găzduire.</string>
+    <string name="login_discovery_error_ssl">Nu am putut să-ți accesăm situl din cauza unei probleme cu &lt;b>certificatul SSL&lt;/b>. Pentru a rezolva acest lucru, va trebui să contactezi serviciul tău de găzduire.</string>
+    <string name="login_discovery_error_http_auth">Nu am putut să-ți accesăm situl deoarece solicită &lt;b>autentificarea HTTP&lt;/b>. Pentru a rezolva acest lucru, va trebui să contactezi serviciul tău de găzduire.</string>
+    <string name="login_discovery_error_xmlrpc">Nu am putut să accesăm &lt;b>fișierul XMLRPC&lt;/b> pe situl tău. Pentru a rezolva acest lucru, va trebui să contactezi serviciul tău de găzduire.</string>
+    <string name="login_site_credentials_magic_link_label">Aproape gata! Trebuie doar să-ți verificăm adresa de email conectată la Jetpack &lt;b>%1$s&lt;/b></string>
+    <string name="enter_site_credentials_instead">Autentifică-te cu datele de conectare ale sitului</string>
+    <string name="enter_credentials_for_site">Autentifică-te cu datele de conectare ale sitului %1$s</string>
+    <string name="send_verification_email">Trimite emailul de verificare</string>
+    <string name="my_site_bottom_sheet_add_page">Creează o pagină nouă</string>
+    <string name="my_site_bottom_sheet_add_post">Creează un articol nou</string>
+    <string name="reader_following_display_name">Urmăresc</string>
+    <string name="posts_cannot_be_started">Nu putem deschide articolele acum. Te rog reîncearcă mai târziu</string>
+    <string name="suffix_1_000">kilo%s</string>
+    <string name="suffix_1_000_000_000">giga%s</string>
+    <string name="suffix_1_000_000">mega%s</string>
+    <string name="suffix_1_000_000_000_000_000">peta%s</string>
+    <string name="suffix_1_000_000_000_000">tera%s</string>
+    <string name="suffix_1_000_000_000_000_000_000">exa%s</string>
+    <string name="reader_filter_all_sites">Toate siturile</string>
+    <string name="reader_filter_sites_title">Situri</string>
+    <string name="reader_filter_tags_title">Etichete</string>
+    <string name="reader_save_for_later_display_name">Salvate</string>
+    <string name="reader_discover_display_name">Descoperă</string>
+    <string name="reader_my_likes_display_name">Aprecieri</string>
+    <string name="site_cannot_be_loaded">Nu putem încărca datele pentru situl tău chiar acum. Te rog reîncearcă mai târziu</string>
     <string name="gutenberg_native_wordpress_media_library">„Bibliotecă media WordPress”</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">„Lucrăm cu sârguință pentru a adăuga mai multe blocuri la fiecare lansare a unei versiuni noi. Între timp, poți edita acest articol pe web.”</string>
     <string name="gutenberg_native_unsupported">„Neacceptat”</string>
@@ -161,7 +186,6 @@ Language: ro
     <string name="site_settings_site_accelerator">Accelerator de situri</string>
     <string name="site_settings_lazy_load_images_summary">Îți îmbunătățește viteza sitului prin încărcarea imaginilor numai când trebuie să apară pe ecran.</string>
     <string name="site_settings_performance">Performanță</string>
-    <string name="notification_settings_moved_notices">Setările pentru notificări pot fi găsite acum în fila Notificări.</string>
     <string name="stats_file_downloads_value_label">Descărcări</string>
     <string name="stats_file_downloads_title_label">Fișier</string>
     <string name="stats_file_downloads">Descărcări de fișiere</string>
@@ -224,9 +248,9 @@ Language: ro
     <string name="post_settings_retry_featured_image">Reîncearcă încărcarea</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Încarc elementele media.\nTe rog atinge pentru opțiuni.</string>
     <string name="link_open_new_window">Deschide legătura într-o fereastră/filă nouă</string>
-    <string name="post_list_search_prompt">Caută în articolele publicate</string>
     <string name="stats_widget_error_no_access_token">Pentru a vizualiza statisticile, autentifică-te în contul WordPress.com.</string>
     <string name="post_list_search_nothing_found">Nu se potrivește niciun articol cu căutarea ta</string>
+    <string name="post_list_search_prompt">Caută articole</string>
     <string name="domains_suggestions_intro_description">Aici vei fi găsit pe internet.</string>
     <string name="domains_suggestions_intro_title">Alege un nume de domeniu premium</string>
     <string name="my_site_custom_domain_name">Toate planurile WordPress.com includ un nume de domeniu personalizat. Înregistrează-ți domeniul premium gratuit acum.</string>
@@ -482,7 +506,6 @@ Language: ro
     <string name="giphy_picker_empty_search_list">Nu s-a potrivit niciun element media cu căutarea ta</string>
     <string name="giphy_picker_initial_empty_text">Caută pentru a găsi imagini GIF pe care să le adaugi în Biblioteca ta media!</string>
     <string name="giphy_picker_search_hint">Caută cu Giphy</string>
-    <string name="photo_picker_giphy">Alege din Giphy</string>
     <string name="stats_author_views_label">Vizualizări</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autori</string>
@@ -1810,7 +1833,6 @@ Language: ro
     <string name="auth_required">Autentifică-te din nou pentru a continua.</string>
     <string name="invalid_verification_code">Cod de verificare invalid</string>
     <string name="verification_code">Cod de verificare</string>
-    <string name="editor_toast_invalid_path">Cale fișier invalidă</string>
     <string name="language">Limbă</string>
     <string name="media_fetching">Se aduc media…</string>
     <string name="posts_fetching">Se aduc articole…</string>
