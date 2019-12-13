@@ -28,7 +28,7 @@ class ReaderTrackerTest {
     @Test
     fun `trackers are initialized on initTrackers`() {
         tracker.initTrackers()
-        val expected =  mapOf(
+        val expected = mapOf(
                 "time_in_main_reader" to 0,
                 "time_in_reader_filtered_list" to 0,
                 "time_in_reader_paged_post" to 0
@@ -56,7 +56,6 @@ class ReaderTrackerTest {
 
         whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 3))
         tracker.stop(ReaderTrackerInfo.ReaderPagedPosts::class.java)
-
 
         val expected = mapOf(
                 "time_in_main_reader" to Int.MAX_VALUE - 1,
@@ -131,7 +130,7 @@ class ReaderTrackerTest {
         )
         assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
 
-        expected =  mapOf(
+        expected = mapOf(
                 "time_in_main_reader" to 0,
                 "time_in_reader_filtered_list" to 0,
                 "time_in_reader_paged_post" to 0
@@ -141,7 +140,7 @@ class ReaderTrackerTest {
         assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
     }
 
-    private fun addToDate(date: Date, seconds: Int) : Date {
+    private fun addToDate(date: Date, seconds: Int): Date {
         val calendar = Calendar.getInstance()
         calendar.time = date
         calendar.add(Calendar.SECOND, seconds)

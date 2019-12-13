@@ -30,6 +30,6 @@ class ReaderTracker @Inject constructor(trackersProvider: ReaderTrackersProvider
     }
 
     fun getAnalyticsData(): Map<String, Any> {
-        return trackers.associateBy( {it.key}, { it.accumulatedTime })
+        return trackers.associateBy({ it.key }, { it.accumulatedTime })
     }
 }

@@ -22,7 +22,13 @@ sealed class ReaderTrackerInfo(val key: String, var accumulatedTime: Int, privat
         }
     }
 
-    class ReaderTopLevelList(dateProvider: DateProvider = DateProvider()) : ReaderTrackerInfo("time_in_main_reader", 0, dateProvider)
-    class ReaderFilteredList(dateProvider: DateProvider = DateProvider()) : ReaderTrackerInfo("time_in_reader_filtered_list", 0, dateProvider)
-    class ReaderPagedPosts(dateProvider: DateProvider = DateProvider()) : ReaderTrackerInfo("time_in_reader_paged_post", 0, dateProvider)
+    class ReaderTopLevelList(
+        dateProvider: DateProvider = DateProvider()
+    ) : ReaderTrackerInfo("time_in_main_reader", 0, dateProvider)
+    class ReaderFilteredList(
+        dateProvider: DateProvider = DateProvider()
+    ) : ReaderTrackerInfo("time_in_reader_filtered_list", 0, dateProvider)
+    class ReaderPagedPosts(
+        dateProvider: DateProvider = DateProvider()
+    ) : ReaderTrackerInfo("time_in_reader_paged_post", 0, dateProvider)
 }
