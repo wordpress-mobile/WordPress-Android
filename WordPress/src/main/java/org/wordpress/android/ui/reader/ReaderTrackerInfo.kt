@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader
 
 import org.wordpress.android.ui.reader.utils.DateProvider
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 
@@ -13,13 +15,13 @@ sealed class ReaderTrackerInfo(val key: String, var accumulatedTime: Int, privat
     }
 
     fun start() {
-        startTime = dateProvider.getCurrentTime()
+        startTime = dateProvider.getCurrentDate()
     }
 
     fun stop() {
         startTime?.let {
-            accumulatedTime += DateTimeUtils.secondsBetween(dateProvider.getCurrentTime(), startTime)
-        }
+            accumulatedTime += DateTimeUtils.secondsBetween(dateProvider.getCurrentDate(), startTime)
+        } ?: AppLog.e(T.READER, "ReaderTrackerInfo > stop found a null startTime")
     }
 
     class ReaderTopLevelList(
