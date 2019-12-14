@@ -858,7 +858,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
          * 2. the app was in background and is now foreground
          */
         public void onAppComesFromBackground() {
-            mReaderTracker.initTrackers();
+            mReaderTracker.setupTrackers();
             AppLog.i(T.UTILS, "App comes from background");
             if (!sAppIsInTheBackground) {
                 return;
