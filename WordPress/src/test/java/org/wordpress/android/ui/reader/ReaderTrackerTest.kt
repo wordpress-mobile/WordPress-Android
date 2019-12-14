@@ -26,8 +26,8 @@ class ReaderTrackerTest {
     }
 
     @Test
-    fun `trackers are initialized on initTrackers`() {
-        tracker.initTrackers()
+    fun `trackers are setup on setupTrackers`() {
+        tracker.setupTrackers()
         val expected = mapOf(
                 "time_in_main_reader" to 0,
                 "time_in_reader_filtered_list" to 0,
@@ -39,22 +39,22 @@ class ReaderTrackerTest {
 
     @Test
     fun `trackers accumulates as expected`() {
-        tracker.initTrackers()
+        tracker.setupTrackers()
         val startPoint = Date()
 
-        whenever(dateProvider.getCurrentTime()).thenReturn(startPoint)
+        whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
 
         tracker.start(ReaderTrackerInfo.ReaderTopLevelList::class.java)
         tracker.start(ReaderTrackerInfo.ReaderFilteredList::class.java)
         tracker.start(ReaderTrackerInfo.ReaderPagedPosts::class.java)
 
-        whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 1))
+        whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 1))
         tracker.stop(ReaderTrackerInfo.ReaderTopLevelList::class.java)
 
-        whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 2))
+        whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 2))
         tracker.stop(ReaderTrackerInfo.ReaderFilteredList::class.java)
 
-        whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 3))
+        whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 3))
         tracker.stop(ReaderTrackerInfo.ReaderPagedPosts::class.java)
 
         val expected = mapOf(
@@ -67,26 +67,26 @@ class ReaderTrackerTest {
 
     @Test
     fun `trackers accumulates as expected in multiple sessions`() {
-        tracker.initTrackers()
+        tracker.setupTrackers()
 
         val numRep = 10
 
         for (i in 0 until numRep) {
             val startPoint = Date()
 
-            whenever(dateProvider.getCurrentTime()).thenReturn(startPoint)
+            whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
 
             tracker.start(ReaderTrackerInfo.ReaderTopLevelList::class.java)
             tracker.start(ReaderTrackerInfo.ReaderFilteredList::class.java)
             tracker.start(ReaderTrackerInfo.ReaderPagedPosts::class.java)
 
-            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 1))
+            whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 1))
             tracker.stop(ReaderTrackerInfo.ReaderTopLevelList::class.java)
 
-            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 2))
+            whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 2))
             tracker.stop(ReaderTrackerInfo.ReaderFilteredList::class.java)
 
-            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 3))
+            whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 3))
             tracker.stop(ReaderTrackerInfo.ReaderPagedPosts::class.java)
         }
 
@@ -99,27 +99,27 @@ class ReaderTrackerTest {
     }
 
     @Test
-    fun `trackers resets on initTrackers after multiple sessions`() {
-        tracker.initTrackers()
+    fun `trackers are setup correctly on setupTrackers after multiple sessions`() {
+        tracker.setupTrackers()
 
         val numRep = 10
 
         for (i in 0 until numRep) {
             val startPoint = Date()
 
-            whenever(dateProvider.getCurrentTime()).thenReturn(startPoint)
+            whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
 
             tracker.start(ReaderTrackerInfo.ReaderTopLevelList::class.java)
             tracker.start(ReaderTrackerInfo.ReaderFilteredList::class.java)
             tracker.start(ReaderTrackerInfo.ReaderPagedPosts::class.java)
 
-            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 1))
+            whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 1))
             tracker.stop(ReaderTrackerInfo.ReaderTopLevelList::class.java)
 
-            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 2))
+            whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 2))
             tracker.stop(ReaderTrackerInfo.ReaderFilteredList::class.java)
 
-            whenever(dateProvider.getCurrentTime()).thenReturn(addToDate(startPoint, 3))
+            whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 3))
             tracker.stop(ReaderTrackerInfo.ReaderPagedPosts::class.java)
         }
 
@@ -136,7 +136,7 @@ class ReaderTrackerTest {
                 "time_in_reader_paged_post" to 0
         )
 
-        tracker.initTrackers()
+        tracker.setupTrackers()
         assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
     }
 
