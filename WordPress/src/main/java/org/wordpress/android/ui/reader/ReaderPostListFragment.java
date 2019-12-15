@@ -105,6 +105,8 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.Up
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
@@ -485,7 +487,7 @@ public class ReaderPostListFragment extends Fragment
         super.onPause();
         AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = " + mIsTopLevel + "]");
         mReaderTracker.stop(
-                mIsTopLevel ? ReaderTrackerInfo.ReaderTopLevelList.class : ReaderTrackerInfo.ReaderFilteredList.class
+                mIsTopLevel ? ReaderTrackerType.MAIN_READER : ReaderTrackerType.FILTERED_LIST
         );
         if (mBookmarksSavedLocallyDialog != null) {
             mBookmarksSavedLocallyDialog.dismiss();
@@ -498,7 +500,7 @@ public class ReaderPostListFragment extends Fragment
         super.onResume();
         AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count [mIsTopLevel = " + mIsTopLevel + "]");
         mReaderTracker.start(
-                mIsTopLevel ? ReaderTrackerInfo.ReaderTopLevelList.class : ReaderTrackerInfo.ReaderFilteredList.class
+                mIsTopLevel ? ReaderTrackerType.MAIN_READER : ReaderTrackerType.FILTERED_LIST
         );
         checkPostAdapter();
 

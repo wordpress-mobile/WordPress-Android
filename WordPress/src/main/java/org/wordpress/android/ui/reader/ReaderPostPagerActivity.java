@@ -44,6 +44,8 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -525,7 +527,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         AppLog.d(T.READER, "TRACK READER ReaderPostPagerActivity > START Count");
-        mReaderTracker.start(ReaderTrackerInfo.ReaderPagedPosts.class);
+        mReaderTracker.start(ReaderTrackerType.PAGED_POST);
         EventBus.getDefault().register(this);
 
         if (!hasPagerAdapter() || mBackFromLogin) {
@@ -544,7 +546,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         AppLog.d(T.READER, "TRACK READER ReaderPostPagerActivity > STOP Count");
-        mReaderTracker.stop(ReaderTrackerInfo.ReaderPagedPosts.class);
+        mReaderTracker.stop(ReaderTrackerType.PAGED_POST);
         EventBus.getDefault().unregister(this);
     }
 
