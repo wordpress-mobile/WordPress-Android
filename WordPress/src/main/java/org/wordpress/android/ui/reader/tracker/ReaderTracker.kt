@@ -2,7 +2,8 @@ package org.wordpress.android.ui.reader.tracker
 
 import androidx.annotation.MainThread
 import org.wordpress.android.ui.reader.utils.DateProvider
-import org.wordpress.android.util.CrashLoggingUtils
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DateTimeUtils
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,7 +41,7 @@ class ReaderTracker @Inject constructor(private val dateProvider: DateProvider) 
                         DateTimeUtils.secondsBetween(dateProvider.getCurrentDate(), startDate)
                 // let reset the startDate to null
                 trackers[type] = ReaderTrackerInfo(accumulatedTime = accumulatedTime)
-            } ?: CrashLoggingUtils.log("ReaderTracker > stop found a null startDate")
+            } ?: AppLog.d(T.READER, "ReaderTracker > stop found a null startDate")
         }
     }
 
