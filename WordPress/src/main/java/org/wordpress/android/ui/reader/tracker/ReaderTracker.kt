@@ -41,7 +41,7 @@ class ReaderTracker @Inject constructor(private val dateProvider: DateProvider) 
                         DateTimeUtils.secondsBetween(dateProvider.getCurrentDate(), startDate)
                 // let reset the startDate to null
                 trackers[type] = ReaderTrackerInfo(accumulatedTime = accumulatedTime)
-            } ?: AppLog.d(T.READER, "ReaderTracker > stop found a null startDate")
+            } ?: AppLog.e(T.READER, "ReaderTracker > stop found a null startDate")
         }
     }
 
