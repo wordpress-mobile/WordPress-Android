@@ -7,22 +7,23 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.FILTERED_LIST
+import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
+import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.PAGED_POST
 import org.wordpress.android.ui.reader.utils.DateProvider
-import org.wordpress.android.ui.reader.utils.ReaderTrackersProvider
 import java.util.Calendar
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderTrackerTest {
     @Mock lateinit var dateProvider: DateProvider
-    lateinit var readerTrackersProvider: ReaderTrackersProvider
 
     private lateinit var tracker: ReaderTracker
 
     @Before
     fun setup() {
-        readerTrackersProvider = ReaderTrackersProvider(dateProvider)
-        tracker = ReaderTracker(readerTrackersProvider)
+        tracker = ReaderTracker(dateProvider)
     }
 
     @Test
@@ -44,18 +45,18 @@ class ReaderTrackerTest {
 
         whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
 
-        tracker.start(ReaderTrackerInfo.ReaderTopLevelList::class.java)
-        tracker.start(ReaderTrackerInfo.ReaderFilteredList::class.java)
-        tracker.start(ReaderTrackerInfo.ReaderPagedPosts::class.java)
+        tracker.start(MAIN_READER)
+        tracker.start(FILTERED_LIST)
+        tracker.start(PAGED_POST)
 
         whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 1))
-        tracker.stop(ReaderTrackerInfo.ReaderTopLevelList::class.java)
+        tracker.stop(MAIN_READER)
 
         whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 2))
-        tracker.stop(ReaderTrackerInfo.ReaderFilteredList::class.java)
+        tracker.stop(FILTERED_LIST)
 
         whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 3))
-        tracker.stop(ReaderTrackerInfo.ReaderPagedPosts::class.java)
+        tracker.stop(PAGED_POST)
 
         val expected = mapOf(
                 "time_in_main_reader" to Int.MAX_VALUE - 1,
@@ -76,18 +77,18 @@ class ReaderTrackerTest {
 
             whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
 
-            tracker.start(ReaderTrackerInfo.ReaderTopLevelList::class.java)
-            tracker.start(ReaderTrackerInfo.ReaderFilteredList::class.java)
-            tracker.start(ReaderTrackerInfo.ReaderPagedPosts::class.java)
+            tracker.start(MAIN_READER)
+            tracker.start(FILTERED_LIST)
+            tracker.start(PAGED_POST)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 1))
-            tracker.stop(ReaderTrackerInfo.ReaderTopLevelList::class.java)
+            tracker.stop(MAIN_READER)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 2))
-            tracker.stop(ReaderTrackerInfo.ReaderFilteredList::class.java)
+            tracker.stop(FILTERED_LIST)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 3))
-            tracker.stop(ReaderTrackerInfo.ReaderPagedPosts::class.java)
+            tracker.stop(PAGED_POST)
         }
 
         val expected = mapOf(
@@ -109,18 +110,18 @@ class ReaderTrackerTest {
 
             whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
 
-            tracker.start(ReaderTrackerInfo.ReaderTopLevelList::class.java)
-            tracker.start(ReaderTrackerInfo.ReaderFilteredList::class.java)
-            tracker.start(ReaderTrackerInfo.ReaderPagedPosts::class.java)
+            tracker.start(MAIN_READER)
+            tracker.start(FILTERED_LIST)
+            tracker.start(PAGED_POST)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 1))
-            tracker.stop(ReaderTrackerInfo.ReaderTopLevelList::class.java)
+            tracker.stop(MAIN_READER)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 2))
-            tracker.stop(ReaderTrackerInfo.ReaderFilteredList::class.java)
+            tracker.stop(FILTERED_LIST)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 3))
-            tracker.stop(ReaderTrackerInfo.ReaderPagedPosts::class.java)
+            tracker.stop(PAGED_POST)
         }
 
         var expected = mapOf(
