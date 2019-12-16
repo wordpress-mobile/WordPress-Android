@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-23 20:35:13+0000
+Translation-Revision-Date: 2019-12-03 20:47:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="login_discovery_error_generic">Wir konnten nicht auf deine Website zugreifen. Du musst dich an deinen Host wenden, um dies zu beheben.</string>
+    <string name="login_discovery_error_ssl">Wir konnten wegen eines Problems mit dem &lt;b>SSL-Zertifikat&lt;/b> nicht auf deine Website zugreifen. Du musst dich an deinen Host wenden, um dies zu beheben.</string>
+    <string name="login_discovery_error_http_auth">Wir konnten nicht auf deine Website zugreifen, da &lt;b>HTTP-Authentifizierung&lt;/b> erforderlich ist. Du musst dich an deinen Host wenden, um dies zu beheben.</string>
+    <string name="login_discovery_error_xmlrpc">Wir konnten nicht auf die &lt;b>XMLRPC-Datei&lt;/b> deiner Website zugreifen. Du musst dich an deinen Host wenden, um dies zu beheben.</string>
+    <string name="login_site_credentials_magic_link_label">Fast geschafft! Wir müssen nur noch deine mit Jetpack verbundene E-Mail-Adresse bestätigen &lt;b>%1$s&lt;/b></string>
+    <string name="enter_site_credentials_instead">Mit den Website-Anmeldedaten anmelden</string>
+    <string name="enter_credentials_for_site">Mit deinen Anmeldedaten der Website %1$s anmelden</string>
+    <string name="send_verification_email">Bestätigungs-E-Mail senden</string>
+    <string name="my_site_bottom_sheet_add_page">Neue Seite erstellen</string>
+    <string name="my_site_bottom_sheet_add_post">Neuen Beitrag erstellen</string>
+    <string name="reader_following_display_name">Folgen</string>
+    <string name="posts_cannot_be_started">Wir können die Beiträge momentan nicht öffnen. Bitte versuche es später erneut</string>
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000_000_000">%sQa</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
+    <string name="reader_filter_all_sites">Alle Websites</string>
+    <string name="reader_filter_sites_title">Websites</string>
+    <string name="reader_filter_tags_title">Schlagwörter</string>
+    <string name="reader_save_for_later_display_name">Gespeichert</string>
+    <string name="reader_discover_display_name">Entdecken</string>
+    <string name="reader_my_likes_display_name">Likes</string>
+    <string name="site_cannot_be_loaded">Wir können die Daten deiner Website momentan nicht laden. Bitte versuche es später erneut</string>
     <string name="gutenberg_native_wordpress_media_library">„WordPress-Mediathek“</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">„Wir arbeiten intensiv daran, mit jedem Release mehr Blöcke hinzuzufügen. In der Zwischenzeit kannst du diesen Beitrag auch im Web bearbeiten.“</string>
     <string name="gutenberg_native_unsupported">„Nicht unterstützt“</string>
@@ -101,7 +126,7 @@ Language: de
     <string name="dialog_gutenberg_informative_description_post">Großartig! Du nutzt jetzt den Block-Editor für neue Beiträge! Wenn du zum klassischen Editor wechseln möchtest, gehe zu „Meine Website“ > „Website-Einstellungen“.</string>
     <string name="pick_media">Bild oder Video hinzufügen</string>
     <string name="error_post_not_submitted_retrying">Wir konnten diesen Beitrag nicht zur Überprüfung einreichen, aber wir werden es später erneut versuchen.</string>
-    <string name="error_post_not_scheduled_retrying">Wir konnten diesen Beitrag nicht planen, aber wir werden es später noch einmal versuchen.</string>
+    <string name="error_post_not_scheduled_retrying">Wir konnten diesen Beitrag nicht planen, aber wir werden es später erneut versuchen.</string>
     <string name="error_post_not_published_retrying_private">Wir konnten diesen privaten Beitrag nicht veröffentlichen, aber wir werden es später erneut versuchen.</string>
     <string name="error_post_not_published_retrying">Wir konnten diesen Beitrag nicht veröffentlichen, aber wir werden es später erneut versuchen.</string>
     <string name="error_post_not_submitted">Wir konnten diese Aktion nicht abschließen und haben diesen Beitrag nicht zur Überprüfung eingereicht.</string>
@@ -161,7 +186,6 @@ Language: de
     <string name="site_settings_site_accelerator">Website-Beschleuniger</string>
     <string name="site_settings_lazy_load_images_summary">Verbessere die Ladezeit deiner Website, indem du nur die auf dem Bildschirm sichtbaren Bilder lädst.</string>
     <string name="site_settings_performance">Performance</string>
-    <string name="notification_settings_moved_notices">Benachrichtigungseinstellungen sind jetzt auf dem Tab „Benachrichtigungen“ zu finden.</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
     <string name="stats_file_downloads_title_label">Datei</string>
     <string name="stats_file_downloads">Heruntergeladene Dateien</string>
@@ -224,9 +248,9 @@ Language: de
     <string name="post_settings_retry_featured_image">Hochladen erneut starten</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Medien werden hochgeladen.\nFür Optionen bitte hier tippen.</string>
     <string name="link_open_new_window">Link in neuem Fenster/Tab öffnen</string>
-    <string name="post_list_search_prompt">Veröffentlichte Beiträge suchen</string>
     <string name="stats_widget_error_no_access_token">Um deine Statistiken anzuzeigen, melde dich beim WordPress.com-Konto an.</string>
     <string name="post_list_search_nothing_found">Es gibt keine Beiträge, die deiner Suche entsprechen</string>
+    <string name="post_list_search_prompt">Beiträge durchsuchen</string>
     <string name="domains_suggestions_intro_description">Hier finden dich andere im Internet.</string>
     <string name="domains_suggestions_intro_title">Wähle einen Premium-Domainnamen</string>
     <string name="my_site_custom_domain_name">Alle Pläne auf WordPress.com enthalten einen eigenen Domainnamen. Registriere dir jetzt deine kostenlose Domain.</string>
@@ -252,8 +276,8 @@ Language: de
     <string name="dialog_confirm_update_message_page">Die veröffentlichte Seite wird sofort aktualisiert.</string>
     <string name="dialog_confirm_update_message_post">Der veröffentlichte Beitrag wird sofort aktualisiert.</string>
     <string name="dialog_confirm_update_title">Bereit für die Aktualisierung?</string>
-    <string name="plugin_fetching_error_after_at">Es dauert länger als üblich, die Details des Plugins zu aktualisieren. Bitte versuche es später noch einmal.</string>
-    <string name="plugin_install_site_ineligible_default_error">Falls du kürzlich einen Domainnamen registriert hast, warte bitte ab, bis diese fertig eingerichtet ist und probiere es noch einmal.\n\nFalls nicht, scheint etwas schiefgegangen zu sein und die Plugin-Funktion ist möglicherweise für diese Website nicht verfügbar.</string>
+    <string name="plugin_fetching_error_after_at">Es dauert länger als üblich, die Details des Plugins zu aktualisieren. Bitte versuche es später errneut.</string>
+    <string name="plugin_install_site_ineligible_default_error">Falls du kürzlich einen Domainnamen registriert hast, warte bitte ab, bis diese fertig eingerichtet ist und versuche es erneut.\n\nFalls nicht, scheint etwas schiefgegangen zu sein und die Plugin-Funktion ist möglicherweise für diese Website nicht verfügbar.</string>
     <string name="domain_contact_information_state_not_available_hint">Status (nicht verfügbar)</string>
     <string name="domain_registration_privacy_protection_tos">Mit der Registrierung dieser Domain stimmst du unseren %1$sBestimmungen und Konditionen%2$s zu</string>
     <string name="error_network_connection">Prüfe deine Netzwerkverbindung und versuche es erneut.</string>
@@ -378,7 +402,7 @@ Language: de
     <string name="plans_loading_error_with_cache_button">Pläne trotzdem ansehen</string>
     <string name="plans_loading_error_with_cache_subtitle">Für die Ansicht von Plänen ist eine Internetverbindung erforderlich, so dass Details möglicherweise nicht mehr aktuell sind.</string>
     <string name="plans_loading_error_no_cache_subtitle">Für die Ansicht der Pläne ist eine Internetverbindung erforderlich.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Wir können im Moment keine Pläne laden. Bitte versuch es später noch einmal.</string>
+    <string name="plans_loading_error_no_plans_subtitle">Wir können momentan keine Pläne laden. Bitte versuche es später erneut.</string>
     <string name="plans_loading_error_no_plans_title">Pläne können nicht geladen werden</string>
     <string name="plans_loading_error_network_title">Keine Verbindung</string>
     <string name="menu_switch_to_gutenberg_editor">Zum Block-Editor wechseln</string>
@@ -444,7 +468,7 @@ Language: de
     <string name="new_site_creation_domain_header_subtitle">Hier wirst du im Internet gefunden.</string>
     <string name="new_site_creation_domain_header_title">Wähl einen Domainnamen für deine Website aus.</string>
     <string name="new_site_creation_empty_domain_list_message">Keine verfügbaren Adressen, die deiner Suche entsprechen.</string>
-    <string name="site_creation_error_generic_subtitle">Fehler bei der Kommunikation mit dem Server, bitte versuch es erneut.</string>
+    <string name="site_creation_error_generic_subtitle">Fehler bei der Kommunikation mit dem Server, bitte versuche es erneut.</string>
     <string name="site_creation_error_generic_title">Es gab ein Problem</string>
     <string name="new_site_creation_verticals_custom_subtitle">Individuelle Kategorie</string>
     <string name="new_site_creation_button_skip">Überspringen</string>
@@ -476,13 +500,12 @@ Language: de
     <string name="dialog_confirm_load_remote_post_title">Lösen des Synchronisierungskonflikts.</string>
     <string name="stats_no_data_for_period">Keine Daten für diesen Zeitraum</string>
     <string name="preference_strip_image_location">Positionsangabe von Medien entfernen</string>
-    <string name="stats_cannot_be_started">Wir können die Statistiken momentan nicht öffnen. Bitte später erneut versuchen</string>
+    <string name="stats_cannot_be_started">Wir können die Statistiken momentan nicht öffnen. Bitte versuche es später erneut</string>
     <string name="giphy_powered_by_giphy">Bereitgestellt von GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Einige Medien konnten aufgrund eines Netzwerkfehlers nicht geladen werden.</string>
     <string name="giphy_picker_empty_search_list">Keine Medien entsprechen deiner Suche</string>
     <string name="giphy_picker_initial_empty_text">Suche nach GIFs, die du deiner Mediathek hinzufügen kannst!</string>
     <string name="giphy_picker_search_hint">Giphy durchsuchen</string>
-    <string name="photo_picker_giphy">Von Giphy auswählen</string>
     <string name="stats_author_views_label">Aufrufe</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autoren</string>
@@ -1408,9 +1431,9 @@ Language: de
     <string name="reader_toast_err_cannot_like_post">Dieser Beitrag konnte nicht mit „Gefällt mir“ gekennzeichnet werden.</string>
     <string name="reader_title_post_detail_wpcom">WordPress.com-Beitrag</string>
     <string name="reader_title_deeplink">WordPress Reader</string>
-    <string name="error_notif_q_action_reply">Auf den Kommentar konnte nicht geantwortet werden. Versuche es später erneut.</string>
-    <string name="error_notif_q_action_approve">Der Kommentar konnte nicht genehmigt werden. Versuche es später erneut.</string>
-    <string name="error_notif_q_action_like">Der Kommentar konnte nicht mit „Gefällt mir“ gekennzeichnet werden. Versuche es später erneut.</string>
+    <string name="error_notif_q_action_reply">Auf den Kommentar konnte nicht geantwortet werden. Bitte versuche es später erneut.</string>
+    <string name="error_notif_q_action_approve">Der Kommentar konnte nicht genehmigt werden. Bitte versuche es später erneut.</string>
+    <string name="error_notif_q_action_like">Der Kommentar konnte nicht mit „Gefällt mir“ gekennzeichnet werden. Bitte versuche es später erneut.</string>
     <string name="notifications_label_new_notifications_subtitle">Zum Anzeigen tippen</string>
     <string name="notifications_label_new_notifications">Neue Benachrichtigungen</string>
     <string name="comment_q_action_replying">Antworten …</string>
@@ -1462,7 +1485,7 @@ Language: de
     <string name="image_settings_save_toast">Änderungen gespeichert</string>
     <string name="image_settings_dismiss_dialog_title">Ungespeicherte Änderungen verwerfen?</string>
     <string name="stop_upload_dialog_title">Hochladen stoppen?</string>
-    <string name="tap_to_try_again">Tippe, um es erneut zu probieren!</string>
+    <string name="tap_to_try_again">Tippe, um es erneut zu versuchen!</string>
     <string name="invite_sent">Einladung erfolgreich gesendet</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_error_some_failed">Einladung gesendet, aber es ist mindestens ein Fehler aufgetreten.</string>
@@ -1810,7 +1833,6 @@ Language: de
     <string name="auth_required">Melde dich erneut an, um fortzufahren.</string>
     <string name="invalid_verification_code">Ungültiger Überprüfungscode</string>
     <string name="verification_code">Überprüfungscode</string>
-    <string name="editor_toast_invalid_path">Ungültiger Dateipfad</string>
     <string name="language">Sprache</string>
     <string name="media_fetching">Medien werden abgerufen…</string>
     <string name="posts_fetching">Beiträge werden abgerufen…</string>
@@ -1922,7 +1944,7 @@ Language: de
     <string name="reader_toast_err_add_tag">Hinzufügen des Tags nicht möglich</string>
     <string name="reader_title_applog">Anwendungslog</string>
     <string name="fatal_db_error">Bei der Erstellung der App-Datenbank ist ein Fehler aufgetreten. Versuche die App erneut zu installieren.</string>
-    <string name="error_blog_hidden">Dieser Blog ist versteckt und konnte nicht geladen werden. Aktivierte ihn erneut in den Einstellungen und versuche es nochmal.</string>
+    <string name="error_blog_hidden">Dieser Blog ist versteckt und konnte nicht geladen werden. Aktiviere ihn wieder in den Einstellungen und versuche es erneut.</string>
     <string name="error_refresh_media">Die Medien konnten zu diesem Zeitpunkt nicht aktualisiert werden</string>
     <string name="wordpress_blog">WordPress-Blog</string>
     <string name="image_settings">Bild-Einstellungen</string>
@@ -1972,7 +1994,7 @@ Language: de
     <string name="media_error_no_permission">Du hast keine Berechtigung die Mediathek zu sehen</string>
     <string name="media_gallery_type_thumbnail_grid">Vorschaubild-Raster</string>
     <string name="learn_more">Mehr erfahren</string>
-    <string name="post_not_found">Beim Abrufen des Beitrags trat ein Fehler auf. Lade deine Beiträge erneut und versuche es nochmal.</string>
+    <string name="post_not_found">Beim Abrufen des Beitrags trat ein Fehler auf. Lade deine Beiträge neu und versuche es erneut.</string>
     <string name="plugin_not_found">Beim Zugriff auf dieses Plugin ist ein Fehler aufgetreten</string>
     <string name="cancel_edit">Bearbeiten abbrechen</string>
     <string name="connection_error">Fehler beim Verbinden</string>
