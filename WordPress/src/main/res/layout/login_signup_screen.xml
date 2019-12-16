@@ -8,6 +8,7 @@
         android:id="@+id/intros_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@string/login_promo_viewpager_content_description"
         android:layout_above="@+id/bottom_buttons"
         android:clipToPadding="false"/>
 
