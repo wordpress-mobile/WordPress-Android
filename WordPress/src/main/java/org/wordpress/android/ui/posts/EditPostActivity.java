@@ -1086,13 +1086,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
 
-            @Nullable
-            @Override
-            public PostImmutableModel updatePostIfNeeded() {
-                updatePostObject();
-                return mEditPostRepository.getPost();
-            }
-
             @Override
             public void notifyEmptyDraft() {
                 ToastUtils.showToast(EditPostActivity.this,
@@ -1246,8 +1239,6 @@ public class EditPostActivity extends AppCompatActivity implements
             return false;
         }
 
-        // we update the mPost object first, so we can pre-check Post publish-ability and inform the user
-        updatePostObject();
         if (isDiscardable()) {
             showEmptyPostErrorForSecondaryAction();
             return false;
