@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:clipToPadding="false"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipToPadding="false"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/content_margin"
+    android:paddingStart="@dimen/content_margin"
     android:paddingEnd="@dimen/content_margin"
-    android:paddingStart="@dimen/content_margin" >
+    android:paddingBottom="@dimen/content_margin">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view_connections"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
         android:visibility="gone"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="@dimen/default_cardview_radius"
-        tools:visibility="visible" >
+        tools:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,31 +27,28 @@
             <org.wordpress.android.widgets.WPTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:text="@string/connected_accounts_label"
-                android:textColor="@color/primary_50"
-                android:textSize="@dimen/text_sz_medium"
-                android:textStyle="bold"
                 android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginEnd="@dimen/margin_extra_large"/>
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:text="@string/connected_accounts_label"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/colorPrimary" />
 
             <org.wordpress.android.ui.reader.views.ReaderRecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginStart="@dimen/margin_extra_large"/>
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_large" />
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view_service"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
         android:layout_width="match_parent"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="@dimen/default_cardview_radius" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,61 +59,58 @@
                 android:id="@+id/text_service"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:ellipsize="end"
-                android:textColor="@color/primary_50"
-                android:textSize="@dimen/text_sz_medium"
-                android:textStyle="bold"
-                tools:text="text_service"
                 android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginEnd="@dimen/margin_extra_large"/>
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:ellipsize="end"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/colorPrimary"
+                tools:text="text_service" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:textColor="?attr/wpColorTextSubtle"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="text_description"
+                android:layout_marginStart="@dimen/margin_extra_large"
                 android:layout_marginEnd="@dimen/margin_extra_large"
-                android:layout_marginStart="@dimen/margin_extra_large"/>
+                android:ellipsize="end"
+                android:textAppearance="?attr/textAppearanceCaption"
+                tools:text="text_description" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_description_notice"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/margin_large"
-                android:ellipsize="end"
-                android:textColor="?attr/wpColorTextSubtle"
-                android:textSize="@dimen/text_sz_medium"
-                android:textStyle="bold"
-                tools:text="text_description_notice"
+                android:layout_marginStart="@dimen/margin_extra_large"
                 android:layout_marginEnd="@dimen/margin_extra_large"
-                android:layout_marginStart="@dimen/margin_extra_large"/>
+                android:ellipsize="end"
+                android:paddingTop="@dimen/margin_large"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:textStyle="bold"
+                tools:text="text_description_notice" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/learn_more_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginBottom="@dimen/margin_large"
                 android:ellipsize="end"
                 android:text="@string/learn_more"
-                android:textColor="@color/primary_50"
-                android:textSize="@dimen/text_sz_medium"
-                android:textStyle="bold"
-                tools:text="learn_more_button"
-                android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginEnd="@dimen/margin_extra_large"/>
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/colorPrimary"
+                tools:text="learn_more_button" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_divider_height"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                android:background="@color/divider" />
+                android:background="?android:attr/listDivider" />
 
             <org.wordpress.android.ui.publicize.ConnectButton
                 android:id="@+id/button_connect"
@@ -128,6 +118,6 @@
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>
