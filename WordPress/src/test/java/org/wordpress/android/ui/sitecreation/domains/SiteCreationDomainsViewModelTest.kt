@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.domains
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.firstValue
 import com.nhaarman.mockitokotlin2.lastValue
 import com.nhaarman.mockitokotlin2.secondValue
@@ -27,6 +28,8 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
 import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelUnavailabilityUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -37,7 +40,10 @@ import org.hamcrest.CoreMatchers.`is` as Is
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private const val ERROR_RESULT_FETCH_QUERY = "error_result_query"
 private const val SEGMENT_ID = 123L
-private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair("multi_result_query", MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE)
+private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair(
+        "multi_result_query",
+        MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
+)
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = Pair("empty_result_query", 0)
 
 @InternalCoroutinesApi
@@ -54,6 +60,7 @@ class SiteCreationDomainsViewModelTest {
     @Mock private lateinit var clearBtnObserver: Observer<Unit>
     @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock private lateinit var mSiteCreationDomainSanitizer: SiteCreationDomainSanitizer
 
     private lateinit var viewModel: SiteCreationDomainsViewModel
 
@@ -61,6 +68,7 @@ class SiteCreationDomainsViewModelTest {
     fun setUp() {
         viewModel = SiteCreationDomainsViewModel(
                 networkUtils = networkUtils,
+                domainSanitizer = mSiteCreationDomainSanitizer,
                 dispatcher = dispatcher,
                 fetchDomainsUseCase = fetchDomainsUseCase,
                 tracker = tracker,
@@ -76,9 +84,13 @@ class SiteCreationDomainsViewModelTest {
 
     private fun <T> testWithSuccessResponse(
         queryResultSizePair: Pair<String, Int> = MULTI_RESULT_DOMAIN_FETCH_QUERY,
+        isDomainAvailableInSuggestions: Boolean = true,
         block: suspend CoroutineScope.() -> T
     ) {
         test {
+            whenever(mSiteCreationDomainSanitizer.sanitizeDomainQuery(any())).thenReturn(
+                    createSanitizedDomainResult(isDomainAvailableInSuggestions)
+            )
             whenever(fetchDomainsUseCase.fetchDomains(queryResultSizePair.first, SEGMENT_ID))
                     .thenReturn(createSuccessfulOnSuggestedDomains(queryResultSizePair))
             block()
@@ -170,13 +182,30 @@ class SiteCreationDomainsViewModelTest {
      * Verifies the UI state for after the user enters a non-empty query which results in multiple domain suggestions.
      */
     @Test
-    fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithMultipleResults() = testWithSuccessResponse {
-        viewModel.start(null, SEGMENT_ID)
-        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(3)).onChanged(captor.capture())
-        verifyVisibleItemsContentUiState(captor.thirdValue, showClearButton = true)
-    }
+    fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithMultipleResults() =
+            testWithSuccessResponse {
+                viewModel.start(null, SEGMENT_ID)
+                viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+                val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+                verify(uiStateObserver, times(3)).onChanged(captor.capture())
+                verifyVisibleItemsContentUiState(captor.thirdValue, showClearButton = true)
+            }
+
+    /**
+     * Verifies the UI state for after the user enters a query that is unavailable which results in the domain
+     * unavailability list item being shown in the domain suggestions.
+     */
+    @Test
+    fun verifyDomainUnavailableUiStateAfterResponseWithMultipleResults() =
+            testWithSuccessResponse(isDomainAvailableInSuggestions = false) {
+                viewModel.start(null, SEGMENT_ID)
+                viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+                val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+                verify(uiStateObserver, times(3)).onChanged(captor.capture())
+                verifyContentAndDomainValidityUiStatesAreVisible(
+                        captor.thirdValue
+                )
+            }
 
     /**
      * Verifies the UI state for after the user enters a non-empty query which results in error.
@@ -187,7 +216,11 @@ class SiteCreationDomainsViewModelTest {
         viewModel.updateQuery(ERROR_RESULT_FETCH_QUERY)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
-        verifyVisibleItemsContentUiState(captor.thirdValue, showClearButton = true, numberOfItems = 1)
+        verifyVisibleItemsContentUiState(
+                captor.thirdValue,
+                showClearButton = true,
+                numberOfItems = 1
+        )
         assertThat(
                 captor.thirdValue.contentState.items[0],
                 instanceOf(DomainsFetchSuggestionsErrorUiState::class.java)
@@ -199,14 +232,15 @@ class SiteCreationDomainsViewModelTest {
      * which results in multiple domain suggestions.
      */
     @Test
-    fun verifyClearQueryWithNonEmptyTitleUiStateAfterResponseWithMultipleResults() = testWithSuccessResponse {
-        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first, SEGMENT_ID)
-        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-        viewModel.updateQuery("")
-        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(6)).onChanged(captor.capture())
-        verifyVisibleItemsContentUiState(captor.lastValue, false, 20)
-    }
+    fun verifyClearQueryWithNonEmptyTitleUiStateAfterResponseWithMultipleResults() =
+            testWithSuccessResponse {
+                viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first, SEGMENT_ID)
+                viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+                viewModel.updateQuery("")
+                val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+                verify(uiStateObserver, times(6)).onChanged(captor.capture())
+                verifyVisibleItemsContentUiState(captor.lastValue, false, 20)
+            }
 
     /**
      * Verifies the UI state after the user enters an empty query (presses clear button) with an empty site title
@@ -284,6 +318,18 @@ class SiteCreationDomainsViewModelTest {
     }
 
     /**
+     * Helper function to verify a [DomainsModelUnavailabilityUiState] Ui State.
+     */
+    private fun verifyContentAndDomainValidityUiStatesAreVisible(
+        uiState: DomainsUiState
+    ) {
+        assertThat(
+                uiState.contentState.items.first(),
+                instanceOf(DomainsModelUnavailabilityUiState::class.java)
+        )
+    }
+
+    /**
      * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.Empty] content state.
      */
     private fun verifyEmptyItemsContentUiState(
@@ -316,4 +362,17 @@ class SiteCreationDomainsViewModelTest {
         event.error = SuggestDomainError("GENERIC_ERROR", "test")
         return event
     }
+
+    /**
+     * Helper function that creates the current sanitized query being used to generate the domain suggestions.
+     * It returns a test domain that's based on the test suggestions being used so that the app can behave in it's
+     * normal [DomainsModelAvailableUiState] state. It also returns an unavailable domain query so that the
+     *  [DomainsModelUnavailabilityUiState] state is activated.
+     */
+    private fun createSanitizedDomainResult(isDomainAvailableInSuggestions: Boolean) =
+            if (isDomainAvailableInSuggestions) {
+                "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-1"
+            } else {
+                "invaliddomain"
+            }
 }

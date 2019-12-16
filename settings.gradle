@@ -19,4 +19,6 @@ if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
     project(':react-native-gutenberg-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/react-native-gutenberg-bridge/android')
     include ':react-native-video'
     project(':react-native-video').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/node_modules/react-native-video/android-exoplayer')
+    include ':@react-native-community_slider'
+    project(':@react-native-community_slider').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/node_modules/@react-native-community/slider/src/android')
 }

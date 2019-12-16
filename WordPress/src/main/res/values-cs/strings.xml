@@ -6,8 +6,8 @@ Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
-    <string name="gutenberg_native_translate">\"Překlad\"</string>
-    <string name="gutenberg_native_title">\"Název:\"</string>
+    <string name="gutenberg_native_translate">Překlad</string>
+    <string name="gutenberg_native_title">Název:</string>
     <string name="domain_registration_state_picker_dialog_title">Vybrat stát</string>
     <string name="domain_registration_country_picker_dialog_title">Vybrat zemi</string>
     <string name="domain_registration_result_continue_button">Další</string>

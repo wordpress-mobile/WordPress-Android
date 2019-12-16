@@ -103,6 +103,11 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected boolean mIsAvatarAdded;
     protected boolean mIsEmailSignup;
 
+    private boolean mIsUpdatingDisplayName = false;
+    private boolean mIsUpdatingPassword = false;
+    private boolean mHasUpdatedPassword = false;
+    private boolean mHasMadeUpdates = false;
+
     private static final String ARG_DISPLAY_NAME = "ARG_DISPLAY_NAME";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_IS_EMAIL_SIGNUP = "ARG_IS_EMAIL_SIGNUP";
@@ -113,6 +118,10 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     private static final String KEY_IS_AVATAR_ADDED = "KEY_IS_AVATAR_ADDED";
     private static final String KEY_PHOTO_URL = "KEY_PHOTO_URL";
     private static final String KEY_USERNAME = "KEY_USERNAME";
+    private static final String KEY_IS_UPDATING_DISPLAY_NAME = "KEY_IS_UPDATING_DISPLAY_NAME";
+    private static final String KEY_IS_UPDATING_PASSWORD = "KEY_IS_UPDATING_PASSWORD";
+    private static final String KEY_HAS_UPDATED_PASSWORD = "KEY_HAS_UPDATED_PASSWORD";
+    private static final String KEY_HAS_MADE_UPDATES = "KEY_HAS_MADE_UPDATES";
 
     public static final String TAG = "signup_epilogue_fragment_tag";
 
@@ -304,6 +313,11 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 mHeaderAvatarAdd.setVisibility(mIsAvatarAdded ? View.GONE : View.VISIBLE);
             }
             mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR_WITHOUT_BACKGROUND, mPhotoUrl);
+
+            mIsUpdatingDisplayName = savedInstanceState.getBoolean(KEY_IS_UPDATING_DISPLAY_NAME);
+            mIsUpdatingPassword = savedInstanceState.getBoolean(KEY_IS_UPDATING_PASSWORD);
+            mHasUpdatedPassword = savedInstanceState.getBoolean(KEY_HAS_UPDATED_PASSWORD);
+            mHasMadeUpdates = savedInstanceState.getBoolean(KEY_HAS_MADE_UPDATES);
         }
     }
 
@@ -406,6 +420,10 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         outState.putString(KEY_EMAIL_ADDRESS, mEmailAddress);
         outState.putString(KEY_USERNAME, mUsername);
         outState.putBoolean(KEY_IS_AVATAR_ADDED, mIsAvatarAdded);
+        outState.putBoolean(KEY_IS_UPDATING_DISPLAY_NAME, mIsUpdatingDisplayName);
+        outState.putBoolean(KEY_IS_UPDATING_PASSWORD, mIsUpdatingPassword);
+        outState.putBoolean(KEY_HAS_UPDATED_PASSWORD, mHasUpdatedPassword);
+        outState.putBoolean(KEY_HAS_MADE_UPDATES, mHasMadeUpdates);
     }
 
     @Override
@@ -433,9 +451,15 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         if (event.isError()) {
-            AnalyticsTracker.track(mIsEmailSignup
-                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED
-                    : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED);
+            if (mIsUpdatingDisplayName) {
+                mIsUpdatingDisplayName = false;
+                AnalyticsTracker.track(mIsEmailSignup
+                        ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED
+                        : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED);
+            } else if (mIsUpdatingPassword) {
+                mIsUpdatingPassword = false;
+            }
+
             AppLog.e(T.API, "SignupEpilogueFragment.onAccountChanged: "
                             + event.error.type + " - " + event.error.message);
             endProgress();
@@ -451,16 +475,20 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                    && !TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
             endProgress();
             populateViews();
-        } else if (changedUsername()) {
-            startProgress(false);
-            PushUsernamePayload payload = new PushUsernamePayload(
-                    mUsername, AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
-            mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
-        } else if (event.causeOfChange == AccountAction.PUSH_SETTINGS && mSignupEpilogueListener != null) {
-            AnalyticsTracker.track(mIsEmailSignup
-                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED
-                    : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED);
-            mSignupEpilogueListener.onContinue();
+        } else if (event.causeOfChange == AccountAction.PUSH_SETTINGS) {
+            mHasMadeUpdates = true;
+
+            if (mIsUpdatingDisplayName) {
+                mIsUpdatingDisplayName = false;
+                AnalyticsTracker.track(mIsEmailSignup
+                        ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED
+                        : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED);
+            } else if (mIsUpdatingPassword) {
+                mIsUpdatingPassword = false;
+                mHasUpdatedPassword = true;
+            }
+
+            updateAccountOrContinue();
         }
     }
 
@@ -475,16 +503,17 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             + event.error.type + " - " + event.error.message);
             endProgress();
             showErrorDialog(getString(R.string.signup_epilogue_error_generic));
-        } else if (mSignupEpilogueListener != null) {
+        } else {
+            mHasMadeUpdates = true;
             AnalyticsTracker.track(mIsEmailSignup
                     ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED
                     : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED);
-            mSignupEpilogueListener.onContinue();
+            updateAccountOrContinue();
         }
     }
 
     protected boolean changedDisplayName() {
-        return !TextUtils.equals(getArguments().getString(ARG_DISPLAY_NAME), mDisplayName);
+        return !TextUtils.equals(mAccount.getAccount().getDisplayName(), mDisplayName);
     }
 
     protected boolean changedPassword() {
@@ -492,7 +521,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected boolean changedUsername() {
-        return !TextUtils.equals(getArguments().getString(ARG_USERNAME), mUsername);
+        return !TextUtils.equals(mAccount.getAccount().getUserName(), mUsername);
     }
 
     /**
@@ -692,42 +721,68 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected void undoChanges() {
-        mDisplayName = getArguments().getString(ARG_DISPLAY_NAME);
+        mDisplayName = !TextUtils.isEmpty(mAccountStore.getAccount().getDisplayName())
+                ? mAccountStore.getAccount().getDisplayName() : getArguments().getString(ARG_DISPLAY_NAME);
         mEditTextDisplayName.setText(mDisplayName);
-        mUsername = getArguments().getString(ARG_USERNAME);
+        mUsername = !TextUtils.isEmpty(mAccountStore.getAccount().getUserName())
+                ? mAccountStore.getAccount().getUserName() : getArguments().getString(ARG_USERNAME);
         mEditTextUsername.setText(mUsername);
         mInputPassword.getEditText().setText("");
         updateAccountOrContinue();
     }
 
     protected void updateAccountOrContinue() {
-        if (changedDisplayName()) {
-            startProgress(false);
-            PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
-            payload.params = new HashMap<>();
-            payload.params.put("display_name", mDisplayName);
-
-            if (changedPassword()) {
-                payload.params.put("password", mInputPassword.getEditText().getText().toString());
-            }
-
-            mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
-        } else if (changedPassword()) {
-            startProgress(false);
-            PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
-            payload.params = new HashMap<>();
-            payload.params.put("password", mInputPassword.getEditText().getText().toString());
-            mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
-        } else if (changedUsername()) {
-            startProgress(false);
-            PushUsernamePayload payload = new PushUsernamePayload(
-                    mUsername, AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
-            mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
+        if (changedUsername()) {
+            startProgressIfNeeded();
+            updateUsername();
+        } else if (changedDisplayName()) {
+            startProgressIfNeeded();
+            mIsUpdatingDisplayName = true;
+            updateDisplayName();
+        } else if (changedPassword() && !mHasUpdatedPassword) {
+            startProgressIfNeeded();
+            mIsUpdatingPassword = true;
+            updatePassword();
         } else if (mSignupEpilogueListener != null) {
-            AnalyticsTracker.track(mIsEmailSignup
-                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UNCHANGED
-                    : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UNCHANGED);
+            if (!mHasMadeUpdates) {
+                AnalyticsTracker.track(mIsEmailSignup
+                        ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UNCHANGED
+                        : AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UNCHANGED);
+            }
+            endProgressIfNeeded();
             mSignupEpilogueListener.onContinue();
+        }
+    }
+
+    private void updateDisplayName() {
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put("display_name", mDisplayName);
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+    }
+
+    private void updatePassword() {
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put("password", mInputPassword.getEditText().getText().toString());
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+    }
+
+    private void updateUsername() {
+        PushUsernamePayload payload = new PushUsernamePayload(
+                mUsername, AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
+        mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
+    }
+
+    private void startProgressIfNeeded() {
+        if (!isInProgress()) {
+            startProgress(false);
+        }
+    }
+
+    private void endProgressIfNeeded() {
+        if (isInProgress()) {
+            endProgress();
         }
     }
 
