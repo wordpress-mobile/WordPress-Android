@@ -1766,8 +1766,6 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditPostRepository.updatePostInTransactionAsync(postModel -> {
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
-            postModel.setIsLocallyChanged(true);
-            postModel.setDateLocallyChanged(mDateTimeUtils.currentTimeInIso8601UTC());
             return true;
         }, postModel -> {
             refreshEditorContent();
@@ -2197,8 +2195,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 // update PostModel
                 postModel.setContent(updatedContent);
                 mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
-                postModel.setDateLocallyChanged(
-                        mDateTimeUtils.currentTimeInIso8601UTC());
                 return true;
             }, postModel -> {
                 mEditorFragment.setTitle(postModel.getTitle());

@@ -917,7 +917,6 @@ public class EditPostSettingsFragment extends Fragment {
         }
         postRepository.updatePostInTransactionAsync(postModel -> {
             postModel.setFeaturedImageId(featuredImageId);
-            postModel.setIsLocallyChanged(true);
             return true;
         }, postModel -> {
             updateFeaturedImageView(postModel);
