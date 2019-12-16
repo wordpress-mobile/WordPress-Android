@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:wp="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/sharing_disabled_notification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,47 +15,43 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/content_margin"
             android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/content_margin"
+            android:layout_marginBottom="@dimen/margin_large"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/margin_medium"
-            android:paddingStart="@dimen/margin_medium">
+            android:paddingStart="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_medium">
 
             <org.wordpress.android.widgets.WPTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:text="@string/sharing_disabled"
-                android:textColor="@color/primary_50"
-                android:textSize="@dimen/text_sz_medium"
-                android:textStyle="bold" />
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/colorPrimary" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sharing_disabled_description"
-                android:textColor="@color/neutral_30"
-                android:textSize="@dimen/text_sz_medium" />
+                android:textAppearance="?attr/textAppearanceCaption" />
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <ScrollView
+        android:id="@+id/sharing_settings_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/sharing_settings_wrapper">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -99,14 +96,12 @@
                         wp:wpTitle="@string/button_style" />
 
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+                android:layout_marginTop="@dimen/margin_large">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -132,14 +127,12 @@
                         wp:wpTitle="@string/site_settings_like" />
 
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+                android:layout_marginTop="@dimen/margin_large">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -158,15 +151,14 @@
                         wp:wpTitle="@string/sharing_comment_likes" />
 
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_view_twitter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+                android:layout_marginBottom="@dimen/margin_large">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -185,7 +177,7 @@
                         wp:wpTitle="@string/twitter_username" />
 
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>

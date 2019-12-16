@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PublicizeConnection;
@@ -38,6 +39,7 @@ public class PublicizeAccountChooserListAdapter
         mSelectedPosition = 0;
     }
 
+    @NotNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -54,13 +56,10 @@ public class PublicizeAccountChooserListAdapter
         holder.mRadioButton.setChecked(position == mSelectedPosition);
 
         if (!mAreAccountsConnected) {
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mListener != null) {
-                        mSelectedPosition = holder.getAdapterPosition();
-                        mListener.onAccountSelected(mSelectedPosition);
-                    }
+            holder.mView.setOnClickListener(view -> {
+                if (mListener != null) {
+                    mSelectedPosition = holder.getAdapterPosition();
+                    mListener.onAccountSelected(mSelectedPosition);
                 }
             });
         } else {
