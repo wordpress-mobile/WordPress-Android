@@ -262,7 +262,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mShowGutenbergEditor;
 
     private List<String> mPendingVideoPressInfoRequests;
-    private List<String> mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds = new ArrayList<>();
+
     private PostEditorAnalyticsSession mPostEditorAnalyticsSession;
     private boolean mIsConfigChange = false;
 
@@ -1885,67 +1885,59 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void savePostAndOptionallyFinish(final boolean doFinish, final boolean forceSave) {
-        // Update post, save to db and post online in its own Thread, because 1. update can be pretty slow with a lot of
-        // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
-        // on API 16 (and 21) with the visual editor.
-        new Thread(() -> {
-            // check if the opened post had some unsaved local changes
-            boolean isFirstTimePublish = isFirstTimePublish(false);
+        if (mEditorFragment == null || !mEditorFragment.isAdded()) {
+            AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
+            return;
+        }
+        // check if the opened post had some unsaved local changes
+        boolean isFirstTimePublish = isFirstTimePublish(false);
 
-            boolean postUpdateSuccessful = updatePostObject();
-            if (!postUpdateSuccessful) {
-                // just return, since the only case updatePostObject() can fail is when the editor
-                // fragment is not added to the activity
-                return;
+        boolean isPublishable = mEditPostRepository.isPostPublishable();
+
+        // if post was modified during this editing session, save it
+        boolean shouldSave = shouldSavePost() || forceSave;
+
+        // if post is publishable or not new, sync it
+        boolean shouldSync = isPublishable || !isNewPost();
+
+        if (doFinish) {
+            saveResult(shouldSave && shouldSync, false);
+        }
+
+        mEditorMedia.definitelyDeleteBackspaceDeletedMediaItemsAsync();
+
+        if (shouldSave) {
+            mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+            boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
+            /*
+             * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
+             * only when it doesn't exist in the remote yet. When it does exist in the remote, we can upload
+             * it only when the user explicitly confirms the changes - eg. clicks on save/publish/submit. The
+             * user didn't confirm the changes in this code path.
+             */
+            boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mEditPostRepository.isLocalDraft();
+            boolean isSavedOnline = false;
+            if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
+                && isNotRestarting && isWpComOrIsLocalDraft) {
+                isSavedOnline = savePostOnline(isFirstTimePublish);
+            } else if (forceSave) {
+                isSavedOnline = savePostOnline(false);
             }
-
-            boolean isPublishable = mEditPostRepository.isPostPublishable();
-
-            // if post was modified during this editing session, save it
-            boolean shouldSave = shouldSavePost() || forceSave;
-
-            // if post is publishable or not new, sync it
-            boolean shouldSync = isPublishable || !isNewPost();
-
             if (doFinish) {
-                saveResult(shouldSave && shouldSync, false);
+                mViewModel.finish(isSavedOnline);
             }
-
-            definitelyDeleteBackspaceDeletedMediaItems();
-
-            if (shouldSave) {
-                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
-                /*
-                 * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
-                 * only when it doesn't exist in the remote yet. When it does exist in the remote, we can upload
-                 * it only when the user explicitly confirms the changes - eg. clicks on save/publish/submit. The
-                  * user didn't confirm the changes in this code path.
-                 */
-                boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mEditPostRepository.isLocalDraft();
-                boolean isSavedOnline = false;
-                if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
-                    && isNotRestarting && isWpComOrIsLocalDraft) {
-                    isSavedOnline = savePostOnline(isFirstTimePublish);
-                } else if (forceSave) {
-                    isSavedOnline = savePostOnline(false);
-                }
-                if (doFinish) {
-                    mViewModel.finish(isSavedOnline);
-                }
-            } else {
-                // discard post if new & empty
-                if (isDiscardable()) {
-                    mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
-                }
-                removePostOpenInEditorStickyEvent();
-                if (doFinish) {
-                    // if we shouldn't save and we should exit, set the session tracking outcome to CANCEL
-                    mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
-                    finish();
-                }
+        } else {
+            // discard post if new & empty
+            if (isDiscardable()) {
+                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
             }
-        }).start();
+            removePostOpenInEditorStickyEvent();
+            if (doFinish) {
+                // if we shouldn't save and we should exit, set the session tracking outcome to CANCEL
+                mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
+                finish();
+            }
+        }
     }
 
     private boolean shouldSavePost() {
@@ -2641,35 +2633,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setDeletedMediaIdOnUploadService(String localMediaId) {
-        mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds.add(localMediaId);
-        UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds);
-    }
-
-    /*
-    * When the user deletes a media item that was being uploaded at that moment, we only cancel the
-    * upload but keep the media item in FluxC DB because the user might have deleted it accidentally,
-    * and they can always UNDO the delete action in Aztec.
-    * So, when the user exits then editor (and thus we lose the undo/redo history) we are safe to
-    * physically delete from the FluxC DB those items that have been deleted by the user using backspace.
-    * */
-    private void definitelyDeleteBackspaceDeletedMediaItems() {
-        for (String mediaId : mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds) {
-            if (!TextUtils.isEmpty(mediaId)) {
-                // make sure the MediaModel exists
-                MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
-                if (mediaModel == null) {
-                    continue;
-                }
-
-                // also make sure it's not being uploaded anywhere else (maybe on some other Post,
-                // simultaneously)
-                if (mediaModel.getUploadState() != null
-                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase(Locale.ROOT))
-                    && !UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
-                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
-                }
-            }
-        }
+        mEditorMedia.removeMediaItem(localMediaId);
     }
 
     @Override
@@ -2697,9 +2661,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
             if (!found) {
                 if (mEditorFragment instanceof AztecEditorFragment) {
-                    mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds.remove(mediaId);
-                    // update the mediaIds list in UploadService
-                    UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds);
+                    mEditorMedia.removeMediaItem(mediaId);
                     ((AztecEditorFragment) mEditorFragment).setMediaToFailed(mediaId);
                 }
             }

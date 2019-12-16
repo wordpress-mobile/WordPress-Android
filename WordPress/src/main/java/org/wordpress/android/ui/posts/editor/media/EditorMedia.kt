@@ -29,6 +29,7 @@ import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialo
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMediaIdle
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMultipleMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
+import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -59,6 +60,7 @@ class EditorMedia @Inject constructor(
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
     private val retryFailedMediaUploadUseCase: RetryFailedMediaUploadUseCase,
     private val cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase,
+    private val removeMediaUseCase: RemoveMediaUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     // region Fields
@@ -69,6 +71,8 @@ class EditorMedia @Inject constructor(
 
     private lateinit var site: SiteModel
     private lateinit var editorMediaListener: EditorMediaListener
+
+    private val deletedMediaItemIds = mutableListOf<String>()
 
     private val _uiState: MutableLiveData<AddMediaToPostUiState> = MutableLiveData()
     val uiState: LiveData<AddMediaToPostUiState> = _uiState
@@ -232,6 +236,25 @@ class EditorMedia @Inject constructor(
                     .purgeMediaToPostAssociationsIfNotInPostAnymore(editorMediaListener.getImmutablePost())
         }
     }
+
+    /*
+    * When the user deletes a media item that was being uploaded at that moment, we only cancel the
+    * upload but keep the media item in FluxC DB because the user might have deleted it accidentally,
+    * and they can always UNDO the delete action in Aztec.
+    * So, when the user exits then editor (and thus we lose the undo/redo history) we are safe to
+    * physically delete from the FluxC DB those items that have been deleted by the user using backspace.
+    * */
+    fun definitelyDeleteBackspaceDeletedMediaItemsAsync() {
+        launch {
+            removeMediaUseCase.removeMediaIfNotUploading(deletedMediaItemIds)
+        }
+    }
+
+    fun removeMediaItem(localMediaId: String) {
+        deletedMediaItemIds.add(localMediaId)
+        UploadService.setDeletedMediaItemIds(deletedMediaItemIds)
+    }
+
     // endregion
 
     fun cancelAddMediaToEditorActions() {
