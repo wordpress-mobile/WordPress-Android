@@ -353,7 +353,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Create a new post
-        mEditPostRepository.setInTransaction(() -> {
+        mEditPostRepository.set(() -> {
             PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
             post.setStatus(PostStatus.DRAFT.toString());
             return post;
@@ -441,7 +441,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 if (mEditPostRepository.hasPost()) {
                     if (extras.getBoolean(EXTRA_LOAD_AUTO_SAVE_REVISION)) {
-                        mEditPostRepository.updateInTransaction(postModel -> {
+                        mEditPostRepository.update(postModel -> {
                             postModel.setTitle(
                                     TextUtils.isEmpty(postModel.getAutoSaveTitle()) ? postModel
                                             .getTitle()
@@ -607,7 +607,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void initializePostObject() {
         if (mEditPostRepository.hasPost()) {
             mEditPostRepository.saveSnapshot();
-            mEditPostRepository.replaceInTransaction(UploadService::updatePostWithCurrentlyCompletedUploads);
+            mEditPostRepository.replace(UploadService::updatePostWithCurrentlyCompletedUploads);
             if (mShowAztecEditor) {
                 try {
                     mMediaMarkedUploadingOnStartIds = AztecEditorFragment
@@ -641,7 +641,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!useAztec || UploadService.hasPendingOrInProgressMediaUploadsForPost(mEditPostRepository.getPost())) {
             return;
         }
-        mEditPostRepository.updateInTransaction(postModel -> {
+        mEditPostRepository.update(postModel -> {
             String oldContent = postModel.getContent();
             if (!AztecEditorFragment.hasMediaItemsMarkedUploading(EditPostActivity.this, oldContent)
                 // we need to make sure items marked failed are still failed or not as well
@@ -1569,7 +1569,7 @@ public class EditPostActivity extends AppCompatActivity implements
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
             return false;
         }
-        return mEditPostRepository.updateInTransaction(postModel -> {
+        return mEditPostRepository.update(postModel -> {
             try {
                 boolean postTitleOrContentChanged =
                         updatePostContentNewEditor(postModel, isAutosave, (String) mEditorFragment.getTitle(),
@@ -1779,7 +1779,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void loadRevision() {
         updatePostLoadingAndDialogState(PostLoadingState.LOADING_REVISION);
         mEditPostRepository.saveForUndo();
-        mEditPostRepository.updateInTransaction(postModel -> {
+        mEditPostRepository.update(postModel -> {
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
             postModel.setIsLocallyChanged(true);
@@ -1865,7 +1865,7 @@ public class EditPostActivity extends AppCompatActivity implements
         @Override
         protected Boolean doInBackground(Void... params) {
             if (mEditPostRepository.postHasEdits()) {
-                mEditPostRepository.updateInTransaction(postModel -> {
+                mEditPostRepository.update(postModel -> {
                     // Changes have been made - save the post and ask for the post list to refresh
                     // We consider this being "manual save", it will replace some Android "spans" by an html
                     // or a shortcode replacement (for instance for images and galleries)
@@ -1968,7 +1968,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
         // on API 16 (and 21) with the visual editor.
         new Thread(() -> {
-            mEditPostRepository.updateInTransaction(postModel -> {
+            mEditPostRepository.update(postModel -> {
                 boolean isFirstTimePublish = isFirstTimePublish(publishPost);
                 if (publishPost) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
@@ -2340,7 +2340,7 @@ public class EditPostActivity extends AppCompatActivity implements
         final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
-            mEditPostRepository.updateInTransaction(postModel -> {
+            mEditPostRepository.update(postModel -> {
                 if (title != null) {
                     mEditorFragment.setTitle(title);
                     postModel.setTitle(title);
@@ -2438,7 +2438,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setFeaturedImageId(final long mediaId) {
-        mEditPostRepository.updateInTransaction(postModel -> {
+        mEditPostRepository.update(postModel -> {
             postModel.setFeaturedImageId(mediaId);
             postModel.setIsLocallyChanged(true);
             return true;
@@ -3116,7 +3116,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
             mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
-            mEditPostRepository.replaceInTransaction(postModel -> handleRemoteAutoSave(event.isError(), postModel));
+            mEditPostRepository.replace(postModel -> handleRemoteAutoSave(event.isError(), postModel));
         }
     }
 
@@ -3177,13 +3177,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 mUploadUtilsWrapper.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
                         event.isError() ? event.error.message : null, getSite());
                 if (!event.isError()) {
-                    mEditPostRepository.setInTransaction(() -> {
+                    mEditPostRepository.set(() -> {
                         updateOnSuccessfulUpload();
                         return post;
                     });
                 }
             } else {
-                mEditPostRepository.setInTransaction(() -> handleRemoteAutoSave(event.isError(), post));
+                mEditPostRepository.set(() -> handleRemoteAutoSave(event.isError(), post));
             }
         }
     }

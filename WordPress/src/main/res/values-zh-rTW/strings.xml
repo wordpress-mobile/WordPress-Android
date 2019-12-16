@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-27 01:54:10+0000
+Translation-Revision-Date: 2019-12-12 00:55:12+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="login_discovery_error_generic">無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_discovery_error_ssl">由於 &lt;b>SSL 憑證&lt;/b>發生問題，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_discovery_error_http_auth">由於你的網站須進行 &lt;b>HTTP 驗證&lt;/b>，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_discovery_error_xmlrpc">無法存取你網站上的 &lt;b>XMLRPC 檔案&lt;/b>。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_site_credentials_magic_link_label">快完成了！我們只需驗證你與 Jetpack 綁定的電子郵件地址就行了&lt;b>%1$s&lt;/b></string>
+    <string name="enter_site_credentials_instead">請使用網站憑證登入</string>
+    <string name="enter_credentials_for_site">請使用 %1$s 網站憑證登入</string>
+    <string name="send_verification_email">傳送驗證電子郵件</string>
+    <string name="my_site_bottom_sheet_add_page">建立新頁面</string>
+    <string name="my_site_bottom_sheet_add_post">建立新文章</string>
+    <string name="reader_following_display_name">關注中</string>
+    <string name="posts_cannot_be_started">目前無法開啟文章。請稍後再試一次</string>
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000_000_000">%sQa</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
+    <string name="reader_filter_all_sites">所有網站</string>
+    <string name="reader_filter_sites_title">網站</string>
+    <string name="reader_filter_tags_title">標籤</string>
+    <string name="reader_save_for_later_display_name">已儲存</string>
+    <string name="reader_discover_display_name">探索</string>
+    <string name="reader_my_likes_display_name">按讚數</string>
+    <string name="site_cannot_be_loaded">目前無法載入你的網站資料。請稍後再試一次</string>
     <string name="gutenberg_native_wordpress_media_library">「WordPress 媒體庫」</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">我們正在努力開發，讓每次版本更新都可以新增更多區塊。在此期間，你也可在網路上編輯這篇文章。</string>
     <string name="gutenberg_native_unsupported">「不支援」</string>
@@ -161,7 +186,6 @@ Language: zh_TW
     <string name="site_settings_site_accelerator">網站加速器</string>
     <string name="site_settings_lazy_load_images_summary">僅載入畫面中可見的圖片，藉此提升網站速度。</string>
     <string name="site_settings_performance">效能</string>
-    <string name="notification_settings_moved_notices">現在可以在「通知」索引標籤中找到通知設定。</string>
     <string name="stats_file_downloads_value_label">下載</string>
     <string name="stats_file_downloads_title_label">檔案</string>
     <string name="stats_file_downloads">檔案下載</string>
@@ -224,9 +248,9 @@ Language: zh_TW
     <string name="post_settings_retry_featured_image">重新嘗試上傳</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">正在上傳媒體。\n請點選以顯示選項。</string>
     <string name="link_open_new_window">在新視窗或分頁開啟鏈結</string>
-    <string name="post_list_search_prompt">搜尋已發表的文章</string>
     <string name="stats_widget_error_no_access_token">若要檢視統計資料，請登入 WordPress.com 帳號。</string>
     <string name="post_list_search_nothing_found">沒有文章符合你的搜尋條件</string>
+    <string name="post_list_search_prompt">搜尋文章</string>
     <string name="domains_suggestions_intro_description">這是人們在網際網路上找到你的地方。</string>
     <string name="domains_suggestions_intro_title">選擇進階網域名稱</string>
     <string name="my_site_custom_domain_name">所有 WordPress.com 方案都包含一個自訂網域名稱。立即註冊你的免費進階網域。</string>
@@ -475,7 +499,6 @@ Language: zh_TW
     <string name="giphy_picker_empty_search_list">沒有符合你搜尋條件的媒體</string>
     <string name="giphy_picker_initial_empty_text">搜尋免費 GIF 以新增至你的媒體庫！</string>
     <string name="giphy_picker_search_hint">搜尋 Giphy</string>
-    <string name="photo_picker_giphy">從 Giphy 中選擇</string>
     <string name="stats_author_views_label">瀏覽數</string>
     <string name="stats_author_label">作者</string>
     <string name="stats_authors">作者</string>
@@ -1764,7 +1787,6 @@ Language: zh_TW
     <string name="auth_required">再次登入以繼續操作。</string>
     <string name="invalid_verification_code">驗證碼無效</string>
     <string name="verification_code">驗證碼</string>
-    <string name="editor_toast_invalid_path">檔案路徑無效</string>
     <string name="language">語言</string>
     <string name="media_fetching">正在擷取媒體…</string>
     <string name="posts_fetching">正在擷取文章…</string>
