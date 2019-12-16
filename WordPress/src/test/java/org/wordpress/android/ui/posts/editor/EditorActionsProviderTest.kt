@@ -58,8 +58,7 @@ class EditorActionsProviderTest {
     @Test
     fun `Verify an error is logged when the user doesn't have publishing rights and works with a PUBLISHED post`() {
         // Arrange & Act
-        val (_, _) =
-                getPrimaryAndSecondaryActions(PostStatus.PUBLISHED, userCanPublish = false)
+        getPrimaryAndSecondaryActions(PostStatus.PUBLISHED, userCanPublish = false)
         // Assert
         verify(crashLoggingUtilsWrapper, times(2)).log(any<String?>())
     }
@@ -77,8 +76,7 @@ class EditorActionsProviderTest {
     @Test
     fun `Verify an error is logged when the user doesn't have publishing rights and works with a SCHEDULED post`() {
         // Arrange & Act
-        val (_, _) =
-                getPrimaryAndSecondaryActions(PostStatus.SCHEDULED, userCanPublish = false)
+        getPrimaryAndSecondaryActions(PostStatus.SCHEDULED, userCanPublish = false)
         // Assert
         verify(crashLoggingUtilsWrapper, times(2)).log(any<String?>())
     }
@@ -96,8 +94,7 @@ class EditorActionsProviderTest {
     @Test
     fun `Verify an error is logged when the user doesn't have publishing rights and works with a TRASHED post`() {
         // Arrange & Act
-        val (_, _) =
-                getPrimaryAndSecondaryActions(PostStatus.TRASHED, userCanPublish = false)
+        getPrimaryAndSecondaryActions(PostStatus.TRASHED, userCanPublish = false)
         // Assert
         verify(crashLoggingUtilsWrapper, times(2)).log(any<String?>())
     }
@@ -136,14 +133,13 @@ class EditorActionsProviderTest {
     @Test
     fun `Verify an error is logged when the user doesn't have publishing rights and works with a PRIVATE post`() {
         // Arrange & Act
-        val (_, _) =
-                getPrimaryAndSecondaryActions(PostStatus.PRIVATE, userCanPublish = false)
+        getPrimaryAndSecondaryActions(PostStatus.PRIVATE, userCanPublish = false)
         // Assert
         verify(crashLoggingUtilsWrapper, times(2)).log(any<String?>())
     }
 
     @Test
-    fun `Verify actions of a UNKNOWN post`() {
+    fun `Verify actions of an UNKNOWN post`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
                 getPrimaryAndSecondaryActions(PostStatus.UNKNOWN, userCanPublish = true)
@@ -153,7 +149,7 @@ class EditorActionsProviderTest {
     }
 
     @Test
-    fun `Verify actions of a UNKNOWN post when the user doesn't have the publishing rights`() {
+    fun `Verify actions of an UNKNOWN post when the user doesn't have the publishing rights`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
                 getPrimaryAndSecondaryActions(PostStatus.UNKNOWN, userCanPublish = false)
