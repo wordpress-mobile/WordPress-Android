@@ -15,13 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.QuickStartStore;
-import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
@@ -171,13 +171,13 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(@NotNull Activity activity) {
         super.onAttach(activity);
 
         if (activity instanceof PublicizeButtonPrefsListener) {
@@ -219,16 +219,14 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
                     mAccountStore.getAccount().getUserId());
             mAdapter.setOnAdapterLoadedListener(mAdapterLoadedListener);
             if (getActivity() instanceof OnServiceClickListener) {
-                mAdapter.setOnServiceClickListener(new OnServiceClickListener() {
-                    @Override public void onServiceClicked(PublicizeService service) {
-                        QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, ENABLE_POST_SHARING,
-                                mDispatcher, mSite, mQuickStartEvent, getContext());
-                        if (getView() != null) {
-                            QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
-                        }
-                        mQuickStartEvent = null;
-                        ((OnServiceClickListener) getActivity()).onServiceClicked(service);
+                mAdapter.setOnServiceClickListener(service -> {
+                    QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, ENABLE_POST_SHARING,
+                            mDispatcher, mSite, mQuickStartEvent, getContext());
+                    if (getView() != null) {
+                        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
                     }
+                    mQuickStartEvent = null;
+                    ((OnServiceClickListener) getActivity()).onServiceClicked(service);
                 });
             }
         }
