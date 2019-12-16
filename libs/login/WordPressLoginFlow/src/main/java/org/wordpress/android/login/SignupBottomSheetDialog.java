@@ -54,6 +54,7 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
         });
 
         setContentView(layout);
+        setTitle(R.string.signup_title);
 
         // Set peek height to full height of view to avoid signup buttons being off screen when
         // bottom sheet is shown with small screen height (e.g. landscape orientation).
