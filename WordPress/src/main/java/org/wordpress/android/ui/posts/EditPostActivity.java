@@ -1542,12 +1542,12 @@ public class EditPostActivity extends AppCompatActivity implements
             return false;
         }
         UpdateResult updateResult = mViewModel
-                .syncPostObjectWithUI(mEditPostRepository, this::updateFromEditor);
+                .updatePostObjectWithUI(mEditPostRepository, this::updateFromEditor);
         return updateResult instanceof UpdateResult.Success;
     }
 
     private void updateAndSavePostAsync() {
-        mViewModel.syncPostObjectWithUIAsync(mEditPostRepository, this::updateFromEditor);
+        mViewModel.updatePostObjectWithUIAsync(mEditPostRepository, this::updateFromEditor, null);
     }
 
     private void updateAndSavePostAsync(final AfterSavePostListener listener) {
@@ -1555,9 +1555,9 @@ public class EditPostActivity extends AppCompatActivity implements
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
             return;
         }
-        mViewModel.updateAndSavePostAsync(this, mEditPostRepository, mSite,
+        mViewModel.updatePostObjectWithUIAsync(mEditPostRepository,
                 this::updateFromEditor,
-                () -> {
+                (post) -> {
                     if (listener != null) {
                         listener.onPostSave();
                     }

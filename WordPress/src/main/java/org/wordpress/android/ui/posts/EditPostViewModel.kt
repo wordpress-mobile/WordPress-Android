@@ -8,9 +8,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtilsWrapper
+import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.Failed
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Success
@@ -87,35 +88,6 @@ class EditPostViewModel
         }
     }
 
-    fun updateAndSavePostAsync(
-        context: Context,
-        postRepository: EditPostRepository,
-        site: SiteModel,
-        getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor,
-        onSaveAction: () -> Unit
-    ) {
-        Log.d("vojta", "updateAndSavePostAsync")
-        launch {
-            val postUpdated = withContext(bgDispatcher) {
-                Log.d("vojta", "Starting post update on the background")
-                (syncPostObjectWithUI(
-                        postRepository,
-                        getUpdatedTitleAndContent
-                ) is Success)
-                        .also { success ->
-                            if (success) {
-                                Log.d("vojta", "Is success so saving to the DB")
-                                savePostToDb(context, postRepository, site)
-                            }
-                        }
-            }
-            if (postUpdated) {
-                Log.d("vojta", "Save action invoked")
-                onSaveAction()
-            }
-        }
-    }
-
     fun savePostWithDelay() {
         Log.d("vojta", "Saving post with delay")
         saveJob?.cancel()
@@ -179,45 +151,55 @@ class EditPostViewModel
         }
     }
 
-    fun syncPostObjectWithUI(
+    fun updatePostObjectWithUI(
         postRepository: EditPostRepository,
         getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor
     ): UpdateResult {
-        Log.d("vojta", "syncPostObjectWithUI")
+        return postRepository.updateInTransaction { postModel ->
+            updatePostObjectWithUI(getUpdatedTitleAndContent, postModel, postRepository)
+        }
+    }
+
+    fun updatePostObjectWithUIAsync(
+        postRepository: EditPostRepository,
+        getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor,
+        onSuccess: ((PostImmutableModel) -> Unit)? = null
+    ) {
+        postRepository.updatePostInTransactionAsync({ postModel ->
+            val updateResult = updatePostObjectWithUI(getUpdatedTitleAndContent, postModel, postRepository)
+            updateResult is Success
+        }, onSuccess)
+    }
+
+    private fun updatePostObjectWithUI(
+        getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor,
+        postModel: PostModel,
+        postRepository: EditPostRepository
+    ): UpdateResult {
+        Log.d("vojta", "updatePostObjectWithUI")
         if (!postRepository.hasPost()) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.")
             return Error
         }
-        return postRepository.updateInTransaction { postModel ->
-            when (val updateFromEditor = getUpdatedTitleAndContent(postModel.content)) {
-                is PostFields -> {
-                    val postTitleOrContentChanged = updatePostContentNewEditor(
-                            postModel,
-                            updateFromEditor.title,
-                            updateFromEditor.content
+        return when (val updateFromEditor = getUpdatedTitleAndContent(postModel.content)) {
+            is PostFields -> {
+                val postTitleOrContentChanged = updatePostContentNewEditor(
+                        postModel,
+                        updateFromEditor.title,
+                        updateFromEditor.content
+                )
+
+                // only makes sense to change the publish date and locally changed date if the Post was actually changed
+                if (postTitleOrContentChanged) {
+                    postRepository.updatePublishDateIfShouldBePublishedImmediately(
+                            postModel
                     )
-
-                    // only makes sense to change the publish date and locally changed date if the Post was actually changed
-                    if (postTitleOrContentChanged) {
-                        postRepository.updatePublishDateIfShouldBePublishedImmediately(
-                                postModel
-                        )
-                    }
-
-                    Log.d("vojta", "syncPostObjectWithUI: success - $postTitleOrContentChanged")
-                    Success(postTitleOrContentChanged)
                 }
-                is UpdateFromEditor.Failed -> Error
-            }
-        }
-    }
 
-    fun syncPostObjectWithUIAsync(
-        postRepository: EditPostRepository,
-        getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor
-    ) {
-        launch(bgDispatcher) {
-            syncPostObjectWithUI(postRepository, getUpdatedTitleAndContent)
+                Log.d("vojta", "updatePostObjectWithUI: success - $postTitleOrContentChanged")
+                Success(postTitleOrContentChanged)
+            }
+            is Failed -> Error
         }
     }
 
@@ -231,7 +213,9 @@ class EditPostViewModel
     ): Boolean {
         Log.d("vojta", "updatePostContentNewEditor")
         val titleChanged = editedPost.title != title
-        editedPost.setTitle(title)
+        if (titleChanged) {
+            editedPost.setTitle(title)
+        }
         val contentChanged: Boolean = editedPost.content != content
         if (contentChanged) {
             editedPost.setContent(content)
