@@ -395,7 +395,7 @@ public class ReaderPostListFragment extends Fragment
                                        .get(ReaderPostListViewModel.class);
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-            mViewModel.getCurrentSubFilter().observe(getActivity(), subfilterListItem -> {
+            mViewModel.getCurrentSubFilter().observe(this, subfilterListItem -> {
                 if (ReaderUtils.isFollowing(
                         mCurrentTag,
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
@@ -405,11 +405,11 @@ public class ReaderPostListFragment extends Fragment
                 }
             });
 
-            mViewModel.getShouldShowSubFilters().observe(getActivity(), show -> {
+            mViewModel.getShouldShowSubFilters().observe(this, show -> {
                 mSubFilterComponent.setVisibility(show ? View.VISIBLE : View.GONE);
             });
 
-            mViewModel.getReaderModeInfo().observe(getActivity(), readerModeInfo -> {
+            mViewModel.getReaderModeInfo().observe(this, readerModeInfo -> {
                 if (readerModeInfo != null) {
                     changeReaderMode(readerModeInfo, true);
 
@@ -424,7 +424,7 @@ public class ReaderPostListFragment extends Fragment
                 }
             });
 
-            mViewModel.isBottomSheetShowing().observe(getActivity(), event -> {
+            mViewModel.isBottomSheetShowing().observe(this, event -> {
                 event.applyIfNotHandled(isShowing -> {
                     FragmentManager fm = getFragmentManager();
                     if (fm != null) {

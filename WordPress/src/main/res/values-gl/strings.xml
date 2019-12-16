@@ -558,7 +558,6 @@ Language: gl_ES
     <string name="auth_required">Inicia sesión de novo para continuar</string>
     <string name="invalid_verification_code">Código de verificación non válido</string>
     <string name="verification_code">Código de verificación</string>
-    <string name="editor_toast_invalid_path">Ruta do ficheiro non válida</string>
     <string name="language">Idioma</string>
     <string name="media_fetching">Á procura dos ficheiros…</string>
     <string name="posts_fetching">Á procura dos artigos…</string>
