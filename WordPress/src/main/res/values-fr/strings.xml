@@ -112,7 +112,7 @@ Language: fr
     <string name="gutenberg_native_add_annotation">Ajouter une annotation</string>
     <string name="gutenberg_native_add_a_description">Ajouter une description</string>
     <string name="reader_empty_saved_posts_content_description">Touchez le bouton Ajouter pour enregistrer les articles pour enregistrer un article dans votre liste.</string>
-    <string name="reader_acessibility_list_loaded">La liste a chargé %1$d éléments.</string>
+    <string name="reader_acessibility_list_loaded">« La liste a chargé %1$d éléments. »</string>
     <string name="notifications_tab_dialog_switch_desc">Notifications</string>
     <string name="master_switch_default_title_off">Off</string>
     <string name="master_switch_default_title_on">On</string>
@@ -1115,7 +1115,7 @@ Language: fr
     <string name="jetpack_disconnect_success_toast">Site déconnecté</string>
     <string name="jetpack_disconnect_confirm">Déconnexion</string>
     <string name="jetpack_disconnect_confirmation_message">Êtes-vous certain de vouloir déconnecter Jetpack de ce site ?</string>
-    <string name="jetpack_disconnect_pref_title">Déconnecter de WordPress.com</string>
+    <string name="jetpack_disconnect_pref_title">« Déconnecter de WordPress.com »</string>
     <string name="site_settings_jetpack_whitelist_description">Vous pourriez placer en liste blanche une adresse IP ou une liste d’adresse pour éviter qu’elles soient bloquées par Jetpack. Les adresses IPv4 et IPv6 sont acceptées. Pour préciser une plage d’IP, saisissez la valeur la plus basse et la plus haute en les séparant par un tiret. Par exemple : 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Nécessite une authentification en deux étapes</string>
     <string name="jetpack_match_wpcom_via_email_title">Faire correspondre les comptes en utilisant l’e-mail</string>

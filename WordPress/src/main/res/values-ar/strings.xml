@@ -112,7 +112,7 @@ Language: ar
     <string name="gutenberg_native_add_annotation">إضافة تعليق توضيحي</string>
     <string name="gutenberg_native_add_a_description">إضافة وصف</string>
     <string name="reader_empty_saved_posts_content_description">أنقر فوق الزرّ \"حفظ المقالات\" لحفظ مقالةٍ في قائمتك.</string>
-    <string name="reader_acessibility_list_loaded">تم تحميل القائمة بعناصر %1$d.</string>
+    <string name="reader_acessibility_list_loaded">\"تم تحميل القائمة بعناصر %1$d.\"</string>
     <string name="notifications_tab_dialog_switch_desc">التنبيهات</string>
     <string name="master_switch_default_title_off">إيقاف التشغيل</string>
     <string name="master_switch_default_title_on">تشغيل</string>
@@ -1115,7 +1115,7 @@ Language: ar
     <string name="jetpack_disconnect_success_toast">تم قطع الاتصال بالموقع</string>
     <string name="jetpack_disconnect_confirm">قطع الاتصال</string>
     <string name="jetpack_disconnect_confirmation_message">هل تريد بالتأكيد قطع اتصال Jetpack بهذا الموقع؟</string>
-    <string name="jetpack_disconnect_pref_title">قطع الاتصال بـ WordPress.com</string>
+    <string name="jetpack_disconnect_pref_title">\"قطع الاتصال بـ WordPress.com\"</string>
     <string name="site_settings_jetpack_whitelist_description">يمكنك إدراج عنوان IP أو سلسلة عناوين في قائمة السماح مما يعمل على منع حظرها بواسطة Jetpack. IPv4 وIPv6 مقبولان. لتحديد نطاق، أدخل القيمة المنخفضة والقيمة المرتفعة مفصولاً بينهما بشرطة. على سبيل المثال: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">يلزم إجراء مصادقة من خطوتين</string>
     <string name="jetpack_match_wpcom_via_email_title">مطابقة الحسابات باستخدام البريد الإلكتروني</string>

@@ -112,7 +112,7 @@ Language: ru
     <string name="gutenberg_native_add_annotation">Добавить аннотацию</string>
     <string name="gutenberg_native_add_a_description">Добавить описание</string>
     <string name="reader_empty_saved_posts_content_description">Нажмите на кнопку добавления в сохраненные записи для сохранения записи в ваш список.</string>
-    <string name="reader_acessibility_list_loaded">Загружен список из %1$d элементов.</string>
+    <string name="reader_acessibility_list_loaded">\"Загружен список из %1$d элементов.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Уведомления</string>
     <string name="master_switch_default_title_off">Выкл.</string>
     <string name="master_switch_default_title_on">Вкл.</string>
@@ -1115,7 +1115,7 @@ Language: ru
     <string name="jetpack_disconnect_success_toast">Сайт отключен</string>
     <string name="jetpack_disconnect_confirm">Отключить</string>
     <string name="jetpack_disconnect_confirmation_message">Вы точно хотите отключить Jetpack от этого сайта?</string>
-    <string name="jetpack_disconnect_pref_title">Отключить от WordPress.com</string>
+    <string name="jetpack_disconnect_pref_title">\"Отключить от WordPress.com\"</string>
     <string name="site_settings_jetpack_whitelist_description">Вы можете внести IP адрес или диапазон адресов в белый список, они не будут блокироваться Jetpack. Приемлимы IPv4 и IPv6. Для указания диапазона, введите начальный и конечный адрес разделенные тире. Пример: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Требуется 2-факторная авторизация</string>
     <string name="jetpack_match_wpcom_via_email_title">Использовать сопоставление учетных записей по email адресу</string>
@@ -1853,7 +1853,7 @@ Language: ru
     <string name="stats_visitors">Посетителей</string>
     <string name="stats_views">Просмотров</string>
     <string name="stats_timeframe_years">Годы</string>
-    <string name="stats_likes">Нравится</string>
+    <string name="stats_likes">\"Нравится\"</string>
     <string name="stats_view_countries">Страны</string>
     <string name="stats_view_followers">Подписчики</string>
     <string name="stats_view_publicize">Публикация</string>

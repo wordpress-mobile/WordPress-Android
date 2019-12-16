@@ -112,7 +112,7 @@ Language: nl
     <string name="gutenberg_native_add_annotation">Opmerking toevoegen</string>
     <string name="gutenberg_native_add_a_description">Een beschrijving toevoegen</string>
     <string name="reader_empty_saved_posts_content_description">Tik op de knop \'Toevoegen om berichten op te slaan\' om een bericht op te slaan in je lijst.</string>
-    <string name="reader_acessibility_list_loaded">De lijst is geladen met %1$d items.</string>
+    <string name="reader_acessibility_list_loaded">\"De lijst is geladen met %1$d items.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Meldingen</string>
     <string name="master_switch_default_title_off">Uit</string>
     <string name="master_switch_default_title_on">Aan</string>
@@ -986,7 +986,7 @@ Language: nl
     <string name="jetpack_disconnect_success_toast">Site losgekoppeld</string>
     <string name="jetpack_disconnect_confirm">Loskoppelen</string>
     <string name="jetpack_disconnect_confirmation_message">Weet je zeker dat je Jetpack wilt loskoppelen van de site?</string>
-    <string name="jetpack_disconnect_pref_title">Loskoppelen van WordPress.com</string>
+    <string name="jetpack_disconnect_pref_title">\"Loskoppelen van WordPress.com\"</string>
     <string name="site_settings_jetpack_whitelist_description">Door een IP-adres of een reeks IP-adressen op een whitelist te plaatsen, zodat ze nooit door Jetpack worden geblokkeerd. IPv4 en IPv6 zijn acceptabel. Stel een bereik in door de hoge en lage waarde in te voeren met een streepje ertussen. Voorbeeld: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Twee-staps verificatie vereisen</string>
     <string name="jetpack_match_wpcom_via_email_title">Accounts matchen via e-mail</string>

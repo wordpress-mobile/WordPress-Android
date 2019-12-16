@@ -112,7 +112,7 @@ Language: he_IL
     <string name="gutenberg_native_add_annotation">להוסיף הסבר</string>
     <string name="gutenberg_native_add_a_description">להוסיף תיאור</string>
     <string name="reader_empty_saved_posts_content_description">יש להקיש על הכפתור \'הוספה\' ו-\'שמירת פוסט\' כדי לשמור את הפוסט ברשימה שלך.</string>
-    <string name="reader_acessibility_list_loaded">הרשימה נטענה עם %1$d פריטים.</string>
+    <string name="reader_acessibility_list_loaded">\"הרשימה נטענה עם %1$d פריטים.\"</string>
     <string name="notifications_tab_dialog_switch_desc">הודעות</string>
     <string name="master_switch_default_title_off">מופסק</string>
     <string name="master_switch_default_title_on">מופעל</string>
@@ -1112,7 +1112,7 @@ Language: he_IL
     <string name="jetpack_disconnect_success_toast">האתר מנותק</string>
     <string name="jetpack_disconnect_confirm">התנתקות</string>
     <string name="jetpack_disconnect_confirmation_message">האם ברצונך לנתק את Jetpack מהאתר?</string>
-    <string name="jetpack_disconnect_pref_title">התנתקות מ-WordPress.com</string>
+    <string name="jetpack_disconnect_pref_title">\"התנתקות מ-WordPress.com\"</string>
     <string name="site_settings_jetpack_whitelist_description">באפשרותך להכניס כתובת IP או סדרת כתובות לרשימת ההיתרים ובכך למנוע לחלוטין את חסימתם על ידי Jetpack. יש תמיכה בגרסאות IPv4 ו-IPv6. כדי לציין טווח, יש להזין את הערך הנמוך והערך הגבוה כשהם מופרדים באמצעות מקף. לדוגמה: ‎12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">דרישת זיהוי בשני שלבים</string>
     <string name="jetpack_match_wpcom_via_email_title">התאמת חשבונות באמצעות אימייל</string>

@@ -112,7 +112,7 @@ Language: id
     <string name="gutenberg_native_add_annotation">Tambahkan anotasi</string>
     <string name="gutenberg_native_add_a_description">Tambahkan deskripsi</string>
     <string name="reader_empty_saved_posts_content_description">Ketuk tombol Tambahkan untuk Simpan Pos untuk menyimpan pos ke daftar Anda.</string>
-    <string name="reader_acessibility_list_loaded">Daftar ini telah diisi dengan %1$d item.</string>
+    <string name="reader_acessibility_list_loaded">\"Daftar ini telah diisi dengan %1$d item.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Pemberitahuan</string>
     <string name="master_switch_default_title_off">Nonaktif</string>
     <string name="master_switch_default_title_on">Aktif</string>
@@ -1068,7 +1068,7 @@ Language: id
     <string name="jetpack_disconnect_success_toast">Situs tidak terhubung</string>
     <string name="jetpack_disconnect_confirm">Putuskan koneksi</string>
     <string name="jetpack_disconnect_confirmation_message">Apakah Anda yakin ingin memutuskan koneksi Jetpack dari situs?</string>
-    <string name="jetpack_disconnect_pref_title">Putuskan koneksi dari WordPress.com</string>
+    <string name="jetpack_disconnect_pref_title">\"Putuskan koneksi dari WordPress.com\"</string>
     <string name="site_settings_jetpack_whitelist_description">Anda dapat membuat daftar putih untuk satu atau serangkaian alamat IP agar tidak diblokir oleh Jetpack. IPv4 dan IPv6 diterima. Untuk menentukan rentang, masukkan nilai rendah dan nilai tinggi yang dipisahkan oleh tanda hubung. Misalnya: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Memerlukan autentikasi dua langkah</string>
     <string name="jetpack_match_wpcom_via_email_title">Cocokkan akun menggunakan email</string>

@@ -99,7 +99,7 @@ Language: pl
     <string name="gutenberg_native_add_block_here">DODAJ TUTAJ BLOK</string>
     <string name="gutenberg_native_add_a_description">Dodaj opis</string>
     <string name="reader_empty_saved_posts_content_description">Stuknij przycisk Dodaj do Zapisanych Wpisów aby zapisać wpis na swojej liście. </string>
-    <string name="reader_acessibility_list_loaded">Lista ma %1$d elementów.</string>
+    <string name="reader_acessibility_list_loaded">\"Lista ma %1$d elementów.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Powiadomienia</string>
     <string name="master_switch_default_title_off">Wyłączone</string>
     <string name="master_switch_default_title_on">Włączone</string>
@@ -1102,7 +1102,7 @@ Language: pl
     <string name="jetpack_disconnect_success_toast">Witryna rozłączona</string>
     <string name="jetpack_disconnect_confirm">Rozłącz</string>
     <string name="jetpack_disconnect_confirmation_message">Czy jesteś pewien że chcesz rozłączyć Jetpack od tej witryny? </string>
-    <string name="jetpack_disconnect_pref_title">Rozłącz z WordPress.com</string>
+    <string name="jetpack_disconnect_pref_title">\"Rozłącz z WordPress.com\"</string>
     <string name="site_settings_jetpack_whitelist_description">Możesz dodać adres IP lub serię adresów do białej listy aby zapobiec zablokowaniu przez Jetpack. Dozwolone są adresy IPv4 i IPv6. Aby określić zakres, wprowadź dolną \n i górną wartość zakresu i odziej je myślnikiem. Przykład 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Wymagaj uwierzytelniania dwuetapowego</string>
     <string name="jetpack_match_wpcom_via_email_title">Połącz konta używając adresu email </string>
