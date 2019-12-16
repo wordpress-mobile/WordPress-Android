@@ -219,7 +219,6 @@ class EditPostViewModel
                     val postTitleOrContentChanged = updatePostContentNewEditor(
                             context,
                             showAztecEditor,
-                            postRepository,
                             postModel,
                             updateFromEditor.title,
                             updateFromEditor.content
@@ -230,7 +229,6 @@ class EditPostViewModel
                         postRepository.updatePublishDateIfShouldBePublishedImmediately(
                                 postModel
                         )
-                        postModel.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
                     }
 
                     Log.d("vojta", "updatePostObject: success - $postTitleOrContentChanged")
@@ -241,37 +239,14 @@ class EditPostViewModel
         }
     }
 
-    fun updatePostAsync(
+    fun updatePostObjectAsync(
         context: Context,
         showAztecEditor: Boolean,
         postRepository: EditPostRepository,
         getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor)
     ) {
         launch(bgDispatcher) {
-            postRepository.updatePostAsync({ postModel ->
-                when (val updateFromEditor = getUpdatedTitleAndContent(postModel.content)) {
-                    is PostFields -> {
-                        val postTitleOrContentChanged = updatePostContentNewEditor(
-                                context,
-                                showAztecEditor,
-                                postRepository,
-                                postModel,
-                                updateFromEditor.title,
-                                updateFromEditor.content
-                        )
-
-                        // only makes sense to change the publish date and locally changed date if the Post was actually changed
-                        if (postTitleOrContentChanged) {
-                            postRepository.updatePublishDateIfShouldBePublishedImmediately(
-                                    postModel
-                            )
-                            postModel.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
-                        }
-                        postTitleOrContentChanged
-                    }
-                    is UpdateFromEditor.Failed -> false
-                }
-            })
+            updatePostObject(context, showAztecEditor, postRepository, getUpdatedTitleAndContent)
         }
     }
 
@@ -281,7 +256,6 @@ class EditPostViewModel
     private fun updatePostContentNewEditor(
         context: Context,
         showAztecEditor: Boolean,
-        postRepository: EditPostRepository,
         editedPost: PostModel?,
         title: String,
         content: String
@@ -302,13 +276,6 @@ class EditPostViewModel
         }
         if (contentChanged) {
             editedPost.setContent(content)
-        }
-
-        val statusChanged = postRepository.hasStatusChangedFromWhenEditorOpened(editedPost.status)
-
-        if (!editedPost.isLocalDraft && (titleChanged || contentChanged || statusChanged)) {
-            editedPost.setIsLocallyChanged(true)
-            editedPost.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
         }
 
         Log.d("vojta", "updatePostContentNewEditor - ${titleChanged || contentChanged}")

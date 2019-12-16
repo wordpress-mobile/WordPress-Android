@@ -663,7 +663,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updateExcerpt(String excerpt) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostAsync(postModel -> {
+            editPostRepository.updatePostInTransactionAsync(postModel -> {
                 postModel.setExcerpt(excerpt);
                 return true;
             }, postModel -> {
@@ -676,7 +676,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updateSlug(String slug) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostAsync(postModel -> {
+            editPostRepository.updatePostInTransactionAsync(postModel -> {
                 postModel.setSlug(slug);
                 return true;
             }, postModel -> {
@@ -689,7 +689,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updatePassword(String password) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostAsync(postModel -> {
+            editPostRepository.updatePostInTransactionAsync(postModel -> {
                 postModel.setPassword(password);
                 return true;
             }, postModel -> {
@@ -705,7 +705,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostAsync(postModel -> {
+            editPostRepository.updatePostInTransactionAsync(postModel -> {
                 postModel.setCategoryIdList(categoryList);
                 return true;
             }, postModel -> {
@@ -718,7 +718,7 @@ public class EditPostSettingsFragment extends Fragment {
     public void updatePostStatus(PostStatus postStatus) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostAsync(postModel -> {
+            editPostRepository.updatePostInTransactionAsync(postModel -> {
                 postModel.setStatus(postStatus.toString());
                 return true;
             }, postModel -> {
@@ -732,7 +732,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updatePostFormat(String postFormat) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostAsync(postModel -> {
+            editPostRepository.updatePostInTransactionAsync(postModel -> {
                 postModel.setPostFormat(postFormat);
                 return true;
             }, postModel -> {
@@ -764,7 +764,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updatePostAsync(postModel -> {
+        postRepository.updatePostInTransactionAsync(postModel -> {
             if (!TextUtils.isEmpty(selectedTags)) {
                 String tags = selectedTags.replace("\n", " ");
                 postModel.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
@@ -915,7 +915,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updatePostAsync(postModel -> {
+        postRepository.updatePostInTransactionAsync(postModel -> {
             postModel.setFeaturedImageId(featuredImageId);
             postModel.setIsLocallyChanged(true);
             return true;
@@ -1084,7 +1084,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updatePostAsync(postModel -> {
+        postRepository.updatePostInTransactionAsync(postModel -> {
             if (place == null) {
                 postModel.clearLocation();
                 mPostLocation = null;

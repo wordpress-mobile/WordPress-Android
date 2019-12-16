@@ -100,30 +100,28 @@ class EditPostRepository
 
     fun <T> updateInTransaction(action: (PostModel) -> T): T {
         val result = lock.write {
-            action(post!!)
+            action(requireNotNull(post))
         }
-        post?.let {
-            runBlocking {
-                launch(mainDispatcher) {
-                    _postChanged.value = Event(it)
-                }
+        runBlocking {
+            launch(mainDispatcher) {
+                _postChanged.value = Event(requireNotNull(post))
             }
         }
         return result
     }
 
-    fun updatePostAsync(
+    fun updatePostInTransactionAsync(
         action: (PostModel) -> Boolean,
         onSuccess: ((PostImmutableModel) -> Unit)? = null
     ) {
         launch {
             val isUpdated = withContext(bgDispatcher) {
                 lock.write {
-                    action(post!!)
+                    action(requireNotNull(post))
                 }
             }
             if (isUpdated) {
-                post?.let {
+                requireNotNull(post).let {
                     _postChanged.value = Event(it)
                     onSuccess?.invoke(it)
                 }
@@ -132,14 +130,14 @@ class EditPostRepository
     }
 
     fun replaceInTransaction(action: (PostModel) -> PostModel) = lock.write {
-        this.post = action(post!!)
+        this.post = action(requireNotNull(post))
     }
 
     fun setInTransaction(action: () -> PostModel) = lock.write {
         this.post = action()
     }
 
-    fun hasLocation() = post!!.hasLocation()
+    fun hasLocation() = requireNotNull(post).hasLocation()
 
     fun hasPost() = post != null
     fun getPost(): PostImmutableModel? = post
@@ -195,11 +193,7 @@ class EditPostRepository
         post.setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
     }
 
-    fun hasStatusChangedFromWhenEditorOpened(postStatus: String?): Boolean {
-        return postSnapshotWhenEditorOpened?.status != null && postStatus != postSnapshotWhenEditorOpened?.status
-    }
-
-    fun postWasChangedInCurrentSession() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post!!)
+    fun postWasChangedInCurrentSession() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, requireNotNull(post)!!)
 
     fun setStatus(status: PostStatus) {
         checkNotNull(post, { "Post cannot be null when setting status" }).let {

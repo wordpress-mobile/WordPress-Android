@@ -659,7 +659,7 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
         Log.d("vojta", "org.wordpress.android.ui.posts.EditPostActivity.resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued");
-        mEditPostRepository.updatePostAsync(postModel -> {
+        mEditPostRepository.updatePostInTransactionAsync(postModel -> {
             String oldContent = postModel.getContent();
             if (!AztecEditorFragment.hasMediaItemsMarkedUploading(EditPostActivity.this, oldContent)
                 // we need to make sure items marked failed are still failed or not as well
@@ -671,12 +671,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
             if (!TextUtils.isEmpty(oldContent) && newContent != null && oldContent.compareTo(newContent) != 0) {
                 postModel.setContent(newContent);
-
-                // we changed the post, so let’s mark this down
-                if (!postModel.isLocalDraft()) {
-                    postModel.setIsLocallyChanged(true);
-                }
-                postModel.setDateLocallyChanged(mDateTimeUtils.currentTimeInIso8601UTC());
                 return true;
             }
             return false;
@@ -1570,7 +1564,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void updateAndSavePostAsync() {
-        mViewModel.updatePostAsync(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor);
+        mViewModel.updatePostObjectAsync(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor);
     }
 
     private void updateAndSavePostAsync(final AfterSavePostListener listener) {
@@ -1769,7 +1763,7 @@ public class EditPostActivity extends AppCompatActivity implements
         updatePostLoadingAndDialogState(PostLoadingState.LOADING_REVISION);
         mEditPostRepository.saveForUndo();
         Log.d("vojta", "EditPostActivity.loadRevision");
-        mEditPostRepository.updatePostAsync(postModel -> {
+        mEditPostRepository.updatePostInTransactionAsync(postModel -> {
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
             postModel.setIsLocallyChanged(true);
@@ -1846,7 +1840,7 @@ public class EditPostActivity extends AppCompatActivity implements
         new Thread(() -> {
             AtomicBoolean saveOnline = new AtomicBoolean(false);
             AtomicBoolean isFirstTimePublish = new AtomicBoolean(false);
-            mEditPostRepository.updatePostAsync(postModel -> {
+            mEditPostRepository.updatePostInTransactionAsync(postModel -> {
                 isFirstTimePublish.set(isFirstTimePublish(publishPost));
                 if (publishPost) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
@@ -2193,7 +2187,7 @@ public class EditPostActivity extends AppCompatActivity implements
         final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
             Log.d("vojta", "EditPostActivity.setPostContentFromShareAction");
-            mEditPostRepository.updatePostAsync(postModel -> {
+            mEditPostRepository.updatePostInTransactionAsync(postModel -> {
                 if (title != null) {
                     postModel.setTitle(title);
                 }
