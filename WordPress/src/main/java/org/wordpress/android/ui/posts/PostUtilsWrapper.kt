@@ -25,4 +25,10 @@ class PostUtilsWrapper @Inject constructor() {
 
     fun postHasEdits(oldPost: PostImmutableModel?, newPost: PostImmutableModel) =
             PostUtils.postHasEdits(oldPost, newPost)
+
+    fun isMediaInGutenbergPostBody(postContent: String, localMediaId: String) =
+            PostUtils.isMediaInGutenbergPostBody(postContent, localMediaId)
+
+    fun contentContainsGutenbergBlocks(postContent: String): Boolean =
+            PostUtils.contentContainsGutenbergBlocks(postContent)
 }

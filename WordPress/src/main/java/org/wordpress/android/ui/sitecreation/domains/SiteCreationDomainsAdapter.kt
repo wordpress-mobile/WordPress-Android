@@ -9,16 +9,20 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolde
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
+import org.wordpress.android.ui.utils.UiHelpers
 
 private const val suggestionItemViewType: Int = 1
 private const val suggestionErrorViewType: Int = 2
 
-class SiteCreationDomainsAdapter : Adapter<SiteCreationDomainViewHolder>() {
+class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<SiteCreationDomainViewHolder>() {
     private val items = mutableListOf<DomainsListItemUiState>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SiteCreationDomainViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): SiteCreationDomainViewHolder {
         return when (viewType) {
-            suggestionItemViewType -> DomainSuggestionItemViewHolder(parent)
+            suggestionItemViewType -> DomainSuggestionItemViewHolder(parent, uiHelpers)
             suggestionErrorViewType -> DomainSuggestionErrorViewHolder(parent)
             else -> throw NotImplementedError("Unknown ViewType")
         }
