@@ -1559,12 +1559,12 @@ public class EditPostActivity extends AppCompatActivity implements
             return false;
         }
         UpdateResult updateResult = mViewModel
-                .updatePostObject(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor);
+                .syncPostObjectWithUI(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor);
         return updateResult instanceof UpdateResult.Success;
     }
 
     private void updateAndSavePostAsync() {
-        mViewModel.updatePostObjectAsync(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor);
+        mViewModel.syncPostObjectWithUIAsync(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor);
     }
 
     private void updateAndSavePostAsync(final AfterSavePostListener listener) {

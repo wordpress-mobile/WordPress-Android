@@ -223,7 +223,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `does not update post object with no change`() {
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository) { PostFields(title, content) }
+        viewModel.syncPostObjectWithUI(context, true, postRepository) { PostFields(title, content) }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 
@@ -236,7 +236,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `returns update error when post is missing`() {
         whenever(postRepository.hasPost()).thenReturn(false)
 
-        val result = viewModel.updatePostObject(context, true, postRepository) {
+        val result = viewModel.syncPostObjectWithUI(context, true, postRepository) {
             PostFields(
                     title,
                     content
@@ -250,7 +250,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `returns update error when get content function returns null`() {
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository) {
+        viewModel.syncPostObjectWithUI(context, true, postRepository) {
             UpdateFromEditor.Failed(
                     RuntimeException("Not found")
             )
@@ -267,7 +267,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `updates post title and date locally changed when title has changed`() {
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository) {
+        viewModel.syncPostObjectWithUI(context, true, postRepository) {
             PostFields(
                     updatedTitle,
                     content
@@ -288,7 +288,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun `updates post content and date locally changed when content has changed`() {
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository) {
+        viewModel.syncPostObjectWithUI(context, true, postRepository) {
             PostFields(
                     title,
                     updatedContent
@@ -310,7 +310,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         viewModel.mediaInsertedOnCreation = true
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository) { PostFields(title, content) }
+        viewModel.syncPostObjectWithUI(context, true, postRepository) { PostFields(title, content) }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 
@@ -333,7 +333,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         ).thenReturn(listOf("B"))
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository) { PostFields(title, content) }
+        viewModel.syncPostObjectWithUI(context, true, postRepository) { PostFields(title, content) }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 
@@ -349,7 +349,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         whenever(postRepository.hasStatusChangedFromWhenEditorOpened(postStatus)).thenReturn(true)
         whenever(postRepository.hasPost()).thenReturn(true)
 
-        viewModel.updatePostObject(context, true, postRepository) { PostFields(title, content) }
+        viewModel.syncPostObjectWithUI(context, true, postRepository) { PostFields(title, content) }
 
         verify(postRepository).updateInTransaction(updateResultCaptor.capture())
 

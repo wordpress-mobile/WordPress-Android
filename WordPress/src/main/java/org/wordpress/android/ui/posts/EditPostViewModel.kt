@@ -103,7 +103,7 @@ class EditPostViewModel
         launch {
             val postUpdated = withContext(bgDispatcher) {
                 Log.d("vojta", "Starting post update on the background")
-                (updatePostObject(
+                (syncPostObjectWithUI(
                         context,
                         showAztecEditor,
                         postRepository,
@@ -177,6 +177,7 @@ class EditPostViewModel
                             context,
                             postRepository.content
                     )
+                    sortMediaMarkedUploadingOnStartIds()
                 }
             }
         }
@@ -202,13 +203,13 @@ class EditPostViewModel
         }
     }
 
-    fun updatePostObject(
+    fun syncPostObjectWithUI(
         context: Context,
         showAztecEditor: Boolean,
         postRepository: EditPostRepository,
         getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor)
     ): UpdateResult {
-        Log.d("vojta", "updatePostObject")
+        Log.d("vojta", "syncPostObjectWithUI")
         if (!postRepository.hasPost()) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.")
             return Error
@@ -231,7 +232,7 @@ class EditPostViewModel
                         )
                     }
 
-                    Log.d("vojta", "updatePostObject: success - $postTitleOrContentChanged")
+                    Log.d("vojta", "syncPostObjectWithUI: success - $postTitleOrContentChanged")
                     Success(postTitleOrContentChanged)
                 }
                 is UpdateFromEditor.Failed -> Error
@@ -239,14 +240,14 @@ class EditPostViewModel
         }
     }
 
-    fun updatePostObjectAsync(
+    fun syncPostObjectWithUIAsync(
         context: Context,
         showAztecEditor: Boolean,
         postRepository: EditPostRepository,
         getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor)
     ) {
         launch(bgDispatcher) {
-            updatePostObject(context, showAztecEditor, postRepository, getUpdatedTitleAndContent)
+            syncPostObjectWithUI(context, showAztecEditor, postRepository, getUpdatedTitleAndContent)
         }
     }
 
@@ -256,14 +257,11 @@ class EditPostViewModel
     private fun updatePostContentNewEditor(
         context: Context,
         showAztecEditor: Boolean,
-        editedPost: PostModel?,
+        editedPost: PostModel,
         title: String,
         content: String
     ): Boolean {
         Log.d("vojta", "updatePostContentNewEditor")
-        if (editedPost == null) {
-            return false
-        }
         val titleChanged = editedPost.title != title
         editedPost.setTitle(title)
         val contentChanged: Boolean = when {
