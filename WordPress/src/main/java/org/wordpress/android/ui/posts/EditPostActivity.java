@@ -616,7 +616,7 @@ public class EditPostActivity extends AppCompatActivity implements
             return null;
         }));
         mEditPostRepository.getPostChanged().observe(this, postEvent -> postEvent.applyIfNotHandled(post -> {
-            mViewModel.savePostToDb(this, mEditPostRepository, mShowAztecEditor, mSite);
+            mViewModel.savePostToDb(this, mEditPostRepository, mSite);
             return null;
         }));
     }
@@ -625,23 +625,6 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditPostRepository.hasPost()) {
             mEditPostRepository.savePostSnapshotWhenEditorOpened();
             mEditPostRepository.replaceInTransaction(UploadService::updatePostWithCurrentlyCompletedUploads);
-            if (mShowAztecEditor) {
-                try {
-                    mViewModel.setMediaMarkedUploadingOnStartIds(AztecEditorFragment
-                            .getMediaMarkedUploadingInPostContent(this, mEditPostRepository.getContent()));
-                    mViewModel.sortMediaMarkedUploadingOnStartIds();
-                } catch (NumberFormatException err) {
-                    // see: https://github.com/wordpress-mobile/AztecEditor-Android/issues/805
-                    if (getSite() != null && getSite().isWPCom() && !getSite().isPrivate()
-                        && TextUtils.isEmpty(mEditPostRepository.getPassword())
-                        && !PostStatus.PRIVATE.toString().equals(mEditPostRepository.getStatus())) {
-                        AppLog.e(T.EDITOR, "There was an error initializing post object!");
-                        AppLog.e(AppLog.T.EDITOR, "HTML content of the post before the crash:");
-                        AppLog.e(AppLog.T.EDITOR, mEditPostRepository.getContent());
-                        throw err;
-                    }
-                }
-            }
             mIsPage = mEditPostRepository.isPage();
 
             EventBus.getDefault().postSticky(new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(),
@@ -1448,7 +1431,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean savePostOnline(boolean isFirstTimePublish) {
-        return mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mShowAztecEditor, mSite);
+        return mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mSite);
     }
 
     private void onUploadSuccess(MediaModel media) {
@@ -1559,12 +1542,12 @@ public class EditPostActivity extends AppCompatActivity implements
             return false;
         }
         UpdateResult updateResult = mViewModel
-                .syncPostObjectWithUI(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor);
+                .syncPostObjectWithUI(mEditPostRepository, this::updateFromEditor);
         return updateResult instanceof UpdateResult.Success;
     }
 
     private void updateAndSavePostAsync() {
-        mViewModel.syncPostObjectWithUIAsync(this, mShowAztecEditor, mEditPostRepository, this::updateFromEditor);
+        mViewModel.syncPostObjectWithUIAsync(mEditPostRepository, this::updateFromEditor);
     }
 
     private void updateAndSavePostAsync(final AfterSavePostListener listener) {
@@ -1572,7 +1555,7 @@ public class EditPostActivity extends AppCompatActivity implements
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
             return;
         }
-        mViewModel.updateAndSavePostAsync(this, mShowAztecEditor, mEditPostRepository, mSite,
+        mViewModel.updateAndSavePostAsync(this, mEditPostRepository, mSite,
                 this::updateFromEditor,
                 () -> {
                     if (listener != null) {

@@ -22,7 +22,6 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Success
-import org.wordpress.android.ui.posts.editor.AztecEditorFragmentStaticWrapper
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.AppLog
@@ -41,7 +40,6 @@ class EditPostViewModel
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
-    private val aztecEditorFragmentStaticWrapper: AztecEditorFragmentStaticWrapper,
     private val siteStore: SiteStore,
     private val uploadUtils: UploadUtilsWrapper,
     private val postUtils: PostUtilsWrapper,
@@ -52,7 +50,6 @@ class EditPostViewModel
 ) : ScopedViewModel(mainDispatcher) {
     private var debounceCounter = 0
     private var saveJob: Job? = null
-    var mediaMarkedUploadingOnStartIds: List<String> = listOf()
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
     val onSavePostTriggered: LiveData<Event<Unit>> = _onSavePostTriggered
     private val _onFinish = MutableLiveData<Event<Boolean>>()
@@ -62,10 +59,9 @@ class EditPostViewModel
         isFirstTimePublish: Boolean,
         context: Context,
         editPostRepository: EditPostRepository,
-        showAztecEditor: Boolean,
         site: SiteModel
     ): Boolean {
-        savePostToDb(context, editPostRepository, showAztecEditor, site)
+        savePostToDb(context, editPostRepository, site)
         return if (networkUtils.isNetworkAvailable()) {
             postUtils.trackSavePostAnalytics(
                     editPostRepository.getPost(),
@@ -93,26 +89,23 @@ class EditPostViewModel
 
     fun updateAndSavePostAsync(
         context: Context,
-        showAztecEditor: Boolean,
         postRepository: EditPostRepository,
         site: SiteModel,
-        getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor),
-        onSaveAction: (() -> Unit)
+        getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor,
+        onSaveAction: () -> Unit
     ) {
         Log.d("vojta", "updateAndSavePostAsync")
         launch {
             val postUpdated = withContext(bgDispatcher) {
                 Log.d("vojta", "Starting post update on the background")
                 (syncPostObjectWithUI(
-                        context,
-                        showAztecEditor,
                         postRepository,
                         getUpdatedTitleAndContent
                 ) is Success)
                         .also { success ->
                             if (success) {
                                 Log.d("vojta", "Is success so saving to the DB")
-                                savePostToDb(context, postRepository, showAztecEditor, site)
+                                savePostToDb(context, postRepository, site)
                             }
                         }
             }
@@ -135,15 +128,9 @@ class EditPostViewModel
             _onSavePostTriggered.value = Event(Unit)
         }
     }
-
-    fun sortMediaMarkedUploadingOnStartIds() {
-        mediaMarkedUploadingOnStartIds = mediaMarkedUploadingOnStartIds.sorted()
-    }
-
     fun savePostToDb(
         context: Context,
         postRepository: EditPostRepository,
-        showAztecEditor: Boolean,
         site: SiteModel
     ) {
         Log.d("vojta", "Saving post to DB")
@@ -169,17 +156,6 @@ class EditPostViewModel
             Log.d("vojta", "Post has changes so really saving")
             postRepository.saveDbSnapshot()
             dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
-
-            if (showAztecEditor) {
-                // update the list of uploading ids
-                launch(bgDispatcher) {
-                    mediaMarkedUploadingOnStartIds = aztecEditorFragmentStaticWrapper.getMediaMarkedUploadingInPostContent(
-                            context,
-                            postRepository.content
-                    )
-                    sortMediaMarkedUploadingOnStartIds()
-                }
-            }
         }
     }
 
@@ -204,10 +180,8 @@ class EditPostViewModel
     }
 
     fun syncPostObjectWithUI(
-        context: Context,
-        showAztecEditor: Boolean,
         postRepository: EditPostRepository,
-        getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor)
+        getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor
     ): UpdateResult {
         Log.d("vojta", "syncPostObjectWithUI")
         if (!postRepository.hasPost()) {
@@ -218,8 +192,6 @@ class EditPostViewModel
             when (val updateFromEditor = getUpdatedTitleAndContent(postModel.content)) {
                 is PostFields -> {
                     val postTitleOrContentChanged = updatePostContentNewEditor(
-                            context,
-                            showAztecEditor,
                             postModel,
                             updateFromEditor.title,
                             updateFromEditor.content
@@ -241,13 +213,11 @@ class EditPostViewModel
     }
 
     fun syncPostObjectWithUIAsync(
-        context: Context,
-        showAztecEditor: Boolean,
         postRepository: EditPostRepository,
-        getUpdatedTitleAndContent: ((currentContent: String) -> UpdateFromEditor)
+        getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor
     ) {
         launch(bgDispatcher) {
-            syncPostObjectWithUI(context, showAztecEditor, postRepository, getUpdatedTitleAndContent)
+            syncPostObjectWithUI(postRepository, getUpdatedTitleAndContent)
         }
     }
 
@@ -255,8 +225,6 @@ class EditPostViewModel
      * Updates post object with given title and content
      */
     private fun updatePostContentNewEditor(
-        context: Context,
-        showAztecEditor: Boolean,
         editedPost: PostModel,
         title: String,
         content: String
@@ -264,43 +232,13 @@ class EditPostViewModel
         Log.d("vojta", "updatePostContentNewEditor")
         val titleChanged = editedPost.title != title
         editedPost.setTitle(title)
-        val contentChanged: Boolean = when {
-            isCurrentMediaMarkedUploadingDifferentToOriginal(
-                    context,
-                    showAztecEditor,
-                    editedPost.content
-            ) -> true
-            else -> editedPost.content != content
-        }
+        val contentChanged: Boolean = editedPost.content != content
         if (contentChanged) {
             editedPost.setContent(content)
         }
 
         Log.d("vojta", "updatePostContentNewEditor - ${titleChanged || contentChanged}")
         return titleChanged || contentChanged
-    }
-
-    /*
-      * for as long as the user is in the Editor, we check whether there are any differences in media items
-      * being uploaded since they opened the Editor for this Post. If some items have finished, the current list
-      * won't be equal and thus we'll know we need to save the Post content as it's changed, given the local
-      * URLs will have been replaced with the remote ones.
-     */
-    fun isCurrentMediaMarkedUploadingDifferentToOriginal(
-        context: Context,
-        showAztecEditor: Boolean,
-        newContent: String
-    ): Boolean {
-        // this method makes use of AztecEditorFragment methods. Make sure to only run if Aztec is the current editor.
-        if (!showAztecEditor) {
-            return false
-        }
-        val currentUploadingMedia = aztecEditorFragmentStaticWrapper.getMediaMarkedUploadingInPostContent(
-                context,
-                newContent
-        )
-
-        return mediaMarkedUploadingOnStartIds != currentUploadingMedia.sorted()
     }
 
     fun finish(savedOnline: Boolean) {
