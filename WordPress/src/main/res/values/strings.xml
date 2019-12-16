@@ -156,7 +156,6 @@
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="media_generic_error">Media error occurred</string>
     <string name="media_space_used">%1$s used</string>
-    <string name="media_multi_select_confirm_action">Confirm selected images</string>
 
     <string name="media_upload_state_queued">Queued</string>
     <string name="media_upload_state_uploading">Uploading</string>
