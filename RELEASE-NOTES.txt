@@ -1,6 +1,14 @@
+13.9
+-----
+* Block Editor: New block "Gallery". You can now create image galleries using WordPress Media library.
+* Block Editor: Add support for the Preformatted block.
+* Block Editor: Add support for changing Settings in the List Block.
+* Block Editor: Add support for Video block settings.
+ 
 13.8
 -----
 * Modified Blog Post search to search for posts under all categories.
+* Block editor: Add support for Preformatted block.
 * Block editor: New Spacer block to create white space between two blocks.
 
 13.7

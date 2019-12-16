@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-198"
+            versionName "alpha-199"
         }
-        versionCode 800
+        versionCode 803
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -84,9 +84,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "13.7"
+                versionName "13.8-rc-1"
             }
-            versionCode 801
+            versionCode 802
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
@@ -207,8 +207,8 @@ dependencies {
         exclude group: 'com.squareup.okhttp3'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    kapt 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    kapt 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
 
     testImplementation 'junit:junit:4.12'
