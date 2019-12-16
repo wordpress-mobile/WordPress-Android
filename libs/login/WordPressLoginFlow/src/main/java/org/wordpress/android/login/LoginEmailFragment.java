@@ -14,6 +14,7 @@ import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -216,6 +217,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 siteLoginButton.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        TextView label = view.findViewById(R.id.label);
+        label.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
     }
 
     @Override
