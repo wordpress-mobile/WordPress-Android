@@ -13,7 +13,7 @@ import org.wordpress.android.util.CrashLoggingUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class EditorActionsProviderTest {
-    private var crashLoggingUtilsWrapper: CrashLoggingUtilsWrapper = mock()
+    private val crashLoggingUtilsWrapper: CrashLoggingUtilsWrapper = mock()
     private val actionsProvider: EditorActionsProvider = EditorActionsProvider(
             crashLoggingUtilsWrapper
     )

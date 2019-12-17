@@ -7,7 +7,7 @@ import javax.inject.Inject
 class CrashLoggingUtilsWrapper @Inject constructor() {
     fun log(message: String?) = CrashLoggingUtils.log(message)
     fun log(exception: Throwable) = CrashLoggingUtils.log(exception)
-    fun logException(tr: Throwable, tag: AppLog.T) = CrashLoggingUtils.logException(tr, tag)
-    fun logException(tr: Throwable, tag: AppLog.T, message: String?) =
-            CrashLoggingUtils.logException(tr, tag, message)
+    fun logException(throwable: Throwable, tag: AppLog.T) = CrashLoggingUtils.logException(throwable, tag)
+    fun logException(throwable: Throwable, tag: AppLog.T, message: String?) =
+            CrashLoggingUtils.logException(throwable, tag, message)
 }

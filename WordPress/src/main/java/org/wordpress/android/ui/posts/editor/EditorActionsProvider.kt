@@ -24,7 +24,7 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                 PostStatus.PENDING,
                 PostStatus.UNKNOWN -> PrimaryEditorAction.SUBMIT_FOR_REVIEW
                 PostStatus.TRASHED -> {
-                    // TODO if this log won't appear in Sentry, we should start throwing IllegalStateException
+                    // TODO if this log doesn't appear in Sentry, we should start throwing IllegalStateException
                     //  instead of returning a valid action.
                     remoteLoggingUtils.log(
                             "User shouldn't be able to open a trashed post in an editor " +
@@ -35,7 +35,7 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                 PostStatus.PUBLISHED,
                 PostStatus.SCHEDULED,
                 PostStatus.PRIVATE -> {
-                    // TODO if this log won't appear in Sentry, we should start throwing IllegalStateException
+                    // TODO if this log doesn't appear in Sentry, we should start throwing IllegalStateException
                     //  instead of returning a valid action.
                     remoteLoggingUtils.log(
                             "User shouldn't be able to open a public ($postStatus) post in an editor " +
@@ -65,7 +65,7 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                 PostStatus.PENDING,
                 PostStatus.UNKNOWN -> SecondaryEditorAction.NONE
                 PostStatus.TRASHED -> {
-                    // TODO if this log won't appear in Sentry, we should start throwing IllegalStateException
+                    // TODO if this log doesn't appear in Sentry, we should start throwing IllegalStateException
                     //  instead of returning a valid action.
                     remoteLoggingUtils.log(
                             "User shouldn't be able to open a trashed post in an editor " +
@@ -76,7 +76,7 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                 PostStatus.PUBLISHED,
                 PostStatus.SCHEDULED,
                 PostStatus.PRIVATE -> {
-                    // TODO if this log won't appear in Sentry, we should start throwing IllegalStateException
+                    // TODO if this log doesn't appear in Sentry, we should start throwing IllegalStateException
                     //  instead of returning a valid action.
                     remoteLoggingUtils.log(
                             "User shouldn't be able to open a public ($postStatus) post in an editor " +
