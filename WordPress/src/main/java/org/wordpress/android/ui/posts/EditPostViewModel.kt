@@ -102,7 +102,7 @@ class EditPostViewModel
         postRepository: EditPostRepository,
         getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor
     ): UpdateResult {
-        return postRepository.updateInTransaction { postModel ->
+        return postRepository.update { postModel ->
             updatePostObjectWithUI(getUpdatedTitleAndContent, postModel, postRepository)
         }
     }
@@ -112,7 +112,7 @@ class EditPostViewModel
         getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor,
         onSuccess: ((PostImmutableModel) -> Unit)? = null
     ) {
-        postRepository.updatePostInTransactionAsync({ postModel ->
+        postRepository.updateAsync({ postModel ->
             val updateResult = updatePostObjectWithUI(getUpdatedTitleAndContent, postModel, postRepository)
             updateResult is Success
         }, onSuccess)

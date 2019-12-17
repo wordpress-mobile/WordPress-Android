@@ -353,7 +353,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Create a new post
-        mEditPostRepository.setInTransaction(() -> {
+        mEditPostRepository.set(() -> {
             PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
             post.setStatus(PostStatus.DRAFT.toString());
             return post;
@@ -401,9 +401,6 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
-        mEditorMedia.start(mSite, this);
-        startObserving();
-
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -444,7 +441,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (mEditPostRepository.hasPost()) {
                     if (extras.getBoolean(EXTRA_LOAD_AUTO_SAVE_REVISION)) {
                         Log.d("vojta", "org.wordpress.android.ui.posts.EditPostActivity.onCreate");
-                        mEditPostRepository.updateInTransaction(postModel -> {
+                        mEditPostRepository.update(postModel -> {
                             boolean updateTitle = !TextUtils.isEmpty(postModel.getAutoSaveTitle());
                             if (updateTitle) {
                                 postModel.setTitle(postModel.getAutoSaveTitle());
@@ -509,6 +506,9 @@ public class EditPostActivity extends AppCompatActivity implements
             showErrorAndFinish(R.string.post_not_found);
             return;
         }
+
+        mEditorMedia.start(mSite, this);
+        startObserving();
 
         QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.PUBLISH_POST,
                 mDispatcher, mSite, this);
@@ -624,7 +624,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void initializePostObject() {
         if (mEditPostRepository.hasPost()) {
             mEditPostRepository.savePostSnapshotWhenEditorOpened();
-            mEditPostRepository.replaceInTransaction(UploadService::updatePostWithCurrentlyCompletedUploads);
+            mEditPostRepository.replace(UploadService::updatePostWithCurrentlyCompletedUploads);
             mIsPage = mEditPostRepository.isPage();
 
             EventBus.getDefault().postSticky(new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(),
@@ -642,7 +642,7 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
         Log.d("vojta", "org.wordpress.android.ui.posts.EditPostActivity.resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued");
-        mEditPostRepository.updatePostInTransactionAsync(postModel -> {
+        mEditPostRepository.updateAsync(postModel -> {
             String oldContent = postModel.getContent();
             if (!AztecEditorFragment.hasMediaItemsMarkedUploading(EditPostActivity.this, oldContent)
                 // we need to make sure items marked failed are still failed or not as well
@@ -1737,7 +1737,7 @@ public class EditPostActivity extends AppCompatActivity implements
         updatePostLoadingAndDialogState(PostLoadingState.LOADING_REVISION);
         mEditPostRepository.saveForUndo();
         Log.d("vojta", "EditPostActivity.loadRevision");
-        mEditPostRepository.updatePostInTransactionAsync(postModel -> {
+        mEditPostRepository.updateAsync(postModel -> {
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
             return true;
@@ -1812,7 +1812,7 @@ public class EditPostActivity extends AppCompatActivity implements
         new Thread(() -> {
             AtomicBoolean saveOnline = new AtomicBoolean(false);
             AtomicBoolean isFirstTimePublish = new AtomicBoolean(false);
-            mEditPostRepository.updatePostInTransactionAsync(postModel -> {
+            mEditPostRepository.updateAsync(postModel -> {
                 isFirstTimePublish.set(isFirstTimePublish(publishPost));
                 if (publishPost) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
@@ -2151,7 +2151,7 @@ public class EditPostActivity extends AppCompatActivity implements
         final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
             Log.d("vojta", "EditPostActivity.setPostContentFromShareAction");
-            mEditPostRepository.updatePostInTransactionAsync(postModel -> {
+            mEditPostRepository.updateAsync(postModel -> {
                 if (title != null) {
                     postModel.setTitle(title);
                 }
@@ -2831,7 +2831,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
             mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
-            mEditPostRepository.replaceInTransaction(postModel -> handleRemoteAutoSave(event.isError(), postModel));
+            mEditPostRepository.replace(postModel -> handleRemoteAutoSave(event.isError(), postModel));
         }
     }
 
@@ -2892,13 +2892,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 mUploadUtilsWrapper.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
                         event.isError() ? event.error.message : null, getSite());
                 if (!event.isError()) {
-                    mEditPostRepository.setInTransaction(() -> {
+                    mEditPostRepository.set(() -> {
                         updateOnSuccessfulUpload();
                         return post;
                     });
                 }
             } else {
-                mEditPostRepository.setInTransaction(() -> handleRemoteAutoSave(event.isError(), post));
+                mEditPostRepository.set(() -> handleRemoteAutoSave(event.isError(), post));
             }
         }
     }

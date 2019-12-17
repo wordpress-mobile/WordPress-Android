@@ -703,7 +703,6 @@ Language: es_CO
     <string name="auth_required">Accede de nuevo para continuar.</string>
     <string name="invalid_verification_code">Código de verificación no válido</string>
     <string name="verification_code">Código de verificación</string>
-    <string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
     <string name="language">Idioma</string>
     <string name="media_fetching">Recuperando medios…</string>
     <string name="posts_fetching">Recuperando entradas…</string>

@@ -111,7 +111,7 @@ class EditPostPublishSettingsViewModel
     }
 
     fun updatePost(updatedDate: Calendar, postRepository: EditPostRepository?) {
-        postRepository?.updatePostInTransactionAsync({ postModel ->
+        postRepository?.updateAsync({ postModel ->
             val dateCreated = DateTimeUtils.iso8601FromDate(updatedDate.time)
             postModel.setDateCreated(dateCreated)
             val initialPostStatus = postRepository.status

@@ -20,13 +20,15 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
+import java.util.Arrays
 import org.wordpress.android.viewmodel.Event
-import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.concurrent.write
 import kotlin.coroutines.CoroutineContext
 
 class EditPostRepository
@@ -93,15 +95,15 @@ class EditPostRepository
     val dateLocallyChanged: String
         get() = post!!.dateLocallyChanged
 
-    private val lock = ReentrantReadWriteLock()
+    private var locked = false
 
     private val _postChanged = MutableLiveData<Event<PostImmutableModel>>()
     val postChanged: LiveData<Event<PostImmutableModel>> = _postChanged
 
-    fun <T> updateInTransaction(action: (PostModel) -> T): T {
-        val result = lock.write {
-            action(requireNotNull(post))
-        }
+    fun <T> update(action: (PostModel) -> T): T {
+        reportTransactionState(true)
+        val result = action(requireNotNull(post))
+        reportTransactionState(false)
         runBlocking {
             launch(mainDispatcher) {
                 _postChanged.value = Event(requireNotNull(post))
@@ -110,16 +112,16 @@ class EditPostRepository
         return result
     }
 
-    fun updatePostInTransactionAsync(
+    fun updateAsync(
         action: (PostModel) -> Boolean,
         onSuccess: ((PostImmutableModel) -> Unit)? = null
     ) {
         launch {
+            reportTransactionState(true)
             val isUpdated = withContext(bgDispatcher) {
-                lock.write {
-                    action(requireNotNull(post))
-                }
+                action(requireNotNull(post))
             }
+            reportTransactionState(false)
             if (isUpdated) {
                 requireNotNull(post).let {
                     _postChanged.value = Event(it)
@@ -129,12 +131,28 @@ class EditPostRepository
         }
     }
 
-    fun replaceInTransaction(action: (PostModel) -> PostModel) = lock.write {
+    fun replace(action: (PostModel) -> PostModel) {
+        reportTransactionState(true)
         this.post = action(requireNotNull(post))
+        reportTransactionState(false)
     }
 
-    fun setInTransaction(action: () -> PostModel) = lock.write {
+    fun set(action: () -> PostModel) {
+        reportTransactionState(true)
         this.post = action()
+        reportTransactionState(false)
+    }
+
+    @Synchronized
+    private fun reportTransactionState(lock: Boolean) {
+        if (lock && locked) {
+            val message = "EditPostRepository: Transaction is writing on a locked thread ${Arrays.toString(
+                    Thread.currentThread().stackTrace
+            )}"
+            AppLog.e(T.EDITOR, message)
+            CrashLoggingUtils.log(message)
+        }
+        locked = lock
     }
 
     fun hasLocation() = requireNotNull(post).hasLocation()
@@ -190,7 +208,9 @@ class EditPostRepository
     fun updateStatusFromPostSnapshotWhenEditorOpened(post: PostModel) {
         // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
         // original post's status as we could not proceed with the action
+        reportTransactionState(true)
         post.setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
+        reportTransactionState(false)
     }
 
     fun postWasChangedInCurrentSession() = postUtils.postHasEdits(postSnapshotWhenEditorOpened,
@@ -201,22 +221,25 @@ class EditPostRepository
         checkNotNull(post, { "Post cannot be null when setting status" }).let {
             val updatedPost = status.toString()
             if (it.status != updatedPost) {
-                it.setStatus(updatedPost)
+                update { post ->
+                    post.setStatus(updatedPost)
+                    true
+                }
             }
         }
     }
 
     fun loadPostByLocalPostId(postId: Int) {
-        lock.write {
-            post = postStore.getPostByLocalPostId(postId)
-            saveDbSnapshot()
-        }
+        reportTransactionState(true)
+        post = postStore.getPostByLocalPostId(postId)
+        saveDbSnapshot()
+        reportTransactionState(false)
     }
 
     fun loadPostByRemotePostId(remotePostId: Long, site: SiteModel) {
-        lock.write {
-            post = postStore.getPostByRemotePostId(remotePostId, site)
-            saveDbSnapshot()
-        }
+        reportTransactionState(true)
+        post = postStore.getPostByRemotePostId(remotePostId, site)
+        saveDbSnapshot()
+        reportTransactionState(false)
     }
 }

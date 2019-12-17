@@ -71,6 +71,7 @@ import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
 import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -123,6 +124,10 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
     private TextView mPublishDateTextView;
+    private TextView mCategoriesTagsHeaderTextView;
+    private TextView mFeaturedImageHeaderTextView;
+    private TextView mMoreOptionsHeaderTextView;
+    private TextView mPublishHeaderTextView;
     private ImageView mFeaturedImageView;
     private ImageView mLocalFeaturedImageView;
     private Button mFeaturedImageButton;
@@ -258,6 +263,10 @@ public class EditPostSettingsFragment extends Fragment {
         mPostFormatTextView = rootView.findViewById(R.id.post_format);
         mPasswordTextView = rootView.findViewById(R.id.post_password);
         mPublishDateTextView = rootView.findViewById(R.id.publish_date);
+        mCategoriesTagsHeaderTextView = rootView.findViewById(R.id.post_settings_categories_and_tags_header);
+        mMoreOptionsHeaderTextView = rootView.findViewById(R.id.post_settings_more_options_header);
+        mFeaturedImageHeaderTextView = rootView.findViewById(R.id.post_settings_featured_image_header);
+        mPublishHeaderTextView = rootView.findViewById(R.id.post_settings_publish);
 
         mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
         mLocalFeaturedImageView = rootView.findViewById(R.id.post_featured_image_local);
@@ -386,6 +395,9 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
+        setupSettingHintsForAccessibility();
+        applyAccessibilityHeadingToSettings();
+
         return rootView;
     }
 
@@ -426,6 +438,23 @@ public class EditPostSettingsFragment extends Fragment {
             default:
                 return false;
         }
+    }
+
+    private void setupSettingHintsForAccessibility() {
+        AccessibilityUtils.disableHintAnnouncement(mPublishDateTextView);
+        AccessibilityUtils.disableHintAnnouncement(mCategoriesTextView);
+        AccessibilityUtils.disableHintAnnouncement(mTagsTextView);
+        AccessibilityUtils.disableHintAnnouncement(mPasswordTextView);
+        AccessibilityUtils.disableHintAnnouncement(mSlugTextView);
+        AccessibilityUtils.disableHintAnnouncement(mExcerptTextView);
+        AccessibilityUtils.disableHintAnnouncement(mLocationTextView);
+    }
+
+    private void applyAccessibilityHeadingToSettings() {
+        AccessibilityUtils.enableAccessibilityHeading(mCategoriesTagsHeaderTextView);
+        AccessibilityUtils.enableAccessibilityHeading(mFeaturedImageHeaderTextView);
+        AccessibilityUtils.enableAccessibilityHeading(mMoreOptionsHeaderTextView);
+        AccessibilityUtils.enableAccessibilityHeading(mPublishHeaderTextView);
     }
 
     private void retryFeaturedImageUpload(@NonNull SiteModel site, @NonNull PostImmutableModel post) {
@@ -663,7 +692,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updateExcerpt(String excerpt) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostInTransactionAsync(postModel -> {
+            editPostRepository.updateAsync(postModel -> {
                 postModel.setExcerpt(excerpt);
                 return true;
             }, postModel -> {
@@ -676,7 +705,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updateSlug(String slug) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostInTransactionAsync(postModel -> {
+            editPostRepository.updateAsync(postModel -> {
                 postModel.setSlug(slug);
                 return true;
             }, postModel -> {
@@ -689,7 +718,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updatePassword(String password) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostInTransactionAsync(postModel -> {
+            editPostRepository.updateAsync(postModel -> {
                 postModel.setPassword(password);
                 return true;
             }, postModel -> {
@@ -705,7 +734,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostInTransactionAsync(postModel -> {
+            editPostRepository.updateAsync(postModel -> {
                 postModel.setCategoryIdList(categoryList);
                 return true;
             }, postModel -> {
@@ -718,7 +747,7 @@ public class EditPostSettingsFragment extends Fragment {
     public void updatePostStatus(PostStatus postStatus) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostInTransactionAsync(postModel -> {
+            editPostRepository.updateAsync(postModel -> {
                 postModel.setStatus(postStatus.toString());
                 return true;
             }, postModel -> {
@@ -732,7 +761,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updatePostFormat(String postFormat) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updatePostInTransactionAsync(postModel -> {
+            editPostRepository.updateAsync(postModel -> {
                 postModel.setPostFormat(postFormat);
                 return true;
             }, postModel -> {
@@ -764,7 +793,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updatePostInTransactionAsync(postModel -> {
+        postRepository.updateAsync(postModel -> {
             if (!TextUtils.isEmpty(selectedTags)) {
                 String tags = selectedTags.replace("\n", " ");
                 postModel.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
@@ -915,7 +944,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updatePostInTransactionAsync(postModel -> {
+        postRepository.updateAsync(postModel -> {
             postModel.setFeaturedImageId(featuredImageId);
             return true;
         }, postModel -> {
@@ -1083,7 +1112,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (postRepository == null) {
             return;
         }
-        postRepository.updatePostInTransactionAsync(postModel -> {
+        postRepository.updateAsync(postModel -> {
             if (place == null) {
                 postModel.clearLocation();
                 mPostLocation = null;
