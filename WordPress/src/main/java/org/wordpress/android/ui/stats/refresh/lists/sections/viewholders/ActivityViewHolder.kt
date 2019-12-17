@@ -21,7 +21,8 @@ private const val GAP = 8
 private const val BLOCK_WIDTH = 104
 private const val SPAN_COUNT = 7
 
-class ActivityViewHolder(val parent: ViewGroup,val postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer?)
+class ActivityViewHolder(val parent: ViewGroup, private val postingActivityBlockAnnouncer:
+PostingActivityBlockAnnouncer?)
     : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_activity_item
@@ -56,17 +57,8 @@ class ActivityViewHolder(val parent: ViewGroup,val postingActivityBlockAnnouncer
     }
 
     private fun setupBlocksForAccessibility(activityItem: ActivityItem) {
-        postingActivityBlockAnnouncer?.onBlockBinded(activityItem)
-
-        val blocks = listOf<View>(firstBlock, secondBlock, thirdBlock)
-
-        blocks.forEach {
-            it.setOnClickListener { view: View? ->
-                postingActivityBlockAnnouncer?.onBlockClicked(
-                        view
-                )
-            }
-        }
+        postingActivityBlockAnnouncer?.onBlocksInflated(firstBlock, secondBlock, thirdBlock)
+        postingActivityBlockAnnouncer?.onActivityItemBound(activityItem)
     }
 
     private fun updateVisibility(

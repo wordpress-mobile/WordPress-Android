@@ -9,16 +9,13 @@ class PostingActivityBlockAnnouncer
     private var activityItem: ActivityItem? = null
     private var currentBoxIndex: Int? = null
     private var currentBlockIndex: Int? = null
+    private var blockViews:List<View>? = null 
 
-     fun onBlockClicked(block:View?) {
-
+     fun onBlocksInflated(vararg blockViews:View) {
+         this.blockViews = blockViews.toList()
     }
 
-    fun onBlockFocused() {
-
-    }
-
-    fun onBlockBinded(activityItem: ActivityItem) {
+    fun onActivityItemBound(activityItem: ActivityItem) {
         this.activityItem = activityItem
     }
 }
