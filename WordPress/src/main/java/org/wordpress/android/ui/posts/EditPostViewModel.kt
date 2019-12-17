@@ -110,7 +110,7 @@ class EditPostViewModel
     ) {
         launch(bgDispatcher) {
             if (editPostRepository.postHasEdits()) {
-                editPostRepository.updateInTransaction { postModel ->
+                editPostRepository.update { postModel ->
                     // Changes have been made - save the post and ask for the post list to refresh
                     // We consider this being "manual save", it will replace some Android "spans" by an html
                     // or a shortcode replacement (for instance for images and galleries)
@@ -267,7 +267,7 @@ class EditPostViewModel
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.")
             return Error
         }
-        return postRepository.updateInTransaction { postModel ->
+        return postRepository.update { postModel ->
             when (val updateFromEditor = getUpdatedTitleAndContent(postModel.content)) {
                 is PostFields -> {
                     val postTitleOrContentChanged = updatePostContentNewEditor(

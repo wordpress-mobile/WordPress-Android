@@ -10,11 +10,13 @@ import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.fromPost
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
-import java.util.concurrent.locks.ReentrantReadWriteLock
+import java.util.Arrays
 import javax.inject.Inject
-import kotlin.concurrent.write
 
 class EditPostRepository
 @Inject constructor(
@@ -73,18 +75,37 @@ class EditPostRepository
     val dateLocallyChanged: String
         get() = post!!.dateLocallyChanged
 
-    private val lock = ReentrantReadWriteLock()
+    private var locked = false
 
-    fun <T> updateInTransaction(action: (PostModel) -> T) = lock.write {
-        action(post!!)
+    fun <T> update(action: (PostModel) -> T): T {
+        reportTransactionState(true)
+        val result = action(post!!)
+        reportTransactionState(false)
+        return result
     }
 
-    fun replaceInTransaction(action: (PostModel) -> PostModel) = lock.write {
+    fun replace(action: (PostModel) -> PostModel) {
+        reportTransactionState(true)
         this.post = action(post!!)
+        reportTransactionState(false)
     }
 
-    fun setInTransaction(action: () -> PostModel) = lock.write {
+    fun set(action: () -> PostModel) {
+        reportTransactionState(true)
         this.post = action()
+        reportTransactionState(false)
+    }
+
+    @Synchronized
+    private fun reportTransactionState(lock: Boolean) {
+        if (lock && locked) {
+            val message = "EditPostRepository: Transaction is writing on a locked thread ${Arrays.toString(
+                    Thread.currentThread().stackTrace
+            )}"
+            AppLog.e(T.EDITOR, message)
+            CrashLoggingUtils.log(message)
+        }
+        locked = lock
     }
 
     fun hasLocation() = post!!.hasLocation()
@@ -137,7 +158,9 @@ class EditPostRepository
     fun updateStatusFromPostSnapshotWhenEditorOpened(post: PostModel) {
         // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
         // original post's status as we could not proceed with the action
+        reportTransactionState(true)
         post.setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
+        reportTransactionState(false)
     }
 
     fun hasStatusChangedFromWhenEditorOpened(postStatus: String?): Boolean {
@@ -147,21 +170,21 @@ class EditPostRepository
     fun postHasEdits() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post!!)
 
     fun updateStatus(status: PostStatus) {
-        updateInTransaction {
+        update {
             it.setStatus(status.toString())
             true
         }
     }
 
     fun loadPostByLocalPostId(postId: Int) {
-        lock.write {
-            post = postStore.getPostByLocalPostId(postId)
-        }
+        reportTransactionState(true)
+        post = postStore.getPostByLocalPostId(postId)
+        reportTransactionState(false)
     }
 
     fun loadPostByRemotePostId(remotePostId: Long, site: SiteModel) {
-        lock.write {
-            post = postStore.getPostByRemotePostId(remotePostId, site)
-        }
+        reportTransactionState(true)
+        post = postStore.getPostByRemotePostId(remotePostId, site)
+        reportTransactionState(false)
     }
 }
