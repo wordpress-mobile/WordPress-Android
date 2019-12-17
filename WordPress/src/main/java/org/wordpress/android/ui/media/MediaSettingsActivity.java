@@ -23,7 +23,6 @@ import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -318,24 +317,17 @@ public class MediaSettingsActivity extends AppCompatActivity
 
         // tap to show full screen view (not supported for documents)
         if (!isDocument()) {
-            View.OnClickListener listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showFullScreen();
-                }
-            };
+            View.OnClickListener listener = v -> showFullScreen();
             mImageView.setOnClickListener(listener);
             mImagePlay.setOnClickListener(listener);
             mFabView.setOnClickListener(listener);
-            mFabView.setOnLongClickListener(new OnLongClickListener() {
-                @Override public boolean onLongClick(View view) {
-                    if (view.isHapticFeedbackEnabled()) {
-                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                    }
-
-                    Toast.makeText(view.getContext(), R.string.button_preview, Toast.LENGTH_SHORT).show();
-                    return true;
+            mFabView.setOnLongClickListener(view -> {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 }
+
+                Toast.makeText(view.getContext(), R.string.button_preview, Toast.LENGTH_SHORT).show();
+                return true;
             });
             ViewUtilsKt.redirectContextClickToLongPressListener(mFabView);
         }
@@ -427,12 +419,9 @@ public class MediaSettingsActivity extends AppCompatActivity
         super.onResume();
 
         long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isFinishing() && shouldShowFab()) {
-                    showFab();
-                }
+        new Handler().postDelayed(() -> {
+            if (!isFinishing() && shouldShowFab()) {
+                showFab();
             }
         }, delayMs);
 
@@ -443,7 +432,7 @@ public class MediaSettingsActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
         outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
@@ -491,12 +480,7 @@ public class MediaSettingsActivity extends AppCompatActivity
 
     private void delayedFinishWithError() {
         ToastUtils.showToast(this, R.string.error_media_not_found);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 1500);
+        new Handler().postDelayed(this::finish, 1500);
     }
 
     @Override
@@ -664,12 +648,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         View txtCopyUrl = findViewById(R.id.text_copy_url);
         txtCopyUrl.setVisibility(hasUrl ? View.VISIBLE : View.GONE);
         if (hasUrl) {
-            txtCopyUrl.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    copyMediaUrlToClipboard();
-                }
-            });
+            txtCopyUrl.setOnClickListener(v -> copyMediaUrlToClipboard());
         }
     }
 
@@ -814,13 +793,10 @@ public class MediaSettingsActivity extends AppCompatActivity
                 int width = DisplayUtils.getDisplayPixelWidth(MediaSettingsActivity.this);
                 final Bitmap thumb = ImageUtils.getVideoFrameFromVideo(mMedia.getUrl(), width);
                 if (thumb != null) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!isFinishing()) {
-                                WordPress.getBitmapCache().put(mMedia.getUrl(), thumb);
-                                mImageView.setImageBitmap(thumb);
-                            }
+                    runOnUiThread(() -> {
+                        if (!isFinishing()) {
+                            WordPress.getBitmapCache().put(mMedia.getUrl(), thumb);
+                            mImageView.setImageBitmap(thumb);
                         }
                     });
                 }
@@ -833,14 +809,11 @@ public class MediaSettingsActivity extends AppCompatActivity
         hideFab();
 
         // show fullscreen preview after a brief delay so fab & actionBar animations don't stutter
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (isMediaFromEditor()) {
-                    MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mEditorImageMetaData.getSrc());
-                } else {
-                    MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia, mMediaIdList);
-                }
+        new Handler().postDelayed(() -> {
+            if (isMediaFromEditor()) {
+                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mEditorImageMetaData.getSrc());
+            } else {
+                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia, mMediaIdList);
             }
         }, 200);
     }
