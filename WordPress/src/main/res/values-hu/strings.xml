@@ -8,7 +8,6 @@ Language: hu
 <resources>
     <string name="timespan_now">most</string>
     <string name="role_follower">Követő</string>
-    <string name="editor_toast_invalid_path">Érvénytelen fájl elérési útvonal</string>
     <string name="language">Nyelv</string>
     <string name="stats_view_authors">Szerzők</string>
     <string name="publisher">Közzétevő:</string>
