@@ -32,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.PostingActivityBlockAnnouncer
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
@@ -44,6 +45,7 @@ import javax.inject.Inject
 class StatsViewAllFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer
     @Inject lateinit var navigator: StatsNavigator
     @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsViewAllViewModel
@@ -237,7 +239,7 @@ class StatsViewAllFragment : DaggerFragment() {
     private fun loadData(recyclerView: RecyclerView, data: List<BlockListItem>) {
         val adapter: BlockListAdapter
         if (recyclerView.adapter == null) {
-            adapter = BlockListAdapter(imageManager)
+            adapter = BlockListAdapter(imageManager, postingActivityBlockAnnouncer)
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as BlockListAdapter

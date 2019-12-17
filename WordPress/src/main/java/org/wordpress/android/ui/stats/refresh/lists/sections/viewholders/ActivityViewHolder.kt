@@ -14,13 +14,15 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
+import org.wordpress.android.ui.stats.refresh.utils.PostingActivityBlockAnnouncer
 
 private const val SIZE_PADDING = 32
 private const val GAP = 8
 private const val BLOCK_WIDTH = 104
 private const val SPAN_COUNT = 7
 
-class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
+class ActivityViewHolder(val parent: ViewGroup,val postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer?)
+    : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_activity_item
 ) {
