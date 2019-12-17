@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 94
+        return 95
     }
 
     override fun getDbName(): String {
@@ -1023,6 +1023,18 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 93 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductVariationModel ADD MENU_ORDER INTEGER")
+                }
+                94 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL(
+                            "CREATE TABLE WCTaxClassModel(" +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "NAME TEXT NOT NULL," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
+                                    "UNIQUE (LOCAL_SITE_ID) " +
+                                    "ON CONFLICT REPLACE)"
+                    )
                 }
             }
         }
