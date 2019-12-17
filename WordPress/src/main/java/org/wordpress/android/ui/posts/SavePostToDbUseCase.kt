@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Context
-import android.util.Log
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -23,7 +22,6 @@ class SavePostToDbUseCase
         postRepository: EditPostRepository,
         site: SiteModel
     ) {
-        Log.d("vojta", "Saving post to DB")
         if (postRepository.postHasChangesFromDb()) {
             val post = checkNotNull(postRepository.getEditablePost())
             // mark as pending if the user doesn't have publishing rights
@@ -43,7 +41,6 @@ class SavePostToDbUseCase
             post.setIsLocallyChanged(true)
             post.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
             handlePendingDraftNotifications(context, postRepository)
-            Log.d("vojta", "Post has changes so really saving")
             postRepository.saveDbSnapshot()
             dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
         }
