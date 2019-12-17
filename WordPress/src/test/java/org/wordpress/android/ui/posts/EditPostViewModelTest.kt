@@ -78,13 +78,9 @@ class EditPostViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = EditPostViewModel(
                 TEST_DISPATCHER,
-                TEST_DISPATCHER,
                 dispatcher,
-                aztecEditorFragmentStaticWrapper,
                 siteStore,
-                uploadUtils,
                 postUtils,
-                pendingDraftsNotificationsUtils,
                 uploadService,
                 dateTimeUtils
         )
