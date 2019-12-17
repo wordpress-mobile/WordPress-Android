@@ -116,6 +116,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
+import org.wordpress.android.ui.posts.editor.EditorActionsProvider;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
 import org.wordpress.android.ui.posts.editor.EditorTracker;
@@ -326,6 +327,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject PostUtilsWrapper mPostUtils;
     @Inject EditorTracker mEditorTracker;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject EditorActionsProvider mEditorActionsProvider;
 
     private SiteModel mSite;
 
@@ -827,7 +829,8 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private PrimaryEditorAction getPrimaryAction() {
-        return PrimaryEditorAction.getPrimaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite));
+        return mEditorActionsProvider
+                .getPrimaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite));
     }
 
     private String getPrimaryActionText() {
@@ -835,7 +838,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private SecondaryEditorAction getSecondaryAction() {
-        return SecondaryEditorAction
+        return mEditorActionsProvider
                 .getSecondaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite));
     }
 
