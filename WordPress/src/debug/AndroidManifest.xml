@@ -8,13 +8,6 @@
         tools:replace="android:name,android:supportsRtl"
         android:name=".WordPressDebug"
         android:supportsRtl="true">
-        <!-- Temporarily adding this activity here, so we are able to launch it from adb -->
-        <activity
-            android:name=".ui.accounts.PostSignupInterstitialActivity"
-            android:label="@string/post_signup_interstitial_title"
-            android:theme="@style/LoginTheme"
-            android:exported="true"
-            />
     </application>
 
     <!--
