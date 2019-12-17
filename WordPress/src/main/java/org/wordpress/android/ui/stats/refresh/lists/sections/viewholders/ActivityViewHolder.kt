@@ -52,6 +52,21 @@ class ActivityViewHolder(val parent: ViewGroup,val postingActivityBlockAnnouncer
                 updateVisibility(item, parent.width / parent.context.resources.displayMetrics.density)
             }
         }
+        setupBlocksForAccessibility(item)
+    }
+
+    private fun setupBlocksForAccessibility(activityItem: ActivityItem) {
+        postingActivityBlockAnnouncer?.onBlockBinded(activityItem)
+
+        val blocks = listOf<View>(firstBlock, secondBlock, thirdBlock)
+
+        blocks.forEach {
+            it.setOnClickListener { view: View? ->
+                postingActivityBlockAnnouncer?.onBlockClicked(
+                        view
+                )
+            }
+        }
     }
 
     private fun updateVisibility(
