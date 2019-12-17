@@ -1032,7 +1032,7 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "SLUG TEXT NOT NULL," +
                                     "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                                     "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
-                                    "UNIQUE (LOCAL_SITE_ID) " +
+                                    "UNIQUE (SLUG, LOCAL_SITE_ID) " +
                                     "ON CONFLICT REPLACE)"
                     )
                 }
