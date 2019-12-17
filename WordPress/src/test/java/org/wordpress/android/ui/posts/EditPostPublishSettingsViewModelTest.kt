@@ -66,7 +66,9 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         whenever(editPostRepository.dateCreated).thenReturn(dateCreated)
 
         val expectedLabel = "Scheduled for 2019"
-        whenever(postSettingsUtils.getPublishDateLabel(editPostRepository)).thenReturn(expectedLabel)
+        val postModel = PostModel()
+        whenever(editPostRepository.getEditablePost()).thenReturn(postModel)
+        whenever(postSettingsUtils.getPublishDateLabel(postModel)).thenReturn(expectedLabel)
         var uiModel: PublishUiModel? = null
         viewModel.onUiModel.observeForever {
             uiModel = it
@@ -269,8 +271,10 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Test
     fun `hides notification when publish date in the past`() {
         val postId = 1
-        whenever(editPostRepository.id).thenReturn(postId)
-        whenever(editPostRepository.dateCreated).thenReturn("2019-05-05T14:33:20+0000")
+        val postModel = PostModel()
+        postModel.setId(postId)
+        postModel.setDateCreated("2019-05-05T14:33:20+0000")
+        whenever(editPostRepository.getEditablePost()).thenReturn(postModel)
         val pastDate = Calendar.getInstance()
         pastDate.set(2019, 6, 6, 10, 10, 10)
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(pastDate)
@@ -282,7 +286,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         whenever(postSchedulingNotificationStore.getSchedulingReminderPeriod(postId)).thenReturn(ONE_HOUR)
 
-        viewModel.updateUiModel(editPostRepository)
+        viewModel.updateUiModel(postModel)
 
         uiModel?.apply {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")
@@ -295,8 +299,10 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Test
     fun `DISABLES notification when publish date in NOW`() {
         val postId = 1
-        whenever(editPostRepository.id).thenReturn(postId)
-        whenever(editPostRepository.dateCreated).thenReturn("2019-05-05T14:33:20+0000")
+        val postModel = PostModel()
+        postModel.setId(postId)
+        postModel.setDateCreated("2019-05-05T14:33:20+0000")
+        whenever(editPostRepository.getEditablePost()).thenReturn(postModel)
         val pastDate = Calendar.getInstance(Locale.US)
         pastDate.timeZone = TimeZone.getTimeZone("GMT")
         pastDate.set(2019, 4, 5, 14, 33, 20)
@@ -309,7 +315,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         whenever(postSchedulingNotificationStore.getSchedulingReminderPeriod(postId)).thenReturn(ONE_HOUR)
 
-        viewModel.updateUiModel(editPostRepository)
+        viewModel.updateUiModel(postModel)
 
         uiModel?.apply {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")
@@ -322,8 +328,10 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Test
     fun `DISABLES notification when publish date in missing`() {
         val postId = 1
-        whenever(editPostRepository.id).thenReturn(postId)
-        whenever(editPostRepository.dateCreated).thenReturn("2019-05-05T14:33:20+0000")
+        val postModel = PostModel()
+        postModel.setId(postId)
+        postModel.setDateCreated("2019-05-05T14:33:20+0000")
+        whenever(editPostRepository.getEditablePost()).thenReturn(postModel)
         val pastDate = Calendar.getInstance(Locale.US)
         pastDate.timeZone = TimeZone.getTimeZone("GMT")
         pastDate.set(2019, 4, 5, 14, 33, 20)
@@ -336,7 +344,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         whenever(postSchedulingNotificationStore.getSchedulingReminderPeriod(postId)).thenReturn(ONE_HOUR)
 
-        viewModel.updateUiModel(editPostRepository)
+        viewModel.updateUiModel(postModel)
 
         uiModel?.apply {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")

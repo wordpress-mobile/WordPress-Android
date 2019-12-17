@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.posts
 
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostLocation
@@ -24,9 +26,10 @@ class EditPostRepositoryTest {
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var postUtils: PostUtilsWrapper
     private lateinit var editPostRepository: EditPostRepository
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
-        editPostRepository = EditPostRepository(localeManager, postStore, postUtils)
+        editPostRepository = EditPostRepository(localeManager, postStore, postUtils, TEST_DISPATCHER, TEST_DISPATCHER)
     }
 
     @Test

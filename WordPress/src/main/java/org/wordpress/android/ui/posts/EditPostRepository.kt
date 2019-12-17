@@ -193,7 +193,9 @@ class EditPostRepository
         post.setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
     }
 
-    fun postWasChangedInCurrentSession() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, requireNotNull(post)!!)
+    fun postWasChangedInCurrentSession() = postUtils.postHasEdits(postSnapshotWhenEditorOpened,
+            requireNotNull(post)
+    )
 
     fun setStatus(status: PostStatus) {
         checkNotNull(post, { "Post cannot be null when setting status" }).let {
