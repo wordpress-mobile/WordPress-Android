@@ -69,7 +69,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return StringUtils.notNullStr(mEndpoint);
     }
 
-    private void setEndpoint(String endpoint) {
+    public void setEndpoint(String endpoint) {
         this.mEndpoint = StringUtils.notNullStr(endpoint);
     }
 

@@ -209,11 +209,20 @@ public class ReaderUtils {
     }
 
     public static ReaderTag getTagFromTagName(String tagName, ReaderTagType tagType, boolean isDefaultTag) {
+        return getTagFromTagName(tagName, tagType, "", isDefaultTag);
+    }
+
+    public static ReaderTag getTagFromTagName(
+            String tagName,
+            ReaderTagType tagType,
+            String endPoint,
+            boolean isDefaultTag
+    ) {
         ReaderTag tag = ReaderTagTable.getTag(tagName, tagType);
         if (tag != null) {
             return tag;
         } else {
-            return createTagFromTagName(tagName, tagType, isDefaultTag);
+            return createTagFromTagName(tagName, tagType, endPoint, isDefaultTag);
         }
     }
 
@@ -222,13 +231,22 @@ public class ReaderUtils {
     }
 
     public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType, boolean isDefaultTag) {
+        return createTagFromTagName(tagName, tagType, "", isDefaultTag);
+    }
+
+    public static ReaderTag createTagFromTagName(
+            String tagName,
+            ReaderTagType tagType,
+            String endPoint,
+            boolean isDefaultTag
+    ) {
         String tagSlug = sanitizeWithDashes(tagName).toLowerCase(Locale.ROOT);
         String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
         return new ReaderTag(
                 tagSlug,
                 tagDisplayName,
                 tagName,
-                null,
+                endPoint,
                 tagType,
                 isDefaultTag
         );
@@ -243,6 +261,14 @@ public class ReaderUtils {
         if (defaultTag == null) {
             defaultTag = getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT, true);
         }
+        return defaultTag;
+    }
+
+    public static ReaderTag getInMemoryDefaultTag(Context context) {
+        if (context == null) return null;
+        ReaderTag defaultTag = getDefaultTag();
+        defaultTag.setTagDisplayName(context.getString(R.string.reader_following_display_name));
+        defaultTag.setEndpoint(ReaderTag.FOLLOWING_PATH);
         return defaultTag;
     }
 
@@ -331,6 +357,32 @@ public class ReaderUtils {
         return orderedTagList;
     }
 
+    public static ReaderTagList addFollowingIfNeeded(Context context, ReaderTagList tagList) {
+        if (tagList == null) tagList = new ReaderTagList();
+
+        if (context != null && !containsFollowing(tagList)) {
+            ReaderTag tag = getInMemoryDefaultTag(context);
+            tagList.add(tag);
+        }
+
+        return tagList;
+    }
+
+    public static boolean containsFollowing(ReaderTagList tagList) {
+        if (tagList == null) return true;
+
+        boolean containsFollowing = false;
+
+        for (ReaderTag tag : tagList) {
+            if (tag.isFollowedSites() || tag.isDefaultTag()) {
+                containsFollowing = true;
+                break;
+            }
+        }
+
+        return containsFollowing;
+    }
+
     public static boolean isFollowing(
             ReaderTag currentTag,
             boolean isTopLevelReader,
@@ -362,7 +414,9 @@ public class ReaderUtils {
     public static ReaderTag getValidTagForSharedPrefs(
             ReaderTag tag,
             boolean isTopLevelReader,
-            FilteredRecyclerView recyclerView
+            FilteredRecyclerView recyclerView,
+            Context context,
+            boolean hasAccessToken
     ) {
         ReaderTag validTag = tag;
 
@@ -378,8 +432,14 @@ public class ReaderUtils {
 
                     // it's possible the default tag won't exist if the user just changed the app's
                     // language, in which case default to the first tag in the table
-                    if (!ReaderTagTable.tagExists(tag)) {
-                        validTag = ReaderTagTable.getFirstTag();
+                    if (!ReaderTagTable.tagExists(validTag)) {
+                        if (isTopLevelReader
+                            &&
+                            context != null && !hasAccessToken) {
+                            validTag = ReaderUtils.getInMemoryDefaultTag(context);
+                        } else {
+                            validTag = ReaderTagTable.getFirstTag();
+                        }
                     }
                 }
             }
