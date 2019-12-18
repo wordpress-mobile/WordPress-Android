@@ -18,6 +18,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
 import org.wordpress.android.models.news.NewsItem
@@ -47,6 +48,7 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var otherTag: ReaderTag
     @Mock private lateinit var newsTracker: NewsTracker
     @Mock private lateinit var newsTrackerHelper: NewsTrackerHelper
+    @Mock private lateinit var accountStore: AccountStore
 
     private lateinit var viewModel: ReaderPostListViewModel
     private val liveData = MutableLiveData<NewsItem>()
@@ -54,7 +56,7 @@ class ReaderPostListViewModelTest {
     @Before
     fun setUp() {
         whenever(newsManager.newsItemSource()).thenReturn(liveData)
-        viewModel = ReaderPostListViewModel(newsManager, newsTracker, newsTrackerHelper, TEST_DISPATCHER)
+        viewModel = ReaderPostListViewModel(newsManager, newsTracker, newsTrackerHelper, accountStore, TEST_DISPATCHER)
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
     }
