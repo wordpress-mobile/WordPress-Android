@@ -80,13 +80,13 @@ jobs:
             VERSION_NAME="${PREFIX}-build-${CIRCLE_BUILD_NUM}"
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
 
-            ./gradlew --stacktrace assembleVanillaRelease -PversionName="$VERSION_NAME"
+            ./gradlew --stacktrace assembleVanillaDebug -PversionName="$VERSION_NAME"
       - android/save-gradle-cache
       - run:
           name: Prepare APK
           command: |
             mkdir -p Artifacts
-            mv WordPress/build/outputs/apk/vanilla/release/org.wordpress.android-vanilla-release.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
+            mv WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
       - store_artifacts:
           path: Artifacts
           destination: Artifacts

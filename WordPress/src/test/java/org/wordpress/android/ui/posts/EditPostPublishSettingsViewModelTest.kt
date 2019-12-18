@@ -172,7 +172,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         viewModel.updatePost(futureDate, editPostRepository)
 
-        verify(editPostRepository).updateInTransaction(actionCaptor.capture())
+        verify(editPostRepository).update(actionCaptor.capture())
         val post = PostModel()
         actionCaptor.firstValue.invoke(post)
 
@@ -205,7 +205,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         viewModel.updatePost(currentCalendar, editPostRepository)
 
-        verify(editPostRepository).updateInTransaction(actionCaptor.capture())
+        verify(editPostRepository).update(actionCaptor.capture())
         val post = PostModel()
         actionCaptor.firstValue.invoke(post)
 
@@ -248,7 +248,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         viewModel.updatePost(currentCalendar, editPostRepository)
 
-        verify(editPostRepository).updateInTransaction(actionCaptor.capture())
+        verify(editPostRepository).update(actionCaptor.capture())
         val post = PostModel()
         actionCaptor.firstValue.invoke(post)
 
