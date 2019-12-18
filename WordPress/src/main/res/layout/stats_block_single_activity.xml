@@ -5,7 +5,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:importantForAccessibility="no"
     android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -14,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:importantForAccessibility="no"/>
+        />
 
     <TextView
         android:id="@+id/label"
@@ -22,6 +21,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:importantForAccessibility="no"
         tools:text="Jan"/>
 </LinearLayout>
