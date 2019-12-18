@@ -882,7 +882,7 @@
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
     <string name="stats_posting_activity_description">%1$s %2$d, %3$d post</string>
     <string name="stats_posting_activity_description_plural">%1$s %2$d, %3$d posts</string>
-    <string name="stats_posting_activity_action">navigate all stats for this period.</string>
+    <string name="stats_posting_activity_action">navigate all stats for this period</string>
     <string name="stats_posting_activity_empty_description">There are no stats in this period.</string>
     <string name="stats_posting_activity_end_description">You have heard all stats for this period.
         Tapping again will restart from the beginning.</string>
