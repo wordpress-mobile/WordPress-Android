@@ -2,11 +2,11 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED
 import androidx.core.view.AccessibilityDelegateCompat
-import androidx.core.view.accessibility.AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUSED
-import androidx.core.view.accessibility.AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED
-import androidx.core.view.accessibility.AccessibilityEventCompat.TYPE_VIEW_CONTEXT_CLICKED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.INVISIBLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_LOW
 import org.wordpress.android.util.AccessibilityUtils
 import javax.inject.Inject
 
@@ -25,9 +25,9 @@ class PostingActivityBlockAnnouncer
     }
 
     private fun setupViewDelegate() {
-        blockViews.forEach {
+        blockViews.forEach { blockView ->
             AccessibilityUtils.setAccessibilityDelegateSafely(
-                    it,
+                    blockView,
                     object : AccessibilityDelegateCompat() {
                         override fun onPopulateAccessibilityEvent(
                             host: View?,
@@ -40,24 +40,30 @@ class PostingActivityBlockAnnouncer
                                     currentBlockIndex = blockViews.indexOf(view)
                                     currentBoxIndex = 0
                                 }
-
-                                TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED -> {
-                                    currentBlockIndex = 0
-                                    currentBoxIndex = 0
-                                }
-
-                                TYPE_VIEW_CONTEXT_CLICKED -> {
-                                    val box = activityItem.blocks[currentBlockIndex].boxes[currentBoxIndex]
-                                    host?.announceForAccessibility(box.contentDescription)
-                                    if (currentBoxIndex != activityItem.blocks.size - 1) {
-                                        currentBoxIndex++
-                                    } else {
-                                        currentBoxIndex = 0
-                                    }
-                                }
                             }
                         }
                     })
+
+            blockView.setOnClickListener { view ->
+                val boxes = activityItem.blocks[currentBlockIndex].boxes
+                var boxItem = boxes[currentBoxIndex]
+
+                while (boxItem.box == INVISIBLE || boxItem.box == VERY_LOW) {
+                    currentBoxIndex++
+
+                    if (currentBoxIndex == boxes.size - 1) {
+                        currentBoxIndex = 0
+                    }
+                    boxItem = boxes[currentBoxIndex]
+                }
+
+                view.announceForAccessibility(boxItem.contentDescription)
+                if (currentBoxIndex != boxes.size - 1) {
+                    currentBoxIndex++
+                } else {
+                    currentBoxIndex = 0
+                }
+            }
         }
     }
 }
