@@ -60,7 +60,7 @@ public class AccessibilityUtils {
     public static void addPopulateAccessibilityEventFocusedListener(@NonNull final View target,
                                                                     @NonNull final AccessibilityEventListener
                                                                             listener) {
-        ViewCompat.setAccessibilityDelegate(target, new AccessibilityDelegateCompat() {
+        setAccessibilityDelegateSafely(target, new AccessibilityDelegateCompat() {
             @Override public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
                 if (event.getEventType() == TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
                     listener.onResult(event);
