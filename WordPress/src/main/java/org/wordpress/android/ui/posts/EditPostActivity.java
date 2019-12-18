@@ -219,7 +219,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_IS_PROMO = "isPromo";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
-    public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
+    public static final String EXTRA_UPLOAD_NOT_STARTED = "savedAsLocalDraft";
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String EXTRA_RESTART_EDITOR = "isSwitchingEditors";
@@ -1752,9 +1752,9 @@ public class EditPostActivity extends AppCompatActivity implements
         return mIsNewPost;
     }
 
-    private void saveResult(boolean saved, boolean savedLocally) {
+    private void saveResult(boolean saved, boolean uploadNotStarted) {
         Intent i = getIntent();
-        i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
+        i.putExtra(EXTRA_UPLOAD_NOT_STARTED, uploadNotStarted);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
@@ -1793,8 +1793,6 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
         if (!mPostUtils.isPublishable(mEditPostRepository.getPost())) {
-            //TODO check if it's needed
-            saveResult(false, false);
             mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened();
             EditPostActivity.this.runOnUiThread(() -> {
                 String message = getString(
@@ -1827,9 +1825,6 @@ public class EditPostActivity extends AppCompatActivity implements
             // the user explicitly confirmed an intention to upload the post
             postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
 
-            // if post was modified or has unsaved local changes and is publishable, save it
-            saveResult(true, false);
-
             // Hide the progress dialog now
             mEditorFragment.hideSavingProgressDialog();
             return true;
@@ -1848,22 +1843,14 @@ public class EditPostActivity extends AppCompatActivity implements
         // check if the opened post had some unsaved local changes
         boolean isFirstTimePublish = isFirstTimePublish(false);
 
-        boolean isPublishable = mEditPostRepository.isPostPublishable();
-
         // if post was modified during this editing session, save it
         boolean shouldSave = shouldSavePost() || forceSave;
 
-        // if post is publishable or not new, sync it
-        boolean shouldSync = isPublishable || !isNewPost();
-
-        if (doFinish) {
-            saveResult(shouldSave && shouldSync, false);
-        }
-
         mEditorMedia.definitelyDeleteBackspaceDeletedMediaItemsAsync();
 
+        mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+        boolean isSavedOnline = false;
         if (shouldSave) {
-            mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
             boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
             /*
              * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
@@ -1872,27 +1859,24 @@ public class EditPostActivity extends AppCompatActivity implements
              * user didn't confirm the changes in this code path.
              */
             boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mEditPostRepository.isLocalDraft();
-            boolean isSavedOnline = false;
-            if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
+            if (!hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
                 && isNotRestarting && isWpComOrIsLocalDraft) {
                 isSavedOnline = savePostOnline(isFirstTimePublish);
             } else if (forceSave) {
                 isSavedOnline = savePostOnline(false);
             }
-            if (doFinish) {
-                mViewModel.finish(isSavedOnline);
-            }
-        } else {
-            // discard post if new & empty
-            if (isDiscardable()) {
-                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
-            }
-            removePostOpenInEditorStickyEvent();
-            if (doFinish) {
-                // if we shouldn't save and we should exit, set the session tracking outcome to CANCEL
-                mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
-                finish();
-            }
+
+        }
+        // discard post if new & empty
+        if (isDiscardable()) {
+            mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
+            mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
+            saveResult(false, true);
+            finish();
+            return;
+        }
+        if (doFinish) {
+            mViewModel.finish(isSavedOnline);
         }
     }
 
@@ -1900,8 +1884,9 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean hasChanges = mEditPostRepository.postWasChangedInCurrentSession();
         boolean isPublishable = mEditPostRepository.isPostPublishable();
 
+        boolean existingPostWithChanges = mEditPostRepository.hasPostSnapshotWhenEditorOpened() && hasChanges;
         // if post was modified during this editing session, save it
-        return (mEditPostRepository.hasPostSnapshotWhenEditorOpened() && hasChanges) || (isPublishable && isNewPost());
+        return isPublishable && (existingPostWithChanges || isNewPost());
     }
 
 
