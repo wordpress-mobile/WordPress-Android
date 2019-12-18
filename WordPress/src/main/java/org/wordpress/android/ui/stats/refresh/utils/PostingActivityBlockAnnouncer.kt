@@ -72,6 +72,8 @@ class PostingActivityBlockAnnouncer
                 if (currentBoxIndex != boxes.size - 1) {
                     currentBoxIndex++
                 } else {
+                    view.announceForAccessibility(resourceProvider.getString(
+                            R.string.stats_posting_activity_end_description))
                     currentBoxIndex = 0
                 }
             }
