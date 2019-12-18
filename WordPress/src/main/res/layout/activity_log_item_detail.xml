@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -29,18 +28,18 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="12dp"
-                    android:src="@drawable/bg_rectangle_neutral_10_user_32dp"
-                    android:contentDescription="@null"/>
+                    android:contentDescription="@null"
+                    android:src="@drawable/bg_rectangle_neutral_10_user_32dp" />
 
                 <ImageView
                     android:id="@+id/activityJetpackActorIcon"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="12dp"
-                    android:visibility="gone"
+                    android:contentDescription="@string/activity_log_jetpack_icon"
                     android:src="@drawable/ic_plans_white_24dp"
                     android:tint="@color/neutral_30"
-                    android:contentDescription="@string/activity_log_jetpack_icon"/>
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -56,10 +55,9 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:lines="1"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
                         android:textColor="?attr/wpColorText"
-                        android:textStyle="bold"
-                        tools:text="John Smith"/>
+                        tools:text="John Smith" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/activityActorRole"
@@ -67,9 +65,8 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:lines="1"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                        android:textColor="?attr/wpColorText"
-                        tools:text="Administrator"/>
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        tools:text="Administrator" />
 
                 </LinearLayout>
 
@@ -84,19 +81,19 @@
                         android:id="@+id/activityCreatedDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                        android:textColor="?attr/wpColorText"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="?attr/colorOnSurface"
                         tools:ignore="RelativeOverlap"
-                        tools:text="January 8, 2018"/>
+                        tools:text="January 8, 2018" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/activityCreatedTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                        android:textColor="?attr/wpColorText"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="?attr/colorOnSurface"
                         tools:ignore="RelativeOverlap"
-                        tools:text="11:32 PM"/>
+                        tools:text="11:32 PM" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -105,20 +102,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="?attr/wpColorText"
+                android:focusable="true"
                 android:linksClickable="true"
-                tools:text="Jetpack by WordPress.com autoupdated to 5.6"
-                android:focusable="true"/>
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                tools:text="Jetpack by WordPress.com autoupdated to 5.6" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/activityType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/neutral_40"
-                tools:text="Plugin autoupdated"/>
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/wpColorOnSurfaceMedium"
+                tools:text="Plugin autoupdated" />
 
             <LinearLayout
                 android:id="@+id/activityRewindButton"
@@ -137,7 +133,7 @@
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_history_white_24dp"
-                    android:tint="@color/primary_40"/>
+                    android:tint="?attr/colorPrimary" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
@@ -145,9 +141,9 @@
                     android:layout_gravity="center_vertical"
                     android:text="@string/rewind"
                     android:textAllCaps="true"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                    android:textColor="@color/primary_40"/>
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?attr/colorPrimary" />
             </LinearLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </FrameLayout>
