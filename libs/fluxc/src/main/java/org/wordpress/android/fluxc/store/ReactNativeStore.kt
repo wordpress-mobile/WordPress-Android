@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.store
 import com.google.gson.JsonElement
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.ReactNativeWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.reactnative.ReactNativeWPComRestClient
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
@@ -37,21 +36,5 @@ class ReactNativeStore
 
 sealed class ReactNativeFetchResponse {
     class Success(val result: JsonElement) : ReactNativeFetchResponse()
-    class Error(networkError: BaseNetworkError) : ReactNativeFetchResponse() {
-        val error: String
-
-        init {
-            val volleyError = networkError.volleyError?.message
-            val wpComError = (networkError as? WPComGsonNetworkError)?.apiError
-            val baseError = networkError.message
-            val errorType = networkError.type?.toString()
-            error = when {
-                volleyError?.isNotBlank() == true -> volleyError
-                wpComError?.isNotBlank() == true -> wpComError
-                baseError?.isNotBlank() == true -> baseError
-                errorType?.isNotBlank() == true -> errorType
-                else -> "Unknown ${networkError.javaClass.simpleName} Error"
-            }
-        }
-    }
+    class Error(val error: BaseNetworkError) : ReactNativeFetchResponse()
 }
