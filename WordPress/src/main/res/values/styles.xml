@@ -17,7 +17,7 @@
         <item name="colorOnError">@android:color/white</item>
 
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorAccent">?attr/colorSecondary</item>
         <item name="colorControlActivated">@color/primary_30</item>
 
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
@@ -27,6 +27,7 @@
         <item name="wpColorText">@color/neutral_70</item>
         <item name="wpColorTextSubtle">@color/neutral</item>
         <item name="wpColorError">@color/error</item>
+        <item name="wpColorSuccess">@color/success_50</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorAppBar">@color/primary</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
@@ -685,7 +686,7 @@
     <style name="PostSettingsDivider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/list_divider_height</item>
-        <item name="android:background">@color/neutral_10</item>
+        <item name="android:background">?android:listDivider</item>
     </style>
 
     <!--Promo Dialog Styles-->
@@ -738,8 +739,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
     <style name="PluginCardViewSecondaryText">
@@ -774,8 +774,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:layout_alignParentStart">true</item>
     </style>
@@ -799,14 +798,12 @@
         <item name="android:paddingStart">@dimen/margin_extra_large</item>
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/primary_40</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">?attr/textAppearanceButton</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
     <style name="WPRatingBar.Small" parent="Widget.AppCompat.RatingBar.Small">
-        <item name="android:progressTint">@color/primary_40</item>
+        <item name="android:progressTint">?attr/colorPrimary</item>
     </style>
 
     <!--Comment Styles-->

@@ -15,10 +15,12 @@
         <item name="colorOnSurface">@android:color/white</item>
         <item name="colorOnError">@android:color/black</item>
         <item name="colorControlActivated">?attr/colorPrimary</item>
+        <item name="colorAccent">?attr/colorSecondary</item>
 
         <item name="wpColorText">@android:color/white</item>
         <item name="wpColorTextSubtle">@color/neutral_50</item>
         <item name="wpColorError">@color/error_50</item>
+        <item name="wpColorSuccess">@color/success_50</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
