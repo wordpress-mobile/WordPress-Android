@@ -11,7 +11,8 @@ import org.wordpress.android.ui.stats.refresh.utils.PostingActivityBlockAnnounce
 import org.wordpress.android.util.image.ImageManager
 
 class LoadingViewHolder(
-    parent: ViewGroup, val imageManager: ImageManager,
+    parent: ViewGroup,
+    val imageManager: ImageManager,
     private val postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer
 ) : BaseStatsViewHolder(
         parent,
