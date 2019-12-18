@@ -129,6 +129,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPSnackbar;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
@@ -407,6 +408,7 @@ public class ReaderPostListFragment extends Fragment
 
             mViewModel.getShouldShowSubFilters().observe(this, show -> {
                 mSubFilterComponent.setVisibility(show ? View.VISIBLE : View.GONE);
+                mSettingsButton.setVisibility(mAccountStore.hasAccessToken() ? View.VISIBLE : View.GONE);
             });
 
             mViewModel.getReaderModeInfo().observe(this, readerModeInfo -> {
@@ -451,6 +453,10 @@ public class ReaderPostListFragment extends Fragment
                 ) || ReaderUtils.isDefaultTag(mCurrentTag))
                 && BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel
         );
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
+            mViewModel.onUserChangedUpdate(getContext());
+        }
     }
 
     private void changeReaderMode(ReaderModeInfo readerModeInfo, boolean onlyOnChanges) {
@@ -554,11 +560,18 @@ public class ReaderPostListFragment extends Fragment
             // it's possible the default tag won't exist if the user just changed the app's
             // language, in which case default to the first tag in the table
             if (!ReaderTagTable.tagExists(tag)) {
-                tag = ReaderTagTable.getFirstTag();
+                Context context = getContext();
+                if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel
+                    &&
+                    context != null && !mAccountStore.hasAccessToken()) {
+                    tag = ReaderUtils.getInMemoryDefaultTag(context);
+                } else {
+                    tag = ReaderTagTable.getFirstTag();
+                }
             }
             setCurrentTag(tag);
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-                if (tag.isFollowedSites()) {
+                if (tag != null && tag.isFollowedSites()) {
                     mViewModel.setDefaultSubfilter();
                 }
             }
@@ -820,7 +833,9 @@ public class ReaderPostListFragment extends Fragment
                     ReaderTag tag = ReaderUtils.getValidTagForSharedPrefs(
                             getCurrentTag(),
                             BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
-                            mRecyclerView);
+                            mRecyclerView,
+                            getContext(),
+                            mAccountStore.hasAccessToken());
 
                     return tag;
                 } else {
@@ -1627,7 +1642,14 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.refreshFilterCriteriaOptions();
 
         if (!ReaderTagTable.tagExists(tag)) {
-            tag = ReaderTagTable.getFirstTag();
+            Context context = getContext();
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel
+                &&
+                context != null && !mAccountStore.hasAccessToken()) {
+                tag = ReaderUtils.getInMemoryDefaultTag(context);
+            } else {
+                tag = ReaderTagTable.getFirstTag();
+            }
         }
 
         setCurrentTag(tag, BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel);
@@ -1934,7 +1956,9 @@ public class ReaderPostListFragment extends Fragment
         ReaderTag validTag = ReaderUtils.getValidTagForSharedPrefs(
                 tag,
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
-                mRecyclerView
+                mRecyclerView,
+                getContext(),
+                mAccountStore.hasAccessToken()
         );
 
         switch (getPostListType()) {
@@ -2009,7 +2033,7 @@ public class ReaderPostListFragment extends Fragment
      * load tags on which the main data will be filtered
      */
     private void loadTags(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
-        new LoadTagsTask(listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadTagsTask(listener, getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*
@@ -2582,14 +2606,24 @@ public class ReaderPostListFragment extends Fragment
     }
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
+        private WeakReference<Context> mWeakContext;
 
-        LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
+        LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, Context context) {
             mFilterCriteriaLoaderListener = listener;
+            mWeakContext = new WeakReference<>(context);
         }
 
         @Override
         protected ReaderTagList doInBackground(Void... voids) {
             ReaderTagList tagList = ReaderTagTable.getDefaultTags();
+
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
+                Context context = mWeakContext.get();
+                if (context != null && !mAccountStore.hasAccessToken()) {
+                    ReaderUtils.addFollowingIfNeeded(context, tagList);
+                }
+            }
+
             tagList.addAll(ReaderTagTable.getCustomListTags());
 
             if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE || !mIsTopLevel) {

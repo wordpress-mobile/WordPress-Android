@@ -19,13 +19,11 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.subfilter.adapters.SubfilterListAdapter
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.NetworkUtils
 import java.util.EnumSet
 import javax.inject.Inject
 
@@ -55,7 +53,13 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             (dialog.filter_recycler_view.adapter as? SubfilterListAdapter)?.update(it ?: listOf())
         })
         viewModel.loadSubFilters()
-        performUpdate()
+        viewModel.performUpdate(
+                context,
+                EnumSet.of(
+                        UpdateTask.TAGS,
+                        UpdateTask.FOLLOWED_BLOGS/*,
+                        UpdateTask.RECOMMENDED_BLOGS*/)
+        )
     }
 
     override fun onAttach(context: Context?) {
@@ -78,24 +82,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
         viewModel.loadSubFilters()
-    }
-
-    private fun performUpdate() {
-        performUpdate(
-                EnumSet.of(
-                        UpdateTask.TAGS,
-                        UpdateTask.FOLLOWED_BLOGS/*,
-                        UpdateTask.RECOMMENDED_BLOGS*/
-                )
-        )
-    }
-
-    private fun performUpdate(tasks: EnumSet<UpdateTask>) {
-        if (!NetworkUtils.isNetworkAvailable(activity)) {
-            return
-        }
-
-        ReaderUpdateServiceStarter.startService(activity, tasks)
     }
 
     override fun onStart() {
