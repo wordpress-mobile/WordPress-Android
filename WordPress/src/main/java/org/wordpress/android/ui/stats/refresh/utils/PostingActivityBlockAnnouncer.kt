@@ -34,12 +34,10 @@ class PostingActivityBlockAnnouncer
                             event: AccessibilityEvent?
                         ) {
                             super.onPopulateAccessibilityEvent(host, event)
-                            when (event?.eventType) {
-                                TYPE_VIEW_ACCESSIBILITY_FOCUSED -> {
-                                    val view = blockViews.find { view -> view.id == host?.id }
-                                    currentBlockIndex = blockViews.indexOf(view)
-                                    currentBoxIndex = 0
-                                }
+                            if (event?.eventType == TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
+                                val view = blockViews.find { view -> view.id == host?.id }
+                                currentBlockIndex = blockViews.indexOf(view)
+                                currentBoxIndex = 0
                             }
                         }
                     })
