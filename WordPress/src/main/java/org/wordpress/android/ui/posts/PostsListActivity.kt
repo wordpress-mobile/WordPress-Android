@@ -30,7 +30,6 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.post_list_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
@@ -172,8 +171,6 @@ class PostsListActivity : AppCompatActivity(),
                 this.getColorFromAttribute(R.attr.wpColorAppBar),
                 appbarElevation
         )
-
-        appbar.setBackgroundColor(appBarColor)
 
         val fadingEdgeDrawable = GradientDrawable(
                 if (RtlUtils.isRtl(this)) {
