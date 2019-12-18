@@ -4,9 +4,9 @@
     android:layout_width="@dimen/plugin_row_width"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
-    android:paddingBottom="@dimen/margin_small"
+    android:paddingStart="@dimen/margin_medium"
     android:paddingEnd="@dimen/margin_medium"
-    android:paddingStart="@dimen/margin_medium" >
+    android:paddingBottom="@dimen/margin_small">
 
     <ImageView
         android:id="@+id/plugin_icon"
@@ -15,7 +15,7 @@
         android:contentDescription="@string/plugin_icon_content_description"
         tools:src="@drawable/plugin_placeholder" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/plugin_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,13 +23,12 @@
         android:breakStrategy="simple"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="?attr/wpColorText"
-        android:textSize="@dimen/text_sz_medium"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         android:textStyle="bold"
-        tools:text="plugin_name"
-        tools:ignore="UnusedAttribute"/>
+        tools:ignore="UnusedAttribute"
+        tools:text="plugin_name" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/plugin_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,15 +36,14 @@
         android:layout_marginBottom="@dimen/margin_medium"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="@color/neutral_40"
-        android:textSize="@dimen/text_sz_small"
+        android:textAppearance="?attr/textAppearanceCaption"
         tools:text="plugin_author" />
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
         android:layout_below="@+id/plugin_author"
+        android:layout_alignParentBottom="true"
         android:paddingBottom="@dimen/margin_large">
 
         <LinearLayout
@@ -63,16 +61,16 @@
                 android:layout_marginEnd="@dimen/margin_small"
                 android:contentDescription="@null"
                 tools:src="@drawable/ic_sync_white_24dp"
-                tools:tint="@color/warning_50" />
+                tools:tint="?attr/wpColorWarningDark" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/plugin_status_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:maxLines="2"
-                android:textColor="@color/warning_50"
-                android:textSize="@dimen/text_sz_small"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="?attr/wpColorWarningDark"
                 tools:text="@string/plugin_needs_update" />
         </LinearLayout>
 
