@@ -52,7 +52,6 @@ Language: az
     <string name="hide">Gizlət</string>
     <string name="select_all">Tamamını seç</string>
     <string name="language">Dil</string>
-    <string name="editor_toast_invalid_path">Keçərsiz fayl yolu.</string>
     <string name="verification_code">Təsdiqləmə kodu</string>
     <string name="invalid_verification_code">Keçərsiz təsdiqləmə kodu</string>
     <string name="reader_empty_posts_request_failed">Yazılar geri alına bilmir</string>

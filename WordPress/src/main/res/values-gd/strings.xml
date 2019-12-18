@@ -62,7 +62,6 @@ Language: gd_GB
     <string name="deselect_all">Dì-thagh na h-uile</string>
     <string name="invalid_verification_code">Còd dearbhadh mì-dhligheach</string>
     <string name="verification_code">Còd dearbhaidh</string>
-    <string name="editor_toast_invalid_path">Tha slighe an fhaidhle mì-dhligheach</string>
     <string name="language">Cànan</string>
     <string name="media_fetching">A’ faighinn nam meadhanan…</string>
     <string name="posts_fetching">A’ faighinn nam post…</string>
