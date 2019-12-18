@@ -11,10 +11,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Activ
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.INVISIBLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_LOW
 import org.wordpress.android.util.AccessibilityUtils
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class PostingActivityBlockAnnouncer
-@Inject constructor() {
+@Inject constructor(private val resourceProvider: ResourceProvider) {
     private lateinit var activityItem: ActivityItem
     private var currentBoxIndex: Int = 0
     private var currentBlockIndex: Int = 0
@@ -50,7 +51,7 @@ class PostingActivityBlockAnnouncer
                         ) {
                             super.onInitializeAccessibilityNodeInfo(host, info)
                             info?.addAction(AccessibilityNodeInfoCompat.AccessibilityActionCompat(
-                                    ACTION_CLICK, host?.context?.getString(
+                                    ACTION_CLICK, resourceProvider.getString(
                                     R.string.stats_posting_activity_action)))
                         }
                     })
