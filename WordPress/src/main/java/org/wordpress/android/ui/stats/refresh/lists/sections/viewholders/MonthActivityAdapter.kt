@@ -4,10 +4,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxItem
 
 class MonthActivityAdapter : Adapter<DayViewHolder>() {
-    private var items: List<Box> = listOf()
-    fun update(newItems: List<Box>) {
+    private var items: List<BoxItem> = listOf()
+    fun update(newItems: List<BoxItem>) {
         val diffResult = DiffUtil.calculateDiff(BoxDiffCallback(items, newItems))
         items = newItems
 
@@ -30,8 +31,8 @@ class MonthActivityAdapter : Adapter<DayViewHolder>() {
     }
 
     private class BoxDiffCallback(
-        private val oldItems: List<Box>,
-        private val newItems: List<Box>
+        private val oldItems: List<BoxItem>,
+        private val newItems: List<BoxItem>
     ) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
             return oldItems[oldPosition] == newItems[newPosition]

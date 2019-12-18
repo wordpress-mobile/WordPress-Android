@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.HIGH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.INVISIBLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.LOW
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.MEDIUM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_HIGH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_LOW
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxItem
 
 class DayViewHolder(parent: ViewGroup) : ViewHolder(
         LayoutInflater.from(parent.context).inflate(
@@ -20,8 +20,8 @@ class DayViewHolder(parent: ViewGroup) : ViewHolder(
                 false
         )
 ) {
-    fun bind(box: Box) {
-        val color = when (box) {
+    fun bind(box: BoxItem) {
+        val color = when (box.box) {
             INVISIBLE -> android.R.color.transparent
             VERY_LOW -> R.color.neutral_10
             LOW -> R.color.stats_activity_low

@@ -3,13 +3,13 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Month
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Block
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.HIGH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.INVISIBLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.LOW
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.MEDIUM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_HIGH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_LOW
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxItem
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import javax.inject.Inject
@@ -32,13 +32,14 @@ class PostingActivityMapper
             val firstDayOfWeek = Calendar.getInstance(localeManagerWrapper.getLocale())
             firstDayOfWeek.time = firstDayOfMonth.time
             firstDayOfWeek.set(Calendar.DAY_OF_WEEK, firstDayOfWeek.firstDayOfWeek)
-            val boxes = mutableListOf<Box>()
+            val boxes = mutableListOf<BoxItem>()
             while (firstDayOfWeek.before(firstDayOfMonth)) {
-                boxes.add(INVISIBLE)
+                boxes.add(BoxItem(INVISIBLE,""))
                 firstDayOfWeek.add(Calendar.DAY_OF_MONTH, 1)
             }
             for (day in month.days) {
                 boxes.add(
+                        BoxItem(
                         when {
                             day.value > veryHighLimit -> VERY_HIGH
                             day.value > highLimit -> HIGH
@@ -46,7 +47,7 @@ class PostingActivityMapper
                             day.value > LOW_LEVEL -> LOW
                             else -> VERY_LOW
                         }
-                )
+                ,""))
             }
             blocks.add(
                     Block(

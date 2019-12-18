@@ -13,7 +13,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxItem
 import org.wordpress.android.ui.stats.refresh.utils.PostingActivityBlockAnnouncer
 
 private const val SIZE_PADDING = 32
@@ -57,8 +57,7 @@ PostingActivityBlockAnnouncer?)
     }
 
     private fun setupBlocksForAccessibility(activityItem: ActivityItem) {
-        postingActivityBlockAnnouncer?.onBlocksInflated(firstBlock, secondBlock, thirdBlock)
-        postingActivityBlockAnnouncer?.onActivityItemBound(activityItem)
+        postingActivityBlockAnnouncer?.initialize(activityItem,firstBlock, secondBlock, thirdBlock)
     }
 
     private fun updateVisibility(
@@ -79,7 +78,7 @@ PostingActivityBlockAnnouncer?)
         }
     }
 
-    private fun drawBlock(recyclerView: RecyclerView, boxes: List<Box>) {
+    private fun drawBlock(recyclerView: RecyclerView, boxes: List<BoxItem>) {
         if (recyclerView.adapter == null) {
             recyclerView.adapter = MonthActivityAdapter()
         }
