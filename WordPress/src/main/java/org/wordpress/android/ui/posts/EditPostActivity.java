@@ -184,7 +184,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -240,7 +239,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_UPDATE_CONFIRMATION_DIALOG = "tag_update_confirmation_dialog";
-    private static final String TAG_FAILED_MEDIA_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
     private static final String TAG_GB_INFORMATIVE_DIALOG = "tag_gb_informative_dialog";
 
     private static final int PAGE_CONTENT = 0;
@@ -1667,11 +1665,6 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
-            case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
-                // Clear failed uploads
-                mFeaturedImageHelper.cancelFeaturedImageUpload(mSite, mEditPostRepository.getPost(), true);
-                mEditorFragment.removeAllFailedMediaUploads();
-                break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_UPDATE_CONFIRMATION_DIALOG:
                 break;
@@ -1691,10 +1684,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 uploadPost(true);
                 AppRatingDialog.INSTANCE
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
-                break;
-            case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
-                boolean isSavedOnline = mViewModel.retryUpload(isFirstTimePublish(false), this, mEditPostRepository);
-                mViewModel.finish(isSavedOnline);
                 break;
             case TAG_GB_INFORMATIVE_DIALOG:
                 // no op
@@ -1819,64 +1808,36 @@ public class EditPostActivity extends AppCompatActivity implements
         // Let's show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
         mEditorFragment.showSavingProgressDialogIfNeeded();
 
-        // TODO it's safe to remove this thread
-        new Thread(() -> {
-            AtomicBoolean saveOnline = new AtomicBoolean(false);
-            AtomicBoolean isFirstTimePublish = new AtomicBoolean(false);
-            mEditPostRepository.updateAsync(postModel -> {
-                isFirstTimePublish.set(isFirstTimePublish(publishPost));
-                if (publishPost) {
-                    // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
-                    // otherwise we'd have an incorrect value
-                    // also re-set the published date in case it was SCHEDULED and they want to publish NOW
-                    if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
-                        postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601UTC());
-                    }
-                    postModel.setStatus(PostStatus.PUBLISHED.toString());
-                    mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
-                } else {
-                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+        boolean isFirstTimePublish = isFirstTimePublish(publishPost);
+        mEditPostRepository.updateAsync(postModel -> {
+            if (publishPost) {
+                // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
+                // otherwise we'd have an incorrect value
+                // also re-set the published date in case it was SCHEDULED and they want to publish NOW
+                if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
+                    postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601UTC());
                 }
+                postModel.setStatus(PostStatus.PUBLISHED.toString());
+                mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
+            } else {
+                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+            }
 
-                AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + postModel.getTitle());
-                // the user explicitly confirmed an intention to upload the post
-                postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
+            AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + postModel.getTitle());
+            // the user explicitly confirmed an intention to upload the post
+            postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
 
-                // if post was modified or has unsaved local changes and is publishable, save it
-                saveResult(true, false);
+            // if post was modified or has unsaved local changes and is publishable, save it
+            saveResult(true, false);
 
-                // Hide the progress dialog now
-                mEditorFragment.hideSavingProgressDialog();
-                boolean networkAvailable = NetworkUtils.isNetworkAvailable(getBaseContext());
-                boolean hasFailedUploads = mEditorFragment.hasFailedMediaUploads()
-                                           || mFeaturedImageHelper.getFailedFeaturedImageUpload(postModel) != null;
-                if (networkAvailable && hasFailedUploads) {
-                    // Show an Alert Dialog asking the user if they want to remove all failed media before upload
-                    EditPostActivity.this.runOnUiThread(this::showRemoveFailedUploadsDialog);
-                } else {
-                    saveOnline.set(true);
-                }
-                return true;
-            }, postModel -> {
-                if (saveOnline.get()) {
-                    boolean savedOnline = savePostOnline(isFirstTimePublish.get());
-                    mViewModel.finish(savedOnline);
-                }
-                return null;
-            });
-        }).start();
-    }
-
-    private void showRemoveFailedUploadsDialog() {
-        BasicFragmentDialog removeFailedUploadsDialog = new BasicFragmentDialog();
-        removeFailedUploadsDialog.initialize(
-                TAG_FAILED_MEDIA_UPLOADS_DIALOG,
-                "",
-                getString(R.string.editor_toast_failed_uploads),
-                getString(R.string.editor_retry_failed_uploads),
-                getString(R.string.editor_remove_failed_uploads),
-                null);
-        removeFailedUploadsDialog.show(getSupportFragmentManager(), TAG_FAILED_MEDIA_UPLOADS_DIALOG);
+            // Hide the progress dialog now
+            mEditorFragment.hideSavingProgressDialog();
+            return true;
+        }, postModel -> {
+            boolean savedOnline = savePostOnline(isFirstTimePublish);
+            mViewModel.finish(savedOnline);
+            return null;
+        });
     }
 
     private void savePostAndOptionallyFinish(final boolean doFinish, final boolean forceSave) {

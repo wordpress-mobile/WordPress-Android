@@ -63,19 +63,6 @@ class EditPostViewModel
         }
     }
 
-    fun retryUpload(
-        isFirstTimePublish: Boolean,
-        context: Context,
-        editPostRepository: EditPostRepository
-    ): Boolean {
-        return if (networkUtils.isNetworkAvailable()) {
-            uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
-            true
-        } else {
-            false
-        }
-    }
-
     fun savePostWithDelay() {
         Log.d("vojta", "Saving post with delay")
         saveJob?.cancel()
