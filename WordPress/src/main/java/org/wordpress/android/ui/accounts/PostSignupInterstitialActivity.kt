@@ -20,19 +20,28 @@ class PostSignupInterstitialActivity : AppCompatActivity() {
 
         appPrefsWrapper.shouldShowPostSignupInterstitial = false
 
-        create_new_site_button.setOnClickListener {
-            ActivityLauncher.newBlogForResult(this)
-            finish()
-        }
+        create_new_site_button.setOnClickListener { startSiteCreationFlow() }
+        add_self_hosted_site_button.setOnClickListener { startSiteConnectionFlow() }
+        dismiss_button.setOnClickListener { dismiss() }
+    }
 
-        add_self_hosted_site_button.setOnClickListener {
-            ActivityLauncher.addSelfHostedSiteForResult(this)
-            finish()
-        }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        dismiss()
+    }
 
-        dismiss_button.setOnClickListener {
-            ActivityLauncher.viewReader(this)
-            finish()
-        }
+    private fun startSiteCreationFlow() {
+        ActivityLauncher.newBlogForResult(this)
+        finish()
+    }
+
+    private fun startSiteConnectionFlow() {
+        ActivityLauncher.addSelfHostedSiteForResult(this)
+        finish()
+    }
+
+    private fun dismiss() {
+        ActivityLauncher.viewReader(this)
+        finish()
     }
 }
