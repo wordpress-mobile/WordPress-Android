@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import org.wordpress.android.R
+import org.wordpress.android.util.getColorFromAttribute
 
 class EventItemViewHolder(
     parent: ViewGroup,
@@ -36,12 +37,16 @@ class EventItemViewHolder(
         text.text = activity.description
 
         if (activity.isButtonVisible) {
-            ContextCompat.getDrawable(container.context, activity.buttonIcon.drawable)?.let { buttonIcon ->
-                val wrapDrawable = DrawableCompat.wrap(buttonIcon).mutate()
-                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(container.context, R.color.primary_40))
-                actionButton.setImageDrawable(DrawableCompat.unwrap(wrapDrawable))
-                actionButton.visibility = View.VISIBLE
-            }
+            ContextCompat.getDrawable(container.context, activity.buttonIcon.drawable)
+                    ?.let { buttonIcon ->
+                        val wrapDrawable = DrawableCompat.wrap(buttonIcon).mutate()
+                        DrawableCompat.setTint(
+                                wrapDrawable,
+                                container.context.getColorFromAttribute(R.attr.colorPrimary)
+                        )
+                        actionButton.setImageDrawable(DrawableCompat.unwrap(wrapDrawable))
+                        actionButton.visibility = View.VISIBLE
+                    }
         } else {
             actionButton.visibility = View.GONE
         }
