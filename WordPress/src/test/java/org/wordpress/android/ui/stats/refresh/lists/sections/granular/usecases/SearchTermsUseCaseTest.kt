@@ -84,7 +84,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                 )
         )
         whenever(contentDescriptionHelper.buildContentDescription(
-                any(),
+                any<Header>(),
                 any<Int>(),
                 any()
         )).thenReturn(contentDescription)
