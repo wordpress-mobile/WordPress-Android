@@ -638,7 +638,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 if (isValidPosition(position)) {
                     if (isItemSelected(position)) {
                         final String imageSelectedText = imageView.getContext().getString(
-                                R.string.photo_picker_image_thumbnail_selected);
+                                R.string.photo_picker_image_selected);
                         if (!imageView.getContentDescription().toString().contains(imageSelectedText)) {
                             imageView.setContentDescription(
                                     imageView.getContentDescription() + " "

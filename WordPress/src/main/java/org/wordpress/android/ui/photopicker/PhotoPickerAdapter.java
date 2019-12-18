@@ -390,7 +390,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
                 int position = getAdapterPosition();
                 if (isValidPosition(position)) {
                     String imageSelectedText = imageView.getContext()
-                                                        .getString(R.string.photo_picker_image_thumbnail_selected);
+                                                        .getString(R.string.photo_picker_image_selected);
 
                     if (isItemSelected(position)) {
                         if (!imageView.getContentDescription().toString().contains(imageSelectedText)) {

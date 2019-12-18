@@ -377,7 +377,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 if (isValidPosition(position)) {
                     if (isItemSelectedByPosition(position)) {
                         final String imageSelectedText = imageView.getContext().getString(
-                                R.string.photo_picker_image_thumbnail_selected);
+                                R.string.photo_picker_image_selected);
                         if (!imageView.getContentDescription().toString().contains(imageSelectedText)) {
                             imageView.setContentDescription(
                                     imageView.getContentDescription() + " "

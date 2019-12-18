@@ -2192,6 +2192,7 @@
     <string name="photo_picker_use_photo">Use this photo</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
     <string name="photo_picker_image_thumbnail_selected">Image selected</string>
+    <string name="photo_picker_image_selected">,Selected</string>
     <string name="photo_picker_image_thumbnail_unselected">Image unselected</string>
     <string name="stock_media_picker_search_hint">Search free photo library</string>
     <string name="stock_media_picker_list_content_description">Photo library</string>
