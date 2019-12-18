@@ -10,6 +10,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Activ
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_HIGH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_LOW
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxItem
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import javax.inject.Inject
@@ -20,7 +21,8 @@ private const val MEDIUM_LEVEL = 0.25
 private const val LOW_LEVEL = 0
 
 class PostingActivityMapper
-@Inject constructor(private val localeManagerWrapper: LocaleManagerWrapper) {
+@Inject constructor(private val localeManagerWrapper: LocaleManagerWrapper,private val contentDescriptionHelper:
+ContentDescriptionHelper) {
     fun buildActivityItem(months: List<Month>, max: Int): ActivityItem {
         val blocks = mutableListOf<Block>()
         val veryHighLimit = (max * VERY_HIGH_LEVEL).toInt()
@@ -34,7 +36,7 @@ class PostingActivityMapper
             firstDayOfWeek.set(Calendar.DAY_OF_WEEK, firstDayOfWeek.firstDayOfWeek)
             val boxes = mutableListOf<BoxItem>()
             while (firstDayOfWeek.before(firstDayOfMonth)) {
-                boxes.add(BoxItem(INVISIBLE,""))
+                boxes.add(BoxItem(INVISIBLE))
                 firstDayOfWeek.add(Calendar.DAY_OF_MONTH, 1)
             }
             for (day in month.days) {
@@ -47,7 +49,11 @@ class PostingActivityMapper
                             day.value > LOW_LEVEL -> LOW
                             else -> VERY_LOW
                         }
-                ,""))
+                ,contentDescriptionHelper.buildContentDescription(firstDayOfMonth.getDisplayName(
+                                Calendar.MONTH,
+                                Calendar.SHORT,
+                                localeManagerWrapper.getLocale()
+                        ),day.key,day.value)))
             }
             blocks.add(
                     Block(
