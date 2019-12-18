@@ -3,9 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
-import android.view.accessibility.AccessibilityEvent
 import android.widget.LinearLayout
-import androidx.core.view.AccessibilityDelegateCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.stats_block_single_activity.view.*
@@ -17,16 +15,16 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxItem
 import org.wordpress.android.ui.stats.refresh.utils.PostingActivityBlockAnnouncer
-import org.wordpress.android.util.AccessibilityUtils
 
 private const val SIZE_PADDING = 32
 private const val GAP = 8
 private const val BLOCK_WIDTH = 104
 private const val SPAN_COUNT = 7
 
-class ActivityViewHolder(val parent: ViewGroup, private var postingActivityBlockAnnouncer:
-PostingActivityBlockAnnouncer)
-    : BlockListItemViewHolder(
+class ActivityViewHolder(
+    val parent: ViewGroup, private var postingActivityBlockAnnouncer:
+    PostingActivityBlockAnnouncer
+) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_activity_item
 ) {
@@ -60,7 +58,7 @@ PostingActivityBlockAnnouncer)
     }
 
     private fun setupBlocksForAccessibility(activityItem: ActivityItem) {
-        postingActivityBlockAnnouncer.initialize(activityItem,firstBlock, secondBlock, thirdBlock)
+        postingActivityBlockAnnouncer.initialize(activityItem, firstBlock, secondBlock, thirdBlock)
     }
 
     private fun updateVisibility(

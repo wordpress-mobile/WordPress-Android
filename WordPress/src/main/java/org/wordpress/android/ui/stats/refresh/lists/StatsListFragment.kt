@@ -33,7 +33,7 @@ import javax.inject.Inject
 class StatsListFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var postingActivityBlockAnnouncer : PostingActivityBlockAnnouncer
+    @Inject lateinit var postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
     @Inject lateinit var navigator: StatsNavigator
     private lateinit var viewModel: StatsListViewModel
@@ -223,7 +223,7 @@ class StatsListFragment : DaggerFragment() {
 
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
-            adapter = StatsBlockAdapter(imageManager,postingActivityBlockAnnouncer)
+            adapter = StatsBlockAdapter(imageManager, postingActivityBlockAnnouncer)
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as StatsBlockAdapter

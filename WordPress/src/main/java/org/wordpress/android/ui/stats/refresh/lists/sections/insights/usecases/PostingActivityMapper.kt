@@ -21,8 +21,10 @@ private const val MEDIUM_LEVEL = 0.25
 private const val LOW_LEVEL = 0
 
 class PostingActivityMapper
-@Inject constructor(private val localeManagerWrapper: LocaleManagerWrapper,private val contentDescriptionHelper:
-ContentDescriptionHelper) {
+@Inject constructor(
+    private val localeManagerWrapper: LocaleManagerWrapper, private val contentDescriptionHelper:
+    ContentDescriptionHelper
+) {
     fun buildActivityItem(months: List<Month>, max: Int): ActivityItem {
         val blocks = mutableListOf<Block>()
         val veryHighLimit = (max * VERY_HIGH_LEVEL).toInt()
@@ -42,18 +44,22 @@ ContentDescriptionHelper) {
             for (day in month.days) {
                 boxes.add(
                         BoxItem(
-                        when {
-                            day.value > veryHighLimit -> VERY_HIGH
-                            day.value > highLimit -> HIGH
-                            day.value > mediumLimit -> MEDIUM
-                            day.value > LOW_LEVEL -> LOW
-                            else -> VERY_LOW
-                        }
-                ,contentDescriptionHelper.buildContentDescription(firstDayOfMonth.getDisplayName(
-                                Calendar.MONTH,
-                                Calendar.SHORT,
-                                localeManagerWrapper.getLocale()
-                        ),day.key,day.value)))
+                                when {
+                                    day.value > veryHighLimit -> VERY_HIGH
+                                    day.value > highLimit -> HIGH
+                                    day.value > mediumLimit -> MEDIUM
+                                    day.value > LOW_LEVEL -> LOW
+                                    else -> VERY_LOW
+                                }
+                                , contentDescriptionHelper.buildContentDescription(
+                                firstDayOfMonth.getDisplayName(
+                                        Calendar.MONTH,
+                                        Calendar.SHORT,
+                                        localeManagerWrapper.getLocale()
+                                ), day.key, day.value
+                        )
+                        )
+                )
             }
             blocks.add(
                     Block(

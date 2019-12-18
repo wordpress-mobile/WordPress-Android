@@ -89,9 +89,10 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ValueVi
 import org.wordpress.android.ui.stats.refresh.utils.PostingActivityBlockAnnouncer
 import org.wordpress.android.util.image.ImageManager
 
-class BlockListAdapter(val imageManager: ImageManager,
-    var postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer)
-    : Adapter<BlockListItemViewHolder>() {
+class BlockListAdapter(
+    val imageManager: ImageManager,
+    private var postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer
+) : Adapter<BlockListItemViewHolder>() {
     private var items: List<BlockListItem> = listOf()
     fun update(newItems: List<BlockListItem>) {
         val diffResult = DiffUtil.calculateDiff(
@@ -127,7 +128,7 @@ class BlockListAdapter(val imageManager: ImageManager,
             MAP -> MapViewHolder(parent)
             MAP_LEGEND -> MapLegendViewHolder(parent)
             VALUE_ITEM -> ValueViewHolder(parent)
-            ACTIVITY_ITEM -> ActivityViewHolder(parent,postingActivityBlockAnnouncer)
+            ACTIVITY_ITEM -> ActivityViewHolder(parent, postingActivityBlockAnnouncer)
             REFERRED_ITEM -> ReferredItemViewHolder(parent)
             QUICK_SCAN_ITEM -> QuickScanItemViewHolder(parent)
             LINK_BUTTON -> LinkButtonViewHolder(parent)

@@ -11,7 +11,11 @@ import org.wordpress.android.ui.stats.refresh.utils.PostingActivityBlockAnnounce
 import org.wordpress.android.ui.stats.refresh.utils.WrappingLinearLayoutManager
 import org.wordpress.android.util.image.ImageManager
 
-open class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager, val postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer) : BaseStatsViewHolder(
+open class BlockListViewHolder(
+    parent: ViewGroup,
+    val imageManager: ImageManager,
+    private val postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer
+) : BaseStatsViewHolder(
         parent,
         R.layout.stats_list_block
 ) {
@@ -20,7 +24,7 @@ open class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager
         super.bind(statsType, items)
         list.isNestedScrollingEnabled = false
         if (list.adapter == null) {
-            val blockListAdapter = BlockListAdapter(imageManager,postingActivityBlockAnnouncer)
+            val blockListAdapter = BlockListAdapter(imageManager, postingActivityBlockAnnouncer)
             val layoutManager = WrappingLinearLayoutManager(
                     list.context,
                     LinearLayoutManager.VERTICAL,
