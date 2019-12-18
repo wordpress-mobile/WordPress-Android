@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.posts
 
+import android.R.color
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.GradientDrawable.Orientation
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.Menu
@@ -18,10 +21,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -46,8 +51,10 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import javax.inject.Inject
 
@@ -157,7 +164,25 @@ class PostsListActivity : AppCompatActivity(),
 
     private fun setupContent() {
         authorSelection = findViewById(R.id.post_list_author_selection)
+
+        val elevationOverlayProvider = ElevationOverlayProvider(this)
+        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
+        val appBarColor = elevationOverlayProvider.compositeOverlayIfNeeded(
+                this.getColorFromAttribute(R.attr.wpColorAppBar),
+                appbarElevation
+        )
+
+        val fadingEdgeDrawable = GradientDrawable(
+                if (RtlUtils.isRtl(this)) {
+                    Orientation.LEFT_RIGHT
+                } else {
+                    Orientation.RIGHT_LEFT
+                },
+                intArrayOf(ContextCompat.getColor(this, color.transparent), appBarColor)
+        )
+
         tabLayoutFadingEdge = findViewById(R.id.post_list_tab_layout_fading_edge)
+        tabLayoutFadingEdge.background = fadingEdgeDrawable
 
         authorSelectionAdapter = AuthorSelectionAdapter(this)
         authorSelection.adapter = authorSelectionAdapter
