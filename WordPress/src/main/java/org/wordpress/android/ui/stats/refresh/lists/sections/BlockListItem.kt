@@ -234,7 +234,7 @@ sealed class BlockListItem(val type: Type) {
 
     data class ActivityItem(val blocks: List<Block>) : BlockListItem(ACTIVITY_ITEM) {
         data class Block(val label: String, val boxes: List<BoxItem>)
-        data class BoxItem(val box: Box, val contentDescription: String)
+        data class BoxItem(val box: Box, val contentDescription: String? = null)
         enum class Box {
             INVISIBLE, VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH
         }
