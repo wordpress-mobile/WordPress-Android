@@ -221,7 +221,7 @@
         <activity
             android:name=".ui.posts.PostsListActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:label="" />
         <activity
             android:name=".ui.pages.PagesActivity"
