@@ -449,4 +449,8 @@
     <!--Main bottom sheet icon size -->
     <dimen name="main_bottom_sheet_list_row_icon_size">32dp</dimen>
 
+    <!-- shimmering skeleton -->
+    <dimen name="skeleton_shimmer_base_alpha">0.33</dimen>
+    <dimen name="skeleton_shimmer_highlight_alpha">0.15</dimen>
+
 </resources>
