@@ -63,7 +63,7 @@ class PostingActivityBlockAnnouncer
                     })
 
             blockView.setOnClickListener { view ->
-                val boxItems = activityItem.blocks[currentBlockIndex].boxes
+                val boxItems = activityItem.blocks[currentBlockIndex].boxItems
                 var boxItem = boxItems[currentBoxIndex]
 
                 // If a box has no stats then it's ignored.

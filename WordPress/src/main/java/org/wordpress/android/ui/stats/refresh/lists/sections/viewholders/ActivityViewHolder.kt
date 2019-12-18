@@ -35,14 +35,14 @@ class ActivityViewHolder(
     fun bind(
         item: ActivityItem
     ) {
-        drawBlock(firstBlock.activity, item.blocks[0].boxes)
+        drawBlock(firstBlock.activity, item.blocks[0].boxItems)
         firstBlock.label.text = item.blocks[0].label
         if (item.blocks.size > 1) {
-            drawBlock(secondBlock.activity, item.blocks[1].boxes)
+            drawBlock(secondBlock.activity, item.blocks[1].boxItems)
             secondBlock.label.text = item.blocks[1].label
         }
         if (item.blocks.size > 2) {
-            drawBlock(thirdBlock.activity, item.blocks[2].boxes)
+            drawBlock(thirdBlock.activity, item.blocks[2].boxItems)
             thirdBlock.label.text = item.blocks[2].label
         }
         val widthInDp = parent.width / parent.context.resources.displayMetrics.density

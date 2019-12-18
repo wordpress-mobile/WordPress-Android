@@ -43,18 +43,18 @@ class PostingActivityMapperTest : BaseUnitTest() {
         val result = mapper.buildActivityItem(listOf(Month(2018, Calendar.JULY, days)), max)
         assertThat(result.blocks).hasSize(1)
         result.blocks[0].let {
-            assertThat(it.boxes).hasSize(11)
-            assertThat(it.boxes[0].box).isEqualTo(Box.VERY_LOW)
-            assertThat(it.boxes[1].box).isEqualTo(Box.LOW)
-            assertThat(it.boxes[2].box).isEqualTo(Box.LOW)
-            assertThat(it.boxes[3].box).isEqualTo(Box.MEDIUM)
-            assertThat(it.boxes[4].box).isEqualTo(Box.MEDIUM)
-            assertThat(it.boxes[5].box).isEqualTo(Box.MEDIUM)
-            assertThat(it.boxes[6].box).isEqualTo(Box.HIGH)
-            assertThat(it.boxes[7].box).isEqualTo(Box.HIGH)
-            assertThat(it.boxes[8].box).isEqualTo(Box.VERY_HIGH)
-            assertThat(it.boxes[9].box).isEqualTo(Box.VERY_HIGH)
-            assertThat(it.boxes[10].box).isEqualTo(Box.VERY_HIGH)
+            assertThat(it.boxItems).hasSize(11)
+            assertThat(it.boxItems[0].box).isEqualTo(Box.VERY_LOW)
+            assertThat(it.boxItems[1].box).isEqualTo(Box.LOW)
+            assertThat(it.boxItems[2].box).isEqualTo(Box.LOW)
+            assertThat(it.boxItems[3].box).isEqualTo(Box.MEDIUM)
+            assertThat(it.boxItems[4].box).isEqualTo(Box.MEDIUM)
+            assertThat(it.boxItems[5].box).isEqualTo(Box.MEDIUM)
+            assertThat(it.boxItems[6].box).isEqualTo(Box.HIGH)
+            assertThat(it.boxItems[7].box).isEqualTo(Box.HIGH)
+            assertThat(it.boxItems[8].box).isEqualTo(Box.VERY_HIGH)
+            assertThat(it.boxItems[9].box).isEqualTo(Box.VERY_HIGH)
+            assertThat(it.boxItems[10].box).isEqualTo(Box.VERY_HIGH)
         }
     }
 
@@ -73,12 +73,12 @@ class PostingActivityMapperTest : BaseUnitTest() {
         assertThat(result.blocks).hasSize(1)
         val offset = 1
         result.blocks[0].let {
-            assertThat(it.boxes).hasSize(33)
+            assertThat(it.boxItems).hasSize(33)
             for (invisible in 0..offset) {
-                assertThat(it.boxes[invisible].box).isEqualTo(Box.INVISIBLE)
+                assertThat(it.boxItems[invisible].box).isEqualTo(Box.INVISIBLE)
             }
-            for (veryLow in (offset + 1) until it.boxes.size) {
-                assertThat(it.boxes[veryLow].box).isEqualTo(Box.VERY_LOW)
+            for (veryLow in (offset + 1) until it.boxItems.size) {
+                assertThat(it.boxItems[veryLow].box).isEqualTo(Box.VERY_LOW)
             }
         }
     }
