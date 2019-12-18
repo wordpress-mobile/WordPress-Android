@@ -90,7 +90,7 @@ import org.wordpress.android.ui.stats.refresh.utils.PostingActivityBlockAnnounce
 import org.wordpress.android.util.image.ImageManager
 
 class BlockListAdapter(val imageManager: ImageManager,
-    var postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer? = null)
+    var postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer)
     : Adapter<BlockListItemViewHolder>() {
     private var items: List<BlockListItem> = listOf()
     fun update(newItems: List<BlockListItem>) {

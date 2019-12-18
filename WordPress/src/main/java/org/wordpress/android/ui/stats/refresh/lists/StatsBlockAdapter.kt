@@ -12,9 +12,11 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.BaseStatsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.BlockListViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.LoadingViewHolder
+import org.wordpress.android.ui.stats.refresh.utils.PostingActivityBlockAnnouncer
 import org.wordpress.android.util.image.ImageManager
 
-class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHolder>() {
+class StatsBlockAdapter(val imageManager: ImageManager, private val postingActivityBlockAnnouncer:
+PostingActivityBlockAnnouncer) : Adapter<BaseStatsViewHolder>() {
     private var items: List<StatsBlock> = listOf()
 
     fun update(newItems: List<StatsBlock>) {
@@ -30,8 +32,8 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseStatsViewHolder {
         return when (values()[viewType]) {
-            SUCCESS, ERROR, EMPTY -> BlockListViewHolder(parent, imageManager)
-            LOADING -> LoadingViewHolder(parent, imageManager)
+            SUCCESS, ERROR, EMPTY -> BlockListViewHolder(parent, imageManager,postingActivityBlockAnnouncer)
+            LOADING -> LoadingViewHolder(parent, imageManager,postingActivityBlockAnnouncer)
         }
     }
 

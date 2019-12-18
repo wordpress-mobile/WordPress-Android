@@ -22,6 +22,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
+import org.wordpress.android.ui.stats.refresh.utils.PostingActivityBlockAnnouncer
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
@@ -32,6 +33,7 @@ import javax.inject.Inject
 class StatsListFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var postingActivityBlockAnnouncer : PostingActivityBlockAnnouncer
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
     @Inject lateinit var navigator: StatsNavigator
     private lateinit var viewModel: StatsListViewModel
@@ -221,7 +223,7 @@ class StatsListFragment : DaggerFragment() {
 
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
-            adapter = StatsBlockAdapter(imageManager)
+            adapter = StatsBlockAdapter(imageManager,postingActivityBlockAnnouncer)
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as StatsBlockAdapter
