@@ -31,6 +31,7 @@ class SavePostToDbUseCase
                     PostStatus.PUBLISHED,
                     PostStatus.SCHEDULED,
                     PostStatus.PRIVATE ->
+                        // TODO Add toast
                         post.setStatus(PostStatus.PENDING.toString())
                     PostStatus.DRAFT,
                     PostStatus.PENDING,

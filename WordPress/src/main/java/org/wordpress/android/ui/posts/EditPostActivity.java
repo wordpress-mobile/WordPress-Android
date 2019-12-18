@@ -1803,6 +1803,17 @@ public class EditPostActivity extends AppCompatActivity implements
             builder.create().show();
             return;
         }
+        if (!mPostUtils.isPublishable(mEditPostRepository.getPost())) {
+            //TODO check if it's needed
+            saveResult(false, false);
+            mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened();
+            EditPostActivity.this.runOnUiThread(() -> {
+                String message = getString(
+                        mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+                ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
+            });
+            return;
+        }
 
         // Loading the content from the GB HTML editor can take time on long posts.
         // Let's show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
@@ -1824,42 +1835,26 @@ public class EditPostActivity extends AppCompatActivity implements
                     postModel.setStatus(PostStatus.PUBLISHED.toString());
                     mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                 } else {
-                    // particular case: if user is submitting for review (that is,
-                    // can't publish posts directly to this site), update the status
-                    if (!UploadUtils.userCanPublish(mSite)) {
-                        postModel.setStatus(PostStatus.PENDING.toString());
-                    }
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 }
-
-                boolean isPublishable = mPostUtils.isPublishable(postModel);
 
                 AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + postModel.getTitle());
                 // the user explicitly confirmed an intention to upload the post
                 postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
 
                 // if post was modified or has unsaved local changes and is publishable, save it
-                saveResult(isPublishable, false);
+                saveResult(true, false);
 
                 // Hide the progress dialog now
                 mEditorFragment.hideSavingProgressDialog();
-                if (isPublishable) {
-                    boolean networkAvailable = NetworkUtils.isNetworkAvailable(getBaseContext());
-                    boolean hasFailedUploads = mEditorFragment.hasFailedMediaUploads()
-                                               || mFeaturedImageHelper.getFailedFeaturedImageUpload(postModel) != null;
-                    if (networkAvailable && hasFailedUploads) {
-                        // Show an Alert Dialog asking the user if they want to remove all failed media before upload
-                        EditPostActivity.this.runOnUiThread(this::showRemoveFailedUploadsDialog);
-                    } else {
-                        saveOnline.set(true);
-                    }
+                boolean networkAvailable = NetworkUtils.isNetworkAvailable(getBaseContext());
+                boolean hasFailedUploads = mEditorFragment.hasFailedMediaUploads()
+                                           || mFeaturedImageHelper.getFailedFeaturedImageUpload(postModel) != null;
+                if (networkAvailable && hasFailedUploads) {
+                    // Show an Alert Dialog asking the user if they want to remove all failed media before upload
+                    EditPostActivity.this.runOnUiThread(this::showRemoveFailedUploadsDialog);
                 } else {
-                    mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened(postModel);
-                    EditPostActivity.this.runOnUiThread(() -> {
-                        String message = getString(
-                                mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
-                        ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
-                    });
+                    saveOnline.set(true);
                 }
                 return true;
             }, postModel -> {

@@ -25,8 +25,8 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
-import java.util.Arrays
 import org.wordpress.android.viewmodel.Event
+import java.util.Arrays
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -205,11 +205,11 @@ class EditPostRepository
 
     fun hasPostSnapshotWhenEditorOpened() = postSnapshotWhenEditorOpened != null
 
-    fun updateStatusFromPostSnapshotWhenEditorOpened(post: PostModel) {
+    fun updateStatusFromPostSnapshotWhenEditorOpened() {
         // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
         // original post's status as we could not proceed with the action
         reportTransactionState(true)
-        post.setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
+        requireNotNull(post).setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
         reportTransactionState(false)
     }
 
