@@ -16,8 +16,8 @@ import org.wordpress.android.ui.stats.refresh.utils.PostingActivityBlockAnnounce
 import org.wordpress.android.util.image.ImageManager
 
 class StatsBlockAdapter(
-    val imageManager: ImageManager, private val postingActivityBlockAnnouncer:
-    PostingActivityBlockAnnouncer
+    val imageManager: ImageManager,
+    private val postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer
 ) : Adapter<BaseStatsViewHolder>() {
     private var items: List<StatsBlock> = listOf()
 

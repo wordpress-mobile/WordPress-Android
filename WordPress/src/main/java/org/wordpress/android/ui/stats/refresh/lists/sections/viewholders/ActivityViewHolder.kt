@@ -22,8 +22,8 @@ private const val BLOCK_WIDTH = 104
 private const val SPAN_COUNT = 7
 
 class ActivityViewHolder(
-    val parent: ViewGroup, private var postingActivityBlockAnnouncer:
-    PostingActivityBlockAnnouncer
+    val parent: ViewGroup,
+    private var postingActivityBlockAnnouncer: PostingActivityBlockAnnouncer
 ) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_activity_item

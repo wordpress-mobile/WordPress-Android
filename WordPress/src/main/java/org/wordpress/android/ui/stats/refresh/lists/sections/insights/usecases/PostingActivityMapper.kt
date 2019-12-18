@@ -22,8 +22,8 @@ private const val LOW_LEVEL = 0
 
 class PostingActivityMapper
 @Inject constructor(
-    private val localeManagerWrapper: LocaleManagerWrapper, private val contentDescriptionHelper:
-    ContentDescriptionHelper
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val contentDescriptionHelper: ContentDescriptionHelper
 ) {
     fun buildActivityItem(months: List<Month>, max: Int): ActivityItem {
         val blocks = mutableListOf<Block>()
@@ -50,8 +50,7 @@ class PostingActivityMapper
                                     day.value > mediumLimit -> MEDIUM
                                     day.value > LOW_LEVEL -> LOW
                                     else -> VERY_LOW
-                                }
-                                , contentDescriptionHelper.buildContentDescription(
+                                }, contentDescriptionHelper.buildContentDescription(
                                 firstDayOfMonth.getDisplayName(
                                         Calendar.MONTH,
                                         Calendar.SHORT,
