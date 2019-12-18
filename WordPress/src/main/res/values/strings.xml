@@ -1220,6 +1220,7 @@
     <!-- reader -->
     <string name="reader">Reader</string>
     <string name="reader_filter_all_sites">All sites</string>
+    <string name="reader_filter_select_filter">Select Filter</string>
     <string name="reader_filter_sites_title">Sites</string>
     <string name="reader_filter_tags_title">Tags</string>
 
