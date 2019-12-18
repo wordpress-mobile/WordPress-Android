@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -51,6 +52,7 @@ public class AppPrefs {
         // last selected tag in the reader
         READER_TAG_NAME,
         READER_TAG_TYPE,
+        READER_TAG_ENDPOINT,
 
         // title of the last active page in ReaderSubsActivity
         READER_SUBS_PAGE_TITLE,
@@ -293,22 +295,41 @@ public class AppPrefs {
 
     public static ReaderTag getReaderTag() {
         String tagName = getString(DeletablePrefKey.READER_TAG_NAME);
-        if (TextUtils.isEmpty(tagName)) {
+        String tagEndPoint = "";
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            // TODO: am I supposed to always have an endpoint?
+            tagEndPoint = getString(DeletablePrefKey.READER_TAG_ENDPOINT);
+        }
+        if (TextUtils.isEmpty(tagName)
+            || (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && TextUtils.isEmpty(tagEndPoint))
+        ) {
             return null;
         }
         int tagType = getInt(DeletablePrefKey.READER_TAG_TYPE);
-        return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType));
+        return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType), tagEndPoint, false);
     }
 
     public static void setReaderTag(ReaderTag tag) {
         if (tag != null && !TextUtils.isEmpty(tag.getTagSlug())) {
             setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagSlug());
             setInt(DeletablePrefKey.READER_TAG_TYPE, tag.tagType.toInt());
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                setString(DeletablePrefKey.READER_TAG_ENDPOINT, tag.getEndpoint());
+            }
         } else {
-            prefs().edit()
-                   .remove(DeletablePrefKey.READER_TAG_NAME.name())
-                   .remove(DeletablePrefKey.READER_TAG_TYPE.name())
-                   .apply();
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                prefs().edit()
+                       .remove(DeletablePrefKey.READER_TAG_NAME.name())
+                       .remove(DeletablePrefKey.READER_TAG_TYPE.name())
+                       .remove(DeletablePrefKey.READER_TAG_ENDPOINT.name())
+                       .apply();
+            } else {
+                prefs().edit()
+                       .remove(DeletablePrefKey.READER_TAG_NAME.name())
+                       .remove(DeletablePrefKey.READER_TAG_TYPE.name())
+                       .apply();
+            }
         }
     }
 
