@@ -13,6 +13,7 @@ import static org.wordpress.android.BuildConfig.E2E_SIGNUP_DISPLAY_NAME;
 import static org.wordpress.android.BuildConfig.E2E_SIGNUP_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_SIGNUP_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_SIGNUP_USERNAME;
+import static org.wordpress.android.TestUtils.clearDefaultSharedPreferences;
 
 public class SignUpTests extends BaseTest {
     @Rule
@@ -22,6 +23,8 @@ public class SignUpTests extends BaseTest {
     @Before
     public void setUp() {
         logoutIfNecessary();
+        // Clearing app preferences to ensure the post-signup interstitial is always shown
+        clearDefaultSharedPreferences(mAppContext);
     }
 
     @Test
@@ -33,6 +36,7 @@ public class SignUpTests extends BaseTest {
                 E2E_SIGNUP_DISPLAY_NAME,
                 E2E_SIGNUP_USERNAME);
         signupFlow.enterPassword(E2E_SIGNUP_PASSWORD);
+        signupFlow.dismissInterstitial();
         signupFlow.confirmSignup();
     }
 }
