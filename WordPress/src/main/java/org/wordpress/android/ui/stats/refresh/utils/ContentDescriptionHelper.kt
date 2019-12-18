@@ -38,4 +38,22 @@ class ContentDescriptionHelper
             false -> "${resourceProvider.getString(keyLabel)}: $key"
         }
     }
+
+    fun buildContentDescription(month: String, days: Int, posts: Int): String {
+        return if (posts > 1) {
+            resourceProvider.getString(
+                    R.string.stats_posting_activity_description_plural,
+                    month,
+                    days,
+                    posts
+            )
+        } else {
+            resourceProvider.getString(
+                    R.string.stats_posting_activity_description,
+                    month,
+                    days,
+                    posts
+            )
+        }
+    }
 }
