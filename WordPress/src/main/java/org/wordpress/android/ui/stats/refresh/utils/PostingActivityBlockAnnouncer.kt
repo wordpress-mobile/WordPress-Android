@@ -68,7 +68,7 @@ class PostingActivityBlockAnnouncer
 
                 // If a box has no stats then it's ignored.
                 while (boxItem.box == INVISIBLE || boxItem.box == VERY_LOW) {
-                    currentBoxIndex.inc()
+                    currentBoxIndex++
 
                     // If the end of the box list was reached then restart the index.
                     if (currentBoxIndex == boxItems.size - 1) {
@@ -100,7 +100,7 @@ class PostingActivityBlockAnnouncer
 
                 // If this isn't the last box then increase the index if not then announce that we reached the end.
                 if (currentBoxIndex != boxItems.size - 1) {
-                    currentBoxIndex.inc()
+                    currentBoxIndex++
                 } else {
                     view.announceForAccessibility(
                             resourceProvider.getString(
