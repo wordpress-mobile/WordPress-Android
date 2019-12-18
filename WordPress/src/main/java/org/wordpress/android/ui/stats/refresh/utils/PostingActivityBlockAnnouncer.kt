@@ -20,6 +20,7 @@ class PostingActivityBlockAnnouncer
     private var currentBoxIndex: Int = 0
     private var currentBlockIndex: Int = 0
     private lateinit var blockViews: List<View>
+    private var isStatsInPeriod = false
 
     fun initialize(activityItem: ActivityItem, vararg blockViews: View) {
         this.activityItem = activityItem
@@ -42,6 +43,7 @@ class PostingActivityBlockAnnouncer
                                 val view = blockViews.find { view -> view.id == host?.id }
                                 currentBlockIndex = blockViews.indexOf(view)
                                 currentBoxIndex = 0
+                                isStatsInPeriod = false
                             }
                         }
 
@@ -50,31 +52,60 @@ class PostingActivityBlockAnnouncer
                             info: AccessibilityNodeInfoCompat?
                         ) {
                             super.onInitializeAccessibilityNodeInfo(host, info)
-                            info?.addAction(AccessibilityNodeInfoCompat.AccessibilityActionCompat(
-                                    ACTION_CLICK, resourceProvider.getString(
-                                    R.string.stats_posting_activity_action)))
+                            info?.addAction(
+                                    AccessibilityNodeInfoCompat.AccessibilityActionCompat(
+                                            ACTION_CLICK, resourceProvider.getString(
+                                            R.string.stats_posting_activity_action
+                                    )
+                                    )
+                            )
                         }
                     })
 
             blockView.setOnClickListener { view ->
-                val boxes = activityItem.blocks[currentBlockIndex].boxes
-                var boxItem = boxes[currentBoxIndex]
+                val boxItems = activityItem.blocks[currentBlockIndex].boxes
+                var boxItem = boxItems[currentBoxIndex]
 
+                // If a box has no stats then it's ignored.
                 while (boxItem.box == INVISIBLE || boxItem.box == VERY_LOW) {
                     currentBoxIndex++
 
-                    if (currentBoxIndex == boxes.size - 1) {
+                    // If the end of the box list was reached then restart the index.
+                    if (currentBoxIndex == boxItems.size - 1) {
+                        if (isStatsInPeriod) {
+                            view.announceForAccessibility(
+                                    resourceProvider.getString(
+                                            R.string.stats_posting_activity_end_description
+                                    )
+                            )
+                        } else {
+                            view.announceForAccessibility(
+                                    resourceProvider.getString(
+                                            R.string.stats_posting_activity_empty_description
+                                    )
+                            )
+                        }
                         currentBoxIndex = 0
+                        return@setOnClickListener
                     }
-                    boxItem = boxes[currentBoxIndex]
+
+                    boxItem = boxItems[currentBoxIndex]
                 }
 
+                // Once the loop didn't return from the listener then a box with stats was found.
+                isStatsInPeriod = true
+
                 view.announceForAccessibility(boxItem.contentDescription)
-                if (currentBoxIndex != boxes.size - 1) {
+
+                // If this isn't the last box then increase the index if not then announce that we reached the end.
+                if (currentBoxIndex != boxItems.size - 1) {
                     currentBoxIndex++
                 } else {
-                    view.announceForAccessibility(resourceProvider.getString(
-                            R.string.stats_posting_activity_end_description))
+                    view.announceForAccessibility(
+                            resourceProvider.getString(
+                                    R.string.stats_posting_activity_end_description
+                            )
+                    )
                     currentBoxIndex = 0
                 }
             }
