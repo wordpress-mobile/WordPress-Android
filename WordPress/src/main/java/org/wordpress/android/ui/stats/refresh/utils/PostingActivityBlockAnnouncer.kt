@@ -3,7 +3,10 @@ package org.wordpress.android.ui.stats.refresh.utils
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED
+import android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK
 import androidx.core.view.AccessibilityDelegateCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
+import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.INVISIBLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_LOW
@@ -39,6 +42,16 @@ class PostingActivityBlockAnnouncer
                                 currentBlockIndex = blockViews.indexOf(view)
                                 currentBoxIndex = 0
                             }
+                        }
+
+                        override fun onInitializeAccessibilityNodeInfo(
+                            host: View?,
+                            info: AccessibilityNodeInfoCompat?
+                        ) {
+                            super.onInitializeAccessibilityNodeInfo(host, info)
+                            info?.addAction(AccessibilityNodeInfoCompat.AccessibilityActionCompat(
+                                    ACTION_CLICK, host?.context?.getString(
+                                    R.string.stats_posting_activity_action)))
                         }
                     })
 
