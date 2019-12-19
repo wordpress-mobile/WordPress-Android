@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.PagedList.BoundaryCallback
+import com.yarolegovich.wellsql.WellSql
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
@@ -226,23 +227,31 @@ class ListStore @Inject constructor(
         val newState = when {
             payload.isError -> ListState.ERROR
             payload.canLoadMore -> ListState.CAN_LOAD_MORE
-            else -> ListState.FETCHED
+            else -> FETCHED
         }
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
 
         if (!payload.isError) {
-            if (!payload.loadedMore) {
-                deleteListItems(payload.listDescriptor)
+            val db = WellSql.giveMeWritableDb()
+            db.beginTransaction()
+            try {
+                if (!payload.loadedMore) {
+                    deleteListItems(payload.listDescriptor)
+                }
+                val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
+                    "The `ListModel` can never be `null` here since either a new list is inserted or existing one " +
+                            "updated"
+                }
+                listItemSqlUtils.insertItemList(payload.remoteItemIds.map { remoteItemId ->
+                    val listItemModel = ListItemModel()
+                    listItemModel.listId = listModel.id
+                    listItemModel.remoteItemId = remoteItemId
+                    return@map listItemModel
+                })
+                db.setTransactionSuccessful()
+            } finally {
+                db.endTransaction()
             }
-            val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
-                "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
-            }
-            listItemSqlUtils.insertItemList(payload.remoteItemIds.map { remoteItemId ->
-                val listItemModel = ListItemModel()
-                listItemModel.listId = listModel.id
-                listItemModel.remoteItemId = remoteItemId
-                return@map listItemModel
-            })
         }
         val causeOfChange = if (payload.isError) {
             CauseOfListChange.ERROR
@@ -453,7 +462,7 @@ class ListStore @Inject constructor(
     class ListError(
         val type: ListErrorType,
         val message: String? = null
-    ) : Store.OnChangedError
+    ) : OnChangedError
 
     enum class ListErrorType {
         GENERIC_ERROR,

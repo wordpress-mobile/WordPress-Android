@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -27,6 +28,8 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
+import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
@@ -43,9 +46,9 @@ import javax.inject.Singleton;
 @Singleton
 public class UploadStore extends Store {
     public static class ClearMediaPayload extends Payload<BaseNetworkError> {
-        public PostModel post;
+        public PostImmutableModel post;
         public Set<MediaModel> media;
-        public ClearMediaPayload(PostModel post, Set<MediaModel> media) {
+        public ClearMediaPayload(PostImmutableModel post, Set<MediaModel> media) {
             this.post = post;
             this.media = media;
         }
@@ -109,8 +112,16 @@ public class UploadStore extends Store {
                 handlePostUploaded((RemotePostPayload) payload);
                 mDispatcher.dispatch(PostActionBuilder.newPushedPostAction((RemotePostPayload) payload));
                 break;
+            case REMOTE_AUTO_SAVED_POST:
+                handleRemoteAutoSavedPost((RemoteAutoSavePostPayload) payload);
+                mDispatcher
+                        .dispatch(PostActionBuilder.newRemoteAutoSavedPostAction((RemoteAutoSavePostPayload) payload));
+                break;
+            case INCREMENT_NUMBER_OF_AUTO_UPLOAD_ATTEMPTS:
+                handleIncrementNumberOfAutoUploadAttempts((PostImmutableModel) payload);
+                break;
             case CANCEL_POST:
-                handleCancelPost((PostModel) payload);
+                handleCancelPost((PostImmutableModel) payload);
                 break;
             case CLEAR_MEDIA_FOR_POST:
                 handleClearMediaForPost((ClearMediaPayload) payload);
@@ -133,7 +144,7 @@ public class UploadStore extends Store {
         }
     }
 
-    public void registerPostModel(PostModel postModel, List<MediaModel> mediaModelList) {
+    public void registerPostModel(PostImmutableModel postModel, List<MediaModel> mediaModelList) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId());
         Set<Integer> mediaIdSet = new HashSet<>();
 
@@ -153,15 +164,15 @@ public class UploadStore extends Store {
         UploadSqlUtils.insertOrUpdatePost(postUploadModel);
     }
 
-    public @NonNull Set<MediaModel> getUploadingMediaForPost(PostModel post) {
+    public @NonNull Set<MediaModel> getUploadingMediaForPost(PostImmutableModel post) {
         return getMediaForPostWithState(post, MediaUploadModel.UPLOADING);
     }
 
-    public @NonNull Set<MediaModel> getCompletedMediaForPost(PostModel post) {
+    public @NonNull Set<MediaModel> getCompletedMediaForPost(PostImmutableModel post) {
         return getMediaForPostWithState(post, MediaUploadModel.COMPLETED);
     }
 
-    public @NonNull Set<MediaModel> getFailedMediaForPost(PostModel post) {
+    public @NonNull Set<MediaModel> getFailedMediaForPost(PostImmutableModel post) {
         return getMediaForPostWithState(post, MediaUploadModel.FAILED);
     }
 
@@ -185,32 +196,32 @@ public class UploadStore extends Store {
         return UploadSqlUtils.getPostModelsForPostUploadModels(postUploadModels);
     }
 
-    public boolean isPendingPost(PostModel post) {
+    public boolean isPendingPost(PostImmutableModel post) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.PENDING;
     }
 
-    public boolean isFailedPost(PostModel post) {
+    public boolean isFailedPost(PostImmutableModel post) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.FAILED;
     }
 
-    public boolean isCancelledPost(PostModel post) {
+    public boolean isCancelledPost(PostImmutableModel post) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.CANCELLED;
     }
 
-    public boolean isRegisteredPostModel(PostModel post) {
+    public boolean isRegisteredPostModel(PostImmutableModel post) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         return postUploadModel != null;
     }
 
-    public int getNumberOfPostUploadErrorsOrCancellations(PostModel post) {
+    public int getNumberOfPostAutoUploadAttempts(PostImmutableModel post) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         if (postUploadModel == null) {
             return 0;
         }
-        return postUploadModel.getNumberOfUploadErrorsOrCancellations();
+        return postUploadModel.getNumberOfAutoUploadAttempts();
     }
 
     /**
@@ -219,7 +230,7 @@ public class UploadStore extends Store {
      * Otherwise, whether or not the {@code postModel} has been registered as uploading with the UploadStore, this
      * will check all media attached to the {@code postModel} and will return the first error it finds.
      */
-    public @Nullable UploadError getUploadErrorForPost(PostModel postModel) {
+    public @Nullable UploadError getUploadErrorForPost(PostImmutableModel postModel) {
         if (postModel == null) return null;
 
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId());
@@ -363,22 +374,34 @@ public class UploadStore extends Store {
         }
     }
 
+    private void handleRemoteAutoSavedPost(@NonNull RemoteAutoSavePostPayload payload) {
+        if (payload.error != null && payload.error.type == PostErrorType.UNSUPPORTED_ACTION) {
+            // The remote-auto-save is not supported -> lets just delete the post from the queue
+            UploadSqlUtils.deletePostUploadModelWithLocalId(payload.localPostId);
+        } else {
+            handlePostUploadedOrAutoSaved(payload.localPostId, payload.error);
+        }
+    }
+
     private void handlePostUploaded(@NonNull RemotePostPayload payload) {
         if (payload.post == null) {
             return;
         }
 
-        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(payload.post.getId());
+        handlePostUploadedOrAutoSaved(payload.post.getId(), payload.error);
+    }
 
-        if (payload.isError()) {
+    private void handlePostUploadedOrAutoSaved(int localPostId, PostError error) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(localPostId);
+
+        if (error != null) {
             if (postUploadModel == null) {
-                postUploadModel = new PostUploadModel(payload.post.getId());
+                postUploadModel = new PostUploadModel(localPostId);
             }
             if (postUploadModel.getUploadState() != PostUploadModel.FAILED) {
                 postUploadModel.setUploadState(PostUploadModel.FAILED);
-                postUploadModel.incNumberOfUploadErrorsOrCancellations();
             }
-            postUploadModel.setPostError(payload.error);
+            postUploadModel.setPostError(error);
             UploadSqlUtils.insertOrUpdatePost(postUploadModel);
             return;
         }
@@ -388,11 +411,19 @@ public class UploadStore extends Store {
             UploadSqlUtils.deleteMediaUploadModelsWithLocalIds(postUploadModel.getAssociatedMediaIdSet());
 
             // Delete the PostUploadModel itself
-            UploadSqlUtils.deletePostUploadModelWithLocalId(payload.post.getId());
+            UploadSqlUtils.deletePostUploadModelWithLocalId(localPostId);
         }
     }
 
-    private void handleCancelPost(PostModel payload) {
+    private void handleIncrementNumberOfAutoUploadAttempts(PostImmutableModel post) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
+        if (postUploadModel != null) {
+            postUploadModel.incNumberOfAutoUploadAttempts();
+            UploadSqlUtils.insertOrUpdatePost(postUploadModel);
+        }
+    }
+
+    private void handleCancelPost(PostImmutableModel payload) {
         if (payload != null) {
             cancelPost(payload.getId());
         }
@@ -423,7 +454,8 @@ public class UploadStore extends Store {
         emitChange(new OnUploadChanged(UploadAction.CLEAR_MEDIA_FOR_POST));
     }
 
-    private @NonNull Set<MediaModel> getMediaForPostWithState(PostModel post, @MediaUploadModel.UploadState int state) {
+    private @NonNull Set<MediaModel> getMediaForPostWithState(PostImmutableModel post,
+                                                              @MediaUploadModel.UploadState int state) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         if (postUploadModel == null) {
             return Collections.emptySet();
@@ -443,7 +475,6 @@ public class UploadStore extends Store {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(localPostId);
         if (postUploadModel != null && postUploadModel.getUploadState() != PostUploadModel.CANCELLED) {
             postUploadModel.setUploadState(PostUploadModel.CANCELLED);
-            postUploadModel.incNumberOfUploadErrorsOrCancellations();
             UploadSqlUtils.insertOrUpdatePost(postUploadModel);
         }
     }

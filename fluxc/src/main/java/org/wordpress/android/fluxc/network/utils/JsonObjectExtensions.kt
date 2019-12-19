@@ -24,6 +24,13 @@ fun JsonObject?.getJsonObject(property: String): JsonObject? {
     return if (obj?.isJsonObject == true) obj.asJsonObject else null
 }
 
-private fun JsonObject?.checkAndGet(property: String): JsonElement? = if (this?.has(property) == true) {
-    this.get(property)
-} else null
+private fun JsonObject?.checkAndGet(property: String): JsonElement? {
+    return if (this?.has(property) == true) {
+        val jsonElement = this.get(property)
+        if (jsonElement.isJsonNull) {
+            null
+        } else {
+            jsonElement
+        }
+    } else null
+}
