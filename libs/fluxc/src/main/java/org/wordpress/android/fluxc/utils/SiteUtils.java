@@ -55,7 +55,16 @@ public class SiteUtils {
                                                      @NonNull SimpleDateFormat dateFormat,
                                                      @NonNull Date date) {
         String wpTimeZone = site.getTimezone();
+        dateFormat.setTimeZone(getNormalizedTimezone(wpTimeZone));
+        return dateFormat.format(date);
+    }
 
+    /**
+     * Given a {@link SiteModel} timezone returns a standard Java timezone
+     * @param wpTimeZone from SiteModel
+     * @return
+     */
+    public static TimeZone getNormalizedTimezone(String wpTimeZone) {
         /*
         Convert the timezone to a form that is compatible with Java TimeZone class
         WordPress returns something like the following:
@@ -63,7 +72,6 @@ public class SiteUtils {
            UTC+1 ----> 1.0
            UTC-0:30 ----> -1.0
         */
-
         String timezoneNormalized;
         if (wpTimeZone == null || wpTimeZone.isEmpty() || wpTimeZone.equals("0") || wpTimeZone.equals("0.0")) {
             timezoneNormalized = "GMT";
@@ -95,7 +103,6 @@ public class SiteUtils {
             }
         }
 
-        dateFormat.setTimeZone(TimeZone.getTimeZone(timezoneNormalized));
-        return dateFormat.format(date);
+        return TimeZone.getTimeZone(timezoneNormalized);
     }
 }

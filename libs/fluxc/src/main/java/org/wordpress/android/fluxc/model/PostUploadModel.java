@@ -50,7 +50,13 @@ public class PostUploadModel extends Payload<BaseNetworkError> implements Identi
     // Serialization of a PostError
     @Column private String mErrorType;
     @Column private String mErrorMessage;
+    /**
+     * @deprecated This is kept just so we don't need to drop the whole table since SQLite
+     * doesn't support rename/drop column in the current version.
+     */
+    @Deprecated
     @Column private int mNumberOfUploadErrorsOrCancellations;
+    @Column private int mNumberOfAutoUploadAttempts;
 
     public PostUploadModel() {}
 
@@ -161,15 +167,33 @@ public class PostUploadModel extends Payload<BaseNetworkError> implements Identi
         return TextUtils.join(",", idList);
     }
 
+    /**
+     * @deprecated This is kept just so we don't need to drop the whole table since SQLite
+     * doesn't support rename/drop column in the current version.
+     */
+    @Deprecated
     public int getNumberOfUploadErrorsOrCancellations() {
         return mNumberOfUploadErrorsOrCancellations;
     }
 
-    public void incNumberOfUploadErrorsOrCancellations() {
-        mNumberOfUploadErrorsOrCancellations += 1;
-    }
-
+    /**
+     * @deprecated This is kept just so we don't need to drop the whole table since SQLite
+     * doesn't support rename/drop column in the current version.
+     */
+    @Deprecated
     public void setNumberOfUploadErrorsOrCancellations(int numberOfUploadErrorsOrCancellations) {
         mNumberOfUploadErrorsOrCancellations = numberOfUploadErrorsOrCancellations;
+    }
+
+    public int getNumberOfAutoUploadAttempts() {
+        return mNumberOfAutoUploadAttempts;
+    }
+
+    public void setNumberOfAutoUploadAttempts(int numberOfAutoUploadAttempts) {
+        mNumberOfAutoUploadAttempts = numberOfAutoUploadAttempts;
+    }
+
+    public void incNumberOfAutoUploadAttempts() {
+        mNumberOfAutoUploadAttempts += 1;
     }
 }

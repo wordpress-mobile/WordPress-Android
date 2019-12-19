@@ -36,6 +36,7 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
     @Column private boolean mPendingEmailChange;
     @Column private String mWebAddress; // WPCom rest API: user_URL
     @Column private boolean mTracksOptOut;
+    @Column private boolean mUsernameCanBeChanged;
 
     public AccountModel() {
         init();
@@ -76,7 +77,8 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
                && getPendingEmailChange() == otherAccount.getPendingEmailChange()
                && StringUtils.equals(getWebAddress(), otherAccount.getWebAddress())
                && getHasUnseenNotes() == otherAccount.getHasUnseenNotes()
-               && getTracksOptOut() == otherAccount.getTracksOptOut();
+               && getTracksOptOut() == otherAccount.getTracksOptOut()
+               && getUsernameCanBeChanged() == otherAccount.getUsernameCanBeChanged();
     }
 
     public void init() {
@@ -98,6 +100,7 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
         mPendingEmailChange = false;
         mWebAddress = "";
         mTracksOptOut = false;
+        mUsernameCanBeChanged = false;
     }
 
     /**
@@ -134,6 +137,7 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
         setTracksOptOut(other.getTracksOptOut());
         setWebAddress(other.getWebAddress());
         setDisplayName(other.getDisplayName());
+        setUsernameCanBeChanged(other.getUsernameCanBeChanged());
     }
 
     public long getUserId() {
@@ -286,5 +290,13 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
 
     public void setTracksOptOut(boolean tracksOptOut) {
         mTracksOptOut = tracksOptOut;
+    }
+
+    public boolean getUsernameCanBeChanged() {
+        return mUsernameCanBeChanged;
+    }
+
+    public void setUsernameCanBeChanged(boolean usernameCanBeChanged) {
+        mUsernameCanBeChanged = usernameCanBeChanged;
     }
 }

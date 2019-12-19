@@ -50,6 +50,7 @@ public class SingleStoreWellSqlConfigForTests extends WellSqlConfig {
     /**
      * Drop and create all tables
      */
+    @Override
     public void reset() {
         SQLiteDatabase db = WellSql.giveMeWritableDb();
         for (Class<? extends Identifiable> clazz : mStoreClassList) {

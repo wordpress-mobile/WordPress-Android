@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.utils
 
+import org.assertj.core.api.Assertions
 import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.DateTimeUtils
@@ -172,5 +173,12 @@ class SiteUtilsTest {
             val currentHour = hourFormat.format(DateTimeUtils.localDateToUTC(date))
             assertNotEquals(currentHour, SiteUtils.getDateTimeForSite(this, hourFormat, date))
         }
+    }
+
+    @Test
+    fun `returns correct timezone`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("+10")
+
+        Assertions.assertThat(timeZone.displayName).isEqualTo("GMT+10:00")
     }
 }

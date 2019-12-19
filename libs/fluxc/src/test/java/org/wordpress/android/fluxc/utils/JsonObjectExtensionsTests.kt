@@ -16,6 +16,7 @@ private const val sampleJson =
     "string": "Some string",
     "escaped_string": "\\ \" '",
     "number": 37,
+    "nullstring": null,
     "object": {
         "name": "Object name"
     }
@@ -41,6 +42,7 @@ class JsonObjectExtensionsTests {
         assertEquals("Some string", jsonObject.getString("string"))
         assertEquals("\\ \" '", jsonObject.getString("escaped_string", true))
         assertNull(jsonObject.getString("doesn't exist"))
+        assertNull(jsonObject.getString("nullstring"))
     }
 
     @Test

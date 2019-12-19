@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.post;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 
@@ -53,40 +51,26 @@ public class PostLocationTest {
     }
 
     @Test
-    public void testInvalidLatitude() {
-        PostLocation location = new PostLocation();
-
-        try {
-            location.setLatitude(INVALID_LAT_MAX);
-            Assert.fail("Lat less than min should have failed");
-        } catch (IllegalArgumentException e) {
-            assertFalse("Invalid setLatitude and still valid", location.isValid());
-        }
-
-        try {
-            location.setLatitude(INVALID_LAT_MIN);
-            Assert.fail("Lat less than min should have failed");
-        } catch (IllegalArgumentException e) {
-            assertFalse("Invalid setLatitude and still valid", location.isValid());
-        }
+    public void testInvalidMaxLatitude() {
+        PostLocation location = new PostLocation(INVALID_LAT_MAX, 0.0);
+        assertFalse("Invalid Latitude and still valid", location.isValid());
     }
 
     @Test
-    public void testInvalidLongitude() {
-        PostLocation location = new PostLocation();
+    public void testInvalidMinLatitude() {
+        PostLocation location = new PostLocation(INVALID_LAT_MIN, 0.0);
+        assertFalse("Invalid Latitude and still valid", location.isValid());
+    }
 
-        try {
-            location.setLongitude(INVALID_LNG_MAX);
-            Assert.fail("Lng less than min should have failed");
-        } catch (IllegalArgumentException e) {
-            assertFalse("Invalid setLongitude and still valid", location.isValid());
-        }
+    @Test
+    public void testInvalidMaxLongitude() {
+        PostLocation location = new PostLocation(0.0, INVALID_LNG_MAX);
+        assertFalse("Invalid Longitude and still valid", location.isValid());
+    }
 
-        try {
-            location.setLongitude(INVALID_LNG_MIN);
-            Assert.fail("Lat less than min should have failed");
-        } catch (IllegalArgumentException e) {
-            assertFalse("Invalid setLongitude and still valid", location.isValid());
-        }
+    @Test
+    public void testInvalidMinLongitude() {
+        PostLocation location = new PostLocation(0.0, INVALID_LNG_MIN);
+        assertFalse("Invalid Longitude and still valid", location.isValid());
     }
 }
