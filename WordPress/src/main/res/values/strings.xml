@@ -885,7 +885,7 @@
     <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
     <string name="stats_management_try_it_now">Try it now</string>
     <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
-    <string name="stats_management_edit">Edit</string>
+    <string name="stats_management_add_new_stats_card">Add new stats card</string>
     <string name="stats_management_new">New</string>
 
     <!-- Stats refreshed widgets -->
