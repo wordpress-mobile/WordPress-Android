@@ -30,6 +30,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 
 @InternalCoroutinesApi
@@ -51,6 +52,7 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var newsTracker: NewsTracker
     @Mock private lateinit var newsTrackerHelper: NewsTrackerHelper
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock private lateinit var subfilterListItemMapper: SubfilterListItemMapper
 
     private lateinit var viewModel: ReaderPostListViewModel
     private val liveData = MutableLiveData<NewsItem>()
@@ -61,17 +63,20 @@ class ReaderPostListViewModelTest {
         whenever(savedTag.tagTitle).thenReturn("tag-title")
         val tag = Tag(
                 tag = savedTag,
-                onClickAction = null
+                onClickAction = ::onClickActionDummy
         )
+        val json = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":4}"
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            whenever(appPrefsWrapper.getReaderSubfilter()).thenReturn(tag)
+            whenever(appPrefsWrapper.getReaderSubfilter()).thenReturn(json)
+            whenever(subfilterListItemMapper.fromJson(any(), any(), any())).thenReturn(tag)
         }
         viewModel = ReaderPostListViewModel(
                 newsManager,
                 newsTracker,
                 newsTrackerHelper,
                 TEST_DISPATCHER,
-                appPrefsWrapper
+                appPrefsWrapper,
+                subfilterListItemMapper
         )
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
@@ -207,5 +212,9 @@ class ReaderPostListViewModelTest {
         viewModel.currentSubFilter.observeForever { item = it }
 
         assertThat(item).isInstanceOf(SiteAll::class.java)
+    }
+
+    private fun onClickActionDummy(filter: SubfilterListItem) {
+        return
     }
 }
