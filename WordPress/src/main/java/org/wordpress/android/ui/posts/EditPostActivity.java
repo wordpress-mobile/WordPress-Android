@@ -112,6 +112,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
+import org.wordpress.android.ui.posts.EditPostViewModel.ActivityFinishState;
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor;
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields;
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult;
@@ -151,7 +152,6 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.LocaleManagerWrapper;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
@@ -607,9 +607,20 @@ public class EditPostActivity extends AppCompatActivity implements
             updateAndSavePostAsync();
             return null;
         }));
-        mViewModel.getOnFinish().observe(this, finishEvent -> finishEvent.applyIfNotHandled(isSavedOnline -> {
-            saveResult(true, !isSavedOnline);
+        mViewModel.getOnFinish().observe(this, finishEvent -> finishEvent.applyIfNotHandled(activityFinishState -> {
+            switch (activityFinishState) {
+                case SAVED_ONLINE:
+                    saveResult(true, false);
+                    break;
+                case SAVED_LOCALLY:
+                    saveResult(true, true);
+                    break;
+                case CANCELLED:
+                    saveResult(false, true);
+                    break;
+            }
             removePostOpenInEditorStickyEvent();
+            mEditorMedia.definitelyDeleteBackspaceDeletedMediaItemsAsync();
             finish();
             return null;
         }));
@@ -1064,7 +1075,6 @@ public class EditPostActivity extends AppCompatActivity implements
         } else if (mEditorPhotoPicker.isPhotoPickerShowing()) {
             mEditorPhotoPicker.hidePhotoPicker();
         } else {
-            mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
             savePostAndOptionallyFinish(true, false);
         }
 
@@ -1182,7 +1192,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
                     mPostEditorAnalyticsSession.switchEditor(Editor.CLASSIC);
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                    savePostAndOptionallyFinish(true, false);
+                    mViewModel.finish(ActivityFinishState.SAVED_LOCALLY);
                 } else {
                     logWrongMenuState("Wrong state in menu_switch_to_aztec: menu should not be visible.");
                 }
@@ -1195,7 +1205,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     mRestartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG;
                     mPostEditorAnalyticsSession.switchEditor(Editor.GUTENBERG);
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                    savePostAndOptionallyFinish(true, false);
+                    mViewModel.finish(ActivityFinishState.SAVED_LOCALLY);
                 } else {
                     logWrongMenuState("Wrong state in menu_switch_to_gutenberg: menu should not be visible.");
                 }
@@ -1226,7 +1236,6 @@ public class EditPostActivity extends AppCompatActivity implements
         mUploadUtilsWrapper.showSnackbar(
                 findViewById(R.id.editor_activity),
                 R.string.editor_uploading_post);
-        mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
         savePostAndOptionallyFinish(false, false);
     }
 
@@ -1419,7 +1428,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private boolean savePostOnline(boolean isFirstTimePublish) {
+    private ActivityFinishState savePostOnline(boolean isFirstTimePublish) {
         return mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mSite);
     }
 
@@ -1783,7 +1792,6 @@ public class EditPostActivity extends AppCompatActivity implements
                            (dialog, id) -> {
                                ToastUtils.showToast(EditPostActivity.this,
                                                     getString(R.string.toast_saving_post_as_draft));
-                               mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                                savePostAndOptionallyFinish(true, false);
                            })
                    .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
@@ -1793,6 +1801,7 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
         if (!mPostUtils.isPublishable(mEditPostRepository.getPost())) {
+            // TODO we don't want to show "publish" message when the user clicked on eg. save
             mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened();
             EditPostActivity.this.runOnUiThread(() -> {
                 String message = getString(
@@ -1829,8 +1838,8 @@ public class EditPostActivity extends AppCompatActivity implements
             mEditorFragment.hideSavingProgressDialog();
             return true;
         }, postModel -> {
-            boolean savedOnline = savePostOnline(isFirstTimePublish);
-            mViewModel.finish(savedOnline);
+            ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
+            mViewModel.finish(activityFinishState);
             return null;
         });
     }
@@ -1846,12 +1855,9 @@ public class EditPostActivity extends AppCompatActivity implements
         // if post was modified during this editing session, save it
         boolean shouldSave = shouldSavePost() || forceSave;
 
-        mEditorMedia.definitelyDeleteBackspaceDeletedMediaItemsAsync();
-
         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-        boolean isSavedOnline = false;
+        ActivityFinishState activityFinishState = ActivityFinishState.SAVED_LOCALLY;
         if (shouldSave) {
-            boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
             /*
              * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
              * only when it doesn't exist in the remote yet. When it does exist in the remote, we can upload
@@ -1859,24 +1865,20 @@ public class EditPostActivity extends AppCompatActivity implements
              * user didn't confirm the changes in this code path.
              */
             boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mEditPostRepository.isLocalDraft();
-            if (!hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
-                && isNotRestarting && isWpComOrIsLocalDraft) {
-                isSavedOnline = savePostOnline(isFirstTimePublish);
+            if (isWpComOrIsLocalDraft) {
+                activityFinishState = savePostOnline(isFirstTimePublish);
             } else if (forceSave) {
-                isSavedOnline = savePostOnline(false);
+                activityFinishState = savePostOnline(false);
             }
-
         }
         // discard post if new & empty
         if (isDiscardable()) {
             mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
             mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
-            saveResult(false, true);
-            finish();
-            return;
+            activityFinishState = ActivityFinishState.CANCELLED;
         }
         if (doFinish) {
-            mViewModel.finish(isSavedOnline);
+            mViewModel.finish(activityFinishState);
         }
     }
 

@@ -13,6 +13,8 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.posts.EditPostViewModel.ActivityFinishState.SAVED_LOCALLY
+import org.wordpress.android.ui.posts.EditPostViewModel.ActivityFinishState.SAVED_ONLINE
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.Failed
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
@@ -41,15 +43,15 @@ class EditPostViewModel
     private var saveJob: Job? = null
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
     val onSavePostTriggered: LiveData<Event<Unit>> = _onSavePostTriggered
-    private val _onFinish = MutableLiveData<Event<Boolean>>()
-    val onFinish: LiveData<Event<Boolean>> = _onFinish
+    private val _onFinish = MutableLiveData<Event<ActivityFinishState>>()
+    val onFinish: LiveData<Event<ActivityFinishState>> = _onFinish
 
     fun savePostOnline(
         isFirstTimePublish: Boolean,
         context: Context,
         editPostRepository: EditPostRepository,
         site: SiteModel
-    ): Boolean {
+    ): ActivityFinishState {
         savePostToDbUseCase.savePostToDb(context, editPostRepository, site)
         return if (networkUtils.isNetworkAvailable()) {
             postUtils.trackSavePostAnalytics(
@@ -57,9 +59,9 @@ class EditPostViewModel
                     siteStore.getSiteByLocalId(editPostRepository.localSiteId)
             )
             uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
-            true
+            SAVED_ONLINE
         } else {
-            false
+            SAVED_LOCALLY
         }
     }
 
@@ -100,7 +102,11 @@ class EditPostViewModel
         onSuccess: ((PostImmutableModel) -> Unit)? = null
     ) {
         postRepository.updateAsync({ postModel ->
-            val updateResult = updatePostObjectWithUI(getUpdatedTitleAndContent, postModel, postRepository)
+            val updateResult = updatePostObjectWithUI(
+                    getUpdatedTitleAndContent,
+                    postModel,
+                    postRepository
+            )
             updateResult is Success
         }, onSuccess)
     }
@@ -159,8 +165,8 @@ class EditPostViewModel
         return titleChanged || contentChanged
     }
 
-    fun finish(savedOnline: Boolean) {
-        _onFinish.postValue(Event(savedOnline))
+    fun finish(state: ActivityFinishState) {
+        _onFinish.postValue(Event(state))
     }
 
     sealed class UpdateResult {
@@ -171,5 +177,9 @@ class EditPostViewModel
     sealed class UpdateFromEditor {
         data class PostFields(val title: String, val content: String) : UpdateFromEditor()
         data class Failed(val exception: Exception) : UpdateFromEditor()
+    }
+
+    enum class ActivityFinishState {
+        SAVED_ONLINE, SAVED_LOCALLY, CANCELLED
     }
 }

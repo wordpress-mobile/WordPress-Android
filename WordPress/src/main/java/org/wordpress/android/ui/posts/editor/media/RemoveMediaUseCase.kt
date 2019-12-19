@@ -7,7 +7,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.StringUtils
