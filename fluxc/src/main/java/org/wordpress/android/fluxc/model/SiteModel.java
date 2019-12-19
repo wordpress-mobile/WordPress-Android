@@ -24,6 +24,8 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
 public class SiteModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
+    private static final long serialVersionUID = -7641813766771796252L;
+
     @Retention(SOURCE)
     @IntDef({ORIGIN_UNKNOWN, ORIGIN_WPCOM_REST, ORIGIN_XMLRPC})
     public @interface SiteOrigin {}

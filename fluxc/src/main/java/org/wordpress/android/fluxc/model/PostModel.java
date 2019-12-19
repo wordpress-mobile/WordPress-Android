@@ -27,6 +27,8 @@ import java.util.List;
 @Table
 public class PostModel extends Payload<BaseNetworkError> implements Cloneable, Identifiable, Serializable,
         PostImmutableModel {
+    private static final long serialVersionUID = 4524418637508876144L;
+
     private static final long LATITUDE_REMOVED_VALUE = 8888;
     private static final long LONGITUDE_REMOVED_VALUE = 8888;
 
