@@ -8,10 +8,11 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.ScrollView;
 
 import androidx.core.view.AccessibilityDelegateCompat;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityRecordCompat;
 import androidx.core.widget.NestedScrollView;
+
+import org.wordpress.android.util.AccessibilityUtils;
 
 
 /**
@@ -40,7 +41,7 @@ public class WPNestedScrollView extends NestedScrollView {
 
     public WPNestedScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        ViewCompat.setAccessibilityDelegate(this, ACCESSIBILITY_DELEGATE);
+        AccessibilityUtils.setAccessibilityDelegateSafely(this, ACCESSIBILITY_DELEGATE);
     }
 
 
