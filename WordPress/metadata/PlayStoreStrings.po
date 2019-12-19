@@ -11,6 +11,13 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_139"
+msgid ""
+"13.9:\n"
+"• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.\n"
+"• Block editor enhancements: Added support for settings in the List and Video blocks.\n"
+msgstr ""
+
 msgctxt "release_note_138"
 msgid ""
 "13.8:\n"
@@ -18,14 +25,6 @@ msgid ""
 "* Modified Blog Post Search to include posts under all categories.\n"
 "* Lots of under-the-hood improvements across the entire app –26 unique crash and bug fixes in all.\n"
 "\n"
-msgstr ""
-
-msgctxt "release_note_137"
-msgid ""
-"13.7:\n"
-"* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.\n"
-"\n"
-"* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
