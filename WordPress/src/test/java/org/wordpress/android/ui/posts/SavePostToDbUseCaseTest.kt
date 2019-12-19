@@ -65,7 +65,7 @@ class SavePostToDbUseCaseTest {
         // When
         savePostToDbUseCase.savePostToDb(context, postRepository, siteModel)
         // Then
-        verify(postRepository).saveDbSnapshot()
+        verify(postRepository).savePostSnapshot()
         assertThat(actionCaptor.firstValue).isNotNull
         assertThat(postModel.isLocallyChanged).isTrue()
         assertThat(postModel.dateLocallyChanged).isEqualTo(currentTime)
@@ -78,7 +78,7 @@ class SavePostToDbUseCaseTest {
         // When
         savePostToDbUseCase.savePostToDb(context, postRepository, siteModel)
         // Then
-        verify(postRepository, never()).saveDbSnapshot()
+        verify(postRepository, never()).savePostSnapshot()
         assertThat(actionCaptor.allValues).isEmpty()
         assertThat(postModel.isLocallyChanged).isFalse()
         assertThat(postModel.dateLocallyChanged).isNullOrEmpty()
@@ -167,7 +167,7 @@ class SavePostToDbUseCaseTest {
         userCanPublish: Boolean = true,
         postStatus: PostStatus = UNKNOWN
     ) {
-        whenever(postRepository.postHasChangesFromDb()).thenReturn(postHasChanges)
+        whenever(postRepository.postHasChanges()).thenReturn(postHasChanges)
         whenever(postRepository.getEditablePost()).thenReturn(postModel)
         whenever(uploadUtils.userCanPublish(siteModel)).thenReturn(userCanPublish)
         whenever(postRepository.status).thenReturn(postStatus)

@@ -47,7 +47,7 @@ class EditPostRepository
     private var post: PostModel? = null
     private var postForUndo: PostModel? = null
     private var postSnapshotWhenEditorOpened: PostModel? = null
-    private var postSnapshotForDb: PostModel? = null
+    private var postSnapshot: PostModel? = null
     val id: Int
         get() = post!!.id
     val localSiteId: Int
@@ -186,14 +186,14 @@ class EditPostRepository
         this.post = postForUndo?.clone()
     }
 
-    fun postHasChangesFromDb(): Boolean {
-        checkNotNull(postSnapshotForDb) { "Post snapshot from DB cannot be null at this point" }
-        return post != postSnapshotForDb ||
-                post?.changesConfirmedContentHashcode != postSnapshotForDb?.changesConfirmedContentHashcode
+    fun postHasChanges(): Boolean {
+        checkNotNull(postSnapshot) { "Post snapshot cannot be null at this point" }
+        return post != postSnapshot ||
+                post?.changesConfirmedContentHashcode != postSnapshot?.changesConfirmedContentHashcode
     }
 
-    fun saveDbSnapshot() {
-        postSnapshotForDb = post?.clone()
+    fun savePostSnapshot() {
+        postSnapshot = post?.clone()
     }
 
     fun savePostSnapshotWhenEditorOpened() {
@@ -217,14 +217,14 @@ class EditPostRepository
     fun loadPostByLocalPostId(postId: Int) {
         reportTransactionState(true)
         post = postStore.getPostByLocalPostId(postId)
-        saveDbSnapshot()
+        savePostSnapshot()
         reportTransactionState(false)
     }
 
     fun loadPostByRemotePostId(remotePostId: Long, site: SiteModel) {
         reportTransactionState(true)
         post = postStore.getPostByRemotePostId(remotePostId, site)
-        saveDbSnapshot()
+        savePostSnapshot()
         reportTransactionState(false)
     }
 }

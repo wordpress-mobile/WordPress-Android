@@ -102,22 +102,22 @@ class EditPostViewModelTest : BaseUnitTest() {
 
     @Test
     fun `saves post to DB`() {
-        whenever(postRepository.postHasChangesFromDb()).thenReturn(true)
+        whenever(postRepository.postHasChanges()).thenReturn(true)
 
         viewModel.savePostToDb(context, postRepository, site)
 
         assertThat(actionCaptor.firstValue.type).isEqualTo(PostAction.UPDATE_POST)
         assertThat(actionCaptor.firstValue.payload).isEqualTo(postModel)
-        verify(postRepository).saveDbSnapshot()
+        verify(postRepository).savePostSnapshot()
     }
 
     @Test
     fun `does not save the post with no change`() {
-        whenever(postRepository.postHasChangesFromDb()).thenReturn(false)
+        whenever(postRepository.postHasChanges()).thenReturn(false)
 
         viewModel.savePostToDb(context, postRepository, site)
 
-        verify(postRepository, never()).saveDbSnapshot()
+        verify(postRepository, never()).savePostSnapshot()
     }
 
     @Test
@@ -261,7 +261,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         val isFirstTimePublish = true
 
         setupPostRepository(PUBLISHED)
-        whenever(postRepository.postHasChangesFromDb()).thenReturn(true)
+        whenever(postRepository.postHasChanges()).thenReturn(true)
 
         viewModel.savePostOnline(
                 isFirstTimePublish,
@@ -269,7 +269,7 @@ class EditPostViewModelTest : BaseUnitTest() {
                 postRepository,
                 site
         )
-        verify(postRepository).saveDbSnapshot()
+        verify(postRepository).savePostSnapshot()
 
         assertThat(actionCaptor.firstValue.type).isEqualTo(PostAction.UPDATE_POST)
         assertThat(actionCaptor.firstValue.payload).isEqualTo(postModel)
@@ -280,7 +280,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         val isFirstTimePublish = true
 
         setupPostRepository(PUBLISHED)
-        whenever(postRepository.postHasChangesFromDb()).thenReturn(false)
+        whenever(postRepository.postHasChanges()).thenReturn(false)
 
         viewModel.savePostOnline(
                 isFirstTimePublish,
@@ -295,7 +295,7 @@ class EditPostViewModelTest : BaseUnitTest() {
         val isFirstTimePublish = true
 
         setupPostRepository(PUBLISHED)
-        whenever(postRepository.postHasChangesFromDb()).thenReturn(false)
+        whenever(postRepository.postHasChanges()).thenReturn(false)
         var finished = false
         viewModel.onFinish.observeForever {
             it.applyIfNotHandled { finished = true }

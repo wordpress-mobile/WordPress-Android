@@ -355,7 +355,7 @@ public class EditPostActivity extends AppCompatActivity implements
             post.setStatus(PostStatus.DRAFT.toString());
             return post;
         });
-        mEditPostRepository.saveDbSnapshot();
+        mEditPostRepository.savePostSnapshot();
         EventBus.getDefault().postSticky(
                 new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(), mEditPostRepository.getId()));
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
@@ -453,6 +453,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             }
                             return updateTitle || updateContent || updateExcerpt;
                         });
+                        mEditPostRepository.savePostSnapshot();
                     }
 
                     initializePostObject();

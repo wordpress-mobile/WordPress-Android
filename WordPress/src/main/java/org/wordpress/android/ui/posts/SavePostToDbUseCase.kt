@@ -22,7 +22,7 @@ class SavePostToDbUseCase
         postRepository: EditPostRepository,
         site: SiteModel
     ) {
-        if (postRepository.postHasChangesFromDb()) {
+        if (postRepository.postHasChanges()) {
             val post = checkNotNull(postRepository.getEditablePost())
             // mark as pending if the user doesn't have publishing rights
             if (!uploadUtils.userCanPublish(site)) {
@@ -42,7 +42,7 @@ class SavePostToDbUseCase
             post.setIsLocallyChanged(true)
             post.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
             handlePendingDraftNotifications(context, postRepository)
-            postRepository.saveDbSnapshot()
+            postRepository.savePostSnapshot()
             dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
         }
     }
