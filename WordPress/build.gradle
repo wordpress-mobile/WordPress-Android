@@ -267,6 +267,8 @@ dependencies {
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
     implementation project(path:':libs:utils:WordPressUtils')
+    testImplementation project(path:':libs:utils:WordPressUtils')
+    debugImplementation project(path:':libs:utils:WordPressUtils')
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
     }
