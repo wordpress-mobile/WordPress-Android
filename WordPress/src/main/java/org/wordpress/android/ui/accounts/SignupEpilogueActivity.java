@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueListener;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.LocaleManager;
 
 import javax.inject.Inject;
@@ -61,12 +60,11 @@ public class SignupEpilogueActivity extends AppCompatActivity implements SignupE
 
     @Override
     public void onContinue() {
-        if (mSiteStore.hasSite()) {
-            setResult(RESULT_OK);
-        } else if (AppPrefs.shouldShowPostSignupInterstitial()) {
+        if (!mSiteStore.hasSite()) {
             ActivityLauncher.showPostSignupInterstitial(this);
         }
 
+        setResult(RESULT_OK);
         finish();
     }
 }
