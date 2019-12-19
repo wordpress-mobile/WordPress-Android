@@ -17,7 +17,6 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -315,13 +314,12 @@ public class AppPrefs {
         }
     }
 
-    public static SubfilterListItem getReaderSubfilter() {
-        String json = getString(DeletablePrefKey.READER_SUBFILTER);
-        return SubfilterListItem.fromJson(json);
+    public static String getReaderSubfilter() {
+        return getString(DeletablePrefKey.READER_SUBFILTER);
     }
 
-    public static void setReaderSubfilter(@NonNull SubfilterListItem filter) {
-        setString(DeletablePrefKey.READER_SUBFILTER, filter.toJson());
+    public static void setReaderSubfilter(@NonNull String json) {
+        setString(DeletablePrefKey.READER_SUBFILTER, json);
     }
 
     /**

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.prefs
 
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
@@ -108,7 +107,7 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getReaderSubfilter() = AppPrefs.getReaderSubfilter()
 
-    fun setReaderSubfilter(filter: SubfilterListItem) = AppPrefs.setReaderSubfilter(filter)
+    fun setReaderSubfilter(json: String) = AppPrefs.setReaderSubfilter(json)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

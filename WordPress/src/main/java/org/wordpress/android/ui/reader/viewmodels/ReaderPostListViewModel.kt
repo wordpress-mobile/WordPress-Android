@@ -25,6 +25,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SectionTitle
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
@@ -38,7 +39,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val newsTracker: NewsTracker,
     private val newsTrackerHelper: NewsTrackerHelper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val subfilterListItemMapper: SubfilterListItemMapper
 ) : ScopedViewModel(bgDispatcher) {
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
@@ -188,9 +190,12 @@ class ReaderPostListViewModel @Inject constructor(
                     onClickAction = ::onSubfilterClicked,
                     isSelected = true)
         } else {
-            _currentSubFilter.value ?: appPrefsWrapper.getReaderSubfilter().apply {
-                onClickAction = ::onSubfilterClicked
-                isSelected = true
+            _currentSubFilter.value ?: appPrefsWrapper.getReaderSubfilter().let {
+                subfilterListItemMapper.fromJson(
+                        json = it,
+                        onClickAction = ::onSubfilterClicked,
+                        isSelected = true
+                )
             }
         }
     }
@@ -266,7 +271,8 @@ class ReaderPostListViewModel @Inject constructor(
 
     private fun updateSubfilter(filter: SubfilterListItem) {
         _currentSubFilter.postValue(filter)
-        appPrefsWrapper.setReaderSubfilter(filter)
+        val json = subfilterListItemMapper.toJson(filter)
+        appPrefsWrapper.setReaderSubfilter(json)
     }
 
     override fun onCleared() {
