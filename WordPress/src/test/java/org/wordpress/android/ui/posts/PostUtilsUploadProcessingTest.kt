@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
@@ -12,9 +13,11 @@ import org.wordpress.android.util.helpers.MediaFile
 @RunWith(MockitoJUnitRunner::class)
 class PostUtilsUploadProcessingTest {
 
+    private val siteUrl = "https://wordpress.org"
     private val remoteUrl = "https://wordpress.org/gutenberg/files/2018/07/Screenshot-1-1.png"
     private val localId = "112"
     private val remoteId = "97629"
+    private val attachmentPageUrl = "https://wordpress.org?p=97629"
 
     private val oldImageBlock = """<!-- wp:image {"id":112,"align":"full"} -->
 <figure class="wp-block-image alignfull"><img src="file://Screenshot-1-1.png" alt="" class="wp-image-112"/><figcaption><em>Gutenberg</em> on web</figcaption></figure>
@@ -47,12 +50,14 @@ class PostUtilsUploadProcessingTest {
     fun before() {
         whenever(mediaFile.mediaId).thenReturn(remoteId)
         whenever(mediaFile.fileURL).thenReturn(remoteUrl)
+        whenever(mediaFile.getAttachmentPageURL(any())).thenReturn(attachmentPageUrl)
     }
 
 
     @Test
     fun `replaceMediaFileWithUrlInGutenbergPost replaces temporary local id and url for image block`() {
-        val processedContent = PostUtils.replaceMediaFileWithUrlInGutenbergPost(oldImageBlock, localId, mediaFile)
+        val processedContent = PostUtils.replaceMediaFileWithUrlInGutenbergPost(oldImageBlock, localId, mediaFile,
+                siteUrl)
         Assertions.assertThat(processedContent).isEqualTo(newImageBlock)
     }
 
@@ -60,13 +65,15 @@ class PostUtilsUploadProcessingTest {
     fun `replaceMediaFileWithUrlInGutenbergPost replaces temporary local id and url for image block with colliding prefixes`() {
         val oldContent = oldImageBlock + imageBlockWithPrefixCollision
         val newContent = newImageBlock + imageBlockWithPrefixCollision
-        val processedContent = PostUtils.replaceMediaFileWithUrlInGutenbergPost(oldContent, localId, mediaFile)
+        val processedContent = PostUtils.replaceMediaFileWithUrlInGutenbergPost(oldContent, localId, mediaFile,
+                siteUrl)
         Assertions.assertThat(processedContent).isEqualTo(newContent)
     }
 
     @Test
     fun `replaceMediaFileWithUrlInGutenbergPost replaces temporary local id and url for media-text block`() {
-        val processedContent = PostUtils.replaceMediaFileWithUrlInGutenbergPost(oldMediaTextBlock, localId, mediaFile)
+        val processedContent = PostUtils.replaceMediaFileWithUrlInGutenbergPost(oldMediaTextBlock, localId, mediaFile,
+                siteUrl)
         Assertions.assertThat(processedContent).isEqualTo(newMediaTextBlock)
     }
 }
