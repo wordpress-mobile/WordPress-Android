@@ -262,12 +262,7 @@
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">?attr/colorSecondary</item>
     </style>
-
-    <style name="WordPress.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/primary_50</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
-    </style>
-
+    
     <style name="WordPress.Button.Grey" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/neutral_0</item>
         <item name="android:textColor">@color/primary_50</item>
