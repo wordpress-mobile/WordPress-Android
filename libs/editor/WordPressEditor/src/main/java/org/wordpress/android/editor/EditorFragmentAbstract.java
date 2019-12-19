@@ -195,7 +195,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onTrackableEvent(TrackableEvent event);
         void onHtmlModeToggledInToolbar();
         void onAddStockMediaClicked(boolean allowMultipleSelection);
-        void onPerformFetch(String path, Consumer<String> onResult, Consumer<String> onError);
+        void onPerformFetch(String path, Consumer<String> onResult, Consumer<Map<String, Object>> onError);
     }
 
     /**

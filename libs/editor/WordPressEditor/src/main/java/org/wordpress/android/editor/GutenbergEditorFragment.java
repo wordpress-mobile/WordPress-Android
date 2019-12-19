@@ -349,7 +349,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new RequestExecutor() {
                     @Override public void performRequest(String path,
                                                          Consumer<String> onResult,
-                                                         Consumer<String> onError) {
+                                                         Consumer<Map<String, Object>> onError) {
                         mEditorFragmentListener.onPerformFetch(path, onResult, onError);
                     }
                 },

@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts.reactnative
 
 import androidx.core.util.Consumer
+import com.android.volley.NetworkResponse
+import com.android.volley.VolleyError
 import com.google.gson.JsonElement
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -9,7 +11,9 @@ import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse
+import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeStore
 import org.wordpress.android.test
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
@@ -50,7 +54,7 @@ class ReactNativeRequestHandlerTest {
             calledSuccess = true
         }
 
-        val errorHandler = Consumer<String> {
+        val errorHandler = Consumer<Map<String, Any?>> {
             fail("Error handler should not be called")
         }
 
@@ -74,8 +78,14 @@ class ReactNativeRequestHandlerTest {
 
         var calledError = false
         val errorMessage = "error_message"
-        val errorHandler = Consumer<String> {
-            if (it != errorMessage) { fail("expected json was not returned: $it") }
+        val statusCode = 444
+        val errorHandler = Consumer<Map<String, Any?>> {
+            val expected = mapOf(
+                    "code" to statusCode,
+                    "message" to errorMessage
+            )
+            if (it != expected) { fail("expected map was not returned: $it") }
+
             calledError = true
         }
 
@@ -87,8 +97,7 @@ class ReactNativeRequestHandlerTest {
                 Pair(parsedPath, paramsMap)
         )
 
-        val fetchResponse = mock<ReactNativeFetchResponse.Error>()
-        whenever(fetchResponse.error).thenReturn(errorMessage)
+        val fetchResponse = getFetchResponseError(errorMessage, statusCode)
         whenever(reactNativeStore.performWPComRequest(parsedPath, paramsMap)).thenReturn(fetchResponse)
 
         subject.performGetRequest(pathWithParams, site, successHandler, errorHandler)
@@ -107,7 +116,7 @@ class ReactNativeRequestHandlerTest {
             calledSuccess = true
         }
 
-        val errorHandler = Consumer<String> {
+        val errorHandler = Consumer<Map<String, Any?>> {
             fail("Error handler should not be called")
         }
 
@@ -130,9 +139,15 @@ class ReactNativeRequestHandlerTest {
         whenever(site.isUsingWpComRestApi).thenReturn(false)
 
         var calledError = false
+        val statusCode = 505
         val errorMessage = "error_message"
-        val errorHandler = Consumer<String> {
-            if (it != errorMessage) { fail("expected json was not returned: $it") }
+        val errorHandler = Consumer<Map<String, Any?>> {
+            val expected = mapOf(
+                    "code" to statusCode,
+                    "message" to errorMessage
+            )
+            if (it != expected) { fail("expected map was not returned: $it") }
+
             calledError = true
         }
 
@@ -144,12 +159,25 @@ class ReactNativeRequestHandlerTest {
                 Pair(parsedPath, paramsMap)
         )
 
-        val fetchResponse = mock<ReactNativeFetchResponse.Error>()
-        whenever(fetchResponse.error).thenReturn(errorMessage)
+        val fetchResponse = getFetchResponseError(errorMessage, statusCode)
         whenever(reactNativeStore.performWPAPIRequest(parsedPath, paramsMap)).thenReturn(fetchResponse)
 
         subject.performGetRequest(pathWithParams, site, successHandler, errorHandler)
 
         assertTrue(calledError)
+    }
+
+    private fun getFetchResponseError(
+        errorMessage: String,
+        statusCode: Int
+    ): Error {
+        val volleyNetworkResponse = NetworkResponse(statusCode, null, false, 0L, null)
+        val volleyError = VolleyError(volleyNetworkResponse)
+
+        val baseNetworkError = mock<BaseNetworkError>()
+        baseNetworkError.message = errorMessage
+        baseNetworkError.volleyError = volleyError
+
+        return Error(baseNetworkError)
     }
 }
