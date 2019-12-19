@@ -405,7 +405,7 @@ public class PostUtils {
     }
 
     public static String replaceMediaFileWithUrlInGutenbergPost(@NonNull String postContent,
-                                                 String localMediaId, MediaFile mediaFile) {
+                                                 String localMediaId, MediaFile mediaFile, String siteUrl) {
         if (mediaFile != null && contentContainsGutenbergBlocks(postContent)) {
             String remoteUrl = org.wordpress.android.util.StringUtils
                     .notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
