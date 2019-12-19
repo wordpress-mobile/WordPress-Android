@@ -87,15 +87,6 @@ class EditPostViewModel
         savePostToDbUseCase.savePostToDb(context, postRepository, site)
     }
 
-    fun updatePostObjectWithUI(
-        postRepository: EditPostRepository,
-        getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor
-    ): UpdateResult {
-        return postRepository.update { postModel ->
-            updatePostObjectWithUI(getUpdatedTitleAndContent, postModel, postRepository)
-        }
-    }
-
     fun updatePostObjectWithUIAsync(
         postRepository: EditPostRepository,
         getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor,

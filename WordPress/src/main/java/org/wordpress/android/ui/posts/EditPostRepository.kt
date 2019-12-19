@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.posts
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -100,15 +100,12 @@ class EditPostRepository
     private val _postChanged = MutableLiveData<Event<PostImmutableModel>>()
     val postChanged: LiveData<Event<PostImmutableModel>> = _postChanged
 
+    @MainThread
     fun <T> update(action: (PostModel) -> T): T {
         reportTransactionState(true)
         val result = action(requireNotNull(post))
         reportTransactionState(false)
-        runBlocking {
-            launch(mainDispatcher) {
-                _postChanged.value = Event(requireNotNull(post))
-            }
-        }
+        _postChanged.value = Event(requireNotNull(post))
         return result
     }
 
@@ -216,18 +213,6 @@ class EditPostRepository
     fun postWasChangedInCurrentSession() = postUtils.postHasEdits(postSnapshotWhenEditorOpened,
             requireNotNull(post)
     )
-
-    fun setStatus(status: PostStatus) {
-        checkNotNull(post, { "Post cannot be null when setting status" }).let {
-            val updatedPost = status.toString()
-            if (it.status != updatedPost) {
-                update { post ->
-                    post.setStatus(updatedPost)
-                    true
-                }
-            }
-        }
-    }
 
     fun loadPostByLocalPostId(postId: Int) {
         reportTransactionState(true)

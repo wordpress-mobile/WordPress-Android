@@ -115,7 +115,6 @@ import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsC
 import org.wordpress.android.ui.posts.EditPostViewModel.ActivityFinishState;
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor;
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields;
-import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
@@ -1532,16 +1531,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 mSiteStore.getSiteByLocalId(mEditPostRepository.getLocalSiteId()),
                 properties
         );
-    }
-
-    private boolean updatePostObject() {
-        if (mEditorFragment == null) {
-            AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
-            return false;
-        }
-        UpdateResult updateResult = mViewModel
-                .updatePostObjectWithUI(mEditPostRepository, this::updateFromEditor);
-        return updateResult instanceof UpdateResult.Success;
     }
 
     private void updateAndSavePostAsync() {
