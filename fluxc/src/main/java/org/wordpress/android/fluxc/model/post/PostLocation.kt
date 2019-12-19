@@ -18,6 +18,7 @@ data class PostLocation(
     }
 
     companion object {
+        private const val serialVersionUID: Long = 771468329640601473L
         const val INVALID_LATITUDE = 9999.0
         const val INVALID_LONGITUDE = 9999.0
         private const val MIN_LATITUDE = -90.0
