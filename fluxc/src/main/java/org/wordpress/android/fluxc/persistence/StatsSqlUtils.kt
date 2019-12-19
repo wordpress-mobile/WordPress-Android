@@ -166,6 +166,7 @@ class StatsSqlUtils
         SEARCH_TERMS,
         VIDEO_PLAYS,
         PUBLICIZE_INSIGHTS,
-        POSTING_ACTIVITY
+        POSTING_ACTIVITY,
+        FILE_DOWNLOADS
     }
 }

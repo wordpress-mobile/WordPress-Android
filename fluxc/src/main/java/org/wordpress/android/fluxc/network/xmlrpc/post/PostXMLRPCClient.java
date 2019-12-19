@@ -347,7 +347,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified_gmt");
             String lastModifiedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(lastModifiedGmt);
 
-            postListItems.add(new PostListItem(Long.parseLong(postID), lastModifiedAsIso8601, postStatus));
+            postListItems.add(new PostListItem(Long.parseLong(postID), lastModifiedAsIso8601, postStatus, null));
         }
         return postListItems;
     }
@@ -422,7 +422,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         Object[] customFields = (Object[]) postMap.get("custom_fields");
         JSONArray jsonCustomFieldsArray = new JSONArray();
         if (customFields != null) {
-            PostLocation postLocation = new PostLocation();
+            Double latitude = null;
+            Double longitude = null;
             for (Object customField : customFields) {
                 jsonCustomFieldsArray.put(customField.toString());
                 // Update geo_long and geo_lat from custom fields
@@ -430,17 +431,21 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     continue;
                 }
                 Map<?, ?> customFieldMap = (Map<?, ?>) customField;
-                if (customFieldMap.get("key") != null && customFieldMap.get("value") != null) {
-                    if (customFieldMap.get("key").equals("geo_longitude")) {
-                        postLocation.setLongitude(XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0));
+                Object key = customFieldMap.get("key");
+                if (key != null && customFieldMap.get("value") != null) {
+                    if (key.equals("geo_longitude")) {
+                        longitude = XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0);
                     }
-                    if (customFieldMap.get("key").equals("geo_latitude")) {
-                        postLocation.setLatitude(XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0));
+                    if (key.equals("geo_latitude")) {
+                        latitude = XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0);
                     }
                 }
             }
-            if (postLocation.isValid()) {
-                post.setLocation(postLocation);
+            if (latitude != null && longitude != null) {
+                PostLocation postLocation = new PostLocation(latitude, longitude);
+                if (postLocation.isValid()) {
+                    post.setLocation(postLocation);
+                }
             }
         }
         post.setCustomFields(jsonCustomFieldsArray.toString());

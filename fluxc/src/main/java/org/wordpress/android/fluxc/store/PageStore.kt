@@ -17,10 +17,10 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.DELETE
 import org.wordpress.android.fluxc.store.PostStore.PostError
-import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.util.DateTimeUtils
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.Continuation
@@ -74,18 +74,17 @@ class PageStore @Inject constructor(
     }
 
     suspend fun search(site: SiteModel, searchQuery: String): List<PageModel> = withContext(coroutineContext) {
-        getPagesFromDb(site).filter { it.title.toLowerCase().contains(searchQuery.toLowerCase()) }
+        getPagesFromDb(site).filter { it.title.toLowerCase(Locale.ROOT).contains(searchQuery.toLowerCase(Locale.ROOT)) }
     }
 
     suspend fun updatePageInDb(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
-        updatePostContinuation = cont
-
         val post = postStore.getPostByRemotePostId(page.remoteId, page.site)
                 ?: postStore.getPostByLocalPostId(page.pageId)
         if (post != null) {
             post.updatePageData(page)
 
             val updateAction = PostActionBuilder.newUpdatePostAction(post)
+            updatePostContinuation = cont
             dispatcher.dispatch(updateAction)
         } else {
             val event = OnPostChanged(CauseOfOnPostChanged.UpdatePost(page.pageId, page.remoteId), 0)
@@ -124,7 +123,7 @@ class PageStore @Inject constructor(
                         // local DB pages have a non-unique remote ID value of 0
                         // to keep the apart we replace it with page ID (still unique)
                         // and make it negative (to easily tell it's a temporary value)
-                        it.remotePostId = -it.id.toLong()
+                        it.setRemotePostId(-it.id.toLong())
                     }
                     it
                 }
@@ -149,10 +148,9 @@ class PageStore @Inject constructor(
     }
 
     suspend fun deletePageFromServer(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
-        deletePostContinuation = cont
-
         val post = postStore.getPostByLocalPostId(page.pageId)
         if (post != null) {
+            deletePostContinuation = cont
             val payload = RemotePostPayload(post, page.site)
             dispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload))
         } else {
@@ -163,7 +161,7 @@ class PageStore @Inject constructor(
                             postDeleteActionType = DELETE
                     ), 0
             )
-            event.error = PostError(PostErrorType.UNKNOWN_POST)
+            event.error = PostError(UNKNOWN_POST)
             cont.resume(event)
         }
     }
@@ -235,11 +233,11 @@ class PageStore @Inject constructor(
     }
 
     private fun PostModel.updatePageData(page: PageModel) {
-        this.id = page.pageId
-        this.title = page.title
-        this.status = page.status.toPostStatus().toString()
-        this.parentId = page.parent?.remoteId ?: 0
-        this.remotePostId = page.remoteId
-        this.dateCreated = DateTimeUtils.iso8601FromDate(page.date)
+        this.setId(page.pageId)
+        this.setTitle(page.title)
+        this.setStatus(page.status.toPostStatus().toString())
+        this.setParentId(page.parent?.remoteId ?: 0)
+        this.setRemotePostId(page.remoteId)
+        this.setDateCreated(DateTimeUtils.iso8601FromDate(page.date))
     }
 }

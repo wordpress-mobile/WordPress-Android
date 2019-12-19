@@ -66,9 +66,11 @@ public class AccountSqlUtilsTest {
         ContentValues testFields = new ContentValues();
         testFields.put(AccountModelTable.ABOUT_ME, testAboutMe);
         testFields.put(AccountModelTable.EMAIL, testEmail);
+        testFields.put(AccountModelTable.USERNAME_CAN_BE_CHANGED, true);
         Assert.assertEquals(1, AccountSqlUtils.updateAccount(testAccount.getId(), testFields));
         AccountModel dbAccount = AccountSqlUtils.getAccountByLocalId(testAccount.getId());
         Assert.assertNotNull(dbAccount);
+        Assert.assertTrue(dbAccount.getUsernameCanBeChanged());
         Assert.assertEquals(dbAccount.getAboutMe(), testAboutMe);
         Assert.assertEquals(dbAccount.getEmail(), testEmail);
     }

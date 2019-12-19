@@ -6,14 +6,18 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Inject
 
 const val DATE_FORMAT_DAY = "yyyy-MM-dd"
 
 class StatsUtils
 @Inject constructor(private val currentDateUtils: CurrentDateUtils) {
-    fun getFormattedDate(date: Date? = null): String {
+    fun getFormattedDate(date: Date? = null, timeZone: TimeZone? = null): String {
         val dateFormat = SimpleDateFormat(DATE_FORMAT_DAY, Locale.ROOT)
+        timeZone?.let {
+            dateFormat.timeZone = timeZone
+        }
         return dateFormat.format(date ?: currentDateUtils.getCurrentDate())
     }
 

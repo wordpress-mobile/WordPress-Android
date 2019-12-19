@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.post
 
 import com.google.gson.annotations.SerializedName
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMeta.PostData.PostAutoSave
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse
 
 data class PostWPComRestResponse(
@@ -27,6 +28,7 @@ data class PostWPComRestResponse(
     @SerializedName("tags") val tags: Map<String, TermWPComRestResponse>? = null,
     @SerializedName("categories") val categories: Map<String, TermWPComRestResponse>? = null,
     @SerializedName("capabilities") val capabilities: Capabilities? = null,
+    @SerializedName("meta") val meta: PostMeta? = null,
     @SerializedName("author") val author: Author? = null
 ) {
     data class PostsResponse(
@@ -47,6 +49,24 @@ data class PostWPComRestResponse(
         @SerializedName("edit_post") val editPost: Boolean = false,
         @SerializedName("delete_post") val deletePost: Boolean = false
     )
+
+    data class PostMeta(@SerializedName("data") val data: PostData? = null) {
+        data class PostData(@SerializedName("autosave") val autoSave: PostAutoSave? = null) {
+            data class PostAutoSave(
+                @SerializedName("ID") var revisionId: Long = 0,
+                @SerializedName("modified") var modified: String? = null,
+                @SerializedName("preview_URL") var previewUrl: String? = null,
+                @SerializedName("title") var title: String? = null,
+                @SerializedName("content") var content: String? = null,
+                @SerializedName("excerpt") var excerpt: String? = null
+            )
+        }
+    }
+
+    fun getPostAutoSave(): PostAutoSave? {
+        return meta?.data?.autoSave
+    }
+
     data class Author(
         @SerializedName("ID") val id: Long = 0,
         @SerializedName("name") val name: String?

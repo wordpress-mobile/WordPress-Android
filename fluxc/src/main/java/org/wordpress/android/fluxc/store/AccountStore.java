@@ -80,6 +80,7 @@ public class AccountStore extends Store {
         public AuthEmailPayloadFlow flow;
         public AuthEmailPayloadSource source;
         public String emailOrUsername;
+        public String signupFlowName;
         public boolean isSignup;
 
         public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
@@ -1045,6 +1046,7 @@ public class AccountStore extends Store {
     private void handlePushUsernameCompleted(AccountPushUsernameResponsePayload payload) {
         if (!payload.isError()) {
             AccountSqlUtils.updateUsername(getAccount(), payload.username);
+            getAccount().setUserName(payload.username);
         }
 
         OnUsernameChanged onUsernameChanged = new OnUsernameChanged();

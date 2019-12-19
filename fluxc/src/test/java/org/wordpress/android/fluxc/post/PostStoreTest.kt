@@ -214,6 +214,84 @@ class PostStoreTest {
         verifyNoMoreInteractions(dispatcher)
     }
 
+    @Test
+    fun `handleFetchedPostList emits FetchPostAction when autosave object changed in remote`() {
+        // Arrange
+        val postInLocalDb = createPostModel()
+        whenever(postSqlUtils.getPostsByRemoteIds(any(), any())).thenReturn(listOf(postInLocalDb))
+
+        val remotePostListItem = createRemotePostListItem(postInLocalDb, autoSaveModified = "modified in remote")
+        val action = createFetchedPostListAction(postListItems = listOf(remotePostListItem))
+
+        // Act
+        store.onAction(action)
+
+        // Assert
+        verify(dispatcher).dispatch(argThat {
+            (this.type == PostAction.FETCH_POST)
+        })
+        verify(dispatcher).dispatch(argThat {
+            (this.type == ListAction.FETCHED_LIST_ITEMS)
+        })
+        verifyNoMoreInteractions(dispatcher)
+    }
+
+    /**
+     *  We can't fetch the post from the remote as we'd override the local changes. The plan is to introduce improved
+     *  conflict resolution on the UI and handle even the scenario for cases when the only thing that has changed is
+     *  the autosave object. The current (temporary) solution simply ignores the fact that the auto-save object was
+     *  updated in the remote.
+     */
+    @Test
+    fun `handleFetchedPostList doesn't emit UpdatePostAction when changed locally and autosave changed in remote`() {
+        // Arrange
+        val postInLocalDb = createPostModel(isLocallyChanged = true)
+        whenever(postSqlUtils.getPostsByRemoteIds(any(), any())).thenReturn(listOf(postInLocalDb))
+
+        val remotePostListItem = createRemotePostListItem(postInLocalDb, autoSaveModified = "modified in remote")
+        val action = createFetchedPostListAction(postListItems = listOf(remotePostListItem))
+
+        // Act
+        store.onAction(action)
+
+        // Assert
+        verify(dispatcher).dispatch(argThat {
+            (this.type == ListAction.FETCHED_LIST_ITEMS)
+        })
+        verifyNoMoreInteractions(dispatcher)
+    }
+
+    /**
+     * This is handled as if the only thing that has changed was the post status - we invoke UpdatePostAction and
+     * the UI needs to take care of conflict resolution. The fact that the autosave object has changed is being
+     * currently ignored.
+     */
+    @Test
+    fun `handleFetchedPostList emits UpdatePostAction when changed locally and status + autosave changed in remote`() {
+        // Arrange
+        val postInLocalDb = createPostModel(isLocallyChanged = true)
+        whenever(postSqlUtils.getPostsByRemoteIds(any(), any())).thenReturn(listOf(postInLocalDb))
+
+        val remotePostListItem = createRemotePostListItem(
+                postInLocalDb,
+                status = PostStatus.TRASHED.toString(),
+                autoSaveModified = "modified in remote"
+        )
+        val action = createFetchedPostListAction(postListItems = listOf(remotePostListItem))
+
+        // Act
+        store.onAction(action)
+
+        // Assert
+        verify(dispatcher).dispatch(argThat {
+            (this.type == PostAction.UPDATE_POST)
+        })
+        verify(dispatcher).dispatch(argThat {
+            (this.type == ListAction.FETCHED_LIST_ITEMS)
+        })
+        verifyNoMoreInteractions(dispatcher)
+    }
+
     private fun createFetchedPostListAction(
         postListItems: List<PostListItem> = listOf(),
         listDescriptor: PostListDescriptor = mockedListDescriptor,
@@ -230,15 +308,17 @@ class PostStoreTest {
 
     private fun createPostModel(isLocallyChanged: Boolean = false, postStatus: PostStatus = PUBLISHED): PostModel {
         val post = PostModel()
-        post.remotePostId = 1
-        post.status = postStatus.toString()
+        post.setRemotePostId(1)
+        post.setStatus(postStatus.toString())
         post.setIsLocallyChanged(isLocallyChanged)
+        post.setAutoSaveModified("1955-11-05T14:15:00Z")
         return post
     }
 
     private fun createRemotePostListItem(
         post: PostModel,
         status: String = post.status,
-        lastModified: String = post.lastModified
-    ) = PostListItem(post.remotePostId, lastModified, status)
+        lastModified: String = post.lastModified,
+        autoSaveModified: String? = post.autoSaveModified
+    ) = PostListItem(post.remotePostId, lastModified, status, autoSaveModified)
 }

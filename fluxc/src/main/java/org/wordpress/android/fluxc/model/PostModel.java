@@ -25,7 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 @Table
-public class PostModel extends Payload<BaseNetworkError> implements Cloneable, Identifiable, Serializable {
+public class PostModel extends Payload<BaseNetworkError> implements Cloneable, Identifiable, Serializable,
+        PostImmutableModel {
     private static final long serialVersionUID = 4524418637508876144L;
 
     private static final long LATITUDE_REMOVED_VALUE = 8888;
@@ -70,6 +71,15 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private long mParentId;
     @Column private String mParentTitle;
 
+    // Unpublished revision data
+    @Column private long mAutoSaveRevisionId;
+    @Column private String mAutoSaveModified; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
+    @Column private String mRemoteAutoSaveModified; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
+    @Column private String mAutoSavePreviewUrl;
+    @Column private String mAutoSaveTitle;
+    @Column private String mAutoSaveContent;
+    @Column private String mAutoSaveExcerpt;
+
     // Local only
     @Column private boolean mIsLocalDraft;
     @Column private boolean mIsLocallyChanged;
@@ -97,6 +107,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         return mId;
     }
 
+    @Override
     public int getLocalSiteId() {
         return mLocalSiteId;
     }
@@ -105,6 +116,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mLocalSiteId = localTableSiteId;
     }
 
+    @Override
     public long getRemoteSiteId() {
         return mRemoteSiteId;
     }
@@ -113,6 +125,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mRemoteSiteId = siteId;
     }
 
+    @Override
     public long getRemotePostId() {
         return mRemotePostId;
     }
@@ -121,6 +134,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mRemotePostId = postId;
     }
 
+    @Override
     public @NonNull String getTitle() {
         return StringUtils.notNullStr(mTitle);
     }
@@ -129,6 +143,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mTitle = title;
     }
 
+    @Override
     public @NonNull String getContent() {
         return StringUtils.notNullStr(mContent);
     }
@@ -137,6 +152,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mContent = content;
     }
 
+    @Override
     public @NonNull String getDateCreated() {
         return StringUtils.notNullStr(mDateCreated);
     }
@@ -145,6 +161,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mDateCreated = dateCreated;
     }
 
+    @Override
     public @NonNull String getLastModified() {
         return StringUtils.notNullStr(mLastModified);
     }
@@ -153,6 +170,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mLastModified = lastModified;
     }
 
+    @Override
     public @NonNull String getRemoteLastModified() {
         return StringUtils.notNullStr(mRemoteLastModified);
     }
@@ -161,6 +179,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mRemoteLastModified = remoteLastModified;
     }
 
+    @Override
     public @NonNull String getCategoryIds() {
         return StringUtils.notNullStr(mCategoryIds);
     }
@@ -169,6 +188,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mCategoryIds = categoryIds;
     }
 
+    @Override
     public @NonNull List<Long> getCategoryIdList() {
         return termIdStringToList(mCategoryIds);
     }
@@ -177,6 +197,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mCategoryIds = termIdListToString(categories);
     }
 
+    @Override
     public @NonNull String getCustomFields() {
         return StringUtils.notNullStr(mCustomFields);
     }
@@ -185,6 +206,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mCustomFields = customFields;
     }
 
+    @Override
     public @NonNull String getLink() {
         return StringUtils.notNullStr(mLink);
     }
@@ -193,6 +215,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mLink = link;
     }
 
+    @Override
     public @NonNull String getExcerpt() {
         return StringUtils.notNullStr(mExcerpt);
     }
@@ -201,6 +224,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mExcerpt = excerpt;
     }
 
+    @Override
     public @NonNull String getTagNames() {
         return StringUtils.notNullStr(mTagNames);
     }
@@ -209,6 +233,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mTagNames = tags;
     }
 
+    @Override
     public @NonNull List<String> getTagNameList() {
         return termNameStringToList(mTagNames);
     }
@@ -217,6 +242,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mTagNames = termNameListToString(tags);
     }
 
+    @Override
     public @NonNull String getStatus() {
         return StringUtils.notNullStr(mStatus);
     }
@@ -225,6 +251,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mStatus = status;
     }
 
+    @Override
     public @NonNull String getPassword() {
         return StringUtils.notNullStr(mPassword);
     }
@@ -233,10 +260,12 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mPassword = password;
     }
 
+    @Override
     public boolean hasFeaturedImage() {
         return mFeaturedImageId > 0;
     }
 
+    @Override
     public long getFeaturedImageId() {
         return mFeaturedImageId;
     }
@@ -245,6 +274,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mFeaturedImageId = featuredImageId;
     }
 
+    @Override
     public @NonNull String getPostFormat() {
         return StringUtils.notNullStr(mPostFormat);
     }
@@ -253,6 +283,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mPostFormat = postFormat;
     }
 
+    @Override
     public @NonNull String getSlug() {
         return StringUtils.notNullStr(mSlug);
     }
@@ -261,6 +292,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mSlug = slug;
     }
 
+    @Override
     public double getLongitude() {
         return mLongitude;
     }
@@ -269,6 +301,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mLongitude = longitude;
     }
 
+    @Override
     public double getLatitude() {
         return mLatitude;
     }
@@ -277,6 +310,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mLatitude = latitude;
     }
 
+    @Override
     public @NonNull PostLocation getLocation() {
         return new PostLocation(mLatitude, mLongitude);
     }
@@ -291,6 +325,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mLongitude = longitude;
     }
 
+    @Override
     public long getAuthorId() {
         return mAuthorId;
     }
@@ -299,6 +334,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         this.mAuthorId = authorId;
     }
 
+    @Override
     public String getAuthorDisplayName() {
         return mAuthorDisplayName;
     }
@@ -307,6 +343,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mAuthorDisplayName = authorDisplayName;
     }
 
+    @Override
     public int getChangesConfirmedContentHashcode() {
         return mChangesConfirmedContentHashcode;
     }
@@ -315,6 +352,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mChangesConfirmedContentHashcode = changesConfirmedContentHashcode;
     }
 
+    @Override
     public boolean isPage() {
         return mIsPage;
     }
@@ -323,6 +361,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mIsPage = isPage;
     }
 
+    @Override
     public long getParentId() {
         return mParentId;
     }
@@ -331,6 +370,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mParentId = parentId;
     }
 
+    @Override
     public @NonNull String getParentTitle() {
         return StringUtils.notNullStr(mParentTitle);
     }
@@ -339,6 +379,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mParentTitle = parentTitle;
     }
 
+    @Override
     public boolean isLocalDraft() {
         return mIsLocalDraft;
     }
@@ -347,12 +388,81 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mIsLocalDraft = isLocalDraft;
     }
 
+    @Override
     public boolean isLocallyChanged() {
         return mIsLocallyChanged;
     }
 
     public void setIsLocallyChanged(boolean isLocallyChanged) {
         mIsLocallyChanged = isLocallyChanged;
+    }
+
+    @Override
+    public boolean hasUnpublishedRevision() {
+        return mAutoSaveRevisionId > 0;
+    }
+
+    @Override
+    public long getAutoSaveRevisionId() {
+        return mAutoSaveRevisionId;
+    }
+
+    public void setAutoSaveRevisionId(long autoSaveRevisionId) {
+        mAutoSaveRevisionId = autoSaveRevisionId;
+    }
+
+    @Override
+    public String getAutoSaveModified() {
+        return mAutoSaveModified;
+    }
+
+    public void setAutoSaveModified(String autoSaveModified) {
+        mAutoSaveModified = autoSaveModified;
+    }
+
+    @Override
+    public String getRemoteAutoSaveModified() {
+        return mRemoteAutoSaveModified;
+    }
+
+    public void setRemoteAutoSaveModified(String remoteAutoSaveModified) {
+        mRemoteAutoSaveModified = remoteAutoSaveModified;
+    }
+
+    @Override
+    public String getAutoSavePreviewUrl() {
+        return mAutoSavePreviewUrl;
+    }
+
+    public void setAutoSavePreviewUrl(String autoSavePreviewUrl) {
+        mAutoSavePreviewUrl = autoSavePreviewUrl;
+    }
+
+    @Override
+    public String getAutoSaveTitle() {
+        return mAutoSaveTitle;
+    }
+
+    public void setAutoSaveTitle(String autoSaveTitle) {
+        mAutoSaveTitle = autoSaveTitle;
+    }
+
+    @Override
+    public String getAutoSaveContent() {
+        return mAutoSaveContent;
+    }
+
+    public void setAutoSaveContent(String autoSaveContent) {
+        mAutoSaveContent = autoSaveContent;
+    }
+
+    @Override
+    public String getAutoSaveExcerpt() {
+        return mAutoSaveExcerpt;
+    }
+
+    public void setAutoSaveExcerpt(String autoSaveExcerpt) {
+        mAutoSaveExcerpt = autoSaveExcerpt;
     }
 
     @Deprecated
@@ -365,6 +475,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mLastKnownRemoteFeaturedImageId = lastKnownRemoteFeaturedImageId;
     }
 
+    @Override
     public boolean getHasCapabilityPublishPost() {
         return mHasCapabilityPublishPost;
     }
@@ -373,6 +484,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mHasCapabilityPublishPost = hasCapabilityPublishPost;
     }
 
+    @Override
     public boolean getHasCapabilityEditPost() {
         return mHasCapabilityEditPost;
     }
@@ -381,6 +493,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mHasCapabilityEditPost = hasCapabilityEditPost;
     }
 
+    @Override
     public boolean getHasCapabilityDeletePost() {
         return mHasCapabilityDeletePost;
     }
@@ -389,6 +502,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mHasCapabilityDeletePost = hasCapabilityDeletePost;
     }
 
+    @Override
     public @NonNull String getDateLocallyChanged() {
         return StringUtils.notNullStr(mDateLocallyChanged);
     }
@@ -416,6 +530,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost()
                 && getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost()
                 && getParentId() == otherPost.getParentId()
+                && getAutoSaveRevisionId() == otherPost.getAutoSaveRevisionId()
                 && StringUtils.equals(getTitle(), otherPost.getTitle())
                 && StringUtils.equals(getContent(), otherPost.getContent())
                 && StringUtils.equals(getDateCreated(), otherPost.getDateCreated())
@@ -430,7 +545,9 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getSlug(), otherPost.getSlug())
                 && StringUtils.equals(getParentTitle(), otherPost.getParentTitle())
                 && StringUtils.equals(getAuthorDisplayName(), otherPost.getAuthorDisplayName())
-                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
+                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged())
+                && StringUtils.equals(getAutoSaveModified(), otherPost.getAutoSaveModified())
+                && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl());
     }
 
     /**
@@ -442,6 +559,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
      * This is a method generated using Android Studio. When you need to add a new field it's safer to use the
      * generator again. (We can't use Objects.hash() since the current minSdkVersion is lower than 19.
      */
+    @Override
     public int contentHashcode() {
         int result;
         long temp;
@@ -474,7 +592,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         return result;
     }
 
-    public @Nullable JSONArray getJSONCustomFields() {
+    public @Nullable JSONArray getJsonCustomFields() {
         if (mCustomFields == null) {
             return null;
         }
@@ -487,8 +605,9 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         return jArray;
     }
 
+    @Override
     public @Nullable JSONObject getCustomField(String key) {
-        JSONArray customFieldsJson = getJSONCustomFields();
+        JSONArray customFieldsJson = getJsonCustomFields();
         if (customFieldsJson == null) {
             return null;
         }
@@ -507,19 +626,23 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         return null;
     }
 
+    @Override
     public boolean supportsLocation() {
         // Right now, we only disable for pages.
         return !isPage();
     }
 
+    @Override
     public boolean hasLocation() {
         return getLocation().isValid();
     }
 
+    @Override
     public boolean shouldDeleteLatitude() {
         return mLatitude == LATITUDE_REMOVED_VALUE;
     }
 
+    @Override
     public boolean shouldDeleteLongitude() {
         return mLongitude == LONGITUDE_REMOVED_VALUE;
     }

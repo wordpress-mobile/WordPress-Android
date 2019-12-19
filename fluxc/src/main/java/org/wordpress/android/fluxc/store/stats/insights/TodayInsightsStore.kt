@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.TodayInsightsSql
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
-import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -20,14 +19,13 @@ class TodayInsightsStore @Inject constructor(
     private val restClient: TodayInsightsRestClient,
     private val sqlUtils: TodayInsightsSqlUtils,
     private val insightsMapper: InsightsMapper,
-    private val timeProvider: CurrentTimeProvider,
     private val coroutineContext: CoroutineContext
 ) {
     suspend fun fetchTodayInsights(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
         if (!forced && sqlUtils.hasFreshRequest(siteModel)) {
             return@withContext OnStatsFetched(getTodayInsights(siteModel), cached = true)
         }
-        val response = restClient.fetchTimePeriodStats(siteModel, DAYS, timeProvider.currentDate, forced)
+        val response = restClient.fetchTimePeriodStats(siteModel, DAYS, forced)
         return@withContext when {
             response.isError -> {
                 OnStatsFetched(response.error)

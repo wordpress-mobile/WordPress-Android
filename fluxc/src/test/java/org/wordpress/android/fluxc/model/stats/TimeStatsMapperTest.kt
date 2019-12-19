@@ -7,14 +7,22 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse.ViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse.ViewsResponse.PostViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
+import org.wordpress.android.fluxc.store.stats.time.POST_AND_PAGE_VIEWS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.time.POST_ID
+import org.wordpress.android.fluxc.store.stats.time.POST_TITLE
+import org.wordpress.android.fluxc.store.stats.time.POST_URL
+import org.wordpress.android.fluxc.store.stats.time.POST_VIEWS
 
 @RunWith(MockitoJUnitRunner::class)
 class TimeStatsMapperTest {
@@ -24,6 +32,29 @@ class TimeStatsMapperTest {
     @Before
     fun setUp() {
         timeStatsMapper = TimeStatsMapper(gson)
+    }
+
+    @Test
+    fun `parses portfolio page type`() {
+        val portfolioResponse = PostViewsResponse(
+                POST_ID,
+                POST_TITLE,
+                "jetpack-portfolio",
+                POST_URL,
+                POST_VIEWS
+        )
+        val response = POST_AND_PAGE_VIEWS_RESPONSE.copy(
+                days = mapOf(
+                        "2019-01-01" to ViewsResponse(
+                                listOf(portfolioResponse), 10
+                        )
+                )
+        )
+
+        val mappedResult = timeStatsMapper.map(response, LimitMode.All)
+
+        assertThat(mappedResult.views).hasSize(1)
+        assertThat(mappedResult.views.first().type).isEqualTo(ViewsType.OTHER)
     }
 
     @Test
