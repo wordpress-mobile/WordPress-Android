@@ -31,6 +31,8 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 @Table
 @RawConstraints({"FOREIGN KEY(_id) REFERENCES PostModel(_id) ON DELETE CASCADE"})
 public class PostUploadModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
+    private static final long serialVersionUID = -4561927559051499557L;
+
     @Retention(SOURCE)
     @IntDef({PENDING, FAILED, CANCELLED})
     public @interface UploadState {}

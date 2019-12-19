@@ -40,6 +40,8 @@ public class SelfHostedEndpointFinder {
     }
 
     public static class DiscoveryException extends Exception {
+        private static final long serialVersionUID = -300904137122546854L;
+
         public final DiscoveryError discoveryError;
         public final String failedUrl;
 

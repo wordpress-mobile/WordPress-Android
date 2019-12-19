@@ -11,6 +11,8 @@ import java.io.Serializable;
 
 @Table
 public class RoleModel implements Identifiable, Serializable {
+    private static final long serialVersionUID = 5154356410357986144L;
+
     @PrimaryKey @Column private int mId;
 
     // Site Id Foreign Key
