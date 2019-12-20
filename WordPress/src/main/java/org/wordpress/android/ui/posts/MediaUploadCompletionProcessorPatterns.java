@@ -75,6 +75,19 @@ public class MediaUploadCompletionProcessorPatterns {
                                                            + "(<!-- /wp:gallery -->\n?)"; // closing comment
 
 
+    /**
+     * A {@link Pattern} to match and capture gallery linkTo property from block header
+     *
+     * <ol>
+     *     <li>Block header before linkTo property</li>
+     *     <li>The linkTo property</li>
+     *     <li>Block header after linkTo property</li>
+     * </ol>
+     */
+    public static final Pattern PATTERN_GALLERY_LINK_TO = Pattern.compile("(<!-- wp:gallery \\{[^\\}]*\"linkTo\":\")"
+                                                           + "([^\"]*)" // linkTo value
+                                                           + "([\"][^>]*-->\n?)"); // rest of header
+
 
     private static final String PATTERN_BLOCK_PREFIX = "<!-- wp:(";
     private static final String PATTERN_BLOCK_SUFFIX = "<!-- /wp:\\1 -->";

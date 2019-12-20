@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.wordpress.android.ui.posts.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK;
+import static org.wordpress.android.ui.posts.MediaUploadCompletionProcessorPatterns.PATTERN_GALLERY_LINK_TO;
 
 public class MediaUploadCompletionProcessor {
     private String mLocalId;
@@ -333,10 +334,24 @@ public class MediaUploadCompletionProcessor {
                 targetImg.removeClass("wp-image-" + mLocalId);
                 targetImg.addClass("wp-image-" + mRemoteId);
 
+                // check for linkTo property
+                Matcher linkToMatcher = PATTERN_GALLERY_LINK_TO.matcher(headerComment);
+
                 // set parent anchor href if necessary
                 Element parent = targetImg.parent();
-                if (parent != null && parent.is("a")) {
-                    parent.attr("href", mAttachmentPageUrl);
+                if (parent != null && parent.is("a") && linkToMatcher.find()) {
+                    String linkToValue = linkToMatcher.group(2);
+
+                    switch (linkToValue) {
+                        case "media":
+                            parent.attr("href", mRemoteUrl);
+                            break;
+                        case "attachment":
+                            parent.attr("href", mAttachmentPageUrl);
+                            break;
+                        default:
+                            return block;
+                    }
                 }
 
                 // return injected block
