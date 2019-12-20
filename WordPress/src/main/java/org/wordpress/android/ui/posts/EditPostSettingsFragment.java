@@ -944,6 +944,16 @@ public class EditPostSettingsFragment extends Fragment {
         postRepository.update(postModel -> {
             postModel.setFeaturedImageId(featuredImageId);
             updateFeaturedImageView();
+
+            if (featuredImageId != 0) {
+                mFeaturedImageHelper.trackFeaturedImageEvent(
+                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                    postModel.getId(),
+                    postModel.getStatus(),
+                    OriginType.EDIT_POST_SETTINGS
+                );
+            }
+
             return true;
         });
     }
