@@ -68,7 +68,7 @@ public class MediaUploadCompletionProcessorPatterns {
     /**
      * Template pattern used to match and splice gallery blocks
      */
-    private static final String PATTERN_TEMPLATE_GALLERY = "(<!-- wp:gallery \\{[^\\}]*\"ids\":\\[(?:\"?\\d+,)*)"
+    private static final String PATTERN_TEMPLATE_GALLERY = "(<!-- wp:gallery \\{[^\\}]*\"ids\":\\[(?:\"?\\d+\"?,)*)"
                                                            + "(\"?%1$s\"?)" // local id must match to be replaced
                                                            + "([,\\]][^>]*-->\n?)" // rest of header
                                                            + "(.*)" // block contents
