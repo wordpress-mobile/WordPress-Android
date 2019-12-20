@@ -333,6 +333,12 @@ public class MediaUploadCompletionProcessor {
                 targetImg.removeClass("wp-image-" + mLocalId);
                 targetImg.addClass("wp-image-" + mRemoteId);
 
+                // set parent anchor href if necessary
+                Element parent = targetImg.parent();
+                if (parent != null && parent.is("a")) {
+                    parent.attr("href", mAttachmentPageUrl);
+                }
+
                 // return injected block
                 return new StringBuilder()
                         .append(headerComment)
