@@ -87,6 +87,14 @@ class MediaUploadCompletionProcessorTest {
 <figure class="wp-block-video"><video controls src="https://videos.files.wordpress.com/qeJFeNa2/macintosh-plus-floral-shoppe-02-e383aae382b5e38395e383a9e383b3e382af420-e78fbee4bba3e381aee382b3e383b3e38394e383a5e383bc-1_hd.mp4"></video><figcaption>Videos too!</figcaption></figure>
 <!-- /wp:video -->
 """
+    private val oldGalleryBlockLinkToMediaFile = """<!-- wp:gallery {"ids":[203,112,369],"linkTo":"media"} -->
+<figure class="wp-block-gallery columns-3 is-cropped"><ul class="blocks-gallery-grid"><li class="blocks-gallery-item"><figure><a href="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg"><img src="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg?w=1024" alt="" data-id="203" data-full-url="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg" data-link="http://onetwoonetwothisisjustatest.home.blog/pexels-photo-1671668/" class="wp-image-203"></a></figure></li><li class="blocks-gallery-item"><figure><a href="file://local-image.jpg"><img src="file://local-image.jpg" alt="" data-id="112" data-full-url="file://local-image.jpg" data-link="file://local-image.jpg" class="wp-image-112"></a></figure></li><li class="blocks-gallery-item"><figure><a href="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg"><img src="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg?w=768" alt="" data-id="369" data-full-url="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg" data-link="http://onetwoonetwothisisjustatest.home.blog/?attachment_id=369" class="wp-image-369"></a></figure></li></ul></figure>
+<!-- /wp:gallery -->
+"""
+    private val newGalleryBlockLinkToMediaFile = """<!-- wp:gallery {"ids":[203,97629,369],"linkTo":"media"} -->
+<figure class="wp-block-gallery columns-3 is-cropped"><ul class="blocks-gallery-grid"><li class="blocks-gallery-item"><figure><a href="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg"><img src="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg?w=1024" alt="" data-id="203" data-full-url="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg" data-link="http://onetwoonetwothisisjustatest.home.blog/pexels-photo-1671668/" class="wp-image-203"></a></figure></li><li class="blocks-gallery-item"><figure><a href="https://wordpress.org?p=97629"><img src="https://wordpress.org/gutenberg/files/2018/07/Screenshot-1-1.png" alt="" data-id="97629" data-full-url="https://wordpress.org/gutenberg/files/2018/07/Screenshot-1-1.png" data-link="https://wordpress.org?p=97629" class="wp-image-97629"></a></figure></li><li class="blocks-gallery-item"><figure><a href="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg"><img src="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg?w=768" alt="" data-id="369" data-full-url="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg" data-link="http://onetwoonetwothisisjustatest.home.blog/?attachment_id=369" class="wp-image-369"></a></figure></li></ul></figure>
+<!-- /wp:gallery -->
+"""
 
     private val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     private val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
@@ -217,9 +225,13 @@ class MediaUploadCompletionProcessorTest {
 
     @Test
     fun `processGalleryBlock can handle ids with mixed types`() {
-        val processedBlock = processor.processGalleryBlock(
-                oldGalleryBlockMixTypeIds
-        )
+        val processedBlock = processor.processGalleryBlock(oldGalleryBlockMixTypeIds)
         Assertions.assertThat(processedBlock).isEqualTo(newGalleryBlock)
+    }
+
+    @Test
+    fun `processGalleryBlock can handle LinkTo MediaFile setting`() {
+        val processedBlock = processor.processGalleryBlock(oldGalleryBlockLinkToMediaFile)
+        Assertions.assertThat(processedBlock).isEqualTo(newGalleryBlockLinkToMediaFile)
     }
 }
