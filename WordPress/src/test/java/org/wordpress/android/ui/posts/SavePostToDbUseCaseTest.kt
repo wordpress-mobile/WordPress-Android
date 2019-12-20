@@ -52,7 +52,7 @@ class SavePostToDbUseCaseTest {
                 pendingDraftsNotificationsUtils
         )
         actionCaptor = argumentCaptor()
-        whenever(dateTimeUtils.currentTimeInIso8601UTC()).thenReturn(currentTime)
+        whenever(dateTimeUtils.currentTimeInIso8601()).thenReturn(currentTime)
         whenever(dispatcher.dispatch(actionCaptor.capture())).doAnswer { }
         siteModel = SiteModel()
         postModel = PostModel()

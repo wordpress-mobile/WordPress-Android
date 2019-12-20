@@ -42,7 +42,7 @@ class SavePostToDbUseCase
             if (!post.isLocalDraft) {
                 post.setIsLocallyChanged(true)
             }
-            post.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
+            post.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601())
             handlePendingDraftNotifications(context, postRepository)
             postRepository.savePostSnapshot()
             dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))

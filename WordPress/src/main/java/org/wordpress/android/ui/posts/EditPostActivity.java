@@ -1808,7 +1808,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // otherwise we'd have an incorrect value
                 // also re-set the published date in case it was SCHEDULED and they want to publish NOW
                 if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
-                    postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601UTC());
+                    postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601());
                 }
                 postModel.setStatus(PostStatus.PUBLISHED.toString());
                 mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
