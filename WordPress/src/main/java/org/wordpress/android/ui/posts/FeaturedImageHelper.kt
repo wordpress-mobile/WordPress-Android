@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -12,6 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.UploadStore
+import org.wordpress.android.ui.posts.FeaturedImageHelper.OriginType.EDIT_POST_SETTINGS
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
@@ -19,6 +21,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.StringUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.ArrayList
 import javax.inject.Inject
@@ -40,7 +43,8 @@ internal class FeaturedImageHelper @Inject constructor(
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val siteUtilsWrapper: SiteUtilsWrapper,
-    private val dispatcher: Dispatcher
+    private val dispatcher: Dispatcher,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     fun getFailedFeaturedImageUpload(post: PostImmutableModel): MediaModel? {
         val failedMediaForPost = uploadStore.getFailedMediaForPost(post)
@@ -137,6 +141,33 @@ internal class FeaturedImageHelper @Inject constructor(
         return FeaturedImageData(FeaturedImageState.REMOTE_IMAGE_LOADING, photonUrl)
     }
 
+    fun trackFeaturedImageEvent(
+        event: TrackableEvent,
+        postId: Long,
+        postStatus: String,
+        originType: OriginType
+    ) {
+        val currentStat = if (originType == EDIT_POST_SETTINGS) {
+            when (event) {
+                TrackableEvent.IMAGE_PICKED -> Stat.POST_SETTINGS_FEATURED_IMAGE_PICKED
+                TrackableEvent.IMAGE_UPLOAD_CANCELED -> Stat.POST_SETTINGS_FEATURED_IMAGE_UPLOAD_CANCELED
+                TrackableEvent.IMAGE_UPLOAD_RETRY_CLICKED -> Stat.POST_SETTINGS_FEATURED_IMAGE_UPLOAD_RETRY_CLICKED
+                TrackableEvent.IMAGE_REMOVE_CLICKED -> Stat.POST_SETTINGS_FEATURED_IMAGE_REMOVE_CLICKED
+            }
+        } else {
+            null
+        }
+
+        currentStat?.let {
+            val properties = mapOf(
+                "post_id" to postId,
+                "post_status" to postStatus
+            )
+
+            analyticsTrackerWrapper.track(it, properties)
+        }
+    }
+
     internal data class FeaturedImageData(val uiState: FeaturedImageState, val mediaUri: String?)
 
     internal enum class FeaturedImageState(
@@ -151,5 +182,16 @@ internal class FeaturedImageHelper @Inject constructor(
         REMOTE_IMAGE_SET(imageViewVisible = true),
         IMAGE_UPLOAD_IN_PROGRESS(localImageViewVisible = true, progressOverlayVisible = true),
         IMAGE_UPLOAD_FAILED(localImageViewVisible = true, retryOverlayVisible = true);
+    }
+
+    internal enum class TrackableEvent {
+        IMAGE_PICKED,
+        IMAGE_UPLOAD_CANCELED,
+        IMAGE_UPLOAD_RETRY_CLICKED,
+        IMAGE_REMOVE_CLICKED
+    }
+
+    internal enum class OriginType {
+        EDIT_POST_SETTINGS
     }
 }
