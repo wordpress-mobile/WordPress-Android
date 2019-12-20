@@ -1698,6 +1698,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "unpublished_revision_dialog_load_local_version_clicked";
             case UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED:
                 return "unpublished_revision_dialog_load_unpublished_version_clicked";
+            case POST_SETTINGS_FEATURED_IMAGE_PICKED:
+                return "post_settings_featured_image_picked";
+            case POST_SETTINGS_FEATURED_IMAGE_UPLOAD_CANCELED:
+                return "post_settings_featured_image_upload_canceled";
+            case POST_SETTINGS_FEATURED_IMAGE_UPLOAD_RETRY_CLICKED:
+                return "post_settings_featured_image_upload_retry_clicked";
+            case POST_SETTINGS_FEATURED_IMAGE_REMOVE_CLICKED:
+                return "post_settings_featured_image_remove_clicked";
         }
         return null;
     }
