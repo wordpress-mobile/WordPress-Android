@@ -79,8 +79,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private String mGoogleEmail;
     private String mRequestedEmail;
     private boolean mIsSocialLogin;
-    private boolean mIsValidEmail = true
-            ;
+    private boolean mIsValidEmail = true;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -283,9 +282,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mLoginSiteUrl = args.getString(ARG_LOGIN_SITE_URL, "");
         }
     }
-
-
-
+    
     @Override
     public void onStart() {
         super.onStart();
