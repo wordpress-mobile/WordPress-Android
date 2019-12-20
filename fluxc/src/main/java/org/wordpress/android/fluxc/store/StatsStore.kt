@@ -23,7 +23,6 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.values
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -85,7 +84,7 @@ class StatsStore
     }
 
     fun getRemovedInsights(addedInsights: List<InsightType>): List<InsightType> {
-        return values().asList() - addedInsights
+        return InsightType.values().asList() - addedInsights
     }
 
     suspend fun updateTypes(site: SiteModel, addedInsights: List<InsightType>) = withContext(coroutineContext) {
