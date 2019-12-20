@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -437,7 +436,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 if (mEditPostRepository.hasPost()) {
                     if (extras.getBoolean(EXTRA_LOAD_AUTO_SAVE_REVISION)) {
-                        Log.d("vojta", "org.wordpress.android.ui.posts.EditPostActivity.onCreate");
                         mEditPostRepository.update(postModel -> {
                             boolean updateTitle = !TextUtils.isEmpty(postModel.getAutoSaveTitle());
                             if (updateTitle) {
@@ -650,7 +648,6 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!useAztec || UploadService.hasPendingOrInProgressMediaUploadsForPost(mEditPostRepository.getPost())) {
             return;
         }
-        Log.d("vojta", "org.wordpress.android.ui.posts.EditPostActivity.resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued");
         mEditPostRepository.updateAsync(postModel -> {
             String oldContent = postModel.getContent();
             if (!AztecEditorFragment.hasMediaItemsMarkedUploading(EditPostActivity.this, oldContent)
@@ -1724,7 +1721,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private void loadRevision() {
         updatePostLoadingAndDialogState(PostLoadingState.LOADING_REVISION);
         mEditPostRepository.saveForUndo();
-        Log.d("vojta", "EditPostActivity.loadRevision");
         mEditPostRepository.updateAsync(postModel -> {
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
@@ -2083,7 +2079,6 @@ public class EditPostActivity extends AppCompatActivity implements
         final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
-            Log.d("vojta", "EditPostActivity.setPostContentFromShareAction");
             mEditPostRepository.updateAsync(postModel -> {
                 if (title != null) {
                     postModel.setTitle(title);

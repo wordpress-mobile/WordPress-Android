@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -66,7 +65,6 @@ class EditPostViewModel
     }
 
     fun savePostWithDelay() {
-        Log.d("vojta", "Saving post with delay")
         saveJob?.cancel()
         saveJob = launch {
             if (debounceCounter < MAX_UNSAVED_POSTS) {
@@ -83,7 +81,6 @@ class EditPostViewModel
         postRepository: EditPostRepository,
         site: SiteModel
     ) {
-        Log.d("vojta", "Saving post to DB")
         savePostToDbUseCase.savePostToDb(context, postRepository, site)
     }
 
@@ -107,7 +104,6 @@ class EditPostViewModel
         postModel: PostModel,
         postRepository: EditPostRepository
     ): UpdateResult {
-        Log.d("vojta", "updatePostObjectWithUI")
         if (!postRepository.hasPost()) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.")
             return Error
@@ -127,7 +123,6 @@ class EditPostViewModel
                     )
                 }
 
-                Log.d("vojta", "updatePostObjectWithUI: success - $postTitleOrContentChanged")
                 Success(postTitleOrContentChanged)
             }
             is Failed -> Error
@@ -142,7 +137,6 @@ class EditPostViewModel
         title: String,
         content: String
     ): Boolean {
-        Log.d("vojta", "updatePostContentNewEditor")
         val titleChanged = editedPost.title != title
         if (titleChanged) {
             editedPost.setTitle(title)
@@ -151,8 +145,6 @@ class EditPostViewModel
         if (contentChanged) {
             editedPost.setContent(content)
         }
-
-        Log.d("vojta", "updatePostContentNewEditor - ${titleChanged || contentChanged}")
         return titleChanged || contentChanged
     }
 
