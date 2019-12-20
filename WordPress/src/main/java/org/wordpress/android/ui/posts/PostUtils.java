@@ -409,44 +409,9 @@ public class PostUtils {
         if (mediaFile != null && contentContainsGutenbergBlocks(postContent)) {
             String remoteUrl = org.wordpress.android.util.StringUtils
                     .notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
-            // TODO: replace the URL
-            if (!mediaFile.isVideo()) {
-                // replace gutenberg block id holder with serverMediaId, and url_holder with remoteUrl
-                String oldImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, localMediaId);
-                String newImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, mediaFile.getMediaId());
-                postContent = postContent.replace(oldImgBlockHeader, newImgBlockHeader);
-
-                String oldMediaTextBlockHeader = String.format(GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER, localMediaId);
-                String newMediaTextBlockHeader = String.format(GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER,
-                        mediaFile.getMediaId());
-                postContent = postContent.replace(oldMediaTextBlockHeader, newMediaTextBlockHeader);
-
-                // replace class wp-image-id with serverMediaId, and url_holder with remoteUrl
-                String oldImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, localMediaId);
-                String newImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, mediaFile.getMediaId());
-                postContent = postContent.replace(oldImgClass, newImgClass);
-
-                // let's first find this occurrence and keep note of the position, as we need to replace the
-                // immediate `src` value before
-                int iStartOfWpImageClassAttribute = postContent.indexOf(newImgClass);
-                if (iStartOfWpImageClassAttribute != -1) {
-                    // now search negatively, for the src attribute appearing right before
-                    int iStartOfImgTag = postContent.lastIndexOf("<img", iStartOfWpImageClassAttribute);
-                    if (iStartOfImgTag != -1) {
-                        Pattern p = Pattern.compile("<img[^>]*src=[\\\"']([^\\\"^']*)");
-                        Matcher m = p.matcher(postContent.substring(iStartOfImgTag));
-                        if (m.find()) {
-                            String src = m.group();
-                            int startIndex = src.indexOf("src=") + SRC_ATTRIBUTE_LENGTH_PLUS_ONE;
-                            String srcTag = src.substring(startIndex, src.length());
-                            // now replace the url
-                            postContent = postContent.replace(srcTag, remoteUrl);
-                        }
-                    }
-                }
-            } else {
-                // TODO replace in GB Video block?
-            }
+            MediaUploadCompletionProcessor processor = new MediaUploadCompletionProcessor(localMediaId, mediaFile,
+                    siteUrl);
+            postContent = processor.processPost(postContent);
         }
         return postContent;
     }
