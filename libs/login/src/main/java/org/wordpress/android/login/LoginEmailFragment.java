@@ -64,6 +64,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final String KEY_IS_SOCIAL = "KEY_IS_SOCIAL";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
+    private static final String VALIDITY_EMAIL = "VALIDITY_EMAIL";
     private static final String LOG_TAG = LoginEmailFragment.class.getSimpleName();
     private static final int GOOGLE_API_CLIENT_ID = 1002;
     private static final int EMAIL_CREDENTIALS_REQUEST_CODE = 25100;
@@ -78,6 +79,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private String mGoogleEmail;
     private String mRequestedEmail;
     private boolean mIsSocialLogin;
+    private boolean mIsValidEmail = true
+            ;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -162,6 +165,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             public void onClick(View view) {
                 mAnalyticsListener.trackSocialButtonClick();
                 ActivityUtils.hideKeyboardForced(mEmailInput.getEditText());
+
 
                 if (NetworkUtils.checkConnection(getActivity())) {
                     if (isAdded()) {
@@ -280,6 +284,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         }
     }
 
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -288,6 +294,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, LoginEmailFragment.this)
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
+        validEmail();
     }
 
     @Override
@@ -312,6 +319,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mIsSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
             mIsDisplayingEmailHints = savedInstanceState.getBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS);
             mHasDismissedEmailHints = savedInstanceState.getBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS);
+            mIsValidEmail = savedInstanceState.getBoolean(VALIDITY_EMAIL);
         } else {
             mAnalyticsListener.trackEmailFormViewed();
         }
@@ -326,6 +334,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         outState.putBoolean(KEY_IS_SOCIAL, mIsSocialLogin);
         outState.putBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS, mIsDisplayingEmailHints);
         outState.putBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS, mHasDismissedEmailHints);
+        outState.putBoolean(VALIDITY_EMAIL, mIsValidEmail);
     }
 
     protected void next(String email) {
@@ -334,10 +343,18 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         }
 
         if (isValidEmail(email)) {
+            mIsValidEmail = true;
             startProgress();
             mRequestedEmail = email;
             mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
         } else {
+            mIsValidEmail = false;
+            showEmailError(R.string.email_invalid);
+        }
+    }
+
+    protected void validEmail() {
+        if (!mIsValidEmail) {
             showEmailError(R.string.email_invalid);
         }
     }
