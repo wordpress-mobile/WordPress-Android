@@ -103,7 +103,13 @@ internal class FeaturedImageHelper @Inject constructor(
         return true
     }
 
-    fun cancelFeaturedImageUpload(site: SiteModel, post: PostImmutableModel, cancelFailedOnly: Boolean) {
+    @JvmOverloads
+    fun cancelFeaturedImageUpload(
+        site: SiteModel,
+        post: PostImmutableModel,
+        cancelFailedOnly: Boolean,
+        originType: OriginType? = null
+    ) {
         var mediaModel: MediaModel? = getFailedFeaturedImageUpload(post)
         if (!cancelFailedOnly && mediaModel == null) {
             mediaModel = uploadServiceFacade.getPendingOrInProgressFeaturedImageUploadForPost(post)
@@ -113,6 +119,10 @@ internal class FeaturedImageHelper @Inject constructor(
             dispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload))
             uploadServiceFacade.cancelFinalNotification(post)
             uploadServiceFacade.cancelFinalNotificationForMedia(site)
+
+            originType?.let {
+                trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_CANCELED, post.id.toLong(), post.status, it)
+            }
         }
     }
 

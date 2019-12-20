@@ -426,12 +426,12 @@ public class EditPostSettingsFragment extends Fragment {
         }
         switch (item.getItemId()) {
             case CHOOSE_FEATURED_IMAGE_MENU_ID:
-                mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false);
+                mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false, OriginType.EDIT_POST_SETTINGS);
                 launchFeaturedMediaPicker();
                 return true;
             case REMOVE_FEATURED_IMAGE_UPLOAD_MENU_ID:
             case REMOVE_FEATURED_IMAGE_MENU_ID:
-                mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false);
+                mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false, OriginType.EDIT_POST_SETTINGS);
                 clearFeaturedImage();
 
                 mFeaturedImageHelper.trackFeaturedImageEvent(
