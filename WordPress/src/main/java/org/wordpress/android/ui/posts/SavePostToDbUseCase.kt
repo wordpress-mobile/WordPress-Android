@@ -39,7 +39,9 @@ class SavePostToDbUseCase
                     }
                 }
             }
-            post.setIsLocallyChanged(true)
+            if(!post.isLocalDraft) {
+                post.setIsLocallyChanged(true)
+            }
             post.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())
             handlePendingDraftNotifications(context, postRepository)
             postRepository.savePostSnapshot()
