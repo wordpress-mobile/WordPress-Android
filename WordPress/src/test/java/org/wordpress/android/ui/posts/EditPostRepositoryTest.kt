@@ -462,7 +462,7 @@ class EditPostRepositoryTest {
 
         assertThat(editPostRepository.status).isEqualTo(PENDING)
 
-        editPostRepository.updateStatusFromPostSnapshotWhenEditorOpened(secondPost)
+        editPostRepository.updateStatusFromPostSnapshotWhenEditorOpened()
 
         assertThat(editPostRepository.status).isEqualTo(PUBLISHED)
     }

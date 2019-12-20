@@ -16,8 +16,6 @@ import org.wordpress.android.ui.posts.EditPostViewModel.ActivityFinishState.SAVE
 import org.wordpress.android.ui.posts.EditPostViewModel.ActivityFinishState.SAVED_ONLINE
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.Failed
 import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
-import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Error
-import org.wordpress.android.ui.posts.EditPostViewModel.UpdateResult.Success
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -90,12 +88,11 @@ class EditPostViewModel
         onSuccess: ((PostImmutableModel) -> Unit)? = null
     ) {
         postRepository.updateAsync({ postModel ->
-            val updateResult = updatePostObjectWithUI(
+            updatePostObjectWithUI(
                     getUpdatedTitleAndContent,
                     postModel,
                     postRepository
             )
-            updateResult is Success
         }, onSuccess)
     }
 
@@ -103,10 +100,10 @@ class EditPostViewModel
         getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor,
         postModel: PostModel,
         postRepository: EditPostRepository
-    ): UpdateResult {
+    ): Boolean {
         if (!postRepository.hasPost()) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.")
-            return Error
+            return false
         }
         return when (val updateFromEditor = getUpdatedTitleAndContent(postModel.content)) {
             is PostFields -> {
@@ -123,9 +120,9 @@ class EditPostViewModel
                     )
                 }
 
-                Success(postTitleOrContentChanged)
+                postTitleOrContentChanged
             }
-            is Failed -> Error
+            is Failed -> false
         }
     }
 
