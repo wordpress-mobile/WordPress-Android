@@ -39,7 +39,7 @@ class SavePostToDbUseCase
                     }
                 }
             }
-            if(!post.isLocalDraft) {
+            if (!post.isLocalDraft) {
                 post.setIsLocallyChanged(true)
             }
             post.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601UTC())

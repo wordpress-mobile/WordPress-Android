@@ -1,6 +1,5 @@
 package org.wordpress.android.util
 
-import java.util.Calendar
 import javax.inject.Inject
 
 class DateTimeUtilsWrapper
