@@ -64,7 +64,6 @@ Language: sr_RS
     <string name="show">Прикажи</string>
     <string name="invalid_verification_code">Погрешан верификациони код</string>
     <string name="verification_code">Код за потврђивање</string>
-    <string name="editor_toast_invalid_path">Неисправна путања до датотеке</string>
     <string name="language">Језик</string>
     <string name="reader_empty_posts_request_failed">Није могуће добавити чланке</string>
     <string name="pages_fetching">Добављам стране…</string>
