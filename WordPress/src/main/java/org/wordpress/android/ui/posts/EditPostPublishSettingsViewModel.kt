@@ -71,13 +71,13 @@ class EditPostPublishSettingsViewModel
         onPostStatusChanged(postRepository?.getPost())
     }
 
-    fun onPostStatusChanged(postRepository: PostImmutableModel?) {
-        canPublishImmediately = postRepository?.let {
+    fun onPostStatusChanged(postModel: PostImmutableModel?) {
+        canPublishImmediately = postModel?.let {
             PostUtils.shouldPublishImmediatelyOptionBeAvailable(
                     it.status
             )
         } ?: false
-        updateUiModel(postModel = postRepository)
+        updateUiModel(postModel = postModel)
     }
 
     fun publishNow() {
