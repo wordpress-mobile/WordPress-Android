@@ -1842,7 +1842,7 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean shouldSave = shouldSavePost() || forceSave;
 
         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-        ActivityFinishState activityFinishState = ActivityFinishState.SAVED_LOCALLY;
+        ActivityFinishState activityFinishState = ActivityFinishState.CANCELLED;
         if (shouldSave) {
             /*
              * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
@@ -1855,6 +1855,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 activityFinishState = savePostOnline(isFirstTimePublish);
             } else if (forceSave) {
                 activityFinishState = savePostOnline(false);
+            } else {
+                activityFinishState = ActivityFinishState.SAVED_LOCALLY;
             }
         }
         // discard post if new & empty

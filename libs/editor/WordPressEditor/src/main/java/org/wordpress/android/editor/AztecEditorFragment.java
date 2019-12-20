@@ -233,6 +233,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mTitle.addTextChangedListener(mTextWatcher);
         mContent.getContentChangeWatcher().registerObserver(this);
+        mSource.addTextChangedListener(mTextWatcher);
 
         // Set the default value for max and min picture sizes.
         maxMediaSize = EditorMediaUtils.getMaximumThumbnailSizeForEditor(getActivity());
