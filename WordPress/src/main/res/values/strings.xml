@@ -1026,6 +1026,10 @@
     <string name="stats_insights_add_insights_header">Add Insights</string>
     <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customize.</string>
 
+    <string name="stats_insights_management_general">General</string>
+    <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
+    <string name="stats_insights_management_activity">Activity</string>
+
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
     <string name="stats_widget_weekly_views_name">Views this week</string>
