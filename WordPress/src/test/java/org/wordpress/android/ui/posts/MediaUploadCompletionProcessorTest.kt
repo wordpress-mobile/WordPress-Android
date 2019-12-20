@@ -71,8 +71,12 @@ class MediaUploadCompletionProcessorTest {
 <figure class="wp-block-gallery columns-3 is-cropped"><ul class="blocks-gallery-grid"><li class="blocks-gallery-item"><figure><img src="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg?w=1024" alt="" data-id="203" data-full-url="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg" data-link="http://onetwoonetwothisisjustatest.home.blog/pexels-photo-1671668/" class="wp-image-203"></figure></li><li class="blocks-gallery-item"><figure><img src="https://wordpress.org/gutenberg/files/2018/07/Screenshot-1-1.png" alt="" data-id="97629" data-full-url="https://wordpress.org/gutenberg/files/2018/07/Screenshot-1-1.png" data-link="https://wordpress.org?p=97629" class="wp-image-97629"></figure></li><li class="blocks-gallery-item"><figure><img src="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg?w=768" alt="" data-id="369" data-full-url="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg" data-link="http://onetwoonetwothisisjustatest.home.blog/?attachment_id=369" class="wp-image-369"></figure></li></ul></figure>
 <!-- /wp:gallery -->
 """
-    private val galleryBlockContent = """<!-- wp:gallery {"ids":[null,null,null,null],"columns":4,"align":"wide","className":"alignwide gutenberg-landing\u002d\u002dfeatures-grid"} -->
-<ul class="wp-block-gallery alignwide columns-4 is-cropped gutenberg-landing--features-grid"><li class="blocks-gallery-item"><figure><img src="https://wordpress.org/gutenberg/files/2018/07/Plugin-1-1.gif" alt=""><figcaption>Do more with fewer plugins.</figcaption></figure></li><li class="blocks-gallery-item"><figure><img src="https://wordpress.org/gutenberg/files/2018/07/Layout-3.gif" alt=""><figcaption>Create modern, multimedia-heavy layouts.</figcaption></figure></li><li class="blocks-gallery-item"><figure><img src="https://wordpress.org/gutenberg/files/2018/07/Devices-1-1.gif" alt=""><figcaption>Work across all screen sizes and devices.</figcaption></figure></li><li class="blocks-gallery-item"><figure><img src="https://wordpress.org/gutenberg/files/2018/07/Visual-1.gif" alt=""><figcaption>Trust that your editor looks like your website.</figcaption></figure></li></ul>
+    private val oldGalleryBlockMixTypeIds2 = """<!-- wp:gallery {"ids":[203,"369",112]} -->
+<figure class="wp-block-gallery columns-3 is-cropped"><ul class="blocks-gallery-grid"><li class="blocks-gallery-item"><figure><img src="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg?w=1024" alt="" data-id="203" data-full-url="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg" data-link="http://onetwoonetwothisisjustatest.home.blog/pexels-photo-1671668/" class="wp-image-203"></figure></li><li class="blocks-gallery-item"><figure><img src="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg?w=768" alt="" data-id="369" data-full-url="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg" data-link="http://onetwoonetwothisisjustatest.home.blog/?attachment_id=369" class="wp-image-369"></figure></li><li class="blocks-gallery-item"><figure><img src="file://pexels-photo-1260968.jpeg?w=683" alt="" data-id="112" data-full-url="file://pexels-photo-1260968.jpeg" data-link="file://pexels-photo-1260968/" class="wp-image-112"></figure></li></ul></figure>
+<!-- /wp:gallery -->
+"""
+    private val newGalleryBlockWithMixTypeIds2 = """<!-- wp:gallery {"ids":[203,"369",97629]} -->
+<figure class="wp-block-gallery columns-3 is-cropped"><ul class="blocks-gallery-grid"><li class="blocks-gallery-item"><figure><img src="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg?w=1024" alt="" data-id="203" data-full-url="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg" data-link="http://onetwoonetwothisisjustatest.home.blog/pexels-photo-1671668/" class="wp-image-203"></figure></li><li class="blocks-gallery-item"><figure><img src="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg?w=768" alt="" data-id="369" data-full-url="https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg" data-link="http://onetwoonetwothisisjustatest.home.blog/?attachment_id=369" class="wp-image-369"></figure></li><li class="blocks-gallery-item"><figure><img src="https://wordpress.org/gutenberg/files/2018/07/Screenshot-1-1.png" alt="" data-id="97629" data-full-url="https://wordpress.org/gutenberg/files/2018/07/Screenshot-1-1.png" data-link="https://wordpress.org?p=97629" class="wp-image-97629"></figure></li></ul></figure>
 <!-- /wp:gallery -->
 """
     private val paragraphBlock = """<!-- wp:paragraph {"align":"center","fontSize":"small","className":"gutenberg-landing\u002d\u002dbutton-disclaimer"} -->
@@ -162,7 +166,7 @@ class MediaUploadCompletionProcessorTest {
 
     @Test
     fun `detectBlockType works for gallery blocks`() {
-        val blockType = Helpers.detectBlockType(galleryBlockContent)
+        val blockType = Helpers.detectBlockType(newGalleryBlock)
         Assertions.assertThat(blockType).isEqualTo(MediaBlockType.GALLERY)
     }
 
@@ -227,6 +231,12 @@ class MediaUploadCompletionProcessorTest {
     fun `processGalleryBlock can handle ids with mixed types`() {
         val processedBlock = processor.processGalleryBlock(oldGalleryBlockMixTypeIds)
         Assertions.assertThat(processedBlock).isEqualTo(newGalleryBlock)
+    }
+
+    @Test
+    fun `processGalleryBlock can handle ids with mixed types different order`() {
+        val processedBlock = processor.processGalleryBlock(oldGalleryBlockMixTypeIds2)
+        Assertions.assertThat(processedBlock).isEqualTo(newGalleryBlockWithMixTypeIds2)
     }
 
     @Test
