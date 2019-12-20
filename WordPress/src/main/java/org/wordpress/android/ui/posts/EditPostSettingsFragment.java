@@ -469,7 +469,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void retryFeaturedImageUpload(@NonNull SiteModel site, @NonNull PostImmutableModel post) {
         MediaModel mediaModel =
-                mFeaturedImageHelper.retryFeaturedImageUpload(site, post);
+                mFeaturedImageHelper.retryFeaturedImageUpload(site, post, OriginType.EDIT_POST_SETTINGS);
         if (mediaModel == null) {
             clearFeaturedImage();
         }

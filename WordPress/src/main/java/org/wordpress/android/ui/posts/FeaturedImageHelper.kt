@@ -56,9 +56,11 @@ internal class FeaturedImageHelper @Inject constructor(
         return null
     }
 
+    @JvmOverloads
     fun retryFeaturedImageUpload(
         site: SiteModel,
-        post: PostImmutableModel
+        post: PostImmutableModel,
+        originType: OriginType? = null
     ): MediaModel? {
         val mediaModel = getFailedFeaturedImageUpload(post)
         if (mediaModel != null) {
@@ -67,6 +69,10 @@ internal class FeaturedImageHelper @Inject constructor(
             mediaModel.setUploadState(MediaUploadState.QUEUED)
             dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel))
             startUploadService(mediaModel)
+
+            originType?.let {
+                trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_RETRY_CLICKED, post.id.toLong(), post.status, it)
+            }
         }
         return mediaModel
     }
