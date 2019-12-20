@@ -67,6 +67,8 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
+import org.wordpress.android.ui.posts.FeaturedImageHelper.OriginType;
+import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -431,6 +433,14 @@ public class EditPostSettingsFragment extends Fragment {
             case REMOVE_FEATURED_IMAGE_MENU_ID:
                 mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false);
                 clearFeaturedImage();
+
+                mFeaturedImageHelper.trackFeaturedImageEvent(
+                    TrackableEvent.IMAGE_REMOVE_CLICKED,
+                    post.getId(),
+                    post.getStatus(),
+                    OriginType.EDIT_POST_SETTINGS
+                );
+
                 return true;
             case RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID:
                 retryFeaturedImageUpload(site, post);
