@@ -1,4 +1,2 @@
-* Block editor improvements: Added Spacer block for creating white space between content.
-* Modified Blog Post Search to include posts under all categories.
-* Lots of under-the-hood improvements across the entire app –26 unique crash and bug fixes in all.
-
+• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
+• Block editor enhancements: Added support for settings in the List and Video blocks.
