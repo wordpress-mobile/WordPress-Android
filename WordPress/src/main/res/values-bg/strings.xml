@@ -664,7 +664,6 @@ Language: bg
     <string name="deselect_all">От-маркиране на всичко</string>
     <string name="show">Показване</string>
     <string name="verification_code">Верификационен код</string>
-    <string name="editor_toast_invalid_path">Невалиден път до файла</string>
     <string name="language">Език</string>
     <string name="invalid_verification_code">Невалиден верификационен код</string>
     <string name="auth_required">За да продължите, влезте отново.</string>
