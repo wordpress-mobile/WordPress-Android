@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.reactnative
 
+import android.os.Bundle
 import androidx.core.util.Consumer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +28,7 @@ class ReactNativeRequestHandler @Inject constructor(
         pathWithParams: String,
         mSite: SiteModel,
         onSuccess: Consumer<String>,
-        onError: Consumer<Map<String, Any?>>
+        onError: Consumer<Bundle>
     ) {
         launch {
             if (mSite.isUsingWpComRestApi) {
@@ -52,7 +53,7 @@ class ReactNativeRequestHandler @Inject constructor(
         pathWithParams: String,
         wpComSiteId: Long,
         onSuccess: (String) -> Unit,
-        onError: (Map<String, Any?>) -> Unit
+        onError: (Bundle) -> Unit
     ) {
         urlUtil.parseUrlAndParamsForWPCom(pathWithParams, wpComSiteId)?.let { (url, params) ->
             val response = reactNativeStore.performWPComRequest(url, params)
@@ -64,7 +65,7 @@ class ReactNativeRequestHandler @Inject constructor(
         pathWithParams: String,
         siteUrl: String,
         onSuccess: (String) -> Unit,
-        onError: (Map<String, Any?>) -> Unit
+        onError: (Bundle) -> Unit
     ) {
         urlUtil.parseUrlAndParamsForWPOrg(pathWithParams, siteUrl)?.let { (url, params) ->
             val response = reactNativeStore.performWPAPIRequest(url, params)
@@ -75,14 +76,21 @@ class ReactNativeRequestHandler @Inject constructor(
     private fun handleResponse(
         response: ReactNativeFetchResponse,
         onSuccess: (String) -> Unit,
-        onError: (Map<String, Any?>) -> Unit
+        onError: (Bundle) -> Unit
     ) {
         when (response) {
             is Success -> onSuccess(response.result.toString())
-            is Error -> onError(mapOf(
-                    "code" to response.error.volleyError?.networkResponse?.statusCode,
-                    "message" to extractErrorMessage(response.error)
-            ))
+            is Error -> {
+                val bundle = Bundle().apply {
+                    response.error.volleyError?.networkResponse?.statusCode?.let {
+                        putInt("code", it)
+                    }
+                    extractErrorMessage(response.error)?.let {
+                        putString("message", it)
+                    }
+                }
+                onError(bundle)
+            }
         }
     }
 

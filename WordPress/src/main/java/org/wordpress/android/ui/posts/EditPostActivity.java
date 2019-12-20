@@ -2433,7 +2433,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onPerformFetch(String path, Consumer<String> onResult, Consumer<Map<String, Object>> onError) {
+    public void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError) {
         if (mSite != null) {
             mReactNativeRequestHandler.performGetRequest(path, mSite, onResult, onError);
         }
