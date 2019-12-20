@@ -32,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fadeScrollbars="true"
+            android:contentDescription="@string/stock_media_picker_list_content_description"
             android:scrollbars="vertical"
             tools:listitem="@layout/media_picker_thumbnail"/>
 

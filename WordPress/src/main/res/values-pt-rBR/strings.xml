@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-25 16:46:48+0000
+Translation-Revision-Date: 2019-12-02 21:22:43+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="notifications_tab_dialog_switch_desc">Notificações</string>
+    <string name="master_switch_default_title_off">Desativado</string>
+    <string name="master_switch_default_title_on">Ativado</string>
+    <string name="notifications_tab_dialog_master_off_title">Para ver as notificações desse site na aba notificações, ative as notificações desse site.</string>
+    <string name="notifications_tab_dialog_master_hint_off">Ativar as notificações desse site para serem exibidas na aba notificações</string>
+    <string name="notifications_tab_dialog_master_hint_on">Desativar a exibição de notificações deste site na aba notificações</string>
+    <string name="notifications_tab_dialog_master_status_off">Notificações para esse site</string>
+    <string name="notifications_tab_dialog_master_status_on">Notificações para esse site</string>
+    <string name="dialog_gutenberg_informative_description_page">Agora você está usando o editor de blocos para novas páginas u2014  ótimo! Se você quiser mudar para o editar clássico, acesse \'Meu site\' > \'Configurações do site\'.</string>
     <string name="pick_media">Adicionar imagem ou vídeo</string>
     <string name="error_post_not_submitted_retrying">Não foi possível enviar este post para revisão, mas tentaremos novamente mais tarde.</string>
     <string name="error_post_not_scheduled_retrying">Não foi possível agendar esse post, mas tentaremos novamente mais tarde.</string>
@@ -68,7 +77,6 @@ Language: pt_BR
     <string name="site_settings_site_accelerator">Acelerador de site</string>
     <string name="site_settings_lazy_load_images_summary">Aumente a velocidade de seu site ao carregar as imagens apenas quando forem exibidas na tela.</string>
     <string name="site_settings_performance">Desempenho</string>
-    <string name="notification_settings_moved_notices">As configurações de notificações agora se encontram na aba de notificações.</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
     <string name="stats_file_downloads_title_label">Arquivo</string>
     <string name="stats_file_downloads">Downloads de arquivos</string>
@@ -131,9 +139,9 @@ Language: pt_BR
     <string name="post_settings_retry_featured_image">Tentar enviar novamente</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Enviando mídia.\nClique para ver as opções.</string>
     <string name="link_open_new_window">Abrir link em uma nova janela/aba</string>
-    <string name="post_list_search_prompt">Pesquisar posts publicados</string>
     <string name="stats_widget_error_no_access_token">Para ver suas estatísticas, acesse sua conta do WordPress.com.</string>
     <string name="post_list_search_nothing_found">Nenhum post corresponde à sua pesquisa</string>
+    <string name="post_list_search_prompt">Pesquisar posts</string>
     <string name="domains_suggestions_intro_description">É onde as pessoas encontrarão seu site na internet.</string>
     <string name="domains_suggestions_intro_title">Escolha um domínio premium</string>
     <string name="my_site_custom_domain_name">Todos os planos do WordPress.com incluem um domínio personalizado. Registre seu domínio gratuito agora.</string>
@@ -389,7 +397,6 @@ Language: pt_BR
     <string name="giphy_picker_empty_search_list">Nenhuma mídia corresponde à sua pesquisa</string>
     <string name="giphy_picker_initial_empty_text">Pesquise para encontrar gifs para adicionar à sua biblioteca de mídias.</string>
     <string name="giphy_picker_search_hint">Pesquisar no Giphy</string>
-    <string name="photo_picker_giphy">Escolher do Giphy</string>
     <string name="stats_author_views_label">Visualizações</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>
@@ -1717,7 +1724,6 @@ Language: pt_BR
     <string name="auth_required">Faça login novamente para continuar.</string>
     <string name="invalid_verification_code">Código de verificação inválido</string>
     <string name="verification_code">Código de verificação</string>
-    <string name="editor_toast_invalid_path">Caminho do arquivo inválido</string>
     <string name="language">Idioma</string>
     <string name="media_fetching">Obtendo mídia…</string>
     <string name="posts_fetching">Obtendo posts…</string>

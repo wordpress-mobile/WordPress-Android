@@ -32,7 +32,6 @@ Language: el_GR
     <string name="new_site_creation_screen_title_general">Δημιουργία ιστότοπου</string>
     <string name="snackbar_conflict_undo">Αναίρεση</string>
     <string name="giphy_picker_search_hint">Αναζήτηση στο Giphy</string>
-    <string name="photo_picker_giphy">Επιλέξτε από το Giphy</string>
     <string name="stats_author_views_label">Προβολές</string>
     <string name="stats_author_label">Συγγραφέας</string>
     <string name="stats_authors">Συγγραφείς</string>
@@ -1006,7 +1005,6 @@ Language: el_GR
     <string name="auth_required">Συνδεθείτε ξανά για να συνεχίσετε.</string>
     <string name="invalid_verification_code">Μη έγκυρος κωδικός επαλήθευσης</string>
     <string name="verification_code">Κωδικός επαλήθευσης</string>
-    <string name="editor_toast_invalid_path">Μη έγκυρη διαδρομή αρχείου</string>
     <string name="language">Γλώσσα</string>
     <string name="media_fetching">Λήψη πολυμέσων…</string>
     <string name="posts_fetching">Λήψη άρθρων…</string>

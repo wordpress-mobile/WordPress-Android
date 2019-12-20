@@ -734,7 +734,6 @@ Language: ms
     <string name="hide">Sembunyi</string>
     <string name="show">Tunjuk</string>
     <string name="select_all">Pilih semua</string>
-    <string name="editor_toast_invalid_path">Laluan fail tidak sah</string>
     <string name="invalid_verification_code">Kod pengesahan tidak sah</string>
     <string name="language">Bahasa</string>
     <string name="verification_code">Kod pengesahan</string>

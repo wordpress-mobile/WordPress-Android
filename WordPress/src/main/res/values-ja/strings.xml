@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-28 01:54:10+0000
+Translation-Revision-Date: 2019-12-13 01:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="login_discovery_error_generic">サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
+    <string name="login_discovery_error_ssl">&lt;b>SSL 証明書&lt;/b>の問題により、サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
+    <string name="login_discovery_error_http_auth">&lt;b>HTTP 認証&lt;/b>の問題により、サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
+    <string name="login_discovery_error_xmlrpc">サイトの &lt;b>XMLRPC ファイル&lt;/b>にアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
+    <string name="login_site_credentials_magic_link_label">もう少しです !最後に、Jetpack に連携したメールアドレス &lt;b>%1$s&lt;/b> を確認します</string>
+    <string name="enter_site_credentials_instead">サイトのログイン情報でログイン</string>
+    <string name="enter_credentials_for_site">%1$s サイトのログイン情報でログインします。</string>
+    <string name="send_verification_email">確認メールを送信</string>
+    <string name="my_site_bottom_sheet_add_page">新規ページを作成</string>
+    <string name="my_site_bottom_sheet_add_post">新規投稿を作成</string>
+    <string name="reader_following_display_name">フォロー中</string>
+    <string name="posts_cannot_be_started">現在、投稿を開くことができません。後ほど、もう一度お試しください</string>
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000_000_000">%sQa</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
+    <string name="reader_filter_all_sites">すべてのサイト</string>
+    <string name="reader_filter_sites_title">サイト</string>
+    <string name="reader_filter_tags_title">タグ</string>
+    <string name="reader_save_for_later_display_name">保存しました</string>
+    <string name="reader_discover_display_name">Discover</string>
+    <string name="reader_my_likes_display_name">いいね</string>
+    <string name="site_cannot_be_loaded">現在、サイトのデータを読み込めません。後ほど、もう一度お試しください</string>
     <string name="gutenberg_native_wordpress_media_library">「WordPress メディアライブラリ」</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">「リリースごとにブロックを追加できるよう努めています。それまでは、Web でこの投稿を編集できます」</string>
     <string name="gutenberg_native_unsupported">「サポート対象外」</string>
@@ -161,7 +186,6 @@ Language: ja_JP
     <string name="site_settings_site_accelerator">サイトアクセラレーター</string>
     <string name="site_settings_lazy_load_images_summary">画面に表示できる画像だけを読み込んで、サイトを高速化します。</string>
     <string name="site_settings_performance">パフォーマンス</string>
-    <string name="notification_settings_moved_notices">通知設定は「通知」タブに移動しました。</string>
     <string name="stats_file_downloads_value_label">ダウンロード</string>
     <string name="stats_file_downloads_title_label">ファイル</string>
     <string name="stats_file_downloads">ファイルのダウンロード</string>
@@ -224,9 +248,9 @@ Language: ja_JP
     <string name="post_settings_retry_featured_image">アップロード再試行</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">メディアをアップロードしています。\nタップすると、オプションが表示されます。</string>
     <string name="link_open_new_window">リンクを新しいウィンドウまたはタブで開く</string>
-    <string name="post_list_search_prompt">公開済みの投稿を検索</string>
     <string name="stats_widget_error_no_access_token">統計情報を表示するには、WordPress.com アカウントにログインしてください。</string>
     <string name="post_list_search_nothing_found">検索に一致する投稿はありません</string>
+    <string name="post_list_search_prompt">投稿を検索</string>
     <string name="domains_suggestions_intro_description">これを使って、他の人があなたのサイトをインターネット上で見つけます。</string>
     <string name="domains_suggestions_intro_title">プレミアムドメイン名を選択</string>
     <string name="my_site_custom_domain_name">WordPress.com のすべてのプランにはカスタムドメイン名があります。無料プレミアムドメインを登録してください。</string>
@@ -479,7 +503,6 @@ Language: ja_JP
     <string name="giphy_picker_empty_search_list">検索と一致するメディアがありません</string>
     <string name="giphy_picker_initial_empty_text">GIF を検索して、メディアライブラリに追加してください。</string>
     <string name="giphy_picker_search_hint">Giphy を検索する</string>
-    <string name="photo_picker_giphy">Giphy から選択する</string>
     <string name="stats_author_views_label">表示回数</string>
     <string name="stats_author_label">投稿者</string>
     <string name="stats_authors">投稿者</string>
@@ -1804,7 +1827,6 @@ Language: ja_JP
     <string name="auth_required">続けるにはログインしてください。</string>
     <string name="invalid_verification_code">無効な認証コード</string>
     <string name="verification_code">認証コード</string>
-    <string name="editor_toast_invalid_path">無効なファイルパス</string>
     <string name="language">言語</string>
     <string name="media_fetching">メディアを取得中…</string>
     <string name="posts_fetching">投稿を取得中…</string>
