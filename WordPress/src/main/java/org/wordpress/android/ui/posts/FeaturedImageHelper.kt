@@ -71,7 +71,7 @@ internal class FeaturedImageHelper @Inject constructor(
             startUploadService(mediaModel)
 
             originType?.let {
-                trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_RETRY_CLICKED, post.id.toLong(), post.status, it)
+                trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_RETRY_CLICKED, post, it)
             }
         }
         return mediaModel
@@ -121,7 +121,7 @@ internal class FeaturedImageHelper @Inject constructor(
             uploadServiceFacade.cancelFinalNotificationForMedia(site)
 
             originType?.let {
-                trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_CANCELED, post.id.toLong(), post.status, it)
+                trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_CANCELED, post, it)
             }
         }
     }
@@ -159,8 +159,7 @@ internal class FeaturedImageHelper @Inject constructor(
 
     fun trackFeaturedImageEvent(
         event: TrackableEvent,
-        postId: Long,
-        postStatus: String,
+        post: PostImmutableModel,
         originType: OriginType
     ) {
         val currentStat = if (originType == EDIT_POST_SETTINGS) {
@@ -176,8 +175,8 @@ internal class FeaturedImageHelper @Inject constructor(
 
         currentStat?.let {
             val properties = mapOf(
-                "post_id" to postId,
-                "post_status" to postStatus
+                "post_id" to post.id,
+                "post_status" to post.status
             )
 
             analyticsTrackerWrapper.track(it, properties)

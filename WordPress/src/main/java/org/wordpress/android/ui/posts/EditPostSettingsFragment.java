@@ -436,8 +436,7 @@ public class EditPostSettingsFragment extends Fragment {
 
                 mFeaturedImageHelper.trackFeaturedImageEvent(
                     TrackableEvent.IMAGE_REMOVE_CLICKED,
-                    post.getId(),
-                    post.getStatus(),
+                    post,
                     OriginType.EDIT_POST_SETTINGS
                 );
 
@@ -948,8 +947,7 @@ public class EditPostSettingsFragment extends Fragment {
             if (featuredImageId != 0) {
                 mFeaturedImageHelper.trackFeaturedImageEvent(
                     FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
-                    postModel.getId(),
-                    postModel.getStatus(),
+                    postModel,
                     OriginType.EDIT_POST_SETTINGS
                 );
             }
