@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,6 +51,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListene
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnPreferredColorSchemeListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
 import java.lang.reflect.Field;
@@ -358,6 +360,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override public void onImageFullscreenPreviewClicked(String mediaUrl) {
                         mEditorImagePreviewListener.onImagePreviewRequested(mediaUrl);
                     }
+                },
+                new OnPreferredColorSchemeListener() {
+                    @Override public String getPreferredColorScheme() {
+                        return getAppTheme();
+                    }
                 });
 
         // request dependency injection. Do this after setting min/max dimensions
@@ -387,6 +394,27 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         return view;
+    }
+
+    private String getAppTheme() {
+        String packageName = getActivity().getApplication().getPackageName();
+
+        int appThemeLightId =
+                getResources().getIdentifier("app_theme_entry_value_light", "string", packageName);
+        String appThemeLight = getString(appThemeLightId);
+
+        int appThemeDarkId =
+                getResources().getIdentifier("app_theme_entry_value_dark", "string", packageName);
+        String appThemeDark = getString(appThemeDarkId);
+
+        Configuration configuration = getActivity().getResources().getConfiguration();
+        int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            return appThemeDark;
+        }
+
+        return appThemeLight;
     }
 
     private ArrayList<MediaOption> initOtherMediaImageOptions() {
