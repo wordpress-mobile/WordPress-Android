@@ -1,3 +1,7 @@
+14.1
+-----
+* Block Editor: Add support for Dark Mode
+
 14.0
 -----
  
