@@ -38,7 +38,8 @@
 
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
-        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress
+        <item name="android:actionModeCloseButtonStyle">
+            @style/ActionButton.CloseMode.WordPress
         </item>
         <item name="android:actionModeBackground">?attr/wpColorAppBar</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
@@ -835,7 +836,8 @@
 
     <style name="ActionableEmptyStateTitle">
         <item name="android:layout_marginBottom">@dimen/margin_medium</item>
-        <item name="android:layout_marginEnd">@dimen/actionable_empty_view_text_margin_horizontal
+        <item name="android:layout_marginEnd">
+            @dimen/actionable_empty_view_text_margin_horizontal
         </item>
         <item name="android:layout_marginStart">
             @dimen/actionable_empty_view_text_margin_horizontal
@@ -853,7 +855,8 @@
     </style>
 
     <style name="ActionableEmptyStateButton" parent="WordPress.Button.Primary">
-        <item name="android:layout_marginEnd">@dimen/actionable_empty_view_text_margin_horizontal
+        <item name="android:layout_marginEnd">
+            @dimen/actionable_empty_view_text_margin_horizontal
         </item>
         <item name="android:layout_marginStart">
             @dimen/actionable_empty_view_text_margin_horizontal
@@ -968,7 +971,8 @@
     <style name="DomainSuggestionsFormIntroductionTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">@dimen/domain_suggestions_intro_header_bottom_padding
+        <item name="android:paddingBottom">
+            @dimen/domain_suggestions_intro_header_bottom_padding
         </item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/neutral_60</item>
