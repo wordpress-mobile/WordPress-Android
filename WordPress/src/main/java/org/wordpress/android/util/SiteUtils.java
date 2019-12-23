@@ -84,6 +84,7 @@ public class SiteUtils {
             // Enable Gutenberg for all sites using a single network call
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
+            trackGutenbergEnabledForNonGutenbergSites(siteStore);
 
             // After enabling Gutenberg on these sites, we consider the user entered the rollout group
             AppPrefs.setUserInGutenbergRolloutGroup();
@@ -100,6 +101,15 @@ public class SiteUtils {
         } else {
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.AZTEC_EDITOR_NAME)));
+        }
+    }
+
+    private static void trackGutenbergEnabledForNonGutenbergSites(final SiteStore siteStore) {
+        for (SiteModel site : siteStore.getSites()) {
+            if (!TextUtils.equals(site.getMobileEditor(), GB_EDITOR_NAME)) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, site,
+                        BlockEditorEnabledSource.ON_PROGRESSIVE_ROLLOUT_PHASE_1.asPropertyMap());
+            }
         }
     }
 
