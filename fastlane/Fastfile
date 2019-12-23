@@ -306,7 +306,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
       download_path: download_path)
     
     android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]})
-    sh("git add #{download_path} && git commit -m \"Update metadata translations for #{options[:version]}\" && git push")
+    sh("git add #{download_path} && git commit -m \"Update metadata translations for #{options[:version]}\" && git push origin HEAD")
   end 
 
 ########################################################################

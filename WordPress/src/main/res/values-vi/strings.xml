@@ -389,7 +389,6 @@ Language: vi_VN
     <string name="auth_required">Đăng nhập lại để tiếp tục</string>
     <string name="invalid_verification_code">Mã xác nhận không hợp lệ</string>
     <string name="verification_code">Mã xác nhận</string>
-    <string name="editor_toast_invalid_path">Đường dẫn tập tin không hợp lệ</string>
     <string name="language">Ngôn ngữ</string>
     <string name="media_fetching">Đang tìm nạp media…</string>
     <string name="posts_fetching">Đang tìm nạp bài viết…</string>

@@ -138,6 +138,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:importantForAccessibility="no"
         android:id="@+id/frame_selection_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -148,6 +149,7 @@
             android:id="@+id/text_selection_count"
             android:layout_width="@dimen/media_selection_dot"
             android:layout_height="@dimen/media_selection_dot"
+            android:importantForAccessibility="no"
             android:background="@drawable/photo_picker_circle_selector"
             android:elevation="4dp"
             android:gravity="center"

@@ -89,7 +89,6 @@ Language: da_DK
     <string name="show">Vis</string>
     <string name="hide">Skjul</string>
     <string name="select_all">Vælg alle</string>
-    <string name="editor_toast_invalid_path">Ugyldig filsti</string>
     <string name="invalid_verification_code">Ugyldig godkendelseskode</string>
     <string name="verification_code">Godkendelseskode</string>
     <string name="auth_required">Log ind igen for at fortsætte.</string>

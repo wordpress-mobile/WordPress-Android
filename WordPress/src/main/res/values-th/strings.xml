@@ -177,7 +177,6 @@ Language: th
     <string name="deselect_all">ไม่เลือกทั้งหมด</string>
     <string name="invalid_verification_code">โค้ดยืนยันไม่ถูกต้อง</string>
     <string name="verification_code">โค้ดยืนยัน</string>
-    <string name="editor_toast_invalid_path">ที่อยู่ไฟล์ไม่ถูกต้อง</string>
     <string name="language">ภาษา</string>
     <string name="auth_required">เข้าสู่ระบบอีกครั้งเพื่อทำต่อ</string>
     <string name="media_fetching">กำลังรับข้อมูลไฟล์สื่อ…</string>
