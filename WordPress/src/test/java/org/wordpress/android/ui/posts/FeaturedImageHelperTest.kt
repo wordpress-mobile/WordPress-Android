@@ -61,7 +61,8 @@ class FeaturedImageHelperTest {
     @Test
     fun `getFailedFeaturedImageUpload returns null when there isn't any failed featured image upload`() {
         // Arrange
-        whenever(uploadStore.getFailedMediaForPost(anyOrNull())).thenReturn(setOf(createMediaModel(false)))
+        whenever(uploadStore.getFailedMediaForPost(anyOrNull()))
+                .thenReturn(setOf(createMediaModel(markedLocallyAsFeatured = false)))
         // Act
         val failedFeaturedImage = featuredImageHelper.getFailedFeaturedImageUpload(mock())
         // Assert
@@ -71,7 +72,8 @@ class FeaturedImageHelperTest {
     @Test
     fun `getFailedFeaturedImageUpload returns MediaModel when an featured image upload failes`() {
         // Arrange
-        whenever(uploadStore.getFailedMediaForPost(anyOrNull())).thenReturn(setOf(createMediaModel(true)))
+        whenever(uploadStore.getFailedMediaForPost(anyOrNull()))
+                .thenReturn(setOf(createMediaModel(markedLocallyAsFeatured = true)))
         // Act
         val failedFeaturedImage = featuredImageHelper.getFailedFeaturedImageUpload(mock())
         // Assert
@@ -81,7 +83,8 @@ class FeaturedImageHelperTest {
     @Test
     fun `retryFeaturedImageUpload sets MediaUploadState to QUEUED`() {
         // Arrange
-        whenever(uploadStore.getFailedMediaForPost(anyOrNull())).thenReturn(setOf(createMediaModel(true)))
+        whenever(uploadStore.getFailedMediaForPost(anyOrNull()))
+                .thenReturn(setOf(createMediaModel(markedLocallyAsFeatured = true)))
         // Act
         val mediaModel = featuredImageHelper.retryFeaturedImageUpload(mock(), mock())
         // Assert
@@ -91,7 +94,8 @@ class FeaturedImageHelperTest {
     @Test
     fun `retryFeaturedImageUpload dispatches updateMediaAction`() {
         // Arrange
-        whenever(uploadStore.getFailedMediaForPost(anyOrNull())).thenReturn(setOf(createMediaModel(true)))
+        whenever(uploadStore.getFailedMediaForPost(anyOrNull()))
+                .thenReturn(setOf(createMediaModel(markedLocallyAsFeatured = true)))
         val captor: KArgumentCaptor<Action<MediaModel>> = argumentCaptor()
         // Act
         val mediaModel = featuredImageHelper.retryFeaturedImageUpload(mock(), mock())
@@ -104,7 +108,8 @@ class FeaturedImageHelperTest {
     @Test
     fun `retryFeaturedImageUpload starts the UploadService`() {
         // Arrange
-        whenever(uploadStore.getFailedMediaForPost(anyOrNull())).thenReturn(setOf(createMediaModel(true)))
+        whenever(uploadStore.getFailedMediaForPost(anyOrNull()))
+                .thenReturn(setOf(createMediaModel(markedLocallyAsFeatured = true)))
         // Act
         val mediaModel = featuredImageHelper.retryFeaturedImageUpload(mock(), mock())
         // Assert
@@ -183,7 +188,7 @@ class FeaturedImageHelperTest {
     @Test
     fun `cancelFeaturedImageUpload dispatches CancelMediaUploadAction`() {
         // Arrange
-        val mediaModel = createMediaModel(true)
+        val mediaModel = createMediaModel(markedLocallyAsFeatured = true)
         whenever(uploadStore.getFailedMediaForPost(anyOrNull())).thenReturn(setOf(mediaModel))
 
         val captor: KArgumentCaptor<Action<MediaModel>> = argumentCaptor()
@@ -197,9 +202,10 @@ class FeaturedImageHelperTest {
     @Test
     fun `cancelFeaturedImageUpload cancels final notifications`() {
         // Arrange
-        whenever(uploadStore.getFailedMediaForPost(anyOrNull())).thenReturn(setOf(createMediaModel(true)))
+        whenever(uploadStore.getFailedMediaForPost(anyOrNull()))
+                .thenReturn(setOf(createMediaModel(markedLocallyAsFeatured = true)))
         // Act
-        featuredImageHelper.cancelFeaturedImageUpload(createSiteModel(), mock(), false)
+        featuredImageHelper.cancelFeaturedImageUpload(createSiteModel(), mock(), cancelFailedOnly = false)
         // Assert
         verify(uploadServiceFacade).cancelFinalNotification(anyOrNull())
         verify(uploadServiceFacade).cancelFinalNotificationForMedia(anyOrNull())
@@ -211,7 +217,7 @@ class FeaturedImageHelperTest {
         whenever(uploadStore.getFailedMediaForPost(anyOrNull())).thenReturn(setOf())
 
         // Act
-        featuredImageHelper.cancelFeaturedImageUpload(createSiteModel(), mock(), false)
+        featuredImageHelper.cancelFeaturedImageUpload(createSiteModel(), mock(), cancelFailedOnly = false)
         // Assert
         verify(uploadServiceFacade).getPendingOrInProgressFeaturedImageUploadForPost(anyOrNull())
     }
@@ -222,7 +228,7 @@ class FeaturedImageHelperTest {
         whenever(uploadStore.getFailedMediaForPost(anyOrNull())).thenReturn(setOf())
 
         // Act
-        featuredImageHelper.cancelFeaturedImageUpload(createSiteModel(), mock(), true)
+        featuredImageHelper.cancelFeaturedImageUpload(createSiteModel(), mock(), cancelFailedOnly = true)
         // Assert
         verify(uploadServiceFacade, never()).getPendingOrInProgressFeaturedImageUploadForPost(anyOrNull())
     }
@@ -231,7 +237,7 @@ class FeaturedImageHelperTest {
     fun `createCurrent-State returns IMAGE_UPLOAD_IN_PROGRESS when uploadService has pending or ongoing uploads`() {
         // Arrange
         whenever(uploadServiceFacade.getPendingOrInProgressFeaturedImageUploadForPost(anyOrNull()))
-                .thenReturn(createMediaModel(true))
+                .thenReturn(createMediaModel(markedLocallyAsFeatured = true))
 
         // Act
         val result = featuredImageHelper.createCurrentFeaturedImageState(createSiteModel(), mock())
@@ -242,7 +248,8 @@ class FeaturedImageHelperTest {
     @Test
     fun `createCurrent-State returns IMAGE_UPLOAD_FAILED when uploadStore returns failed upload`() {
         // Arrange
-        whenever(uploadStore.getFailedMediaForPost(anyOrNull())).thenReturn(setOf(createMediaModel(true)))
+        whenever(uploadStore.getFailedMediaForPost(anyOrNull()))
+                .thenReturn(setOf(createMediaModel(markedLocallyAsFeatured = true)))
 
         // Act
         val result = featuredImageHelper.createCurrentFeaturedImageState(createSiteModel(), mock())
