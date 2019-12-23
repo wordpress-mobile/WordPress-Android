@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.UploadStore
+import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadServiceFacade
@@ -128,17 +129,17 @@ class FeaturedImageHelperTest {
     }
 
     @Test
-    fun `queueFeaturedImageForUpload returns false when the uri can't be converted to MediaModel`() {
+    fun `queueFeaturedImageForUpload returns fileNotFound when the uri can't be converted to MediaModel`() {
         // Arrange
         whenever(fluxCUtilsWrapper.mediaModelFromLocalUri(anyOrNull(), anyOrNull(), anyInt())).thenReturn(null)
         // Act
         val result = featuredImageHelper.queueFeaturedImageForUpload(0, createSiteModel(), mock(), "")
         // Assert
-        assertThat(result).isFalse()
+        assertThat(result).isEqualTo(EnqueueFeaturedImageResult.FILE_NOT_FOUND)
     }
 
     @Test
-    fun `queueFeaturedImageForUpload returns false when the provided localPostId is empty`() {
+    fun `queueFeaturedImageForUpload returns invalidPostId when the provided localPostId is empty`() {
         // Arrange
         whenever(fluxCUtilsWrapper.mediaModelFromLocalUri(anyOrNull(), anyOrNull(), anyInt()))
                 .thenReturn(createMediaModel(markedLocallyAsFeatured = false))
@@ -146,18 +147,18 @@ class FeaturedImageHelperTest {
         val result = featuredImageHelper
                 .queueFeaturedImageForUpload(EMPTY_LOCAL_POST_ID, createSiteModel(), mock(), "")
         // Assert
-        assertThat(result).isFalse()
+        assertThat(result).isEqualTo(EnqueueFeaturedImageResult.INVALID_POST_ID)
     }
 
     @Test
-    fun `queueFeaturedImageForUpload returns true when it succeeds`() {
+    fun `queueFeaturedImageForUpload returns success when it succeeds`() {
         // Arrange
         whenever(fluxCUtilsWrapper.mediaModelFromLocalUri(anyOrNull(), anyOrNull(), anyInt()))
                 .thenReturn(createMediaModel(markedLocallyAsFeatured = false))
         // Act
         val result = featuredImageHelper.queueFeaturedImageForUpload(0, createSiteModel(), mock(), "")
         // Assert
-        assertThat(result).isTrue()
+        assertThat(result).isEqualTo(EnqueueFeaturedImageResult.SUCCESS)
     }
 
     @Test
