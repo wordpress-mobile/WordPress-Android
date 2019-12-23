@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-27 12:33:27+0000
+Translation-Revision-Date: 2019-12-03 22:59:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es_VE
 -->
 <resources>
+    <string name="login_discovery_error_generic">No hemos podido acceder a tu sitio. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
+    <string name="login_discovery_error_ssl">No hemos podido acceder a tu sitio debido a un problema con el &lt;b>certificado SSL&lt;/b>. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
+    <string name="login_discovery_error_http_auth">No hemos podido acceder a tu sitio porque necesita &lt;b>identificación HTTP&lt;/b>. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
+    <string name="login_discovery_error_xmlrpc">No hemos podido acceder en tu sitio al &lt;b>archivo XMLRCP&lt;/b>. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
+    <string name="login_site_credentials_magic_link_label">¡Ya casi estamos! Solo necesitamos verificar tu dirección de correo electrónico conectada a Jetpack &lt;b>%1$s&lt;/b></string>
+    <string name="enter_site_credentials_instead">Accede con las credenciales del sitio</string>
+    <string name="enter_credentials_for_site">Accede con las credenciales del sitio %1$s</string>
+    <string name="send_verification_email">Enviar el correo electrónico de verificación</string>
+    <string name="my_site_bottom_sheet_add_page">Crear una nueva página</string>
+    <string name="my_site_bottom_sheet_add_post">Crear una nueva entrada</string>
+    <string name="reader_following_display_name">Siguiendo</string>
+    <string name="posts_cannot_be_started">No podemos abrir las entradas en este momento. Por favor, inténtalo de nuevo más tarde</string>
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000_000_000">%sC</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQ</string>
+    <string name="reader_filter_all_sites">Todos los sitios</string>
+    <string name="reader_filter_sites_title">Sitios</string>
+    <string name="reader_filter_tags_title">Etiquetas</string>
+    <string name="reader_save_for_later_display_name">Guardado</string>
+    <string name="reader_discover_display_name">Descubrir</string>
+    <string name="reader_my_likes_display_name">Me gusta</string>
+    <string name="site_cannot_be_loaded">No podemos cargar los datos para tu sitio en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabajando duro para añadir más bloques en cada versión. Mientras tanto, también puedes editar esta entrada en la web.</string>
     <string name="gutenberg_native_unsupported">No compatible</string>
@@ -161,7 +186,6 @@ Language: es_VE
     <string name="site_settings_site_accelerator">Acelerador de sitios</string>
     <string name="site_settings_lazy_load_images_summary">Mejora la velocidad de tu sitio al cargar solo las imágenes visibles en la pantalla.</string>
     <string name="site_settings_performance">Rendimiento</string>
-    <string name="notification_settings_moved_notices">Los ajustes de los avisos pueden encontrarse ahora en la pestaña de Avisos.</string>
     <string name="stats_file_downloads_value_label">Descargas</string>
     <string name="stats_file_downloads_title_label">Archivo</string>
     <string name="stats_file_downloads">Descargas de archivos</string>
@@ -224,9 +248,9 @@ Language: es_VE
     <string name="post_settings_retry_featured_image">Reintentar la subida</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Subiendo medios.\nPor favor, toca para ver las opciones.</string>
     <string name="link_open_new_window">Abrir enlace en una nueva ventana/pestaña</string>
-    <string name="post_list_search_prompt">Buscar entradas publicadas</string>
     <string name="stats_widget_error_no_access_token">Para ver tus estadísticas accede a la cuenta de WordPress.com.</string>
     <string name="post_list_search_nothing_found">Ninguna entrada coincide con tu búsqueda</string>
+    <string name="post_list_search_prompt">Buscar entradas</string>
     <string name="domains_suggestions_intro_description">Aquí es donde la gente te encuentra en Internet.</string>
     <string name="domains_suggestions_intro_title">Elige un nombre de dominio premium</string>
     <string name="my_site_custom_domain_name">Todos los planes de WordPress.com incluyen un nombre de dominio personalizado. Registra ahora tu dominio premium gratuito.</string>
@@ -482,7 +506,6 @@ Language: es_VE
     <string name="giphy_picker_empty_search_list">Ningún medio coincide con tu búsqueda</string>
     <string name="giphy_picker_initial_empty_text">¡Busca para encontrar GIFs para agregar a tu biblioteca de medios!</string>
     <string name="giphy_picker_search_hint">Buscar en Giphy</string>
-    <string name="photo_picker_giphy">Elegir de Giphy</string>
     <string name="stats_author_views_label">Vistas</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>
@@ -1810,7 +1833,6 @@ Language: es_VE
     <string name="auth_required">Accede de nuevo para continuar.</string>
     <string name="invalid_verification_code">Código de verificación no válido</string>
     <string name="verification_code">Código de verificación</string>
-    <string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
     <string name="language">Idioma</string>
     <string name="media_fetching">Recuperando medios…</string>
     <string name="posts_fetching">Recuperando entradas…</string>
