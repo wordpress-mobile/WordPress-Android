@@ -15,9 +15,9 @@
         <item name="colorOnBackground">@android:color/black</item>
         <item name="colorOnSurface">@android:color/black</item>
         <item name="colorOnError">@android:color/white</item>
+        <item name="colorAccent">?attr/colorSecondary</item>
 
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">?attr/colorSecondary</item>
         <item name="colorControlActivated">@color/primary_30</item>
 
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
@@ -39,7 +39,9 @@
 
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
-        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
+        <item name="android:actionModeCloseButtonStyle">
+            @style/ActionButton.CloseMode.WordPress
+        </item>
         <item name="android:actionModeBackground">?attr/wpColorAppBar</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
@@ -64,7 +66,7 @@
         <!-- We need to keep this here so we can override it in values-vXY -->
     </style>
 
-     <style name="WordPress.NoActionBar" parent="WordPress">
+    <style name="WordPress.NoActionBar" parent="WordPress">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -104,7 +106,9 @@
     <style name="DropDownListView.Light.WordPress" parent="Widget.AppCompat.ListView.DropDown">
         <item name="android:background">@android:color/white</item>
         <item name="android:fadeScrollbars">false</item>
-        <item name="android:scrollbarThumbVertical">@drawable/bg_rectangle_black_translucent_50_3dp</item>
+        <item name="android:scrollbarThumbVertical">
+            @drawable/bg_rectangle_black_translucent_50_3dp
+        </item>
     </style>
 
     <style name="TabTextStyle.WordPress" parent="android:Widget.Material.ActionBar.TabText">
@@ -202,29 +206,12 @@
 
     <style name="MediaSettings" />
 
-    <style name="MediaSettings.Activity" parent="WordPress">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="WordPress.NoActionBar.TranslucentStatus" parent="WordPress.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="MediaSettings.TextInputStyle">
-        <item name="android:layout_marginTop">@dimen/margin_medium</item>
-    </style>
-
-    <style name="MediaSettings.TextInputTheme" parent="ThemeOverlay.AppCompat.Light">
-        <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/neutral_40</item>
-        <!-- Header color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorControlNormal">@color/neutral</item>
-        <item name="colorControlActivated">@color/primary_50</item>
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:gravity">start</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-    </style>
-
     <style name="MediaSettings.Divider">
-        <item name="android:background">@color/divider</item>
+        <item name="android:background">?android:attr/listDivider</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
@@ -232,15 +219,15 @@
     <style name="MediaSettings.Label">
         <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
     <style name="MediaSettings.Value">
         <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <style name="EmptyListText">
@@ -262,7 +249,7 @@
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">?attr/colorSecondary</item>
     </style>
-    
+
     <style name="WordPress.Button.Grey" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/neutral_0</item>
         <item name="android:textColor">@color/primary_50</item>
@@ -841,8 +828,12 @@
 
     <style name="ActionableEmptyStateTitle">
         <item name="android:layout_marginBottom">@dimen/margin_medium</item>
-        <item name="android:layout_marginEnd">@dimen/actionable_empty_view_text_margin_horizontal</item>
-        <item name="android:layout_marginStart">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginEnd">
+            @dimen/actionable_empty_view_text_margin_horizontal
+        </item>
+        <item name="android:layout_marginStart">
+            @dimen/actionable_empty_view_text_margin_horizontal
+        </item>
         <item name="android:maxWidth">@dimen/actionable_empty_view_text_maximum_width</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
@@ -852,12 +843,16 @@
 
     <style name="ActionableEmptyStateSubtitle" parent="@style/ActionableEmptyStateTitle">
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
-         <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="ActionableEmptyStateButton" parent="WordPress.Button.Primary">
-        <item name="android:layout_marginEnd">@dimen/actionable_empty_view_text_margin_horizontal</item>
-        <item name="android:layout_marginStart">@dimen/actionable_empty_view_text_margin_horizontal</item>
+        <item name="android:layout_marginEnd">
+            @dimen/actionable_empty_view_text_margin_horizontal
+        </item>
+        <item name="android:layout_marginStart">
+            @dimen/actionable_empty_view_text_margin_horizontal
+        </item>
         <item name="android:paddingEnd">@dimen/margin_extra_medium_large</item>
         <item name="android:paddingStart">@dimen/margin_extra_medium_large</item>
     </style>
@@ -968,7 +963,9 @@
     <style name="DomainSuggestionsFormIntroductionTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">@dimen/domain_suggestions_intro_header_bottom_padding</item>
+        <item name="android:paddingBottom">
+            @dimen/domain_suggestions_intro_header_bottom_padding
+        </item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/neutral_60</item>
         <item name="android:text">@dimen/text_sz_large</item>
@@ -1083,7 +1080,8 @@
     </style>
 
     <!-- DialogPreference custom title style -->
-    <style name="DialogPreference"/>
+    <style name="DialogPreference" />
+
     <style name="DialogPreference.CustomTitle">
         <item name="android:paddingBottom">16dp</item>
         <item name="android:paddingTop">16dp</item>
