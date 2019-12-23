@@ -54,7 +54,6 @@ Language: sk
     <string name="preference_strip_image_location">Odstrániť lokáciu z médiá</string>
     <string name="giphy_powered_by_giphy">Poháňa GIPHY</string>
     <string name="giphy_picker_search_hint">Vyhľadať v Giphy</string>
-    <string name="photo_picker_giphy">Vybrať z Giphy</string>
     <string name="stats_author_views_label">Zobrazenia</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autori</string>
@@ -1359,7 +1358,6 @@ Language: sk
     <string name="auth_required">Ak chcete pokračovať, prihláste sa znova.</string>
     <string name="invalid_verification_code">Nesprávny overovací kód</string>
     <string name="verification_code">Overovací kód</string>
-    <string name="editor_toast_invalid_path">Nesprávna cesta súboru</string>
     <string name="language">Jazyk</string>
     <string name="media_fetching">Načítavajú sa súbory…</string>
     <string name="posts_fetching">Načítavajú sa príspevky…</string>

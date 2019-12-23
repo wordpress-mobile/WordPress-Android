@@ -450,7 +450,6 @@ Language: is
     <string name="auth_required">Skráðu þig aftur inn til að halda áfram.</string>
     <string name="invalid_verification_code">Ógildur staðfestingarkóði</string>
     <string name="verification_code">Staðfestingarkóði</string>
-    <string name="editor_toast_invalid_path">Ógild skráarslóð</string>
     <string name="language">Tungumál</string>
     <string name="media_fetching">Sæki skrá…</string>
     <string name="posts_fetching">Sæki færslur…</string>

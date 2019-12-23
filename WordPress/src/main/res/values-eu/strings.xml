@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-12 18:27:03+0000
+Translation-Revision-Date: 2019-12-08 18:04:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: eu_ES
 -->
 <resources>
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000_000_000">%sQa</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
+    <string name="reader_filter_all_sites">Gune guztiak</string>
+    <string name="reader_filter_sites_title">Guneak</string>
+    <string name="reader_filter_tags_title">Etiketak</string>
+    <string name="reader_save_for_later_display_name">Gordeta</string>
+    <string name="reader_discover_display_name">Aurkitu</string>
+    <string name="reader_my_likes_display_name">Atsegiteak</string>
+    <string name="site_cannot_be_loaded">Ezin ditugu zure gunearentzako datuak kargatu orain. Mesedez, saiatu geroago</string>
+    <string name="gutenberg_native_wordpress_media_library">WordPress Media Liburutegia</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Lanean gogor gabiltza argitalpen bakoitzean bloke gehiago gehitzeko. Bitartean, sarrera hau editatu dezakezu ere webean.</string>
+    <string name="gutenberg_native_unsupported">Ez Bateragarria</string>
+    <string name="gutenberg_native_ungroup">Destaldekatu</string>
+    <string name="gutenberg_native_translate">Itzuli</string>
+    <string name="gutenberg_native_title">Izenburua:</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard">Tap egin teklatua izkutatzeko</string>
+    <string name="gutenberg_native_tap_here_to_show_help">Tap egin hemen laguntza erakusteko</string>
+    <string name="gutenberg_native_take_a_video">Hartu Bideo bat</string>
+    <string name="gutenberg_native_take_a_photo_or_video">Hartu Argazki edo Bideo bat</string>
+    <string name="gutenberg_native_take_a_photo">Hartu Argazki bat</string>
+    <string name="gutenberg_native_start_writing">Hasi idazten…</string>
+    <string name="gutenberg_native_size">Tamaina</string>
+    <string name="gutenberg_native_sidebar_title_plugin">Albo-barrako pluginaren izenburua</string>
+    <string name="gutenberg_native_show_section">Erakutsi Atala</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">%s ez da oraindik bateragarria iOSerako WordPressekin</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s ez da oraindik bateragarria iAndroiderako WordPressekin</string>
     <string name="add_media_progress">Media gehitzen</string>
     <string name="post_title">Izenburua</string>
     <string name="post_settings_post_format">Bidalketa formatua</string>
@@ -256,7 +286,6 @@ Language: eu_ES
     <string name="auth_required">Hasi saioa berriro jarraitzeko.</string>
     <string name="invalid_verification_code">Egiaztaketa kode okerra</string>
     <string name="verification_code">Egiaztaketa kodea</string>
-    <string name="editor_toast_invalid_path">Fitxategiaren bide okerra</string>
     <string name="language">Hizkuntza</string>
     <string name="media_fetching">Media eskuratzen…</string>
     <string name="posts_fetching">Bidalketak eskuratzen…</string>
