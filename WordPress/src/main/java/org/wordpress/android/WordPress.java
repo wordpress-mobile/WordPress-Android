@@ -77,6 +77,7 @@ import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadStarter;
@@ -152,6 +153,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject StatsWidgetUpdaters mStatsWidgetUpdaters;
     @Inject StatsStore mStatsStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
+    @Inject ReaderTracker mReaderTracker;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -834,6 +836,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 properties.put("time_in_app", DateTimeUtils.secondsBetween(now, mApplicationOpenedDate));
                 mApplicationOpenedDate = null;
             }
+            properties.putAll(mReaderTracker.getAnalyticsData());
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
             AnalyticsTracker.endSession(false);
             // Methods onAppComesFromBackground and onAppGoesToBackground are only workarounds to track when the
@@ -857,6 +860,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
          * 2. the app was in background and is now foreground
          */
         public void onAppComesFromBackground() {
+            mReaderTracker.setupTrackers();
             AppLog.i(T.UTILS, "App comes from background");
             if (!sAppIsInTheBackground) {
                 return;
