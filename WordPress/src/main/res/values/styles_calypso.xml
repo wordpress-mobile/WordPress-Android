@@ -15,11 +15,6 @@
         <item name="actionModeSplitBackground">@color/neutral_50</item>
         <item name="actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
     </style>
-    <style name="Calypso.ActionMode.Dark.NoActionBar" parent="@style/Calypso.NoActionBar">
-        <item name="actionModeBackground">@color/neutral_50</item>
-        <item name="actionModeSplitBackground">@color/neutral_50</item>
-        <item name="actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
-    </style>
 
     <style name="Calypso.SiteSettingsTheme" parent="@style/CalypsoTheme">
         <item name="android:windowActionModeOverlay">true</item>
