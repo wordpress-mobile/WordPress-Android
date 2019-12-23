@@ -1,3 +1,2 @@
-* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.
-
-* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.
+• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
+• Block editor enhancements: Added support for settings in the List and Video blocks.
