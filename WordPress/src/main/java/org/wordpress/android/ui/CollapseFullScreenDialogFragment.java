@@ -29,6 +29,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.elevation.ElevationOverlayProvider;
+
 import org.wordpress.android.R;
 
 /**
@@ -55,13 +57,17 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
 
     public interface CollapseFullScreenDialogContent {
         boolean onCollapseClicked(CollapseFullScreenDialogController controller);
+
         boolean onConfirmClicked(CollapseFullScreenDialogController controller);
+
         void onViewCreated(CollapseFullScreenDialogController controller);
     }
 
     public interface CollapseFullScreenDialogController {
         void collapse(@Nullable Bundle result);
+
         void confirm(@Nullable Bundle result);
+
         void setConfirmEnabled(boolean enabled);
     }
 
@@ -99,7 +105,7 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
             getChildFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(R.anim.full_screen_dialog_fragment_none, 0, 0,
-                                         R.anim.full_screen_dialog_fragment_none)
+                            R.anim.full_screen_dialog_fragment_none)
                     .add(R.id.full_screen_dialog_fragment_content, mFragment)
                     .commitNow();
         }
@@ -194,7 +200,7 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
     public int show(FragmentTransaction transaction, String tag) {
         initBuilderArguments();
         transaction.setCustomAnimations(R.anim.full_screen_dialog_fragment_slide_up, 0, 0,
-                                        R.anim.full_screen_dialog_fragment_slide_down);
+                R.anim.full_screen_dialog_fragment_slide_down);
         return transaction.add(android.R.id.content, this, tag).addToBackStack(null).commit();
     }
 
@@ -257,15 +263,16 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
      */
     private void initToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.full_screen_dialog_fragment_toolbar);
+
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(view.getContext());
+        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
+        int elevatedColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation);
+        toolbar.setBackgroundColor(elevatedColor);
+
         toolbar.setTitle(mTitle);
         toolbar.setNavigationContentDescription(R.string.description_collapse);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_chevron_down_white_24dp));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onCollapseClicked();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> onCollapseClicked());
 
         if (!mAction.isEmpty()) {
             Menu menu = toolbar.getMenu();
@@ -274,9 +281,7 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
             mMenuAction.setEnabled(false);
             mMenuAction.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             mMenuAction.setOnMenuItemClickListener(
-                new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
+                    item -> {
                         if (item.getItemId() == ID_ACTION) {
                             onConfirmClicked();
                             return true;
@@ -284,7 +289,6 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
                             return false;
                         }
                     }
-                }
             );
         }
     }
@@ -434,11 +438,11 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
         /**
          * Set {@link Fragment} to be added as dialog, which must implement {@link CollapseFullScreenDialogContent}.
          *
-         * @param contentClass Fragment class to be instantiated
+         * @param contentClass     Fragment class to be instantiated
          * @param contentArguments arguments to be added to Fragment
          * @return {@link Builder} object to allow for chaining of calls to set methods
          * @throws IllegalArgumentException if content class does not implement
-         * {@link CollapseFullScreenDialogContent} interface
+         *                                  {@link CollapseFullScreenDialogContent} interface
          */
         public Builder setContent(Class<? extends Fragment> contentClass, @Nullable Bundle contentArguments) {
             if (!CollapseFullScreenDialogContent.class.isAssignableFrom(contentClass)) {
