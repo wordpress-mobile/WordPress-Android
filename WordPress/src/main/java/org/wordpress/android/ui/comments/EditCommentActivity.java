@@ -1,15 +1,12 @@
 package org.wordpress.android.ui.comments;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,10 +15,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
@@ -74,7 +76,8 @@ public class EditCommentActivity extends AppCompatActivity {
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.comment_edit_activity);
-
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
@@ -99,7 +102,7 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         if (mCancelEditCommentDialog != null) {
@@ -156,7 +159,7 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private void configureViews() {
-        final EditText editContent = (EditText) this.findViewById(R.id.edit_comment_content);
+        final EditText editContent = this.findViewById(R.id.edit_comment_content);
         editContent.setText(mComment.getContent());
 
         // show error when comment content is empty
@@ -205,13 +208,13 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private String getEditTextStr(int resId) {
-        final EditText edit = (EditText) findViewById(resId);
+        final EditText edit = findViewById(resId);
         return EditTextUtils.getText(edit);
     }
 
     private void saveComment() {
         // make sure comment content was entered
-        final EditText editContent = (EditText) findViewById(R.id.edit_comment_content);
+        final EditText editContent = findViewById(R.id.edit_comment_content);
         if (EditTextUtils.isEmpty(editContent)) {
             editContent.setError(getString(R.string.content_required));
             return;
@@ -269,21 +272,18 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private void showEditErrorAlert() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
-        dialogBuilder.setTitle(getResources().getText(R.string.error));
-        dialogBuilder.setMessage(R.string.error_edit_comment);
-        dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // just close the dialog
-            }
+        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
+        dialog.setTitle(getResources().getText(R.string.error));
+        dialog.setMessage(R.string.error_edit_comment);
+        dialog.setPositiveButton(android.R.string.ok, (dialog1, whichButton) -> {
+            // just close the dialog
         });
-        dialogBuilder.setCancelable(true);
-        dialogBuilder.create().show();
+        dialog.setCancelable(true);
+        dialog.create().show();
     }
 
     private void setFetchProgressVisible(boolean progressVisible) {
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.edit_comment_progress);
+        final ProgressBar progress = findViewById(R.id.edit_comment_progress);
         final View editContainer = findViewById(R.id.edit_comment_container);
 
         if (progress == null || editContainer == null) {
@@ -309,26 +309,19 @@ public class EditCommentActivity extends AppCompatActivity {
             return;
         }
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
-        dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
-        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_cancel_edit_comment));
-        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        finish();
-                    }
-                });
-        dialogBuilder.setNegativeButton(
+        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
+        dialog.setTitle(getResources().getText(R.string.cancel_edit));
+        dialog.setMessage(getResources().getText(R.string.sure_to_cancel_edit_comment));
+        dialog.setPositiveButton(getResources().getText(R.string.yes),
+                (dialog12, whichButton) -> finish());
+        dialog.setNegativeButton(
                 getResources().getText(R.string.no),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // just close the dialog
-                    }
+                (dialog1, whichButton) -> {
+                    // just close the dialog
                 });
-        dialogBuilder.setCancelable(true);
+        dialog.setCancelable(true);
 
-        mCancelEditCommentDialog = dialogBuilder.create();
+        mCancelEditCommentDialog = dialog.create();
         mCancelEditCommentDialog.show();
     }
 
