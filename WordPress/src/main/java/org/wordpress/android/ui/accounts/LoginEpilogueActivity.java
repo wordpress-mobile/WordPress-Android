@@ -9,9 +9,11 @@ import androidx.fragment.app.FragmentTransaction;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.LocaleManager;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpi
     public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -67,6 +70,10 @@ public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpi
 
     @Override
     public void onContinue() {
+        if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial()) {
+            ActivityLauncher.showPostSignupInterstitial(this);
+        }
+
         setResult(RESULT_OK);
         finish();
     }

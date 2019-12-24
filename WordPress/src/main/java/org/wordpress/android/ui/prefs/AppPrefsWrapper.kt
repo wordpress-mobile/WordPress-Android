@@ -50,6 +50,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getSystemNotificationsEnabled()
         set(value) = AppPrefs.setSystemNotificationsEnabled(value)
 
+    var shouldShowPostSignupInterstitial: Boolean
+        get() = AppPrefs.shouldShowPostSignupInterstitial()
+        set(shouldShow) = AppPrefs.setShouldShowPostSignupInterstitial(shouldShow)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
