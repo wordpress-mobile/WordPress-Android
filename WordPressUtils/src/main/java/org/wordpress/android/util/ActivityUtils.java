@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -45,5 +46,9 @@ public class ActivityUtils {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public static boolean isDeepLinking(Intent intent) {
+        return Intent.ACTION_VIEW.equals(intent.getAction());
     }
 }

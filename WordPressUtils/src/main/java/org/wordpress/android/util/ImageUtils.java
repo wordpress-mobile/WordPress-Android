@@ -847,43 +847,6 @@ public class ImageUtils {
         return null;
     }
 
-    /**
-     * This is a wrapper around MediaStore.Images.Thumbnails.getThumbnail that takes in consideration
-     * the orientation of the picture.
-     *
-     * @param contentResolver ContentResolver used to dispatch queries to MediaProvider.
-     * @param id Original image id associated with thumbnail of interest.
-     * @param kind The type of thumbnail to fetch. Should be either MINI_KIND or MICRO_KIND.
-     *
-     * @return A Bitmap instance. It could be null if the original image
-     * associated with origId doesn't exist or memory is not enough.
-     */
-    public static Bitmap getThumbnail(ContentResolver contentResolver, long id, int kind) {
-        Cursor cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                              new String[]{MediaStore.Images.Media.DATA}, // Which columns to return
-                                              MediaStore.Images.Media._ID + "=?", // Which rows to return
-                                              new String[]{String.valueOf(id)}, // Selection arguments
-                                              null); // order
-
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            String filepath = cursor.getString(0);
-            cursor.close();
-            int rotation = getExifOrientation(filepath);
-            Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(contentResolver, id, kind, null);
-
-            if (rotation != 0 && bitmap != null) {
-                Matrix matrix = new Matrix();
-                matrix.setRotate(rotation);
-                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            }
-
-            return bitmap;
-        }
-
-        return null;
-    }
-
     // determine correct scale value (should be power of 2)
     // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
     protected static int getScaleForResizing(int maxSize, BitmapFactory.Options optBounds) {

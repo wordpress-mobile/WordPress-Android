@@ -35,6 +35,7 @@ public class AppLog {
         NOTIFS,
         DB,
         POSTS,
+        PAGES,
         COMMENTS,
         THEMES,
         TESTS,
@@ -48,7 +49,9 @@ public class AppLog {
         SHARING,
         PLUGINS,
         ACTIVITY_LOG,
-        SUPPORT
+        JETPACK_REMOTE_INSTALL,
+        SUPPORT,
+        SITE_CREATION
     }
 
     public static final String TAG = "WordPress";
