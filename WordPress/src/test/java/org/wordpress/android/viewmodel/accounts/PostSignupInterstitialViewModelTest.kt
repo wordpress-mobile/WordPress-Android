@@ -9,10 +9,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_SIGNUP_INTERSTITIAL_ADD_SELF_HOSTED_SITE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_SIGNUP_INTERSTITIAL_CREATE_NEW_SITE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_SIGNUP_INTERSTITIAL_DISMISSED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_SIGNUP_INTERSTITIAL_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_ADD_SELF_HOSTED_SITE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_CREATE_NEW_SITE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_DISMISSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_SHOWN
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction
@@ -40,7 +40,7 @@ class PostSignupInterstitialViewModelTest {
     fun `when interstitial is shown should update preference value`() {
         viewModel.onInterstitialShown()
 
-        verify(analyticsTracker).track(POST_SIGNUP_INTERSTITIAL_SHOWN)
+        verify(analyticsTracker).track(WELCOME_NO_SITES_INTERSTITIAL_SHOWN)
         verify(appPrefs).shouldShowPostSignupInterstitial = false
     }
 
@@ -48,7 +48,7 @@ class PostSignupInterstitialViewModelTest {
     fun `when create new site button is pressed should start site creation flow`() {
         viewModel.onCreateNewSiteButtonPressed()
 
-        verify(analyticsTracker).track(POST_SIGNUP_INTERSTITIAL_CREATE_NEW_SITE_TAPPED)
+        verify(analyticsTracker).track(WELCOME_NO_SITES_INTERSTITIAL_CREATE_NEW_SITE_TAPPED)
         verify(observer).onChanged(START_SITE_CREATION_FLOW)
     }
 
@@ -56,7 +56,7 @@ class PostSignupInterstitialViewModelTest {
     fun `when add self hosted site button is pressed should start site connection flow`() {
         viewModel.onAddSelfHostedSiteButtonPressed()
 
-        verify(analyticsTracker).track(POST_SIGNUP_INTERSTITIAL_ADD_SELF_HOSTED_SITE_TAPPED)
+        verify(analyticsTracker).track(WELCOME_NO_SITES_INTERSTITIAL_ADD_SELF_HOSTED_SITE_TAPPED)
         verify(observer).onChanged(START_SITE_CONNECTION_FLOW)
     }
 
@@ -64,7 +64,7 @@ class PostSignupInterstitialViewModelTest {
     fun `when dismissal button is pressed should dismiss`() {
         viewModel.onDismissButtonPressed()
 
-        verify(analyticsTracker).track(POST_SIGNUP_INTERSTITIAL_DISMISSED)
+        verify(analyticsTracker).track(WELCOME_NO_SITES_INTERSTITIAL_DISMISSED)
         verify(observer).onChanged(DISMISS)
     }
 
@@ -72,7 +72,7 @@ class PostSignupInterstitialViewModelTest {
     fun `when back button is pressed should dismiss`() {
         viewModel.onBackButtonPressed()
 
-        verify(analyticsTracker).track(POST_SIGNUP_INTERSTITIAL_DISMISSED)
+        verify(analyticsTracker).track(WELCOME_NO_SITES_INTERSTITIAL_DISMISSED)
         verify(observer).onChanged(DISMISS)
     }
 }
