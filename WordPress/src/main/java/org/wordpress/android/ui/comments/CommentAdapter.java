@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.CommentModel;
@@ -24,6 +25,7 @@ import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
@@ -71,8 +73,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private final int mAvatarSz;
     private final String mStatusTextSpam;
     private final String mStatusTextUnapproved;
-    private final int mSelectedColor;
-    private final int mUnselectedColor;
 
     private OnDataLoadedListener mOnDataLoadedListener;
     private OnCommentPressedListener mOnCommentPressedListener;
@@ -134,11 +134,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         mSite = site;
 
-        mStatusColorSpam = ContextCompat.getColor(context, R.color.error);
-        mStatusColorUnapproved = ContextCompat.getColor(context, R.color.accent);
+        mStatusColorSpam = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorError);
+        mStatusColorUnapproved = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorWarningDark);
 
-        mUnselectedColor = ContextCompat.getColor(context, android.R.color.white);
-        mSelectedColor = ContextCompat.getColor(context, R.color.gray_5);
 
         mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
         mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
@@ -164,8 +162,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mOnSelectedChangeListener = listener;
     }
 
+    @NotNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         //noinspection InflateParams
         View view = mInflater.inflate(R.layout.comment_listitem, null);
         CommentHolder holder = new CommentHolder(view);
@@ -213,7 +212,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NotNull RecyclerView.ViewHolder viewHolder, int position) {
         CommentModel comment = mComments.get(position);
         CommentHolder holder = (CommentHolder) viewHolder;
 
@@ -247,12 +246,12 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (mEnableSelection && isItemSelected(position)) {
             checkmarkVisibility = View.VISIBLE;
             mImageManager.cancelRequestAndClearImageView(holder.mImgAvatar);
-            holder.mContainerView.setBackgroundColor(mSelectedColor);
+            holder.mContainerView.setSelected(true);
         } else {
             checkmarkVisibility = View.GONE;
             mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND,
                     getAvatarForDisplay(comment, mAvatarSz));
-            holder.mContainerView.setBackgroundColor(mUnselectedColor);
+            holder.mContainerView.setSelected(false);
         }
 
         if (holder.mImgCheckmark.getVisibility() != checkmarkVisibility) {
@@ -448,16 +447,13 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 mComments.clear();
                 mComments.addAll(mTmpComments);
                 // Sort by date
-                Collections.sort(mComments, new Comparator<CommentModel>() {
-                    @Override
-                    public int compare(CommentModel commentModel, CommentModel t1) {
-                        Date d0 = DateTimeUtils.dateFromIso8601(commentModel.getDatePublished());
-                        Date d1 = DateTimeUtils.dateFromIso8601(t1.getDatePublished());
-                        if (d0 == null || d1 == null) {
-                            return 0;
-                        }
-                        return d1.compareTo(d0);
+                Collections.sort(mComments, (commentModel, t1) -> {
+                    Date d0 = DateTimeUtils.dateFromIso8601(commentModel.getDatePublished());
+                    Date d1 = DateTimeUtils.dateFromIso8601(t1.getDatePublished());
+                    if (d0 == null || d1 == null) {
+                        return 0;
                     }
+                    return d1.compareTo(d0);
                 });
                 notifyDataSetChanged();
             }
