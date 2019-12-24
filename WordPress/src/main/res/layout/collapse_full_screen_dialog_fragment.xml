@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:elevation="@dimen/appbar_elevation"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/WordPress.ActionBar.Inverted"
+        android:theme="@style/WordPress.ActionBar.LightDark"
         app:contentInsetStart="@dimen/keyline_second"
         app:navigationContentDescription="@string/description_expand"
         app:navigationIcon="@drawable/ic_chevron_down_white_24dp"
