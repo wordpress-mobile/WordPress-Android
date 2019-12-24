@@ -1,14 +1,12 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.ContextThemeWrapper;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +20,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -403,8 +403,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             CommentStatus status = CommentStatus.fromString(mComment.getStatus());
             // If the comment status is trash or spam, next deletion is a permanent deletion.
             if (status == CommentStatus.TRASH || status == CommentStatus.SPAM) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+                AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getActivity());
                 dialogBuilder.setTitle(getResources().getText(R.string.delete));
                 dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
                 dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
