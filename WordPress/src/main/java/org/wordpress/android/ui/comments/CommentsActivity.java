@@ -55,8 +55,6 @@ public class CommentsActivity extends AppCompatActivity
     public static final String COMMENT_MODERATE_STATUS_EXTRA = "commentModerateStatus";
     private final CommentList mTrashedComments = new CommentList();
 
-    private CommentStatus mCurrentCommentStatusType = CommentStatus.ALL;
-
     private SiteModel mSite;
 
     @Inject Dispatcher mDispatcher;
@@ -74,11 +72,10 @@ public class CommentsActivity extends AppCompatActivity
 
         setContentView(R.layout.comment_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setElevation(0);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -95,21 +92,22 @@ public class CommentsActivity extends AppCompatActivity
             return;
         }
 
+        CommentStatus currentCommentStatusType;
         if (getIntent() != null && getIntent().hasExtra(SAVED_COMMENTS_STATUS_TYPE)) {
-            mCurrentCommentStatusType = (CommentStatus) getIntent().getSerializableExtra(SAVED_COMMENTS_STATUS_TYPE);
+            currentCommentStatusType = (CommentStatus) getIntent().getSerializableExtra(SAVED_COMMENTS_STATUS_TYPE);
         } else {
             // Read the value from app preferences here. Default to 0 - All
-            mCurrentCommentStatusType = AppPrefs.getCommentsStatusFilter().toCommentStatus();
+            currentCommentStatusType = AppPrefs.getCommentsStatusFilter().toCommentStatus();
         }
 
         if (savedInstanceState == null) {
             CommentsListFragment commentsListFragment = new CommentsListFragment();
             // initialize comment status filter first time
-            commentsListFragment.setCommentStatusFilter(mCurrentCommentStatusType);
+            commentsListFragment.setCommentStatusFilter(currentCommentStatusType);
             getSupportFragmentManager().beginTransaction()
-                                .add(R.id.layout_fragment_container, commentsListFragment,
-                                     getString(R.string.fragment_tag_comment_list))
-                                .commitAllowingStateLoss();
+                                       .add(R.id.layout_fragment_container, commentsListFragment,
+                                               getString(R.string.fragment_tag_comment_list))
+                                       .commitAllowingStateLoss();
         } else {
             getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));
             getIntent().putExtra(KEY_EMPTY_VIEW_MESSAGE, savedInstanceState.getString(KEY_EMPTY_VIEW_MESSAGE));
@@ -223,7 +221,7 @@ public class CommentsActivity extends AppCompatActivity
             String newStatus = data.getStringExtra(COMMENT_MODERATE_STATUS_EXTRA);
             if (commentId >= 0 && !TextUtils.isEmpty(newStatus)) {
                 onModerateComment(mCommentStore.getCommentBySiteAndRemoteId(mSite, commentId),
-                                  CommentStatus.fromString(newStatus));
+                        CommentStatus.fromString(newStatus));
             }
         }
     }
@@ -243,16 +241,13 @@ public class CommentsActivity extends AppCompatActivity
             String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed)
                     : newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed)
                             : getString(R.string.comment_deleted_permanently));
-            View.OnClickListener undoListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mTrashedComments.remove(comment);
-                    getListFragment().loadComments();
-                }
+            View.OnClickListener undoListener = v -> {
+                mTrashedComments.remove(comment);
+                getListFragment().loadComments();
             };
 
             WPSnackbar snackbar = WPSnackbar.make(getListFragment().getView(), message, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.undo, undoListener);
+                                            .setAction(R.string.undo, undoListener);
 
             // do the actual moderation once the undo bar has been hidden
             snackbar.setCallback(new Snackbar.Callback() {
