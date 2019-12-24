@@ -11,6 +11,7 @@
     <attr name="wpColorOnSurfaceMedium" format="reference|color" />
 
     <attr name="wpColorWarningDark" format="reference|color" />
+    <attr name="wpColorActionModeIcon" format="reference|color" />
 
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
