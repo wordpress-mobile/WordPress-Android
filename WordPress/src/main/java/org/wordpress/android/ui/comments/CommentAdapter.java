@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +70,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final int mStatusColorSpam;
     private final int mStatusColorUnapproved;
+
+    private int mSelectedItemBackground;
 
     private final int mAvatarSz;
     private final String mStatusTextSpam;
@@ -142,6 +145,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
 
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+
+        mSelectedItemBackground = ColorUtils
+                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface),
+                        context.getResources().getInteger(R.integer.selected_list_item_opacity));
 
         setHasStableIds(true);
     }
@@ -246,12 +253,12 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (mEnableSelection && isItemSelected(position)) {
             checkmarkVisibility = View.VISIBLE;
             mImageManager.cancelRequestAndClearImageView(holder.mImgAvatar);
-            holder.mContainerView.setSelected(true);
+            holder.mContainerView.setBackgroundColor(mSelectedItemBackground);
         } else {
             checkmarkVisibility = View.GONE;
             mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND,
                     getAvatarForDisplay(comment, mAvatarSz));
-            holder.mContainerView.setSelected(false);
+            holder.mContainerView.setBackground(null);
         }
 
         if (holder.mImgCheckmark.getVisibility() != checkmarkVisibility) {

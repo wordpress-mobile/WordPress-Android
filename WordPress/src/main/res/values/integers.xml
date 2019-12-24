@@ -7,6 +7,8 @@
     </integer>
     <integer name="custom_popup_selected_list_item_opacity_dec">50</integer>
 
+    <integer name="selected_list_item_opacity">20</integer>
+
     <!-- max #chars user can type when adding a new topic to the reader -->
     <integer name="max_length_reader_topic_name">96</integer>
 
