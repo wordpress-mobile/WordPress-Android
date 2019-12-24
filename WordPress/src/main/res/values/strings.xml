@@ -340,6 +340,11 @@
     <string name="dialog_confirm_update_yes">Update now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
 
+    <!-- scheduled post sync confirmation dialog -->
+    <string name="dialog_confirm_scheduled_post_sync_title">Ready to Sync?</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">This post will be synced immediately.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Sync now</string>
+
     <!-- post version sync conflict dialog -->
     <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
     <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
