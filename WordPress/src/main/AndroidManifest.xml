@@ -124,6 +124,12 @@
             android:theme="@style/LoginTheme" />
 
         <activity
+            android:name=".ui.accounts.PostSignupInterstitialActivity"
+            android:label="@string/post_signup_interstitial_title"
+            android:theme="@style/LoginTheme"
+            />
+
+        <activity
             android:name=".ui.sitecreation.SiteCreationActivity"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
@@ -299,18 +305,18 @@
         <!-- Media Activities -->
         <activity
             android:name=".ui.media.MediaBrowserActivity"
-            android:theme="@style/Calypso.ActionMode.Dark.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:label="@string/wp_media_title" />
         <activity
             android:name=".ui.media.MediaPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/media_settings_image_preview_desc"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.media.MediaSettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:label="@string/media_settings_screen_title"
-            android:theme="@style/MediaSettings.Activity" />
+            android:theme="@style/WordPress.NoActionBar.TranslucentStatus" />
 
         <!-- Theme Activities -->
         <activity
