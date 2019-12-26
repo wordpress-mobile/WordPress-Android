@@ -25,4 +25,8 @@
 
     <color name="black_translucent_50">#80000000</color>
     <color name="media_shade_overlay_color">@color/black_translucent_50</color>
+
+    <!-- Gutenberg -->
+    <color name="background_color">#f6f7f7</color>
+
 </resources>

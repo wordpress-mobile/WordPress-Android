@@ -88,7 +88,8 @@ public class GutenbergContainerFragment extends Fragment {
                 postType,
                 isNewPost,
                 localeString,
-                translations);
+                translations,
+                getContext().getResources().getColor(R.color.background_color));
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;
