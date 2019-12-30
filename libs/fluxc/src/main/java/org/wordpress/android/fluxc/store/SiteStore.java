@@ -115,9 +115,16 @@ public class SiteStore extends Store {
 
     public static class DesignateMobileEditorForAllSitesPayload extends Payload<SiteEditorsError> {
         public String editor;
+        public boolean setOnlyIfEmpty;
 
         public DesignateMobileEditorForAllSitesPayload(@NonNull String editorName) {
             this.editor = editorName;
+            this.setOnlyIfEmpty = true;
+        }
+
+        public DesignateMobileEditorForAllSitesPayload(@NonNull String editorName, boolean setOnlyIfEmpty) {
+            this.editor = editorName;
+            this.setOnlyIfEmpty = setOnlyIfEmpty;
         }
     }
 
@@ -1754,7 +1761,7 @@ public class SiteStore extends Store {
         }
 
         if (wpcomPostRequestRequired) {
-            mSiteRestClient.designateMobileEditorForAllSites(payload.editor);
+            mSiteRestClient.designateMobileEditorForAllSites(payload.editor, payload.setOnlyIfEmpty);
             event.isNetworkResponse = false;
         } else {
             event.isNetworkResponse = true;
