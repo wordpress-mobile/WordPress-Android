@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatButton
 import org.wordpress.android.R
+import org.wordpress.android.util.expandTouchTargetArea
 import org.wordpress.android.widgets.WPTextView
 
 /**
@@ -56,6 +57,7 @@ class ActionableEmptyView : LinearLayout {
         image = layout.findViewById(R.id.image)
         title = layout.findViewById(R.id.title)
         subtitle = layout.findViewById(R.id.subtitle)
+        subtitle.expandTouchTargetArea(R.dimen.actionable_subtitle_extra_padding,true)
         button = layout.findViewById(R.id.button)
         bottomImage = layout.findViewById(R.id.bottom_image)
 

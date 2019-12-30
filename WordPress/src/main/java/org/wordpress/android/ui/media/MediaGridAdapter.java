@@ -302,6 +302,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
             mVideoOverlayContainer = view.findViewById(R.id.frame_video_overlay);
             mSelectionCountContainer = view.findViewById(R.id.frame_selection_count);
+            ViewUtilsKt.expandTouchTargetArea(mSelectionCountContainer, R.dimen.media_picker_selection_extra_padding,
+                    false);
 
             // make the progress bar white
             mProgressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
