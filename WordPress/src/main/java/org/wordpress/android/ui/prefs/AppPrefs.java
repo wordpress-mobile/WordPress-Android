@@ -691,7 +691,7 @@ public class AppPrefs {
         return urls != null && urls.contains(siteURL);
     }
 
-    public static void setGutenbergInfoPopupDisplayed(String siteURL) {
+    public static void setGutenbergInfoPopupDisplayed(String siteURL, boolean remove) {
         if (isGutenbergInfoPopupDisplayed(siteURL)) {
             return;
         }
@@ -711,8 +711,11 @@ public class AppPrefs {
         if (urls != null) {
             newUrls.addAll(urls);
         }
-        newUrls.add(siteURL);
-
+        if (remove) {
+            newUrls.remove(siteURL);
+        } else {
+            newUrls.add(siteURL);
+        }
         SharedPreferences.Editor editor = prefs().edit();
         editor.putStringSet(DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name(), newUrls);
         editor.apply();

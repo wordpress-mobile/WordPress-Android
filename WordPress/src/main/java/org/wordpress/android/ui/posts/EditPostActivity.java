@@ -1426,7 +1426,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void showGutenbergInformativeDialog(boolean v2) {
+    private void showGutenbergInformativeDialog() {
         // Show the GB informative dialog on editing GB posts
         final PromoDialog gbInformativeDialog = new PromoDialog();
         gbInformativeDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
@@ -1436,9 +1436,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(org.wordpress.android.editor.R.string.dialog_button_ok));
 
         gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
-        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl());
+        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), false);
     }
-
 
     private void showGutenbergRolloutV2InformativeDialog() {
         // Show the GB informative dialog on editing GB posts
@@ -1449,7 +1448,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(org.wordpress.android.editor.R.string.dialog_button_ok));
 
         gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG);
-        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl());
+        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), false);
     }
 
     private void setGutenbergEnabledIfNeeded() {
@@ -1458,7 +1457,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopupForTheNewPosts(mSite.getUrl());
-        boolean showRolloutV2Popup = AppPrefs.shouldShowGutenbergRolloutV2InfoPopupForTheNewPosts(mSite.getUrl());
+        boolean showRolloutPopupPhase2 = AppPrefs.shouldShowGutenbergInfoPopupPhase2ForNewPosts(mSite.getUrl());
 
         if (TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost) {
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
@@ -1469,7 +1468,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (showPopup) {
             showGutenbergInformativeDialog();
-        } else if (showRolloutV2Popup) {
+        } else if (showRolloutPopupPhase2) {
             showGutenbergRolloutV2InformativeDialog();
         }
     }
