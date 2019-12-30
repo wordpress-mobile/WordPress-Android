@@ -57,7 +57,7 @@ class ActionableEmptyView : LinearLayout {
         image = layout.findViewById(R.id.image)
         title = layout.findViewById(R.id.title)
         subtitle = layout.findViewById(R.id.subtitle)
-        subtitle.expandTouchTargetArea(R.dimen.actionable_subtitle_extra_padding,true)
+        subtitle.expandTouchTargetArea(R.dimen.actionable_subtitle_extra_padding, true)
         button = layout.findViewById(R.id.button)
         bottomImage = layout.findViewById(R.id.bottom_image)
 
