@@ -22,7 +22,7 @@
     <string name="open_mail">Open mail</string>
     <string name="alternatively">Alternatively:</string>
     <string name="enter_site_address_instead">Log in by entering your site address.</string>
-    <string name="enter_site_credentials_instead">Log in with site credentials.</string>
+    <string name="enter_site_credentials_instead">Log in with site credentials</string>
     <string name="enter_username_instead">Log in with your username.</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
