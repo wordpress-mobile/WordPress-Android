@@ -455,6 +455,7 @@ public class SitePickerActivity extends AppCompatActivity
     private void setupSearchView() {
         mSearchView = (SearchView) mMenuSearch.getActionView();
         mSearchView.setIconifiedByDefault(false);
+        mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
 
         mMenuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
