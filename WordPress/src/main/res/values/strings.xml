@@ -891,7 +891,7 @@
     <string name="stats_management_try_it_now">Try it now</string>
     <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
     <string name="stats_management_add_new_stats_card">Add new stats card</string>
-    <string name="stats_management_add_new_card">Add New Card</string>
+    <string name="stats_management_screen_title">Add New Card</string>
     <string name="stats_management_new">New</string>
 
     <!-- Stats refreshed widgets -->
