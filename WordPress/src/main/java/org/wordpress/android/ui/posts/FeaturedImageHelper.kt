@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.ui.posts.FeaturedImageHelper.OriginType.EDIT_POST_SETTINGS
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
@@ -24,6 +23,7 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.ArrayList
+import java.util.HashMap
 import javax.inject.Inject
 
 const val EMPTY_LOCAL_POST_ID = -1
@@ -56,11 +56,9 @@ internal class FeaturedImageHelper @Inject constructor(
         return null
     }
 
-    @JvmOverloads
     fun retryFeaturedImageUpload(
         site: SiteModel,
-        post: PostImmutableModel,
-        originType: OriginType? = null
+        post: PostImmutableModel
     ): MediaModel? {
         val mediaModel = getFailedFeaturedImageUpload(post)
         if (mediaModel != null) {
@@ -70,9 +68,7 @@ internal class FeaturedImageHelper @Inject constructor(
             dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel))
             startUploadService(mediaModel)
 
-            originType?.let {
-                trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_RETRY_CLICKED, post, it)
-            }
+            trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_RETRY_CLICKED.label, post)
         }
         return mediaModel
     }
@@ -103,12 +99,10 @@ internal class FeaturedImageHelper @Inject constructor(
         return true
     }
 
-    @JvmOverloads
     fun cancelFeaturedImageUpload(
         site: SiteModel,
         post: PostImmutableModel,
-        cancelFailedOnly: Boolean,
-        originType: OriginType? = null
+        cancelFailedOnly: Boolean
     ) {
         var mediaModel: MediaModel? = getFailedFeaturedImageUpload(post)
         if (!cancelFailedOnly && mediaModel == null) {
@@ -120,9 +114,7 @@ internal class FeaturedImageHelper @Inject constructor(
             uploadServiceFacade.cancelFinalNotification(post)
             uploadServiceFacade.cancelFinalNotificationForMedia(site)
 
-            originType?.let {
-                trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_CANCELED, post, it)
-            }
+            trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_CANCELED.label, post)
         }
     }
 
@@ -158,28 +150,20 @@ internal class FeaturedImageHelper @Inject constructor(
     }
 
     fun trackFeaturedImageEvent(
-        event: TrackableEvent,
-        post: PostImmutableModel,
-        originType: OriginType
+        stat: Stat,
+        post: PostImmutableModel?
     ) {
-        val currentStat = if (originType == EDIT_POST_SETTINGS) {
-            when (event) {
-                TrackableEvent.IMAGE_PICKED -> Stat.POST_SETTINGS_FEATURED_IMAGE_PICKED
-                TrackableEvent.IMAGE_UPLOAD_CANCELED -> Stat.POST_SETTINGS_FEATURED_IMAGE_UPLOAD_CANCELED
-                TrackableEvent.IMAGE_UPLOAD_RETRY_CLICKED -> Stat.POST_SETTINGS_FEATURED_IMAGE_UPLOAD_RETRY_CLICKED
-                TrackableEvent.IMAGE_REMOVE_CLICKED -> Stat.POST_SETTINGS_FEATURED_IMAGE_REMOVE_CLICKED
-            }
-        } else {
-            null
+        var properties: HashMap<String, Any>? = null
+        post?.let {
+            properties = HashMap()
+            properties?.put(POST_ID_KEY, it.id)
+            properties?.put(POST_STATUS_KEY, it.status)
         }
 
-        currentStat?.let {
-            val properties = mapOf(
-                "post_id" to post.id,
-                "post_status" to post.status
-            )
-
-            analyticsTrackerWrapper.track(it, properties)
+        if (properties == null) {
+            analyticsTrackerWrapper.track(stat)
+        } else {
+            analyticsTrackerWrapper.track(stat, properties as HashMap<String, Any>)
         }
     }
 
@@ -199,14 +183,15 @@ internal class FeaturedImageHelper @Inject constructor(
         IMAGE_UPLOAD_FAILED(localImageViewVisible = true, retryOverlayVisible = true);
     }
 
-    internal enum class TrackableEvent {
-        IMAGE_PICKED,
-        IMAGE_UPLOAD_CANCELED,
-        IMAGE_UPLOAD_RETRY_CLICKED,
-        IMAGE_REMOVE_CLICKED
+    internal enum class TrackableEvent(val label: Stat) {
+        IMAGE_PICKED(Stat.FEATURED_IMAGE_PICKED_POST_SETTINGS),
+        IMAGE_UPLOAD_CANCELED(Stat.FEATURED_IMAGE_UPLOAD_CANCELED_POST_SETTINGS),
+        IMAGE_UPLOAD_RETRY_CLICKED(Stat.FEATURED_IMAGE_UPLOAD_RETRY_CLICKED_POST_SETTINGS),
+        IMAGE_REMOVE_CLICKED(Stat.FEATURED_IMAGE_REMOVE_CLICKED_POST_SETTINGS)
     }
 
-    internal enum class OriginType {
-        EDIT_POST_SETTINGS
+    companion object {
+        private const val POST_ID_KEY = "post_id"
+        private const val POST_STATUS_KEY = "post_status"
     }
 }

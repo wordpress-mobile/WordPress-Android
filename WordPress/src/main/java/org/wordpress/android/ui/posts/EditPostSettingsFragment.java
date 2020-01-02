@@ -67,7 +67,6 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
-import org.wordpress.android.ui.posts.FeaturedImageHelper.OriginType;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -426,19 +425,15 @@ public class EditPostSettingsFragment extends Fragment {
         }
         switch (item.getItemId()) {
             case CHOOSE_FEATURED_IMAGE_MENU_ID:
-                mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false, OriginType.EDIT_POST_SETTINGS);
+                mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false);
                 launchFeaturedMediaPicker();
                 return true;
             case REMOVE_FEATURED_IMAGE_UPLOAD_MENU_ID:
             case REMOVE_FEATURED_IMAGE_MENU_ID:
-                mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false, OriginType.EDIT_POST_SETTINGS);
+                mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false);
                 clearFeaturedImage();
 
-                mFeaturedImageHelper.trackFeaturedImageEvent(
-                    TrackableEvent.IMAGE_REMOVE_CLICKED,
-                    post,
-                    OriginType.EDIT_POST_SETTINGS
-                );
+                mFeaturedImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_REMOVE_CLICKED.getLabel(), post);
 
                 return true;
             case RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID:
@@ -467,8 +462,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void retryFeaturedImageUpload(@NonNull SiteModel site, @NonNull PostImmutableModel post) {
-        MediaModel mediaModel =
-                mFeaturedImageHelper.retryFeaturedImageUpload(site, post, OriginType.EDIT_POST_SETTINGS);
+        MediaModel mediaModel = mFeaturedImageHelper.retryFeaturedImageUpload(site, post);
         if (mediaModel == null) {
             clearFeaturedImage();
         }
@@ -943,14 +937,6 @@ public class EditPostSettingsFragment extends Fragment {
         postRepository.update(postModel -> {
             postModel.setFeaturedImageId(featuredImageId);
             updateFeaturedImageView();
-
-            if (featuredImageId != 0) {
-                mFeaturedImageHelper.trackFeaturedImageEvent(
-                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
-                    postModel,
-                    OriginType.EDIT_POST_SETTINGS
-                );
-            }
 
             return true;
         });
