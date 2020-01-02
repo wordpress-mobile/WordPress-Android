@@ -938,13 +938,6 @@ public class EditPostSettingsFragment extends Fragment {
             postModel.setFeaturedImageId(featuredImageId);
             updateFeaturedImageView();
 
-            if (featuredImageId != 0) {
-                mFeaturedImageHelper.trackFeaturedImageEvent(
-                    TrackableEvent.IMAGE_SET,
-                    postModel.getId()
-                );
-            }
-
             return true;
         });
     }
@@ -993,6 +986,11 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void launchFeaturedMediaPicker() {
         if (isAdded()) {
+            mFeaturedImageHelper.trackFeaturedImageEvent(
+                TrackableEvent.IMAGE_SET_CLICKED,
+                getEditPostRepository().getId()
+            );
+
             ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite(),
                     getEditPostRepository().getId());
         }
