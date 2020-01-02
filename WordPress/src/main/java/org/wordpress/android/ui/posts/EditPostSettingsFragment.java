@@ -433,7 +433,7 @@ public class EditPostSettingsFragment extends Fragment {
                 mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false);
                 clearFeaturedImage();
 
-                mFeaturedImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_REMOVE_CLICKED.getLabel(), post);
+                mFeaturedImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_REMOVE_CLICKED, post.getId());
 
                 return true;
             case RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID:
@@ -937,6 +937,13 @@ public class EditPostSettingsFragment extends Fragment {
         postRepository.update(postModel -> {
             postModel.setFeaturedImageId(featuredImageId);
             updateFeaturedImageView();
+
+            if (featuredImageId != 0) {
+                mFeaturedImageHelper.trackFeaturedImageEvent(
+                    TrackableEvent.IMAGE_SET,
+                    postModel.getId()
+                );
+            }
 
             return true;
         });

@@ -23,7 +23,6 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.ArrayList
-import java.util.HashMap
 import javax.inject.Inject
 
 const val EMPTY_LOCAL_POST_ID = -1
@@ -68,7 +67,7 @@ internal class FeaturedImageHelper @Inject constructor(
             dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel))
             startUploadService(mediaModel)
 
-            trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_RETRY_CLICKED.label, post)
+            trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_RETRY_CLICKED, post.id)
         }
         return mediaModel
     }
@@ -114,7 +113,7 @@ internal class FeaturedImageHelper @Inject constructor(
             uploadServiceFacade.cancelFinalNotification(post)
             uploadServiceFacade.cancelFinalNotificationForMedia(site)
 
-            trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_CANCELED.label, post)
+            trackFeaturedImageEvent(TrackableEvent.IMAGE_UPLOAD_CANCELED, post.id)
         }
     }
 
@@ -150,22 +149,9 @@ internal class FeaturedImageHelper @Inject constructor(
     }
 
     fun trackFeaturedImageEvent(
-        stat: Stat,
-        post: PostImmutableModel?
-    ) {
-        var properties: HashMap<String, Any>? = null
-        post?.let {
-            properties = HashMap()
-            properties?.put(POST_ID_KEY, it.id)
-            properties?.put(POST_STATUS_KEY, it.status)
-        }
-
-        if (properties == null) {
-            analyticsTrackerWrapper.track(stat)
-        } else {
-            analyticsTrackerWrapper.track(stat, properties as HashMap<String, Any>)
-        }
-    }
+        event: TrackableEvent,
+        postId: Int
+    ) = analyticsTrackerWrapper.track(event.label, mapOf(POST_ID_KEY to postId))
 
     internal data class FeaturedImageData(val uiState: FeaturedImageState, val mediaUri: String?)
 
@@ -184,6 +170,7 @@ internal class FeaturedImageHelper @Inject constructor(
     }
 
     internal enum class TrackableEvent(val label: Stat) {
+        IMAGE_SET(Stat.FEATURED_IMAGE_SET_POST_SETTINGS),
         IMAGE_PICKED(Stat.FEATURED_IMAGE_PICKED_POST_SETTINGS),
         IMAGE_UPLOAD_CANCELED(Stat.FEATURED_IMAGE_UPLOAD_CANCELED_POST_SETTINGS),
         IMAGE_UPLOAD_RETRY_CLICKED(Stat.FEATURED_IMAGE_UPLOAD_RETRY_CLICKED_POST_SETTINGS),
@@ -192,6 +179,5 @@ internal class FeaturedImageHelper @Inject constructor(
 
     companion object {
         private const val POST_ID_KEY = "post_id"
-        private const val POST_STATUS_KEY = "post_status"
     }
 }

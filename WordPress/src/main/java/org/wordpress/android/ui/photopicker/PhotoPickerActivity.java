@@ -253,8 +253,8 @@ public class PhotoPickerActivity extends AppCompatActivity
             final String mimeType = getContentResolver().getType(mediaUri);
 
             mFeaturedImageHelper.trackFeaturedImageEvent(
-                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED.getLabel(),
-                null
+                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                mLocalPostId
             );
 
             WPMediaUtils.fetchMediaAndDoNext(this, mediaUri,
@@ -290,8 +290,8 @@ public class PhotoPickerActivity extends AppCompatActivity
         // if user chose a featured image, track image picked event
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             mFeaturedImageHelper.trackFeaturedImageEvent(
-                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED.getLabel(),
-                null
+                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                mLocalPostId
             );
         }
 
