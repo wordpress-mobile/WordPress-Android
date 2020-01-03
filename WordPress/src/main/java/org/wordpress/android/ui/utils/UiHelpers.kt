@@ -16,6 +16,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtils
 import javax.inject.Inject
 import android.graphics.Point
+import androidx.recyclerview.widget.RecyclerView
 
 class UiHelpers @Inject constructor() {
     fun getPxOfUiDimen(context: Context, uiDimen: UiDimen): Int =
@@ -55,6 +56,12 @@ class UiHelpers @Inject constructor() {
         updateVisibility(imageView, resId != null)
         resId?.let {
             imageView.setImageResource(resId)
+        }
+    }
+
+    fun removeAllItemDecorationsInRecyclerView(recyclerView: RecyclerView) {
+        while (recyclerView.itemDecorationCount > 0) {
+            recyclerView.removeItemDecorationAt(0)
         }
     }
 
