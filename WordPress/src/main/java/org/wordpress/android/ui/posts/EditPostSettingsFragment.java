@@ -986,13 +986,15 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void launchFeaturedMediaPicker() {
         if (isAdded()) {
-            mFeaturedImageHelper.trackFeaturedImageEvent(
-                TrackableEvent.IMAGE_SET_CLICKED,
-                getEditPostRepository().getId()
-            );
+            EditPostRepository postRepository = getEditPostRepository();
+            if (postRepository == null) {
+                return;
+            }
+            int postId = postRepository.getId();
+            mFeaturedImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_SET_CLICKED, postId);
 
             ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite(),
-                    getEditPostRepository().getId());
+                    postId);
         }
     }
 
