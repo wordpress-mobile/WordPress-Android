@@ -986,11 +986,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void launchFeaturedMediaPicker() {
         if (isAdded()) {
-            EditPostRepository postRepository = getEditPostRepository();
-            if (postRepository == null) {
-                return;
-            }
-            int postId = postRepository.getId();
+            int postId = getEditPostRepository().getId();
             mFeaturedImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_SET_CLICKED, postId);
 
             ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite(),
