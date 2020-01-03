@@ -862,6 +862,7 @@
     <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
 
     <!-- Number suffixes -->
+    <string name="negative_prefix">-%s</string>
     <string name="suffix_1_000">%sk</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000_000_000">%sB</string>
