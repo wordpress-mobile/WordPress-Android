@@ -30,7 +30,7 @@ class StatsUtilsTest {
         whenever(resourceProvider.getString(any(), any())).then {
             val resourceId = it.getArgument<Int>(0)
             val value = it.getArgument<String>(1)
-            when(resourceId) {
+            when (resourceId) {
                 R.string.negative_prefix -> "-$value"
                 R.string.suffix_1_000 -> value + suffixThousand
                 R.string.suffix_1_000_000 -> value + suffixMillion
