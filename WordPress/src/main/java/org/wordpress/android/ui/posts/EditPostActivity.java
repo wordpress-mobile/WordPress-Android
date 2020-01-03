@@ -118,6 +118,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
+import org.wordpress.android.ui.posts.editor.EditorActionsProvider;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
 import org.wordpress.android.ui.posts.editor.EditorTracker;
@@ -318,6 +319,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject PostUtilsWrapper mPostUtils;
     @Inject EditorTracker mEditorTracker;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject EditorActionsProvider mEditorActionsProvider;
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
 
@@ -809,7 +811,8 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private PrimaryEditorAction getPrimaryAction() {
-        return PrimaryEditorAction.getPrimaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite));
+        return mEditorActionsProvider
+                .getPrimaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite));
     }
 
     private String getPrimaryActionText() {
@@ -817,7 +820,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private SecondaryEditorAction getSecondaryAction() {
-        return SecondaryEditorAction
+        return mEditorActionsProvider
                 .getSecondaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite));
     }
 
@@ -1921,11 +1924,13 @@ public class EditPostActivity extends AppCompatActivity implements
                         // Enable gutenberg on the site & show the informative popup upon opening
                         // the GB editor the first time when the remote setting value is still null
                         setGutenbergEnabledIfNeeded();
+                        String postType = mIsPage ? "page" : "post";
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
                         boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
                         return GutenbergEditorFragment.newInstance("",
                                 "",
+                                postType,
                                 mIsNewPost,
                                 wpcomLocaleSlug,
                                 supportsStockPhotos);

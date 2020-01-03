@@ -15,6 +15,7 @@ private const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG
 private const val CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG = "CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG"
 private const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
+private const val CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG = "CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG"
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
@@ -31,6 +32,7 @@ class PostListDialogHelper(
     private var localPostIdForTrashPostWithLocalChangesDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
     private var localPostIdForAutosaveRevisionResolutionDialog: Int? = null
+    private var localPostIdForScheduledPostSyncDialog: Int? = null
 
     fun showDeletePostConfirmationDialog(post: PostModel) {
         // We need network connection to delete a remote post, but not a local draft
@@ -61,6 +63,22 @@ class PostListDialogHelper(
                 negativeButton = UiStringRes(R.string.cancel)
         )
         localPostIdForPublishDialog = post.id
+        showDialog.invoke(dialogHolder)
+    }
+
+    fun showSyncScheduledPostConfirmationDialog(post: PostModel) {
+        if (localPostIdForScheduledPostSyncDialog != null) {
+            // We can only handle one sync post dialog at once
+            return
+        }
+        val dialogHolder = DialogHolder(
+                tag = CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_scheduled_post_sync_title),
+                message = UiStringRes(R.string.dialog_confirm_scheduled_post_sync_message),
+                positiveButton = UiStringRes(R.string.dialog_confirm_scheduled_post_sync_yes),
+                negativeButton = UiStringRes(R.string.cancel)
+        )
+        localPostIdForScheduledPostSyncDialog = post.id
         showDialog.invoke(dialogHolder)
     }
 
@@ -121,6 +139,10 @@ class PostListDialogHelper(
                 localPostIdForPublishDialog = null
                 publishPost(it)
             }
+            CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG -> localPostIdForScheduledPostSyncDialog?.let {
+                localPostIdForScheduledPostSyncDialog = null
+                publishPost(it)
+            }
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 localPostIdForConflictResolutionDialog = null
                 // here load version from remote
@@ -148,6 +170,7 @@ class PostListDialogHelper(
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog = null
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
+            CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG -> localPostIdForScheduledPostSyncDialog = null
             CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithLocalChangesDialog = null
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 updateConflictedPostWithLocalVersion(it)

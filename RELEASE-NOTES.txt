@@ -1,3 +1,6 @@
+14.0
+-----
+ 
 13.9
 -----
 * Block Editor: New block "Gallery". You can now create image galleries using WordPress Media library.

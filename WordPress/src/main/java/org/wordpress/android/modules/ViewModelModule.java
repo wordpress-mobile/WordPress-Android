@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
+import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel;
@@ -269,6 +270,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(WPMainActivityViewModel.class)
     abstract ViewModel wpMainActivityViewModel(WPMainActivityViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PostSignupInterstitialViewModel.class)
+    abstract ViewModel postSignupInterstitialViewModel(PostSignupInterstitialViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
