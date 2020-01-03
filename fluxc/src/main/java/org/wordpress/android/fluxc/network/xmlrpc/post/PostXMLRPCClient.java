@@ -507,11 +507,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         String content = post.getContent();
 
-        // get rid of the p and br tags that the editor adds.
-        if (post.isLocalDraft()) {
-            content = content.replace("<p>", "").replace("</p>", "\n").replace("<br>", "");
-        }
-
         // gets rid of the weird character android inserts after images
         content = content.replaceAll("\uFFFC", "");
 
