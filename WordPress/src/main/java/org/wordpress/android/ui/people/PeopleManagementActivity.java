@@ -8,10 +8,11 @@ import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -118,26 +119,12 @@ public class PeopleManagementActivity extends AppCompatActivity
         // Fetch the user roles to get ready
         mDispatcher.dispatch(SiteActionBuilder.newFetchUserRolesAction(mSite));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setElevation(0);
-        }
-
-
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (savedInstanceState == null) {
             // only delete cached people if there is a connection
             if (NetworkUtils.isNetworkAvailable(this)) {
                 PeopleTable.deletePeopleExceptForFirstPage(mSite.getId());
-            }
-
-            if (actionBar != null) {
-                actionBar.setTitle(R.string.people);
             }
 
             PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(mSite);
@@ -184,11 +171,6 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             mFollowersLastFetchedPage = savedInstanceState.getInt(KEY_FOLLOWERS_LAST_FETCHED_PAGE);
             mEmailFollowersLastFetchedPage = savedInstanceState.getInt(KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE);
-
-            CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
-            if (actionBar != null && title != null) {
-                actionBar.setTitle(title);
-            }
 
             PeopleListFragment peopleListFragment = getListFragment();
             if (peopleListFragment != null) {
@@ -310,8 +292,8 @@ public class PeopleManagementActivity extends AppCompatActivity
                 }
                 mUsersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
-                                     R.string.error_fetch_users_list,
-                                     ToastUtils.Duration.SHORT);
+                        R.string.error_fetch_users_list,
+                        ToastUtils.Duration.SHORT);
             }
         });
 
@@ -352,8 +334,8 @@ public class PeopleManagementActivity extends AppCompatActivity
                 }
                 mFollowersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
-                                     R.string.error_fetch_followers_list,
-                                     ToastUtils.Duration.SHORT);
+                        R.string.error_fetch_followers_list,
+                        ToastUtils.Duration.SHORT);
             }
         });
 
@@ -395,8 +377,8 @@ public class PeopleManagementActivity extends AppCompatActivity
                 }
                 mEmailFollowersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
-                                     R.string.error_fetch_email_followers_list,
-                                     ToastUtils.Duration.SHORT);
+                        R.string.error_fetch_email_followers_list,
+                        ToastUtils.Duration.SHORT);
             }
         });
 
@@ -436,8 +418,8 @@ public class PeopleManagementActivity extends AppCompatActivity
                 }
                 mViewersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
-                                     R.string.error_fetch_viewers_list,
-                                     ToastUtils.Duration.SHORT);
+                        R.string.error_fetch_viewers_list,
+                        ToastUtils.Duration.SHORT);
             }
         });
 
@@ -453,7 +435,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         if (personDetailFragment == null) {
             personDetailFragment = PersonDetailFragment.newInstance(mAccountStore.getAccount().getUserId(), personID,
-                                                                    localTableBlogID, person.getPersonType());
+                    localTableBlogID, person.getPersonType());
         } else {
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
@@ -492,25 +474,25 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         PeopleUtils.updateRole(mSite, person.getPersonID(), event.getNewRole(), event.getLocalTableBlogId(),
-                               new PeopleUtils.UpdateUserCallback() {
-                                   @Override
-                                   public void onSuccess(Person person) {
-                                       AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PERSON_UPDATED, mSite);
-                                       PeopleTable.saveUser(person);
-                                       refreshOnScreenFragmentDetails();
-                                   }
+                new PeopleUtils.UpdateUserCallback() {
+                    @Override
+                    public void onSuccess(Person person) {
+                        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PERSON_UPDATED, mSite);
+                        PeopleTable.saveUser(person);
+                        refreshOnScreenFragmentDetails();
+                    }
 
-                                   @Override
-                                   public void onError() {
-                                       // change the role back to it's original value
-                                       if (personDetailFragment != null) {
-                                           personDetailFragment.refreshPersonDetails();
-                                       }
-                                       ToastUtils.showToast(PeopleManagementActivity.this,
-                                                            R.string.error_update_role,
-                                                            ToastUtils.Duration.LONG);
-                                   }
-                               });
+                    @Override
+                    public void onError() {
+                        // change the role back to it's original value
+                        if (personDetailFragment != null) {
+                            personDetailFragment.refreshPersonDetails();
+                        }
+                        ToastUtils.showToast(PeopleManagementActivity.this,
+                                R.string.error_update_role,
+                                ToastUtils.Duration.LONG);
+                    }
+                });
     }
 
     private void confirmRemovePerson() {
@@ -519,7 +501,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.person_remove_confirmation_title, person.getDisplayName()));
         if (person.getPersonType() == Person.PersonType.USER) {
             builder.setMessage(getString(R.string.user_remove_confirmation_message, person.getDisplayName()));
@@ -583,8 +565,8 @@ public class PeopleManagementActivity extends AppCompatActivity
                         break;
                 }
                 ToastUtils.showToast(PeopleManagementActivity.this,
-                                     errorMessageRes,
-                                     ToastUtils.Duration.LONG);
+                        errorMessageRes,
+                        ToastUtils.Duration.LONG);
             }
         };
 

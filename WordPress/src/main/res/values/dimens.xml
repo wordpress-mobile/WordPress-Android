@@ -265,9 +265,6 @@
 
     <!--theme browser-->
     <dimen name="theme_browser_default_column_width">320dp</dimen>
-    <dimen name="theme_browser_cardview_margin_large">5dp</dimen>
-    <dimen name="theme_browser_cardview_header_margin">10dp</dimen>
-    <dimen name="theme_browser_separator_thickness">1dp</dimen>
     <dimen name="theme_browser_more_button_height">40dp</dimen>
     <dimen name="theme_browser_more_button_width">48dp</dimen>
     <dimen name="theme_browser_header_button_height">50dp</dimen>
@@ -291,7 +288,6 @@
     <dimen name="people_avatar_sz">40dp</dimen>
     <dimen name="people_list_row_height">72dp</dimen>
     <dimen name="people_list_row_role_margin_top">20dp</dimen>
-    <dimen name="people_list_divider_height">1dp</dimen>
     <dimen name="people_list_divider_left_margin">72dp</dimen>
 
     <!-- photo picker -->
@@ -323,6 +319,11 @@
 
     <!-- signup -->
     <dimen name="progress_spinner_small">24dp</dimen>
+
+    <!-- post-signup interstitial -->
+    <dimen name="post_signup_interstitial_max_width">
+        @dimen/actionable_empty_view_text_maximum_width
+    </dimen>
 
     <!--plugins-->
     <dimen name="plugin_row_width">116dp</dimen>
@@ -437,7 +438,8 @@
 
     <!-- web preview  -->
     <dimen name="web_preview_navbar_height">72dp</dimen>
-    <dimen name="web_preview_mode_popup_width">161sp</dimen> <!-- SP works better with popup list menu  -->
+    <dimen name="web_preview_mode_popup_width">161sp
+    </dimen> <!-- SP works better with popup list menu  -->
     <dimen name="web_preview_hint_label_corner_radius">6dp</dimen>
 
     <!--settings username changer-->
