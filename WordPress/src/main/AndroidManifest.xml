@@ -321,13 +321,13 @@
         <!-- Theme Activities -->
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:launchMode="singleTop"
             android:label="@string/themes"/>
         <activity
             android:name=".ui.themes.ThemeWebActivity"
             android:label="@string/selected_theme"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:parentActivityName=".ui.themes.ThemeBrowserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -531,7 +531,7 @@
             android:name=".ui.people.PeopleManagementActivity"
             android:label="@string/people"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <!--Plugins-->
         <activity
