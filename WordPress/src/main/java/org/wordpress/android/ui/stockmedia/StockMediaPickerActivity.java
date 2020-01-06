@@ -22,6 +22,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -634,19 +635,21 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         }
 
         private void addImageSelectedToAccessibilityFocusedEvent(ImageView imageView, int position) {
-            AccessibilityUtils.addPopulateAccessibilityEventFocusedListener(imageView, event -> {
-                if (isValidPosition(position)) {
-                    if (isItemSelected(position)) {
-                        final String imageSelectedText = imageView.getContext().getString(
-                                R.string.photo_picker_image_selected);
-                        if (!imageView.getContentDescription().toString().contains(imageSelectedText)) {
-                            imageView.setContentDescription(
-                                    imageView.getContentDescription() + " "
-                                    + imageSelectedText);
+            if (!ViewCompat.hasAccessibilityDelegate(imageView)) {
+                AccessibilityUtils.addPopulateAccessibilityEventFocusedListener(imageView, event -> {
+                    if (isValidPosition(position)) {
+                        if (isItemSelected(position)) {
+                            final String imageSelectedText = imageView.getContext().getString(
+                                    R.string.photo_picker_image_selected);
+                            if (!imageView.getContentDescription().toString().contains(imageSelectedText)) {
+                                imageView.setContentDescription(
+                                        imageView.getContentDescription() + " "
+                                        + imageSelectedText);
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
 
         boolean isValidPosition(int position) {
