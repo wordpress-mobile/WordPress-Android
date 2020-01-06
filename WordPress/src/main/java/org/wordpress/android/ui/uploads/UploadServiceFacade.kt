@@ -41,4 +41,7 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
     fun uploadMediaFromEditor(mediaList: ArrayList<MediaModel>) {
         UploadService.uploadMediaFromEditor(appContext, mediaList)
     }
+
+    fun isPendingOrInProgressMediaUpload(mediaModel: MediaModel): Boolean =
+            UploadService.isPendingOrInProgressMediaUpload(mediaModel)
 }
