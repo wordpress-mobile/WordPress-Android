@@ -45,8 +45,14 @@ enum class QuickStartMySitePrompts constructor(
     PUBLISH_POST_TUTORIAL(
             QuickStartTask.PUBLISH_POST,
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) R.id.my_site_scroll_view_root else R.id.root_view_main,
-            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) R.id.row_blog_posts else R.id.bottom_nav_new_post_button,
-            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) R.string.quick_start_dialog_create_new_post_message_short else R.string.quick_start_dialog_publish_post_message_short,
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE)
+                R.id.row_blog_posts
+            else
+                R.id.bottom_nav_new_post_button,
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE)
+                R.string.quick_start_dialog_create_new_post_message_short
+            else
+                R.string.quick_start_dialog_publish_post_message_short,
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) -1 else R.drawable.ic_create_white_24dp
     ),
     FOLLOW_SITES_TUTORIAL(
@@ -98,7 +104,8 @@ enum class QuickStartMySitePrompts constructor(
 
         @JvmStatic
         fun isTargetingBottomNavBar(task: QuickStartTask): Boolean {
-            return task == QuickStartTask.FOLLOW_SITE || (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && task == QuickStartTask.PUBLISH_POST)
+            return task == QuickStartTask.FOLLOW_SITE ||
+                    (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && task == QuickStartTask.PUBLISH_POST)
         }
     }
 }
