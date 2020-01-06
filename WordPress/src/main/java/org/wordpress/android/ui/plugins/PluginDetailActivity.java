@@ -262,8 +262,6 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
 
 
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-
-
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
 
         float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);

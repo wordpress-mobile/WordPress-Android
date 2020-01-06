@@ -27,7 +27,7 @@
         <item name="wpColorText">@color/neutral_70</item>
         <item name="wpColorTextSubtle">@color/neutral</item>
         <item name="wpColorError">@color/error</item>
-        <item name="wpColorSuccess">@color/success_50</item>
+        <item name="wpColorSuccess">@color/green_50</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorAppBar">@color/primary</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>

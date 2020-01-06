@@ -43,7 +43,6 @@
                     android:layout_below="@+id/text_manage" />
             </RelativeLayout>
 
-
             <RelativeLayout
                 android:id="@+id/featured_plugins_container"
                 android:layout_width="match_parent"
