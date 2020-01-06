@@ -7,9 +7,9 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.util.MediaUtils
-import org.wordpress.android.util.StringUtils
+import org.wordpress.android.ui.uploads.UploadServiceFacade
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.MediaUtilsWrapper
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
@@ -17,20 +17,26 @@ import javax.inject.Named
 class RemoveMediaUseCase @Inject constructor(
     private val mediaStore: MediaStore,
     private val dispatcher: Dispatcher,
+    private val mediaUtils: MediaUtilsWrapper,
+    private val uploadService: UploadServiceFacade,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun removeMediaIfNotUploading(mediaIds: List<String>) = withContext(bgDispatcher) {
         for (mediaId in mediaIds) {
             if (!TextUtils.isEmpty(mediaId)) {
                 // make sure the MediaModel exists
-                val mediaModel = mediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId))
-                        ?: continue
+                val mediaModel = try {
+                    mediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)) ?: continue
+                } catch (e: NumberFormatException) {
+                    AppLog.e(AppLog.T.MEDIA, "Invalid media id: $mediaId")
+                    continue
+                }
 
                 // also make sure it's not being uploaded anywhere else (maybe on some other Post,
                 // simultaneously)
                 if (mediaModel.uploadState != null &&
-                        MediaUtils.isLocalFile(mediaModel.uploadState.toLowerCase(Locale.ROOT)) &&
-                        !UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
+                        mediaUtils.isLocalFile(mediaModel.uploadState.toLowerCase(Locale.ROOT)) &&
+                        !uploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
                     dispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel))
                 }
             }
