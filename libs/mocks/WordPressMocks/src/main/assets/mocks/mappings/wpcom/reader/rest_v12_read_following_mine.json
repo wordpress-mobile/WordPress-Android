@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/rest/v1.2/read/following/mine.*"
+        "urlPattern": "/rest/v1.(1|2)/read/following/mine.*"
     },
     "response": {
         "status": 200,

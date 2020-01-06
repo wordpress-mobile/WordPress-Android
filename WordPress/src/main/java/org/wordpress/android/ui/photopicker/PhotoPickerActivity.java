@@ -251,6 +251,12 @@ public class PhotoPickerActivity extends AppCompatActivity
         // if user chose a featured image, we need to upload it and return the uploaded media object
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             final String mimeType = getContentResolver().getType(mediaUri);
+
+            mFeaturedImageHelper.trackFeaturedImageEvent(
+                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                mLocalPostId
+            );
+
             WPMediaUtils.fetchMediaAndDoNext(this, mediaUri,
                                              new WPMediaUtils.MediaFetchDoNext() {
                                                  @Override
@@ -281,6 +287,14 @@ public class PhotoPickerActivity extends AppCompatActivity
     }
 
     private void doMediaIdSelected(long mediaId, @NonNull PhotoPickerMediaSource source) {
+        // if user chose a featured image, track image picked event
+        if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+            mFeaturedImageHelper.trackFeaturedImageEvent(
+                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                mLocalPostId
+            );
+        }
+
         Intent data = new Intent()
                 .putExtra(EXTRA_MEDIA_ID, mediaId)
                 .putExtra(EXTRA_MEDIA_SOURCE, source.name());
