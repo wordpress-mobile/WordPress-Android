@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:insetRight="@dimen/people_list_divider_left_margin">
-    <shape>
-        <solid android:color="@color/neutral_0"/>
-        <size android:height="@dimen/people_list_divider_height"/>
-    </shape>
-</inset>

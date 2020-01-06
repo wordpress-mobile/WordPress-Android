@@ -58,13 +58,18 @@ public class SignupFlow {
         ViewInteraction passwordField = onView(allOf(withId(R.id.input), withHint("Password (optional)")));
         waitForElementToBeDisplayed(passwordField);
         populateTextField(passwordField, password);
+
+        // Click continue
+        clickOn(onView(withId(R.id.primary_button)));
+    }
+
+    public void dismissInterstitial() {
+        // Dismiss post-signup interstitial
+        clickOn(onView(withId(R.id.dismiss_button)));
     }
 
     public void confirmSignup() {
-        // Click continue
-        clickOn(onView(withId(R.id.primary_button)));
-
-        // Confirm login
+        // Confirm signup
         waitForElementToBeDisplayed(R.id.nav_me);
     }
 }

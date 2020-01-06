@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.themes;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -15,8 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -100,7 +101,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     (ThemeBrowserFragment) getSupportFragmentManager().findFragmentByTag(ThemeBrowserFragment.TAG);
         }
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -118,7 +119,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
     }
@@ -369,13 +370,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private void addBrowserFragment() {
         mThemeBrowserFragment = ThemeBrowserFragment.newInstance(mSite);
         getSupportFragmentManager().beginTransaction()
-                            .add(R.id.theme_browser_container, mThemeBrowserFragment, ThemeBrowserFragment.TAG)
-                            .commit();
+                                   .add(R.id.theme_browser_container, mThemeBrowserFragment, ThemeBrowserFragment.TAG)
+                                   .commit();
     }
 
     private void showAlertDialogOnNewSettingNewTheme(ThemeModel newTheme) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
+        AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(this);
 
         String thanksMessage = String.format(getString(R.string.theme_prompt), newTheme.getName());
         if (!TextUtils.isEmpty(newTheme.getAuthorName())) {
@@ -385,12 +385,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
         dialogBuilder.setMessage(thanksMessage);
         dialogBuilder.setNegativeButton(R.string.theme_done, null);
-        dialogBuilder.setPositiveButton(R.string.theme_manage_site, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
+        dialogBuilder.setPositiveButton(R.string.theme_manage_site, (dialog, which) -> finish());
 
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
