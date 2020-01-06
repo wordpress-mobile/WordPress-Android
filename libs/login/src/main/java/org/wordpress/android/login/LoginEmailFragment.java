@@ -79,7 +79,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private String mGoogleEmail;
     private String mRequestedEmail;
     private boolean mIsSocialLogin;
-    private boolean mIsValidEmail = true;
+    private boolean mIsValidEmail = false;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -164,7 +164,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             public void onClick(View view) {
                 mAnalyticsListener.trackSocialButtonClick();
                 ActivityUtils.hideKeyboardForced(mEmailInput.getEditText());
-
 
                 if (NetworkUtils.checkConnection(getActivity())) {
                     if (isAdded()) {
@@ -282,7 +281,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mLoginSiteUrl = args.getString(ARG_LOGIN_SITE_URL, "");
         }
     }
-    
+
     @Override
     public void onStart() {
         super.onStart();
@@ -291,7 +290,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, LoginEmailFragment.this)
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
-        validEmail();
+        showErrorIfEmailInvalid();
     }
 
     @Override
@@ -350,8 +349,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         }
     }
 
-    protected void validEmail() {
-        if (!mIsValidEmail) {
+    private void showErrorIfEmailInvalid() {
+        if (!mIsValidEmail && mEmailInput.getEditText().getText().length() > 0) {
             showEmailError(R.string.email_invalid);
         }
     }
