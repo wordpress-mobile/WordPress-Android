@@ -78,6 +78,8 @@ public class SiteUtils {
                 // Enable Gutenberg for all sites using a single network call
                 dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                         new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME, false)));
+                trackGutenbergEnabledForNonGutenbergSites(siteStore,
+                        BlockEditorEnabledSource.ON_PROGRESSIVE_ROLLOUT_PHASE_2);
 
                 // After enabling Gutenberg on these sites, we consider the user entered the rollout group
                 AppPrefs.setUserInGutenbergRolloutGroup();
@@ -115,7 +117,8 @@ public class SiteUtils {
             // Enable Gutenberg for all sites using a single network call
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
-            trackGutenbergEnabledForNonGutenbergSites(siteStore);
+            trackGutenbergEnabledForNonGutenbergSites(siteStore,
+                    BlockEditorEnabledSource.ON_PROGRESSIVE_ROLLOUT_PHASE_1);
 
             // After enabling Gutenberg on these sites, we consider the user entered the rollout group
             AppPrefs.setUserInGutenbergRolloutGroup();
@@ -135,11 +138,11 @@ public class SiteUtils {
         }
     }
 
-    private static void trackGutenbergEnabledForNonGutenbergSites(final SiteStore siteStore) {
+    private static void trackGutenbergEnabledForNonGutenbergSites(final SiteStore siteStore,
+                                                                  final BlockEditorEnabledSource source) {
         for (SiteModel site : siteStore.getSites()) {
             if (!TextUtils.equals(site.getMobileEditor(), GB_EDITOR_NAME)) {
-                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, site,
-                        BlockEditorEnabledSource.ON_PROGRESSIVE_ROLLOUT_PHASE_1.asPropertyMap());
+                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, site, source.asPropertyMap());
             }
         }
     }
