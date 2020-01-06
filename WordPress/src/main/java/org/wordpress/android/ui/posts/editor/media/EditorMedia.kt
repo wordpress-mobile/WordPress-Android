@@ -33,6 +33,7 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
@@ -250,7 +251,7 @@ class EditorMedia @Inject constructor(
         }
     }
 
-    fun removeMediaItem(localMediaId: String) {
+    fun updateDeletedMediaItemIds(localMediaId: String) {
         deletedMediaItemIds.add(localMediaId)
         UploadService.setDeletedMediaItemIds(deletedMediaItemIds)
     }
@@ -259,6 +260,22 @@ class EditorMedia @Inject constructor(
 
     fun cancelAddMediaToEditorActions() {
         job.cancel()
+    }
+
+    fun onMediaDeleted(
+        showAztecEditor: Boolean,
+        showGutenbergEditor: Boolean,
+        localMediaId: String
+    ) {
+        updateDeletedMediaItemIds(localMediaId)
+        if (showAztecEditor && !showGutenbergEditor) {
+            // passing false here as we need to keep the media item in case the user wants to undo
+            cancelMediaUploadAsync(StringUtils.stringToInt(localMediaId), false)
+        } else {
+            launch {
+                removeMediaUseCase.removeMediaIfNotUploading(listOf(localMediaId))
+            }
+        }
     }
 
     enum class AddExistingMediaSource {
