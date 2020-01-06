@@ -27,6 +27,7 @@ public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
     private static final int GB_ROLLOUT_PERCENTAGE = 100;
+    private static final int GB_ROLLOUT_PERCENTAGE_PHASE_2 = 30;
 
     /**
      * Migrate the old app-wide editor preference value to per-site setting. wpcom sites will make a network call
@@ -45,16 +46,46 @@ public class SiteUtils {
             return;
         }
 
-        // In a later version we might override mobile_editor setting if it's set to `aztec` and show a specific notice
-        // for these users ("We made a lot of progress on the block editor and we think it's now better than
-        // the classic editor, we switched it on, but you can change the configuration in your Site Settings").
-        // ^ This code should be here.
-
         // If the user is already in the rollout group, we can skip this the migration.
         if (AppPrefs.isUserInGutenbergRolloutGroup()) {
             return;
         }
 
+        // -------- Rollout: Phase 2 -------
+        //
+        // If the user as one Aztec enabled site, we'll migrate all his sites to gutenberg and show
+        if (atLeastOneSiteHasAztecEnabled(siteStore)) {
+            // Randomly pick the user in the rollout group
+            if (accountStore.getAccount().getUserId() % 100 >= (100 - GB_ROLLOUT_PERCENTAGE_PHASE_2)) {
+                if (!NetworkUtils.isNetworkAvailable(WordPress.getContext())) {
+                    // If the network is not available, abort. We can't update the remote setting.
+                    return;
+                }
+
+                for (SiteModel site : siteStore.getSites()) {
+                    // Show "phase 2" dialog on sites that get switched from aztec to gutenberg
+                    if (TextUtils.equals(site.getMobileEditor(), AZTEC_EDITOR_NAME)) {
+                        AppPrefs.setShowGutenbergInfoPopupPhase2ForNewPosts(site.getUrl(), true);
+                        AppPrefs.setGutenbergInfoPopupDisplayed(site.getUrl(), true);
+                    }
+
+                    // Show "phase 1" dialog on sites that get switched from "empty" (no pref) to gutenberg
+                    if (TextUtils.isEmpty(site.getMobileEditor())) {
+                        AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(site.getUrl(), true);
+                    }
+                }
+
+                // Enable Gutenberg for all sites using a single network call
+                dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
+                        new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME, false)));
+
+                // After enabling Gutenberg on these sites, we consider the user entered the rollout group
+                AppPrefs.setUserInGutenbergRolloutGroup();
+            }
+        }
+
+        // -------- Rollout: Phase 1 -------
+        //
         // Check if the user has been "randomly" selected to enter the rollout group.
         //
         // For self hosted sites, there are often one or two users, and the user id is probably 0, 1 in these cases.
