@@ -11,11 +11,15 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Block
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -55,9 +59,35 @@ class PostingActivityUseCase
     override fun buildUiModel(domainModel: PostingActivityModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
-        val activityItem = postingActivityMapper.buildActivityItem(domainModel.months, domainModel.max)
-        items.add(activityItem)
+        val activityItem = postingActivityMapper.buildActivityItem(
+                domainModel.months,
+                domainModel.max
+        )
+        val activityItemWithContentDescription = addBlockContentDescriptions(activityItem)
+        items.add(activityItemWithContentDescription)
         return items
+    }
+
+    private fun addBlockContentDescriptions(activityItem: ActivityItem): ActivityItem {
+        val blocks = mutableListOf<Block>()
+
+        activityItem.blocks.forEach { block ->
+            val descriptions = mutableListOf<String>()
+            block.boxes.filter { box -> box.boxType != BoxType.INVISIBLE }
+                    .groupBy { box -> box.boxType }
+                    .forEach { entry ->
+                        val readableBoxType = entry.key.name.replace(
+                                "_",
+                                " "
+                        ).toLowerCase(Locale.ROOT)
+                        val days = entry.value.map { box -> box.day }.joinToString()
+                        val description = "The days with $readableBoxType views for ${block.label} are : ${block.label} $days."
+                        descriptions.add(description)
+                    }
+            blocks.add(Block(block.label, block.boxes, descriptions))
+        }
+
+        return ActivityItem(blocks)
     }
 
     private fun buildTitle() = Title(R.string.stats_insights_posting_activity, menuAction = this::onMenuClick)
