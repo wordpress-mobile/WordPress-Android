@@ -332,12 +332,17 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void designateMobileEditorForAllSites(final String mobileEditorName) {
+    public void designateMobileEditorForAllSites(final String mobileEditorName, final boolean setOnlyIfEmpty) {
         Map<String, Object> params = new HashMap<>();
         String url = WPCOMV2.me.gutenberg.getUrl();
         params.put("editor", mobileEditorName);
         params.put("platform", "mobile");
-        params.put("set_only_if_empty", "true");
+        if (setOnlyIfEmpty) {
+            params.put("set_only_if_empty", "true");
+        }
+        // Else, omit the "set_only_if_empty" parameters.
+        // There is an issue in the API implementation. It only checks
+        // for "set_only_if_empty" presence but don't check for its value.
 
         add(WPComGsonRequest
                 .buildPostRequest(url, params, Map.class,
