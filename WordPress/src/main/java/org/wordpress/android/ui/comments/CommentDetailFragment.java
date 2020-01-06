@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -144,6 +145,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
     private String mPreviousStatus;
+    private float mNormalOpacity = 1f;
+    private float mMediumOpacity;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -247,6 +250,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
+
+        mMediumOpacity = ResourcesCompat.getFloat(getResources(), R.dimen.material_emphasis_medium);
 
         mTxtStatus = view.findViewById(R.id.text_status);
         mTxtContent = view.findViewById(R.id.text_content);
@@ -1068,10 +1073,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             color = ContextExtensionsKt
                     .getColorResIdFromAttribute(mBtnModerateTextView.getContext(), R.attr.colorSecondary);
             mBtnModerateTextView.setText(R.string.comment_status_approved);
+            mBtnModerateTextView.setAlpha(mNormalOpacity);
+            mBtnModerateIcon.setAlpha(mNormalOpacity);
         } else {
             color = ContextExtensionsKt
                     .getColorResIdFromAttribute(mBtnModerateTextView.getContext(), R.attr.colorOnSurface);
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);
+            mBtnModerateTextView.setAlpha(mMediumOpacity);
+            mBtnModerateIcon.setAlpha(mMediumOpacity);
         }
 
         ColorUtils.INSTANCE.setImageResourceWithTint(mBtnModerateIcon, R.drawable.ic_checkmark_white_24dp, color);
@@ -1201,11 +1210,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             drawable = R.drawable.ic_star_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeComment.setActivated(true);
+            mBtnLikeTextView.setAlpha(mNormalOpacity);
+            mBtnLikeIcon.setAlpha(mNormalOpacity);
         } else {
             color = ContextExtensionsKt.getColorResIdFromAttribute(mBtnLikeIcon.getContext(), R.attr.colorOnSurface);
             drawable = R.drawable.ic_star_outline_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeComment.setActivated(false);
+            mBtnLikeTextView.setAlpha(mMediumOpacity);
+            mBtnLikeIcon.setAlpha(mMediumOpacity);
         }
 
 

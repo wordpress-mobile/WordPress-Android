@@ -800,6 +800,18 @@
         <item name="android:maxLines">1</item>
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+    <style name="CommentActionIcon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:tint">?attr/colorOnSurface</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+        <item name="android:paddingStart">@dimen/margin_medium</item>
+        <item name="android:paddingEnd">@dimen/margin_medium</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
     <style name="WordPress.TransparentToolbarTheme" parent="WordPress">
