@@ -74,7 +74,8 @@ public class AnalyticsUtils {
         VIA_SITE_SETTINGS,
         ON_SITE_CREATION,
         ON_BLOCK_POST_OPENING,
-        ON_PROGRESSIVE_ROLLOUT;
+        ON_PROGRESSIVE_ROLLOUT_PHASE_1,
+        ON_PROGRESSIVE_ROLLOUT_PHASE_2;
 
         public Map<String, Object> asPropertyMap() {
             Map<String, Object> properties = new HashMap<>();

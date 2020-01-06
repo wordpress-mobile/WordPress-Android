@@ -26,7 +26,7 @@ import java.util.List;
 public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
-    private static final int GB_ROLLOUT_PERCENTAGE = 30;
+    private static final int GB_ROLLOUT_PERCENTAGE = 100;
 
     /**
      * Migrate the old app-wide editor preference value to per-site setting. wpcom sites will make a network call
@@ -84,6 +84,7 @@ public class SiteUtils {
             // Enable Gutenberg for all sites using a single network call
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
+            trackGutenbergEnabledForNonGutenbergSites(siteStore);
 
             // After enabling Gutenberg on these sites, we consider the user entered the rollout group
             AppPrefs.setUserInGutenbergRolloutGroup();
@@ -100,6 +101,15 @@ public class SiteUtils {
         } else {
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.AZTEC_EDITOR_NAME)));
+        }
+    }
+
+    private static void trackGutenbergEnabledForNonGutenbergSites(final SiteStore siteStore) {
+        for (SiteModel site : siteStore.getSites()) {
+            if (!TextUtils.equals(site.getMobileEditor(), GB_EDITOR_NAME)) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, site,
+                        BlockEditorEnabledSource.ON_PROGRESSIVE_ROLLOUT_PHASE_1.asPropertyMap());
+            }
         }
     }
 
