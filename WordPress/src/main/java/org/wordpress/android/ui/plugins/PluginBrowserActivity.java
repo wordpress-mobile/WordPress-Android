@@ -242,19 +242,19 @@ public class PluginBrowserActivity extends AppCompatActivity
         switch (pluginType) {
             case SITE:
                 adapter = (PluginBrowserAdapter) mSitePluginsRecycler.getAdapter();
-                cardView = findViewById(R.id.installed_plugins_cardview);
+                cardView = findViewById(R.id.installed_plugins_container);
                 break;
             case FEATURED:
                 adapter = (PluginBrowserAdapter) mFeaturedPluginsRecycler.getAdapter();
-                cardView = findViewById(R.id.featured_plugins_cardview);
+                cardView = findViewById(R.id.featured_plugins_container);
                 break;
             case POPULAR:
                 adapter = (PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter();
-                cardView = findViewById(R.id.popular_plugins_cardview);
+                cardView = findViewById(R.id.popular_plugins_container);
                 break;
             case NEW:
                 adapter = (PluginBrowserAdapter) mNewPluginsRecycler.getAdapter();
-                cardView = findViewById(R.id.new_plugins_cardview);
+                cardView = findViewById(R.id.new_plugins_container);
                 break;
             case SEARCH:
                 return;
