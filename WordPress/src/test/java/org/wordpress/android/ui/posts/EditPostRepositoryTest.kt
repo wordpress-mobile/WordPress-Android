@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.posts
 
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostLocation
@@ -24,9 +26,10 @@ class EditPostRepositoryTest {
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var postUtils: PostUtilsWrapper
     private lateinit var editPostRepository: EditPostRepository
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
-        editPostRepository = EditPostRepository(localeManager, postStore, postUtils)
+        editPostRepository = EditPostRepository(localeManager, postStore, postUtils, TEST_DISPATCHER, TEST_DISPATCHER)
     }
 
     @Test
@@ -435,11 +438,11 @@ class EditPostRepositoryTest {
 
         editPostRepository.savePostSnapshotWhenEditorOpened()
 
-        assertThat(editPostRepository.postHasEdits()).isFalse()
+        assertThat(editPostRepository.postWasChangedInCurrentSession()).isFalse()
 
         editPostRepository.set { secondPost }
 
-        assertThat(editPostRepository.postHasEdits()).isTrue()
+        assertThat(editPostRepository.postWasChangedInCurrentSession()).isTrue()
     }
 
     @Test
@@ -459,7 +462,7 @@ class EditPostRepositoryTest {
 
         assertThat(editPostRepository.status).isEqualTo(PENDING)
 
-        editPostRepository.updateStatusFromPostSnapshotWhenEditorOpened(secondPost)
+        editPostRepository.updateStatusFromPostSnapshotWhenEditorOpened()
 
         assertThat(editPostRepository.status).isEqualTo(PUBLISHED)
     }

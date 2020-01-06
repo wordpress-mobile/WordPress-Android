@@ -22,7 +22,7 @@ public class LiveTextWatcher implements TextWatcher {
         return mAfterTextChanged;
     }
 
-    public void postTextChanged(Editable s) {
-        mAfterTextChanged.postValue(s);
+    public void postTextChanged() {
+        mAfterTextChanged.postValue(null);
     }
 }

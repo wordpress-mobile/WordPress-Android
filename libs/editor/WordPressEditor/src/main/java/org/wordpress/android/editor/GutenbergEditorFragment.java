@@ -337,9 +337,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 new OnEditorAutosaveListener() {
                     @Override public void onEditorAutosave() {
-                        // FIXME the Editable field passed to postTextChanged is never used later, and also nullable,
-                        //  but in theory we should be able to pass either the content field or the title field.
-                        mTextWatcher.postTextChanged(null);
+                        mTextWatcher.postTextChanged();
                     }
                 },
                 new OnAuthHeaderRequestedListener() {
