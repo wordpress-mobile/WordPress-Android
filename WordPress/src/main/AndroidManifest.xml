@@ -531,7 +531,7 @@
             android:name=".ui.people.PeopleManagementActivity"
             android:label="@string/people"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <!--Plugins-->
         <activity

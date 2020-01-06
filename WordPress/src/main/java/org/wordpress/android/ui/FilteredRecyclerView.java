@@ -28,12 +28,14 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.tabs.TabLayout;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -186,6 +188,15 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         mToolbar = findViewById(R.id.toolbar_with_spinner);
         mAppBarLayout = findViewById(R.id.app_bar_layout);
+
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(getContext());
+        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
+        int appBarColor =
+                elevationOverlayProvider
+                        .compositeOverlay(ContextExtensionsKt.getColorFromAttribute(getContext(), R.attr.wpColorAppBar),
+                                cardElevation);
+
+        mToolbar.setBackgroundColor(appBarColor);
 
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
         if (mToolbarDisableScrollGestures) {
@@ -416,17 +427,17 @@ public class FilteredRecyclerView extends RelativeLayout {
 
     public void setToolbarLeftPadding(int paddingLeft) {
         ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(),
-                                      ViewCompat.getPaddingEnd(mToolbar), mToolbar.getPaddingBottom());
+                ViewCompat.getPaddingEnd(mToolbar), mToolbar.getPaddingBottom());
     }
 
     public void setToolbarRightPadding(int paddingRight) {
         ViewCompat.setPaddingRelative(mToolbar, ViewCompat.getPaddingStart(mToolbar), mToolbar.getPaddingTop(),
-                                      paddingRight, mToolbar.getPaddingBottom());
+                paddingRight, mToolbar.getPaddingBottom());
     }
 
     public void setToolbarLeftAndRightPadding(int paddingLeft, int paddingRight) {
         ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(), paddingRight,
-                                      mToolbar.getPaddingBottom());
+                mToolbar.getPaddingBottom());
     }
 
     public void setToolbarTitle(@StringRes int title, int startMargin) {
@@ -485,13 +496,13 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     /*
-    * use this if you need to reload the criterias for this FilteredRecyclerView. The actual data loading goes
-    * through the FilteredRecyclerView lifecycle using its listeners:
-    *
-    * - FilterCriteriaAsyncLoaderListener
-    * and
-    * - FilterListener.onLoadFilterCriteriaOptions
-    * */
+     * use this if you need to reload the criterias for this FilteredRecyclerView. The actual data loading goes
+     * through the FilteredRecyclerView lifecycle using its listeners:
+     *
+     * - FilterCriteriaAsyncLoaderListener
+     * and
+     * - FilterListener.onLoadFilterCriteriaOptions
+     * */
     public void refreshFilterCriteriaOptions() {
         setup(true);
     }
@@ -609,7 +620,7 @@ public class FilteredRecyclerView extends RelativeLayout {
      */
     public boolean isFirstItemVisible() {
         if (mRecyclerView == null
-                || mRecyclerView.getLayoutManager() == null) {
+            || mRecyclerView.getLayoutManager() == null) {
             return false;
         }
 
@@ -637,7 +648,7 @@ public class FilteredRecyclerView extends RelativeLayout {
          * The Spinner is then loaded with such array of FilterCriterias, through which the main data can be filtered.
          *
          * @param listener to be called to pass the FilterCriteria array when done
-         * @param refresh "true"if the criterias need be refreshed
+         * @param refresh  "true"if the criterias need be refreshed
          */
         void onLoadFilterCriteriaOptionsAsync(FilterCriteriaAsyncLoaderListener listener, boolean refresh);
 
@@ -675,7 +686,7 @@ public class FilteredRecyclerView extends RelativeLayout {
          * Called when there's no data to show.
          *
          * @param emptyViewMsgType this will hint you on the reason why no data is being shown, so you can return
-         * a proper message to be displayed to the user
+         *                         a proper message to be displayed to the user
          * @return the message to be displayed to the user, or null if using a Custom Empty View (see below)
          */
         String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType);
@@ -685,7 +696,7 @@ public class FilteredRecyclerView extends RelativeLayout {
          * be called otherwise).
          *
          * @param emptyViewMsgType this will hint you on the reason why no data is being shown, and
-         * also here you should perform any actions on your custom empty view
+         *                         also here you should perform any actions on your custom empty view
          * @return nothing
          */
         void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType);

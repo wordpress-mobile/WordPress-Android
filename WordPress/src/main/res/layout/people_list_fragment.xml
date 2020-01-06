@@ -1,37 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:orientation="vertical">
 
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/actionable_empty_view"
-        android:layout_height="match_parent"
+    <include layout="@layout/toolbar_main" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:visibility="gone"
-        app:aevImage="@drawable/img_illustration_empty_results_216dp"
-        app:aevTitle="@string/people_empty_list_filtered_followers"
-        tools:visibility="visible" >
-    </org.wordpress.android.ui.ActionableEmptyView>
+        android:layout_height="match_parent">
 
-    <org.wordpress.android.ui.FilteredRecyclerView
-        android:id="@+id/filtered_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:scrollbars="vertical"/>
+        <org.wordpress.android.ui.ActionableEmptyView
+            android:id="@+id/actionable_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:aevImage="@drawable/img_illustration_empty_results_216dp"
+            app:aevTitle="@string/people_empty_list_filtered_followers"
+            tools:visibility="visible" />
 
-    <ProgressBar
-        android:id="@+id/progress_footer"
-        style="@style/ReaderProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        <org.wordpress.android.ui.FilteredRecyclerView
+            android:id="@+id/filtered_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
 
-</RelativeLayout>
+        <ProgressBar
+            android:id="@+id/progress_footer"
+            style="@style/ReaderProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </RelativeLayout>
+</LinearLayout>

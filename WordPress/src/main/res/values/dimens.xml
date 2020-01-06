@@ -288,7 +288,6 @@
     <dimen name="people_avatar_sz">40dp</dimen>
     <dimen name="people_list_row_height">72dp</dimen>
     <dimen name="people_list_row_role_margin_top">20dp</dimen>
-    <dimen name="people_list_divider_height">1dp</dimen>
     <dimen name="people_list_divider_left_margin">72dp</dimen>
 
     <!-- photo picker -->
@@ -440,7 +439,8 @@
 
     <!-- web preview  -->
     <dimen name="web_preview_navbar_height">72dp</dimen>
-    <dimen name="web_preview_mode_popup_width">161sp</dimen> <!-- SP works better with popup list menu  -->
+    <dimen name="web_preview_mode_popup_width">161sp
+    </dimen> <!-- SP works better with popup list menu  -->
     <dimen name="web_preview_hint_label_corner_radius">6dp</dimen>
 
     <!--settings username changer-->
