@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -9,6 +8,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -57,9 +57,11 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         whenever(postSchedulingNotificationStore.getSchedulingReminderPeriod(any())).thenReturn(OFF)
         whenever(editPostRepository.dateCreated).thenReturn("")
         post = PostModel()
-        whenever(editPostRepository.updateAsync(any(), isNull())).then {
-            val action: (PostModel) -> Boolean = it.arguments[0] as ((PostModel) -> Boolean)
+        whenever(editPostRepository.updateAsync(any(), any())).then {
+            val action: (PostModel) -> Boolean = it.getArgument(0)
+            val onSuccess: (PostImmutableModel) -> Unit = it.getArgument(1)
             action(post)
+            onSuccess(post)
             null
         }
         whenever(editPostRepository.getPost()).thenReturn(post)

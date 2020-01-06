@@ -135,11 +135,12 @@ class EditPostPublishSettingsViewModel
                 _onToast.postValue(Event(resourceProvider.getString(R.string.editor_post_converted_back_to_draft)))
             }
             postModel.setStatus(finalPostStatus.toString())
-            _onPostStatusChanged.value = finalPostStatus
+            _onPostStatusChanged.postValue(finalPostStatus)
             val scheduledTime = postSchedulingNotificationStore.getSchedulingReminderPeriod(postRepository.id)
             updateNotifications(postRepository, scheduledTime)
-            updateUiModel(postModel = postModel)
             true
+        }, onSuccess = { postModel ->
+            updateUiModel(postModel = postModel)
         })
     }
 
