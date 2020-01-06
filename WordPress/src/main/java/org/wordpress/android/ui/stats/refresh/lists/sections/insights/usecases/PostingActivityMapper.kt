@@ -4,12 +4,12 @@ import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Mon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Block
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.HIGH
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.INVISIBLE
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.LOW
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.MEDIUM
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_HIGH
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_LOW
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.HIGH
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.INVISIBLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.LOW
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.MEDIUM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.VERY_HIGH
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.VERY_LOW
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import javax.inject.Inject
@@ -34,18 +34,20 @@ class PostingActivityMapper
             firstDayOfWeek.set(Calendar.DAY_OF_WEEK, firstDayOfWeek.firstDayOfWeek)
             val boxes = mutableListOf<Box>()
             while (firstDayOfWeek.before(firstDayOfMonth)) {
-                boxes.add(INVISIBLE)
+                boxes.add(Box(INVISIBLE))
                 firstDayOfWeek.add(Calendar.DAY_OF_MONTH, 1)
             }
             for (day in month.days) {
                 boxes.add(
-                        when {
-                            day.value > veryHighLimit -> VERY_HIGH
-                            day.value > highLimit -> HIGH
-                            day.value > mediumLimit -> MEDIUM
-                            day.value > LOW_LEVEL -> LOW
-                            else -> VERY_LOW
-                        }
+                        Box(
+                                when {
+                                    day.value > veryHighLimit -> VERY_HIGH
+                                    day.value > highLimit -> HIGH
+                                    day.value > mediumLimit -> MEDIUM
+                                    day.value > LOW_LEVEL -> LOW
+                                    else -> VERY_LOW
+                                }, day.key
+                        )
                 )
             }
             blocks.add(

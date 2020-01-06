@@ -7,7 +7,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Month
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import java.util.Locale
@@ -33,17 +33,17 @@ class PostingActivityMapperTest : BaseUnitTest() {
         assertThat(result.blocks).hasSize(1)
         result.blocks[0].let {
             assertThat(it.boxes).hasSize(11)
-            assertThat(it.boxes[0]).isEqualTo(Box.VERY_LOW)
-            assertThat(it.boxes[1]).isEqualTo(Box.LOW)
-            assertThat(it.boxes[2]).isEqualTo(Box.LOW)
-            assertThat(it.boxes[3]).isEqualTo(Box.MEDIUM)
-            assertThat(it.boxes[4]).isEqualTo(Box.MEDIUM)
-            assertThat(it.boxes[5]).isEqualTo(Box.MEDIUM)
-            assertThat(it.boxes[6]).isEqualTo(Box.HIGH)
-            assertThat(it.boxes[7]).isEqualTo(Box.HIGH)
-            assertThat(it.boxes[8]).isEqualTo(Box.VERY_HIGH)
-            assertThat(it.boxes[9]).isEqualTo(Box.VERY_HIGH)
-            assertThat(it.boxes[10]).isEqualTo(Box.VERY_HIGH)
+            assertThat(it.boxes[0].boxType).isEqualTo(BoxType.VERY_LOW)
+            assertThat(it.boxes[1].boxType).isEqualTo(BoxType.LOW)
+            assertThat(it.boxes[2].boxType).isEqualTo(BoxType.LOW)
+            assertThat(it.boxes[3].boxType).isEqualTo(BoxType.MEDIUM)
+            assertThat(it.boxes[4].boxType).isEqualTo(BoxType.MEDIUM)
+            assertThat(it.boxes[5].boxType).isEqualTo(BoxType.MEDIUM)
+            assertThat(it.boxes[6].boxType).isEqualTo(BoxType.HIGH)
+            assertThat(it.boxes[7].boxType).isEqualTo(BoxType.HIGH)
+            assertThat(it.boxes[8].boxType).isEqualTo(BoxType.VERY_HIGH)
+            assertThat(it.boxes[9].boxType).isEqualTo(BoxType.VERY_HIGH)
+            assertThat(it.boxes[10].boxType).isEqualTo(BoxType.VERY_HIGH)
         }
     }
 
@@ -64,10 +64,10 @@ class PostingActivityMapperTest : BaseUnitTest() {
         result.blocks[0].let {
             assertThat(it.boxes).hasSize(33)
             for (invisible in 0..offset) {
-                assertThat(it.boxes[invisible]).isEqualTo(Box.INVISIBLE)
+                assertThat(it.boxes[invisible].boxType).isEqualTo(BoxType.INVISIBLE)
             }
             for (veryLow in (offset + 1) until it.boxes.size) {
-                assertThat(it.boxes[veryLow]).isEqualTo(Box.VERY_LOW)
+                assertThat(it.boxes[veryLow].boxType).isEqualTo(BoxType.VERY_LOW)
             }
         }
     }

@@ -233,8 +233,15 @@ sealed class BlockListItem(val type: Type) {
     data class LoadingItem(val loadMore: () -> Unit, val isLoading: Boolean = false) : BlockListItem(LOADING_ITEM)
 
     data class ActivityItem(val blocks: List<Block>) : BlockListItem(ACTIVITY_ITEM) {
-        data class Block(val label: String, val boxes: List<Box>)
-        enum class Box {
+        data class Block(
+            val label: String,
+            val boxes: List<Box>,
+            val activityContentDescriptions: List<String>? = null
+        )
+
+        data class Box(val boxType: BoxType, val day: Int? = null)
+
+        enum class BoxType {
             INVISIBLE, VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH
         }
 
