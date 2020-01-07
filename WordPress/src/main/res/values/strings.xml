@@ -340,6 +340,11 @@
     <string name="dialog_confirm_update_yes">Update now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
 
+    <!-- scheduled post sync confirmation dialog -->
+    <string name="dialog_confirm_scheduled_post_sync_title">Ready to Sync?</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">This post will be synced immediately.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Sync now</string>
+
     <!-- post version sync conflict dialog -->
     <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
     <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
@@ -863,6 +868,7 @@
     <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
 
     <!-- Number suffixes -->
+    <string name="negative_prefix">-%s</string>
     <string name="suffix_1_000">%sk</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000_000_000">%sB</string>
@@ -1729,7 +1735,7 @@
 
     <!-- dialogs -->
     <string name="reader_save_posts_locally_dialog_title">Save Posts for Later</string>
-    <string name="reader_save_posts_locally_dialog_message">Save this post, and come back to read it whenever you\'d like. It will only be available on this device — saved posts don\'t sync to your other devices. (Yet! We\'re working on it.)</string>
+    <string name="reader_save_posts_locally_dialog_message">Save this post, and come back to read it whenever you\'d like. It will only be available on this device — saved posts don\'t sync to your other devices.</string>
 
     <!-- connection bar which appears on main activity when there's no connection -->
     <string name="connectionbar_no_connection">No connection</string>
@@ -2192,7 +2198,12 @@
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
+    <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
+    <string name="photo_picker_image_thumbnail_selected">Image selected</string>
+    <string name="photo_picker_image_selected">,Selected</string>
+    <string name="photo_picker_image_thumbnail_unselected">Image unselected</string>
     <string name="stock_media_picker_search_hint">Search free photo library</string>
+    <string name="stock_media_picker_list_content_description">Photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
 
@@ -2358,6 +2369,14 @@
     <string name="settings_username_changer_snackbar_cancel">This action can\'t be canceled. Username might have been already updated.</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
+
+    <!-- Post-Signup Interstitial -->
+    <string name="post_signup_interstitial_title">Welcome to WordPress</string>
+    <string name="post_signup_interstitial_subtitle">Whatever you want to create or share, we’ll help you do it right here.</string>
+    <string name="post_signup_interstitial_create_new_site" translatable="false">@string/site_picker_create_wpcom</string>
+    <string name="post_signup_interstitial_add_self_hosted_site" translatable="false">@string/site_picker_add_self_hosted</string>
+    <string name="post_signup_interstitial_not_right_now">Not right now</string>
+    <string name="content_description_person_building_website">Person building website</string>
 
     <!-- Android O notification channels, these show in the Android app settings -->
     <string name="notification_channel_general_title">General</string>
