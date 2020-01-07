@@ -111,7 +111,7 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setMainFabTooltipDisabled(disable: Boolean) = AppPrefs.setMainFabTooltipDisabled(disable)
 
-    fun  isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
+    fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
 
     companion object {
         private const val LIGHT_MODE_ID = 0

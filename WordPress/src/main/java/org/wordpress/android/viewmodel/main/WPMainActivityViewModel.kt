@@ -37,7 +37,8 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
         if (isStarted) return
         isStarted = true
 
-        mainFabTooltipDisabled = !BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE || appPrefsWrapper.isMainFabTooltipDisabled()
+        mainFabTooltipDisabled = !BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE ||
+                appPrefsWrapper.isMainFabTooltipDisabled()
         setMainFabUiState(isFabVisible)
 
         loadMainActions()

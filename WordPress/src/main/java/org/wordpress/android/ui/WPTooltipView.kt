@@ -3,12 +3,10 @@ package org.wordpress.android.ui
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.core.view.ViewCompat
 import org.wordpress.android.R
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.ABOVE
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.BELOW
@@ -16,7 +14,6 @@ import org.wordpress.android.ui.WPTooltipView.TooltipPosition.LEFT
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.RIGHT
 import org.wordpress.android.util.RtlUtils
 import java.lang.IllegalArgumentException
-import java.util.jar.Attributes
 
 /**
  * Partially based on https://stackoverflow.com/a/42756576
