@@ -2,9 +2,11 @@ package org.wordpress.android.login;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -64,6 +66,28 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
                 behavior.setPeekHeight(layout.getHeight());
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Fix to show navigation bar buttons when the signup bottom sheet is shown
+        // on Android versions API 27 and above. They get shadowed or invisible otherwise.
+        if (getWindow() != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            Window window = getWindow();
+
+            // You can find the bottom sheet coordinator layout container id here: https://git.io/JejbO
+            View containerView = window.findViewById(com.google.android.material.R.id.container);
+            if (containerView != null) {
+                containerView.setFitsSystemWindows(false);
+
+                // dark navigation bar icons
+                View decorView = window.getDecorView();
+                decorView.setSystemUiVisibility(
+                    decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+                );
+            }
+        }
     }
 
     public interface SignupSheetListener {
