@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/tooltip_message"
+        android:ellipsize="end"
+        android:minHeight="@dimen/snackbar_height_minimum"
+        android:background="@drawable/bg_tooltip"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_sz_medium"
+        android:layout_weight="1"
+        android:padding="@dimen/margin_medium"
+        tools:text="This is an example tooltip message"/>
+
+    <ImageView
+        android:id="@+id/tooltip_arrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_weight="1"
+        android:rotation="-180"
+        android:src="@drawable/tooltip_arrow"
+        android:contentDescription="@null" />
+
+</LinearLayout>
