@@ -254,7 +254,7 @@
 
         <!-- plans -->
         <activity android:name=".ui.plans.PlansActivity"
-                  android:theme="@style/Calypso.NoActionBar"
+                  android:theme="@style/WordPress.NoActionBar"
                   android:launchMode="singleTop"
                   android:parentActivityName=".ui.main.WPMainActivity"/>
 
