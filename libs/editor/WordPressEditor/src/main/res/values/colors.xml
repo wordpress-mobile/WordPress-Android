@@ -19,7 +19,7 @@
     <color name="code_background">@color/wp_grey_light</color>
     <color name="hint_text">@color/wp_grey_darken_10</color>
     <color name="link">@color/wp_blue_medium</color>
-    <color name="quote">@color/wp_grey_darken_10</color>
+    <color name="quote">@color/wp_grey</color>
     <color name="quote_background">@color/wp_grey_lighten_30</color>
     <color name="text">@color/wp_grey_darken_30</color>
 
