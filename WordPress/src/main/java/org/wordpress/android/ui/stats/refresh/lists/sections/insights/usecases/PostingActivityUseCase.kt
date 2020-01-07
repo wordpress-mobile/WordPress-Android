@@ -84,13 +84,13 @@ class PostingActivityUseCase
                                 " "
                         ).toLowerCase(Locale.ROOT)
                         val days = entry.value.map { box -> box.day }.joinToString(separator = ". ")
-                        val description = resourceProvider.getString(
+                        val activityDescription = resourceProvider.getString(
                                 R.string.stats_posting_activity_content_description,
                                 readableBoxType,
                                 block.contentDescription,
                                 days
                         )
-                        descriptions.add(description)
+                        descriptions.add(activityDescription)
                     }
             blocks.add(Block(block.label, block.boxes, block.contentDescription, descriptions))
         }
