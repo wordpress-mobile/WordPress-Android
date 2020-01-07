@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.wordpress.android.editor.Utils;
 import org.wordpress.android.ui.posts.MediaUploadCompletionProcessorPatterns.Helpers;
 import org.wordpress.android.util.helpers.MediaFile;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,7 +79,7 @@ public class MediaUploadCompletionProcessor {
     /**
      * HTML output used by the parser
      */
-    private static final OutputSettings OUTPUT_SETTINGS = new OutputSettings()
+    @SuppressWarnings("checkstyle:LineLength") private static final OutputSettings OUTPUT_SETTINGS = new OutputSettings()
             .outline(false)
 //          .syntax(Syntax.xml)
 //            Do we want xml or html here (e.g. self closing tags, boolean attributes)?

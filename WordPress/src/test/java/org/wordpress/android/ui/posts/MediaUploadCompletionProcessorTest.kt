@@ -15,7 +15,6 @@ import org.wordpress.android.util.helpers.MediaFile
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaUploadCompletionProcessorTest {
-
     // TODO: extract the test content and prettify it
     private val siteUrl = "https://wordpress.org"
     private val remoteImageUrl = "https://wordpress.org/gutenberg/files/2018/07/Screenshot-1-1.png"
