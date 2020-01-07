@@ -363,7 +363,8 @@ class EditorMediaTest : BaseUnitTest() {
             siteModel: SiteModel = mock(),
             editorMediaListener: EditorMediaListener = mock(),
             removeMediaUseCase: RemoveMediaUseCase = mock(),
-            cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase = mock()
+            cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase = mock(),
+            reattachUploadingMediaUseCase: ReattachUploadingMediaUseCase = mock()
         ): EditorMedia {
             val editorMedia = EditorMedia(
                     updateMediaModelUseCase,
@@ -376,6 +377,7 @@ class EditorMediaTest : BaseUnitTest() {
                     retryFailedMediaUploadUseCase,
                     cleanUpMediaToPostAssociationUseCase,
                     removeMediaUseCase,
+                    reattachUploadingMediaUseCase,
                     TEST_DISPATCHER
             )
             editorMedia.start(siteModel, editorMediaListener)

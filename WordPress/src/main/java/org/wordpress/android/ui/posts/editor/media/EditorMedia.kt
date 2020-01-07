@@ -11,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -61,6 +62,7 @@ class EditorMedia @Inject constructor(
     private val retryFailedMediaUploadUseCase: RetryFailedMediaUploadUseCase,
     private val cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase,
     private val removeMediaUseCase: RemoveMediaUseCase,
+    private val reattachUploadingMediaUseCase: ReattachUploadingMediaUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     // region Fields
@@ -235,6 +237,16 @@ class EditorMedia @Inject constructor(
             cleanUpMediaToPostAssociationUseCase
                     .purgeMediaToPostAssociationsIfNotInPostAnymore(editorMediaListener.getImmutablePost())
         }
+    }
+
+    fun reattachUploadingMediaForAztec(
+        isAztec: Boolean,
+        editorMediaUploadListener: EditorMediaUploadListener
+    ) {
+        reattachUploadingMediaUseCase.reattachUploadingMediaForAztec(
+                isAztec,
+                editorMediaUploadListener
+        )
     }
 
     /*
