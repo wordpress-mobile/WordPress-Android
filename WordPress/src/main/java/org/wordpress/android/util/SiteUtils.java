@@ -66,7 +66,8 @@ public class SiteUtils {
                     // Show "phase 2" dialog on sites that get switched from aztec to gutenberg
                     if (TextUtils.equals(site.getMobileEditor(), AZTEC_EDITOR_NAME)) {
                         AppPrefs.setShowGutenbergInfoPopupPhase2ForNewPosts(site.getUrl(), true);
-                        AppPrefs.setGutenbergInfoPopupDisplayed(site.getUrl(), true);
+                        // Will show the popup again, even if it was displayed in the past
+                        AppPrefs.setGutenbergInfoPopupDisplayed(site.getUrl(), false);
                     }
 
                     // Show "phase 1" dialog on sites that get switched from "empty" (no pref) to gutenberg
