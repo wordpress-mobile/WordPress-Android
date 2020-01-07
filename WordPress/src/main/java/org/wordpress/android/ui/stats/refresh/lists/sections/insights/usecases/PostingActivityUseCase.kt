@@ -75,7 +75,7 @@ class PostingActivityUseCase
 
         activityItem.blocks.forEach { block ->
             val descriptions = mutableListOf<String>()
-            block.boxes.filter { box -> box.boxType != BoxType.INVISIBLE }
+            block.boxes.filter { box -> box.boxType != BoxType.INVISIBLE && box.boxType != BoxType.VERY_LOW }
                     .sortedByDescending { box -> box.boxType }
                     .groupBy { box -> box.boxType }
                     .forEach { entry ->
