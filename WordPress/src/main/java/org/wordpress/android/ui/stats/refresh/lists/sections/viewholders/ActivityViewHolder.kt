@@ -13,7 +13,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Block
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
 import org.wordpress.android.util.ContentDescriptionListAnnouncer
 
