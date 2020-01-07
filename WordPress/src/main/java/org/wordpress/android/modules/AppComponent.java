@@ -13,6 +13,7 @@ import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
+import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
 import org.wordpress.android.ui.JetpackRemoteInstallFragment;
@@ -243,6 +244,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(HelpActivity object);
 
     void inject(CommentDetailFragment object);
+
+    void inject(CommentFullScreenDialogFragment object);
 
     void inject(EditCommentActivity object);
 
