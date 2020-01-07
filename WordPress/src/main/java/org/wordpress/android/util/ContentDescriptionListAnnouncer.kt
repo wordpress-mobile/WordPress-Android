@@ -9,7 +9,8 @@ import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 
 class ContentDescriptionListAnnouncer constructor(
-    @StringRes private val emptyListText: Int, @StringRes private val endOfListText: Int,
+    @StringRes private val emptyListText: Int,
+    @StringRes private val endOfListText: Int,
     @StringRes private val clickActionText: Int? = null,
     private val contentDescriptions: List<String>,
     targetView: View
