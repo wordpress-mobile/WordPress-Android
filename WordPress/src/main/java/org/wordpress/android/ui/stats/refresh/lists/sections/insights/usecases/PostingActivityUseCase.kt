@@ -82,10 +82,11 @@ class PostingActivityUseCase
                                 " "
                         ).toLowerCase(Locale.ROOT)
                         val days = entry.value.map { box -> box.day }.joinToString()
-                        val description = "The days with $readableBoxType views for ${block.label} are : ${block.label} $days."
+                        val description = "The days with $readableBoxType views for ${block.contentDescription}" +
+                                " are : ${block.contentDescription} $days."
                         descriptions.add(description)
                     }
-            blocks.add(Block(block.label, block.boxes, descriptions))
+            blocks.add(Block(block.label, block.boxes,block.contentDescription, descriptions))
         }
 
         return ActivityItem(blocks)

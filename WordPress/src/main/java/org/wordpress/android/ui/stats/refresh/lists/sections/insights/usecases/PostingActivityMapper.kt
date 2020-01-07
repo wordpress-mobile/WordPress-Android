@@ -57,7 +57,13 @@ class PostingActivityMapper
                                     Calendar.SHORT,
                                     localeManagerWrapper.getLocale()
                             ),
-                            boxes
+                            boxes,
+                            firstDayOfMonth.getDisplayName(
+                                    Calendar.MONTH,
+                                    Calendar.LONG,
+                                    localeManagerWrapper.getLocale()
+                            )
+
                     )
             )
         }

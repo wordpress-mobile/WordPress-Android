@@ -59,6 +59,8 @@ class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
         val blocks = listOf(firstBlock, secondBlock, thirdBlock)
 
         blocks.forEachIndexed { index, block ->
+            block.label.contentDescription = item.blocks[index].contentDescription
+
             ContentDescriptionListAnnouncer(
                     R.string.stats_posting_activity_empty_description,
                     R.string.stats_posting_activity_end_description,

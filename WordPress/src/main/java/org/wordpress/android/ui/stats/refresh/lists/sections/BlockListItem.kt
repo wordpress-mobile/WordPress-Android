@@ -236,6 +236,7 @@ sealed class BlockListItem(val type: Type) {
         data class Block(
             val label: String,
             val boxes: List<Box>,
+            val contentDescription: String,
             val activityContentDescriptions: List<String>? = null
         )
 
