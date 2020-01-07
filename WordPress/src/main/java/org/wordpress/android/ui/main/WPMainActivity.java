@@ -74,6 +74,7 @@ import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ShortcutsNavigator;
+import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
@@ -172,6 +173,7 @@ public class WPMainActivity extends AppCompatActivity implements
     private SiteModel mSelectedSite;
     private WPMainActivityViewModel mViewModel;
     private FloatingActionButton mFloatingActionButton;
+    private WPTooltipView mFabTooltip;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
 
     @Inject AccountStore mAccountStore;
@@ -386,16 +388,23 @@ public class WPMainActivity extends AppCompatActivity implements
 
     private void initViewModel() {
         mFloatingActionButton = findViewById(R.id.fab_button);
+        mFabTooltip = findViewById(R.id.fab_tooltip);
 
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPMainActivityViewModel.class);
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
             // Setup Observers
-            mViewModel.getShowMainActionFab().observe(this, shouldShow -> {
-                if (shouldShow) {
+            mViewModel.getShowMainActionFab().observe(this, showUiState -> {
+                if (showUiState.isFabVisible()) {
                     mFloatingActionButton.show();
                 } else {
                     mFloatingActionButton.hide();
+                }
+
+                if (showUiState.isFabTooltipVisible()) {
+                    mFabTooltip.show();
+                } else {
+                    mFabTooltip.hide();
                 }
             });
 

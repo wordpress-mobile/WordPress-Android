@@ -6,10 +6,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class WPMainActivityViewModelTest {
@@ -18,22 +20,25 @@ class WPMainActivityViewModelTest {
 
     private lateinit var viewModel: WPMainActivityViewModel
 
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Before
     fun setUp() {
-        viewModel = WPMainActivityViewModel()
+        viewModel = WPMainActivityViewModel(appPrefsWrapper)
         viewModel.start(true)
     }
 
     @Test
     fun `fab visible when asked`() {
         viewModel.onPageChanged(true)
-        assertThat(viewModel.showMainActionFab.value).isEqualTo(true)
+        assertThat(viewModel.showMainActionFab.value?.isFabVisible).isEqualTo(true)
     }
 
     @Test
     fun `fab hidden when asked`() {
         viewModel.onPageChanged(false)
-        assertThat(viewModel.showMainActionFab.value).isEqualTo(false)
+        assertThat(viewModel.showMainActionFab.value?.isFabVisible).isEqualTo(false)
     }
 
     @Test
