@@ -18,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
@@ -27,6 +28,7 @@ class PostingActivityUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
+    private val resourceProvider: ResourceProvider,
     private val store: PostingActivityStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val postingActivityMapper: PostingActivityMapper,
@@ -82,11 +84,15 @@ class PostingActivityUseCase
                                 " "
                         ).toLowerCase(Locale.ROOT)
                         val days = entry.value.map { box -> box.day }.joinToString()
-                        val description = "The days with $readableBoxType views for ${block.contentDescription}" +
-                                " are : ${block.contentDescription} $days."
+                        val description = resourceProvider.getString(
+                                R.string.stats_posting_activity_content_description,
+                                readableBoxType,
+                                block.contentDescription,
+                                days
+                        )
                         descriptions.add(description)
                     }
-            blocks.add(Block(block.label, block.boxes,block.contentDescription, descriptions))
+            blocks.add(Block(block.label, block.boxes, block.contentDescription, descriptions))
         }
 
         return ActivityItem(blocks)
