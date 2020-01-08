@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +38,7 @@ import org.wordpress.android.util.VideoUtils;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -118,14 +120,21 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
-        for (SiteModel currentSite : siteStore.getSites()) {
-            if (SiteUtils.GB_EDITOR_NAME.equals(currentSite.getMobileEditor())) {
-                metadata.setGutenbergEnabled(true);
-                break;
-            }
+        if (siteStore.hasSite()) {
+            metadata.setGutenbergEnabled(isGutenbergEnabledOnAnySite(siteStore.getSites()));
         }
 
         AnalyticsTracker.refreshMetadata(metadata);
+    }
+
+    @VisibleForTesting
+    protected static boolean isGutenbergEnabledOnAnySite(List<SiteModel> sites) {
+        for (SiteModel currentSite : sites) {
+            if (SiteUtils.GB_EDITOR_NAME.equals(currentSite.getMobileEditor())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
