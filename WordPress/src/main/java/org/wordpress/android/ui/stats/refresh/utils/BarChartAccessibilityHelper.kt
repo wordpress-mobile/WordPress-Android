@@ -14,10 +14,9 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 
 class BarChartAccessibilityHelper(
     private val barChart: BarChart,
-    private val dataSet: BarDataSet,
     private val contentDescriptions: List<String>
 ) : ExploreByTouchHelper(barChart) {
-
+    private val dataSet =barChart.data.dataSets.first()
     init {
         barChart.setOnHoverListener { _, event -> dispatchHoverEvent(event) }
         barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
