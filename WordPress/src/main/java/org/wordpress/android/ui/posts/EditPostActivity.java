@@ -69,7 +69,6 @@ import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
-import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
@@ -2545,31 +2544,8 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            if (mShowAztecEditor && !mShowGutenbergEditor) {
-                setDeletedMediaIdOnUploadService(localMediaId);
-                // passing false here as we need to keep the media item in case the user wants to undo
-                mEditorMedia.cancelMediaUploadAsync(StringUtils.stringToInt(localMediaId), false);
-            } else if (mShowGutenbergEditor) {
-                MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(localMediaId));
-                if (mediaModel == null) {
-                    return;
-                }
-
-                setDeletedMediaIdOnUploadService(localMediaId);
-
-                // also make sure it's not being uploaded anywhere else (maybe on some other Post,
-                // simultaneously)
-                if (mediaModel.getUploadState() != null
-                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase(Locale.ROOT))
-                    && !UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
-                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
-                }
-            }
+            mEditorMedia.onMediaDeleted(mShowAztecEditor, mShowGutenbergEditor, localMediaId);
         }
-    }
-
-    private void setDeletedMediaIdOnUploadService(String localMediaId) {
-        mEditorMedia.removeMediaItem(localMediaId);
     }
 
     @Override
@@ -2597,7 +2573,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
             if (!found) {
                 if (mEditorFragment instanceof AztecEditorFragment) {
-                    mEditorMedia.removeMediaItem(mediaId);
+                    mEditorMedia.updateDeletedMediaItemIds(mediaId);
                     ((AztecEditorFragment) mEditorFragment).setMediaToFailed(mediaId);
                 }
             }
