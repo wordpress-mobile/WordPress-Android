@@ -24,6 +24,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.utils.BarChartAccessibilityHelper
+import org.wordpress.android.ui.stats.refresh.utils.BarChartAccessibilityHelper.BarChartAccessibilityEvent
 import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
 import org.wordpress.android.util.DisplayUtils
 
@@ -52,6 +53,16 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                         chart,
                         contentDescriptions = item.entryContentDescriptions
                 )
+
+                accessibilityHelper.accessibilityEvent = object : BarChartAccessibilityEvent {
+                    override fun onHighlight(index: Int) {
+                        chart.highlightColumn(index, true)
+                        val entry = chart.data.dataSets.first().getEntryForIndex(index)
+                        val value = entry?.data as? String
+                        item.onBarSelected?.invoke(value)
+                    }
+                }
+
                 ViewCompat.setAccessibilityDelegate(chart, accessibilityHelper)
             }
         }
