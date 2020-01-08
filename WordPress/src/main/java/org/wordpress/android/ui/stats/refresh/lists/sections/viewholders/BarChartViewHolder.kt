@@ -9,10 +9,12 @@ import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.DataSet
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.github.mikephil.charting.listener.OnDrawListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -20,6 +22,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
+import org.wordpress.android.ui.stats.refresh.utils.BarChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
 import org.wordpress.android.util.DisplayUtils
 
@@ -42,6 +45,20 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         GlobalScope.launch(Dispatchers.Main) {
             delay(50)
             chart.draw(item, labelStart, labelEnd)
+            chart.setOnDrawListener(object : OnDrawListener {
+                override fun onEntryMoved(entry: Entry?) {
+                }
+
+                override fun onEntryAdded(entry: Entry?) {
+                }
+
+                override fun onDrawFinished(dataSet: DataSet<*>?) {
+                    BarChartAccessibilityHelper(
+                            barChart = chart, dataSet = dataSet as BarDataSet,
+                            contentDescriptions = item.entryContentDescriptions
+                    )
+                }
+            })
         }
     }
 
