@@ -942,36 +942,6 @@
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
     </style>
 
-    <style name="DomainSuggestionsFormIntroductionContainer">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingStart">@dimen/domain_suggestions_intro_horizontal_padding</item>
-        <item name="android:paddingTop">@dimen/domain_suggestions_intro_vertical_padding</item>
-        <item name="android:paddingEnd">@dimen/domain_suggestions_intro_horizontal_padding</item>
-        <item name="android:paddingBottom">@dimen/domain_suggestions_intro_vertical_padding</item>
-        <item name="android:background">@color/neutral_0</item>
-    </style>
-
-    <style name="DomainSuggestionsFormIntroductionTitle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">
-            @dimen/domain_suggestions_intro_header_bottom_padding
-        </item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">@color/neutral_60</item>
-        <item name="android:text">@dimen/text_sz_large</item>
-        <item name="android:gravity">center_horizontal</item>
-    </style>
-
-    <style name="DomainSuggestionsFormIntroductionDescription">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_40</item>
-        <item name="android:text">@dimen/text_sz_large</item>
-        <item name="android:gravity">center_horizontal</item>
-    </style>
-
     <style name="FullScreenDialog.Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:paddingEnd">@dimen/margin_small</item>
         <item name="android:paddingStart">@dimen/margin_small</item>
