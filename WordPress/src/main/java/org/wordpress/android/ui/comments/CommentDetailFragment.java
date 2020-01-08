@@ -281,7 +281,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = view.findViewById(R.id.layout_comment_box);
 
-
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(view.getContext());
         float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
         int elevatedColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation);
@@ -1220,7 +1219,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnLikeTextView.setAlpha(mMediumOpacity);
             mBtnLikeIcon.setAlpha(mMediumOpacity);
         }
-
 
         ColorUtils.INSTANCE.setImageResourceWithTint(mBtnLikeIcon, drawable, color);
         mBtnLikeTextView.setTextColor(ContextCompat.getColor(requireContext(), color));

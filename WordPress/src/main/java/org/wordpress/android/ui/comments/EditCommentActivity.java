@@ -272,14 +272,14 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private void showEditErrorAlert() {
-        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setTitle(getResources().getText(R.string.error));
-        dialog.setMessage(R.string.error_edit_comment);
-        dialog.setPositiveButton(android.R.string.ok, (dialog1, whichButton) -> {
+        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(this);
+        dialogBuilder.setTitle(getResources().getText(R.string.error));
+        dialogBuilder.setMessage(R.string.error_edit_comment);
+        dialogBuilder.setPositiveButton(android.R.string.ok, (dialog1, whichButton) -> {
             // just close the dialog
         });
-        dialog.setCancelable(true);
-        dialog.create().show();
+        dialogBuilder.setCancelable(true);
+        dialogBuilder.create().show();
     }
 
     private void setFetchProgressVisible(boolean progressVisible) {
@@ -309,19 +309,19 @@ public class EditCommentActivity extends AppCompatActivity {
             return;
         }
 
-        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setTitle(getResources().getText(R.string.cancel_edit));
-        dialog.setMessage(getResources().getText(R.string.sure_to_cancel_edit_comment));
-        dialog.setPositiveButton(getResources().getText(R.string.yes),
+        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(this);
+        dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
+        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_cancel_edit_comment));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                 (dialog12, whichButton) -> finish());
-        dialog.setNegativeButton(
+        dialogBuilder.setNegativeButton(
                 getResources().getText(R.string.no),
                 (dialog1, whichButton) -> {
                     // just close the dialog
                 });
-        dialog.setCancelable(true);
+        dialogBuilder.setCancelable(true);
 
-        mCancelEditCommentDialog = dialog.create();
+        mCancelEditCommentDialog = dialogBuilder.create();
         mCancelEditCommentDialog.show();
     }
 
