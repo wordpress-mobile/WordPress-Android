@@ -16,19 +16,15 @@ class BarChartAccessibilityHelper(
     private val barChart: BarChart,
     private val contentDescriptions: List<String>
 ) : ExploreByTouchHelper(barChart) {
-    private val dataSet =barChart.data.dataSets.first()
+    interface BarChartAccessibilityEvent {
+        fun onHighlight(index: Int)
+    }
+
+    private val dataSet = barChart.data.dataSets.first()
+    var accessibilityEvent: BarChartAccessibilityEvent? = null
+
     init {
         barChart.setOnHoverListener { _, event -> dispatchHoverEvent(event) }
-        barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-            override fun onNothingSelected() {
-            }
-
-            override fun onValueSelected(entry: Entry?, highlight: Highlight?) {
-                highlight?.let {
-                    invalidateVirtualView(it.dataIndex)
-                }
-            }
-        })
     }
 
     override fun getVirtualViewAt(x: Float, y: Float): Int {
@@ -57,7 +53,7 @@ class BarChartAccessibilityHelper(
     ): Boolean {
         when (action) {
             AccessibilityNodeInfoCompat.ACTION_CLICK -> {
-                invalidateVirtualView(virtualViewId)
+                accessibilityEvent?.onHighlight(virtualViewId)
                 return true
             }
         }
