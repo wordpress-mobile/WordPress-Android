@@ -142,7 +142,6 @@ class StatsUtils
         overlappingEntries: List<Bar>? = null
     ): List<String> {
         val contentDescriptions = mutableListOf<String>()
-        
         entries.forEachIndexed { index, bar ->
             var contentDescription = resourceProvider.getString(
                     R.string.stats_bar_chart_accessibility_entry,
