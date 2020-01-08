@@ -51,12 +51,13 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             chart.post {
                 accessibilityHelper = BarChartAccessibilityHelper(
                         chart,
-                        contentDescriptions = item.entryContentDescriptions
+                        contentDescriptions = item.entryContentDescriptions,
+                        hasOverlappingEntries = item.overlappingEntries != null
                 )
 
                 accessibilityHelper.accessibilityEvent = object : BarChartAccessibilityEvent {
-                    override fun onHighlight(index: Int) {
-                        chart.highlightColumn(index, true)
+                    override fun onHighlight(index: Int, hasOverlappingEntries: Boolean) {
+                        chart.highlightColumn(index, hasOverlappingEntries)
                         val entry = chart.data.dataSets.first().getEntryForIndex(index)
                         val value = entry?.data as? String
                         item.onBarSelected?.invoke(value)
