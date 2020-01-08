@@ -25,7 +25,7 @@ class ReattachUploadingMediaUseCaseTest {
 
     @Before
     fun setUp() {
-        useCase = ReattachUploadingMediaUseCase(editPostRepository, uploadServiceFacade)
+        useCase = ReattachUploadingMediaUseCase(uploadServiceFacade)
     }
 
     @Test
@@ -37,7 +37,7 @@ class ReattachUploadingMediaUseCaseTest {
                 .thenReturn(listOf(mediaModel2))
 
         // Act
-        useCase.reattachUploadingMediaForAztec(true, editorMediaUploadListener)
+        useCase.reattachUploadingMediaForAztec(editPostRepository, editorMediaUploadListener)
 
         // Assert
         verify(editorMediaUploadListener).onMediaUploadReattached(mediaModel1.id.toString(), 0f)
@@ -53,7 +53,7 @@ class ReattachUploadingMediaUseCaseTest {
                 .thenReturn(listOf(mediaModel1, mediaModel2))
 
         // Act
-        useCase.reattachUploadingMediaForAztec(true, editorMediaUploadListener)
+        useCase.reattachUploadingMediaForAztec(editPostRepository, editorMediaUploadListener)
 
         // Assert
         verify(editorMediaUploadListener, times(1)).onMediaUploadReattached(mediaModel1.id.toString(), 0f)
@@ -72,7 +72,7 @@ class ReattachUploadingMediaUseCaseTest {
         whenever(uploadServiceFacade.getUploadProgressForMedia(mediaModel1)).thenReturn(progress)
 
         // Act
-        useCase.reattachUploadingMediaForAztec(true, editorMediaUploadListener)
+        useCase.reattachUploadingMediaForAztec(editPostRepository, editorMediaUploadListener)
 
         // Assert
         verify(editorMediaUploadListener, times(1)).onMediaUploadReattached(mediaModel1.id.toString(), progress)

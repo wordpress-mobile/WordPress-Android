@@ -245,11 +245,12 @@ class EditorMedia @Inject constructor(
         isAztec: Boolean,
         editorMediaUploadListener: EditorMediaUploadListener
     ) {
-        reattachUploadingMediaUseCase.reattachUploadingMediaForAztec(
-                editPostRepository,
-                isAztec,
-                editorMediaUploadListener
-        )
+        if (isAztec) {
+            reattachUploadingMediaUseCase.reattachUploadingMediaForAztec(
+                    editPostRepository,
+                    editorMediaUploadListener
+            )
+        }
     }
 
     /*
