@@ -196,13 +196,36 @@ class OverviewMapper
         if (shouldShowVisitors) {
             result.add(ChartLegend(R.string.stats_visitors))
         }
+
+        val entryType = when (selectedType) {
+            0 -> R.string.stats_views
+            1 -> R.string.stats_visitors
+            2 -> R.string.stats_likes
+            3 -> R.string.stats_comments
+            else -> 0
+        }
+
+        val overlappingType = if (shouldShowVisitors) {
+            R.string.stats_visitors
+        } else {
+            null
+        }
+
+        val contentDescriptions = statsUtils.getEntryContentDescriptions(
+                entryType,
+                chartItems,
+                overlappingType,
+                overlappingItems
+        )
+
         result.add(
                 BarChartItem(
                         chartItems,
                         overlappingEntries = overlappingItems,
                         selectedItem = selectedItemPeriod,
                         onBarSelected = onBarSelected,
-                        onBarChartDrawn = onBarChartDrawn
+                        onBarChartDrawn = onBarChartDrawn,
+                        entryContentDescriptions = contentDescriptions
                 )
         )
         return result
