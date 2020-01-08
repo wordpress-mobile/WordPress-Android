@@ -22,6 +22,7 @@
         android:layout_marginStart="@dimen/margin_medium"
         android:background="@drawable/photo_picker_circle_selector"
         android:elevation="4dp"
+        android:importantForAccessibility="no"
         android:gravity="center"
         android:includeFontPadding="false"
         android:textColor="@android:color/white"
