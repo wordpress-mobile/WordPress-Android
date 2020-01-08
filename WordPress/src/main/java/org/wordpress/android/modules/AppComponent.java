@@ -13,6 +13,7 @@ import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
+import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
 import org.wordpress.android.ui.JetpackRemoteInstallFragment;
@@ -23,6 +24,8 @@ import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
+import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
+import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
@@ -204,7 +207,11 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(LoginMagicLinkInterceptActivity object);
 
+    void inject(SignupEpilogueActivity object);
+
     void inject(SignupEpilogueFragment object);
+
+    void inject(PostSignupInterstitialActivity object);
 
     void inject(SiteCreationActivity object);
 
@@ -237,6 +244,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(HelpActivity object);
 
     void inject(CommentDetailFragment object);
+
+    void inject(CommentFullScreenDialogFragment object);
 
     void inject(EditCommentActivity object);
 

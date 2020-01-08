@@ -456,6 +456,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_ACTION_MEDIA_TAPPED:
                 predefinedEventProperties.put("button", "media");
                 break;
+            case WELCOME_NO_SITES_INTERSTITIAL_CREATE_NEW_SITE_TAPPED:
+                predefinedEventProperties.put("button", "create_new_site");
+                break;
+            case WELCOME_NO_SITES_INTERSTITIAL_ADD_SELF_HOSTED_SITE_TAPPED:
+                predefinedEventProperties.put("button", "add_self_hosted_site");
+                break;
         }
 
         final String user;
@@ -1698,6 +1704,23 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "unpublished_revision_dialog_load_local_version_clicked";
             case UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED:
                 return "unpublished_revision_dialog_load_unpublished_version_clicked";
+            case WELCOME_NO_SITES_INTERSTITIAL_SHOWN:
+                return "welcome_no_sites_interstitial_shown";
+            case WELCOME_NO_SITES_INTERSTITIAL_CREATE_NEW_SITE_TAPPED:
+            case WELCOME_NO_SITES_INTERSTITIAL_ADD_SELF_HOSTED_SITE_TAPPED:
+                return "welcome_no_sites_interstitial_button_tapped";
+            case WELCOME_NO_SITES_INTERSTITIAL_DISMISSED:
+                return "welcome_no_sites_interstitial_dismissed";
+            case FEATURED_IMAGE_SET_CLICKED_POST_SETTINGS:
+                return "featured_image_set_clicked_post_settings";
+            case FEATURED_IMAGE_PICKED_POST_SETTINGS:
+                return "featured_image_picked_post_settings";
+            case FEATURED_IMAGE_UPLOAD_CANCELED_POST_SETTINGS:
+                return "featured_image_upload_canceled_post_settings";
+            case FEATURED_IMAGE_UPLOAD_RETRY_CLICKED_POST_SETTINGS:
+                return "featured_image_upload_retry_clicked_post_settings";
+            case FEATURED_IMAGE_REMOVE_CLICKED_POST_SETTINGS:
+                return "featured_image_remove_clicked_post_settings";
         }
         return null;
     }

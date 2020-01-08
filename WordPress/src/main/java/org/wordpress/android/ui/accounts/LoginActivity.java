@@ -58,6 +58,7 @@ import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
@@ -241,7 +242,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         switch (getLoginMode()) {
             case FULL:
             case WPCOM_LOGIN_ONLY:
-                ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
+                if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial()) {
+                    ActivityLauncher.showPostSignupInterstitial(this);
+                } else {
+                    ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
+                }
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
