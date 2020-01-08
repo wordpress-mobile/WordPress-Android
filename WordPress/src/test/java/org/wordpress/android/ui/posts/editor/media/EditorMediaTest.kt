@@ -346,7 +346,7 @@ class EditorMediaTest : BaseUnitTest() {
     }
 
     @Test
-    fun `reattachUploadingMedia is called when isAztec is true`() {
+    fun `reattachUploadingMedia is called for Aztec editor`() {
         // Arrange
         val reattachUploadingMediaUseCase = mock<ReattachUploadingMediaUseCase>()
         // Act
@@ -357,7 +357,7 @@ class EditorMediaTest : BaseUnitTest() {
     }
 
     @Test
-    fun `reattachUploadingMedia is NOT called when isAztec is false`() {
+    fun `reattachUploadingMedia is NOT called for other editors`() {
         // Arrange
         val reattachUploadingMediaUseCase = mock<ReattachUploadingMediaUseCase>()
         // Act
