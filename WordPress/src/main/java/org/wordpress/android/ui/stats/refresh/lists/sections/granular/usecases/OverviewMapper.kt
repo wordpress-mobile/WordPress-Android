@@ -198,11 +198,10 @@ class OverviewMapper
         }
 
         val entryType = when (selectedType) {
-            0 -> R.string.stats_views
             1 -> R.string.stats_visitors
             2 -> R.string.stats_likes
             3 -> R.string.stats_comments
-            else -> -1
+            else -> R.string.stats_views
         }
 
         val overlappingType = if (shouldShowVisitors) {
