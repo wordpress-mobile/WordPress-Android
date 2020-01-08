@@ -136,7 +136,9 @@ class StatsUtils
     }
 
     fun getEntryContentDescriptions(
-        @StringRes entryType: Int, entries: List<Bar>, @StringRes overlappingEntryType: Int? = null,
+        @StringRes entryType: Int,
+        entries: List<Bar>,
+        @StringRes overlappingEntryType: Int? = null,
         overlappingEntries: List<Bar>? = null
     ): List<String> {
         val contentDescriptions = mutableListOf<String>()

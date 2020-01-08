@@ -69,6 +69,6 @@ class LatestPostSummaryMapper
                 R.string.stats_views,
                 barEntries)
 
-        return BarChartItem(barEntries,entryContentDescriptions = contentDescriptions)
+        return BarChartItem(barEntries, entryContentDescriptions = contentDescriptions)
     }
 }
