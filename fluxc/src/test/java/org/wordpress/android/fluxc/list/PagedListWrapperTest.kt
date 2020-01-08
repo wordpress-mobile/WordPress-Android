@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
 import org.wordpress.android.fluxc.store.ListStore.OnListDataInvalidated
-import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 
@@ -130,12 +129,6 @@ class PagedListWrapperTest {
     }
 
     @Test
-    fun `onListItemsChanged invokes invalidate property`() {
-        triggerOnListItemsChanged()
-        verify(mockInvalidate).invoke()
-    }
-
-    @Test
     fun `onListRequiresRefresh invokes refresh`() {
         triggerOnListRequiresRefresh()
         verify(mockRefresh).invoke()
@@ -181,18 +174,6 @@ class PagedListWrapperTest {
                 error = error
         )
         pagedListWrapper.onListChanged(event)
-    }
-
-    private fun triggerOnListItemsChanged(
-        error: ListError? = null
-    ) {
-        val pagedListWrapper = createPagedListWrapper()
-        whenever(mockListDescriptor.typeIdentifier).thenReturn(ListDescriptorTypeIdentifier(0))
-        val event = OnListItemsChanged(
-                type = mockListDescriptor.typeIdentifier,
-                error = error
-        )
-        pagedListWrapper.onListItemsChanged(event)
     }
 
     private fun triggerOnListRequiresRefresh() {
