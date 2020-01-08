@@ -202,7 +202,7 @@ class OverviewMapper
             1 -> R.string.stats_visitors
             2 -> R.string.stats_likes
             3 -> R.string.stats_comments
-            else -> 0
+            else -> -1
         }
 
         val overlappingType = if (shouldShowVisitors) {

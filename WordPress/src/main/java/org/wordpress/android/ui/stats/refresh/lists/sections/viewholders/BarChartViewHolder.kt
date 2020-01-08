@@ -47,6 +47,10 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             delay(50)
             chart.draw(item, labelStart, labelEnd)
             chart.post {
+                if (item.entryContentDescriptions.isEmpty()) {
+                    return@post
+                }
+
                 accessibilityHelper = BarChartAccessibilityHelper(
                         chart,
                         contentDescriptions = item.entryContentDescriptions,
