@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.quickstart;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 
@@ -41,7 +42,8 @@ public enum QuickStartTaskDetails {
             QuickStartTask.PUBLISH_POST,
             R.string.quick_start_list_publish_post_title,
             R.string.quick_start_list_publish_post_subtitle,
-            R.drawable.ic_create_white_24dp
+            BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
+                    ? R.drawable.ic_posts_white_24dp : R.drawable.ic_create_white_24dp
     ),
     FOLLOW_SITES_TUTORIAL(
             QuickStartTask.FOLLOW_SITE,
