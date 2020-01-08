@@ -91,7 +91,7 @@
     </style>
 
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/secondary_disabled_selector</item>
+        <item name="backgroundTint">@color/secondary_variant_disabled_selector</item>
         <item name="android:textColor">@color/on_surface_disabled_selector</item>
     </style>
 
