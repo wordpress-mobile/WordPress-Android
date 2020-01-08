@@ -94,13 +94,14 @@ class PostListFragment : Fragment() {
 
         mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
+                recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
+                recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
+
                 when (layoutType) {
                     STANDARD -> {
-                        recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
                         recyclerView?.addItemDecoration(itemDecorationStandardLayout)
                     }
                     COMPACT -> {
-                        recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
                         recyclerView?.addItemDecoration(itemDecorationCompactLayout)
                     }
                 }

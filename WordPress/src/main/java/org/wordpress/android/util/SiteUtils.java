@@ -26,7 +26,7 @@ import java.util.List;
 public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
-    private static final int GB_ROLLOUT_PERCENTAGE = 100;
+    private static final int GB_ROLLOUT_PERCENTAGE_PHASE_1 = 100;
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_2 = 30;
 
     /**
@@ -66,7 +66,8 @@ public class SiteUtils {
                     // Show "phase 2" dialog on sites that get switched from aztec to gutenberg
                     if (TextUtils.equals(site.getMobileEditor(), AZTEC_EDITOR_NAME)) {
                         AppPrefs.setShowGutenbergInfoPopupPhase2ForNewPosts(site.getUrl(), true);
-                        AppPrefs.setGutenbergInfoPopupDisplayed(site.getUrl(), true);
+                        // Will show the popup again, even if it was displayed in the past
+                        AppPrefs.setGutenbergInfoPopupDisplayed(site.getUrl(), false);
                     }
 
                     // Show "phase 1" dialog on sites that get switched from "empty" (no pref) to gutenberg
@@ -96,7 +97,7 @@ public class SiteUtils {
         //
         // To exclude ids 0 and 1, to rollout for 10% users,
         // we'll use a test like `id % 100 >= 90` instead of `id % 100 < 10`.
-        if (accountStore.getAccount().getUserId() % 100 >= (100 - GB_ROLLOUT_PERCENTAGE)) {
+        if (accountStore.getAccount().getUserId() % 100 >= (100 - GB_ROLLOUT_PERCENTAGE_PHASE_1)) {
             if (atLeastOneSiteHasAztecEnabled(siteStore)) {
                 // If the user has opt-ed out from at least one of their site, then exclude them from the cohort
                 return;

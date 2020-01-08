@@ -1436,7 +1436,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(org.wordpress.android.editor.R.string.dialog_button_ok));
 
         gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
-        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), false);
+        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), true);
     }
 
     private void showGutenbergRolloutV2InformativeDialog() {
@@ -1448,7 +1448,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(org.wordpress.android.editor.R.string.dialog_button_ok));
 
         gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG);
-        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), false);
+        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), true);
     }
 
     private void setGutenbergEnabledIfNeeded() {
