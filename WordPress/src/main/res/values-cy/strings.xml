@@ -415,7 +415,6 @@ Language: cy_GB
     <string name="auth_required">Mewngofnodwch eto i barhau.</string>
     <string name="invalid_verification_code">Cod dilysu annilys</string>
     <string name="verification_code">Cod dilysu</string>
-    <string name="editor_toast_invalid_path">Llwybr ffeil annilys</string>
     <string name="language">Iaith</string>
     <string name="media_fetching">Estyn cyfrwng…</string>
     <string name="posts_fetching">Estyn cofnodion…</string>
