@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
 import com.nhaarman.mockitokotlin2.any
@@ -16,15 +16,18 @@ import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.posts.EditPostViewModel.ActivityFinishState.SAVED_LOCALLY
-import org.wordpress.android.ui.posts.EditPostViewModel.ActivityFinishState.SAVED_ONLINE
-import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor
-import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
+import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.PostUtilsWrapper
+import org.wordpress.android.ui.posts.SavePostToDbUseCase
+import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState.SAVED_LOCALLY
+import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState.SAVED_ONLINE
+import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor
+import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
-class EditPostViewModelTest : BaseUnitTest() {
+class StorePostViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var postUtils: PostUtilsWrapper
     @Mock lateinit var uploadService: UploadServiceFacade
@@ -33,7 +36,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
     @Mock lateinit var context: Context
 
-    private lateinit var viewModel: EditPostViewModel
+    private lateinit var viewModel: StorePostViewModel
     private val title = "title"
     private val updatedTitle = "updatedTitle"
     private val content = "content"
@@ -47,7 +50,7 @@ class EditPostViewModelTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        viewModel = EditPostViewModel(
+        viewModel = StorePostViewModel(
                 TEST_DISPATCHER,
                 siteStore,
                 postUtils,

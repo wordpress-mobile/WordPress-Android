@@ -111,9 +111,6 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
-import org.wordpress.android.ui.posts.EditPostViewModel.ActivityFinishState;
-import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor;
-import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
@@ -125,6 +122,10 @@ import org.wordpress.android.ui.posts.editor.EditorTracker;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
+import org.wordpress.android.ui.posts.editor.StorePostViewModel;
+import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState;
+import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor;
+import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.PostFields;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
@@ -323,7 +324,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
 
-    private EditPostViewModel mViewModel;
+    private StorePostViewModel mViewModel;
 
     private SiteModel mSite;
 
@@ -377,7 +378,7 @@ public class EditPostActivity extends AppCompatActivity implements
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
         mViewModel =
-                ViewModelProviders.of(this, mViewModelFactory).get(EditPostViewModel.class);
+                ViewModelProviders.of(this, mViewModelFactory).get(StorePostViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -12,10 +12,13 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.posts.EditPostViewModel.ActivityFinishState.SAVED_LOCALLY
-import org.wordpress.android.ui.posts.EditPostViewModel.ActivityFinishState.SAVED_ONLINE
-import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.Failed
-import org.wordpress.android.ui.posts.EditPostViewModel.UpdateFromEditor.PostFields
+import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.PostUtilsWrapper
+import org.wordpress.android.ui.posts.SavePostToDbUseCase
+import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState.SAVED_LOCALLY
+import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState.SAVED_ONLINE
+import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.Failed
+import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -27,7 +30,7 @@ import javax.inject.Named
 private const val CHANGE_SAVE_DELAY = 500L
 private const val MAX_UNSAVED_POSTS = 50
 
-class EditPostViewModel
+class StorePostViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val siteStore: SiteStore,

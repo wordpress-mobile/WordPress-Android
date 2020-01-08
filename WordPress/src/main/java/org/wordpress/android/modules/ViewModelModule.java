@@ -7,8 +7,8 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
-import org.wordpress.android.ui.posts.EditPostViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
+import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
@@ -253,8 +253,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(EditPostViewModel.class)
-    abstract ViewModel editPostViewModel(EditPostViewModel viewModel);
+    @ViewModelKey(StorePostViewModel.class)
+    abstract ViewModel storePostViewModel(StorePostViewModel viewModel);
 
     @Binds
     @IntoMap
