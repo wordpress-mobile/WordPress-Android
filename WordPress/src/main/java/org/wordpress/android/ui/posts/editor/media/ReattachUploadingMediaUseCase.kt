@@ -7,10 +7,10 @@ import org.wordpress.android.ui.uploads.UploadServiceFacade
 import javax.inject.Inject
 
 class ReattachUploadingMediaUseCase @Inject constructor(
-    private val editPostRepository: EditPostRepository,
     private val uploadServiceFacade: UploadServiceFacade
 ) {
     fun reattachUploadingMediaForAztec(
+        editPostRepository: EditPostRepository,
         isAztec: Boolean,
         editorMediaUploadListener: EditorMediaUploadListener
     ) {

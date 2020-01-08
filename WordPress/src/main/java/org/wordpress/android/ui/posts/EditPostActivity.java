@@ -685,6 +685,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void reattachUploadingMediaForAztec() {
         if (mEditorMediaUploadListener != null) {
             mEditorMedia.reattachUploadingMediaForAztec(
+                    mEditPostRepository,
                     mEditorFragment instanceof AztecEditorFragment,
                     mEditorMediaUploadListener
             );
