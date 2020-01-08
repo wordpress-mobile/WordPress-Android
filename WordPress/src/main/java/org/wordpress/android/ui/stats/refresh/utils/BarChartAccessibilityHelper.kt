@@ -45,7 +45,7 @@ class BarChartAccessibilityHelper(
     }
 
     override fun getVisibleVirtualViews(virtualViewIds: MutableList<Int>?) {
-        for (i in 0..dataSet.entryCount) {
+        for (i in 0 until dataSet.entryCount) {
             virtualViewIds?.add(i)
         }
     }
