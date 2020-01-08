@@ -1711,6 +1711,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "welcome_no_sites_interstitial_button_tapped";
             case WELCOME_NO_SITES_INTERSTITIAL_DISMISSED:
                 return "welcome_no_sites_interstitial_dismissed";
+            case FEATURED_IMAGE_SET_CLICKED_POST_SETTINGS:
+                return "featured_image_set_clicked_post_settings";
+            case FEATURED_IMAGE_PICKED_POST_SETTINGS:
+                return "featured_image_picked_post_settings";
+            case FEATURED_IMAGE_UPLOAD_CANCELED_POST_SETTINGS:
+                return "featured_image_upload_canceled_post_settings";
+            case FEATURED_IMAGE_UPLOAD_RETRY_CLICKED_POST_SETTINGS:
+                return "featured_image_upload_retry_clicked_post_settings";
+            case FEATURED_IMAGE_REMOVE_CLICKED_POST_SETTINGS:
+                return "featured_image_remove_clicked_post_settings";
         }
         return null;
     }
