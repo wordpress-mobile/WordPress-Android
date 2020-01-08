@@ -55,7 +55,8 @@ class FeaturedImageHelperTest {
                 readerUtilsWrapper,
                 fluxCUtilsWrapper,
                 siteUtilsWrapper,
-                dispatcher
+                dispatcher,
+                mock()
         )
     }
 
