@@ -345,6 +345,28 @@ class EditorMediaTest : BaseUnitTest() {
         verify(retryFailedMediaUploadUseCase).retryFailedMediaAsync(anyOrNull(), eq(expectedIds))
     }
 
+    @Test
+    fun `reattachUploadingMedia is called when isAztec is true`() {
+        // Arrange
+        val reattachUploadingMediaUseCase = mock<ReattachUploadingMediaUseCase>()
+        // Act
+        createEditorMedia(reattachUploadingMediaUseCase = reattachUploadingMediaUseCase)
+                .reattachUploadingMediaForAztec(mock(), true, mock())
+        // Assert
+        verify(reattachUploadingMediaUseCase).reattachUploadingMediaForAztec(anyOrNull(), anyOrNull())
+    }
+
+    @Test
+    fun `reattachUploadingMedia is NOT called when isAztec is false`() {
+        // Arrange
+        val reattachUploadingMediaUseCase = mock<ReattachUploadingMediaUseCase>()
+        // Act
+        createEditorMedia(reattachUploadingMediaUseCase = reattachUploadingMediaUseCase)
+                .reattachUploadingMediaForAztec(mock(), false, mock())
+        // Assert
+        verify(reattachUploadingMediaUseCase, never()).reattachUploadingMediaForAztec(anyOrNull(), anyOrNull())
+    }
+
     private companion object Fixtures {
         private val VIDEO_URI = mock<Uri>()
         private val IMAGE_URI = mock<Uri>()
