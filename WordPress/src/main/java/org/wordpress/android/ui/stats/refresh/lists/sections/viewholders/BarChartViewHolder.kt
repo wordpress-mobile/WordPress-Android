@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.BarData
@@ -36,6 +37,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     private val chart = itemView.findViewById<BarChart>(R.id.chart)
     private val labelStart = itemView.findViewById<TextView>(R.id.label_start)
     private val labelEnd = itemView.findViewById<TextView>(R.id.label_end)
+    private lateinit var accessibilityHelper: BarChartAccessibilityHelper
 
     fun bind(
         item: BarChartItem,
@@ -45,20 +47,13 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         GlobalScope.launch(Dispatchers.Main) {
             delay(50)
             chart.draw(item, labelStart, labelEnd)
-            chart.setOnDrawListener(object : OnDrawListener {
-                override fun onEntryMoved(entry: Entry?) {
-                }
-
-                override fun onEntryAdded(entry: Entry?) {
-                }
-
-                override fun onDrawFinished(dataSet: DataSet<*>?) {
-                    BarChartAccessibilityHelper(
-                            barChart = chart, dataSet = dataSet as BarDataSet,
-                            contentDescriptions = item.entryContentDescriptions
-                    )
-                }
-            })
+            chart.post {
+                accessibilityHelper = BarChartAccessibilityHelper(
+                        chart,
+                        contentDescriptions = item.entryContentDescriptions
+                )
+                ViewCompat.setAccessibilityDelegate(chart, accessibilityHelper)
+            }
         }
     }
 
