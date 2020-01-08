@@ -90,9 +90,9 @@
         <item name="tint">?attr/colorOnSurface</item>
     </style>
 
-       <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">?attr/colorSecondaryVariant</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
+    <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/secondary_disabled_selector</item>
+        <item name="android:textColor">@color/on_surface_disabled_selector</item>
     </style>
 
 </resources>
