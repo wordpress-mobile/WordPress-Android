@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,11 +16,24 @@ class ActionListItemViewHolder(
         val actionIcon: ImageView = this.itemView.findViewById(R.id.action_icon)
         val actionTitle: TextView = this.itemView.findViewById(R.id.action_title)
 
-        actionIcon.setImageResource(action.iconRes)
-        actionTitle.setText(action.labelRes)
+        if (action.iconRes > 0) {
+            actionIcon.setImageResource(action.iconRes)
+            actionIcon.visibility = View.VISIBLE
+        } else {
+            actionIcon.visibility = View.GONE
+        }
 
-        this.itemView.setOnClickListener {
-            action.onClickAction?.invoke(action.actionType)
+        if (action.labelRes > 0) {
+            actionTitle.setText(action.labelRes)
+            actionTitle.visibility = View.VISIBLE
+        } else {
+            actionTitle.visibility = View.GONE
+        }
+
+        action.onClickAction?.let {
+            this.itemView.setOnClickListener {
+                action.onClickAction.invoke(action.actionType)
+            }
         }
     }
 }
