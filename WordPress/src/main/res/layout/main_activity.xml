@@ -60,15 +60,16 @@
         android:id="@+id/fab_tooltip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        app:wpTooltipPosition="left"
+        app:wpTooltipPosition="above"
         android:visibility="gone"
         tools:visibility="visible"
+        android:background="@android:color/transparent"
         app:wpTooltipMessage="@string/create_post_page_fab_tooltip"
+        app:wpArrowHorizontalOffsetFromEnd="@dimen/main_fab_tooltip_offset_end"
         android:layout_marginStart="@dimen/margin_medium"
-        android:layout_toStartOf="@+id/fab_button"
-        android:layout_alignTop="@+id/fab_button"
-        android:layout_alignBottom="@+id/fab_button"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_above="@+id/fab_button"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_button"
