@@ -1490,7 +1490,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        if (!newValue.contentEquals(pref.getSummary())) {
+        if (!newValue.equals(pref.getSummary())) {
             String formattedValue = StringEscapeUtils.unescapeHtml4(newValue.replaceFirst(ADDRESS_FORMAT_REGEX, ""));
 
             pref.setText(formattedValue);

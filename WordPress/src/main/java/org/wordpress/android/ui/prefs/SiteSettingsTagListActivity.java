@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -407,13 +406,11 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         dialogBuilder.setMessage(message);
         dialogBuilder.setPositiveButton(
                 getResources().getText(R.string.delete_yes),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        showProgressDialog(R.string.dlg_deleting_tag);
-                        Action action = TaxonomyActionBuilder.newDeleteTermAction(
-                                new TaxonomyStore.RemoteTermPayload(term, mSite));
-                        mDispatcher.dispatch(action);
-                    }
+                (dialog, whichButton) -> {
+                    showProgressDialog(R.string.dlg_deleting_tag);
+                    Action action = TaxonomyActionBuilder.newDeleteTermAction(
+                            new TaxonomyStore.RemoteTermPayload(term, mSite));
+                    mDispatcher.dispatch(action);
                 });
         dialogBuilder.setNegativeButton(R.string.cancel, null);
         dialogBuilder.setCancelable(true);
