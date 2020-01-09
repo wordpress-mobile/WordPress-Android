@@ -625,7 +625,7 @@ public class AppPrefs {
         remove(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS);
     }
 
-    public static boolean getBooleanPrefForKeyAndURL(PrefKey key, String siteURL) {
+    public static boolean getShowGutenbergInfoPopupForTheNewPosts(PrefKey key, String siteURL) {
         if (TextUtils.isEmpty(siteURL)) {
             return false;
         }
@@ -650,7 +650,7 @@ public class AppPrefs {
         return flag;
     }
 
-    public static void setBooleanPrefForKeyAndURL(PrefKey key, String siteURL, boolean show) {
+    public static void setShowGutenbergInfoPopupForTheNewPosts(PrefKey key, String siteURL, boolean show) {
         if (TextUtils.isEmpty(siteURL)) {
             return;
         }
@@ -680,21 +680,23 @@ public class AppPrefs {
     }
 
     public static boolean shouldShowGutenbergInfoPopupPhase2ForNewPosts(String siteURL) {
-        return getBooleanPrefForKeyAndURL(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
-                siteURL);
+        return getShowGutenbergInfoPopupForTheNewPosts(
+                DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2, siteURL);
     }
 
     public static void setShowGutenbergInfoPopupPhase2ForNewPosts(String siteURL, boolean show) {
-        setBooleanPrefForKeyAndURL(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2, siteURL,
-                show);
+        setShowGutenbergInfoPopupForTheNewPosts(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
+                siteURL, show);
     }
 
     public static boolean shouldShowGutenbergInfoPopupForTheNewPosts(String siteURL) {
-        return getBooleanPrefForKeyAndURL(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, siteURL);
+        return getShowGutenbergInfoPopupForTheNewPosts(
+                DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, siteURL);
     }
 
     public static void setShowGutenbergInfoPopupForTheNewPosts(String siteURL, boolean show) {
-        setBooleanPrefForKeyAndURL(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, siteURL, show);
+        setShowGutenbergInfoPopupForTheNewPosts(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
+                siteURL, show);
     }
 
     public static boolean isGutenbergInfoPopupDisplayed(String siteURL) {
