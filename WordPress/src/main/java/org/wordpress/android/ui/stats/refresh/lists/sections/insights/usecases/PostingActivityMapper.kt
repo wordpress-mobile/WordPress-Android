@@ -29,6 +29,13 @@ class PostingActivityMapper
         for (month in months) {
             val firstDayOfMonth = Calendar.getInstance(localeManagerWrapper.getLocale())
             firstDayOfMonth.set(month.year, month.month, firstDayOfMonth.getActualMinimum(Calendar.DAY_OF_MONTH))
+            val getMonthDisplayName = { style: Int ->
+                firstDayOfMonth.getDisplayName(
+                        Calendar.MONTH,
+                        style,
+                        localeManagerWrapper.getLocale()
+                )
+            }
             val firstDayOfWeek = Calendar.getInstance(localeManagerWrapper.getLocale())
             firstDayOfWeek.time = firstDayOfMonth.time
             firstDayOfWeek.set(Calendar.DAY_OF_WEEK, firstDayOfWeek.firstDayOfWeek)
@@ -52,18 +59,8 @@ class PostingActivityMapper
             }
             blocks.add(
                     Block(
-                            firstDayOfMonth.getDisplayName(
-                                    Calendar.MONTH,
-                                    Calendar.SHORT,
-                                    localeManagerWrapper.getLocale()
-                            ),
-                            boxes,
-                            firstDayOfMonth.getDisplayName(
-                                    Calendar.MONTH,
-                                    Calendar.LONG,
-                                    localeManagerWrapper.getLocale()
-                            )
-
+                            getMonthDisplayName(Calendar.SHORT),
+                            boxes, getMonthDisplayName(Calendar.LONG)
                     )
             )
         }
