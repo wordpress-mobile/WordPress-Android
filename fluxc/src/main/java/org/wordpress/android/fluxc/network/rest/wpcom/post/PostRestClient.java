@@ -133,7 +133,7 @@ public class PostRestClient extends BaseWPComRestClient {
                                     .add(new PostListItem(postResponse.getRemotePostId(), postResponse.getModified(),
                                             postResponse.getStatus(), autoSaveModified));
                         }
-                        boolean canLoadMore = postListItems.size() == pageSize;
+                        boolean canLoadMore = response.getFound() > offset + postListItems.size();
                         FetchPostListResponsePayload responsePayload =
                                 new FetchPostListResponsePayload(listDescriptor, postListItems, loadedMore,
                                         canLoadMore, null);
