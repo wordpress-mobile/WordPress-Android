@@ -1,5 +1,7 @@
 package org.wordpress.android.ui
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
@@ -30,12 +32,13 @@ class WPTooltipView @JvmOverloads constructor (
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-    var position = LEFT
-    var messageId = 0
-    var arrowHorizontalOffsetFromEndResId = 0
-    var arrowHorizontalOffsetFromStartResId = 0
-    var arrowHorizontalOffsetFromEnd = -1
-    var arrowHorizontalOffsetFromStart = -1
+    private var position = LEFT
+    private var messageId = 0
+    private var arrowHorizontalOffsetFromEndResId = 0
+    private var arrowHorizontalOffsetFromStartResId = 0
+    private var arrowHorizontalOffsetFromEnd = -1
+    private var arrowHorizontalOffsetFromStart = -1
+    private var animationDuration: Int
 
     init {
         attrs?.also {
@@ -66,6 +69,7 @@ class WPTooltipView @JvmOverloads constructor (
         val root = findViewById<LinearLayout>(R.id.root_view)
         val tvMessage = findViewById<TextView>(R.id.tooltip_message)
         val arrow = findViewById<View>(R.id.tooltip_arrow)
+        animationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
 
         if (messageId > 0) {
             tvMessage.setText(messageId)
@@ -111,11 +115,28 @@ class WPTooltipView @JvmOverloads constructor (
 
     fun show() {
         this.postDelayed({
-            this.visibility = View.VISIBLE
-        }, 600)
+            this.apply {
+                alpha = 0f
+                visibility = View.VISIBLE
+                animate()
+                        .alpha(1f)
+                        .setDuration(animationDuration.toLong())
+                        .setListener(null)
+            }
+        }, 400)
     }
 
     fun hide() {
-        this.visibility = View.GONE
+        this.apply {
+            animate()
+                    .alpha(0f)
+                    .setDuration(animationDuration.toLong())
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator?) {
+                            super.onAnimationEnd(animation)
+                            visibility = View.GONE
+                        }
+                    })
+        }
     }
 }
