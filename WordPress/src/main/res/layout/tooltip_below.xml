@@ -2,19 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_view"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    style="@style/TooltipContainer"
     android:gravity="center_horizontal"
-    android:background="@android:color/transparent">
+    android:orientation="vertical">
 
-    <ImageView
+    <View
         android:id="@+id/tooltip_arrow"
         style="@style/TooltipArrowView"
         android:layout_weight="1"
         android:rotation="0"
-        android:src="@drawable/tooltip_arrow"
-        android:contentDescription="@null" />
+        android:background="@drawable/tooltip_arrow"
+        android:contentDescription="@null"/>
 
     <TextView
         android:id="@+id/tooltip_message"

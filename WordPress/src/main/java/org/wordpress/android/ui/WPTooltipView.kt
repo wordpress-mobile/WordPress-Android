@@ -66,7 +66,7 @@ class WPTooltipView @JvmOverloads constructor (
         inflate(getContext(), position.layout, this)
         val root = findViewById<LinearLayout>(R.id.root_view)
         val tvMessage = findViewById<TextView>(R.id.tooltip_message)
-        val arrow = findViewById<ImageView>(R.id.tooltip_arrow)
+        val arrow = findViewById<View>(R.id.tooltip_arrow)
 
         if (messageId > 0) {
             tvMessage.setText(messageId)

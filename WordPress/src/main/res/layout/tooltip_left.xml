@@ -2,11 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_view"
-    android:orientation="horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    style="@style/TooltipContainer"
     android:gravity="center_vertical"
-    android:background="@android:color/transparent">
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/tooltip_message"
@@ -14,12 +12,12 @@
         android:layout_weight="1"
         tools:text="This is an example tooltip message"/>
 
-    <ImageView
+    <View
         android:id="@+id/tooltip_arrow"
         style="@style/TooltipArrowView"
         android:layout_weight="1"
         android:rotation="90"
-        android:contentDescription="@null"
-        android:src="@drawable/tooltip_arrow"/>
+        android:background="@drawable/tooltip_arrow"
+        android:contentDescription="@null"/>
 
 </LinearLayout>

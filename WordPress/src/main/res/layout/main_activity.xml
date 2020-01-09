@@ -63,12 +63,11 @@
         app:wpTooltipPosition="above"
         android:visibility="gone"
         tools:visibility="visible"
-        android:background="@android:color/transparent"
         app:wpTooltipMessage="@string/create_post_page_fab_tooltip"
         app:wpArrowHorizontalOffsetFromEnd="@dimen/main_fab_tooltip_offset_end"
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:layout_above="@+id/fab_button"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
