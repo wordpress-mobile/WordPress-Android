@@ -90,9 +90,15 @@
         <item name="tint">?attr/colorOnSurface</item>
     </style>
 
-       <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
+    <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">?attr/colorSecondaryVariant</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="NumberPickerTheme" parent="WordPress">
+        <item name="colorControlNormal">@color/transparent</item>
+        <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
     </style>
 
 </resources>
