@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -877,7 +878,8 @@ public class AppPrefs {
     }
 
     public static boolean isMainFabTooltipDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
+        return !BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
+               || getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
     }
 
     public static void setQuickStartMigrationDialogShown(Boolean shown) {

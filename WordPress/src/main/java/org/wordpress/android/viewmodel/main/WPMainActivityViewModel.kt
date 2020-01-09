@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -19,8 +18,8 @@ import javax.inject.Inject
 class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) : ViewModel() {
     private var isStarted = false
 
-    private val _showMainActionFab = MutableLiveData<MainFabUiState>()
-    val showMainActionFab: LiveData<MainFabUiState> = _showMainActionFab
+    private val _fabUiState = MutableLiveData<MainFabUiState>()
+    val fabUiState: LiveData<MainFabUiState> = _fabUiState
 
     private val _mainActions = MutableLiveData<List<MainActionListItem>>()
     val mainActions: LiveData<List<MainActionListItem>> = _mainActions
@@ -31,14 +30,10 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
-    private var mainFabTooltipDisabled = true
-
     fun start(isFabVisible: Boolean) {
         if (isStarted) return
         isStarted = true
 
-        mainFabTooltipDisabled = !BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE ||
-                appPrefsWrapper.isMainFabTooltipDisabled()
         setMainFabUiState(isFabVisible)
 
         loadMainActions()
@@ -69,11 +64,9 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
     }
 
     fun setIsBottomSheetShowing(showing: Boolean) {
-        if (!mainFabTooltipDisabled) {
-            mainFabTooltipDisabled = true
-            appPrefsWrapper.setMainFabTooltipDisabled(mainFabTooltipDisabled)
-            setMainFabUiState(true)
-        }
+        appPrefsWrapper.setMainFabTooltipDisabled(true)
+        setMainFabUiState(true)
+
         _isBottomSheetShowing.value = Event(showing)
     }
 
@@ -84,9 +77,9 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
     private fun setMainFabUiState(isFabVisible: Boolean) {
         val newState = MainFabUiState(
                         isFabVisible = isFabVisible,
-                        isFabTooltipVisible = if (mainFabTooltipDisabled) false else isFabVisible
+                        isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible
         )
 
-        _showMainActionFab.value = newState
+        _fabUiState.value = newState
     }
 }

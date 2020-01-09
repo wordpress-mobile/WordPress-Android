@@ -394,14 +394,14 @@ public class WPMainActivity extends AppCompatActivity implements
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
             // Setup Observers
-            mViewModel.getShowMainActionFab().observe(this, showUiState -> {
-                if (showUiState.isFabVisible()) {
+            mViewModel.getFabUiState().observe(this, fabUiState -> {
+                if (fabUiState.isFabVisible()) {
                     mFloatingActionButton.show();
                 } else {
                     mFloatingActionButton.hide();
                 }
 
-                if (showUiState.isFabTooltipVisible()) {
+                if (fabUiState.isFabTooltipVisible()) {
                     mFabTooltip.show();
                 } else {
                     mFabTooltip.hide();
