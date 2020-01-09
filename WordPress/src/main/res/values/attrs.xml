@@ -22,9 +22,9 @@
         <attr name="iconTint" format="color" />
         <attr name="switchThumbTint" format="integer" />
         <attr name="switchTrackTint" format="integer" />
-        <attr name="preferenceTextColor" format="color" />
-        <attr name="backgroundColorChecked" format="color" />
-        <attr name="backgroundColorUnchecked" format="color" />
+        <attr name="preferenceTextColor" format="color|reference" />
+        <attr name="backgroundColorChecked" format="color|reference" />
+        <attr name="backgroundColorUnchecked" format="color|reference" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->

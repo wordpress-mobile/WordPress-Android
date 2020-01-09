@@ -25,39 +25,38 @@
             android:padding="@dimen/start_over_icon_padding"
             android:contentDescription="@null"
             android:layout_gravity="center_vertical"
-            android:tint="@color/neutral_60"
+            android:tint="?attr/wpColorOnSurfaceMedium"
             android:layout_marginEnd="@dimen/start_over_icon_margin_right"/>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@android:id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:layout_gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
             android:paddingStart="@dimen/start_over_title_margin"/>
 
     </LinearLayout>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@android:id/summary"
         android:layout_marginTop="@dimen/start_over_preference_margin_medium"
         android:layout_marginBottom="@dimen/start_over_preference_margin_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textAppearance="?attr/textAppearanceBody2"
         android:paddingStart="@dimen/start_over_preference_margin_small"
         android:layout_marginStart="@dimen/start_over_summary_margin"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/start_over_summary_margin"
         android:text="@string/button_more"
-        android:theme="@style/WhiteButton"/>
+        style="@style/WordPress.Button.Primary"/>
 
 </LinearLayout>
