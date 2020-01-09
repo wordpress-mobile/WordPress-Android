@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -25,6 +26,7 @@ class WPMainActivityViewModelTest {
 
     @Before
     fun setUp() {
+        whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(false)
         viewModel = WPMainActivityViewModel(appPrefsWrapper)
         viewModel.start(true)
     }
@@ -32,13 +34,25 @@ class WPMainActivityViewModelTest {
     @Test
     fun `fab visible when asked`() {
         viewModel.onPageChanged(true)
-        assertThat(viewModel.showMainActionFab.value?.isFabVisible).isEqualTo(true)
+        assertThat(viewModel.fabUiState.value?.isFabVisible).isEqualTo(true)
     }
 
     @Test
     fun `fab hidden when asked`() {
         viewModel.onPageChanged(false)
-        assertThat(viewModel.showMainActionFab.value?.isFabVisible).isEqualTo(false)
+        assertThat(viewModel.fabUiState.value?.isFabVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `fab tooltip visible when asked`() {
+        viewModel.onPageChanged(true)
+        assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(true)
+    }
+
+    @Test
+    fun `fab tooltip hidden when asked`() {
+        viewModel.onPageChanged(false)
+        assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
 
     @Test
