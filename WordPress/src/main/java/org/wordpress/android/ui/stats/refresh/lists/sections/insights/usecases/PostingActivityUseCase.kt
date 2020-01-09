@@ -15,17 +15,14 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Activ
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Block
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.HIGH
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.LOW
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.MEDIUM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.VERY_HIGH
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.VERY_LOW
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
