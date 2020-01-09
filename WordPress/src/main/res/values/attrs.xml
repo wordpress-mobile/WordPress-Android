@@ -161,6 +161,8 @@
             <enum name="below" value="3"/>
         </attr>
         <attr name="wpTooltipMessage" format="reference"/>
+        <attr name="wpArrowHorizontalOffsetFromEnd" format="dimension"/>
+        <attr name="wpArrowHorizontalOffsetFromStart" format="dimension"/>
     </declare-styleable>
 
     <!--

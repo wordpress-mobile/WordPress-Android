@@ -2,6 +2,7 @@ package org.wordpress.android.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -32,10 +33,14 @@ class WPTooltipView @JvmOverloads constructor (
 ) : LinearLayout(context, attrs, defStyleAttr) {
     var position = LEFT
     var messageId = 0
+    var arrowHorizontalOffsetFromEndResId = 0
+    var arrowHorizontalOffsetFromStartResId = 0
+    var arrowHorizontalOffsetFromEnd = -1
+    var arrowHorizontalOffsetFromStart = -1
 
     init {
         attrs?.also {
-            val a = context.theme.obtainStyledAttributes(
+            val stylesAttributes = context.theme.obtainStyledAttributes(
                     attrs,
                     R.styleable.WPTooltipView,
                     0,
@@ -43,18 +48,31 @@ class WPTooltipView @JvmOverloads constructor (
             )
 
             try {
-                position = TooltipPosition.fromInt(a.getInt(R.styleable.WPTooltipView_wpTooltipPosition, 0))
-                messageId = a.getResourceId(R.styleable.WPTooltipView_wpTooltipMessage, 0)
+                position = TooltipPosition.fromInt(
+                        stylesAttributes.getInt(R.styleable.WPTooltipView_wpTooltipPosition, 0)
+                )
+                messageId = stylesAttributes.getResourceId(R.styleable.WPTooltipView_wpTooltipMessage, 0)
+                arrowHorizontalOffsetFromEndResId = stylesAttributes.getResourceId(
+                        R.styleable.WPTooltipView_wpArrowHorizontalOffsetFromEnd, 0
+                )
+                arrowHorizontalOffsetFromStartResId = stylesAttributes.getResourceId(
+                        R.styleable.WPTooltipView_wpArrowHorizontalOffsetFromStart, 0
+                )
             } finally {
-                a.recycle()
+                stylesAttributes.recycle()
             }
         }
 
         inflate(getContext(), position.layout, this)
+        val root = findViewById<LinearLayout>(R.id.root_view)
         val tvMessage = findViewById<TextView>(R.id.tooltip_message)
+        val arrow = findViewById<ImageView>(R.id.tooltip_arrow)
+
+        if (messageId > 0) {
+            tvMessage.setText(messageId)
+        }
 
         if (RtlUtils.isRtl(context)) {
-            val arrow = findViewById<ImageView>(R.id.tooltip_arrow)
             when (position) {
                 LEFT -> arrow.rotation = -90f
                 RIGHT -> arrow.rotation = 90f
@@ -62,8 +80,20 @@ class WPTooltipView @JvmOverloads constructor (
             }
         }
 
-        if (messageId > 0) {
-            tvMessage.setText(messageId)
+        if (position == ABOVE || position == BELOW) {
+            if (arrowHorizontalOffsetFromEndResId > 0) {
+                arrowHorizontalOffsetFromEnd = resources.getDimensionPixelSize(arrowHorizontalOffsetFromEndResId)
+                root.gravity = Gravity.END
+                val lp = arrow.layoutParams as LayoutParams
+                lp.marginEnd = arrowHorizontalOffsetFromEnd
+                arrow.layoutParams = lp
+            } else if (arrowHorizontalOffsetFromStartResId > 0) {
+                arrowHorizontalOffsetFromStart = resources.getDimensionPixelSize(arrowHorizontalOffsetFromStartResId)
+                root.gravity = Gravity.START
+                val lp = arrow.layoutParams as LayoutParams
+                lp.marginStart = arrowHorizontalOffsetFromStart
+                arrow.layoutParams = lp
+            }
         }
     }
 
@@ -75,7 +105,7 @@ class WPTooltipView @JvmOverloads constructor (
 
         companion object {
             fun fromInt(value: Int): TooltipPosition =
-                    values().firstOrNull() { it.value == value }
+                    values().firstOrNull { it.value == value }
                             ?: throw IllegalArgumentException("TooltipPosition wrong value $value")
         }
     }
