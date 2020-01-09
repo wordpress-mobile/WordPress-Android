@@ -81,10 +81,10 @@ public class SiteUtils {
                 }
             }
 
-            // Enable Gutenberg for all sites using a single network call
+            // Enable and track Gutenberg for all sites using a single network call
+            trackGutenbergEnabledForNonGutenbergSites(siteStore);
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
-            trackGutenbergEnabledForNonGutenbergSites(siteStore);
 
             // After enabling Gutenberg on these sites, we consider the user entered the rollout group
             AppPrefs.setUserInGutenbergRolloutGroup();
