@@ -53,7 +53,7 @@ public class SiteUtils {
 
         // -------- Rollout: Phase 2 -------
         //
-        // If the user as one Aztec enabled site, we'll migrate all his sites to gutenberg and show
+        // If user has any Aztec enabled sites, we'll migrate their sites to Gutenberg and schedule showing popup.
         if (atLeastOneSiteHasAztecEnabled(siteStore)) {
             // Randomly pick the user in the rollout group
             if (accountStore.getAccount().getUserId() % 100 >= (100 - GB_ROLLOUT_PERCENTAGE_PHASE_2)) {
