@@ -225,7 +225,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
                 showMagicLinkRequestProgressDialog();
             }
 
-            boolean gravatarInProgress = savedInstanceState.getBoolean(KEY_GRAVATAR_IN_PROGRESS);
+            boolean gravatarInProgress = savedInstanceState.getBoolean(
+                    KEY_GRAVATAR_IN_PROGRESS, false);
             mAvatarProgressBar.setVisibility(gravatarInProgress ? View.VISIBLE : View.GONE);
         }
         // important for accessibility - talkback
@@ -243,7 +244,10 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
-        outState.putBoolean(KEY_GRAVATAR_IN_PROGRESS, mAvatarProgressBar.getVisibility() == View.VISIBLE);
+        if (mAvatarProgressBar != null) {
+            outState.putBoolean(KEY_GRAVATAR_IN_PROGRESS,
+                    mAvatarProgressBar.getVisibility() == View.VISIBLE);
+        }
     }
 
     @Override
