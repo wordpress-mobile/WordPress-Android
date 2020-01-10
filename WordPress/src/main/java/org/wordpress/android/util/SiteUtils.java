@@ -81,7 +81,10 @@ public class SiteUtils {
                 }
             }
 
-            // Enable and track Gutenberg for all sites using a single network call
+            // Track and enable and  Gutenberg for all sites using a single network call. Ideally we would track this
+            // on the network response, but this would make this rollout even more complex.
+            // There might be some rare events when we register a site switched to Gutenberg which is actually
+            // still on Aztec.
             trackGutenbergEnabledForNonGutenbergSites(siteStore);
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
