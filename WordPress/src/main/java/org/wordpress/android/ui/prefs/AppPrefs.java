@@ -117,6 +117,7 @@ public class AppPrefs {
         GUTENBERG_DEFAULT_FOR_NEW_POSTS,
         USER_IN_GUTENBERG_ROLLOUT_GROUP,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
+        SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
@@ -624,14 +625,14 @@ public class AppPrefs {
         remove(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS);
     }
 
-    public static boolean shouldShowGutenbergInfoPopupForTheNewPosts(String siteURL) {
+    private static boolean getShowGutenbergInfoPopupForTheNewPosts(PrefKey key, String siteURL) {
         if (TextUtils.isEmpty(siteURL)) {
             return false;
         }
 
         Set<String> urls;
         try {
-            urls = prefs().getStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), null);
+            urls = prefs().getStringSet(key.name(), null);
         } catch (ClassCastException exp) {
             // no operation - This should not happen.
             return false;
@@ -642,20 +643,20 @@ public class AppPrefs {
             if (urls.contains(siteURL)) {
                 flag = true;
                 // remove the flag from Prefs
-                setShowGutenbergInfoPopupForTheNewPosts(siteURL, false);
+                setShowGutenbergInfoPopupForTheNewPosts(key, siteURL, false);
             }
         }
 
         return flag;
     }
 
-    public static void setShowGutenbergInfoPopupForTheNewPosts(String siteURL, boolean show) {
+    private static void setShowGutenbergInfoPopupForTheNewPosts(PrefKey key, String siteURL, boolean show) {
         if (TextUtils.isEmpty(siteURL)) {
             return;
         }
         Set<String> urls;
         try {
-            urls = prefs().getStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), null);
+            urls = prefs().getStringSet(key.name(), null);
         } catch (ClassCastException exp) {
             // nope - this should never happens
             return;
@@ -674,8 +675,28 @@ public class AppPrefs {
         }
 
         SharedPreferences.Editor editor = prefs().edit();
-        editor.putStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), newUrls);
+        editor.putStringSet(key.name(), newUrls);
         editor.apply();
+    }
+
+    public static boolean shouldShowGutenbergInfoPopupPhase2ForNewPosts(String siteURL) {
+        return getShowGutenbergInfoPopupForTheNewPosts(
+                DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2, siteURL);
+    }
+
+    public static void setShowGutenbergInfoPopupPhase2ForNewPosts(String siteURL, boolean show) {
+        setShowGutenbergInfoPopupForTheNewPosts(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
+                siteURL, show);
+    }
+
+    public static boolean shouldShowGutenbergInfoPopupForTheNewPosts(String siteURL) {
+        return getShowGutenbergInfoPopupForTheNewPosts(
+                DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, siteURL);
+    }
+
+    public static void setShowGutenbergInfoPopupForTheNewPosts(String siteURL, boolean show) {
+        setShowGutenbergInfoPopupForTheNewPosts(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
+                siteURL, show);
     }
 
     public static boolean isGutenbergInfoPopupDisplayed(String siteURL) {
@@ -694,7 +715,7 @@ public class AppPrefs {
         return urls != null && urls.contains(siteURL);
     }
 
-    public static void setGutenbergInfoPopupDisplayed(String siteURL) {
+    public static void setGutenbergInfoPopupDisplayed(String siteURL, boolean isDisplayed) {
         if (isGutenbergInfoPopupDisplayed(siteURL)) {
             return;
         }
@@ -714,8 +735,11 @@ public class AppPrefs {
         if (urls != null) {
             newUrls.addAll(urls);
         }
-        newUrls.add(siteURL);
-
+        if (isDisplayed) {
+            newUrls.add(siteURL);
+        } else {
+            newUrls.remove(siteURL);
+        }
         SharedPreferences.Editor editor = prefs().edit();
         editor.putStringSet(DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name(), newUrls);
         editor.apply();

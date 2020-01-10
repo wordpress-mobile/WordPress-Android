@@ -239,6 +239,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_UPDATE_CONFIRMATION_DIALOG = "tag_update_confirmation_dialog";
     private static final String TAG_GB_INFORMATIVE_DIALOG = "tag_gb_informative_dialog";
+    private static final String TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG = "tag_gb_rollout_v2_informative_dialog";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -1408,7 +1409,19 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(org.wordpress.android.editor.R.string.dialog_button_ok));
 
         gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
-        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl());
+        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), true);
+    }
+
+    private void showGutenbergRolloutV2InformativeDialog() {
+        // Show the GB informative dialog on editing GB posts
+        final PromoDialog gbInformativeDialog = new PromoDialog();
+        gbInformativeDialog.initialize(TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG,
+                getString(R.string.dialog_gutenberg_informative_title),
+                getString(R.string.dialog_gutenberg_informative_description_v2),
+                getString(org.wordpress.android.editor.R.string.dialog_button_ok));
+
+        gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG);
+        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), true);
     }
 
     private void setGutenbergEnabledIfNeeded() {
@@ -1417,6 +1430,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopupForTheNewPosts(mSite.getUrl());
+        boolean showRolloutPopupPhase2 = AppPrefs.shouldShowGutenbergInfoPopupPhase2ForNewPosts(mSite.getUrl());
 
         if (TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost) {
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
@@ -1427,6 +1441,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (showPopup) {
             showGutenbergInformativeDialog();
+        } else if (showRolloutPopupPhase2) {
+            showGutenbergRolloutV2InformativeDialog();
         }
     }
 
@@ -1687,6 +1703,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
             case TAG_GB_INFORMATIVE_DIALOG:
+                // no op
+                break;
+            case TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG:
                 // no op
                 break;
             default:
