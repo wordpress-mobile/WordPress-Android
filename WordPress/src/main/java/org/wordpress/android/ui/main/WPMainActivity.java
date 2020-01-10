@@ -759,7 +759,8 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
-        if (getSelectedSite() != null && getMySiteFragment() != null) {
+        if (getSelectedSite() != null && getMySiteFragment() != null
+            && !BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
             if (getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
                 // PUBLISH_POST task requires special Quick Start notice logic, so we set the flag here
                 AppPrefs.setQuickStartNoticeRequired(
