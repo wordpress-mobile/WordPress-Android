@@ -12,14 +12,14 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.util.image.ImageManager
 
-private val REGULAR = Typeface.create("sans-serif", Typeface.NORMAL)
-private val MEDIUM = Typeface.create("sans-serif-medium", Typeface.NORMAL)
-
 class ActionListItemViewHolder(
     internal val parent: ViewGroup,
     val imageManager: ImageManager
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.main_action_list_item, parent, false)) {
-    open fun bind(action: CreateAction) {
+    private val regularTypeface = Typeface.create("sans-serif", Typeface.NORMAL)
+    private val mediumTypeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+
+    fun bind(action: CreateAction) {
         val actionIcon: ImageView = this.itemView.findViewById(R.id.action_icon)
         val actionTitle: TextView = this.itemView.findViewById(R.id.action_title)
 
@@ -32,9 +32,9 @@ class ActionListItemViewHolder(
 
         if (action.labelRes > 0) {
             if (action.actionType == NO_ACTION) {
-                actionTitle.typeface = MEDIUM
+                actionTitle.typeface = mediumTypeface
             } else {
-                actionTitle.typeface = REGULAR
+                actionTitle.typeface = regularTypeface
             }
 
             actionTitle.setText(action.labelRes)
