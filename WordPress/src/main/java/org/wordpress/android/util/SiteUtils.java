@@ -77,11 +77,14 @@ public class SiteUtils {
                     }
                 }
 
-                // Enable Gutenberg for all sites using a single network call
-                dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
-                        new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME, false)));
+                // Track and enable Gutenberg for all sites using a single network call. Ideally we would track this
+                // on the network response, but this would make this rollout even more complex.
+                // There might be some rare events when we register a site switched to Gutenberg which is actually
+                // still on Aztec.
                 trackGutenbergEnabledForNonGutenbergSites(siteStore,
                         BlockEditorEnabledSource.ON_PROGRESSIVE_ROLLOUT_PHASE_2);
+                dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
+                        new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME, false)));
 
                 // After enabling Gutenberg on these sites, we consider the user entered the rollout group
                 AppPrefs.setUserInGutenbergRolloutGroup();
@@ -116,11 +119,14 @@ public class SiteUtils {
                 }
             }
 
-            // Enable Gutenberg for all sites using a single network call
-            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
-                    new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
+            // Track and enable and  Gutenberg for all sites using a single network call. Ideally we would track this
+            // on the network response, but this would make this rollout even more complex.
+            // There might be some rare events when we register a site switched to Gutenberg which is actually
+            // still on Aztec.
             trackGutenbergEnabledForNonGutenbergSites(siteStore,
                     BlockEditorEnabledSource.ON_PROGRESSIVE_ROLLOUT_PHASE_1);
+            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
+                    new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
 
             // After enabling Gutenberg on these sites, we consider the user entered the rollout group
             AppPrefs.setUserInGutenbergRolloutGroup();
