@@ -424,7 +424,7 @@ public class WPMainActivity extends AppCompatActivity implements
             });
 
             mFabTooltip.setOnClickListener(v -> {
-                mFabTooltip.hide();
+                mViewModel.onTooltipTapped();
             });
 
             mViewModel.isBottomSheetShowing().observe(this, event -> {

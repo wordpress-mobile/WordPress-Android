@@ -74,6 +74,16 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
         setMainFabUiState(showFab)
     }
 
+    fun onTooltipTapped() {
+        val oldState = _fabUiState.value
+        oldState?.let {
+            _fabUiState.value = MainFabUiState(
+                    isFabVisible = it.isFabVisible,
+                    isFabTooltipVisible = false
+            )
+        }
+    }
+
     private fun setMainFabUiState(isFabVisible: Boolean) {
         val newState = MainFabUiState(
                         isFabVisible = isFabVisible,
