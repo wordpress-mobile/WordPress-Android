@@ -508,8 +508,10 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorMedia.start(mSite, this);
         startObserving();
 
-        QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.PUBLISH_POST,
-                mDispatcher, mSite, this);
+        if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.PUBLISH_POST,
+                    mDispatcher, mSite, this);
+        }
 
         if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(mImageLoader);

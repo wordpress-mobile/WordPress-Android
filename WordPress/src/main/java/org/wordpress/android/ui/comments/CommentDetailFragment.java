@@ -321,7 +321,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     Bundle bundle = Companion.newBundle(
                             mEditReply.getText().toString(),
                             mEditReply.getSelectionStart(),
-                            mEditReply.getSelectionEnd()
+                            mEditReply.getSelectionEnd(),
+                            mSite.getSiteId()
                                                        );
 
                     new Builder(requireContext())
