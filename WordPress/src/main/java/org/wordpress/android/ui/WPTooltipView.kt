@@ -27,6 +27,8 @@ import java.lang.IllegalArgumentException
  * CoordinatorLayout behavior (as in this scenario with FAB and snackbars)
  */
 
+private const val HIDE_ANIMATION_DURATION = 50L
+
 class WPTooltipView @JvmOverloads constructor (
     context: Context,
     attrs: AttributeSet? = null,
@@ -130,7 +132,7 @@ class WPTooltipView @JvmOverloads constructor (
         this.apply {
             animate()
                     .alpha(0f)
-                    .setDuration(animationDuration.toLong())
+                    .setDuration(HIDE_ANIMATION_DURATION)
                     .setListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator?) {
                             super.onAnimationEnd(animation)

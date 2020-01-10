@@ -395,16 +395,16 @@ public class WPMainActivity extends AppCompatActivity implements
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
             // Setup Observers
             mViewModel.getFabUiState().observe(this, fabUiState -> {
-                if (fabUiState.isFabVisible()) {
-                    mFloatingActionButton.show();
-                } else {
-                    mFloatingActionButton.hide();
-                }
-
                 if (fabUiState.isFabTooltipVisible()) {
                     mFabTooltip.show();
                 } else {
                     mFabTooltip.hide();
+                }
+
+                if (fabUiState.isFabVisible()) {
+                    mFloatingActionButton.show();
+                } else {
+                    mFloatingActionButton.hide();
                 }
             });
 
@@ -421,6 +421,10 @@ public class WPMainActivity extends AppCompatActivity implements
 
             mFloatingActionButton.setOnClickListener(v -> {
                 mViewModel.setIsBottomSheetShowing(true);
+            });
+
+            mFabTooltip.setOnClickListener(v -> {
+                mFabTooltip.hide();
             });
 
             mViewModel.isBottomSheetShowing().observe(this, event -> {
