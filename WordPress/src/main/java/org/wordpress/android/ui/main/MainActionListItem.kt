@@ -2,20 +2,28 @@ package org.wordpress.android.ui.main
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import org.wordpress.android.ui.main.MainActionListItem.ItemType.CREATE_ACTION
+import org.wordpress.android.ui.main.MainActionListItem.ItemType.TITLE
 
-sealed class MainActionListItem {
-    abstract val actionType: ActionType
+sealed class MainActionListItem(val itemType: ItemType) {
+    enum class ItemType {
+        TITLE,
+        CREATE_ACTION,
+    }
 
     enum class ActionType {
-        NO_ACTION,
         CREATE_NEW_PAGE,
         CREATE_NEW_POST
     }
 
+    data class Title(
+        @StringRes val labelRes: Int
+    ) : MainActionListItem(TITLE)
+
     data class CreateAction(
-        override val actionType: ActionType,
+        val actionType: ActionType,
         @DrawableRes val iconRes: Int,
         @StringRes val labelRes: Int,
-        val onClickAction: ((actionType: ActionType) -> Unit)?
-    ) : MainActionListItem()
+        val onClickAction: (actionType: ActionType) -> Unit
+    ) : MainActionListItem(CREATE_ACTION)
 }

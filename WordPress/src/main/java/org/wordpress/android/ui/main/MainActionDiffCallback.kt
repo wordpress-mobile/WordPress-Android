@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.main
 
 import androidx.recyclerview.widget.DiffUtil.Callback
+import org.wordpress.android.ui.main.MainActionListItem.CreateAction
+import org.wordpress.android.ui.main.MainActionListItem.Title
 
 class MainActionDiffCallback(
     private val oldList: List<MainActionListItem>,
@@ -10,7 +12,10 @@ class MainActionDiffCallback(
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
 
-        return (oldItem.actionType == newItem.actionType)
+        return when (newItem) {
+            is Title -> (oldItem is Title) && (oldItem.labelRes == newItem.labelRes)
+            is CreateAction -> (oldItem is CreateAction) && (oldItem.actionType == newItem.actionType)
+        }
     }
 
     override fun getOldListSize(): Int = oldList.size

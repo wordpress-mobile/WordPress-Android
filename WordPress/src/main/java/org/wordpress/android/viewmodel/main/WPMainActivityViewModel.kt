@@ -8,8 +8,8 @@ import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
+import org.wordpress.android.ui.main.MainActionListItem.Title
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -40,11 +40,8 @@ class WPMainActivityViewModel @Inject constructor() : ViewModel() {
     private fun loadMainActions() {
         val actionsList = ArrayList<MainActionListItem>()
 
-        actionsList.add(CreateAction(
-                actionType = NO_ACTION,
-                iconRes = 0,
-                labelRes = R.string.my_site_bottom_sheet_title,
-                onClickAction = null
+        actionsList.add(Title(
+                labelRes = R.string.my_site_bottom_sheet_title
         ))
         actionsList.add(CreateAction(
                 actionType = CREATE_NEW_POST,

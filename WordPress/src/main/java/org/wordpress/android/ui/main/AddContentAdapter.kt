@@ -33,7 +33,7 @@ class AddContentAdapter(context: Context) : Adapter<ActionListItemViewHolder>() 
     override fun onBindViewHolder(holder: ActionListItemViewHolder, position: Int) {
         val item = items[position]
         // Currently we have only one ViewHolder type
-        holder.bind(item as CreateAction)
+        holder.bind(item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActionListItemViewHolder {
@@ -42,6 +42,6 @@ class AddContentAdapter(context: Context) : Adapter<ActionListItemViewHolder>() 
     }
 
     override fun getItemViewType(position: Int): Int {
-        return items[position].actionType.ordinal
+        return items[position].itemType.ordinal
     }
 }
