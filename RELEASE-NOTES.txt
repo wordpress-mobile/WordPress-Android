@@ -1,6 +1,5 @@
 14.0
 -----
-* Block Editor: Hide image size selection options when image is a url
 * Block Editor: Fix displaying placeholder for images
 * Block Editor: Fix crash on undo
 * Block Editor: Fix styling on navigation UI
