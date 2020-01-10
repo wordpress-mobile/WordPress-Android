@@ -8,16 +8,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
+import org.wordpress.android.util.image.ImageManager
 
 class ActionListItemViewHolder(
-    internal val parent: ViewGroup
+    internal val parent: ViewGroup,
+    val imageManager: ImageManager
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.main_action_list_item, parent, false)) {
     open fun bind(action: CreateAction) {
         val actionIcon: ImageView = this.itemView.findViewById(R.id.action_icon)
         val actionTitle: TextView = this.itemView.findViewById(R.id.action_title)
 
         if (action.iconRes > 0) {
-            actionIcon.setImageResource(action.iconRes)
+            imageManager.load(actionIcon, action.iconRes)
             actionIcon.visibility = View.VISIBLE
         } else {
             actionIcon.visibility = View.GONE
