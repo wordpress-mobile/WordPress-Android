@@ -81,7 +81,11 @@ public class SiteUtils {
                 }
             }
 
-            // Enable Gutenberg for all sites using a single network call
+            // Track and enable and  Gutenberg for all sites using a single network call. Ideally we would track this
+            // on the network response, but this would make this rollout even more complex.
+            // There might be some rare events when we register a site switched to Gutenberg which is actually
+            // still on Aztec.
+            trackGutenbergEnabledForNonGutenbergSites(siteStore);
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
 
@@ -100,6 +104,15 @@ public class SiteUtils {
         } else {
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.AZTEC_EDITOR_NAME)));
+        }
+    }
+
+    private static void trackGutenbergEnabledForNonGutenbergSites(final SiteStore siteStore) {
+        for (SiteModel site : siteStore.getSites()) {
+            if (!TextUtils.equals(site.getMobileEditor(), GB_EDITOR_NAME)) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, site,
+                        BlockEditorEnabledSource.ON_PROGRESSIVE_ROLLOUT_PHASE_1.asPropertyMap());
+            }
         }
     }
 
