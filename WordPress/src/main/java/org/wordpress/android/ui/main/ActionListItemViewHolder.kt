@@ -1,16 +1,19 @@
 package org.wordpress.android.ui.main
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.util.image.ImageManager
+
+private val REGULAR = Typeface.create("sans-serif", Typeface.NORMAL)
+private val MEDIUM = Typeface.create("sans-serif-medium", Typeface.NORMAL)
 
 class ActionListItemViewHolder(
     internal val parent: ViewGroup,
@@ -29,9 +32,9 @@ class ActionListItemViewHolder(
 
         if (action.labelRes > 0) {
             if (action.actionType == NO_ACTION) {
-                TextViewCompat.setTextAppearance(actionTitle, android.R.style.TextAppearance_Medium)
+                actionTitle.typeface = MEDIUM
             } else {
-                TextViewCompat.setTextAppearance(actionTitle, android.R.style.TextAppearance)
+                actionTitle.typeface = REGULAR
             }
 
             actionTitle.setText(action.labelRes)
@@ -47,6 +50,7 @@ class ActionListItemViewHolder(
             this.itemView.setOnClickListener {
                 action.onClickAction.invoke(action.actionType)
             }
+            this.itemView.isClickable = true
         }
     }
 }
