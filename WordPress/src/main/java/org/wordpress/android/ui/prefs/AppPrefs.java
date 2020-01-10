@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -204,6 +205,9 @@ public class AppPrefs {
 
         // Used to indicate whether or not the the post-signup interstitial must be shown
         SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL,
+
+        // used to indicate that we do not need to show the main FAB tooltip
+        IS_MAIN_FAB_TOOLTIP_DISABLED,
     }
 
     private static SharedPreferences prefs() {
@@ -891,6 +895,15 @@ public class AppPrefs {
 
     public static boolean isQuickStartDisabled() {
         return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
+    }
+
+    public static void setMainFabTooltipDisabled(Boolean disable) {
+        setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
+    }
+
+    public static boolean isMainFabTooltipDisabled() {
+        return !BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
+               || getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
     }
 
     public static void setQuickStartMigrationDialogShown(Boolean shown) {

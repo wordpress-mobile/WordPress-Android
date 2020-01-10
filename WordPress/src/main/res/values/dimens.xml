@@ -453,5 +453,8 @@
 
     <!--Main bottom sheet icon size -->
     <dimen name="main_bottom_sheet_list_row_icon_size">32dp</dimen>
+    <dimen name="main_fab_tooltip_offset_end">20dp</dimen>
+    <dimen name="main_fab_tooltip_elevation">6dp</dimen>
+    <dimen name="main_fab_tooltip_arrow_size">16dp</dimen>
 
 </resources>
