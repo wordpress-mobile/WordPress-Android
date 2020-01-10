@@ -2182,10 +2182,7 @@
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode
         in this state. Remove all failed uploads and continue?</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
-    <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
-        your post in this state.</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
-    <string name="editor_retry_failed_uploads">Retry uploading</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>

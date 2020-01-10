@@ -45,4 +45,6 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
 
     fun getVideoThumbnail(videoPath: String): String? =
             EditorMediaUtils.getVideoThumbnail(appContext, videoPath)
+
+    fun isLocalFile(uploadState: String): Boolean = MediaUtils.isLocalFile(uploadState)
 }

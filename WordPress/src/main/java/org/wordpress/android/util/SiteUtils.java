@@ -68,6 +68,7 @@ public class SiteUtils {
                         AppPrefs.setShowGutenbergInfoPopupPhase2ForNewPosts(site.getUrl(), true);
                         // Will show the popup again, even if it was displayed in the past
                         AppPrefs.setGutenbergInfoPopupDisplayed(site.getUrl(), false);
+                        continue;
                     }
 
                     // Show "phase 1" dialog on sites that get switched from "empty" (no pref) to gutenberg
