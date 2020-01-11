@@ -25,6 +25,7 @@
         <attr name="preferenceTextColor" format="color|reference" />
         <attr name="backgroundColorChecked" format="color|reference" />
         <attr name="backgroundColorUnchecked" format="color|reference" />
+        <attr name="startOffset" format="dimension|reference" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->

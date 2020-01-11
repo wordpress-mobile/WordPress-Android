@@ -31,6 +31,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
     private @ColorRes int mTextColor = 0;
     private @ColorRes int mBackgroundCheckedColor = 0;
     private @ColorRes int mBackgroundUncheckedColor = 0;
+    private int mStartOffset = 0;
 
     private View mContainer;
 
@@ -54,6 +55,8 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
                 mBackgroundCheckedColor = array.getResourceId(index, android.R.color.white);
             } else if (index == R.styleable.SummaryEditTextPreference_backgroundColorUnchecked) {
                 mBackgroundUncheckedColor = array.getResourceId(index, android.R.color.white);
+            } else if (index == R.styleable.SummaryEditTextPreference_startOffset) {
+                mStartOffset = array.getDimensionPixelSize(index, 0);
             }
         }
 
@@ -89,7 +92,9 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             // add padding to the start of nested preferences
             if (!TextUtils.isEmpty(getDependency())) {
                 int margin = res.getDimensionPixelSize(R.dimen.margin_large);
-                ViewCompat.setPaddingRelative(coloredTitleView, margin, 0, 0, 0);
+                ViewCompat.setPaddingRelative(coloredTitleView, margin + mStartOffset, 0, 0, 0);
+            } else {
+                ViewCompat.setPaddingRelative(coloredTitleView, mStartOffset, 0, 0, 0);
             }
         }
 
