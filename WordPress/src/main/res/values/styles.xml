@@ -49,8 +49,6 @@
 
         <item name="colorButtonNormal">@color/light_gray</item>
 
-        <item name="android:dialogTheme">@style/DialogTheme.WordPress</item>
-        <item name="android:alertDialogTheme">@style/Calypso.Dialog.Alert</item>
         <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
         <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
 
@@ -74,7 +72,7 @@
     <style name="NumberPickerTheme" parent="WordPress">
         <item name="colorControlNormal">@color/transparent</item>
         <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
-        <item name="android:textColorPrimary">?attr/colorPrimary</item>
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
