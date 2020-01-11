@@ -18,8 +18,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
 import org.wordpress.android.R;
 
 import java.util.ArrayList;
@@ -92,13 +90,14 @@ public class RelatedPostsDialog extends DialogFragment
 
         toggleViews(mShowRelatedPosts.isChecked());
 
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+        // Material alert dialog is not expanding vertically, so as exception we are using normal dialog here
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //noinspection InflateParams
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
         TextView titleText = titleView.findViewById(R.id.title);
         titleText.setText(R.string.site_settings_related_posts_title);
         titleText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                                                  RelativeLayout.LayoutParams.WRAP_CONTENT));
+                RelativeLayout.LayoutParams.WRAP_CONTENT));
         builder.setCustomTitle(titleView);
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);

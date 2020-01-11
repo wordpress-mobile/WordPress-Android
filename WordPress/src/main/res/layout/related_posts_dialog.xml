@@ -30,8 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/site_settings_rp_switch_summary"
-            android:textColor="?attr/wpColorTextSubtle"
-            android:textSize="@dimen/text_sz_small" />
+            android:textAppearance="?attr/textAppearanceCaption" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/show_header_checkbox"
@@ -41,7 +40,7 @@
             android:gravity="center_vertical|start"
             android:text="@string/site_settings_rp_show_header_title"
             android:textAlignment="viewStart"
-            android:textSize="@dimen/text_sz_large" />
+            android:textAppearance="?attr/textAppearanceSubtitle1" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/show_images_checkbox"
@@ -51,7 +50,7 @@
             android:gravity="center_vertical|start"
             android:text="@string/site_settings_rp_show_images_title"
             android:textAlignment="viewStart"
-            android:textSize="@dimen/text_sz_large" />
+            android:textAppearance="?attr/textAppearanceSubtitle1" />
 
         <View
             android:layout_width="match_parent"
