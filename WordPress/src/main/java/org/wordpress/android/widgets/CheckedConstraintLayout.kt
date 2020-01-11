@@ -30,4 +30,3 @@ class CheckedConstraintLayout @JvmOverloads constructor(
         checkBox.isChecked = checked
     }
 }
-
