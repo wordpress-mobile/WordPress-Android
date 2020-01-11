@@ -45,21 +45,15 @@ public class CategoryArrayAdapter extends ArrayAdapter<CategoryNode> {
             ViewCompat.setPaddingRelative(viewHolder.mCategoryRowText,
                     DisplayUtils.dpToPx(getContext(), 16) * node.getLevel(), 0,
                     DisplayUtils.dpToPx(getContext(), 16), 0);
-
-            viewHolder.mCategoryRowLayout.setOnClickListener(v -> viewHolder.mCategoryRowCheckBox.toggle());
         }
         return rowView;
     }
 
     private static class ViewHolder {
         private final TextView mCategoryRowText;
-        private final CheckBox mCategoryRowCheckBox;
-        private final View mCategoryRowLayout;
 
         private ViewHolder(View view) {
             this.mCategoryRowText = view.findViewById(R.id.categoryRowText);
-            this.mCategoryRowCheckBox = view.findViewById(R.id.categoryRowCheckBox);
-            this.mCategoryRowLayout = view.findViewById(R.id.categoryRowLayout);
         }
     }
 }
