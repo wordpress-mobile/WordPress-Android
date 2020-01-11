@@ -165,7 +165,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         }
 
         CategoryArrayAdapter categoryAdapter =
-                new CategoryArrayAdapter(this, R.layout.categories_row2, mCategoryLevels);
+                new CategoryArrayAdapter(this, R.layout.categories_row, mCategoryLevels);
         mListView.setAdapter(categoryAdapter);
         if (mSelectedCategories != null) {
             for (Long selectedCategory : mSelectedCategories) {

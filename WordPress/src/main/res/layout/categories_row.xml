@@ -1,22 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.wordpress.android.widgets.CheckedLinearLayout
-    android:id="@+id/categoryRow"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+<org.wordpress.android.widgets.CheckedConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="@dimen/category_row_height"
-    android:clickable="false"
-    android:orientation="horizontal">
-
-    <CheckedTextView
-        android:id="@+id/categoryRowText"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:checkMark="@drawable/category_checkmark"
-        android:gravity="center_vertical"
+    android:id="@+id/categoryRowLayout"
+    android:descendantFocusability="blocksDescendants"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_begin="@dimen/checkbox_keyline"
+        android:id="@+id/checkbox_keyline"
         android:orientation="vertical"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_begin="@dimen/row_text_keyline"
+        android:id="@+id/row_text_keyline"
+        android:orientation="vertical"
+        />
+
+    <TextView
+        android:id="@+id/categoryRowText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_large"
-        android:checkMarkTint="@color/neutral"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/row_text_keyline"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Pony Category" />
-</org.wordpress.android.widgets.CheckedLinearLayout>
+
+    <CheckBox
+        android:id="@+id/categoryRowCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        app:layout_constraintEnd_toStartOf="@id/row_text_keyline"
+        app:layout_constraintStart_toEndOf="@id/checkbox_keyline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        />
+</org.wordpress.android.widgets.CheckedConstraintLayout>
