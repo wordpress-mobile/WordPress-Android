@@ -2561,6 +2561,7 @@
 
 
     <!-- Posts -->
+    <string name="post_list_author">Post author</string>
     <string name="post_list_author_me">Me</string>
     <string name="post_list_author_everyone">Everyone</string>
     <string name="post_list_published">Published</string>
