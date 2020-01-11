@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -44,8 +43,8 @@ public class CategoryArrayAdapter extends ArrayAdapter<CategoryNode> {
         if (node != null) {
             viewHolder.mCategoryRowText.setText(StringEscapeUtils.unescapeHtml4(node.getName()));
             ViewCompat.setPaddingRelative(viewHolder.mCategoryRowText,
-                                          DisplayUtils.dpToPx(getContext(), 16) * node.getLevel(), 0,
-                                          DisplayUtils.dpToPx(getContext(), 16), 0);
+                    DisplayUtils.dpToPx(getContext(), 16) * node.getLevel(), 0,
+                    DisplayUtils.dpToPx(getContext(), 16), 0);
 
             viewHolder.mCategoryRowLayout.setOnClickListener(v -> viewHolder.mCategoryRowCheckBox.toggle());
         }
