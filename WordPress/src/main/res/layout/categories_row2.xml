@@ -6,23 +6,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
-
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_begin="@dimen/checkbox_keyline"
+        android:id="@+id/checkbox_keyline"
+        android:orientation="vertical"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_begin="@dimen/row_text_keyline"
+        android:id="@+id/row_text_keyline"
+        android:orientation="vertical"
+        />
     <TextView
         android:id="@+id/categoryRowText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_large"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/row_text_keyline"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:text="Pony Category"
         />
+
     <CheckBox
         android:id="@+id/categoryRowCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/checkbox_keyline"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
