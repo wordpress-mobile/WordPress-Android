@@ -20,24 +20,28 @@
         android:id="@+id/row_text_keyline"
         android:orientation="vertical"
         />
+
     <TextView
         android:id="@+id/categoryRowText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@id/row_text_keyline"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="Pony Category"
-        />
+        tools:text="Pony Category" />
 
     <CheckBox
         android:id="@+id/categoryRowCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/row_text_keyline"
         app:layout_constraintStart_toEndOf="@id/checkbox_keyline"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         />
 </org.wordpress.android.widgets.CheckedConstraintLayout>
