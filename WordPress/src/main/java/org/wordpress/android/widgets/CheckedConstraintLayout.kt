@@ -14,7 +14,6 @@ class CheckedConstraintLayout @JvmOverloads constructor(
     private lateinit var checkBox: CheckBox
     override fun onFinishInflate() {
         super.onFinishInflate()
-        val childCount = childCount
         for (i in 0 until childCount) {
             val view = getChildAt(i)
             if (view is CheckBox) {
