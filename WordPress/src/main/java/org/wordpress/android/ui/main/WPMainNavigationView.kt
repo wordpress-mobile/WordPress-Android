@@ -90,7 +90,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             itemView.addView(customView)
         }
 
-        currentPosition = AppPrefs.getMainPageIndex()
+        currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
     }
 
     private fun disableShiftMode() {
