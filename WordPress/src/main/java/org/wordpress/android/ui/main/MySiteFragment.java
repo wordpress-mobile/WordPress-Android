@@ -612,7 +612,13 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void viewPosts() {
-        ActivityLauncher.viewCurrentBlogPosts(getActivity(), getSelectedSite());
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) requestNextStepOfActiveQuickStartTask();
+        SiteModel selectedSite = getSelectedSite();
+        if (selectedSite != null) {
+            ActivityLauncher.viewCurrentBlogPosts(requireActivity(), selectedSite);
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.site_cannot_be_loaded);
+        }
     }
 
     private void viewPages() {
