@@ -32,7 +32,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -155,7 +154,6 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
     public static final String ARG_EDITOR = "show_editor";
-    public static final String ARG_ME = "show_me";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
@@ -220,10 +218,6 @@ public class WPMainActivity extends AppCompatActivity implements
 
         mBottomNav = findViewById(R.id.bottom_navigation);
 
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            mBottomNav.getMenu().removeItem(R.id.nav_me);
-            mBottomNav.getMenu().removeItem(R.id.nav_write);
-        }
         mBottomNav.init(getSupportFragmentManager(), this);
 
         mConnectionBar = findViewById(R.id.connection_bar);
@@ -389,48 +383,46 @@ public class WPMainActivity extends AppCompatActivity implements
 
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPMainActivityViewModel.class);
 
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            // Setup Observers
-            mViewModel.getShowMainActionFab().observe(this, shouldShow -> {
-                if (shouldShow) {
-                    mFloatingActionButton.show();
-                } else {
-                    mFloatingActionButton.hide();
-                }
-            });
+        // Setup Observers
+        mViewModel.getShowMainActionFab().observe(this, shouldShow -> {
+            if (shouldShow) {
+                mFloatingActionButton.show();
+            } else {
+                mFloatingActionButton.hide();
+            }
+        });
 
-            mViewModel.getCreateAction().observe(this, createAction -> {
-                switch (createAction) {
-                    case CREATE_NEW_POST:
-                        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
-                        break;
-                    case CREATE_NEW_PAGE:
-                        handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
-                        break;
-                }
-            });
+        mViewModel.getCreateAction().observe(this, createAction -> {
+            switch (createAction) {
+                case CREATE_NEW_POST:
+                    handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
+                    break;
+                case CREATE_NEW_PAGE:
+                    handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                    break;
+            }
+        });
 
-            mFloatingActionButton.setOnClickListener(v -> {
-                mViewModel.setIsBottomSheetShowing(true);
-            });
+        mFloatingActionButton.setOnClickListener(v -> {
+            mViewModel.setIsBottomSheetShowing(true);
+        });
 
-            mViewModel.isBottomSheetShowing().observe(this, event -> {
-                event.applyIfNotHandled(isShowing -> {
-                    FragmentManager fm = getSupportFragmentManager();
-                    if (fm != null) {
-                        MainBottomSheetFragment bottomSheet =
-                                (MainBottomSheetFragment) fm.findFragmentByTag(MAIN_BOTTOM_SHEET_TAG);
-                        if (isShowing && bottomSheet == null) {
-                            bottomSheet = new MainBottomSheetFragment();
-                            bottomSheet.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
-                        } else if (!isShowing && bottomSheet != null) {
-                            bottomSheet.dismiss();
-                        }
+        mViewModel.isBottomSheetShowing().observe(this, event -> {
+            event.applyIfNotHandled(isShowing -> {
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm != null) {
+                    MainBottomSheetFragment bottomSheet =
+                            (MainBottomSheetFragment) fm.findFragmentByTag(MAIN_BOTTOM_SHEET_TAG);
+                    if (isShowing && bottomSheet == null) {
+                        bottomSheet = new MainBottomSheetFragment();
+                        bottomSheet.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
+                    } else if (!isShowing && bottomSheet != null) {
+                        bottomSheet.dismiss();
                     }
-                    return null;
-                });
+                }
+                return null;
             });
-        }
+        });
 
         mViewModel.start(mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
     }
@@ -463,9 +455,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 case ARG_READER:
                     mBottomNav.setCurrentSelectedPage(PageType.READER);
                     break;
-                case ARG_ME:
-                    mBottomNav.setCurrentSelectedPage(PageType.ME);
-                    break;
                 case ARG_EDITOR:
                     if (mSelectedSite == null) {
                         initSelectedSite();
@@ -493,9 +482,9 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
-        // leave the Main activity showing the ME page, so when the user comes back from Help&Support the app is in
-        // the right section.
-        mBottomNav.setCurrentSelectedPage(PageType.ME);
+        // leave the Main activity showing the MY_SITE page, so when the user comes back from
+        // Help&Support > HelpActivity the app is in the right section.
+        mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
 
         // init selected site, this is the same as in onResume
         initSelectedSite();
@@ -799,19 +788,11 @@ public class WPMainActivity extends AppCompatActivity implements
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
                 }
                 break;
-            case ME:
-                ActivityId.trackLastActivity(ActivityId.ME);
-                if (trackAnalytics) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
-                }
-                break;
             case NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
                 }
-                break;
-            case NEW_POST:
                 break;
             default:
                 break;
@@ -1002,14 +983,6 @@ public class WPMainActivity extends AppCompatActivity implements
         Fragment fragment = mBottomNav.getFragment(PageType.MY_SITE);
         if (fragment instanceof MySiteFragment) {
             return (MySiteFragment) fragment;
-        }
-        return null;
-    }
-
-    private MeFragment getMeFragment() {
-        Fragment fragment = mBottomNav.getFragment(PageType.ME);
-        if (fragment instanceof MeFragment) {
-            return (MeFragment) fragment;
         }
         return null;
     }
