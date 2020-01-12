@@ -612,7 +612,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void viewPosts() {
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) requestNextStepOfActiveQuickStartTask();
+        requestNextStepOfActiveQuickStartTask();
         SiteModel selectedSite = getSelectedSite();
         if (selectedSite != null) {
             ActivityLauncher.viewCurrentBlogPosts(requireActivity(), selectedSite);
