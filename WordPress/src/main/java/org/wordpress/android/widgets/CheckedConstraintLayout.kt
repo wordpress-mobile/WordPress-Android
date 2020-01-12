@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.widget.CheckBox
 import android.widget.Checkable
 import androidx.constraintlayout.widget.ConstraintLayout
+import java.lang.RuntimeException
 
 class CheckedConstraintLayout @JvmOverloads constructor(
     context: Context,
@@ -18,8 +19,10 @@ class CheckedConstraintLayout @JvmOverloads constructor(
             val view = getChildAt(i)
             if (view is CheckBox) {
                 checkBox = view
+                return
             }
         }
+        throw RuntimeException("A CheckBox is required in this layout for it to function.")
     }
 
     override fun isChecked() = checkBox.isChecked
