@@ -1799,8 +1799,9 @@
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_content_description">Change site icon</string>
 
-    <string name="my_site_bottom_sheet_add_post">Create new post</string>
-    <string name="my_site_bottom_sheet_add_page">Create new page</string>
+    <string name="my_site_bottom_sheet_title">Add new</string>
+    <string name="my_site_bottom_sheet_add_post">Blog post</string>
+    <string name="my_site_bottom_sheet_add_page">Site page</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>

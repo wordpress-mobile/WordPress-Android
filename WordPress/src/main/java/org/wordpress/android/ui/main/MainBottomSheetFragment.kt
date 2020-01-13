@@ -34,7 +34,7 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.create_actions_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = AddContentAdapter()
+        recyclerView.adapter = AddContentAdapter(requireActivity())
 
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(WPMainActivityViewModel::class.java)
 
