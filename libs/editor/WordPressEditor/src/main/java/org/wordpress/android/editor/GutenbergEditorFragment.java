@@ -50,7 +50,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListene
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnPreferredColorSchemeListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
 import java.lang.reflect.Field;
@@ -218,7 +217,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             GutenbergContainerFragment gutenbergContainerFragment =
-                    GutenbergContainerFragment.newInstance(postType, isNewPost, localeSlug, this.getTranslations());
+                    GutenbergContainerFragment.newInstance(postType,
+                            isNewPost,
+                            localeSlug,
+                            getTranslations(),
+                            isDarkMode());
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
@@ -357,11 +360,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override public void onImageFullscreenPreviewClicked(String mediaUrl) {
                         mEditorImagePreviewListener.onImagePreviewRequested(mediaUrl);
                     }
-                },
-                new OnPreferredColorSchemeListener() {
-                    @Override public String getPreferredColorScheme() {
-                        return getAppTheme();
-                    }
                 });
 
         // request dependency injection. Do this after setting min/max dimensions
@@ -393,25 +391,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return view;
     }
 
-    private String getAppTheme() {
-        String packageName = getActivity().getApplication().getPackageName();
-
-        int appThemeLightId =
-                getResources().getIdentifier("app_theme_entry_value_light", "string", packageName);
-        String appThemeLight = getString(appThemeLightId);
-
-        int appThemeDarkId =
-                getResources().getIdentifier("app_theme_entry_value_dark", "string", packageName);
-        String appThemeDark = getString(appThemeDarkId);
-
+    private boolean isDarkMode() {
         Configuration configuration = getActivity().getResources().getConfiguration();
         int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            return appThemeDark;
-        }
-
-        return appThemeLight;
+        return currentNightMode == Configuration.UI_MODE_NIGHT_YES;
     }
 
     private ArrayList<MediaOption> initOtherMediaImageOptions() {

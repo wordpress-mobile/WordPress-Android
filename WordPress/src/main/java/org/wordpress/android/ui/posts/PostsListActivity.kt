@@ -62,7 +62,6 @@ import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SnackbarSequencer
 
 import org.wordpress.android.util.SnackbarItem
-import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.widgets.WPDialogSnackbar
