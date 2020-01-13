@@ -437,28 +437,22 @@
                 </LinearLayout>
 
                 <!--Blog Posts-->
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                <LinearLayout
+                    android:id="@+id/row_blog_posts"
+                    style="@style/MySiteListRowLayout">
 
-                    <LinearLayout
-                        android:id="@+id/row_blog_posts"
-                        style="@style/MySiteListRowLayout">
+                    <ImageView
+                        android:id="@+id/my_site_blog_posts_icon"
+                        style="@style/MySiteListRowIcon"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_posts_white_24dp"/>
 
-                        <ImageView
-                            android:id="@+id/my_site_blog_posts_icon"
-                            style="@style/MySiteListRowIcon"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_posts_white_24dp"/>
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/my_site_blog_posts_text_view"
+                        style="@style/MySiteListRowTextView"
+                        android:text="@string/my_site_btn_blog_posts"/>
 
-                        <org.wordpress.android.widgets.WPTextView
-                            android:id="@+id/my_site_blog_posts_text_view"
-                            style="@style/MySiteListRowTextView"
-                            android:text="@string/my_site_btn_blog_posts"/>
-
-                    </LinearLayout>
-
-                </FrameLayout>
+                </LinearLayout>
 
                 <!--Media-->
                 <LinearLayout

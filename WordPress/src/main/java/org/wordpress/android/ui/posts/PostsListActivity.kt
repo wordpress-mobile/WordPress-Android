@@ -30,10 +30,15 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
@@ -44,6 +49,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -52,10 +58,14 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.RtlUtils
+import org.wordpress.android.util.QuickStartUtils
+import org.wordpress.android.util.SnackbarSequencer
+
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.widgets.WPDialogSnackbar
 import javax.inject.Inject
 
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
@@ -75,6 +85,7 @@ class PostsListActivity : AppCompatActivity(),
     @Inject internal lateinit var uploadActionUseCase: UploadActionUseCase
     @Inject internal lateinit var snackbarSequencer: SnackbarSequencer
     @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Inject internal lateinit var quickStartStore: QuickStartStore
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
@@ -90,6 +101,8 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var fab: FloatingActionButton
     private lateinit var searchActionButton: MenuItem
     private lateinit var toggleViewLayoutMenuItem: MenuItem
+
+    private var quickStartEvent: QuickStartEvent? = null
 
     private var restorePreviousSearch = false
 
@@ -151,6 +164,8 @@ class PostsListActivity : AppCompatActivity(),
         setupContent()
         initViewModel(initPreviewState)
         loadIntentData(intent)
+
+        quickStartEvent = savedInstanceState?.getParcelable(QuickStartEvent.KEY)
     }
 
     private fun setupActionBar() {
@@ -252,6 +267,15 @@ class PostsListActivity : AppCompatActivity(),
 
         viewModel.postListAction.observe(this, Observer { postListAction ->
             postListAction?.let { action ->
+                QuickStartUtils.completeTaskAndRemindNextOne(
+                        quickStartStore,
+                        QuickStartTask.PUBLISH_POST,
+                        dispatcher,
+                        site,
+                        quickStartEvent,
+                        this@PostsListActivity
+                )
+
                 handlePostListAction(
                         this@PostsListActivity,
                         action,
@@ -494,5 +518,43 @@ class PostsListActivity : AppCompatActivity(),
 
     private fun updateMenuTitle(title: UiString, menuItem: MenuItem): MenuItem? {
         return menuItem.setTitle(uiHelpers.getTextOfUiString(this@PostsListActivity, title))
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
+    fun onEvent(event: QuickStartEvent) {
+        val view = findViewById<View>(R.id.coordinator)
+
+        if (view == null) {
+            return
+        }
+
+        EventBus.getDefault().removeStickyEvent(event)
+        quickStartEvent = event
+
+        if (quickStartEvent?.task == QuickStartTask.PUBLISH_POST) {
+            view.post {
+                val title = QuickStartUtils.stylizeQuickStartPrompt(
+                        this,
+                        R.string.quick_start_dialog_create_new_post_message_short_posts,
+                        R.drawable.ic_create_white_24dp
+                )
+
+                WPDialogSnackbar.make(
+                        view, title,
+                        resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
+                ).show()
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 }

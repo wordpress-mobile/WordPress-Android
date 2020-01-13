@@ -45,8 +45,10 @@ public class BaseTest {
                      .notifier(new AndroidNotifier()));
 
     private void logout() {
-        boolean isSelfHosted = new MePage().go().isSelfHosted();
+        MePage mePage = new MePage();
+        boolean isSelfHosted = mePage.go().isSelfHosted();
         if (isSelfHosted) { // Logged in from self hosted connected
+            mePage.goBack();
             new MySitesPage().go().removeSite(E2E_SELF_HOSTED_USER_SITE_ADDRESS);
         } else {
             wpLogout();
@@ -58,7 +60,7 @@ public class BaseTest {
             return;
         }
 
-        if (isElementDisplayed(R.id.nav_me)) {
+        if (isElementDisplayed(R.id.nav_sites)) {
             logout();
         }
     }

@@ -69,6 +69,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.Aztec;
 import org.wordpress.aztec.AztecAttributes;
+import org.wordpress.aztec.AztecContentChangeWatcher.AztecTextChangeObserver;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.AztecParser;
 import org.wordpress.aztec.AztecText;
@@ -120,6 +121,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
         EditorMediaUploadListener,
         IAztecToolbarClickListener,
+        AztecTextChangeObserver,
         IHistoryListener {
     public static class AztecLoggingException extends Exception {
         public AztecLoggingException(String message) {
@@ -230,7 +232,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mContentAndSourceContainer = view.findViewById(R.id.aztec_content_and_source_container);
 
         mTitle.addTextChangedListener(mTextWatcher);
-        mContent.addTextChangedListener(mTextWatcher);
+        mContent.getContentChangeWatcher().registerObserver(this);
+        mSource.addTextChangedListener(mTextWatcher);
 
         // Set the default value for max and min picture sizes.
         maxMediaSize = EditorMediaUtils.getMaximumThumbnailSizeForEditor(getActivity());
@@ -363,6 +366,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onEditorFragmentInitialized();
 
         return view;
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        mContent.getContentChangeWatcher().unregisterObserver(this);
     }
 
     public void setEditorImageSettingsListener(EditorImageSettingsListener listener) {
@@ -976,6 +984,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public LiveData<Editable> getTitleOrContentChanged() {
         return mTextWatcher.getAfterTextChanged();
+    }
+
+    @Override
+    public void onContentChanged() {
+        mTextWatcher.postTextChanged();
     }
 
     @Override
