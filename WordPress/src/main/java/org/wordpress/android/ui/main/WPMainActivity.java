@@ -74,6 +74,7 @@ import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ShortcutsNavigator;
+import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
@@ -172,6 +173,7 @@ public class WPMainActivity extends AppCompatActivity implements
     private SiteModel mSelectedSite;
     private WPMainActivityViewModel mViewModel;
     private FloatingActionButton mFloatingActionButton;
+    private WPTooltipView mFabTooltip;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
 
     @Inject AccountStore mAccountStore;
@@ -386,13 +388,20 @@ public class WPMainActivity extends AppCompatActivity implements
 
     private void initViewModel() {
         mFloatingActionButton = findViewById(R.id.fab_button);
+        mFabTooltip = findViewById(R.id.fab_tooltip);
 
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPMainActivityViewModel.class);
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
             // Setup Observers
-            mViewModel.getShowMainActionFab().observe(this, shouldShow -> {
-                if (shouldShow) {
+            mViewModel.getFabUiState().observe(this, fabUiState -> {
+                if (fabUiState.isFabTooltipVisible()) {
+                    mFabTooltip.show();
+                } else {
+                    mFabTooltip.hide();
+                }
+
+                if (fabUiState.isFabVisible()) {
                     mFloatingActionButton.show();
                 } else {
                     mFloatingActionButton.hide();
@@ -412,6 +421,10 @@ public class WPMainActivity extends AppCompatActivity implements
 
             mFloatingActionButton.setOnClickListener(v -> {
                 mViewModel.setIsBottomSheetShowing(true);
+            });
+
+            mFabTooltip.setOnClickListener(v -> {
+                mViewModel.onTooltipTapped();
             });
 
             mViewModel.isBottomSheetShowing().observe(this, event -> {
@@ -759,7 +772,8 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
-        if (getSelectedSite() != null && getMySiteFragment() != null) {
+        if (getSelectedSite() != null && getMySiteFragment() != null
+            && !BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
             if (getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
                 // PUBLISH_POST task requires special Quick Start notice logic, so we set the flag here
                 AppPrefs.setQuickStartNoticeRequired(
