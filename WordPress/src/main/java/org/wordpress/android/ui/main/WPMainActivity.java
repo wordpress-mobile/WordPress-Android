@@ -437,7 +437,7 @@ public class WPMainActivity extends AppCompatActivity implements
             });
         });
 
-        mViewModel.start(mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
+        mViewModel.start(mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
     }
 
     private @Nullable String getAuthToken() {
@@ -731,7 +731,7 @@ public class WPMainActivity extends AppCompatActivity implements
             }
         }
 
-        mViewModel.onPageChanged(pageType == PageType.MY_SITE);
+        mViewModel.onPageChanged(mSiteStore.hasSite() && pageType == PageType.MY_SITE);
     }
 
     // user tapped the new post button in the bottom navbar
