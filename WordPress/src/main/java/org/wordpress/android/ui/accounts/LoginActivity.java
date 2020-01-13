@@ -40,8 +40,8 @@ import org.wordpress.android.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
-import org.wordpress.android.login.SignupBottomSheetDialog;
-import org.wordpress.android.login.SignupBottomSheetDialog.SignupSheetListener;
+import org.wordpress.android.login.SignupBottomSheetDialogFragment;
+import org.wordpress.android.login.SignupBottomSheetDialogFragment.SignupSheetListener;
 import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         FINISHED
     }
 
-    private SignupBottomSheetDialog mSignupSheet;
+    private SignupBottomSheetDialogFragment mSignupSheet;
     private SmartLockHelper mSmartLockHelper;
     private SmartLockHelperState mSmartLockHelperState = SmartLockHelperState.NOT_TRIGGERED;
     private JetpackConnectionSource mJetpackConnectSource;
@@ -165,8 +165,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             }
 
             if (mSignupSheetDisplayed) {
-                mSignupSheet = new SignupBottomSheetDialog(this, this);
-                mSignupSheet.show();
+                mSignupSheet = new SignupBottomSheetDialogFragment(this);
+                mSignupSheet.show(getSupportFragmentManager(), SignupBottomSheetDialogFragment.TAG);
             }
         }
     }
@@ -177,15 +177,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
         outState.putBoolean(KEY_SIGNUP_SHEET_DISPLAYED, mSignupSheetDisplayed);
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mSignupSheetDisplayed && mSignupSheet != null) {
-            mSignupSheet.dismiss();
-        }
-
-        super.onDestroy();
     }
 
     private void showFragment(Fragment fragment, String tag) {
@@ -389,8 +380,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_BUTTON_TAPPED);
-        mSignupSheet = new SignupBottomSheetDialog(this, this);
-        mSignupSheet.show();
+        mSignupSheet = new SignupBottomSheetDialogFragment(this);
+        mSignupSheet.show(getSupportFragmentManager(), SignupBottomSheetDialogFragment.TAG);
         mSignupSheetDisplayed = true;
     }
 
