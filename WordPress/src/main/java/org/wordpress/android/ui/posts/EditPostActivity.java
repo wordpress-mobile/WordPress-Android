@@ -95,6 +95,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import com.automattic.android.imageeditor.ImageEditor;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
@@ -103,7 +104,6 @@ import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -1676,7 +1676,13 @@ public class EditPostActivity extends AppCompatActivity implements
 
 
     @Override public void onImagePreviewRequested(String mediaUrl) {
-        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+//        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+
+        // TODO:
+        // Temporarily linking ImageEditor at this point
+        // Replacing media preview activity with one for editing an image
+        ImageEditor imageEditor = new ImageEditor();
+        imageEditor.edit(this, mediaUrl);
     }
 
     @Override
