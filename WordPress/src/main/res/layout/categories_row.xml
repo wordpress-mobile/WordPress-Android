@@ -26,6 +26,7 @@
         android:id="@+id/categoryRowText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
         android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toBottomOf="parent"
