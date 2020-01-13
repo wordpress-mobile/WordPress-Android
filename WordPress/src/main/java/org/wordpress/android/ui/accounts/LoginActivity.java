@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             }
 
             if (mSignupSheetDisplayed) {
-                mSignupSheet = new SignupBottomSheetDialogFragment(this);
+                mSignupSheet = SignupBottomSheetDialogFragment.newInstance();
                 mSignupSheet.show(getSupportFragmentManager(), SignupBottomSheetDialogFragment.TAG);
             }
         }
@@ -380,7 +380,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_BUTTON_TAPPED);
-        mSignupSheet = new SignupBottomSheetDialogFragment(this);
+        mSignupSheet = SignupBottomSheetDialogFragment.newInstance();
         mSignupSheet.show(getSupportFragmentManager(), SignupBottomSheetDialogFragment.TAG);
         mSignupSheetDisplayed = true;
     }

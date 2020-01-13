@@ -1,6 +1,7 @@
 package org.wordpress.android.login;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnShowListener;
 import android.os.Bundle;
@@ -21,8 +22,17 @@ public class SignupBottomSheetDialogFragment extends WPBottomSheetDialogFragment
     public static final String TAG = SignupBottomSheetDialogFragment.class.getSimpleName();
     private SignupSheetListener mSignupSheetListener;
 
-    public SignupBottomSheetDialogFragment(@NonNull final SignupSheetListener signupSheetListener) {
-        mSignupSheetListener = signupSheetListener;
+    public static SignupBottomSheetDialogFragment newInstance() {
+        return new SignupBottomSheetDialogFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (!(context instanceof SignupSheetListener)) {
+            throw new IllegalStateException("Parent activity doesn't implement SignupSheetListener");
+        }
+        mSignupSheetListener = (SignupSheetListener) context;
     }
 
     @Nullable
@@ -89,6 +99,12 @@ public class SignupBottomSheetDialogFragment extends WPBottomSheetDialogFragment
     @Override public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         mSignupSheetListener.onSignupSheetCanceled();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mSignupSheetListener = null;
     }
 
     public interface SignupSheetListener {
