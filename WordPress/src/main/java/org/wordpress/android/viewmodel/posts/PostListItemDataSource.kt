@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.PostSummary
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
@@ -31,6 +32,7 @@ sealed class PostListItemIdentifier {
     data class SectionHeaderIdentifier(val type: PostListType) : PostListItemIdentifier()
 }
 
+// TODO: Add a comment explaining that only the ids are available during identifier and we can only use post summary model during this
 class PostListItemDataSource(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
@@ -91,7 +93,7 @@ class PostListItemDataSource(
     private fun localOrRemoteIdsFromPostListItemIds(
         itemIdentifiers: List<PostListItemIdentifier>
     ): List<LocalOrRemoteId> {
-        val localOrRemoteIds = itemIdentifiers.mapNotNull {
+        return itemIdentifiers.mapNotNull {
             when (it) {
                 is LocalPostId -> it.id
                 is RemotePostId -> it.id
@@ -100,7 +102,6 @@ class PostListItemDataSource(
                 is SectionHeaderIdentifier -> null
             }
         }
-        return localOrRemoteIds
     }
 
     private fun fetchMissingRemotePosts(
@@ -130,22 +131,23 @@ class PostListItemDataSource(
         listDescriptor: PostListDescriptor,
         itemIdentifiers: List<PostListItemIdentifier>
     ): List<PostListItemIdentifier> {
-        val localOrRemoteIds = localOrRemoteIdsFromPostListItemIds(itemIdentifiers)
-        val postList = postStore.getPostsByLocalOrRemotePostIds(localOrRemoteIds, listDescriptor.site)
         val listDrafts = mutableListOf<PostListItemIdentifier>()
         val listPublished = mutableListOf<PostListItemIdentifier>()
         val listScheduled = mutableListOf<PostListItemIdentifier>()
         val listTrashed = mutableListOf<PostListItemIdentifier>()
-        val mapToPostListItemIdentifier = { post: PostModel ->
-            if (post.remotePostId != 0L) {
-                RemotePostId(RemoteId(post.remotePostId))
-            } else {
-                LocalPostId(LocalId(post.id))
-            }
+        val mapToPostListItemIdentifier = { postSummary: PostSummary ->
+            RemotePostId(RemoteId(postSummary.remoteId))
         }
 
-        postList.forEach {
-            when (PostListType.fromPostStatus(PostStatus.fromPost(it))) {
+        val localOrRemoteIds = localOrRemoteIdsFromPostListItemIds(itemIdentifiers)
+        val postSummaries = postStore.getPostSummaries(
+                listDescriptor.site,
+                localOrRemoteIds.filterIsInstance<RemoteId>().map { it.value })
+
+        // If we only have a local id for a post, it should be in the Drafts section
+        listDrafts.addAll(localOrRemoteIds.filterIsInstance<LocalId>().map { LocalPostId(it) })
+        postSummaries.forEach {
+            when (PostListType.fromPostStatus(it.status)) {
                 PostListType.DRAFTS -> listDrafts.add(mapToPostListItemIdentifier(it))
                 PostListType.PUBLISHED -> listPublished.add(mapToPostListItemIdentifier(it))
                 PostListType.SCHEDULED -> listScheduled.add(mapToPostListItemIdentifier(it))
