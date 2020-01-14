@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-03 22:59:24+0000
+Translation-Revision-Date: 2019-12-17 08:13:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
@@ -44,7 +44,7 @@ Language: sv_SE
     <string name="gutenberg_native_take_a_photo">Ta en bild</string>
     <string name="gutenberg_native_start_writing">Börja skriva…</string>
     <string name="gutenberg_native_size">Storlek</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Tillägg för sidopanelsrubrik</string>
+    <string name="gutenberg_native_sidebar_title_plugin">Tillägg för sidopanelrubrik</string>
     <string name="gutenberg_native_show_section">Visa sektion</string>
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">Blocktypen ”%s” stöds ännu inte i WordPress för iOS</string>
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">Blocktypen ”%s” stöds ännu inte i WordPress för Android</string>
@@ -54,9 +54,9 @@ Language: sv_SE
     <string name="gutenberg_native_row_d">Rad %d.</string>
     <string name="gutenberg_native_reset_block">Återställ block</string>
     <string name="gutenberg_native_reset">ÅTERSTÄLL</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Ta bort blocket i rad %s</string>
+    <string name="gutenberg_native_remove_block_at_row_s">Ta bort block från rad %s</string>
     <string name="gutenberg_native_remove_annotations">Ta bort bildtexter/förklaringar</string>
-    <string name="gutenberg_native_problem_opening_the_video">Problem att öppna videoklippet</string>
+    <string name="gutenberg_native_problem_opening_the_video">Svårigheter att öppna videoklippet</string>
     <string name="gutenberg_native_problem_displaying_block">Problem med att visa block</string>
     <string name="gutenberg_native_post_title_s">Inläggsrubrik. %s</string>
     <string name="gutenberg_native_post_title_empty">Inläggsrubrik. Tom</string>
@@ -73,13 +73,13 @@ Language: sv_SE
     <string name="gutenberg_native_move_block_up">Flytta block uppåt</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Flytta block nedåt från rad %1$s till rad %2$s</string>
     <string name="gutenberg_native_move_block_down">Flytta block nedåt</string>
-    <string name="gutenberg_native_link_text">Länktext:</string>
-    <string name="gutenberg_native_link_inserted">Länk infogad.</string>
+    <string name="gutenberg_native_link_text">Länktext</string>
+    <string name="gutenberg_native_link_inserted">Länk infogad</string>
     <string name="gutenberg_native_level_s_empty">Nivå %s. Tomt.</string>
     <string name="gutenberg_native_level_1_s_2_s">Nivå %1$s. %2$s</string>
     <string name="gutenberg_native_image_caption_s">Bildtext. %s</string>
     <string name="gutenberg_native_hide_keyboard">Dölj tangentbordet</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Här är panelens innehåll!</string>
+    <string name="gutenberg_native_here_is_the_panel_content">Här är panelen innehåll!</string>
     <string name="gutenberg_native_help_icon">Hjälpikon</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Kunde inte lägga in mediafil.\nTryck för att visa alternativ.</string>
     <string name="gutenberg_native_empty">Tomt</string>
@@ -93,14 +93,14 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Dubbeltryck för att flytta blocket uppåt</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Dubbeltryck för att flytta blocket nedåt</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Dubbeltryck för att redigera värdet</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Dubbeltryck för att ändra värdet med skjutreglage</string>
+    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Dubbeltryck för att ändra värdet via skjutreglage.</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Dubbeltryck för att lägga till block</string>
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Dubbeltryck och håll kvar för att redigera</string>
     <string name="gutenberg_native_current_value_is_s">Nuvarande värde är %s</string>
     <string name="gutenberg_native_content">Innehåll…</string>
     <string name="gutenberg_native_clear_all_settings">Rensa alla inställningar</string>
     <string name="gutenberg_native_choose_from_device">Välj från enheten</string>
-    <string name="gutenberg_native_annotations_sidebar">Sidopanel för bildtexter/beskrivningar</string>
+    <string name="gutenberg_native_annotations_sidebar">Sidopanel för bildtexter/beskrivninger</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ett okänt fel har inträffatt. Försök igen.</string>
     <string name="gutenberg_native_alt_text">Alt-text</string>
     <string name="gutenberg_native_add_video">LÄGG TILL VIDEO</string>
