@@ -319,6 +319,7 @@ class PostStoreTest {
         post: PostModel,
         status: String = post.status,
         lastModified: String = post.lastModified,
-        autoSaveModified: String? = post.autoSaveModified
-    ) = PostListItem(post.remotePostId, lastModified, status, autoSaveModified)
+        autoSaveModified: String? = post.autoSaveModified,
+        dateCreated: String? = null
+    ) = PostListItem(post.remotePostId, lastModified, status, autoSaveModified, dateCreated)
 }
