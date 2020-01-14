@@ -91,7 +91,9 @@ public class SignupBottomSheetDialogFragment extends WPBottomSheetDialogFragment
 
     @Override public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        mSignupSheetListener.onSignupSheetCanceled();
+        if (mSignupSheetListener != null) {
+            mSignupSheetListener.onSignupSheetCanceled();
+        }
     }
 
     @Override
