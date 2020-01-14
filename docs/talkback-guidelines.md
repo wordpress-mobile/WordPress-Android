@@ -93,9 +93,20 @@ In cases like these, it's important that the descriptions of the elements are ke
 
 ### Traversal/Spoken Order
 
+The reading order of the views are determined by the order in which XML elements are declared. There might be times when this order doesn't translate to a natural sounding utterance by TalkBack so the order can be modified using these two attributes. 
 
+* `accessibilityTraversalAfter`: takes the id of a view after which this one is visited in accessibility traversal
+* `accessibilityTraversalBefore`: takes the id of a view before which this one is visited in accessibility traversal process.
+* These can be set programmatically using `setAccessibilityTraversalBefore` and `setAccessibilityTraversalAfter`
+* Note : These attributes are only available in API 22 and above. To utilize it in lower versions, `ViewCompat` can be leveraged (only enables the functionality if API 22 and above).
 
-
-
+	 ```
+	ViewCompat.setAccessibilityDelegate(imageView2, object : AccessibilityDelegateCompat() {
+	    override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfoCompat?) {
+	        info?.setTraversalAfter(imageView3)
+	        super.onInitializeAccessibilityNodeInfo(host, info) }})
+	
+	
+	
 ### Custom Views
 Make sure that custom views are accessible with both Switch Access and TalkBack. Consider implementing accessibility functionality for them using ExploreByTouchHelper.
