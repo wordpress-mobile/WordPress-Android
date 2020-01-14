@@ -7,7 +7,19 @@ import com.yarolegovich.wellsql.core.annotation.RawConstraints
 import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.post.PostStatus
 
-data class PostSummary(val remoteId: Long, val localSiteId: Int, val status: PostStatus)
+data class PostSummary(val remoteId: Long, val localSiteId: Int, val status: PostStatus) {
+    companion object {
+        @JvmStatic
+        fun fromPostSummaryModel(postSummaryModel: PostSummaryModel): PostSummary {
+            // Both remoteId and localSiteId should never be null, so it's worth crashing here to catch the bug
+            return PostSummary(
+                    postSummaryModel.remoteId!!,
+                    postSummaryModel.localSiteId!!,
+                    PostStatus.(postSummaryModel.status)
+            )
+        }
+    }
+}
 
 @Table
 @RawConstraints(
