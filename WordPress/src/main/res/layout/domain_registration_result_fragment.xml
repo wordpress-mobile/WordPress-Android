@@ -32,7 +32,7 @@
         android:text="@string/domain_registration_result_description"
         android:textAppearance="?attr/textAppearanceSubtitle1" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/continue_button"
         style="@style/WordPress.Button.Primary"
         android:layout_width="match_parent"
