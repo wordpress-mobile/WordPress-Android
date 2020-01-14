@@ -28,6 +28,8 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoveAllPosts;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostSummary;
+import org.wordpress.android.fluxc.model.PostSummaryModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.ListOrder;
@@ -754,6 +756,8 @@ public class PostStore extends Store {
             }
         }
 
+        updatePostSummaries(payload.listDescriptor.getSite(), payload.postListItems);
+
         FetchedListItemsPayload fetchedListItemsPayload =
                 new FetchedListItemsPayload(payload.listDescriptor, postIds,
                         payload.loadedMore, payload.canLoadMore, fetchedListItemsError);
@@ -1061,5 +1065,23 @@ public class PostStore extends Store {
 
     public void deleteLocalRevisionOfAPostOrPage(PostModel post) {
         mPostSqlUtils.deleteLocalRevisionAndDiffsOfAPostOrPage(post);
+    }
+
+    /**
+     * Since we only fetch the ids of a post while fetching the post list, new need to keep a small table in the
+     * DB to be able to check post statuses for sectioning.
+     */
+    private void updatePostSummaries(SiteModel site, List<PostListItem> postListItems) {
+        List<PostSummaryModel> postSummaryModelList = new ArrayList<>(postListItems.size());
+        for (PostListItem item : postListItems) {
+            postSummaryModelList.add(PostSummaryModel.newInstance(site, item.remotePostId, item.status);
+        }
+        mPostSqlUtils.insertPostSummaries(postSummaryModelList);
+    }
+
+    // TODO: Do we need to purge the PostSummaryModelTable, if so when is the best time to do that?
+
+    public List<PostSummary> getPostSummaries(SiteModel site, List<Long> remotePostIds) {
+        mPostSqlUtils.getPostSummaries(site, remotePostIds);
     }
 }
