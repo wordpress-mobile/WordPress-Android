@@ -1079,8 +1079,12 @@ public class PostStore extends Store {
         mPostSqlUtils.insertOrUpdatePostSummaries(postSummaryModelList);
     }
 
-    // TODO: Return PostSummary instead
-    public List<PostSummaryModel> getPostSummaries(SiteModel site, List<Long> remotePostIds) {
-        return mPostSqlUtils.getPostSummaries(site, remotePostIds);
+    public List<PostSummary> getPostSummaries(SiteModel site, List<Long> remotePostIds) {
+        List<PostSummaryModel> postSummaryModelList = mPostSqlUtils.getPostSummaries(site, remotePostIds);
+        List<PostSummary> postSummaryList = new ArrayList<>(postSummaryModelList.size());
+        for (PostSummaryModel postSummaryModel : postSummaryModelList) {
+            postSummaryList.add(PostSummary.fromPostSummaryModel(postSummaryModel));
+        }
+        return postSummaryList;
     }
 }
