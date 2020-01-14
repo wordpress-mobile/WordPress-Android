@@ -25,14 +25,43 @@
 
 If you have never worked with TalkBack you can visit the TalkBack resources to get started.
 
+- [Using TalkBack](using-talback.md)
+
 ## <a name="basics"></a>Basics
 
 The accessibility framework within Android has several ways in which you can provide cues to TalkBack so it knows how it make it's announcement when a view becomes focused. 
 
 * `contentDescription`  - Each view has this attribute that allows you to set meaningful and descriptive labels. If this is missing TalkBack might not be able to provide much value to the user. 
 * `importantForAccessibility` - In cases where a view or layout might not have a need to be accessible this attribute can be set. It basically allows TalkBack to ignore views that have this property set to `yes` thus eliminating the need for a content description. 
+* `hint` - For usability purposes, the text input control `EditText` has the hint attribute. If another view is providing the label then you can utilize the `labelFor` attribute. Below is an example.  
 
- 
+ ```
+ <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/email_subject_label"
+        android:labelFor="@id/email_subject" />
+    <EditText
+        android:id="@+id/email_subject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+
+
+## <a name="simple-views"></a> Simple Views
+
+To make a view ready for accessibility these are the rules that should govern the content descriptions that are set. 
+
+* Do not include the type of the control. TalkBack will automatically announce the description you have set and the type. 
+* Ensure that each description is unique. This ensures that TalkBack is able to communicate different views of the same type to the user without causing any confusion. This is especially useful in list controls such as `ListView` or `RecyclerView` where a view template is being used for each row with similar controls. In such cases, each row should have unique content descriptions. 
+* Like all strings, content descriptions should be localized for maximum support in all languages. 
+
+
+
 ### Activity titles
 When an Activity comes to the foreground, TalkBack announces it’s title. When the activity has no title, TalkBack announces the name of the application which might confuse the user -> **_set a title to all visible activities_**, either in AndroidManifest or using Activity.setTitle() method.
 
