@@ -130,3 +130,31 @@ So now the announcement will be "Tap to start playback".
 
 There might be times when a custom view such as a chart might not be accessible in no shape or form. This is how the `ExploreByTouchHelper` comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creating virtual views using the `Rect` of the actual views. Since it's simply a super `AccessibilityDelegate` these views can be customized with `contentDescriptions` and `actions` when they become focused. 
 
+### <a name="auditing"></a>Auditing & Testing
+####Manual testing
+ Interact with your app using Android accessibility services.
+You are able to test the app using TalkBack or Voice Access. TalkBack allows you to interact with the app utilizing it’s screen reading functionality where selecting or swiping over elements reads out their descriptions and actions. Utilizing this creates the experience a visually impaired person would have while using the app. Voice Access allows a user to control the device using voice/spoken commands. This is really useful for persons who are motor impaired or may be in a situation where their hands can’t be used. 
+
+Testing with analysis tools
+
+Use tools to discover opportunities to improve your app's accessibility.
+
+* Accessibility Scanner - Utilizing the Accessibility Test Framework it scans your screen and provides ways in which your accessibility can be improved by making changes to your labels, clickable items and other behaviour. 
+* Google Play pre launch report - When you upload the app for distribution Google Play generates a report utilizing the Accessibility Test Framework that can be used to identify improvements that can be made. 
+* UI Automator Viewer - Can scan the views of an app that’s running on a device and provide means by which the layout hierarchy can be analyzed at a deeper level. This is especially useful if other manual tests are being carried out and it reveals views that aren’t being focused or made accessible to the framework and a specific layout related change may need to be done to resolve the issue. 
+* Lint - lint warnings are shown in the build phase for various accessibility issues that may arise. These lint warnings can even be enforced to break the build so developers are forced to implement accessibility related attributes.
+
+####Automated testing
+* Power unit and integration tests using the Accessibility APIs with Espresso & Robolectric 
+Espresso has an accessibility API that can allow you to run checks every time a ViewAction is performed. eg.`AccessibilityChecks.enable()`
+
+* Furthermore, you are able to customize how it does traversal and verification if it’s generating false positives by utilizing the AccessibilityValidator’s  setSuppressingResultMatcher.There’s an AccessibilityUtil class in Robolectric that allows you to perform similar actions as described above for Espresso. 
+
+####User testing
+Get feedback from real people who interact with your app.
+Ask other coworkers to simulate the behavior that the impaired so they can test from the viewpoint of the target user while being able to prove clear insights based on their engineering background.
+Reaching out to local communities that have people with disabilities who would be willing to help with testing. 
+Contracting a user testing service that has testers who are disabled and are able to provide deep insights based on their expertise in providing this type of service. 
+
+
+
