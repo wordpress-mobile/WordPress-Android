@@ -93,12 +93,15 @@ public class PostStore extends Store {
         public String lastModified;
         public String status;
         public String autoSaveModified;
+        public String dateCreated;
 
-        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified) {
+        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified,
+                            String dateCreated) {
             this.remotePostId = remotePostId;
             this.lastModified = lastModified;
             this.status = status;
             this.autoSaveModified = autoSaveModified;
+            this.dateCreated = dateCreated;
         }
     }
 
@@ -1074,7 +1077,8 @@ public class PostStore extends Store {
     private void updatePostSummaries(SiteModel site, List<PostListItem> postListItems) {
         List<PostSummaryModel> postSummaryModelList = new ArrayList<>(postListItems.size());
         for (PostListItem item : postListItems) {
-            postSummaryModelList.add(PostSummaryModel.newInstance(site, item.remotePostId, item.status));
+            postSummaryModelList
+                    .add(PostSummaryModel.newInstance(site, item.remotePostId, item.status, item.dateCreated));
         }
         mPostSqlUtils.insertOrUpdatePostSummaries(postSummaryModelList);
     }

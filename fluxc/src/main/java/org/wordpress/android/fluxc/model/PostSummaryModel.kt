@@ -15,7 +15,7 @@ data class PostSummary(val remoteId: Long, val localSiteId: Int, val status: Pos
             return PostSummary(
                     postSummaryModel.remoteId!!,
                     postSummaryModel.localSiteId!!,
-                    PostStatus.(postSummaryModel.status)
+                    PostStatus.fromPostSummary(postSummaryModel)
             )
         }
     }
@@ -30,6 +30,7 @@ class PostSummaryModel(@PrimaryKey @Column private var id: Int = 0) : Identifiab
     @Column var remoteId: Long? = null
     @Column var localSiteId: Int? = null
     @Column var status: String? = null
+    @Column var dateCreated: String? = null // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
 
     override fun getId(): Int = id
 
@@ -39,11 +40,12 @@ class PostSummaryModel(@PrimaryKey @Column private var id: Int = 0) : Identifiab
 
     companion object {
         @JvmStatic
-        fun newInstance(site: SiteModel, remoteId: Long, postStatus: String?): PostSummaryModel {
+        fun newInstance(site: SiteModel, remoteId: Long, postStatus: String?, dateCreated: String?): PostSummaryModel {
             return PostSummaryModel().apply {
                 this.localSiteId = site.id
                 this.remoteId = remoteId
                 this.status = postStatus
+                this.dateCreated = dateCreated
             }
         }
     }
