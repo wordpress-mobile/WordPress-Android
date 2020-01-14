@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import com.wellsql.generated.LocalDiffModelTable;
 import com.wellsql.generated.LocalRevisionModelTable;
 import com.wellsql.generated.PostModelTable;
+import com.wellsql.generated.PostSummaryModelTable;
 import com.yarolegovich.wellsql.ConditionClauseBuilder;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.SelectQuery.Order;
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostSummaryModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
 import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
@@ -399,5 +401,26 @@ public class PostSqlUtils {
             localPostIds.add(new LocalId(post.getId()));
         }
         return localPostIds;
+    }
+
+    public void insertPostSummaries(List<PostSummaryModel> postSummaryModelList) {
+        WellSql.insert(postSummaryModelList).asSingleTransaction(true).execute();
+    }
+
+    public List<PostSummaryModel> getPostSummaries(SiteModel site, List<Long> remotePostIds) {
+        return WellSql.select(PostSummaryModel.class)
+                      .where()
+                      .equals(PostSummaryModelTable.LOCAL_SITE_ID, site.getId())
+                      .isIn(PostSummaryModelTable.REMOTE_ID, remotePostIds)
+                      .endWhere()
+                      .getAsModel();
+    }
+
+    public void deletePostSummaries(SiteModel site) {
+        WellSql.delete(PostSummaryModel.class)
+               .where()
+               .equals(PostSummaryModelTable.LOCAL_SITE_ID, site.getId())
+               .endWhere()
+               .execute()
     }
 }
