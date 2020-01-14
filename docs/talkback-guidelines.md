@@ -1,4 +1,4 @@
-# Accessibility Guidelines
+# TalkBack Guidelines
 
 “Making applications accessible not only ensures equal access to the roughly 1 billion people in the world with disabilities but also benefits people without disabilities by allowing them to customize their experiences.” - [Google Accessibility] (https://www.google.com/accessibility/for-developers/)
 
@@ -21,9 +21,18 @@
 	For more details visit [Make apps more accessible
 ](https://developer.android.com/guide/topics/ui/accessibility/apps.html).
 	
-Introduction 
+## <a name="getting-started"></a>Getting Started
 
+If you have never worked with TalkBack you can visit the TalkBack resources to get started.
 
+## <a name="basics"></a>Basics
+
+The accessibility framework within Android has several ways in which you can provide cues to TalkBack so it knows how it make it's announcement when a view becomes focused. 
+
+* `contentDescription`  - Each view has this attribute that allows you to set meaningful and descriptive labels. If this is missing TalkBack might not be able to provide much value to the user. 
+* `importantForAccessibility` - In cases where a view or layout might not have a need to be accessible this attribute can be set. It basically allows TalkBack to ignore views that have this property set to `yes` thus eliminating the need for a content description. 
+
+ 
 ### Activity titles
 When an Activity comes to the foreground, TalkBack announces it’s title. When the activity has no title, TalkBack announces the name of the application which might confuse the user -> **_set a title to all visible activities_**, either in AndroidManifest or using Activity.setTitle() method.
 
