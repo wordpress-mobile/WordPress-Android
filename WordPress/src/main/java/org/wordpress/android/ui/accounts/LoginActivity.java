@@ -110,7 +110,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private SmartLockHelperState mSmartLockHelperState = SmartLockHelperState.NOT_TRIGGERED;
     private JetpackConnectionSource mJetpackConnectSource;
     private boolean mIsJetpackConnect;
-    private boolean mSignupSheetDisplayed;
 
     private LoginMode mLoginMode;
 
@@ -155,18 +154,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                     break;
             }
         } else {
-            mSignupSheetDisplayed = savedInstanceState.getBoolean(KEY_SIGNUP_SHEET_DISPLAYED);
             mSmartLockHelperState = SmartLockHelperState.valueOf(
                     savedInstanceState.getString(KEY_SMARTLOCK_HELPER_STATE));
 
             if (mSmartLockHelperState != SmartLockHelperState.NOT_TRIGGERED) {
                 // reconnect SmartLockHelper
                 initSmartLockHelperConnection();
-            }
-
-            if (mSignupSheetDisplayed) {
-                mSignupSheet = SignupBottomSheetDialogFragment.newInstance();
-                mSignupSheet.show(getSupportFragmentManager(), SignupBottomSheetDialogFragment.TAG);
             }
         }
     }
@@ -175,7 +168,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_SIGNUP_SHEET_DISPLAYED, mSignupSheetDisplayed);
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
     }
 
@@ -382,13 +374,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_BUTTON_TAPPED);
         mSignupSheet = SignupBottomSheetDialogFragment.newInstance();
         mSignupSheet.show(getSupportFragmentManager(), SignupBottomSheetDialogFragment.TAG);
-        mSignupSheetDisplayed = true;
     }
 
     @Override
     public void onSignupSheetCanceled() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_CANCELED);
-        mSignupSheetDisplayed = false;
     }
 
     @Override
@@ -817,7 +807,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private void dismissSignupSheet() {
         if (mSignupSheet != null) {
             mSignupSheet.dismiss();
-            mSignupSheetDisplayed = false;
         }
     }
 
