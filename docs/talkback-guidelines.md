@@ -14,7 +14,7 @@
 - [Auditing](#auditing)
 - [Further Reading](#further-reading)
 
-##<a name="governing-principles"></a>Governing Accessibility Principles 
+## <a name="governing-principles"></a>Governing Accessibility Principles 
 * Make the information on the screen as visible as possible. 
 * Always design the size of controls and touch areas inclusive of all use cases.
 * Provide as much support context and details for all views & actions. Images, buttons, lists and the actions they enable should have thorough, well-formatted descriptions that allow the accessibility APIs to deliver their intent seamlessly. 
@@ -30,7 +30,7 @@ If you have never worked with TalkBack you can visit the TalkBack resources to g
 
 ## <a name="guidelines"></a>Guidelines
 
-###Basics
+### <a name="basics"></a>Basics
 
 The accessibility framework within Android has several ways in which you can provide cues to TalkBack so it knows how it make it's announcement when a view becomes focused. 
 
