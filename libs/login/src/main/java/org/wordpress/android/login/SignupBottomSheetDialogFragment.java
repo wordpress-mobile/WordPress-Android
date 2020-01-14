@@ -73,13 +73,6 @@ public class SignupBottomSheetDialogFragment extends WPBottomSheetDialogFragment
 
         Dialog dialog = getDialog();
         if (dialog != null) {
-            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    mSignupSheetListener.onSignupSheetCanceled();
-                }
-            });
-
             dialog.setContentView(layout);
 
             // Set peek height to full height of view to avoid signup buttons being off screen when
