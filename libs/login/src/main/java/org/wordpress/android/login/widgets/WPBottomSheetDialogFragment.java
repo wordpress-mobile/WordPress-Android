@@ -20,7 +20,6 @@ public class WPBottomSheetDialogFragment extends BottomSheetDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        setRetainInstance(true);
         return new BottomSheetDialog(requireContext(), getTheme());
     }
 
