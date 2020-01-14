@@ -1074,14 +1074,13 @@ public class PostStore extends Store {
     private void updatePostSummaries(SiteModel site, List<PostListItem> postListItems) {
         List<PostSummaryModel> postSummaryModelList = new ArrayList<>(postListItems.size());
         for (PostListItem item : postListItems) {
-            postSummaryModelList.add(PostSummaryModel.newInstance(site, item.remotePostId, item.status);
+            postSummaryModelList.add(PostSummaryModel.newInstance(site, item.remotePostId, item.status));
         }
-        mPostSqlUtils.insertPostSummaries(postSummaryModelList);
+        mPostSqlUtils.insertOrUpdatePostSummaries(postSummaryModelList);
     }
 
-    // TODO: Do we need to purge the PostSummaryModelTable, if so when is the best time to do that?
-
-    public List<PostSummary> getPostSummaries(SiteModel site, List<Long> remotePostIds) {
-        mPostSqlUtils.getPostSummaries(site, remotePostIds);
+    // TODO: Return PostSummary instead
+    public List<PostSummaryModel> getPostSummaries(SiteModel site, List<Long> remotePostIds) {
+        return mPostSqlUtils.getPostSummaries(site, remotePostIds);
     }
 }
