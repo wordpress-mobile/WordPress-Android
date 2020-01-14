@@ -1052,7 +1052,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 96 -> migrate(version) {
                     db.execSQL("CREATE TABLE PostSummaryModel (REMOTE_ID INTEGER,LOCAL_SITE_ID INTEGER,STATUS TEXT," +
-                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "DATE_CREATED TEXT,_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
                             "UNIQUE(REMOTE_ID) ON CONFLICT REPLACE)")
                 }
