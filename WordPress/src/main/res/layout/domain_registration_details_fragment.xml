@@ -46,6 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_large"
+                    android:layout_marginBottom="@dimen/margin_medium"
                     android:checkedButton="@+id/domain_privacy_on_radio_button"
                     tools:ignore="UnusedAttribute">
 
@@ -63,7 +64,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/margin_medium"
-                        android:paddingBottom="@dimen/margin_extra_large"
+                        android:paddingBottom="@dimen/margin_medium"
                         android:text="@string/domain_privacy_option_off_title" />
                 </RadioGroup>
             </LinearLayout>
