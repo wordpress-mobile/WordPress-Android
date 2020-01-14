@@ -54,12 +54,13 @@ The accessibility framework within Android has several ways in which you can pro
 
 ## <a name="simple-views"></a> Simple Views
 
+
+### General 
 To make a view ready for accessibility these are the rules that should govern the content descriptions that are set. 
 
 * Do not include the type of the control. TalkBack will automatically announce the description you have set and the type. 
 * Ensure that each description is unique. This ensures that TalkBack is able to communicate different views of the same type to the user without causing any confusion. This is especially useful in list controls such as `ListView` or `RecyclerView` where a view template is being used for each row with similar controls. In such cases, each row should have unique content descriptions. 
 * Like all strings, content descriptions should be localized for maximum support in all languages. 
-
 
 
 ### Activity titles
@@ -76,15 +77,20 @@ ImageButtons with labels should have contentDescription set to null. Setting imp
 
 <img src="images/accessibility-guidelines/image-with-label.png" width="300">
 
-### Labels
-When a UI element is just a label for another element, set the `labelFor` attribute.
+#### Touch Targets
+Be sure to check for insufficient touch targets on a screen. An element that’s touch enabled should at least 48dp x 48dp. 
 
-<img src="images/accessibility-guidelines/label-for.png" width="300">
+For views where you don’t want to modify the padding you can utilize the [TouchDelegate](https://developer.android.com/reference/android/view/TouchDelegate) functionality where you are able to get the current “Hit Rect) which is a rect with the current bounds and you are able to modify it to increase the touch area. 
+
 
 ### Grouping content
-If users should treat a set of elements as a single unit of information, you can group these elements in a focusable container (use android:focusable=”true”). 
+If users should treat a set of elements as a single unit of information, you can group these elements in a focusable container using `android:focusable=”true”` or a`ndroid:screenReaderFocusable` attribute to `true` in API 28 and above.  
 
 <img src="images/accessibility-guidelines/grouping-content.png" width="300">
+
+In cases like these, it's important that the descriptions of the elements are kept short since they all will be announced in a single utterance. 
+
+
 
 ### Custom Views
 Make sure that custom views are accessible with both Switch Access and TalkBack. Consider implementing accessibility functionality for them using ExploreByTouchHelper.
