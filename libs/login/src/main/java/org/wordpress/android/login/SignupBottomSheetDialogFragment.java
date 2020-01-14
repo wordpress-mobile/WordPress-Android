@@ -10,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment;
 
@@ -40,9 +42,14 @@ public class SignupBottomSheetDialogFragment extends WPBottomSheetDialogFragment
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        final View layout = inflater.inflate(R.layout.signup_bottom_sheet_dialog, container, false);
+        return inflater.inflate(R.layout.signup_bottom_sheet_dialog, container);
+    }
 
-        Button termsOfServiceText = layout.findViewById(R.id.signup_tos);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Button termsOfServiceText = view.findViewById(R.id.signup_tos);
         termsOfServiceText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +62,7 @@ public class SignupBottomSheetDialogFragment extends WPBottomSheetDialogFragment
                     .getResources()
                     .getString(R.string.signup_terms_of_service_text), "<u>", "</u>")));
 
-        Button signupWithEmailButton = layout.findViewById(R.id.signup_email);
+        Button signupWithEmailButton = view.findViewById(R.id.signup_email);
         signupWithEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,7 +70,7 @@ public class SignupBottomSheetDialogFragment extends WPBottomSheetDialogFragment
             }
         });
 
-        Button signupWithGoogleButton = layout.findViewById(R.id.signup_google);
+        Button signupWithGoogleButton = view.findViewById(R.id.signup_google);
         signupWithGoogleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,20 +80,23 @@ public class SignupBottomSheetDialogFragment extends WPBottomSheetDialogFragment
 
         Dialog dialog = getDialog();
         if (dialog != null) {
-            dialog.setContentView(layout);
 
             // Set peek height to full height of view to avoid signup buttons being off screen when
             // bottom sheet is shown with small screen height (e.g. landscape orientation).
-            final BottomSheetBehavior behavior = BottomSheetBehavior.from((View) layout.getParent());
             dialog.setOnShowListener(new OnShowListener() {
                 @Override
-                public void onShow(DialogInterface dialog) {
-                    behavior.setPeekHeight(layout.getHeight());
+                public void onShow(DialogInterface dialogInterface) {
+                    BottomSheetDialog sheetDialog = (BottomSheetDialog) dialogInterface;
+                    FrameLayout bottomSheet = sheetDialog
+                            .findViewById(com.google.android.material.R.id.design_bottom_sheet);
+
+                    if (bottomSheet != null) {
+                        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+                        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    }
                 }
             });
         }
-
-        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override public void onDismiss(DialogInterface dialog) {
