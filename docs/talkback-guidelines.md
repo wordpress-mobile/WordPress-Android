@@ -12,6 +12,7 @@
 	- [Spoken Order](#spoken-order)
 	- [Custom Views](#custom-views)
 - [Auditing](#auditing)
+- [FAQ](#faq)
 - [Further Reading](#further-reading)
 
 ## <a name="governing-principles"></a>Governing Accessibility Principles 
@@ -130,7 +131,7 @@ So now the announcement will be "Tap to start playback".
 
 There might be times when a custom view such as a chart might not be accessible in no shape or form. This is how the `ExploreByTouchHelper` comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creating virtual views using the `Rect` of the actual views. Since it's simply a super `AccessibilityDelegate` these views can be customized with `contentDescriptions` and `actions` when they become focused. 
 
-### <a name="auditing"></a>Auditing & Testing
+## <a name="auditing"></a>Auditing & Testing
 #### Manual testing
  Interact with your app using Android accessibility services.
 You are able to test the app using TalkBack or Voice Access. TalkBack allows you to interact with the app utilizing it’s screen reading functionality where selecting or swiping over elements reads out their descriptions and actions. Utilizing this creates the experience a visually impaired person would have while using the app. Voice Access allows a user to control the device using voice/spoken commands. This is really useful for persons who are motor impaired or may be in a situation where their hands can’t be used. 
@@ -155,6 +156,26 @@ Get feedback from real people who interact with your app.
 Ask other coworkers to simulate the behavior that the impaired so they can test from the viewpoint of the target user while being able to prove clear insights based on their engineering background.
 Reaching out to local communities that have people with disabilities who would be willing to help with testing. 
 Contracting a user testing service that has testers who are disabled and are able to provide deep insights based on their expertise in providing this type of service. 
+
+## <a name="faq"></a>F.A.Q
+* A modal dialog was just shown, should the app announce the options?
+
+	Yes,it could announce that there are options or the framework might treat it as a popup window so the user would know that actions exist. 
+
+* I entered a search query and the search results were refreshed, should the app announce that?
+
+	Yes, because search result’s state is being changed so there search results that will make the screen empty and some that will have contents so being able to make the user aware of the amount of results returned will determine their followup action.
+
+* A snackbar/notice was just shown, should that have been announced?
+
+	Yes, the existence of the snackbar alone means that the information being shown is important so all users must be made aware of it. 
+	
+* Should an icon be dictated even if I could not interact with it anyway?
+
+	No, because that means it doesn’t provide any context to the user and can be categorized as decorative. 
+I’m hovering on an image, what information should be dictated?
+It depends on the context. For a static image it could describe what’s being shown and for a dynamic image placeholder it could describe what the image should represent or communicate. 
+
 
 
 
