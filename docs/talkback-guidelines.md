@@ -50,6 +50,7 @@ The accessibility framework within Android has several ways in which you can pro
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>
+```
 
 
 ## <a name="simple-views"></a> Simple Views
@@ -64,12 +65,12 @@ To make a view ready for accessibility these are the rules that should govern th
 
 
 ### Activity titles
-When an Activity comes to the foreground, TalkBack announces it’s title. When the activity has no title, TalkBack announces the name of the application which might confuse the user -> **_set a title to all visible activities_**, either in AndroidManifest or using Activity.setTitle() method.
+When an Activity comes to the foreground, TalkBack announces it’s title. When the activity has no title, TalkBack announces the name of the application which might confuse the user -> **_set a title to all visible activities_**, either in `AndroidManifest` or using `Activity.setTitle()` method.
 
 ### Images
-Set contentDescription attribute to all ImageViews (null is a valid value).
+Set `contentDescription` attribute to all ImageViews (null is a valid value).
 
-Illustrative images and images with labels should have contentDescription set to null -> “android:contentDescription="@null" or have importantForAccessibility set to “no” -> “android:importantForAccessibility="no".
+Illustrative images and images with labels should have contentDescription set to null -> “`android:contentDescription="@null`" or have `importantForAccessibility` set to “no” -> “`android:importantForAccessibility="no"`.
 
 <img src="images/accessibility-guidelines/illustrative-img.png" width="300">
 
@@ -108,5 +109,25 @@ The reading order of the views are determined by the order in which XML elements
 	
 	
 	
-### Custom Views
+## Custom Views & Actions
+
+#### Custom Announcements
+If the Android framework is announcing something that needs more customization or a state change in the app needs to be made known to the user the `announceForAccessibility` method of the `view` can be utilized to specify this message. By default the framework handles creating announcements for various events and state changes really well once the correct semantics are supplied so this should only be utilized when necessary.
+
+#### Custom Actions
+For full accessibility support within custom views, you have to hook the accessibility events within different the different actions and events that are occurring within that view. For full backward compatibility `ViewCompat.setAccessibilityDelegate()` can be utilized. 
+
+* Usage hint / View action - When TalkBack is making an announcement for an actionable control it normally says "Tap to activate". There might be times when this needs to be customized and this can be done via the `AccessibilityDelegate` like so : 
+
+	```
+	@Override
+	public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
+	    super.onInitializeAccessibilityNodeInfo(host, info);
+	
+	    info.addAction(new AccessibilityActionCompat(ACTION_CLICK, "start playback"));
+	}
+	```
+So now the announcement will be "Tap to start playback".
+
+
 Make sure that custom views are accessible with both Switch Access and TalkBack. Consider implementing accessibility functionality for them using ExploreByTouchHelper.
