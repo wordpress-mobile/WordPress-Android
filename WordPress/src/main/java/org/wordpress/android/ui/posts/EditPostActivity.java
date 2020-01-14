@@ -95,7 +95,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
-import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -400,9 +399,6 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
-        mEditorMedia.start(mSite, this);
-        startObserving();
-
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -507,6 +503,9 @@ public class EditPostActivity extends AppCompatActivity implements
             showErrorAndFinish(R.string.post_not_found);
             return;
         }
+
+        mEditorMedia.start(mSite, this);
+        startObserving();
 
         QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.PUBLISH_POST,
                 mDispatcher, mSite, this);
@@ -631,48 +630,7 @@ public class EditPostActivity extends AppCompatActivity implements
             EventBus.getDefault().postSticky(new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(),
                     mEditPostRepository.getId()));
 
-            // run this purge in the background to not delay Editor initialization
-            new Thread(this::purgeMediaToPostAssociationsIfNotInPostAnymore).start();
-        }
-    }
-
-    private void purgeMediaToPostAssociationsIfNotInPostAnymore() {
-        boolean useAztec = AppPrefs.isAztecEditorEnabled();
-        boolean useGutenberg = AppPrefs.isGutenbergEditorEnabled();
-
-        ArrayList<MediaModel> allMedia = new ArrayList<>();
-        allMedia.addAll(mUploadStore.getFailedMediaForPost(mEditPostRepository.getPost()));
-        allMedia.addAll(mUploadStore.getCompletedMediaForPost(mEditPostRepository.getPost()));
-        allMedia.addAll(mUploadStore.getUploadingMediaForPost(mEditPostRepository.getPost()));
-
-        if (!allMedia.isEmpty()) {
-            HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
-            for (MediaModel media : allMedia) {
-                if (useAztec) {
-                    if (!AztecEditorFragment.isMediaInPostBody(this,
-                            mEditPostRepository.getContent(), String.valueOf(media.getId()))) {
-                        // don't delete featured image uploads
-                        if (!media.getMarkedLocallyAsFeatured()) {
-                            mediaToDeleteAssociationFor.add(media);
-                        }
-                    }
-                } else if (useGutenberg) {
-                    if (!PostUtils.isMediaInGutenbergPostBody(
-                            mEditPostRepository.getContent(), String.valueOf(media.getId()))) {
-                        // don't delete featured image uploads
-                        if (!media.getMarkedLocallyAsFeatured()) {
-                            mediaToDeleteAssociationFor.add(media);
-                        }
-                    }
-                }
-            }
-
-            if (!mediaToDeleteAssociationFor.isEmpty()) {
-                // also remove the association of Media-to-Post for this post
-                ClearMediaPayload clearMediaPayload =
-                        new ClearMediaPayload(mEditPostRepository.getPost(), mediaToDeleteAssociationFor);
-                mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
-            }
+            mEditorMedia.purgeMediaToPostAssociationsIfNotInPostAnymoreAsync();
         }
     }
 
