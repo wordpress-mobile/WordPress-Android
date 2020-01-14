@@ -409,6 +409,9 @@ public class PostSqlUtils {
     }
 
     public List<PostSummaryModel> getPostSummaries(SiteModel site, List<Long> remotePostIds) {
+        if (site == null || remotePostIds == null || remotePostIds.isEmpty()) {
+            return Collections.emptyList();
+        }
         return WellSql.select(PostSummaryModel.class)
                       .where()
                       .equals(PostSummaryModelTable.LOCAL_SITE_ID, site.getId())
