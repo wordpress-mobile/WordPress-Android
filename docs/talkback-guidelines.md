@@ -10,6 +10,7 @@
    - [Basics](#basics)
 	- [Grouping Content](#grouping-content)
 	- [Spoken Order](#spoken-order)
+	- [Appearing and Disappearing Elements](#appearing-disappearing)
 	- [Custom Views](#custom-views)
 - [Auditing](#auditing)
 - [FAQ](#faq)
@@ -130,6 +131,30 @@ So now the announcement will be "Tap to start playback".
 #### Inaccessible Custom Views 
 
 There might be times when a custom view such as a chart might not be accessible in no shape or form. This is how the `ExploreByTouchHelper` comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creating virtual views using the `Rect` of the actual views. Since it's simply a super `AccessibilityDelegate` these views can be customized with `contentDescriptions` and `actions` when they become focused. 
+
+### <a name="appearing-disappearing"></a>Appearing and Disappearing Elements
+
+There are several views and UI patterns that involve views that appear for a limited to show something to the user. The most common ones are `Toasts` and `Snackbars`. These components already have accessibility support built in. However, the `SnackBar` behavior has to be extended to be more accessible. 
+In this codebase, the `WPSnackBar` component has functionality that detects if the accessibility services are enabled and extends the time that the `SnackBar` is visible. This allows the user to get the change to interaction with the actions that are normally present on the `SnackBar`. Another component that is worth mentioning is the play/pause controls on a media component. Normally, they disappear and the user would tap the screen for them to reappear but in the case of TalkBack usage it would be best to make them remain on the screen permanently. So the guiding principles for views of this nature are: 
+
+* Ensure that the views that are appearing for a limited time, are either extended or have an indefinite time. 
+* The actions that are present on these views should be available in other areas of the app so that if the view disappears the user still has means of triggering the functionality elsewhere. 
+* If a custom view is being created, ensure that the the description and actions are announced when an event occurs and be mindful of the associated type being utilized. You can customize the behavior of a custom view to have a type similar to that of another built in/standard view if it shares similar characteristics with the one you created. This code snippet was taken from the Aztec Editor
+
+	``` 
+	fun ToggleButton.convertToButtonAccessibilityProperties() {
+	    ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {
+	        override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfoCompat?) {
+	            super.onInitializeAccessibilityNodeInfo(host, info)
+	            info?.className = Button::class.java.name
+	            info?.isCheckable = false
+	            info?.addAction(AccessibilityNodeInfoCompat.AccessibilityActionCompat(ACTION_CLICK, context.getString(R.string.accessibility_action_click_label)))
+	        }
+	    })
+	}
+	```
+
+So in this case the `ToggleButton` which normally gets announced as a `Switch` is now being announced as a `Button` and it's no longer `checkable` so the announcement doesn't say `Tap to toggle` it says `Tap to activate`. 
 
 ## <a name="auditing"></a>Auditing & Testing
 #### Manual testing
