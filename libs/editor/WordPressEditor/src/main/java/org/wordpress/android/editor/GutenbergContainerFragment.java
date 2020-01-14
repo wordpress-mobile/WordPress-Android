@@ -33,7 +33,10 @@ public class GutenbergContainerFragment extends Fragment {
     private WPAndroidGlueCode mWPAndroidGlueCode;
 
     public static GutenbergContainerFragment newInstance(String postType,
-                                                         boolean isNewPost, String localeString, Bundle translations, boolean isDarkMode) {
+                                                         boolean isNewPost,
+                                                         String localeString,
+                                                         Bundle translations,
+                                                         boolean isDarkMode) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
         Bundle args = new Bundle();
         args.putString(ARG_POST_TYPE, postType);
