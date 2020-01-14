@@ -1,6 +1,6 @@
 # TalkBack Guidelines
 
-“Making applications accessible not only ensures equal access to the roughly 1 billion people in the world with disabilities but also benefits people without disabilities by allowing them to customize their experiences.” - [Google Accessibility] (https://www.google.com/accessibility/for-developers/)
+“Making applications accessible not only ensures equal access to the roughly 1 billion people in the world with disabilities but also benefits people without disabilities by allowing them to customize their experiences.” - [Google Accessibility](https://www.google.com/accessibility/for-developers/)
 
 ### Table of Contents 
 
@@ -8,8 +8,9 @@
 - [Getting Started](#getting-started)
 - [Guidelines](#guidelines)
    - [Basics](#basics)
-	- [Simple Views](#simple-views)
-	- [Complex Views](#complex-views)
+	- [Grouping Content](#grouping-content)
+	- [Spoken Order](#spoken-order)
+	- [Custom Views](#custom-views)
 - [Auditing](#auditing)
 - [Further Reading](#further-reading)
 
@@ -27,7 +28,9 @@ If you have never worked with TalkBack you can visit the TalkBack resources to g
 
 - [Using TalkBack](using-talback.md)
 
-## <a name="basics"></a>Basics
+## <a name="guidelines"></a>Guidelines
+
+###Basics
 
 The accessibility framework within Android has several ways in which you can provide cues to TalkBack so it knows how it make it's announcement when a view becomes focused. 
 
@@ -53,10 +56,7 @@ The accessibility framework within Android has several ways in which you can pro
 ```
 
 
-## <a name="simple-views"></a> Simple Views
-
-
-### General 
+#### Labels / Content Description 
 To make a view ready for accessibility these are the rules that should govern the content descriptions that are set. 
 
 * Do not include the type of the control. TalkBack will automatically announce the description you have set and the type. 
@@ -64,10 +64,10 @@ To make a view ready for accessibility these are the rules that should govern th
 * Like all strings, content descriptions should be localized for maximum support in all languages. 
 
 
-### Activity titles
+#### Activity titles
 When an Activity comes to the foreground, TalkBack announces it’s title. When the activity has no title, TalkBack announces the name of the application which might confuse the user -> **_set a title to all visible activities_**, either in `AndroidManifest` or using `Activity.setTitle()` method.
 
-### Images
+#### Images
 Set `contentDescription` attribute to all ImageViews (null is a valid value).
 
 Illustrative images and images with labels should have contentDescription set to null -> “`android:contentDescription="@null`" or have `importantForAccessibility` set to “no” -> “`android:importantForAccessibility="no"`.
@@ -78,21 +78,19 @@ ImageButtons with labels should have contentDescription set to null. Setting imp
 
 <img src="images/accessibility-guidelines/image-with-label.png" width="300">
 
-### Touch Targets
+#### Touch Targets
 Be sure to check for insufficient touch targets on a screen. An element that’s touch enabled should at least 48dp x 48dp. 
 
 For views where you don’t want to modify the padding you can utilize the [TouchDelegate](https://developer.android.com/reference/android/view/TouchDelegate) functionality where you are able to get the current “Hit Rect) which is a rect with the current bounds and you are able to modify it to increase the touch area. 
 
-## <a name="complex-views"></a> Complex Views
-
-### Grouping content
-If users should treat a set of elements as a single unit of information, you can group these elements in a focusable container using `android:focusable=”true”` or a`ndroid:screenReaderFocusable` attribute to `true` in API 28 and above.  
+### <a name="grouping-content"></a>Grouping content
+If users should treat a set of elements as a single unit of information, you can group these elements in a focusable container using `android:focusable=”true”` or `android:screenReaderFocusable` attribute to `true` in API 28 and above.  
 
 <img src="images/accessibility-guidelines/grouping-content.png" width="300">
 
 In cases like these, it's important that the descriptions of the elements are kept short since they all will be announced in a single utterance. 
 
-### Traversal/Spoken Order
+### <a name="spoken-order"></a>Traversal/Spoken Order
 
 The reading order of the views are determined by the order in which XML elements are declared. There might be times when this order doesn't translate to a natural sounding utterance by TalkBack so the order can be modified using these two attributes. 
 
@@ -109,12 +107,12 @@ The reading order of the views are determined by the order in which XML elements
 	
 	
 	
-## Custom Views & Behavior
+### <a name="custom-views"></a>Custom Views & Behavior
 
-### Announcements
+#### Announcements
 If the Android framework is announcing something that needs more customization or a state change in the app needs to be made known to the user the `announceForAccessibility` method of the `view` can be utilized to specify this message. By default the framework handles creating announcements for various events and state changes really well once the correct semantics are supplied so this should only be utilized when necessary.
 
-### Actions & Events
+#### Actions & Events
 For full accessibility support within custom views, you have to hook the accessibility events within different the different actions and events that are occurring within that view. For full backward compatibility `ViewCompat.setAccessibilityDelegate()` can be utilized. 
 An example of this is the Usage hint / View action. When TalkBack is making an announcement for an actionable control it normally says "Tap to activate". There might be times when this needs to be customized and this can be done via the `AccessibilityDelegate` like so : 
 
@@ -128,7 +126,7 @@ An example of this is the Usage hint / View action. When TalkBack is making an a
 ```
 So now the announcement will be "Tap to start playback".
 
-### Inaccessible Custom Views 
+#### Inaccessible Custom Views 
 
 There might be times when a custom view such as a chart might not be accessible in no shape or form. This is how the `ExploreByTouchHelper` comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creating virtual views using the `Rect` of the actual views. Since it's simply a super `AccessibilityDelegate` these views can be customized with `contentDescriptions` and `actions` when they become focused. 
 
