@@ -403,7 +403,8 @@ public class PostSqlUtils {
         return localPostIds;
     }
 
-    public void insertPostSummaries(List<PostSummaryModel> postSummaryModelList) {
+    public void insertOrUpdatePostSummaries(List<PostSummaryModel> postSummaryModelList) {
+        // The "unique(remote_id) on conflict replace" constraint will take care of updating on insert
         WellSql.insert(postSummaryModelList).asSingleTransaction(true).execute();
     }
 
@@ -414,13 +415,5 @@ public class PostSqlUtils {
                       .isIn(PostSummaryModelTable.REMOTE_ID, remotePostIds)
                       .endWhere()
                       .getAsModel();
-    }
-
-    public void deletePostSummaries(SiteModel site) {
-        WellSql.delete(PostSummaryModel.class)
-               .where()
-               .equals(PostSummaryModelTable.LOCAL_SITE_ID, site.getId())
-               .endWhere()
-               .execute()
     }
 }

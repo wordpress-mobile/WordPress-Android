@@ -3,12 +3,17 @@ package org.wordpress.android.fluxc.model
 import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
+import com.yarolegovich.wellsql.core.annotation.RawConstraints
 import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.post.PostStatus
 
 data class PostSummary(val remoteId: Long, val localSiteId: Int, val status: PostStatus)
 
 @Table
+@RawConstraints(
+        "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE",
+        "UNIQUE(REMOTE_ID) ON CONFLICT REPLACE"
+)
 class PostSummaryModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
     @Column var remoteId: Long? = null
     @Column var localSiteId: Int? = null
