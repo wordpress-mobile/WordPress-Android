@@ -1,5 +1,29 @@
 # Accessibility Guidelines
 
+“Making applications accessible not only ensures equal access to the roughly 1 billion people in the world with disabilities but also benefits people without disabilities by allowing them to customize their experiences.” - [Google Accessibility] (https://www.google.com/accessibility/for-developers/)
+
+### Table of Contents 
+
+- [Governing Principles](#governing-principles)
+- [Getting Started](#getting-started)
+- [Guidelines](#guidelines)
+   - [Basics](#basics)
+	- [Simple Views](#simple-views)
+	- [Complex Views](#complex-views)
+- [Auditing](#auditing)
+- [Further Reading](#further-reading)
+
+##<a name="governing-principles"></a>Governing Accessibility Principles 
+* Make the information on the screen as visible as possible. 
+* Always design the size of controls and touch areas inclusive of all use cases.
+* Provide as much support context and details for all views & actions. Images, buttons, lists and the actions they enable should have thorough, well-formatted descriptions that allow the accessibility APIs to deliver their intent seamlessly. 
+
+	For more details visit [Make apps more accessible
+](https://developer.android.com/guide/topics/ui/accessibility/apps.html).
+	
+Introduction 
+
+
 ### Activity titles
 When an Activity comes to the foreground, TalkBack announces it’s title. When the activity has no title, TalkBack announces the name of the application which might confuse the user -> **_set a title to all visible activities_**, either in AndroidManifest or using Activity.setTitle() method.
 
