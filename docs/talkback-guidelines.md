@@ -109,25 +109,26 @@ The reading order of the views are determined by the order in which XML elements
 	
 	
 	
-## Custom Views & Actions
+## Custom Views & Behavior
 
-#### Custom Announcements
+### Announcements
 If the Android framework is announcing something that needs more customization or a state change in the app needs to be made known to the user the `announceForAccessibility` method of the `view` can be utilized to specify this message. By default the framework handles creating announcements for various events and state changes really well once the correct semantics are supplied so this should only be utilized when necessary.
 
-#### Custom Actions
+### Actions & Events
 For full accessibility support within custom views, you have to hook the accessibility events within different the different actions and events that are occurring within that view. For full backward compatibility `ViewCompat.setAccessibilityDelegate()` can be utilized. 
+An example of this is the Usage hint / View action. When TalkBack is making an announcement for an actionable control it normally says "Tap to activate". There might be times when this needs to be customized and this can be done via the `AccessibilityDelegate` like so : 
 
-* Usage hint / View action - When TalkBack is making an announcement for an actionable control it normally says "Tap to activate". There might be times when this needs to be customized and this can be done via the `AccessibilityDelegate` like so : 
-
-	```
+```
 	@Override
 	public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
 	    super.onInitializeAccessibilityNodeInfo(host, info);
 	
 	    info.addAction(new AccessibilityActionCompat(ACTION_CLICK, "start playback"));
 	}
-	```
+```
 So now the announcement will be "Tap to start playback".
 
+### Inaccessible Custom Views 
 
-Make sure that custom views are accessible with both Switch Access and TalkBack. Consider implementing accessibility functionality for them using ExploreByTouchHelper.
+There might be times when a custom view such as a chart might not be accessible in no shape or form. This is how the `ExploreByTouchHelper` comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creating virtual views using the `Rect` of the actual views. Since it's simply a super `AccessibilityDelegate` these views can be customized with `contentDescriptions` and `actions` when they become focused. 
+
