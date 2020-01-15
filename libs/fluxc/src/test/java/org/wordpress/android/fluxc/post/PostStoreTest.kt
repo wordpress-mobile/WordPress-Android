@@ -306,8 +306,8 @@ class PostStoreTest {
         // Assert
         verify(postSqlUtils).insertOrUpdatePostSummaries(argThat {
             this.first().let {
-                it.status == post.status && it.remoteId == post.remotePostId && it.localSiteId == post.localSiteId
-                        && it.dateCreated == post.dateCreated
+                it.status == post.status && it.remoteId == post.remotePostId && it.localSiteId == post.localSiteId &&
+                        it.dateCreated == post.dateCreated
             }
         })
     }
