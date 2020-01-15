@@ -1,3 +1,7 @@
+14.1
+-----
+* Fixes an issue where searching for posts sometimes doesn't show some results.
+
 14.0
 -----
 * Block Editor: Fix displaying placeholder for images
