@@ -430,7 +430,6 @@ public class WPMainActivity extends AppCompatActivity implements
 
         ViewUtilsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
 
-
         mFabTooltip.setOnClickListener(v -> {
             mViewModel.onTooltipTapped();
         });
