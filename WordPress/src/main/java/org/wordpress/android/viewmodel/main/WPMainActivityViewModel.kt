@@ -82,6 +82,8 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
     }
 
     fun onTooltipTapped() {
+        appPrefsWrapper.setMainFabTooltipDisabled(true)
+
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
