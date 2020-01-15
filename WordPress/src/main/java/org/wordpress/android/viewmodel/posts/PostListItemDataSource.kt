@@ -32,7 +32,21 @@ sealed class PostListItemIdentifier {
     data class SectionHeaderIdentifier(val type: PostListType) : PostListItemIdentifier()
 }
 
-// TODO: Add a comment explaining that only the ids are available during identifier and we can only use post summary model during this
+/**
+ * This is the post list data source to be used by `ListStore`. Before making any changes, it's important to know:
+ *
+ * 1. Lists managed by `ListStore` works by first fetching a smaller version of the models and then fetching the
+ * actual model if necessary.
+ * 2. During [getItemIdentifiers] the actual models might not be available and should not be relied upon. For post list
+ * specifically, we have [PostSummary] that's always available. If a field that's not in the [PostSummary] is necessary
+ * in [getItemIdentifiers], one should add that to [PostSummary] in FluxC and make sure that field is fetched
+ * and updated in [PostStore].
+ * 3. In [getItemsAndFetchIfNecessary], if the actual model is not available, this class is responsible for fetching
+ * that model. For this post list specifically, when the actual model is fetched the list will update itself.
+ *
+ * // TODO: We can add a link to the wiki for ListStore when that's available.
+ * For more information, please see the documentation for `ListStore` components.
+ */
 class PostListItemDataSource(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
