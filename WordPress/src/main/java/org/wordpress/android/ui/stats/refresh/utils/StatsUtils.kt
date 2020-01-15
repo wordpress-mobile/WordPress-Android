@@ -135,7 +135,7 @@ class StatsUtils
         }
     }
 
-    fun getEntryContentDescriptions(
+    fun getBarChartEntryContentDescriptions(
         @StringRes entryType: Int,
         entries: List<Bar>,
         @StringRes overlappingEntryType: Int? = null,

@@ -65,7 +65,7 @@ class LatestPostSummaryMapper
         val barEntries = dayViews.subList(Math.max(0, dayViews.size - 30), dayViews.size)
                 .map { pair -> BarChartItem.Bar(statsDateFormatter.printDate(pair.first), pair.first, pair.second) }
 
-        val contentDescriptions = statsUtils.getEntryContentDescriptions(
+        val contentDescriptions = statsUtils.getBarChartEntryContentDescriptions(
                 R.string.stats_views,
                 barEntries)
 

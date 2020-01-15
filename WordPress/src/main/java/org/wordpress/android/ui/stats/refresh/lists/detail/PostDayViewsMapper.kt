@@ -96,7 +96,7 @@ class PostDayViewsMapper
         }
         val result = mutableListOf<BlockListItem>()
 
-        val contentDescriptions = statsUtils.getEntryContentDescriptions(
+        val contentDescriptions = statsUtils.getBarChartEntryContentDescriptions(
                 R.string.stats_views,
                 chartItems
         )

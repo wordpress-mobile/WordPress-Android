@@ -225,7 +225,7 @@ class OverviewMapper
             null
         }
 
-        val contentDescriptions = statsUtils.getEntryContentDescriptions(
+        val contentDescriptions = statsUtils.getBarChartEntryContentDescriptions(
                 entryType,
                 chartItems,
                 overlappingType,
