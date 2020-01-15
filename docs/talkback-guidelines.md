@@ -14,7 +14,6 @@
 	- [Appearing and Disappearing Elements](#appearing-disappearing)
 	- [Custom Views](#custom-views)
 - [Auditing](#auditing)
-- [FAQ](#faq)
 - [Further Reading](#further-reading)
 
 ## <a name="governing-principles"></a>Governing Accessibility Principles 
@@ -163,9 +162,8 @@ The reading order of the views are determined by the order in which XML elements
 	    override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfoCompat?) {
 	        info?.setTraversalAfter(imageView3)
 	        super.onInitializeAccessibilityNodeInfo(host, info) }})
-	
-	
-	
+
+
 ### <a name="custom-views"></a>Custom Views & Behavior
 
 #### Announcements
@@ -247,24 +245,6 @@ Ask other coworkers to simulate the behavior that the impaired so they can test 
 Reaching out to local communities that have people with disabilities who would be willing to help with testing. 
 Contracting a user testing service that has testers who are disabled and are able to provide deep insights based on their expertise in providing this type of service. 
 
-## <a name="faq"></a>F.A.Q
-* A modal dialog was just shown, should the app announce the options?
-
-	Yes,it could announce that there are options or the framework might treat it as a popup window so the user would know that actions exist. 
-
-* I entered a search query and the search results were refreshed, should the app announce that?
-
-	Yes, because search result’s state is being changed so there search results that will make the screen empty and some that will have contents so being able to make the user aware of the amount of results returned will determine their followup action.
-
-* A snackbar/notice was just shown, should that have been announced?
-
-	Yes, the existence of the snackbar alone means that the information being shown is important so all users must be made aware of it. 
-	
-* Should an icon be dictated even if I could not interact with it anyway?
-
-	No, because that means it doesn’t provide any context to the user and can be categorized as decorative. 
-I’m hovering on an image, what information should be dictated?
-It depends on the context. For a static image it could describe what’s being shown and for a dynamic image placeholder it could describe what the image should represent or communicate. 
 
 
 
