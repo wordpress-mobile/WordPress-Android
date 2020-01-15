@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts;
+package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
 import org.apache.commons.lang3.StringUtils;
 
