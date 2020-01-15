@@ -90,6 +90,29 @@ Enable developer options by going to Settings > System > Developer Options. Unde
  * Easiest way to increase this is to utilize the `padding` attribute. 
  * For views where you don’t want to modify the padding you can utilize the [TouchDelegate](https://developer.android.com/reference/android/view/TouchDelegate) functionality where you are able to get the current “Hit Rect) which is a rect with the current bounds and you are able to modify it to increase the touch area. There is a [function within ViewUtils](https://github.com/wordpress-mobile/WordPress-Android/blob/3f99349887f004a697f6ff6ec4a5d49bd1d9d497/WordPress/src/main/java/org/wordpress/android/util/ViewUtils.kt#L20) that does this well. 
 
+#### Color Contrasts
+
+Users that have low vision might find it difficult to read information on the screen when there isn't enough contrast between the foreground and the background. To solve this issue it's normally best to utilize the [Contrast Checker](https://webaim.org/resources/contrastchecker/) that will allow you to compare a new foreground color with the current background to see if the ratio will make the improvement appropriate. Below is an example of how the contrast of the Aztec editor was improved. The steps to do this were as follows. 
+
+* The foreground color of the view in question was located and it was determined that it was `<color name="wp_grey_dark">#2e4453</color>`
+* Luckily for us, we have several other colors that are higher in contrast that can be utilized. 
+
+	```
+	<color name="wp_grey_dark">#2e4453</color>
+	<color name="wp_grey_darken_10">#668eaa</color>
+	<color name="wp_grey_darken_20">#4f748e</color>
+	<color name="wp_grey_darken_30">#3d596d</color>
+	```
+* The `wp_grey_darken_10` was then checked with the Contrast Checker with the background color of white and the ratio was above the amount stipulated for low vision users. 
+
+This was the end result : 
+
+Before | After 
+--------|-------
+<img src="https://user-images.githubusercontent.com/1509205/71564967-16c97e00-2a77-11ea-8372-04791708408a.png" width="320">        | <img src="https://user-images.githubusercontent.com/1509205/71564969-1fba4f80-2a77-11ea-84e7-3353ba5c7454.png" width="320">
+
+Even though the change is subtle, improving the color contrasts of our elements can go a far way for using with low vision. 
+ 
 ### <a name="grouping-content"></a>Grouping content
 If users should treat a set of elements as a single unit of information, you can group these elements in a focusable container using `android:focusable=”true”` or `android:screenReaderFocusable` attribute to `true` in API 28 and above.  
 
