@@ -64,15 +64,11 @@ class PostListItemDataSource(
         remoteItemIds: List<RemoteId>,
         isListFullyFetched: Boolean
     ): List<PostListItemIdentifier> {
-        val localItems = postStore.getLocalPostIdsForDescriptor(listDescriptor)
-                .map { LocalPostId(id = it) }
-        val remoteItems = remoteItemIds.map { RemotePostId(id = it) }
-        val actualItems: List<PostListItemIdentifier>
-
-        if (postListType == SEARCH) {
-            actualItems = getGroupedItemIdentifiers(listDescriptor, localItems + remoteItems)
+        val localPostIds = postStore.getLocalPostIdsForDescriptor(listDescriptor)
+        val actualItems: List<PostListItemIdentifier> = if (postListType == SEARCH) {
+            getGroupedItemIdentifiers(listDescriptor, localPostIds, remoteItemIds)
         } else {
-            actualItems = localItems + remoteItems
+            localPostIds.map { LocalPostId(id = it) } + remoteItemIds.map { RemotePostId(id = it) }
         }
 
         // We only want to show the end list indicator if the list is fully fetched and it's not empty
@@ -143,29 +139,26 @@ class PostListItemDataSource(
 
     private fun getGroupedItemIdentifiers(
         listDescriptor: PostListDescriptor,
-        itemIdentifiers: List<PostListItemIdentifier>
+        localPostIds: List<LocalId>,
+        remotePostIds: List<RemoteId>
     ): List<PostListItemIdentifier> {
         val listDrafts = mutableListOf<PostListItemIdentifier>()
         val listPublished = mutableListOf<PostListItemIdentifier>()
         val listScheduled = mutableListOf<PostListItemIdentifier>()
         val listTrashed = mutableListOf<PostListItemIdentifier>()
-        val mapToPostListItemIdentifier = { postSummary: PostSummary ->
-            RemotePostId(RemoteId(postSummary.remoteId))
-        }
 
-        val localOrRemoteIds = localOrRemoteIdsFromPostListItemIds(itemIdentifiers)
-        val postSummaries = postStore.getPostSummaries(
+        val localIdentifiers = postStore.getPostsByLocalOrRemotePostIds(localPostIds, listDescriptor.site)
+                .associate { PostStatus.fromPost(it) to LocalPostId(LocalId(it.id)) }
+        val remoteIdentifiers = postStore.getPostSummaries(
                 listDescriptor.site,
-                localOrRemoteIds.filterIsInstance<RemoteId>().map { it.value })
+                remotePostIds.map { it.value }).associate { it.status to RemotePostId(RemoteId(it.remoteId)) }
 
-        // If we only have a local id for a post, it should be in the Drafts section
-        listDrafts.addAll(localOrRemoteIds.filterIsInstance<LocalId>().map { LocalPostId(it) })
-        postSummaries.forEach {
-            when (PostListType.fromPostStatus(it.status)) {
-                PostListType.DRAFTS -> listDrafts.add(mapToPostListItemIdentifier(it))
-                PostListType.PUBLISHED -> listPublished.add(mapToPostListItemIdentifier(it))
-                PostListType.SCHEDULED -> listScheduled.add(mapToPostListItemIdentifier(it))
-                TRASHED -> listTrashed.add(mapToPostListItemIdentifier(it))
+        (localIdentifiers + remoteIdentifiers).forEach {
+            when (PostListType.fromPostStatus(it.key)) {
+                PostListType.DRAFTS -> listDrafts.add(it.value)
+                PostListType.PUBLISHED -> listPublished.add(it.value)
+                PostListType.SCHEDULED -> listScheduled.add(it.value)
+                TRASHED -> listTrashed.add(it.value)
                 // We are grouping Post results into display groups. Search isn't a valid post type so it can be ignored.
                 PostListType.SEARCH -> {}
             }
