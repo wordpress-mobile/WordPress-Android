@@ -80,6 +80,33 @@ ImageButtons with labels should have contentDescription set to null. Setting imp
 
 <img src="images/accessibility-guidelines/image-with-label.png" width="300">
 
+
+#### Headings
+
+One of the many navigation modes provided by TalkBack is that of "Heading". This mode allows the user to jump to different section of the screen utilizing the heading of that area. This functionality was introduced in Android Pie and it can be enabled by putting the `android:accessibilityHeading="true"` on the element that needs to become a heading. If the min sdk is less than 28 then this can be enabled using the `AccessibilityDelegate`. 
+
+```java
+public static void enableAccessibilityHeading(@NonNull View view) {
+        setAccessibilityDelegateSafely(view, new AccessibilityDelegateCompat() {
+            @Override public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
+                super.onInitializeAccessibilityNodeInfo(host, info);
+                info.setHeading(true);
+            }
+        });
+    }
+```
+
+Below is an example of the heading functionality in action. 
+
+This is one of the target headings.
+
+<img src="images/accessibility-guidelines/heading.png" width="300">
+
+This is how TalkBack behaves when you swipe left or right to navigate the headings.
+
+<img src="images/accessibility-guidelines/heading_live.gif" width="300">
+
+
 #### Touch Targets
 Sometimes people have difficulty when attempting to select views with small touch targets on the  screen. 
 Be sure to check for insufficient touch targets using the tools available. You can utilize the layout bounds functionality in Developer Options to see the current touch target size. 
@@ -119,7 +146,7 @@ If users should treat a set of elements as a single unit of information, you can
 
 In cases like these, it's important that the descriptions of the elements are kept short since they all will be announced in a single utterance. 
 
-### <a name="live-regions"></a>Live regions
+### <a name="live-regions"></a>Live regions (dynamic content)
 
 To activate the functionality of views with TalkBack you have to navigate to it. However there are times when the contents of a view might changeand the user should be made aware of it. This is where Live Regions come in. For example say you have a `TextView` similar to the one defined below. 
 
