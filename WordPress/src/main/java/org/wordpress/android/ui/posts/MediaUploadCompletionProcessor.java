@@ -107,19 +107,19 @@ public class MediaUploadCompletionProcessor {
      */
     public String processPost(String postContent) {
         Matcher matcher = PATTERN_BLOCK.matcher(postContent);
-        ArrayList<String> chunks = new ArrayList<>();
+        StringBuilder result = new StringBuilder();
 
         int position = 0;
 
         while (matcher.find()) {
-            chunks.add(postContent.substring(position, matcher.start()));
-            chunks.add(processBlock(matcher.group()));
+            result.append(postContent.substring(position, matcher.start()));
+            result.append(processBlock(matcher.group()));
             position = matcher.end();
         }
 
-        chunks.add(postContent.substring(position));
+        result.append(postContent.substring(position));
 
-        return StringUtils.join(chunks, "");
+        return result.toString();
     }
 
 
