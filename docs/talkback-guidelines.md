@@ -41,7 +41,7 @@ The accessibility framework within Android has several ways in which you can pro
 * `importantForAccessibility` - In cases where a view or layout might not have a need to be accessible this attribute can be set. It basically allows TalkBack to ignore views that have this property set to `yes` thus eliminating the need for a content description. 
 * `hint` - For usability purposes, the text input control `EditText` has the hint attribute. If another view is providing the label then you can utilize the `labelFor` attribute. Below is an example.  
 
- ```
+ ```xml
  <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -97,7 +97,7 @@ Users that have low vision might find it difficult to read information on the sc
 * The foreground color of the view in question was located and it was determined that it was `<color name="wp_grey_dark">#2e4453</color>`
 * Luckily for us, we have several other colors that are higher in contrast that can be utilized. 
 
-	```
+	```xml
 	<color name="wp_grey_dark">#2e4453</color>
 	<color name="wp_grey_darken_10">#668eaa</color>
 	<color name="wp_grey_darken_20">#4f748e</color>
@@ -111,7 +111,7 @@ Before | After
 --------|-------
 <img src="https://user-images.githubusercontent.com/1509205/71564967-16c97e00-2a77-11ea-8372-04791708408a.png" width="320">        | <img src="https://user-images.githubusercontent.com/1509205/71564969-1fba4f80-2a77-11ea-84e7-3353ba5c7454.png" width="320">
 
-Even though the change is subtle, improving the color contrasts of our elements can go a far way for using with low vision. 
+Even though the change is subtle, improving the color contrasts of our elements can go a far way for users with low vision. 
  
 ### <a name="grouping-content"></a>Grouping content
 If users should treat a set of elements as a single unit of information, you can group these elements in a focusable container using `android:focusable=”true”` or `android:screenReaderFocusable` attribute to `true` in API 28 and above.  
