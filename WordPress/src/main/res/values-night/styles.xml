@@ -27,10 +27,10 @@
 
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
-        <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Dark</item>
+        <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
 
         <item name="actionOverflowMenuStyle">
-            @style/Widget.MaterialComponents.PopupMenu.Overflow.Dark
+            @style/Widget.MaterialComponents.PopupMenu.Overflow
         </item>
 
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
@@ -90,9 +90,9 @@
         <item name="tint">?attr/colorOnSurface</item>
     </style>
 
-       <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">?attr/colorSecondaryVariant</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
+    <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/secondary_variant_disabled_selector</item>
+        <item name="android:textColor">@color/on_surface_disabled_selector</item>
     </style>
 
 </resources>
