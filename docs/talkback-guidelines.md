@@ -81,9 +81,14 @@ ImageButtons with labels should have contentDescription set to null. Setting imp
 <img src="images/accessibility-guidelines/image-with-label.png" width="300">
 
 #### Touch Targets
-Be sure to check for insufficient touch targets on a screen. An element that’s touch enabled should at least 48dp x 48dp. 
-
-For views where you don’t want to modify the padding you can utilize the [TouchDelegate](https://developer.android.com/reference/android/view/TouchDelegate) functionality where you are able to get the current “Hit Rect) which is a rect with the current bounds and you are able to modify it to increase the touch area. 
+Sometimes people have difficulty when attempting to select views with small touch targets on the  screen. 
+Be sure to check for insufficient touch targets using the tools available. You can utilize the layout bounds functionality in Developer Options to see the current touch target size. 
+Enable developer options by going to Settings > System > Developer Options. Under the Drawing section, selected "Show layout bounds" and turn it on. Your screen should now show the bounds & margins of every visible view on the screen. For touch targets : 
+ 
+ * Each element that’s touch enabled should have at least 48dp x 48dp in size. 
+ * Easiest way to increase this is to utilize the `padding` attribute. 
+ * For views where you don’t want to modify the padding you can utilize the [TouchDelegate](https://developer.android.com/reference/android/view/TouchDelegate) functionality where you are able to get the current “Hit Rect) which is a rect with the current bounds and you are able to modify it to increase the touch area. There is a function within `ViewUtils` that does this well. 
+https://github.com/wordpress-mobile/WordPress-Android/blob/3f99349887f004a697f6ff6ec4a5d49bd1d9d497/WordPress/src/main/java/org/wordpress/android/util/ViewUtils.kt#L20
 
 ### <a name="grouping-content"></a>Grouping content
 If users should treat a set of elements as a single unit of information, you can group these elements in a focusable container using `android:focusable=”true”` or `android:screenReaderFocusable` attribute to `true` in API 28 and above.  
