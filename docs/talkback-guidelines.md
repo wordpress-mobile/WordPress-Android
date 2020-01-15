@@ -9,6 +9,7 @@
 - [Guidelines](#guidelines)
    - [Basics](#basics)
 	- [Grouping Content](#grouping-content)
+	- [Live Regions](#live-regions)
 	- [Spoken Order](#spoken-order)
 	- [Appearing and Disappearing Elements](#appearing-disappearing)
 	- [Custom Views](#custom-views)
@@ -95,6 +96,35 @@ If users should treat a set of elements as a single unit of information, you can
 <img src="images/accessibility-guidelines/grouping-content.png" width="300">
 
 In cases like these, it's important that the descriptions of the elements are kept short since they all will be announced in a single utterance. 
+
+### <a name="live-regions"></a>Live regions
+
+To activate the functionality of views with TalkBack you have to navigate to it. However there are times when the contents of a view might changeand the user should be made aware of it. This is where Live Regions come in. For example say you have a `TextView` similar to the one defined below. 
+
+```
+<TextView
+   android:id="@+id/feedback_text_view"
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content"
+   android:textColor="@color/white"
+   android:padding="@dimen/standard_padding"
+   android:textSize="@dimen/large_text" />
+```
+
+You can add a live region attribute to it so that when `setText` is called TalkBack will announce it. 
+
+```
+<TextView
+   android:id="@+id/feedback_text_view"
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content"
+   android:textColor="@color/white"
+   android:padding="@dimen/standard_padding"
+   android:textSize="@dimen/large_text" 
+   android:accessibilityLiveRegion="polite"/>
+```
+
+The live region attribute is set to `polite` so that means it won't interrupt TalkBack if it is currently announcing something but if it is important that it gets announced it can be set to `assertive`. This should be used sparing.
 
 ### <a name="spoken-order"></a>Traversal/Spoken Order
 
