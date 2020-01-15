@@ -62,7 +62,8 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                         chart,
                         contentDescriptions = item.entryContentDescriptions,
                         hasOverlappingEntries = item.overlappingEntries != null,
-                        accessibilityEvent = accessibilityEvent
+                        accessibilityEvent = accessibilityEvent,
+                        dataSet = chart.data.dataSets.first()
                 )
 
                 ViewCompat.setAccessibilityDelegate(chart, accessibilityHelper)

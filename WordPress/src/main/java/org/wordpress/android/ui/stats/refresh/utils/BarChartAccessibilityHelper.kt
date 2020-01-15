@@ -7,18 +7,18 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.Accessibilit
 import androidx.customview.widget.ExploreByTouchHelper
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 
 class BarChartAccessibilityHelper(
     private val barChart: BarChart,
     private val contentDescriptions: List<String>,
     private val hasOverlappingEntries: Boolean,
-    private val accessibilityEvent: BarChartAccessibilityEvent
+    private val accessibilityEvent: BarChartAccessibilityEvent,
+    private val dataSet:IBarDataSet
 ) : ExploreByTouchHelper(barChart) {
     interface BarChartAccessibilityEvent {
         fun onHighlight(index: Int, hasOverlappingEntries: Boolean)
     }
-
-    private val dataSet = barChart.data.dataSets.first()
 
     init {
         barChart.setOnHoverListener { _, event -> dispatchHoverEvent(event) }
