@@ -36,18 +36,6 @@ public class MediaUploadCompletionProcessor {
      * <li>Block closing comment and any following characters</li>
      * </ol>
      */
-    private Pattern mVideoBlockPattern;
-    /**
-     * A {@link Pattern} to match media-text blocks with the following capture groups:
-     *
-     * <ol>
-     * <li>Block header before id</li>
-     * <li>The mLocalId (to be replaced)</li>
-     * <li>Block header after id</li>
-     * <li>Block contents</li>
-     * <li>Block closing comment and any following characters</li>
-     * </ol>
-     */
     private Pattern mMediaTextBlockPattern;
     /**
      * A {@link Pattern} to match gallery blocks with the following capture groups:
@@ -73,15 +61,16 @@ public class MediaUploadCompletionProcessor {
             .prettyPrint(false);
 
     private ImageBlockProcessor mImageBlockProcessor;
+    private VideoBlockProcessor mVideoBlockProcessor;
 
     public MediaUploadCompletionProcessor(String localId, MediaFile mediaFile, String siteUrl) {
         mLocalId = localId;
         mRemoteId = mediaFile.getMediaId();
         mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
 
-        mImageBlockProcessor = new ImageBlockProcessor(localId, mediaFile, siteUrl);
+        mImageBlockProcessor = new ImageBlockProcessor(localId, mediaFile);
 
-        mVideoBlockPattern = Helpers.getVideoBlockPattern(mLocalId);
+        mVideoBlockProcessor = new VideoBlockProcessor(localId, mediaFile);
 
         mMediaTextBlockPattern = Helpers.getMediaTextBlockPattern(mLocalId);
 
@@ -126,7 +115,7 @@ public class MediaUploadCompletionProcessor {
             case IMAGE:
                 return mImageBlockProcessor.processBlock(block);
             case VIDEO:
-                return processVideoBlock(block);
+                return mVideoBlockProcessor.processBlock(block);
             case MEDIA_TEXT:
                 return processMediaTextBlock(block);
             case GALLERY:
@@ -134,50 +123,6 @@ public class MediaUploadCompletionProcessor {
             default:
                 return block;
         }
-    }
-
-    /**
-     * Processes a video block returning a raw content replacement string
-     *
-     * @param block The raw block contents
-     * @return A string containing content with ids and urls replaced
-     */
-    public String processVideoBlock(String block) {
-        // TODO: process block header JSON in a more robust way (current processing uses RexEx)
-        Matcher matcher = mVideoBlockPattern.matcher(block);
-
-        if (matcher.find()) {
-            String headerComment = new StringBuilder()
-                    .append(matcher.group(1))
-                    .append(mRemoteId) // here we substitute remote id in place of the local id
-                    .append(matcher.group(3))
-                    .toString();
-            String blockContent = matcher.group(4);
-            String closingComment = matcher.group(5);
-
-            // create document from block content
-            Document document = Jsoup.parse(blockContent);
-            document.outputSettings(OUTPUT_SETTINGS);
-
-            // select video element with our local id
-            Element targetVideo = document.select("video").first();
-
-            // if a match is found for video, proceed with replacement
-            if (targetVideo != null) {
-                // replace attribute
-                targetVideo.attr("src", mRemoteUrl);
-
-                // return injected block
-                return new StringBuilder()
-                        .append(headerComment)
-                        .append(document.body().html()) // parser output
-                        .append(closingComment)
-                        .toString();
-            }
-        }
-
-        // leave block unchanged
-        return block;
     }
 
     /**
