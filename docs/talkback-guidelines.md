@@ -75,7 +75,7 @@ Set `contentDescription` attribute to all ImageViews (null is a valid value).
 
 Illustrative images and images with labels should have contentDescription set to null -> “`android:contentDescription="@null`" or have `importantForAccessibility` set to “no” -> “`android:importantForAccessibility="no"`.
 
-<img src="images/accessibility-guidelines/illustrative-img.png" width="300">
+<img src="images/accessibility-guidelines/image_inaccessible.png" width="300">
 
 ImageButtons with labels should have contentDescription set to null. Setting importanceForAccessibility to “no” makes them unfocusable in the accessibility mode.
 
@@ -93,7 +93,7 @@ Enable developer options by going to Settings > System > Developer Options. Unde
 ### <a name="grouping-content"></a>Grouping content
 If users should treat a set of elements as a single unit of information, you can group these elements in a focusable container using `android:focusable=”true”` or `android:screenReaderFocusable` attribute to `true` in API 28 and above.  
 
-<img src="images/accessibility-guidelines/grouping-content.png" width="300">
+<img src="images/accessibility-guidelines/stats_group.png" width="300">
 
 In cases like these, it's important that the descriptions of the elements are kept short since they all will be announced in a single utterance. 
 
