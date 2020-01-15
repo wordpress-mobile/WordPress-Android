@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload
 import org.wordpress.android.fluxc.store.PostStore
@@ -292,6 +293,25 @@ class PostStoreTest {
         verifyNoMoreInteractions(dispatcher)
     }
 
+    @Test
+    fun `handleFetchedPostList updates post summaries`() {
+        // Arrange
+        val post = createPostModel(postStatus = SCHEDULED)
+        val remotePostListItem = createRemotePostListItem(post)
+        val action = createFetchedPostListAction(postListItems = listOf(remotePostListItem))
+
+        // Act
+        store.onAction(action)
+
+        // Assert
+        verify(postSqlUtils).insertOrUpdatePostSummaries(argThat {
+            this.first().let {
+                it.status == post.status && it.remoteId == post.remotePostId && it.localSiteId == post.localSiteId
+                        && it.dateCreated == post.dateCreated
+            }
+        })
+    }
+
     private fun createFetchedPostListAction(
         postListItems: List<PostListItem> = listOf(),
         listDescriptor: PostListDescriptor = mockedListDescriptor,
@@ -320,6 +340,6 @@ class PostStoreTest {
         status: String = post.status,
         lastModified: String = post.lastModified,
         autoSaveModified: String? = post.autoSaveModified,
-        dateCreated: String? = null
+        dateCreated: String? = post.dateCreated
     ) = PostListItem(post.remotePostId, lastModified, status, autoSaveModified, dateCreated)
 }
