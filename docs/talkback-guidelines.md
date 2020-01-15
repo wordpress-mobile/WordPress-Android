@@ -1,10 +1,8 @@
 # TalkBack Guidelines
 
-“Making applications accessible not only ensures equal access to the roughly 1 billion people in the world with disabilities but also benefits people without disabilities by allowing them to customize their experiences.” - [Google Accessibility](https://www.google.com/accessibility/for-developers/)
 
 ### Table of Contents 
 
-- [Governing Principles](#governing-principles)
 - [Getting Started](#getting-started)
 - [Guidelines](#guidelines)
    - [Basics](#basics)
@@ -16,17 +14,21 @@
 - [Auditing](#auditing)
 - [Further Reading](#further-reading)
 
-## <a name="governing-principles"></a>Governing Accessibility Principles 
+	
+## <a name="getting-started"></a>Getting Started
+“Making applications accessible not only ensures equal access to the roughly 1 billion people in the world with disabilities but also benefits people without disabilities by allowing them to customize their experiences.” - [Google Accessibility](https://www.google.com/accessibility/for-developers/)
+
+#### Governing Accessibility Principles 
+
 * Make the information on the screen as visible as possible. 
 * Always design the size of controls and touch areas inclusive of all use cases.
 * Provide as much support context and details for all views & actions. Images, buttons, lists and the actions they enable should have thorough, well-formatted descriptions that allow the accessibility APIs to deliver their intent seamlessly. 
 
 	For more details visit [Make apps more accessible
 ](https://developer.android.com/guide/topics/ui/accessibility/apps.html).
-	
-## <a name="getting-started"></a>Getting Started
 
-If you have never worked with TalkBack you can visit the TalkBack resources to get started.
+#### TalkBack
+This document will provide all the resources needed to improve an app's accessibility using TalkBack. If you have never worked with TalkBack you can visit the "Using TalkBack" document to get started.
 
 - [Using TalkBack](using-talback.md)
 
@@ -193,10 +195,10 @@ The reading order of the views are determined by the order in which XML elements
 
 ### <a name="custom-views"></a>Custom Views & Behavior
 
-#### Announcements
+#### Custom Announcements
 If the Android framework is announcing something that needs more customization or a state change in the app needs to be made known to the user, the `announceForAccessibility` method of the `view` can be utilized to specify this message. By default the framework handles creating announcements for various events and state changes really well once the correct semantics are supplied. so this should only be utilized when necessary.
 
-#### Actions & Events
+#### Custom Events
 For full accessibility support within custom views, you have to hook the accessibility events within different the different actions and events that are occurring within that view. For full backward compatibility `ViewCompat.setAccessibilityDelegate()` can be utilized. 
 An example of this is the Usage hint / View action. When TalkBack is making an announcement for an actionable control it normally says "Tap to activate". There might be times when this needs to be customized and this can be done via the `AccessibilityDelegate` like so : 
 
@@ -209,6 +211,29 @@ An example of this is the Usage hint / View action. When TalkBack is making an a
 	}
 ```
 So now the announcement will be "Tap to start playback".
+
+#### Custom Actions
+
+If you have a view that contains several actions and it might be difficult for the user to activate them at all times you can utilize a custom action dialog to show the options available in a more accessible & friendly format. This dialog won't replace the existing actions as it's more for convenience to the user navigating the app via TalkBack.
+
+To make the example a lot clearer, we will be focusing on optimizing the actions available on a post within the `Post List`. 
+
+<img src="images/accessibility-guidelines/post_list.png" width="300">
+
+
+* To accomplish this you would have to first detect if TalkBack is enabled. 
+
+	```java
+	AccessibilityManager am = (AccessibilityManager) getSystemService(ACCESSIBILITY_SERVICE);
+	boolean isAccessibilityEnabled = am.isEnabled();
+	```
+
+* Once TalkBack is enabled then you can then add a `LongClickListener` that will open the dialog. 
+
+
+
+
+
 
 #### Inaccessible Custom Views 
 
