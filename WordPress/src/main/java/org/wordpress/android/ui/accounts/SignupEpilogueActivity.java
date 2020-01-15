@@ -7,9 +7,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueListener;
 import org.wordpress.android.util.LocaleManager;
+
+import javax.inject.Inject;
 
 public class SignupEpilogueActivity extends AppCompatActivity implements SignupEpilogueListener {
     public static final String EXTRA_SIGNUP_DISPLAY_NAME = "EXTRA_SIGNUP_DISPLAY_NAME";
@@ -20,6 +25,8 @@ public class SignupEpilogueActivity extends AppCompatActivity implements SignupE
     public static final String MAGIC_SIGNUP_PARAMETER = "new_user";
     public static final String MAGIC_SIGNUP_VALUE = "1";
 
+    @Inject SiteStore mSiteStore;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleManager.setLocale(newBase));
@@ -28,6 +35,8 @@ public class SignupEpilogueActivity extends AppCompatActivity implements SignupE
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
+
         setContentView(R.layout.signup_epilogue_activity);
 
         if (savedInstanceState == null) {
@@ -51,6 +60,10 @@ public class SignupEpilogueActivity extends AppCompatActivity implements SignupE
 
     @Override
     public void onContinue() {
+        if (!mSiteStore.hasSite()) {
+            ActivityLauncher.showPostSignupInterstitial(this);
+        }
+
         setResult(RESULT_OK);
         finish();
     }

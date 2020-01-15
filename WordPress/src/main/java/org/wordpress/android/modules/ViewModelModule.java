@@ -8,6 +8,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
+import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
+import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel;
@@ -251,6 +253,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(StorePostViewModel.class)
+    abstract ViewModel storePostViewModel(StorePostViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(EditPostPublishSettingsViewModel.class)
     abstract ViewModel editPostPublishedSettingsViewModel(EditPostPublishSettingsViewModel viewModel);
 
@@ -263,6 +270,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(WPMainActivityViewModel.class)
     abstract ViewModel wpMainActivityViewModel(WPMainActivityViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PostSignupInterstitialViewModel.class)
+    abstract ViewModel postSignupInterstitialViewModel(PostSignupInterstitialViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

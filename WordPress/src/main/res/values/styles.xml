@@ -1101,4 +1101,31 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
+    <style name="TooltipContainer">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:padding">@dimen/margin_medium</item>
+        <item name="android:clipToPadding">false</item>
+    </style>
+
+    <style name="TooltipTextView">
+        <item name="android:ellipsize">end</item>
+        <item name="android:minHeight">@dimen/snackbar_height_minimum</item>
+        <item name="android:background">@drawable/bg_snackbar</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textColor">@color/neutral_5</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:padding">@dimen/margin_extra_large</item>
+        <item name="android:elevation">@dimen/main_fab_tooltip_elevation</item>
+    </style>
+
+    <style name="TooltipArrowView">
+        <item name="android:layout_width">@dimen/main_fab_tooltip_arrow_size</item>
+        <item name="android:layout_height">@dimen/main_fab_tooltip_arrow_size</item>
+        <item name="android:elevation">@dimen/main_fab_tooltip_elevation</item>
+    </style>
 </resources>

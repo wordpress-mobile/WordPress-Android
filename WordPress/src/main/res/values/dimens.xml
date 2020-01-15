@@ -322,6 +322,11 @@
     <!-- signup -->
     <dimen name="progress_spinner_small">24dp</dimen>
 
+    <!-- post-signup interstitial -->
+    <dimen name="post_signup_interstitial_max_width">
+        @dimen/actionable_empty_view_text_maximum_width
+    </dimen>
+
     <!--plugins-->
     <dimen name="plugin_row_width">116dp</dimen>
     <dimen name="plugin_icon_size">40dp</dimen>
@@ -445,8 +450,11 @@
     <!--preferences master switch -->
     <dimen name="notifications_tab_dialog_toolbar_content_offset">24dp</dimen>
     <dimen name="notifications_settings_dialog_divider_height">1dp</dimen>
-    
+
     <!--Main bottom sheet icon size -->
     <dimen name="main_bottom_sheet_list_row_icon_size">32dp</dimen>
+    <dimen name="main_fab_tooltip_offset_end">20dp</dimen>
+    <dimen name="main_fab_tooltip_elevation">6dp</dimen>
+    <dimen name="main_fab_tooltip_arrow_size">16dp</dimen>
 
 </resources>
