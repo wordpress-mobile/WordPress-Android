@@ -124,7 +124,7 @@ In cases like these, it's important that the descriptions of the elements are ke
 
 To activate the functionality of views with TalkBack you have to navigate to it. However there are times when the contents of a view might changeand the user should be made aware of it. This is where Live Regions come in. For example say you have a `TextView` similar to the one defined below. 
 
-```
+```xml
 <TextView
    android:id="@+id/feedback_text_view"
    android:layout_width="match_parent"
@@ -136,7 +136,7 @@ To activate the functionality of views with TalkBack you have to navigate to it.
 
 You can add a live region attribute to it so that when `setText` is called TalkBack will announce it. 
 
-```
+```xml
 <TextView
    android:id="@+id/feedback_text_view"
    android:layout_width="match_parent"
@@ -158,7 +158,7 @@ The reading order of the views are determined by the order in which XML elements
 * These can be set programmatically using `setAccessibilityTraversalBefore` and `setAccessibilityTraversalAfter`
 * Note : These attributes are only available in API 22 and above. To utilize it in lower versions, `ViewCompat` can be leveraged (only enables the functionality if API 22 and above).
 
-	 ```
+	 ```java
 	ViewCompat.setAccessibilityDelegate(imageView2, object : AccessibilityDelegateCompat() {
 	    override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfoCompat?) {
 	        info?.setTraversalAfter(imageView3)
@@ -175,7 +175,7 @@ If the Android framework is announcing something that needs more customization o
 For full accessibility support within custom views, you have to hook the accessibility events within different the different actions and events that are occurring within that view. For full backward compatibility `ViewCompat.setAccessibilityDelegate()` can be utilized. 
 An example of this is the Usage hint / View action. When TalkBack is making an announcement for an actionable control it normally says "Tap to activate". There might be times when this needs to be customized and this can be done via the `AccessibilityDelegate` like so : 
 
-```
+```java
 	@Override
 	public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
 	    super.onInitializeAccessibilityNodeInfo(host, info);
@@ -206,7 +206,7 @@ In this codebase, the `WPSnackBar` component has functionality that detects if t
 * The actions that are present on these views should be available in other areas of the app, so that if the view disappears the user still has means of triggering the functionality elsewhere. 
 * If a custom view is being created, ensure that the the description and actions are announced when an event occurs, and be mindful of the associated type being utilized. You can customize the behavior of a custom view to have a type similar to that of another built in/standard view if it shares similar characteristics with the one you created. This code snippet was taken from the Aztec Editor
 
-	``` 
+	```kotlin
 	fun ToggleButton.convertToButtonAccessibilityProperties() {
 	    ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {
 	        override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfoCompat?) {
