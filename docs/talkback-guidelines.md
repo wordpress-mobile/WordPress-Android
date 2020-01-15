@@ -34,7 +34,7 @@ If you have never worked with TalkBack you can visit the TalkBack resources to g
 
 ### <a name="basics"></a>Basics
 
-The accessibility framework within Android has several ways in which you can provide cues to TalkBack so it knows how it make it's announcement when a view becomes focused. 
+The accessibility framework within Android has several ways in which you can provide cues to TalkBack, so it knows how it make it's announcement when a view becomes focused. 
 
 * `contentDescription`  - Each view has this attribute that allows you to set meaningful and descriptive labels. If this is missing TalkBack might not be able to provide much value to the user. 
 * `importantForAccessibility` - In cases where a view or layout might not have a need to be accessible this attribute can be set. It basically allows TalkBack to ignore views that have this property set to `yes` thus eliminating the need for a content description. 
@@ -112,7 +112,7 @@ The reading order of the views are determined by the order in which XML elements
 ### <a name="custom-views"></a>Custom Views & Behavior
 
 #### Announcements
-If the Android framework is announcing something that needs more customization or a state change in the app needs to be made known to the user the `announceForAccessibility` method of the `view` can be utilized to specify this message. By default the framework handles creating announcements for various events and state changes really well once the correct semantics are supplied so this should only be utilized when necessary.
+If the Android framework is announcing something that needs more customization or a state change in the app needs to be made known to the user, the `announceForAccessibility` method of the `view` can be utilized to specify this message. By default the framework handles creating announcements for various events and state changes really well once the correct semantics are supplied. so this should only be utilized when necessary.
 
 #### Actions & Events
 For full accessibility support within custom views, you have to hook the accessibility events within different the different actions and events that are occurring within that view. For full backward compatibility `ViewCompat.setAccessibilityDelegate()` can be utilized. 
@@ -130,16 +130,16 @@ So now the announcement will be "Tap to start playback".
 
 #### Inaccessible Custom Views 
 
-There might be times when a custom view such as a chart might not be accessible in no shape or form. This is how the `ExploreByTouchHelper` comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creating virtual views using the `Rect` of the actual views. Since it's simply a super `AccessibilityDelegate` these views can be customized with `contentDescriptions` and `actions` when they become focused. 
+There might be times when a custom view such as a chart might not be accessible in no shape or form. This is how the `ExploreByTouchHelper` comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creates virtual views using the `Rect` of the actual views. Since it's simply a super `AccessibilityDelegate` these views can be customized with `contentDescriptions` and `actions` when they become focused. 
 
 ### <a name="appearing-disappearing"></a>Appearing and Disappearing Elements
 
 There are several views and UI patterns that involve views that appear for a limited to show something to the user. The most common ones are `Toasts` and `Snackbars`. These components already have accessibility support built in. However, the `SnackBar` behavior has to be extended to be more accessible. 
-In this codebase, the `WPSnackBar` component has functionality that detects if the accessibility services are enabled and extends the time that the `SnackBar` is visible. This allows the user to get the chance to interact with the actions that are present on the `SnackBar` before it disappears. Another component that is worth mentioning is the play/pause controls on a media component. Normally, they disappear and the user would tap the screen for them to reappear but in the case of TalkBack usage it would be best to make them remain on the screen permanently. So the guiding principles for views of this nature are: 
+In this codebase, the `WPSnackBar` component has functionality that detects if the accessibility services are enabled and extends the time that the `SnackBar` is visible. This allows the user to interact with the actions that are present on the `SnackBar` before it disappears. Another component that is worth mentioning is the play/pause controls on a media component. Normally, they disappear and the user would tap the screen for them to reappear but in the case of TalkBack usage it would be best to make them remain on the screen permanently. The guiding principles for views of this nature are: 
 
 * Ensure that the views that are appearing for a limited time, are either extended or have an indefinite time. 
-* The actions that are present on these views should be available in other areas of the app so that if the view disappears the user still has means of triggering the functionality elsewhere. 
-* If a custom view is being created, ensure that the the description and actions are announced when an event occurs and be mindful of the associated type being utilized. You can customize the behavior of a custom view to have a type similar to that of another built in/standard view if it shares similar characteristics with the one you created. This code snippet was taken from the Aztec Editor
+* The actions that are present on these views should be available in other areas of the app, so that if the view disappears the user still has means of triggering the functionality elsewhere. 
+* If a custom view is being created, ensure that the the description and actions are announced when an event occurs, and be mindful of the associated type being utilized. You can customize the behavior of a custom view to have a type similar to that of another built in/standard view if it shares similar characteristics with the one you created. This code snippet was taken from the Aztec Editor
 
 	``` 
 	fun ToggleButton.convertToButtonAccessibilityProperties() {
