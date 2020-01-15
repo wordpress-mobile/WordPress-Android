@@ -7,6 +7,22 @@ import com.yarolegovich.wellsql.core.annotation.RawConstraints
 import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.post.PostStatus
 
+/**
+ * When we fetch the post list, we don't fetch the whole model and only keep the ids of posts in ListStore's
+ * ListItemModelTable. However, some fields such as `status` and `dateCreated` are necessary to be able to section the
+ * list properly.
+ *
+ * `PostSummaryModel` is a pattern we can utilize in situations like this. It works as a look up table where records
+ * in its table are updated each time posts are fetched. This way the information necessary for a list to work is
+ * always available, but we still don't need to fetch & update the whole model on each fetch.
+ *
+ * // TODO: We can add a link to the wiki for ListStore when that's available.
+ * See `ListStore` components for more details.
+ */
+
+/**
+ * Immutable version of PostSummaryModel that should be used by the clients.
+ */
 data class PostSummary(val remoteId: Long, val localSiteId: Int, val status: PostStatus) {
     companion object {
         @JvmStatic
