@@ -11,14 +11,14 @@ import com.github.mikephil.charting.data.BarEntry
 class BarChartAccessibilityHelper(
     private val barChart: BarChart,
     private val contentDescriptions: List<String>,
-    private val hasOverlappingEntries: Boolean
+    private val hasOverlappingEntries: Boolean,
+    private val accessibilityEvent: BarChartAccessibilityEvent
 ) : ExploreByTouchHelper(barChart) {
     interface BarChartAccessibilityEvent {
         fun onHighlight(index: Int, hasOverlappingEntries: Boolean)
     }
 
     private val dataSet = barChart.data.dataSets.first()
-    var accessibilityEvent: BarChartAccessibilityEvent? = null
 
     init {
         barChart.setOnHoverListener { _, event -> dispatchHoverEvent(event) }
@@ -50,7 +50,7 @@ class BarChartAccessibilityHelper(
     ): Boolean {
         when (action) {
             AccessibilityNodeInfoCompat.ACTION_CLICK -> {
-                accessibilityEvent?.onHighlight(virtualViewId, hasOverlappingEntries)
+                accessibilityEvent.onHighlight(virtualViewId, hasOverlappingEntries)
                 return true
             }
         }

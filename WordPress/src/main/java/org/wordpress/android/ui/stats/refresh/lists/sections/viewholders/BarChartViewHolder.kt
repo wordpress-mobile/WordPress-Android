@@ -47,13 +47,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             delay(50)
             chart.draw(item, labelStart, labelEnd)
             chart.post {
-                accessibilityHelper = BarChartAccessibilityHelper(
-                        chart,
-                        contentDescriptions = item.entryContentDescriptions,
-                        hasOverlappingEntries = item.overlappingEntries != null
-                )
-
-                accessibilityHelper.accessibilityEvent = object : BarChartAccessibilityEvent {
+                val accessibilityEvent = object : BarChartAccessibilityEvent {
                     override fun onHighlight(index: Int, hasOverlappingEntries: Boolean) {
                         chart.highlightColumn(index, hasOverlappingEntries)
                         val entry = chart.data.dataSets.first().getEntryForIndex(index)
@@ -63,6 +57,13 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                         }
                     }
                 }
+
+                accessibilityHelper = BarChartAccessibilityHelper(
+                        chart,
+                        contentDescriptions = item.entryContentDescriptions,
+                        hasOverlappingEntries = item.overlappingEntries != null,
+                        accessibilityEvent = accessibilityEvent
+                )
 
                 ViewCompat.setAccessibilityDelegate(chart, accessibilityHelper)
             }
