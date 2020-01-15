@@ -83,14 +83,6 @@ class MediaUploadCompletionProcessorTest {
     }
 
     @Test
-    fun `processVideoBlock replaces id and url in matching block`() {
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteVideoUrl)
-        processor = MediaUploadCompletionProcessor(TestContent.localMediaId, mediaFile, TestContent.siteUrl)
-        val processedBlock = processor.processVideoBlock(TestContent.oldVideoBlock)
-        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newVideoBlock)
-    }
-
-    @Test
     fun `processMediaTextBlock replaces temporary local id and url for media-text block`() {
         val processedBlock = processor.processMediaTextBlock(TestContent.oldMediaTextBlock)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newMediaTextBlock)
