@@ -58,7 +58,9 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                         chart.highlightColumn(index, hasOverlappingEntries)
                         val entry = chart.data.dataSets.first().getEntryForIndex(index)
                         val value = entry?.data as? String
-                        item.onBarSelected?.invoke(value)
+                        value?.let {
+                            item.onBarSelected?.invoke(it)
+                        }
                     }
                 }
 
