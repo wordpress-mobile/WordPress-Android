@@ -709,6 +709,25 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
+    public static void viewHelpAndSupportInNewStack(@NonNull Context context, @NonNull Origin origin,
+                                          @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("origin", origin.name());
+        AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
+
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        Intent meIntent = new Intent(context, MeActivity.class);
+        meIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        Intent helpIntent = HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(meIntent);
+        taskStackBuilder.addNextIntent(helpIntent);
+        taskStackBuilder.startActivities();
+    }
+
     public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin,
                                           @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
         Map<String, String> properties = new HashMap<>();
@@ -719,7 +738,7 @@ public class ActivityLauncher {
 
     public static void viewZendeskTickets(@NonNull Context context,
                                           @Nullable SiteModel selectedSite) {
-        viewHelpAndSupport(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
+        viewHelpAndSupportInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {

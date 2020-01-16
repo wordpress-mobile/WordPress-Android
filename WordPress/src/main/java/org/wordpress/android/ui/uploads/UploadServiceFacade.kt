@@ -20,6 +20,9 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
         context.startService(intent)
     }
 
+    fun uploadPost(context: Context, postId: Int, isFirstTimePublish: Boolean) =
+            UploadService.uploadPost(context, postId, isFirstTimePublish)
+
     fun isPostUploadingOrQueued(post: PostImmutableModel) =
             UploadService.isPostUploadingOrQueued(post)
 
@@ -38,4 +41,7 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
     fun uploadMediaFromEditor(mediaList: ArrayList<MediaModel>) {
         UploadService.uploadMediaFromEditor(appContext, mediaList)
     }
+
+    fun isPendingOrInProgressMediaUpload(mediaModel: MediaModel): Boolean =
+            UploadService.isPendingOrInProgressMediaUpload(mediaModel)
 }

@@ -80,8 +80,8 @@ class EditPostPublishSettingsFragment : Fragment() {
                 addToCalendarContainer.isEnabled = uiModel.notificationEnabled
                 if (uiModel.notificationEnabled) {
                     publishNotificationContainer.setOnClickListener {
-                        getPostRepository()?.let { postRepository ->
-                            viewModel.onShowDialog(postRepository)
+                        getPostRepository()?.getPost()?.let { postModel ->
+                            viewModel.onShowDialog(postModel)
                         }
                     }
                     addToCalendarContainer.setOnClickListener {

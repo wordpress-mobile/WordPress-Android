@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
@@ -78,7 +79,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
     private void buildNotificationForPostId(int postId, Context context) {
         if (postId != 0) {
             PostModel post = mPostStore.getPostByLocalPostId(postId);
-            if (post != null) {
+            if (post != null && PostStatus.DRAFT.toString().equals(post.getStatus())) {
                 long now = System.currentTimeMillis();
                 long dateLastUpdated = DateTimeUtils.timestampFromIso8601(post.getDateLocallyChanged());
                 long daysInDraft = (now - dateLastUpdated) / ONE_DAY;

@@ -6,7 +6,6 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -21,12 +20,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemReselectedListener
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType.ME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NEW_POST
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.notifications.NotificationsListFragment
@@ -80,36 +76,21 @@ class WPMainNavigationView @JvmOverloads constructor(
         val inflater = LayoutInflater.from(context)
         for (i in 0 until menu.size()) {
             val itemView = menuView.getChildAt(i) as BottomNavigationItemView
-            val customView: View
-            // remove the background ripple and use a different layout for the post button
-            if (i == getPosition(NEW_POST)) {
-                itemView.background = null
-                customView = inflater.inflate(R.layout.navbar_post_item, menuView, false)
-                customView.id = R.id.bottom_nav_new_post_button // identify view for QuickStart
-            } else {
-                customView = inflater.inflate(
-                        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE)
-                            R.layout.navbar_item
-                        else
-                            R.layout.navbar_item_old,
-                        menuView,
-                        false
-                )
+            val customView: View = inflater.inflate(R.layout.navbar_item, menuView, false)
 
-                val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
-                val imgIcon = customView.findViewById<ImageView>(R.id.nav_icon)
-                txtLabel.text = getTitleForPosition(i)
-                customView.contentDescription = getContentDescriptionForPosition(i)
-                imgIcon.setImageResource(getDrawableResForPosition(i))
-                if (i == getPosition(READER)) {
-                    customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
-                }
+            val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
+            val imgIcon = customView.findViewById<ImageView>(R.id.nav_icon)
+            txtLabel.text = getTitleForPosition(i)
+            customView.contentDescription = getContentDescriptionForPosition(i)
+            imgIcon.setImageResource(getDrawableResForPosition(i))
+            if (i == getPosition(READER)) {
+                customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
             }
 
             itemView.addView(customView)
         }
 
-        currentPosition = AppPrefs.getMainPageIndex()
+        currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
     }
 
     private fun disableShiftMode() {
@@ -123,42 +104,15 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val position = getPositionForItemId(item.itemId)
-        return if (position == getPosition(NEW_POST)) {
-            handlePostButtonClicked()
-            false
-        } else {
-            currentPosition = position
-            pageListener.onPageChanged(position)
-            true
-        }
-    }
-
-    private fun handlePostButtonClicked() {
-        val postView = getItemView(getPosition(NEW_POST))
-
-        // animate the button icon before telling the listener the post button was clicked - this way
-        // the user sees the animation before the editor appears
-        AniUtils.startAnimation(postView, R.anim.navbar_button_scale, object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation) {
-                // noop
-            }
-
-            override fun onAnimationEnd(animation: Animation) {
-                pageListener.onNewPostButtonClicked()
-            }
-
-            override fun onAnimationRepeat(animation: Animation) {
-                // noop
-            }
-        })
+        currentPosition = position
+        pageListener.onPageChanged(position)
+        return true
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
         // scroll the active fragment's contents to the top when user re-taps the current item
         val position = getPositionForItemId(item.itemId)
-        if (position != getPosition(NEW_POST)) {
-            (navAdapter.getFragment(position) as? OnScrollToTopListener)?.onScrollToTop()
-        }
+        (navAdapter.getFragment(position) as? OnScrollToTopListener)?.onScrollToTop()
     }
 
     private fun getPositionForItemId(@IdRes itemId: Int): Int {
@@ -169,8 +123,6 @@ class WPMainNavigationView @JvmOverloads constructor(
         return when (itemId) {
             R.id.nav_sites -> MY_SITE
             R.id.nav_reader -> READER
-            R.id.nav_write -> NEW_POST
-            R.id.nav_me -> ME
             else -> NOTIFS
         }
     }
@@ -180,34 +132,20 @@ class WPMainNavigationView @JvmOverloads constructor(
         return when (getPageTypeOrNull(position)) {
             MY_SITE -> R.id.nav_sites
             READER -> R.id.nav_reader
-            NEW_POST -> R.id.nav_write
-            ME -> R.id.nav_me
             else -> R.id.nav_notifications
         }
     }
 
     private fun updateCurrentPosition(position: Int) {
-        // new post page can't be selected, only tapped
-        if (position == getPosition(NEW_POST)) {
-            return
-        }
-
         // remove the title and selected state from the previously selected item
         if (prevPosition > -1) {
-            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                setTitleViewSelected(prevPosition, false)
-            } else {
-                showTitleForPosition(prevPosition, false)
-            }
+            setTitleViewSelected(prevPosition, false)
             setImageViewSelected(prevPosition, false)
         }
 
         // set the title and selected state from the newly selected item
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            setTitleViewSelected(position, true)
-        } else {
-            showTitleForPosition(position, true)
-        }
+        setTitleViewSelected(position, true)
+
         setImageViewSelected(position, true)
 
         AppPrefs.setMainPageIndex(position)
@@ -248,8 +186,6 @@ class WPMainNavigationView @JvmOverloads constructor(
         return when (getPageTypeOrNull(position)) {
             MY_SITE -> R.drawable.ic_my_sites_white_24dp
             READER -> R.drawable.ic_reader_white_24dp
-            NEW_POST -> R.drawable.ic_create_white_24dp
-            ME -> R.drawable.ic_user_circle_white_24dp
             else -> R.drawable.ic_bell_white_24dp
         }
     }
@@ -258,8 +194,6 @@ class WPMainNavigationView @JvmOverloads constructor(
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
             MY_SITE -> R.string.my_site_section_screen_title
             READER -> R.string.reader_screen_title
-            NEW_POST -> R.string.write_post
-            ME -> R.string.me_section_screen_title
             else -> R.string.notifications_screen_title
         }
         return context.getString(idRes)
@@ -273,8 +207,6 @@ class WPMainNavigationView @JvmOverloads constructor(
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
             MY_SITE -> R.string.tabbar_accessibility_label_my_site
             READER -> R.string.tabbar_accessibility_label_reader
-            NEW_POST -> R.string.tabbar_accessibility_label_write
-            ME -> R.string.tabbar_accessibility_label_me
             else -> R.string.tabbar_accessibility_label_notifications
         }
         return context.getString(idRes)
@@ -288,26 +220,17 @@ class WPMainNavigationView @JvmOverloads constructor(
         return when (getPageTypeOrNull(position)) {
             MY_SITE -> TAG_MY_SITE
             READER -> TAG_READER
-            ME -> TAG_ME
             else -> TAG_NOTIFS
         }
     }
 
     private fun getTitleViewForPosition(position: Int): TextView? {
-        if (position == getPosition(NEW_POST)) {
-            return null
-        }
         return getItemView(position)?.findViewById(R.id.nav_label)
     }
 
     private fun getImageViewForPosition(position: Int): ImageView? {
         val itemView = getItemView(position)
         return itemView?.findViewById(R.id.nav_icon)
-    }
-
-    private fun showTitleForPosition(position: Int, show: Boolean) {
-        val txtTitle = getTitleViewForPosition(position)
-        txtTitle?.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     fun getFragment(pageType: PageType) = navAdapter.getFragment(getPosition(pageType))
@@ -358,7 +281,6 @@ class WPMainNavigationView @JvmOverloads constructor(
             val fragment: Fragment = when (pages().getOrNull(position)) {
                 MY_SITE -> MySiteFragment.newInstance()
                 READER -> ReaderPostListFragment.newInstance(true)
-                ME -> MeFragment.newInstance()
                 NOTIFS -> NotificationsListFragment.newInstance()
                 else -> return null
             }
@@ -383,29 +305,15 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val oldPages = listOf(MY_SITE, READER, NEW_POST, ME, NOTIFS)
         private val pages = listOf(MY_SITE, READER, NOTIFS)
 
         private const val TAG_MY_SITE = "tag-mysite"
         private const val TAG_READER = "tag-reader"
-        private const val TAG_ME = "tag-me"
         private const val TAG_NOTIFS = "tag-notifs"
 
-        private fun numPages(): Int {
-            return if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                pages.size
-            } else {
-                oldPages.size
-            }
-        }
+        private fun numPages(): Int = pages.size
 
-        private fun pages(): List<PageType> {
-            return if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                pages
-            } else {
-                oldPages
-            }
-        }
+        private fun pages(): List<PageType> = pages
 
         private fun getPageTypeOrNull(position: Int): PageType? {
             return pages().getOrNull(position)
@@ -422,6 +330,6 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     enum class PageType {
-        MY_SITE, READER, NEW_POST, ME, NOTIFS
+        MY_SITE, READER, NOTIFS
     }
 }
