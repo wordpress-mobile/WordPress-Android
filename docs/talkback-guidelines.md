@@ -214,7 +214,7 @@ So now the announcement will be "Tap to start playback".
 
 #### Custom Actions
 
-If you have a view that contains several actions and it might be difficult for the user to activate them at all times you can utilize a custom action dialog to show the options available in a more accessible & friendly format. This dialog won't replace the existing actions as it's more for convenience to the user navigating the app via TalkBack.
+If you have a view that contains several actions then it might be difficult for the user to activate them without any confusion. You can utilize a custom action dialog to show the options available in a more accessible & friendly format. This dialog won't replace the existing actions, as it's more for convenience to the user navigating the app via TalkBack.
 
 To make the example a lot clearer, we will be focusing on optimizing the actions available on a post within the `Post List`. 
 
@@ -233,6 +233,8 @@ To make the example a lot clearer, we will be focusing on optimizing the actions
 * Since there are a lot of tutorials on creating dialogs, we will just be showing an image of how the post dialog could look. 
 
 	<img src="images/accessibility-guidelines/post_actions.png" width="300">
+	
+	Even though it's not the most visually appealing dialog, it doesn't need to be since it's for TalkBack. Navigating these actions are as easy as swiping left or right and making a selection. 
 	
 * Once the dialog has been implemented, you need to add custom accessibility actions. You can either override two methods on the `View` or set your own `AccessibilityDelegate`. Below are the two methods that are important for providing the accessibility framework with details about the actions and telling it what to do when an action is triggered using TalkBack. 
 	(N.B The code below is for example purposes and doesn't reflect methods or behavior in the actual codebase)
@@ -257,8 +259,8 @@ To make the example a lot clearer, we will be focusing on optimizing the actions
                 return super.performAccessibilityAction(host, action, args);
         }
      }
-}
-```
+	}
+	```
 	
 #### Inaccessible Custom Views 
 
