@@ -11,9 +11,9 @@ class RemovedInsightViewHolder(
     val parent: ViewGroup,
     private val onButtonClicked: (InsightModel) -> Unit
 ) : InsightsManagementViewHolder(parent) {
-    private val title: TextView = itemView.findViewById(R.id.itemTitle)
-    private val managementButton: ImageButton = itemView.findViewById(R.id.insightsManagementItemButton)
-    private val dragAndDropButton: View = itemView.findViewById(R.id.dragAndDropItemButton)
+    private val title: TextView = itemView.findViewById(R.id.item_title)
+    private val managementButton: ImageButton = itemView.findViewById(R.id.insights_management_item_button)
+    private val dragAndDropButton: View = itemView.findViewById(R.id.drag_and_drop_item_button)
     private val divider: View = itemView.findViewById(R.id.divider)
 
     override fun bind(insight: InsightModel, isLast: Boolean) {
