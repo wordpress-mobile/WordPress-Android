@@ -100,7 +100,7 @@ class PostListItemDataSourceTest {
         excludeListTypes: List<PostListType> = emptyList()
     ) {
         val postSummaries = createPostSummaries(excludeListTypes)
-        val posts = createPosts(excludeListTypes)
+        val posts = createLocalPosts(excludeListTypes)
         setupPostStoreMocks(postSummaries, posts)
 
         val identifiers = dataSource.getItemIdentifiers(
@@ -138,9 +138,10 @@ class PostListItemDataSourceTest {
         assert(mutableSectionHeaders.isEmpty())
     }
 
-    private fun createPosts(excludeListTypes: List<PostListType> = emptyList()): List<PostModel> =
-            createPostStatuses(excludeListTypes).map { status ->
+    private fun createLocalPosts(excludeListTypes: List<PostListType> = emptyList()): List<PostModel> =
+            createPostStatuses(excludeListTypes).mapIndexed { i, status ->
                 PostModel().also {
+                    it.setId(i)
                     it.setStatus(status.toString())
                 }
             }
