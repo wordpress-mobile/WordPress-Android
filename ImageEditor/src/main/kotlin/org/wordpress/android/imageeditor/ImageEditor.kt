@@ -1,9 +1,9 @@
 
-package com.automattic.android.imageeditor
+package org.wordpress.android.imageeditor
 
 import android.content.Context
 import android.content.Intent
-import com.automattic.android.imageeditor.fragments.MainImageFragment
+import org.wordpress.android.imageeditor.fragments.MainImageFragment
 
 class ImageEditor {
     var imageUrls: ArrayList<String> = ArrayList()

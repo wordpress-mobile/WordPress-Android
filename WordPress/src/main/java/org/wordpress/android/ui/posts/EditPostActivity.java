@@ -95,7 +95,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
-import com.automattic.android.imageeditor.ImageEditor;
+import org.wordpress.android.imageeditor.ImageEditor;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;

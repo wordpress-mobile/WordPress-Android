@@ -1,4 +1,4 @@
-package com.automattic.android.imageeditor.fragments
+package org.wordpress.android.imageeditor.fragments
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 
 import androidx.fragment.app.Fragment
-import com.automattic.android.imageeditor.R
+import org.wordpress.android.imageeditor.R
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource

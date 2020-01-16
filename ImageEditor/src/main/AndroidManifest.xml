@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.automattic.android.imageeditor">
-<application>
-
-    <activity
-        android:name=".EditImageActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
-    </activity>
-</application>
+          package="org.wordpress.android.imageeditor">
+    <application>
+        <activity
+            android:name=".EditImageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+        </activity>
+    </application>
 </manifest>

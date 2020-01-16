@@ -1,4 +1,4 @@
-package com.automattic.android.imageeditor
+package org.wordpress.android.imageeditor
 
 import android.content.Context
 import android.content.Intent
@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentTransaction
 
-import com.automattic.android.imageeditor.fragments.MainImageFragment
+import org.wordpress.android.imageeditor.fragments.MainImageFragment
 
 class EditImageActivity : AppCompatActivity() {
     // initial media item to show, based either on ID or URI

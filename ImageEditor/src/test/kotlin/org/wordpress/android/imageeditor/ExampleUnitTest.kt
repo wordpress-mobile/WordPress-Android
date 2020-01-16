@@ -1,4 +1,4 @@
-package com.automattic.android.imageeditor
+package org.wordpress.android.imageeditor
 
 import org.junit.Test
 
