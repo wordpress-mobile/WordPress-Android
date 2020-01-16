@@ -238,7 +238,7 @@ To make the example a lot clearer, we will be focusing on optimizing the actions
 	
 * Once the dialog has been implemented, you need to add custom accessibility actions. You can either override two methods on the `View` or set your own `AccessibilityDelegate`. Below are the two methods that are important for providing the accessibility framework with details about the actions and telling it what to do when an action is triggered using TalkBack. 
 	(N.B The code below is for example purposes and doesn't reflect methods or behavior in the actual codebase)
-* 
+ 
 	```java
 	 @Override
     public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
@@ -323,6 +323,23 @@ Get feedback from real people who interact with your app.
 Ask other coworkers to simulate the behavior that the impaired so they can test from the viewpoint of the target user while being able to prove clear insights based on their engineering background.
 Reaching out to local communities that have people with disabilities who would be willing to help with testing. 
 Contracting a user testing service that has testers who are disabled and are able to provide deep insights based on their expertise in providing this type of service. 
+
+
+## <a name="further-reading"></a>Further Reading
+
+* Google Links 
+	* [Android Accessibility Documentation](https://developer.android.com/guide/topics/ui/accessibility/)
+	* [Google Accessibility Code Lab](https://codelabs.developers.google.com/codelabs/basic-android-accessibility/)
+* Talks
+	*	 [Making Android Accessibility Easy (Android Dev Summit '18) - Youtube](https://www.youtube.com/watch?v=R2NftUX7rDM)
+	* [What’s new in Android accessibility (Google I/O '18) - YouTube](https://www.youtube.com/watch?v=Lcoc4aCLfqI)
+	* [What's New in Android Accessibility (Google I/O '17) - YouTube](https://www.youtube.com/watch?v=h5rRNXzy1xo)
+	* [Demystifying Android Accessibility Development (Google I/O'19) - YouTube](https://www.youtube.com/watch?v=bTodlNvQGfY)
+	* [Droidcon NYC 2015 - Android Accessibility 101 - YouTube](https://www.youtube.com/watch?v=UOr3mgqJU0A)
+* Others
+	* [Buffer - Announce Actions](https://overflow.buffer.com/2018/09/05/announce-actions/)
+	* [Paciello Group - Mobile Accessibility Guidelines](https://developer.paciellogroup.com/blog/2017/11/mobile-accessibility-testing-guide-for-android-and-ios-free/)
+	* [Orange -  Accessibility Guidelines](https://a11y-guidelines.orange.com/mobile_EN/dev-android.html)
 
 
 
