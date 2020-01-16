@@ -7,16 +7,11 @@ import java.util.regex.Matcher;
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK;
 
 public class MediaUploadCompletionProcessor {
-    private final ImageBlockProcessor mImageBlockProcessor;
-    private final VideoBlockProcessor mVideoBlockProcessor;
-    private final MediaTextBlockProcessor mMediaTextBlockProcessor;
-    private final GalleryBlockProcessor mGalleryBlockProcessor;
+    private final BlockProcessorFactory mBlockProcessorFactory;
 
     public MediaUploadCompletionProcessor(String localId, MediaFile mediaFile, String siteUrl) {
-        mImageBlockProcessor = new ImageBlockProcessor(localId, mediaFile);
-        mVideoBlockProcessor = new VideoBlockProcessor(localId, mediaFile);
-        mMediaTextBlockProcessor = new MediaTextBlockProcessor(localId, mediaFile);
-        mGalleryBlockProcessor = new GalleryBlockProcessor(localId, mediaFile, siteUrl);
+        mBlockProcessorFactory = new BlockProcessorFactory()
+                .init(localId, mediaFile, siteUrl);
     }
 
     /**
@@ -51,18 +46,14 @@ public class MediaUploadCompletionProcessor {
      * @return A string containing content with ids and urls replaced
      */
     private String processBlock(String block) {
-        switch (MediaBlockType.detectBlockType(block)) {
-            case IMAGE:
-                return mImageBlockProcessor.processBlock(block);
-            case VIDEO:
-                return mVideoBlockProcessor.processBlock(block);
-            case MEDIA_TEXT:
-                return mMediaTextBlockProcessor.processBlock(block);
-            case GALLERY:
-                return mGalleryBlockProcessor.processBlock(block);
-            default:
-                return block;
+        final MediaBlockType blockType = MediaBlockType.detectBlockType(block);
+        final BlockProcessor blockProcessor = mBlockProcessorFactory.getProcessorForMediaBlockType(blockType);
+
+        if (blockProcessor != null) {
+            return blockProcessor.processBlock(block);
         }
+
+        return block;
     }
 }
 
