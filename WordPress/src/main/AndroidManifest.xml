@@ -538,12 +538,12 @@
         <!--Plugins-->
         <activity
             android:name=".ui.plugins.PluginDetailActivity"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
         <activity
             android:name=".ui.plugins.PluginBrowserActivity"
             android:label="@string/plugins"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <!--Activity log-->
         <activity
