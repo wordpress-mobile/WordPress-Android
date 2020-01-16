@@ -51,14 +51,14 @@ sealed class SubfilterListItem(val type: ItemType) {
 
     data class SiteAll(
         override var isSelected: Boolean = false,
-        override val onClickAction: ((filter: SubfilterListItem) -> Unit)
+        override val onClickAction: (filter: SubfilterListItem) -> Unit
     ) : SubfilterListItem(SITE_ALL) {
         override val label: UiString = UiStringRes(R.string.reader_filter_all_sites)
     }
 
     data class Site(
         override var isSelected: Boolean = false,
-        override val onClickAction: ((filter: SubfilterListItem) -> Unit),
+        override val onClickAction: (filter: SubfilterListItem) -> Unit,
         val blog: ReaderBlog
     ) : SubfilterListItem(SITE) {
         override val label: UiString = if (blog.name.isNotEmpty()) {
@@ -70,7 +70,7 @@ sealed class SubfilterListItem(val type: ItemType) {
 
     data class Tag(
         override var isSelected: Boolean = false,
-        override val onClickAction: ((filter: SubfilterListItem) -> Unit),
+        override val onClickAction: (filter: SubfilterListItem) -> Unit,
         val tag: ReaderTag
     ) : SubfilterListItem(TAG) {
         override val label: UiString = UiStringText(tag.tagTitle)
