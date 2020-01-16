@@ -13,10 +13,20 @@ import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.Med
 class BlockProcessorFactory {
     private final Map<MediaBlockType, BlockProcessor> mMediaBlockTypeBlockProcessorMap;
 
+    /**
+     * This factory initializes block processors for all media block types and provides a method to retrieve a block
+     * processor instance for a given block type.
+     */
     BlockProcessorFactory() {
         mMediaBlockTypeBlockProcessorMap = new HashMap<>();
     }
 
+    /**
+     * @param localId The local media id that needs replacement
+     * @param mediaFile The mediaFile containing the remote id and remote url
+     * @param siteUrl The site url - used to generate the attachmentPage url
+     * @return The factory instance - useful for chaining this method upon instantiation
+     */
     BlockProcessorFactory init(String localId, MediaFile mediaFile, String siteUrl) {
         mMediaBlockTypeBlockProcessorMap.put(IMAGE, new ImageBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(VIDEO, new VideoBlockProcessor(localId, mediaFile));
@@ -26,6 +36,12 @@ class BlockProcessorFactory {
         return this;
     }
 
+    /**
+     * Retrieves the block processor instance for the given media block type.
+     *
+     * @param blockType The media block type for which to provide a {@link BlockProcessor}
+     * @return The {@link BlockProcessor} for the given media block type
+     */
     BlockProcessor getProcessorForMediaBlockType(MediaBlockType blockType) {
         return mMediaBlockTypeBlockProcessorMap.get(blockType);
     }

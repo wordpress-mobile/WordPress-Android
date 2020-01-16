@@ -4,6 +4,9 @@ import org.jsoup.nodes.Document.OutputSettings;
 import org.wordpress.android.editor.Utils;
 import org.wordpress.android.util.helpers.MediaFile;
 
+/**
+ * Abstract class to be extended for each enumerated {@link MediaBlockType}.
+ */
 abstract class BlockProcessor {
     /**
      * HTML output used by the parser
@@ -19,6 +22,10 @@ abstract class BlockProcessor {
     String mRemoteId;
     String mRemoteUrl;
 
+    /**
+     * @param localId The local media id that needs replacement
+     * @param mediaFile The mediaFile containing the remote id and remote url
+     */
     BlockProcessor(String localId, MediaFile mediaFile) {
         mLocalId = localId;
         mRemoteId = mediaFile.getMediaId();
@@ -26,7 +33,8 @@ abstract class BlockProcessor {
     }
 
     /**
-     * Processes a block returning a raw content replacement string
+     * Processes a block returning a raw content replacement string. If a match is not found for the block content, this
+     * method should return the original block contents unchanged.
      *
      * @param block The raw block contents
      * @return A string containing content with ids and urls replaced
