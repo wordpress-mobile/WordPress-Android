@@ -1,53 +1,23 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Document.OutputSettings;
-import org.jsoup.nodes.Element;
-import org.wordpress.android.editor.Utils;
 import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.Helpers;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK;
-import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_GALLERY_LINK_TO;
 
 public class MediaUploadCompletionProcessor {
-    private String mLocalId;
-    private String mRemoteId;
-    private String mRemoteUrl;
-    private String mAttachmentPageUrl;
-
-    /**
-     * HTML output used by the parser
-     */
-    @SuppressWarnings("checkstyle:LineLength") private static final OutputSettings OUTPUT_SETTINGS = new OutputSettings()
-            .outline(false)
-//          .syntax(Syntax.xml)
-//            Do we want xml or html here (e.g. self closing tags, boolean attributes)?
-//            https://stackoverflow.com/questions/26584974/keeping-html-boolean-attributes-in-their-original-form-when-parsing-with-jsoup
-            .prettyPrint(false);
-
     private final ImageBlockProcessor mImageBlockProcessor;
     private final VideoBlockProcessor mVideoBlockProcessor;
     private final MediaTextBlockProcessor mMediaTextBlockProcessor;
     private final GalleryBlockProcessor mGalleryBlockProcessor;
 
     public MediaUploadCompletionProcessor(String localId, MediaFile mediaFile, String siteUrl) {
-        mLocalId = localId;
-        mRemoteId = mediaFile.getMediaId();
-        mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
-
         mImageBlockProcessor = new ImageBlockProcessor(localId, mediaFile);
-
         mVideoBlockProcessor = new VideoBlockProcessor(localId, mediaFile);
-
         mMediaTextBlockProcessor = new MediaTextBlockProcessor(localId, mediaFile);
-
         mGalleryBlockProcessor = new GalleryBlockProcessor(localId, mediaFile, siteUrl);
-        mAttachmentPageUrl = mediaFile.getAttachmentPageURL(siteUrl);
     }
 
     /**
@@ -95,6 +65,5 @@ public class MediaUploadCompletionProcessor {
                 return block;
         }
     }
-
 }
 
