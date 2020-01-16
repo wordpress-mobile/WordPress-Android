@@ -9,6 +9,7 @@
 	- [Grouping Content](#grouping-content)
 	- [Live Regions](#live-regions)
 	- [Spoken Order](#spoken-order)
+	- [Horizontal Scrolling](#horizontal-scrolling)
 	- [Appearing and Disappearing Elements](#appearing-disappearing)
 	- [Custom Views](#custom-views)
 - [Auditing](#auditing)
@@ -177,6 +178,8 @@ You can add a live region attribute to it so that when `setText` is called TalkB
 
 The live region attribute is set to `polite` so that means it won't interrupt TalkBack if it is currently announcing something but if it is important that it gets announced it can be set to `assertive`. This should be used sparingly.
 
+In addition to live region, another consideration, is to ensure that views that are being dynamically altered are having their content descriptions updated. A good example is a single button, that represents a "Play/Stop" behavior. Imagine the content description for this control in the "Play" state being "Allows you to start the Media Player" when the button actually says "Stop". 
+
 ### <a name="spoken-order"></a>Traversal/Spoken Order
 
 The reading order of the views are determined by the order in which XML elements are declared. There might be times when this order doesn't translate to a natural-sounding utterance by TalkBack so the order can be modified using these two attributes. 
@@ -191,6 +194,10 @@ The reading order of the views are determined by the order in which XML elements
 	    override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfoCompat?) {
 	        info?.setTraversalAfter(imageView3)
 	        super.onInitializeAccessibilityNodeInfo(host, info) }})
+
+### <a name="horizontal-scrolling"></a>Horizontal Scrolling
+
+Horizontal scrolling views are common UI components in every developer's arsenal. In Android, we primarily utilize the `ViewPager` to create this experience. These views have to be optimized for TalkBack, since a visually impaired might find it difficult to know that it needs to be scrolled horizontally. To remedy this situation, visual indicators can be added so that TalkBack can scroll horizontally if necessary. This could be as simple as putting a Previous and Next button within the view or modifying the TalkBack announcement of the element, so that users know they can scroll for more content.
 
 
 ### <a name="custom-views"></a>Custom Views & Behavior
