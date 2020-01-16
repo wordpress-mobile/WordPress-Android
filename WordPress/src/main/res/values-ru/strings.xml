@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-03 20:11:00+0000
+Translation-Revision-Date: 2019-12-17 10:12:52+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
@@ -108,7 +108,7 @@ Language: ru
     <string name="gutenberg_native_add_link_text">Добавить текст ссылки</string>
     <string name="gutenberg_native_add_image_or_video">ДОБАВИТЬ ИЗОБРАЖЕНИЕ ИЛИ ВИДЕО</string>
     <string name="gutenberg_native_add_image">ДОБАВИТЬ ИЗОБРАЖЕНИЕ</string>
-    <string name="gutenberg_native_add_block_here">ДОБАВЬТЕ БЛОК ЗДЕСЬ</string>
+    <string name="gutenberg_native_add_block_here">ДОБАВИТЬ БЛОК ЗДЕСЬ</string>
     <string name="gutenberg_native_add_annotation">Добавить аннотацию</string>
     <string name="gutenberg_native_add_a_description">Добавить описание</string>
     <string name="reader_empty_saved_posts_content_description">Нажмите на кнопку добавления в сохраненные записи для сохранения записи в ваш список.</string>

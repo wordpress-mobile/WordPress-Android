@@ -342,6 +342,10 @@ public class PostUtils {
         return postStatus == PostStatus.DRAFT;
     }
 
+    static boolean shouldPublishImmediatelyOptionBeAvailable(String postStatus) {
+        return postStatus.equals(PostStatus.DRAFT.toString());
+    }
+
     public static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
         if (shouldPublishImmediately(postModel)) {
             postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
@@ -546,7 +550,7 @@ public class PostUtils {
 
     public static void preparePostForPublish(PostModel post, SiteModel site) {
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
-        post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        post.setDateLocallyChanged(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
 
         // We need to update the post status and mark the post as locally changed. If we didn't mark it as locally
         // changed the UploadStarter wouldn't upload the post if the only change the user did was clicking on Publish

@@ -9,14 +9,6 @@
         android:contentDescription="@string/tabbar_accessibility_label_reader"
         android:title=""/>
     <item
-        android:id="@+id/nav_write"
-        android:contentDescription="@string/tabbar_accessibility_label_write"
-        android:title=""/>
-    <item
-        android:id="@+id/nav_me"
-        android:contentDescription="@string/tabbar_accessibility_label_me"
-        android:title=""/>
-    <item
         android:id="@+id/nav_notifications"
         android:contentDescription="@string/tabbar_accessibility_label_notifications"
         android:title=""/>

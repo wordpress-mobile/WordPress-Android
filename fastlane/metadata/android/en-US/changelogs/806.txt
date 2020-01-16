@@ -1,5 +1,0 @@
-13.8:
-* Block editor improvements: Added Spacer block for creating white space between content.
-* Modified Blog Post Search to include posts under all categories.
-* Lots of under-the-hood improvements across the entire app –26 unique crash and bug fixes in all.
-

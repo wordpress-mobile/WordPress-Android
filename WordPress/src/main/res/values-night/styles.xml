@@ -20,7 +20,7 @@
         <item name="wpColorText">@android:color/white</item>
         <item name="wpColorTextSubtle">@color/neutral_50</item>
         <item name="wpColorError">@color/error_50</item>
-        <item name="wpColorSuccess">@color/green_50</item>
+        <item name="wpColorSuccess">@color/green_30</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
@@ -28,10 +28,10 @@
 
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
-        <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Dark</item>
+        <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
 
         <item name="actionOverflowMenuStyle">
-            @style/Widget.MaterialComponents.PopupMenu.Overflow.Dark
+            @style/Widget.MaterialComponents.PopupMenu.Overflow
         </item>
 
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
@@ -91,9 +91,9 @@
         <item name="tint">?attr/colorOnSurface</item>
     </style>
 
-       <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">?attr/colorSecondaryVariant</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
+    <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/secondary_variant_disabled_selector</item>
+        <item name="android:textColor">@color/on_surface_disabled_selector</item>
     </style>
 
 </resources>
