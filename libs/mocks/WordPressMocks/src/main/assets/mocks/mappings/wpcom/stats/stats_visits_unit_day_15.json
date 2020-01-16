@@ -7,7 +7,7 @@
                 "equalTo": "day"
             },
             "quantity": {
-                "equalTo": "15"
+                "matches": "[0-9]+"
             },
             "date": {
                 "matches": "(.*)"
@@ -20,7 +20,7 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{fnow format='yyyy-MM-dd'}}",
+            "date": "{{now format='yyyy-MM-dd'}}",
             "unit": "day",
             "fields": [
                 "period",
@@ -33,7 +33,7 @@
             ],
             "data": [
                 [
-                    "{{fnow offset='-14 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-14 days' format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,
@@ -42,7 +42,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-13 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-13 days' format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,
@@ -51,7 +51,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-12 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-12 days' format='yyyy-MM-dd'}}",
                     2,
                     2,
                     0,
@@ -60,7 +60,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-11 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-11 days' format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,
@@ -69,7 +69,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-10 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-10 days' format='yyyy-MM-dd'}}",
                     3,
                     2,
                     0,
@@ -78,7 +78,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-9 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-9 days' format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,
@@ -87,7 +87,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-8 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-8 days' format='yyyy-MM-dd'}}",
                     6,
                     3,
                     0,
@@ -96,7 +96,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-7 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-7 days' format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,
@@ -105,7 +105,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-6 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-6 days' format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,
@@ -114,7 +114,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-5 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-5 days' format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,
@@ -123,7 +123,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-4 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-4 days' format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,
@@ -132,7 +132,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-3 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-3 days' format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,
@@ -141,7 +141,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-2 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-2 days' format='yyyy-MM-dd'}}",
                     1,
                     1,
                     0,
@@ -150,7 +150,7 @@
                     0
                 ],
                 [
-                    "{{fnow offset='-1 days' format='yyyy-MM-dd'}}",
+                    "{{now offset='-1 days' format='yyyy-MM-dd'}}",
                     1,
                     1,
                     0,
@@ -159,7 +159,7 @@
                     0
                 ],
                 [
-                    "{{fnow format='yyyy-MM-dd'}}",
+                    "{{now format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,

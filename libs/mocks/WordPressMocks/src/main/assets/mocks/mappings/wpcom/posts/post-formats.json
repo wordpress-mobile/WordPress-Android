@@ -1,12 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/106707880/post-formats/",
-        "queryParameters": {
-            "locale": {
-                "matches": "(.*)"
-            }
-        }
+        "urlPattern": "/rest/v1.1/sites/[0-9]+/post-formats(.*)"
     },
     "response": {
         "status": 200,

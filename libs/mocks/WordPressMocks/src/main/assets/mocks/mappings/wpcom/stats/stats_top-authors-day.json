@@ -4,10 +4,10 @@
         "urlPath": "/rest/v1.1/sites/106707880/stats/top-authors/",
         "queryParameters": {
             "period": {
-                "equalTo": "month"
+                "equalTo": "day"
             },
             "max": {
-                "equalTo": "7"
+                "matches": "[0-9]+"
             },
             "date": {
                 "matches": "(.*)"

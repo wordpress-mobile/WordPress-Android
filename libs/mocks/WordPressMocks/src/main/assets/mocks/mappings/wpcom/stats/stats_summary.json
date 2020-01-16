@@ -6,7 +6,7 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{fnow format='yyyy-MM-dd'}}",
+            "date": "{{now format='yyyy-MM-dd'}}",
             "period": "day",
             "views": 0,
             "visitors": 0,

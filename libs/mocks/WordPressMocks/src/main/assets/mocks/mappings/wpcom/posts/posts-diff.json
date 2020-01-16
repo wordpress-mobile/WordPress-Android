@@ -3,14 +3,20 @@
         "method": "GET",
         "urlPath": "/rest/v1.1/sites/106707880/posts/",
         "queryParameters": {
-            "context": {
-                "equalTo": "edit"
+            "after": {
+                "matches": "(.*)"
+            },
+            "before": {
+                "matches": "(.*)"
             },
             "fields": {
-                "equalTo": "ID,modified,status,meta,date"
+                "equalTo": "ID, title, URL"
             },
-            "status": {
-                "equalTo": "future"
+             "number": {
+                "matches": "(.*)"
+            },
+            "locale": {
+                "matches": "(.*)"
             }
         }
     },
@@ -23,14 +29,8 @@
                 "links": {
                     "counts": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/post-counts/post"
                 },
-                "next_page": "value=&id=29",
                 "wpcom": true
             }
-        },
-        "headers": {
-            "Content-Type": "application/json",
-            "Connection": "keep-alive",
-            "Cache-Control": "no-cache, must-revalidate, max-age=0"
         }
     }
 }

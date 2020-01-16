@@ -1,12 +1,20 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/rest/v1.1/sites/.*/stats/tags/"
+        "urlPath": "/rest/v1.1/sites/106707880/stats/tags/",
+         "queryParameters": {
+            "locale": {
+                "matches": "(.*)"
+            },
+            "max": {
+                "matches": "(.*)"
+            }
+        }
     },
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{fnow format='yyyy-MM-dd'}}",
+            "date": "{{now format='yyyy-MM-dd'}}",
             "tags": []
         },
         "headers": {

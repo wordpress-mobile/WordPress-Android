@@ -6,9 +6,9 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{fnow format='yyyy-MM-dd'}}",
+            "date": "{{now format='yyyy-MM-dd'}}",
             "days": {
-                "{{fnow format='yyyy-MM-dd'}}": {
+                "{{now format='yyyy-MM-dd'}}": {
                     "clicks": [],
                     "other_clicks": 0,
                     "total_clicks": 0

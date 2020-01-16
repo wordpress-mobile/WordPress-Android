@@ -82,9 +82,9 @@
                         "parent": 0,
                         "meta": {
                             "links": {
-                                "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/categories/slug:uncategorized",
-                                "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/categories/slug:uncategorized/help",
-                                "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                                "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized",
+                                "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized/help",
+                                "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                             }
                         }
                     }
@@ -104,9 +104,9 @@
                     "parent": 0,
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/categories/slug:uncategorized",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/categories/slug:uncategorized/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 }
@@ -127,12 +127,12 @@
             ],
             "meta": {
                 "links": {
-                    "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/posts/106",
-                    "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/posts/106/help",
-                    "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880",
-                    "replies": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/posts/106/replies/",
-                    "likes": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/posts/106/likes/",
-                    "autosave": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/posts/106/autosave"
+                    "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/posts/106",
+                    "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/posts/106/help",
+                    "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880",
+                    "replies": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/posts/106/replies/",
+                    "likes": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/posts/106/likes/",
+                    "autosave": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/posts/106/autosave"
                 }
             },
             "capabilities": {

@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/wpcom/v2/sites/106707880/gutenberg",
+    "queryParameters": {
+      "platform": {
+        "equalTo": "mobile"
+      },
+      "editor": {
+        "equalTo": "gutenberg"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "editor_mobile": "gutenberg",
+      "editor_web": "gutenberg",
+      "opt_out": "{{request.requestLine.baseUrl}}/wpcom/v2/sites/106707880/gutenberg?editor=aztec&platform=mobile"
+    }
+  }
+}

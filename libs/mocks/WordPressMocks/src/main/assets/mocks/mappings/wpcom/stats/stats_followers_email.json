@@ -1,8 +1,14 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/rest/v1.1/sites/.*/stats/followers/",
+        "urlPath": "/rest/v1.1/sites/106707880/stats/followers/",
         "queryParameters": {
+            "locale": {
+                "matches": "(.*)"
+            },
+            "max": {
+                "matches": "(.*)"
+            },
             "type": {
                 "equalTo": "email"
             }

@@ -1,17 +1,12 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/106707880/stats/comments/",
-        "queryParameters": {
-            "locale": {
-                "matches": "(.*)"
-            }
-        }
+        "urlPattern": "/rest/v1.1/sites/[0-9]+/stats/comments(.*)"
     },
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{fnow format='yyyy-MM-dd'}}",
+            "date": "{{now format='yyyy-MM-dd'}}",
             "authors": [],
             "posts": [],
             "monthly_comments": 0,

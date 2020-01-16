@@ -7,7 +7,7 @@
                 "equalTo": "month"
             },
             "num": {
-                "equalTo": "7"
+                "matches": "[0-9]+"
             },
             "date": {
                 "matches": "(.*)"
@@ -23,7 +23,7 @@
             "date": "2019-07-31",
             "period": "month",
             "days": {
-                "2019-07-01": {
+                "{{now offset='-1 days' format='yyyy-MM-dd'}}": {
                     "files": [],
                     "other_downloads": 0,
                     "total_downloads": 0

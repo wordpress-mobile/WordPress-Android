@@ -13,7 +13,7 @@
                 "equalTo": "date"
             },
             "fields": {
-                "equalTo": "ID,modified,status,meta"
+                "equalTo": "ID,modified,status,meta,date"
             },
             "order": {
                 "equalTo": "DESC"
@@ -69,7 +69,7 @@
             ],
             "meta": {
                 "links": {
-                    "counts": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/post-counts/post"
+                    "counts": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/post-counts/post"
                 },
                 "wpcom": true
             }
