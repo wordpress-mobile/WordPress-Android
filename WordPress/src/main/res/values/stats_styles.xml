@@ -168,7 +168,7 @@
     </style>
 
     <style name="StatsTag" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimarySurface</item>
         <item name="android:backgroundTint">?attr/colorError</item>
     </style>
 
