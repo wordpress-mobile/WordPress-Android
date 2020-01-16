@@ -148,19 +148,19 @@ class PostListItemDataSource(
         val listTrashed = mutableListOf<PostListItemIdentifier>()
 
         val localIdentifiers = postStore.getPostsByLocalOrRemotePostIds(localPostIds, listDescriptor.site)
-                .associate { PostStatus.fromPost(it) to LocalPostId(LocalId(it.id)) }
+                .map { Pair(PostStatus.fromPost(it), LocalPostId(LocalId(it.id))) }
         val remoteIdentifiers = postStore.getPostSummaries(
                 listDescriptor.site,
-                remotePostIds.map { it.value }).associate { it.status to RemotePostId(RemoteId(it.remoteId)) }
+                remotePostIds.map { it.value }).map { Pair(it.status, RemotePostId(RemoteId(it.remoteId))) }
 
         (localIdentifiers + remoteIdentifiers).forEach {
-            when (PostListType.fromPostStatus(it.key)) {
-                PostListType.DRAFTS -> listDrafts.add(it.value)
-                PostListType.PUBLISHED -> listPublished.add(it.value)
-                PostListType.SCHEDULED -> listScheduled.add(it.value)
-                TRASHED -> listTrashed.add(it.value)
+            when (PostListType.fromPostStatus(it.first)) {
+                PostListType.DRAFTS -> listDrafts.add(it.second)
+                PostListType.PUBLISHED -> listPublished.add(it.second)
+                PostListType.SCHEDULED -> listScheduled.add(it.second)
+                TRASHED -> listTrashed.add(it.second)
                 // We are grouping Post results into display groups. Search isn't a valid post type so it can be ignored.
-                PostListType.SEARCH -> {}
+                SEARCH -> {}
             }
         }
 
