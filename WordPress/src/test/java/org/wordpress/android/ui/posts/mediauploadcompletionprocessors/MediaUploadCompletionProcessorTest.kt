@@ -9,8 +9,6 @@ import org.junit.Test
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessor.MediaBlockType
-import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.Helpers
 import org.wordpress.android.util.helpers.MediaFile
 
 @RunWith(MockitoJUnitRunner::class)
@@ -50,35 +48,5 @@ class MediaUploadCompletionProcessorTest {
     fun `processPost splices id and url for a gallery block`() {
         val blocks = processor.processPost(TestContent.oldPostGallery)
         Assertions.assertThat(blocks).isEqualTo(TestContent.newPostGallery)
-    }
-
-    @Test
-    fun `detectBlockType works for image blocks`() {
-        val blockType = Helpers.detectBlockType(TestContent.newImageBlock)
-        Assertions.assertThat(blockType).isEqualTo(MediaBlockType.IMAGE)
-    }
-
-    @Test
-    fun `detectBlockType works for video blocks`() {
-        val blockType = Helpers.detectBlockType(TestContent.newVideoBlock)
-        Assertions.assertThat(blockType).isEqualTo(MediaBlockType.VIDEO)
-    }
-
-    @Test
-    fun `detectBlockType works for media-text blocks`() {
-        val blockType = Helpers.detectBlockType(TestContent.newMediaTextBlock)
-        Assertions.assertThat(blockType).isEqualTo(MediaBlockType.MEDIA_TEXT)
-    }
-
-    @Test
-    fun `detectBlockType works for gallery blocks`() {
-        val blockType = Helpers.detectBlockType(TestContent.newGalleryBlock)
-        Assertions.assertThat(blockType).isEqualTo(MediaBlockType.GALLERY)
-    }
-
-    @Test
-    fun `detectBlockType returns null for non-media blocks`() {
-        val blockType = Helpers.detectBlockType(TestContent.paragraphBlock)
-        Assertions.assertThat(blockType).isNull()
     }
 }
