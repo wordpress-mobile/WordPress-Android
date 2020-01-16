@@ -307,17 +307,32 @@ In this codebase, the `WPSnackBar` component has functionality that detects if t
 So in this case the `ToggleButton` which normally gets announced as a `Switch` is now being announced as a `Button` and it's no longer `checkable` so the announcement doesn't say `Tap to toggle` it says `Tap to activate`. 
 
 ## <a name="auditing"></a>Auditing & Testing
+
+There are several tools and approaches you can utilize to audit your app for TalkBack. 
+
+When you are performing your audit, you can utilize these guiding questions to help:
+
+* Is the navigation order of TalkBack what you are expecting? 
+* Are there decorative elements on the screen that are gaining focus that should be inaccessible?
+* Are there elements that should be accessible but they aren't? 
+* Are there elements that belong to a group and are being focused individually?
+* Is the content description, type and action of each element appropriate? Eg. `ToggleButton` that was behaving like a `Switch` but was being used like a `Button`.
+* Are all the strings being used in the content descriptions and actions localized?
+* Is the touch target of the view large enough for it to be easily selected?
+* Do all elements have the appropriate contrast ratio for maximum visibility?
+* Are there any state changes that aren't being announced?
+
 #### Manual testing
+
  Interact with your app using Android accessibility services.
 
-You can test the app using TalkBack. TalkBack allows you to interact with the app utilizing it’s screen reading functionality where selecting or swiping over elements reads out their descriptions and actions. Utilizing this creates the experience a visually impaired person would have while using the app.
-
+You can test the app using TalkBack since it's simply an app that's built on top of the accessibility services. TalkBack allows you to interact with the app utilizing it’s screen reading functionality where selecting or swiping over elements reads out their descriptions and actions. Utilizing this creates the experience a visually impaired person would have while using the app.
 
 Testing with analysis tools
 
 Use tools to discover opportunities to improve your app's accessibility.
 
-* Accessibility Scanner - Utilizing the Accessibility Test Framework it scans your screen and provides ways in which your accessibility can be improved by making changes to your labels, clickable items and other behaviour. 
+* Accessibility Scanner - Utilizing the Accessibility Test Framework it scans your screen and provides ways in which your accessibility can be improved by making changes to your labels, clickable items and other behaviour. The report normally focuses on touch targets, contrasts ratios, and repetitive content descriptions. 
 * Google Play pre launch report - When you upload the app for distribution Google Play generates a report utilizing the Accessibility Test Framework that can be used to identify improvements that can be made. 
 * UI Automator Viewer - Can scan the views of an app that’s running on a device and provide means by which the layout hierarchy can be analyzed at a deeper level. This is especially useful if other manual tests are being carried out, and it reveals views that aren’t being focused or made accessible to the framework, and a specific layout related change may need to be done to resolve the issue. 
 * Lint - lint warnings are shown in the build phase for various accessibility issues that may arise. These lint warnings can even be enforced to break the build so developers are forced to implement accessibility-related attributes.
