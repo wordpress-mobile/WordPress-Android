@@ -2327,6 +2327,7 @@
     <string name="signup_magic_link_error_button_positive">Retry</string>
     <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
     <string name="signup_magic_link_progress">Sending email</string>
+    <string name="signup_title">Sign up for WordPress</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_updating_account">Updating account…</string>
     <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
