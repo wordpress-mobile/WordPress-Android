@@ -27,11 +27,11 @@ class SubfilterListItemMapper @Inject constructor() {
         onClickAction: ((filter: SubfilterListItem) -> Unit),
         isSelected: Boolean
     ): SubfilterListItem {
-        val gson = Gson()
 
         val mappedItem = if (json.isEmpty()) {
             MappedItem(type = SITE_ALL.value)
         } else {
+            val gson = Gson()
             gson.fromJson(json, MappedItem::class.java)
         }
 
