@@ -1,5 +1,6 @@
 14.1
 -----
+* Disable the option to remove a Jetpack site from site picker
  
 14.0
 -----
