@@ -230,11 +230,36 @@ To make the example a lot clearer, we will be focusing on optimizing the actions
 
 * Once TalkBack is enabled then you can then add a `LongClickListener` that will open the dialog. 
 
+* Since there are a lot of tutorials on creating dialogs, we will just be showing an image of how the post dialog could look. 
 
+	<img src="images/accessibility-guidelines/post_actions.png" width="300">
+	
+* Once the dialog has been implemented, you need to add custom accessibility actions. You can either override two methods on the `View` or set your own `AccessibilityDelegate`. Below are the two methods that are important for providing the accessibility framework with details about the actions and telling it what to do when an action is triggered using TalkBack. 
+	(N.B The code below is for example purposes and doesn't reflect methods or behavior in the actual codebase)
+* 
+	```java
+	 @Override
+    public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
+        super.onInitializeAccessibilityNodeInfo(host, info);
+        info.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(R.id.edit, "Edit"));
+        info.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(R.id.view, "View"));
+        // ... for each action
+    }
 
-
-
-
+    @Override
+    public boolean performAccessibilityAction(View host, int action, Bundle args) {
+        switch (action) {
+            case R.id.edit:
+                postHandler.edit();
+                return true;
+            // ... other actions
+            default:
+                return super.performAccessibilityAction(host, action, args);
+        }
+     }
+}
+```
+	
 #### Inaccessible Custom Views 
 
 There might be times when a custom view such as a chart might not be accessible in no shape or form. This is how the `ExploreByTouchHelper` comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creates virtual views using the `Rect` of the actual views. Since it's simply a super `AccessibilityDelegate` these views can be customized with `contentDescriptions` and `actions` when they become focused. 
