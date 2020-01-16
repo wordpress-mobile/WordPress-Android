@@ -81,34 +81,4 @@ class MediaUploadCompletionProcessorTest {
         val blockType = Helpers.detectBlockType(TestContent.paragraphBlock)
         Assertions.assertThat(blockType).isNull()
     }
-
-    @Test
-    fun `processGalleryBlock replaces temporary local id and url for gallery block`() {
-        val processedBlock = processor.processGalleryBlock(TestContent.oldGalleryBlock)
-        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newGalleryBlock)
-    }
-
-    @Test
-    fun `processGalleryBlock can handle ids with mixed types`() {
-        val processedBlock = processor.processGalleryBlock(TestContent.oldGalleryBlockMixTypeIds)
-        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newGalleryBlock)
-    }
-
-    @Test
-    fun `processGalleryBlock can handle ids with mixed types different order`() {
-        val processedBlock = processor.processGalleryBlock(TestContent.oldGalleryBlockMixTypeIds2)
-        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newGalleryBlockWithMixTypeIds2)
-    }
-
-    @Test
-    fun `processGalleryBlock can handle Link To Media File setting`() {
-        val processedBlock = processor.processGalleryBlock(TestContent.oldGalleryBlockLinkToMediaFile)
-        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newGalleryBlockLinkToMediaFile)
-    }
-
-    @Test
-    fun `processGalleryBlock can handle Link To Attachment Page setting`() {
-        val processedBlock = processor.processGalleryBlock(TestContent.oldGalleryBlockLinkToAttachmentPage)
-        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newGalleryBlockLinkToAttachmentPage)
-    }
 }
