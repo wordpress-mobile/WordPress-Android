@@ -32,7 +32,8 @@ data class PostWPComRestResponse(
     @SerializedName("author") val author: Author? = null
 ) {
     data class PostsResponse(
-        @SerializedName("posts") val posts: List<PostWPComRestResponse>
+        @SerializedName("posts") val posts: List<PostWPComRestResponse>,
+        @SerializedName("found") val found: Int
     )
 
     data class PostThumbnail(
