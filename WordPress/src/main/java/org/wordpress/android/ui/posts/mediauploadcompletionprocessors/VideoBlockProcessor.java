@@ -10,11 +10,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class VideoBlockProcessor implements BlockProcessor {
-    private String mLocalId;
-    private String mRemoteId;
-    private String mRemoteUrl;
-
+public class VideoBlockProcessor extends BlockProcessor {
     /**
      * A {@link Pattern} to match media-text blocks with the following capture groups:
      *
@@ -29,10 +25,8 @@ public class VideoBlockProcessor implements BlockProcessor {
     private Pattern mVideoBlockPattern;
 
     public VideoBlockProcessor(String localId, MediaFile mediaFile) {
-        mLocalId = localId;
-        mRemoteId = mediaFile.getMediaId();
-        mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
-        mVideoBlockPattern = Helpers.getVideoBlockPattern(mLocalId);
+        super(localId, mediaFile);
+        mVideoBlockPattern = Helpers.getVideoBlockPattern(localId);
     }
 
     @Override public String processBlock(String block) {

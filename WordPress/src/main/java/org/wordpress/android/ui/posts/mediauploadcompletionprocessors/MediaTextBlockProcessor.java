@@ -3,18 +3,13 @@ package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.wordpress.android.editor.Utils;
 import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.Helpers;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MediaTextBlockProcessor implements BlockProcessor {
-    private String mLocalId;
-    private String mRemoteId;
-    private String mRemoteUrl;
-
+public class MediaTextBlockProcessor extends BlockProcessor {
     /**
      * A {@link Pattern} to match media-text blocks with the following capture groups:
      *
@@ -29,10 +24,8 @@ public class MediaTextBlockProcessor implements BlockProcessor {
     private Pattern mMediaTextBlockPattern;
 
     public MediaTextBlockProcessor(String localId, MediaFile mediaFile) {
-        mLocalId = localId;
-        mRemoteId = mediaFile.getMediaId();
-        mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
-        mMediaTextBlockPattern = Helpers.getMediaTextBlockPattern(mLocalId);
+        super(localId, mediaFile);
+        mMediaTextBlockPattern = Helpers.getMediaTextBlockPattern(localId);
     }
 
     @Override public String processBlock(String block) {

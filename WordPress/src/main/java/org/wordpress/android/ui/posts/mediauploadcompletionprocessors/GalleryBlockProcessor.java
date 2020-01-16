@@ -12,10 +12,7 @@ import java.util.regex.Pattern;
 
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_GALLERY_LINK_TO;
 
-public class GalleryBlockProcessor implements BlockProcessor {
-    private String mLocalId;
-    private String mRemoteId;
-    private String mRemoteUrl;
+public class GalleryBlockProcessor extends BlockProcessor {
     private String mAttachmentPageUrl;
 
     /**
@@ -37,11 +34,9 @@ public class GalleryBlockProcessor implements BlockProcessor {
     private Pattern mGalleryBlockPattern;
 
     public GalleryBlockProcessor(String localId, MediaFile mediaFile, String siteUrl) {
-        mLocalId = localId;
-        mRemoteId = mediaFile.getMediaId();
-        mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
+        super(localId, mediaFile);
         mGalleryBlockPattern = Helpers.getGalleryBlockPattern(localId);
-        mGalleryImageQuerySelector = Helpers.getGalleryImgSelector(mLocalId);
+        mGalleryImageQuerySelector = Helpers.getGalleryImgSelector(localId);
         mAttachmentPageUrl = mediaFile.getAttachmentPageURL(siteUrl);
     }
 
