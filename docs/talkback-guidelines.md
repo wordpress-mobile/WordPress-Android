@@ -13,6 +13,10 @@
 	- [Appearing and Disappearing Elements](#appearing-disappearing)
 	- [Custom Views](#custom-views)
 - [Auditing](#auditing)
+  - [Questions to ask](#questions)
+  - [Manual Audit](#manual_auditing)
+  - [Automated Audit](#automated_auditing)
+  - [User Audit](#user_auditing)
 - [Further Reading](#further-reading)
 	
 ## <a name="getting-started"></a>Getting Started
@@ -320,12 +324,13 @@ In this codebase, the `WPSnackBar` component has functionality that detects if t
 	    })
 	}
 	```
-
 So in this case the `ToggleButton` which normally gets announced as a `Switch` is now being announced as a `Button` and it's no longer `checkable` so the announcement doesn't say `Tap to toggle` it says `Tap to activate`. 
 
 ## <a name="auditing"></a>Auditing & Testing
 
 There are several tools and approaches you can utilize to audit your app for TalkBack. 
+
+### <a name="questions"></a>Questions to ask
 
 When you are performing your audit, you can utilize these guiding questions to help:
 
@@ -340,7 +345,7 @@ When you are performing your audit, you can utilize these guiding questions to h
 * Are there any state changes that aren't being announced?
 * Does TalkBack function well with in app gestures such as swiping, zooming, and scrolling?
 
-#### Manual testing
+### <a name="manual_auditing"></a>Manual Audit
 
  Interact with your app using Android accessibility services.
 
@@ -361,13 +366,13 @@ Use tools to discover opportunities to improve your app's accessibility.
 * UI Automator Viewer - Can scan the views of an app that’s running on a device and provide means by which the layout hierarchy can be analyzed at a deeper level. This is especially useful if other manual tests are being carried out, and it reveals views that aren’t being focused or made accessible to the framework, and a specific layout related change may need to be done to resolve the issue. 
 * Lint - lint warnings are shown in the build phase for various accessibility issues that may arise. These lint warnings can even be enforced to break the build so developers are forced to implement accessibility-related attributes.
 
-#### Automated testing
+### <a name="automated_audit"></a>Automated Audit
 * Power unit and integration tests using the Accessibility APIs with Espresso & Robolectric 
 Espresso has an accessibility API that can allow you to run checks every time a ViewAction is performed. eg.`AccessibilityChecks.enable()`
 
 * Furthermore, you can to customize how it does traversal and verification if it’s generating false positives by utilizing the AccessibilityValidator’s  setSuppressingResultMatcher.There’s an AccessibilityUtil class in Robolectric that allows you to perform similar actions as described above for Espresso. 
 
-#### User testing
+### <a name="user_audit"></a>User Audit
 Get feedback from real people who interact with your app.
 Ask other coworkers to simulate the behavior that the impaired so they can test from the viewpoint of the target user while being able to prove clear insights based on their engineering background.
 Reaching out to local communities that have people with disabilities who would be willing to help with testing. 
