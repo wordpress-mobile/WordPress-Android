@@ -42,9 +42,9 @@ This document will provide all the resources needed to improve an app's accessib
 
 The accessibility framework within Android has several ways in which you can provide cues to TalkBack, so it knows how it makes it's announcement when a view becomes focused. 
 
-* `contentDescription`  - Each view has this attribute that allows you to set meaningful and descriptive labels. If this is missing TalkBack might not be able to provide much value to the user. 
-* `importantForAccessibility` - In cases where a view or layout might not need to be accessible, this attribute can be set. It allows TalkBack to ignore views that have this property set to `yes`, thus eliminating the need for a content description. 
-* `hint` - For usability purposes, the text input control `EditText` has the hint attribute. If another view is providing the label, then you can utilize the `labelFor` attribute. Below is an example.  
+* [`contentDescription`](https://developer.android.com/reference/android/view/View#attr_android:contentDescription)  - Each view has this attribute that allows you to set meaningful and descriptive labels. If this is missing TalkBack might not be able to provide much value to the user. 
+* [`importantForAccessibility`](https://developer.android.com/reference/android/view/View#attr_android:importantForAccessibility) - In cases where a view or layout might not need to be accessible, this attribute can be set. It allows TalkBack to ignore views that have this property set to `yes`, thus eliminating the need for a content description. 
+* [`hint`](https://developer.android.com/reference/android/widget/TextView#attr_android:hint) - For usability purposes, the text input control `TextView` has the hint attribute. If another view is providing the label, then you can utilize the [`labelFor`](http://developer.android.com/reference/android/view/View.html#setLabelFor(int)) attribute. Below is an example.  
 
  ```xml
  <LinearLayout
@@ -86,7 +86,7 @@ ImageButtons with labels should have contentDescription set to null. Setting imp
 
 #### Headings
 
-One of the many navigation modes provided by TalkBack is that of "Heading". This mode allows the user to jump to a different section of the screen utilizing the heading of that area. This functionality was introduced in Android Pie, and it can be enabled by putting the `android:accessibilityHeading="true"` on the element that needs to become a heading. If the min sdk is less than 28 then this can be enabled using the `AccessibilityDelegate`. 
+One of the many navigation modes provided by TalkBack is that of "Heading". This mode allows the user to jump to a different section of the screen utilizing the heading of that area. This functionality was introduced in Android Pie, and it can be enabled by putting the [`android:accessibilityHeading="true"`](https://developer.android.com/reference/android/view/View#attr_android:accessibilityHeading) on the element that needs to become a heading. If the min sdk is less than 28 then this can be enabled using the [`AccessibilityDelegate`](https://developer.android.com/reference/android/view/View.AccessibilityDelegate). 
 
 ```java
 public static void enableAccessibilityHeading(@NonNull View view) {
@@ -143,7 +143,7 @@ Before | After
 Even though the change is subtle, improving the color contrasts of our elements can go a far way for users with low vision. 
  
 ### <a name="grouping-content"></a>Grouping content
-There are times when users should treat a set of elements as a single unit of information. You can group these elements in a focusable container using `android:focusable=”true”` or `android:screenReaderFocusable` attribute to `true` in API 28 and above.  
+There are times when users should treat a set of elements as a single unit of information. You can group these elements in a focusable container using [`android:focusable=”true”`](https://developer.android.com/reference/android/view/View#attr_android:focusable) or [`android:screenReaderFocusable`](https://developer.android.com/reference/android/view/View#attr_android:screenReaderFocusable) attribute to `true` in API 28 and above.  
 
 <img src="images/accessibility-guidelines/stats_group.png" width="300">
 
@@ -163,7 +163,7 @@ To activate the functionality of views with TalkBack, you have to navigate to it
    android:textSize="@dimen/large_text" />
 ```
 
-You can add a live region attribute to it so that when `setText` is called TalkBack will announce it. 
+You can add a [live region attribute](https://developer.android.com/reference/android/view/View#attr_android:accessibilityLiveRegion) to it so that when `setText` is called TalkBack will announce it. 
 
 ```xml
 <TextView
@@ -184,10 +184,10 @@ In addition to live region, another consideration, is to ensure that views that 
 
 The reading order of the views are determined by the order in which XML elements are declared. There might be times when this order doesn't translate to a natural-sounding utterance by TalkBack so the order can be modified using these two attributes. 
 
-* `accessibilityTraversalAfter`: takes the id of a view after which this one is visited in accessibility traversal
-* `accessibilityTraversalBefore`: takes the id of a view before which this one is visited in accessibility traversal process.
+* [`accessibilityTraversalAfter`](https://developer.android.com/reference/android/view/View.html#attr_android:accessibilityTraversalAfter): takes the id of a view after which this one is visited in accessibility traversal
+* [`accessibilityTraversalBefore`](https://developer.android.com/reference/android/view/View.html#attr_android:accessibilityTraversalBefore): takes the id of a view before which this one is visited in accessibility traversal process.
 * These can be set programmatically using `setAccessibilityTraversalBefore` and `setAccessibilityTraversalAfter`
-* Note: These attributes are only available in API 22 and above. To utilize it in lower versions, `ViewCompat` can be leveraged (only enables the functionality if API 22 and above).
+* Note: These attributes are only available in API 22 and above. To utilize it in lower versions, [`ViewCompat`](https://developer.android.com/reference/androidx/core/view/ViewCompat#setAccessibilityDelegate(android.view.View,%20androidx.core.view.AccessibilityDelegateCompat)) can be leveraged (only enables the functionality if API 22 and above).
 
 	 ```java
 	ViewCompat.setAccessibilityDelegate(imageView2, object : AccessibilityDelegateCompat() {
@@ -225,7 +225,7 @@ Horizontal scrolling views are common UI components in every developer's arsenal
 ### <a name="custom-views"></a>Custom Views & Behavior
 
 #### Custom Announcements
-If the Android framework is announcing something that needs more customization or a state change in the app needs to be made known to the user, the `announceForAccessibility` method of the `view` can be utilized to specify this message. By default, the framework handles creating announcements for various events, and state changes well once the correct semantics are supplied. So this should only be utilized when necessary.
+If the Android framework is announcing something that needs more customization or a state change in the app needs to be made known to the user, the [`announceForAccessibility`](https://developer.android.com/reference/android/view/View.html#announceForAccessibility(java.lang.CharSequence)) method of the `view` can be utilized to specify this message. By default, the framework handles creating announcements for various events, and state changes well once the correct semantics are supplied. So this should only be utilized when necessary.
 
 #### Custom Events
 For full accessibility support within custom views, you have to hook the accessibility events within different the different actions and events that are occurring within that view. For full backward compatibility `ViewCompat.setAccessibilityDelegate()` can be utilized. 
@@ -294,7 +294,7 @@ To make the example a lot clearer, we will be focusing on optimizing the actions
 	
 #### Inaccessible Custom Views 
 
-There might be times when a custom view, such as a chart, might not be accessible in no shape or form. This is how the `ExploreByTouchHelper` comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creates virtual views using the `Rect` of the actual views. Since it's a super `AccessibilityDelegate`, these views can be customized with `contentDescriptions` and `actions` when they become focused. 
+There might be times when a custom view, such as a chart, might not be accessible in no shape or form. This is how the [`ExploreByTouchHelper`](https://developer.android.com/reference/android/support/v4/widget/ExploreByTouchHelper) comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creates virtual views using the `Rect` of the actual views. Since it's a super `AccessibilityDelegate`, these views can be customized with `contentDescriptions` and `actions` when they become focused. 
 
 <img style="clear: left;"  src="images/accessibility-guidelines/stats_chart.gif">
 
@@ -361,14 +361,14 @@ Testing with analysis tools
 
 Use tools to discover opportunities to improve your app's accessibility.
 
-* Accessibility Scanner - Utilizing the Accessibility Test Framework it scans your screen and provides ways in which your accessibility can be improved by making changes to your labels, clickable items and other behaviour. The report normally focuses on touch targets, contrasts ratios, and repetitive content descriptions. 
+* [Accessibility Scanner](https://support.google.com/accessibility/android/answer/6376570?hl=en) - Utilizing the Accessibility Test Framework it scans your screen and provides ways in which your accessibility can be improved by making changes to your labels, clickable items and other behaviour. The report normally focuses on touch targets, contrasts ratios, and repetitive content descriptions. 
 * Google Play pre launch report - When you upload the app for distribution Google Play generates a report utilizing the Accessibility Test Framework that can be used to identify improvements that can be made. 
-* UI Automator Viewer - Can scan the views of an app that’s running on a device and provide means by which the layout hierarchy can be analyzed at a deeper level. This is especially useful if other manual tests are being carried out, and it reveals views that aren’t being focused or made accessible to the framework, and a specific layout related change may need to be done to resolve the issue. 
+* [UI Automator Viewer](https://developer.android.com/training/testing/ui-automator) - Can scan the views of an app that’s running on a device and provide means by which the layout hierarchy can be analyzed at a deeper level. This is especially useful if other manual tests are being carried out, and it reveals views that aren’t being focused or made accessible to the framework, and a specific layout related change may need to be done to resolve the issue. 
 * Lint - lint warnings are shown in the build phase for various accessibility issues that may arise. These lint warnings can even be enforced to break the build so developers are forced to implement accessibility-related attributes.
 
 ### <a name="automated_audit"></a>Automated Audit
 * Power unit and integration tests using the Accessibility APIs with Espresso & Robolectric 
-Espresso has an accessibility API that can allow you to run checks every time a ViewAction is performed. eg.`AccessibilityChecks.enable()`
+Espresso has an accessibility API that can allow you to run checks every time a ViewAction is performed. eg. [`AccessibilityChecks.enable()`](https://developer.android.com/training/testing/espresso/accessibility-checking)
 
 * Furthermore, you can to customize how it does traversal and verification if it’s generating false positives by utilizing the AccessibilityValidator’s  setSuppressingResultMatcher.There’s an AccessibilityUtil class in Robolectric that allows you to perform similar actions as described above for Espresso. 
 
