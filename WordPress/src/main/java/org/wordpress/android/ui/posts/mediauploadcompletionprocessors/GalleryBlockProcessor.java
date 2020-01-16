@@ -3,16 +3,36 @@ package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.wordpress.android.editor.Utils;
-import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.Helpers;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_GALLERY_LINK_TO;
-
 public class GalleryBlockProcessor extends BlockProcessor {
+    /**
+     * Template pattern used to match and splice gallery blocks
+     */
+    private static final String PATTERN_TEMPLATE_GALLERY = "(<!-- wp:gallery \\{[^\\}]*\"ids\":\\[(?:\"?\\d+\"?,)*)"
+                                                           + "(\"?%1$s\"?)" // local id must match to be replaced
+                                                           + "([,\\]][^>]*-->\n?)" // rest of header
+                                                           + "(.*)" // block contents
+                                                           + "(<!-- /wp:gallery -->\n?)"; // closing comment
+
+
+    /**
+     * A {@link Pattern} to match and capture gallery linkTo property from block header
+     *
+     * <ol>
+     *     <li>Block header before linkTo property</li>
+     *     <li>The linkTo property</li>
+     *     <li>Block header after linkTo property</li>
+     * </ol>
+     */
+    public static final Pattern PATTERN_GALLERY_LINK_TO = Pattern.compile("(<!-- wp:gallery \\{[^\\}]*\"linkTo\":\")"
+                                                                          + "([^\"]*)" // linkTo value
+                                                                          + "([\"][^>]*-->\n?)"); // rest of header
+
+
     private String mAttachmentPageUrl;
 
     /**
@@ -21,11 +41,12 @@ public class GalleryBlockProcessor extends BlockProcessor {
     private String mGalleryImageQuerySelector;
 
     /**
-     * A {@link Pattern} to match gallery blocks with the following capture groups:
+     * A {@link Pattern} to extract gallery block contents and splice the header with a remote id. The pattern has the
+     * following capture groups:
      *
      * <ol>
      * <li>Block header before id</li>
-     * <li>The mLocalId (to be replaced)</li>
+     * <li>The localId (to be replaced)</li>
      * <li>Block header after id</li>
      * <li>Block contents</li>
      * <li>Block closing comment and any following characters</li>
@@ -35,8 +56,12 @@ public class GalleryBlockProcessor extends BlockProcessor {
 
     public GalleryBlockProcessor(String localId, MediaFile mediaFile, String siteUrl) {
         super(localId, mediaFile);
-        mGalleryBlockPattern = Helpers.getGalleryBlockPattern(localId);
-        mGalleryImageQuerySelector = Helpers.getGalleryImgSelector(localId);
+        mGalleryBlockPattern = Pattern.compile(String.format(PATTERN_TEMPLATE_GALLERY, localId), Pattern.DOTALL);
+        mGalleryImageQuerySelector = new StringBuilder()
+                .append("img[data-id=\"")
+                .append(localId)
+                .append("\"]")
+                .toString();
         mAttachmentPageUrl = mediaFile.getAttachmentPageURL(siteUrl);
     }
 
