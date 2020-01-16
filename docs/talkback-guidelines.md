@@ -36,11 +36,11 @@ This document will provide all the resources needed to improve an app's accessib
 
 ### <a name="basics"></a>Basics
 
-The accessibility framework within Android has several ways in which you can provide cues to TalkBack, so it knows how it make it's announcement when a view becomes focused. 
+The accessibility framework within Android has several ways in which you can provide cues to TalkBack, so it knows how it makes it's announcement when a view becomes focused. 
 
 * `contentDescription`  - Each view has this attribute that allows you to set meaningful and descriptive labels. If this is missing TalkBack might not be able to provide much value to the user. 
-* `importantForAccessibility` - In cases where a view or layout might not have a need to be accessible this attribute can be set. It basically allows TalkBack to ignore views that have this property set to `yes` thus eliminating the need for a content description. 
-* `hint` - For usability purposes, the text input control `EditText` has the hint attribute. If another view is providing the label then you can utilize the `labelFor` attribute. Below is an example.  
+* `importantForAccessibility` - In cases where a view or layout might not need to be accessible, this attribute can be set. It allows TalkBack to ignore views that have this property set to `yes`, thus eliminating the need for a content description. 
+* `hint` - For usability purposes, the text input control `EditText` has the hint attribute. If another view is providing the label, then you can utilize the `labelFor` attribute. Below is an example.  
 
  ```xml
  <LinearLayout
@@ -64,12 +64,12 @@ The accessibility framework within Android has several ways in which you can pro
 To make a view ready for accessibility these are the rules that should govern the content descriptions that are set. 
 
 * Do not include the type of the control. TalkBack will automatically announce the description you have set and the type. 
-* Ensure that each description is unique. This ensures that TalkBack is able to communicate different views of the same type to the user without causing any confusion. This is especially useful in list controls such as `ListView` or `RecyclerView` where a view template is being used for each row with similar controls. In such cases, each row should have unique content descriptions. 
+* Ensure that each description is unique. This ensures that TalkBack can communicate different views of the same type to the user without causing any confusion. This is especially useful in list controls such as `ListView` or `RecyclerView` where a view template is being used for each row with similar controls. In such cases, each row should have unique content descriptions. 
 * Like all strings, content descriptions should be localized for maximum support in all languages. 
 
 
 #### Activity titles
-When an Activity comes to the foreground, TalkBack announces it’s title. When the activity has no title, TalkBack announces the name of the application which might confuse the user -> **_set a title to all visible activities_**, either in `AndroidManifest` or using `Activity.setTitle()` method.
+When an Activity comes to the foreground, TalkBack announces it’s title. When the activity has no title, TalkBack announces the name of the application, which might confuse the user -> **_set a title to all visible activities_**, either in `AndroidManifest` or using `Activity.setTitle()` method.
 
 #### Images
 Set `contentDescription` attribute to all ImageViews (null is a valid value).
@@ -85,7 +85,7 @@ ImageButtons with labels should have contentDescription set to null. Setting imp
 
 #### Headings
 
-One of the many navigation modes provided by TalkBack is that of "Heading". This mode allows the user to jump to different section of the screen utilizing the heading of that area. This functionality was introduced in Android Pie and it can be enabled by putting the `android:accessibilityHeading="true"` on the element that needs to become a heading. If the min sdk is less than 28 then this can be enabled using the `AccessibilityDelegate`. 
+One of the many navigation modes provided by TalkBack is that of "Heading". This mode allows the user to jump to a different section of the screen utilizing the heading of that area. This functionality was introduced in Android Pie, and it can be enabled by putting the `android:accessibilityHeading="true"` on the element that needs to become a heading. If the min sdk is less than 28 then this can be enabled using the `AccessibilityDelegate`. 
 
 ```java
 public static void enableAccessibilityHeading(@NonNull View view) {
@@ -112,15 +112,15 @@ This is how TalkBack behaves when you swipe left or right to navigate the headin
 #### Touch Targets
 Sometimes people have difficulty when attempting to select views with small touch targets on the  screen. 
 Be sure to check for insufficient touch targets using the tools available. You can utilize the layout bounds functionality in Developer Options to see the current touch target size. 
-Enable developer options by going to Settings > System > Developer Options. Under the Drawing section, selected "Show layout bounds" and turn it on. Your screen should now show the bounds & margins of every visible view on the screen. For touch targets : 
+Enable developer options by going to Settings > System > Developer Options. Under the Drawing section, select "Show layout bounds" and turn it on. Your screen should now show the bounds & margins of every visible view on the screen. For touch targets : 
  
- * Each element that’s touch enabled should have at least 48dp x 48dp in size. 
- * Easiest way to increase this is to utilize the `padding` attribute. 
- * For views where you don’t want to modify the padding you can utilize the [TouchDelegate](https://developer.android.com/reference/android/view/TouchDelegate) functionality where you are able to get the current “Hit Rect) which is a rect with the current bounds and you are able to modify it to increase the touch area. There is a [function within ViewUtils](https://github.com/wordpress-mobile/WordPress-Android/blob/3f99349887f004a697f6ff6ec4a5d49bd1d9d497/WordPress/src/main/java/org/wordpress/android/util/ViewUtils.kt#L20) that does this well. 
+ * Each element that’s touch-enabled should have at least 48dp x 48dp in size. 
+ * The easiest way to increase this is to utilize the `padding` attribute. 
+ * For views where you don’t want to modify the padding, you can utilize the [TouchDelegate](https://developer.android.com/reference/android/view/TouchDelegate) functionality where you can get the current “Hit Rect), which is a rect with the current bounds, and you can modify it to increase the touch area. There is a [function within ViewUtils](https://github.com/wordpress-mobile/WordPress-Android/blob/3f99349887f004a697f6ff6ec4a5d49bd1d9d497/WordPress/src/main/java/org/wordpress/android/util/ViewUtils.kt#L20) that does this well. 
 
 #### Color Contrasts
 
-Users that have low vision might find it difficult to read information on the screen when there isn't enough contrast between the foreground and the background. To solve this issue it's normally best to utilize the [Contrast Checker](https://webaim.org/resources/contrastchecker/) that will allow you to compare a new foreground color with the current background to see if the ratio will make the improvement appropriate. Below is an example of how the contrast of the Aztec editor was improved. The steps to do this were as follows. 
+Users that have low vision might find it difficult to read the information on the screen when there isn't enough contrast between the foreground and the background. To solve this issue, it's usually best to utilize the [Contrast Checker](https://webaim.org/resources/contrastchecker/) that will allow you to compare a new foreground color with the current background to see if the ratio will make the improvement appropriate. Below is an example of how the contrast of the Aztec editor was improved. The steps to do this were as follows. 
 
 * The foreground color of the view in question was located and it was determined that it was `<color name="wp_grey_dark">#2e4453</color>`
 * Luckily for us, we have several other colors that are higher in contrast that can be utilized. 
@@ -142,15 +142,15 @@ Before | After
 Even though the change is subtle, improving the color contrasts of our elements can go a far way for users with low vision. 
  
 ### <a name="grouping-content"></a>Grouping content
-If users should treat a set of elements as a single unit of information, you can group these elements in a focusable container using `android:focusable=”true”` or `android:screenReaderFocusable` attribute to `true` in API 28 and above.  
+There are times when users should treat a set of elements as a single unit of information. You can group these elements in a focusable container using `android:focusable=”true”` or `android:screenReaderFocusable` attribute to `true` in API 28 and above.  
 
 <img src="images/accessibility-guidelines/stats_group.png" width="300">
 
-In cases like these, it's important that the descriptions of the elements are kept short since they all will be announced in a single utterance. 
+In cases like these, the descriptions of the elements must be kept short since they all will be announced in a single utterance. 
 
 ### <a name="live-regions"></a>Live regions (dynamic content)
 
-To activate the functionality of views with TalkBack you have to navigate to it. However there are times when the contents of a view might changeand the user should be made aware of it. This is where Live Regions come in. For example say you have a `TextView` similar to the one defined below. 
+To activate the functionality of views with TalkBack, you have to navigate to it. However, there are times when the contents of a view might change and the user should be made aware of it. This is where Live Regions come in. For example, say you have a `TextView` similar to the one defined below. 
 
 ```xml
 <TextView
@@ -179,12 +179,12 @@ The live region attribute is set to `polite` so that means it won't interrupt Ta
 
 ### <a name="spoken-order"></a>Traversal/Spoken Order
 
-The reading order of the views are determined by the order in which XML elements are declared. There might be times when this order doesn't translate to a natural sounding utterance by TalkBack so the order can be modified using these two attributes. 
+The reading order of the views are determined by the order in which XML elements are declared. There might be times when this order doesn't translate to a natural-sounding utterance by TalkBack so the order can be modified using these two attributes. 
 
 * `accessibilityTraversalAfter`: takes the id of a view after which this one is visited in accessibility traversal
 * `accessibilityTraversalBefore`: takes the id of a view before which this one is visited in accessibility traversal process.
 * These can be set programmatically using `setAccessibilityTraversalBefore` and `setAccessibilityTraversalAfter`
-* Note : These attributes are only available in API 22 and above. To utilize it in lower versions, `ViewCompat` can be leveraged (only enables the functionality if API 22 and above).
+* Note: These attributes are only available in API 22 and above. To utilize it in lower versions, `ViewCompat` can be leveraged (only enables the functionality if API 22 and above).
 
 	 ```java
 	ViewCompat.setAccessibilityDelegate(imageView2, object : AccessibilityDelegateCompat() {
@@ -196,11 +196,11 @@ The reading order of the views are determined by the order in which XML elements
 ### <a name="custom-views"></a>Custom Views & Behavior
 
 #### Custom Announcements
-If the Android framework is announcing something that needs more customization or a state change in the app needs to be made known to the user, the `announceForAccessibility` method of the `view` can be utilized to specify this message. By default the framework handles creating announcements for various events and state changes really well once the correct semantics are supplied. so this should only be utilized when necessary.
+If the Android framework is announcing something that needs more customization or a state change in the app needs to be made known to the user, the `announceForAccessibility` method of the `view` can be utilized to specify this message. By default, the framework handles creating announcements for various events, and state changes well once the correct semantics are supplied. So this should only be utilized when necessary.
 
 #### Custom Events
 For full accessibility support within custom views, you have to hook the accessibility events within different the different actions and events that are occurring within that view. For full backward compatibility `ViewCompat.setAccessibilityDelegate()` can be utilized. 
-An example of this is the Usage hint / View action. When TalkBack is announcing an actionable control, it normally says "Tap to activate". There might be times when this needs to be customized and this can be done via the `AccessibilityDelegate` like so:
+An example of this is the Usage hint / View action. When TalkBack is announcing an actionable control, it normally says "Tap to activate". There might be times when this needs to be customized, and this can be done via the `AccessibilityDelegate` like so:
  
 
 ```java
@@ -215,14 +215,14 @@ So now the announcement will be "Tap to start playback".
 
 #### Custom Actions
 
-If you have a view that contains several actions then it might be difficult for the user to activate them without any confusion. You can utilize a custom action dialog to show the options available in a more accessible & friendly format. This dialog won't replace the existing actions, as it's more for convenience to the user navigating the app via TalkBack.
+If you have a view that contains several actions, then it might be difficult for the user to activate them without any confusion. You can utilize a custom action dialog to show the options available in a more accessible & friendly format. This dialog won't replace the existing actions, as it's more for convenience to the user navigating the app via TalkBack.
 
 To make the example a lot clearer, we will be focusing on optimizing the actions available on a post within the `Post List`. 
 
 <img src="images/accessibility-guidelines/post_list.png" width="300">
 
 
-* To accomplish this you would have to first detect if TalkBack is enabled. 
+* To accomplish this, you would have to first detect if TalkBack is enabled. 
 
 	```java
 	AccessibilityManager am = (AccessibilityManager) getSystemService(ACCESSIBILITY_SERVICE);
@@ -235,7 +235,7 @@ To make the example a lot clearer, we will be focusing on optimizing the actions
 
 	<img src="images/accessibility-guidelines/post_actions.png" width="300">
 	
-	Even though it's not the most visually appealing dialog, it doesn't need to be since it's for TalkBack. Navigating these actions are as easy as swiping left or right and making a selection. 
+	Even though it's not the most visually appealing dialog, it doesn't need to be since it's for TalkBack. Navigating these actions is as easy as swiping left or right and making a selection. 
 	
 * Once the dialog has been implemented, you need to add custom accessibility actions. You can either override two methods on the `View` or set your own `AccessibilityDelegate`. Below are the two methods that are important for providing the accessibility framework with details about the actions and telling it what to do when an action is triggered using TalkBack. 
 	(N.B The code below is for example purposes and doesn't reflect methods or behavior in the actual codebase)
@@ -265,24 +265,24 @@ To make the example a lot clearer, we will be focusing on optimizing the actions
 	
 #### Inaccessible Custom Views 
 
-There might be times when a custom view such as a chart might not be accessible in no shape or form. This is how the `ExploreByTouchHelper` comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creates virtual views using the `Rect` of the actual views. Since it's simply a super `AccessibilityDelegate` these views can be customized with `contentDescriptions` and `actions` when they become focused. 
+There might be times when a custom view, such as a chart, might not be accessible in no shape or form. This is how the `ExploreByTouchHelper` comes into play. This component allows virtual accessibility views to be created that intercepts touch events to trigger TalkBack announcements. It does this by hooking into a view once it has been drawn and creates virtual views using the `Rect` of the actual views. Since it's a super `AccessibilityDelegate`, these views can be customized with `contentDescriptions` and `actions` when they become focused. 
 
 <img style="clear: left;"  src="images/accessibility-guidelines/stats_chart.gif">
 
 
 ### <a name="appearing-disappearing"></a>Appearing and Disappearing Elements
 
-There are several views and UI patterns that involve views that appear for a limited to show something to the user. The most common ones are `Toasts` and `Snackbars`. These components already have accessibility support built in. However, the `SnackBar` behavior has to be extended to be more accessible. 
-In this codebase, the `WPSnackBar` component has functionality that detects if the accessibility services are enabled and extends the time that the `SnackBar` is visible. Eg. this Snackbar below is hidden after a few seconds so in an accessibility mode this wouldn't happen.
+There are several views and UI patterns that involve views that appear for a limited to show something to the user. The most common ones are `Toasts` and `Snackbars`. These components already have accessibility support built-in. However, the `SnackBar` behavior has to be extended to be more accessible. 
+In this codebase, the `WPSnackBar` component has functionality that detects if the accessibility services are enabled and extends the time that the `SnackBar` is visible. Eg. this Snackbar below is hidden after a few seconds, so in an accessibility mode, this wouldn't happen.
 
 <img style="clear: left;"  src="images/accessibility-guidelines/snackbar.gif" width="300">
 
 
- This allows the user to interact with the actions that are present on the `SnackBar` before it disappears. Another component that is worth mentioning is the play/pause controls on a media component. Normally, they disappear and the user would tap the screen for them to reappear but in the case of TalkBack usage it would be best to make them remain on the screen permanently. The guiding principles for views of this nature are: 
+ This allows the user to interact with the actions that are present on the `SnackBar` before it disappears. Another component that is worth mentioning is the play/pause controls on a media component. Usually, they disappear and the user would tap the screen for them to reappear, but in the case of TalkBack usage, it would be best to make them remain on the display permanently. The guiding principles for views of this nature are: 
 
-* Ensure that the views that are appearing for a limited time, are either extended or have an indefinite time. 
-* The actions that are present on these views should be available in other areas of the app, so that if the view disappears the user still has means of triggering the functionality elsewhere. 
-* If a custom view is being created, ensure that the the description and actions are announced when an event occurs, and be mindful of the associated type being utilized. You can customize the behavior of a custom view to have a type similar to that of another built in/standard view if it shares similar characteristics with the one you created. This code snippet was taken from the Aztec Editor
+* Ensure that the views that are appearing for a limited time are either extended or have indefinite time. 
+* The actions that are present on these views should be available in other areas of the app so that if the view disappears the user still has means of triggering the functionality elsewhere. 
+* If a custom view is being created, ensure that the the description and actions are announced when it is displayed. Also be mindful of the associated type being utilized. You can customize the behavior of a custom view to have a type similar to that of another built-in/standard view if it shares similar characteristics with the one you created. This code snippet was taken from the Aztec Editor
 
 	```kotlin
 	fun ToggleButton.convertToButtonAccessibilityProperties() {
@@ -302,7 +302,7 @@ So in this case the `ToggleButton` which normally gets announced as a `Switch` i
 ## <a name="auditing"></a>Auditing & Testing
 #### Manual testing
  Interact with your app using Android accessibility services.
-You are able to test the app using TalkBack or Voice Access. TalkBack allows you to interact with the app utilizing it’s screen reading functionality where selecting or swiping over elements reads out their descriptions and actions. Utilizing this creates the experience a visually impaired person would have while using the app. Voice Access allows a user to control the device using voice/spoken commands. This is really useful for persons who are motor impaired or may be in a situation where their hands can’t be used. 
+You can test the app using TalkBack or Voice Access. TalkBack allows you to interact with the app utilizing it’s screen reading functionality where selecting or swiping over elements reads out their descriptions and actions. Utilizing this creates the experience a visually impaired person would have while using the app. Voice Access allows a user to control the device using voice/spoken commands. This is useful for persons who are motor impaired or may be in a situation where their hands can’t be used. 
 
 Testing with analysis tools
 
@@ -310,20 +310,20 @@ Use tools to discover opportunities to improve your app's accessibility.
 
 * Accessibility Scanner - Utilizing the Accessibility Test Framework it scans your screen and provides ways in which your accessibility can be improved by making changes to your labels, clickable items and other behaviour. 
 * Google Play pre launch report - When you upload the app for distribution Google Play generates a report utilizing the Accessibility Test Framework that can be used to identify improvements that can be made. 
-* UI Automator Viewer - Can scan the views of an app that’s running on a device and provide means by which the layout hierarchy can be analyzed at a deeper level. This is especially useful if other manual tests are being carried out and it reveals views that aren’t being focused or made accessible to the framework and a specific layout related change may need to be done to resolve the issue. 
-* Lint - lint warnings are shown in the build phase for various accessibility issues that may arise. These lint warnings can even be enforced to break the build so developers are forced to implement accessibility related attributes.
+* UI Automator Viewer - Can scan the views of an app that’s running on a device and provide means by which the layout hierarchy can be analyzed at a deeper level. This is especially useful if other manual tests are being carried out, and it reveals views that aren’t being focused or made accessible to the framework, and a specific layout related change may need to be done to resolve the issue. 
+* Lint - lint warnings are shown in the build phase for various accessibility issues that may arise. These lint warnings can even be enforced to break the build so developers are forced to implement accessibility-related attributes.
 
 #### Automated testing
 * Power unit and integration tests using the Accessibility APIs with Espresso & Robolectric 
 Espresso has an accessibility API that can allow you to run checks every time a ViewAction is performed. eg.`AccessibilityChecks.enable()`
 
-* Furthermore, you are able to customize how it does traversal and verification if it’s generating false positives by utilizing the AccessibilityValidator’s  setSuppressingResultMatcher.There’s an AccessibilityUtil class in Robolectric that allows you to perform similar actions as described above for Espresso. 
+* Furthermore, you can to customize how it does traversal and verification if it’s generating false positives by utilizing the AccessibilityValidator’s  setSuppressingResultMatcher.There’s an AccessibilityUtil class in Robolectric that allows you to perform similar actions as described above for Espresso. 
 
 #### User testing
 Get feedback from real people who interact with your app.
 Ask other coworkers to simulate the behavior that the impaired so they can test from the viewpoint of the target user while being able to prove clear insights based on their engineering background.
 Reaching out to local communities that have people with disabilities who would be willing to help with testing. 
-Contracting a user testing service that has testers who are disabled and are able to provide deep insights based on their expertise in providing this type of service. 
+Contracting a user testing service that has testers who are disabled and can provide deep insights based on their expertise in delivering this type of service. 
 
 
 ## <a name="further-reading"></a>Further Reading
