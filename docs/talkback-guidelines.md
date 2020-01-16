@@ -309,7 +309,9 @@ So in this case the `ToggleButton` which normally gets announced as a `Switch` i
 ## <a name="auditing"></a>Auditing & Testing
 #### Manual testing
  Interact with your app using Android accessibility services.
-You can test the app using TalkBack or Voice Access. TalkBack allows you to interact with the app utilizing it’s screen reading functionality where selecting or swiping over elements reads out their descriptions and actions. Utilizing this creates the experience a visually impaired person would have while using the app. Voice Access allows a user to control the device using voice/spoken commands. This is useful for persons who are motor impaired or may be in a situation where their hands can’t be used. 
+
+You can test the app using TalkBack. TalkBack allows you to interact with the app utilizing it’s screen reading functionality where selecting or swiping over elements reads out their descriptions and actions. Utilizing this creates the experience a visually impaired person would have while using the app.
+
 
 Testing with analysis tools
 
