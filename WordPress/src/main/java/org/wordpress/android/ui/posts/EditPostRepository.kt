@@ -1,5 +1,13 @@
 package org.wordpress.android.ui.posts
 
+import androidx.annotation.MainThread
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
@@ -9,24 +17,37 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.fromPost
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.viewmodel.Event
 import java.util.Arrays
 import javax.inject.Inject
+import javax.inject.Named
+import kotlin.coroutines.CoroutineContext
 
 class EditPostRepository
 @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val postStore: PostStore,
-    private val postUtils: PostUtilsWrapper
-) {
+    private val postUtils: PostUtilsWrapper,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+) : CoroutineScope {
+    private var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = mainDispatcher + job
+
     private var post: PostModel? = null
     private var postForUndo: PostModel? = null
     private var postSnapshotWhenEditorOpened: PostModel? = null
+    private var postSnapshot: PostModel? = null
     val id: Int
         get() = post!!.id
     val localSiteId: Int
@@ -76,16 +97,40 @@ class EditPostRepository
 
     private var locked = false
 
-    fun update(action: (PostModel) -> Boolean): Boolean {
+    private val _postChanged = MutableLiveData<Event<PostImmutableModel>>()
+    val postChanged: LiveData<Event<PostImmutableModel>> = _postChanged
+
+    @MainThread
+    fun <T> update(action: (PostModel) -> T): T {
         reportTransactionState(true)
-        val result = action(post!!)
+        val result = action(requireNotNull(post))
         reportTransactionState(false)
+        _postChanged.value = Event(requireNotNull(post))
         return result
+    }
+
+    fun updateAsync(
+        action: (PostModel) -> Boolean,
+        onSuccess: ((PostImmutableModel) -> Unit)? = null
+    ) {
+        launch {
+            reportTransactionState(true)
+            val isUpdated = withContext(bgDispatcher) {
+                action(requireNotNull(post))
+            }
+            reportTransactionState(false)
+            if (isUpdated) {
+                requireNotNull(post).let {
+                    _postChanged.value = Event(it)
+                    onSuccess?.invoke(it)
+                }
+            }
+        }
     }
 
     fun replace(action: (PostModel) -> PostModel) {
         reportTransactionState(true)
-        this.post = action(post!!)
+        this.post = action(requireNotNull(post))
         reportTransactionState(false)
     }
 
@@ -107,7 +152,7 @@ class EditPostRepository
         locked = lock
     }
 
-    fun hasLocation() = post!!.hasLocation()
+    fun hasLocation() = requireNotNull(post).hasLocation()
 
     fun hasPost() = post != null
     fun getPost(): PostImmutableModel? = post
@@ -141,45 +186,45 @@ class EditPostRepository
         this.post = postForUndo?.clone()
     }
 
-    fun saveSnapshot() {
+    fun postHasChanges(): Boolean {
+        checkNotNull(postSnapshot) { "Post snapshot cannot be null at this point" }
+        return post != postSnapshot ||
+                post?.changesConfirmedContentHashcode != postSnapshot?.changesConfirmedContentHashcode
+    }
+
+    fun savePostSnapshot() {
+        postSnapshot = post?.clone()
+    }
+
+    fun savePostSnapshotWhenEditorOpened() {
         postSnapshotWhenEditorOpened = post?.clone()
     }
 
-    fun isSnapshotDifferent(): Boolean =
-            postSnapshotWhenEditorOpened == null || post != postSnapshotWhenEditorOpened
+    fun hasPostSnapshotWhenEditorOpened() = postSnapshotWhenEditorOpened != null
 
-    fun hasSnapshot() = postSnapshotWhenEditorOpened != null
-
-    fun updateStatusFromSnapshot(post: PostModel) {
+    fun updateStatusFromPostSnapshotWhenEditorOpened() {
         // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
         // original post's status as we could not proceed with the action
         reportTransactionState(true)
-        post.setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
+        requireNotNull(post).setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
         reportTransactionState(false)
     }
 
-    fun hasStatusChanged(postStatus: String?): Boolean {
-        return postSnapshotWhenEditorOpened?.status != null && postStatus != postSnapshotWhenEditorOpened?.status
-    }
-
-    fun postHasEdits() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post!!)
-
-    fun updateStatus(status: PostStatus) {
-        update {
-            it.setStatus(status.toString())
-            true
-        }
-    }
+    fun postWasChangedInCurrentSession() = postUtils.postHasEdits(postSnapshotWhenEditorOpened,
+            requireNotNull(post)
+    )
 
     fun loadPostByLocalPostId(postId: Int) {
         reportTransactionState(true)
         post = postStore.getPostByLocalPostId(postId)
+        savePostSnapshot()
         reportTransactionState(false)
     }
 
     fun loadPostByRemotePostId(remotePostId: Long, site: SiteModel) {
         reportTransactionState(true)
         post = postStore.getPostByRemotePostId(remotePostId, site)
+        savePostSnapshot()
         reportTransactionState(false)
     }
 }

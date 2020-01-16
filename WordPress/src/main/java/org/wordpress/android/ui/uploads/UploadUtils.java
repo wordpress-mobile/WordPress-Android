@@ -37,10 +37,10 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.SnackbarItem;
 import org.wordpress.android.util.SnackbarItem.Action;
 import org.wordpress.android.util.SnackbarItem.Info;
 import org.wordpress.android.util.SnackbarSequencer;
-import org.wordpress.android.util.SnackbarItem;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.WPMediaUtils;
@@ -163,8 +163,8 @@ public class UploadUtils {
             return;
         }
 
-        boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
-        if (savedLocally && !NetworkUtils.isNetworkAvailable(activity)) {
+        boolean uploadNotStarted = data.getBooleanExtra(EditPostActivity.EXTRA_UPLOAD_NOT_STARTED, false);
+        if (uploadNotStarted && !NetworkUtils.isNetworkAvailable(activity)) {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
             // And tell the user about it
@@ -194,7 +194,7 @@ public class UploadUtils {
         boolean isScheduledPost = postStatus == PostStatus.SCHEDULED;
         if (isScheduledPost) {
             // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
-            if (savedLocally) {
+            if (uploadNotStarted) {
                 showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
                              publishPostListener, sequencer);
             }
@@ -204,7 +204,7 @@ public class UploadUtils {
         boolean isPublished = postStatus == PostStatus.PUBLISHED;
         if (isPublished) {
             // if it's a published post, we only want to show a "Sync" button if it's locally saved
-            if (savedLocally) {
+            if (uploadNotStarted) {
                 showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
                              publishPostListener, sequencer);
             } else {
@@ -217,7 +217,7 @@ public class UploadUtils {
         if (isDraft) {
             if (PostUtils.isPublishable(post)) {
                 // if the post is publishable, we offer the PUBLISH button
-                if (savedLocally) {
+                if (uploadNotStarted) {
                     showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_locally,
                                               R.string.button_publish,
                                               publishPostListener, sequencer);
@@ -235,7 +235,7 @@ public class UploadUtils {
                 showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally, sequencer);
             }
         } else {
-            if (savedLocally) {
+            if (uploadNotStarted) {
                 showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_publish,
                              publishPostListener, sequencer);
             } else {

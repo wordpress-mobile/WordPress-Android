@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-28 12:57:35+0000
+Translation-Revision-Date: 2020-01-05 15:09:12+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
-    <string name="gutenberg_native_translate">Překlad</string>
+    <string name="send_verification_email">Poslat ověřovací email</string>
+    <string name="gutenberg_native_translate">Přeložit</string>
     <string name="gutenberg_native_title">Název:</string>
+    <string name="gutenberg_native_size">Velikost</string>
     <string name="domain_registration_state_picker_dialog_title">Vybrat stát</string>
     <string name="domain_registration_country_picker_dialog_title">Vybrat zemi</string>
     <string name="domain_registration_result_continue_button">Další</string>

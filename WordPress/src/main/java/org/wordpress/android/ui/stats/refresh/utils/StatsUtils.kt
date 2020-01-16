@@ -4,9 +4,9 @@ import org.wordpress.android.R
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DecimalFormat
-import java.util.Locale
 import java.util.TreeMap
 import javax.inject.Inject
+import kotlin.math.abs
 
 const val ONE_THOUSAND = 1000
 const val TEN_THOUSAND = 10000
@@ -30,15 +30,11 @@ class StatsUtils
     )
 
     fun toFormattedString(number: Long?, startValue: Int = TEN_THOUSAND): String? {
-        return number?.toFormattedString(resourceProvider, startValue)
+        return number?.let { toFormattedString(it, startValue) }
     }
 
     fun toFormattedString(number: Long?, startValue: Int = TEN_THOUSAND, defaultValue: String): String {
-        return number?.toFormattedString(resourceProvider, startValue) ?: defaultValue
-    }
-
-    fun toFormattedString(number: Long, startValue: Int = TEN_THOUSAND): String {
-        return number.toFormattedString(resourceProvider, startValue)
+        return number?.let { toFormattedString(it, startValue) } ?: defaultValue
     }
 
     fun toFormattedString(number: Double?, startValue: Int = TEN_THOUSAND): String? {
@@ -50,15 +46,14 @@ class StatsUtils
     }
 
     fun toFormattedString(number: Double, startValue: Int = TEN_THOUSAND): String {
-        val locale = localeManager.getLocale()
         return number.let {
             if (it < startValue && it > (startValue * -1)) {
-                val formatter = DecimalFormat.getInstance(locale)
+                val formatter = DecimalFormat.getInstance(localeManager.getLocale())
                 formatter.maximumFractionDigits = 1
                 formatter.minimumFractionDigits = 0
                 formatter.format(it)
             } else {
-                it.toLong().toFormattedString(resourceProvider, startValue, locale)
+                toFormattedString(it.toLong(), startValue)
             }
         }
     }
@@ -75,34 +70,67 @@ class StatsUtils
         return toFormattedString(number.toLong(), startValue)
     }
 
-    private fun Long.toFormattedString(
-        resourceProvider: ResourceProvider,
-        startValue: Int = TEN_THOUSAND,
-        locale: Locale = Locale.getDefault()
+    fun toFormattedString(
+        number: Long,
+        startValue: Int = TEN_THOUSAND
     ): String {
-        if (this == java.lang.Long.MIN_VALUE) return (java.lang.Long.MIN_VALUE + 1).toFormattedString(
-                locale = locale,
-                resourceProvider = resourceProvider
+        val isNegative = number < 0
+        val safeNumber = abs(
+                if (number == java.lang.Long.MIN_VALUE) {
+                    number + 1
+                } else {
+                    number
+                }
         )
-        if (this < 0) return "-" + (-this).toFormattedString(
-                locale = locale,
-                resourceProvider = resourceProvider
-        )
-        if (this < startValue) return DecimalFormat.getInstance(locale).format(this).toString()
+        if (safeNumber < startValue) {
+            return printNumber(safeNumber, isNegative)
+        }
 
-        val e = suffixes.floorEntry(this)
+        val e = suffixes.floorEntry(safeNumber)
         val divideBy = e.key
         val suffix = e.value
 
-        val truncated = this / (divideBy!! / 10)
+        val truncated = safeNumber / (divideBy!! / 10)
         val hasDecimal = truncated < 100 && truncated / 10.0 != (truncated / 10).toDouble()
-        return if (hasDecimal)
+        return printNumber(truncated, isNegative, suffix, hasDecimal)
+    }
+
+    private fun printNumber(
+        number: Long,
+        isNegative: Boolean,
+        suffix: Int? = null,
+        hasDecimal: Boolean = false
+    ): String {
+        val formattedNumber =
+                DecimalFormat.getInstance(localeManager.getLocale()).format(
+                        when {
+                            suffix != null && hasDecimal -> number / 10.0
+                            suffix != null -> number / 10
+                            else -> number
+                        }
+                )
+        return if (suffix != null) {
             resourceProvider.getString(
                     suffix,
-                    DecimalFormat.getInstance(locale).format(truncated / 10.0)
+                    handleNegativeNumber(
+                            formattedNumber,
+                            isNegative
+                    )
             )
-        else
-            resourceProvider.getString(suffix, DecimalFormat.getInstance(locale).format(truncated / 10))
+        } else {
+            handleNegativeNumber(
+                    formattedNumber,
+                    isNegative
+            )
+        }
+    }
+
+    private fun handleNegativeNumber(number: String, isNegative: Boolean): String {
+        return if (isNegative) {
+            resourceProvider.getString(R.string.negative_prefix, number)
+        } else {
+            number
+        }
     }
 }
 

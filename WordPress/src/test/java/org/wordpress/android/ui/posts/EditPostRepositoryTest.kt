@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.posts
 
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostLocation
@@ -24,9 +26,10 @@ class EditPostRepositoryTest {
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var postUtils: PostUtilsWrapper
     private lateinit var editPostRepository: EditPostRepository
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
-        editPostRepository = EditPostRepository(localeManager, postStore, postUtils)
+        editPostRepository = EditPostRepository(localeManager, postStore, postUtils, TEST_DISPATCHER, TEST_DISPATCHER)
     }
 
     @Test
@@ -414,9 +417,9 @@ class EditPostRepositoryTest {
 
         assertThat(editPostRepository.getPost()).isEqualTo(firstPost)
 
-        editPostRepository.saveSnapshot()
+        editPostRepository.savePostSnapshotWhenEditorOpened()
 
-        assertThat(editPostRepository.hasSnapshot()).isTrue()
+        assertThat(editPostRepository.hasPostSnapshotWhenEditorOpened()).isTrue()
     }
 
     @Test
@@ -427,18 +430,19 @@ class EditPostRepositoryTest {
         val secondPost = PostModel()
         val secondPostId = 2
         secondPost.setId(secondPostId)
+        whenever(postUtils.postHasEdits(firstPost, secondPost)).thenReturn(true)
 
         editPostRepository.set { firstPost }
 
         assertThat(editPostRepository.getPost()).isEqualTo(firstPost)
 
-        editPostRepository.saveSnapshot()
+        editPostRepository.savePostSnapshotWhenEditorOpened()
 
-        assertThat(editPostRepository.isSnapshotDifferent()).isFalse()
+        assertThat(editPostRepository.postWasChangedInCurrentSession()).isFalse()
 
         editPostRepository.set { secondPost }
 
-        assertThat(editPostRepository.isSnapshotDifferent()).isTrue()
+        assertThat(editPostRepository.postWasChangedInCurrentSession()).isTrue()
     }
 
     @Test
@@ -452,13 +456,13 @@ class EditPostRepositoryTest {
 
         editPostRepository.set { firstPost }
 
-        editPostRepository.saveSnapshot()
+        editPostRepository.savePostSnapshotWhenEditorOpened()
 
         editPostRepository.set { secondPost }
 
         assertThat(editPostRepository.status).isEqualTo(PENDING)
 
-        editPostRepository.updateStatusFromSnapshot(secondPost)
+        editPostRepository.updateStatusFromPostSnapshotWhenEditorOpened()
 
         assertThat(editPostRepository.status).isEqualTo(PUBLISHED)
     }
