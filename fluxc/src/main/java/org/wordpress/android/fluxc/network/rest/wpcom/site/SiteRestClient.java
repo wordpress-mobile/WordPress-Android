@@ -693,7 +693,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     /**
-     * Performs an HTTP GET call to v1.1 /domains/$domainName/is-available/ endpoint. Upon receiving a response
+     * Performs an HTTP GET call to v1.3 /domains/$domainName/is-available/ endpoint. Upon receiving a response
      * (success or error) a {@link SiteAction#CHECKED_DOMAIN_AVAILABILITY} action is dispatched with a
      * payload of type {@link DomainAvailabilityResponsePayload}.
      *
