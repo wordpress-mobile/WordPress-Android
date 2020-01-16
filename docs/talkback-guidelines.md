@@ -1,6 +1,5 @@
 # TalkBack Guidelines
 
-
 ### Table of Contents 
 
 - [Getting Started](#getting-started)
@@ -14,7 +13,6 @@
 	- [Custom Views](#custom-views)
 - [Auditing](#auditing)
 - [Further Reading](#further-reading)
-
 	
 ## <a name="getting-started"></a>Getting Started
 “Making applications accessible not only ensures equal access to the roughly 1 billion people in the world with disabilities but also benefits people without disabilities by allowing them to customize their experiences.” - [Google Accessibility](https://www.google.com/accessibility/for-developers/)
@@ -60,7 +58,6 @@ The accessibility framework within Android has several ways in which you can pro
 </LinearLayout>
 ```
 
-
 #### Labels / Content Description 
 To make a view ready for accessibility these are the rules that should govern the content descriptions that are set. 
 
@@ -68,14 +65,13 @@ To make a view ready for accessibility these are the rules that should govern th
 * Ensure that each description is unique. This ensures that TalkBack can communicate different views of the same type to the user without causing any confusion. This is especially useful in list controls such as `ListView` or `RecyclerView` where a view template is being used for each row with similar controls. In such cases, each row should have unique content descriptions. 
 * Like all strings, content descriptions should be localized for maximum support in all languages. 
 
-
 #### Activity titles
-When an Activity comes to the foreground, TalkBack announces it’s title. When the activity has no title, TalkBack announces the name of the application, which might confuse the user -> **_set a title to all visible activities_**, either in `AndroidManifest` or using `Activity.setTitle()` method.
+When an Activity comes to the foreground, TalkBack announces it’s title. When the activity has no title, TalkBack announces the name of the application, which might confuse the user → **_set a title to all visible activities_**, either in `AndroidManifest` or using `Activity.setTitle()` method.
 
 #### Images
 Set `contentDescription` attribute to all ImageViews (null is a valid value).
 
-Illustrative images and images with labels should have contentDescription set to null -> “`android:contentDescription="@null`" or have `importantForAccessibility` set to “no” -> “`android:importantForAccessibility="no"`.
+Illustrative images and images with labels should have contentDescription set to null → “`android:contentDescription="@null`" or have `importantForAccessibility` set to “no” → “`android:importantForAccessibility="no"`.
 
 <img src="images/accessibility-guidelines/image_inaccessible.png" width="300">
 
@@ -275,7 +271,6 @@ There might be times when a custom view, such as a chart, might not be accessibl
 
 <img style="clear: left;"  src="images/accessibility-guidelines/stats_chart.gif">
 
-
 ### <a name="appearing-disappearing"></a>Appearing and Disappearing Elements
 
 There are several views and UI patterns that involve views that appear for a limited to show something to the user. The most common ones are `Toasts` and `Snackbars`. These components already have accessibility support built-in. However, the `SnackBar` behavior has to be extended to be more accessible. 
@@ -329,7 +324,7 @@ You can test the app using TalkBack since it's simply an app that's built on top
 
 * Once TalkBack is enabled, you can navigate to TalkBack Settings to optimize it's behavior, so that you can get as much diagnostics from your audit. One of the best options available is the enabling of captions. This allows TalkBack to display it's output at the bottom of the screen so you can validate what you are hearing. If necessary, you can also take screenshots that encapsulate TalkBack behavior when captions are enabled. 
 
-* To enable captions, go to Accessibility -> TalkBack -> Settings -> Miscellaneous -> Developer settings and then enable "Display speech output" similar to the screenshot below. 
+* To enable captions, go to Accessibility → TalkBack → Settings → Miscellaneous → Developer settings and then enable "Display speech output" similar to the screenshot below. 
 
 	<img src="images/accessibility-guidelines/talkback_captions.png" width="300">
 
