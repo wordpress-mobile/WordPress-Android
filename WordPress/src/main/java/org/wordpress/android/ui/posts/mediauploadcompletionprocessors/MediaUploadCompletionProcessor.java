@@ -1,13 +1,45 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.Helpers;
 import org.wordpress.android.util.helpers.MediaFile;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK;
 
 public class MediaUploadCompletionProcessor {
+    enum MediaBlockType {
+        IMAGE("image"),
+        VIDEO("video"),
+        MEDIA_TEXT("media-text"),
+        GALLERY("gallery");
+
+        private final String mName;
+
+        MediaBlockType(String name) {
+            mName = name;
+        }
+
+        public String toString() {
+            return mName;
+        }
+
+        public static MediaBlockType fromString(String blockType) {
+            for (MediaBlockType mediaBlockType : MediaBlockType.values()) {
+                if (mediaBlockType.mName.equals(blockType)) {
+                    return mediaBlockType;
+                }
+            }
+            return null;
+        }
+
+        static String getMatchingGroup() {
+            return StringUtils.join(Arrays.asList(MediaBlockType.values()), "|");
+        }
+    }
+
     private final ImageBlockProcessor mImageBlockProcessor;
     private final VideoBlockProcessor mVideoBlockProcessor;
     private final MediaTextBlockProcessor mMediaTextBlockProcessor;

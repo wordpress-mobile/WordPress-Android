@@ -1,42 +1,11 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
-import org.apache.commons.lang3.StringUtils;
+import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessor.MediaBlockType;
 
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MediaUploadCompletionProcessorPatterns {
-    enum MediaBlockType {
-        IMAGE("image"),
-        VIDEO("video"),
-        MEDIA_TEXT("media-text"),
-        GALLERY("gallery");
-
-        private final String mName;
-
-        MediaBlockType(String name) {
-            mName = name;
-        }
-
-        public String toString() {
-            return mName;
-        }
-
-        public static MediaBlockType fromString(String blockType) {
-            for (MediaBlockType mediaBlockType : MediaBlockType.values()) {
-                if (mediaBlockType.mName.equals(blockType)) {
-                    return mediaBlockType;
-                }
-            }
-            return null;
-        }
-
-        static String getMatchingGroup() {
-            return StringUtils.join(Arrays.asList(MediaBlockType.values()), "|");
-        }
-    }
-
     // TODO: these patterns can be DRYed up after implementing JSON handling for the block header
     /**
      * Template pattern used to match and splice image blocks

@@ -9,8 +9,8 @@ import org.junit.Test
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessor.MediaBlockType
 import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.Helpers
-import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.MediaBlockType
 import org.wordpress.android.util.helpers.MediaFile
 
 @RunWith(MockitoJUnitRunner::class)
