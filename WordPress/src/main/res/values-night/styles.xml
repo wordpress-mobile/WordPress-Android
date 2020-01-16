@@ -33,6 +33,8 @@
             @style/Widget.MaterialComponents.PopupMenu.Overflow.Dark
         </item>
 
+        <item name="listPopupWindowStyle">@style/Widget.MaterialComponents.PopupMenu.ListPopupWindow.Dark</item>
+
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
 
