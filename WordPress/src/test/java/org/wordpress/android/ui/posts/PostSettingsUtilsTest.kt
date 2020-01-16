@@ -9,6 +9,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.util.DateTimeUtils
@@ -18,12 +19,12 @@ import java.util.Date
 
 class PostSettingsUtilsTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var dateUtils: DateUtils
     private lateinit var postSettingsUtils: PostSettingsUtils
 
     private val dateCreated = "2019-05-05T14:33:20+0200"
     private val formattedDate = "5. 5. 2019"
+    private lateinit var postModel: PostModel
     @Before
     fun setUp() {
         postSettingsUtils = PostSettingsUtils(resourceProvider, dateUtils)
@@ -61,67 +62,68 @@ class PostSettingsUtilsTest : BaseUnitTest() {
                         any()
                 )
         ).thenReturn("Schedule for $formattedDate")
+        postModel = PostModel()
     }
 
     @Test
     fun `returns "scheduled for" for scheduled post`() {
-        whenever(editPostRepository.status).thenReturn(PostStatus.SCHEDULED)
-        whenever(editPostRepository.dateCreated).thenReturn(dateCreated)
+        postModel.setStatus(PostStatus.SCHEDULED.toString())
+        postModel.setDateCreated(dateCreated)
 
-        val publishedDate = postSettingsUtils.getPublishDateLabel(editPostRepository)
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
         assertThat(publishedDate).isEqualTo("Scheduled for 5. 5. 2019")
     }
 
     @Test
     fun `returns "published on" for published post`() {
-        whenever(editPostRepository.status).thenReturn(PostStatus.PUBLISHED)
-        whenever(editPostRepository.dateCreated).thenReturn(dateCreated)
+        postModel.setStatus(PostStatus.PUBLISHED.toString())
+        postModel.setDateCreated(dateCreated)
 
-        val publishedDate = postSettingsUtils.getPublishDateLabel(editPostRepository)
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
         assertThat(publishedDate).isEqualTo("Published on 5. 5. 2019")
     }
 
     @Test
     fun `returns "published on" for private post`() {
-        whenever(editPostRepository.status).thenReturn(PostStatus.PRIVATE)
-        whenever(editPostRepository.dateCreated).thenReturn(dateCreated)
+        postModel.setStatus(PostStatus.PRIVATE.toString())
+        postModel.setDateCreated(dateCreated)
 
-        val publishedDate = postSettingsUtils.getPublishDateLabel(editPostRepository)
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
         assertThat(publishedDate).isEqualTo("Published on 5. 5. 2019")
     }
 
     @Test
     fun `returns "backdated for" for local draft when publish date in the past`() {
-        whenever(editPostRepository.isLocalDraft).thenReturn(true)
-        whenever(editPostRepository.dateCreated).thenReturn(dateCreated)
+        postModel.setIsLocalDraft(true)
+        postModel.setDateCreated(dateCreated)
 
-        val publishedDate = postSettingsUtils.getPublishDateLabel(editPostRepository)
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
         assertThat(publishedDate).isEqualTo("Backdated for 5. 5. 2019")
     }
 
     @Test
     fun `returns "immediately" for local draft when should publish immediately`() {
-        whenever(editPostRepository.isLocalDraft).thenReturn(true)
-        whenever(editPostRepository.status).thenReturn(PostStatus.DRAFT)
-        whenever(editPostRepository.dateCreated).thenReturn(DateTimeUtils.iso8601FromDate(Date()))
+        postModel.setIsLocalDraft(true)
+        postModel.setStatus(PostStatus.DRAFT.toString())
+        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(Date()))
 
-        val publishedDate = postSettingsUtils.getPublishDateLabel(editPostRepository)
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
         assertThat(publishedDate).isEqualTo("Immediately")
     }
 
     @Test
     fun `returns "published on" for local draft when date is not set`() {
-        whenever(editPostRepository.isLocalDraft).thenReturn(true)
+        postModel.setIsLocalDraft(true)
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.MINUTE, -5)
-        whenever(editPostRepository.dateCreated).thenReturn(DateTimeUtils.iso8601FromDate(calendar.time))
+        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(calendar.time))
 
-        val publishedDate = postSettingsUtils.getPublishDateLabel(editPostRepository)
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
         assertThat(publishedDate).isEqualTo("Publish on 5. 5. 2019")
     }
@@ -130,28 +132,28 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     fun `returns "schedule for" when post published in future`() {
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.MINUTE, 100)
-        whenever(editPostRepository.dateCreated).thenReturn(DateTimeUtils.iso8601FromDate(calendar.time))
+        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(calendar.time))
 
-        val publishedDate = postSettingsUtils.getPublishDateLabel(editPostRepository)
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
         assertThat(publishedDate).isEqualTo("Schedule for 5. 5. 2019")
     }
 
     @Test
     fun `returns "immediately" when post does not have the date and is draft`() {
-        whenever(editPostRepository.status).thenReturn(PostStatus.DRAFT)
-        whenever(editPostRepository.dateCreated).thenReturn("")
+        postModel.setStatus(PostStatus.DRAFT.toString())
+        postModel.setDateCreated("")
 
-        val publishedDate = postSettingsUtils.getPublishDateLabel(editPostRepository)
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
         assertThat(publishedDate).isEqualTo("Immediately")
     }
 
     @Test
     fun `returns empty string in other cases`() {
-        whenever(editPostRepository.dateCreated).thenReturn("")
+        postModel.setDateCreated("")
 
-        val publishedDate = postSettingsUtils.getPublishDateLabel(editPostRepository)
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
         assertThat(publishedDate).isEqualTo("")
     }

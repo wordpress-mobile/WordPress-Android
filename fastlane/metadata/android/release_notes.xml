@@ -1,118 +1,74 @@
 <ar>
-13.8:
-* تحسينات محرِّر المكوّن: تمت إضافة مكوّن المباعد لإنشاء مسافة بيضاء بين المحتوى.
-* تم تعديل البحث عن المقالات لتضمين المقالات أسفل كل التصنيفات.
-* الكثير من التحسينات التي أجريت في الخلفية عبر التطبيق بالكامل – 26 من الإصلاحات الفريدة للأخطاء والأعطال إجمالاً.
-
+13.9:
+• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
+• Block editor enhancements: Added support for settings in the List and Video blocks.
 </ar>
 <de-DE>
-13.8:
-* Verbesserungen am Block-Editor: Der Abstandshalter-Block wurde hinzugefügt, damit du Leerräume zwischen Inhalten erstellen kannst.
-* Die Suche nach Blogbeiträgen wurde verändert, um Beiträge unter allen Kategorien einzuschließen.
-* Die gesamte App wurde hinter den Kulissen an zahlreichen Stellen verbessert. Insgesamt wurden 26 Fehler, die zu Abstürzen und Problemen führten, behoben.
-
+13.9:
+• Neu im Block-Editor: Neuer Galerie-Block zur Erstellung von Bildgalerien mit Dateien aus deiner Mediathek sowie Unterstützung des vorformatierten Blocks hinzugefügt.
+• Verbesserungen am Block-Editor: Unterstützung für Einstellungen in den Listen- und Video-Blöcken hinzugefügt.
 </de-DE>
 <en-US>
-13.8:
-* Block editor improvements: Added Spacer block for creating white space between content.
-* Modified Blog Post Search to include posts under all categories.
-* Lots of under-the-hood improvements across the entire app –26 unique crash and bug fixes in all.
-
+13.9:
+• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
+• Block editor enhancements: Added support for settings in the List and Video blocks.
 </en-US>
 <es-ES>
-13.8:
-* Mejoras en el editor de bloques: Añadido bloque espaciador para crear espacios vacíos entre contenidos.
-* Modificada la búsqueda de entradas del blog para incluir entradas en todas las categorías.
-* Montones de mejoras bajo el capó en toda la aplicación  26 correcciones de errores y problemas en total.
-
+13.9:
+- Adiciones al editor de bloques: Añadido un nuevo bloque de galería para crear galerías de imágenes usando archivos de tu biblioteca de medios, junto con compatibilidad para el bloque preformateado.
+- Mejoras en el editor de bloques: Añadida compatibilidad para los ajustes de los bloques de lista y vídeo.
 </es-ES>
-<fr-CA>
-13.8 :
-* Améliorations de l'éditeur de blocs : un bloc d'espacement a été ajouté pour créer un espace blanc entre le contenu.
-* Modification de la recherche d'articles de blog pour inclure les articles appartenant à toutes les catégories.
-* Nombreuses améliorations en arrière-plan dans toute l'application. Résolution de 26 bugs ou pannes uniques.
-
-</fr-CA>
-<fr-FR>
-13.8 :
-* Améliorations de l'éditeur de blocs : un bloc d'espacement a été ajouté pour créer un espace blanc entre le contenu.
-* Modification de la recherche d'articles de blog pour inclure les articles appartenant à toutes les catégories.
-* Nombreuses améliorations en arrière-plan dans toute l'application. Résolution de 26 bugs ou pannes uniques.
-
-</fr-FR>
 <iw-IL>
-13.8:
-* שיפורים בעורך הבלוקים: הוספנו את בלוק המרווח כדי ליצור רווח ריק בין התכנים.
-* שינינו את חיפוש הפוסטים כדי לכלול פוסטים שמשויכים לכל הקטגוריות.
-* ביצענו המון שיפורים מתחת למכסה המנוע ברחבי האפליקציה – תיקנו 26 מקרים ייחודיים של קריסות ובאגים סך הכול.
-
+13.9:
+• תוספות לעורך הבלוקים: הוספנו בלוק גלריה חדש ליצירת גלריית תמונות באמצעות קבצים מספריית המדיה שלך ותמיכה בבלוק Preformatted.
+• שיפורים בעורך הבלוקים: הוספנו תמיכה להגדרות בבלוק הרשימה ובבלוק הווידאו.
 </iw-IL>
 <id>
-13.8:
-* Peningkatan penyunting blok: Menambahkan blok Spacer untuk membuat spasi putih di antara konten.
-* Memodifikasi Pencarian Pos Blog untuk menyertakan pos di semua kategori.
-* Banyak peningkatan di seluruh aplikasi – Memperbaiki 26 crash dan bug unik.
-
+13.9:
+• Tambahan pada penyunting blok: Menambahkan blok Galeri yang baru untuk membuat galeri gambar menggunakan file dari Pustaka Media Anda, bersama dengan dukungan untuk blok Yang diformat sebelumnya.
+• Peningkatan pada penyunting blok: Menambahkan dukungan untuk pengaturan di blok Daftar dan Video.
 </id>
 <it-IT>
-13.8:
-*Miglioramenti all'editor dei blocchi: blocco Spazio vuoto aggiunto per la creazione di spazio bianco tra i contenuti.
-*Ricerca dell'articolo del blog modificata per includere gli articoli presenti in tutte le categorie.
-*Molti miglioramenti sotto controllo nell'intera app, 26 arresti univoci e correzioni di bug in tutti.
-
+13.9:
+• Aggiunte all'editor dei blocchi: aggiunto un nuovo blocco Galleria per creare gallerie di immagini usando file dalla libreria multimediale, insieme al supporto per il blocco Preformattato.
+• Miglioramenti all'editor dei blocchi: aggiunto supporto per le impostazioni nei blocchi Elenco e Video.
 </it-IT>
 <ja-JP>
-13.8 :
-* ブロックエディターの改善 :コンテンツ間に空白を作成するためのスペーサーブロックが追加されました。
-* すべてのカテゴリーの投稿を含めるようにブログ投稿検索が変更されました。
-* アプリ全体でさまざまな改善がなされ、合計26個の固有のクラッシュとバグが修正されました。
-
+13.9:
+•Block editor additions:Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
+•Block editor enhancements:Added support for settings in the List and Video blocks.
 </ja-JP>
 <ko-KR>
-13.8:
-* 블록 편집기 개선 사항: 콘텐츠 사이에 공백을 만들기 위한 스페이서 블록을 추가했습니다.
-* 모든 카테고리에 글을 포함하도록 블로그 글 검색을 수정했습니다.
-* 앱 내부 전체에서 많은 부분이 개선되었습니다(고유한 충돌 및 버그 수정 총 26개).
-
+13.9:
+• 블록 편집기 추가 기능: 미디어 라이브러리의 파일을 사용하여 이미지 갤러리를 만들 수 있는 새로운 갤러리 블록이 사전 서식 지정된 블록 지원과 함께 추가되었습니다.
+• 블록 편집기의 향상된 기능: 목록 및 비디오 블록의 설정에 대한 지원이 추가되었습니다.
 </ko-KR>
 <nl-NL>
-13.8:
-* Verbeteringen aan de blok-editor: Vulelementblok toegevoegd voor het creëren van lege ruimte tussen content.
-* De zoekfunctie voor blogberichten is aangepast en bevat nu berichten onder alle categorieën.
-* Veel onopvallende verbeteringen in de gehele app: in totaal 26 unieke crash-oplossingen en bugverwijderingen.
-
+13.9:
+• Aanvullingen op de blokeditor: We hebben een nieuw Galerijblok toegevoegd om afbeeldinggalerijen te maken met bestanden uit je Mediabibliotheek, en ondersteuning voor het Vooraf ingesteld-blok.
+• Verbeteringen aan de blokeditor: Toegevoegde ondersteuning voor instellingen in de Lijst- en videoblokken.
 </nl-NL>
 <ru-RU>
-13.8:
-* Улучшения в редакторе блоков: добавлен блок-заполнитель, для добавления пустого места между содержимым.
-* Поиск по записям в блоге будут включать записи во всех рубриках.
-* Целая куча исправлений ошибок и падений (26).
+13.9:
+• Улучшения редактора блоков: добавлен блок галереи для создания галерей из файлов медиатеки, а также поддержка блока преформатированного текста. Возможность настройки блоков списков и видео.
 </ru-RU>
 <sv-SE>
-13.8:
-* Förbättringar i blockredigeraren: Nytt distanselement som kan skapa avstånd mellan olika innehållsblock.
-* Sökfunktionen för blogginlägg har modifierats så att den söker inom alla kategorier.
-* En rad förbättringar ”under motorhuven” i hela appen. Totalt 26 avhjälpta kraschorsaker och andra fel.
-
+13.9:
+• Nyheter i blockredigeraren: Nytt galleri-block för bildgallerier med filer från mediabiblioteket, och även stöd för ett förformaterat block.
+• Förbättringar i blockredigeraren: Nu finns det stöd för inställningar i list- och videoblock.
 </sv-SE>
 <tr-TR>
-13.8:
-* Blok düzenleyici iyileştirmeleri: İçerik arasında beyaz boşluk oluşturmak için Spacer bloğu eklendi.
-* Blog Gönderi Arama tüm kategorilerin altındaki gönderileri içerecek şekilde değiştirildi.
-* Tüm uygulama içinde görünmeyen bir çok iyileştirme yapıldı -26 benzersiz kapanma ve hata düzeltmeleri.
-
+13.9:
+• Blok düzenleyici eklemeleri: Önceden Biçimli blok desteğinin yanı sıra, Ortam Kütüphanenizdeki dosyaları kullanarak görsel galerileri oluşturmanız için yeni bir Galeri bloku eklendi.
+• Blok düzenleyici geliştirmeleri: Liste ve Video bloklarındaki ayarlar için destek eklendi.
 </tr-TR>
 <zh-CN>
-13.8：
-* 区块编辑器改进：添加了用于在内容之间创建空白的空白区块。
-* 修改了博文搜索，将文章包含在所有类别下。
-* 在整个应用程序中进行了许多改进，包括全部 26 个独特的崩溃和错误修复。
-
+13.9：
+•区块编辑器添加内容：添加了一个新的“图库”区块，用于使用媒体库中的文件创建图片库，并支持“预格式化”区块。
+•区块编辑器增强功能：添加了对“列表”和“视频”区块中设置的支持。
 </zh-CN>
 <zh-TW>
-13.8：
-* 改善區塊編輯器：新增空白間隔區塊，你現可在內容之間建立空白字元。
-* 修改網誌文章搜尋功能，納入所有類別底下的文章。
-* 應用程式整體內部改善，一共修正 26 個不同的當機問題和錯誤。
-
+13.9：
+•區塊編輯器新增功能：已新增「圖庫」區塊，讓你可用媒體庫內的檔案建立圖庫，並取得「未格式化」區塊的支援。
+•區塊編輯器增強功能：已新增「清單」和「視訊」區塊內的設定支援。
 </zh-TW>

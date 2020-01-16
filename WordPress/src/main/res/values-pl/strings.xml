@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-06 14:09:42+0000
+Translation-Revision-Date: 2020-01-11 09:44:29+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="login_discovery_error_generic">Nie byliśmy w stanie uzyskać dostępu do twojej witryny. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
+    <string name="login_discovery_error_ssl">Nie byliśmy w stanie uzyskać dostępu do twojej witryny z powodu problemu z &lt;b>SSL Certificatem&lt;/b>. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
+    <string name="login_discovery_error_http_auth">Nie byliśmy w stanie uzyskać dostępu do twojej witryny ponieważ wymaga &lt;b>Authentykacji HTTP&lt;/b>. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
+    <string name="login_discovery_error_xmlrpc">Nie byliśmy w stanie uzyskać dostępu do &lt;b>pliku XMLRPC&lt;/b> na twojej witrynie. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
+    <string name="login_site_credentials_magic_link_label">Prawie zakończone! Musimy tylko sprawdzić twój adres email &lt;b>%1$s&lt;/b> podłączony do Jetpacka</string>
     <string name="enter_site_credentials_instead">Zaloguj się za pomocą danych uwierzytelniających tej witryny</string>
     <string name="enter_credentials_for_site">Zaloguj się za pomocą danych uwierzytelniających %1$s tej witryny</string>
     <string name="send_verification_email">Wyślij email weryfikacyjny</string>
     <string name="my_site_bottom_sheet_add_page">Utwórz nową stronę</string>
     <string name="my_site_bottom_sheet_add_post">Utwórz nowy wpis</string>
     <string name="reader_following_display_name">Obserwowane</string>
-    <string name="posts_cannot_be_started">Nie możemy w tym momencie prowadzić otworzyć wpisu. Proszę spróbować ponownie później</string>
+    <string name="posts_cannot_be_started">Nie możemy w tym momencie otworzyć wpisów. Proszę spróbować ponownie później</string>
     <string name="suffix_1_000">%s tys.</string>
     <string name="suffix_1_000_000_000">%s mld</string>
     <string name="suffix_1_000_000">%s mln</string>
@@ -27,6 +32,7 @@ Language: pl
     <string name="reader_my_likes_display_name">Polubienia</string>
     <string name="site_cannot_be_loaded">Nie możemy w tym momencie wyczytać danych dla twojej witryny. Proszę spróbować ponownie później.</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteka mediów WordPressa</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Pracujemy ciężko aby dodać więcj bloków z każdym wydaniem. W międzyczasie, możesz również edytować ten wpis na sieci.</string>
     <string name="gutenberg_native_unsupported">Niewspierane</string>
     <string name="gutenberg_native_ungroup">Rozgrupuj</string>
     <string name="gutenberg_native_translate">Przetłumacz</string>
@@ -38,6 +44,7 @@ Language: pl
     <string name="gutenberg_native_take_a_photo">Wykonaj zdjęcie</string>
     <string name="gutenberg_native_start_writing">Rozpocznij pisanie…</string>
     <string name="gutenberg_native_size">Rozmiar</string>
+    <string name="gutenberg_native_sidebar_title_plugin">Wtyczka paska bocznego</string>
     <string name="gutenberg_native_show_section">Wybierz sekcję</string>
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">%s\' nie jest jeszcze wspierane na WordPressie dla iOS</string>
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s\' nie jest jeszcze wspierane na WordPressie dla Androida</string>
@@ -54,8 +61,9 @@ Language: pl
     <string name="gutenberg_native_post_title_s">Tytuł wpisu. %s</string>
     <string name="gutenberg_native_post_title_empty">Tytuł wpisu. Pusty</string>
     <string name="gutenberg_native_paste_url">Wklej adres URL</string>
+    <string name="gutenberg_native_page_break_block_s">Blok końca strony. %s</string>
     <string name="gutenberg_native_open_settings">Otwórz Ustawienia</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Żadna aplikacja nie jest w stanie obsłużyć tego zapytania. Proszę zainstalować przeglądarkę</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Żadna aplikacja nie jest w stanie obsłużyć tego zapytania. Proszę zainstalować przeglądarkę.</string>
     <string name="gutenberg_native_navigate_up">Nawiguj w górę</string>
     <string name="gutenberg_native_my_pre_publish_panel">Panel wstępnej publikacji</string>
     <string name="gutenberg_native_my_post_status_info">Informacje o statusie mojego wpisu</string>
@@ -65,15 +73,18 @@ Language: pl
     <string name="gutenberg_native_move_block_up">Przesuń blok w górę</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Przesuń blok w dół z wiersza %1$s do wiersza %2$s</string>
     <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
-    <string name="gutenberg_native_link_inserted">Osadzono odnośnik</string>
+    <string name="gutenberg_native_link_text">Tekst odnośnika</string>
+    <string name="gutenberg_native_link_inserted">Wstawiono odnośnik</string>
     <string name="gutenberg_native_level_s_empty">Poziom %s. Puste.</string>
     <string name="gutenberg_native_level_1_s_2_s">Poziom %1$s. %2$s</string>
+    <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ukryj klawiaturę</string>
     <string name="gutenberg_native_here_is_the_panel_content">Tutaj jest zawartość panelu!</string>
     <string name="gutenberg_native_help_icon">Ikona pomocy</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Nie można było osadzić plików mediów.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_empty">Puste</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Stuknij dwukrotnie aby cofnąć zmiany</string>
+    <string name="gutenberg_native_double_tap_to_toggle_setting">Stuknij dwukrotnie aby zmienić ustawienie</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Stuknij dwukrotnie aby wybrać obrazek</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Stuknij dwukrotnie aby wybrać plik filmowy</string>
     <string name="gutenberg_native_double_tap_to_select">Stuknij dwukrotnie aby wybrać</string>
@@ -86,9 +97,10 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_add_a_block">Stuknij dwukrotnie aby dodać blok</string>
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Stuknij dwukrotnie i przytrzymaj aby edytować</string>
     <string name="gutenberg_native_current_value_is_s">Aktualna wartość to %s</string>
-    <string name="gutenberg_native_content">Zawartość…</string>
+    <string name="gutenberg_native_content">Treść…</string>
     <string name="gutenberg_native_clear_all_settings">Wyczyść wszystkie ustawienia</string>
     <string name="gutenberg_native_choose_from_device">Wybierz z urządzenia</string>
+    <string name="gutenberg_native_annotations_sidebar">Pasek boczny przypisu</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Spróbuj ponownie.</string>
     <string name="gutenberg_native_alt_text">Tekst alternatywny</string>
     <string name="gutenberg_native_add_video">DODAJ FILM</string>
@@ -97,6 +109,7 @@ Language: pl
     <string name="gutenberg_native_add_image_or_video">DODAJ ZDJĘCIE LUB FILM</string>
     <string name="gutenberg_native_add_image">DODAJ ZDJĘCIE</string>
     <string name="gutenberg_native_add_block_here">DODAJ TUTAJ BLOK</string>
+    <string name="gutenberg_native_add_annotation">Dodaj przypis</string>
     <string name="gutenberg_native_add_a_description">Dodaj opis</string>
     <string name="reader_empty_saved_posts_content_description">Stuknij przycisk Dodaj do Zapisanych Wpisów aby zapisać wpis na swojej liście. </string>
     <string name="reader_acessibility_list_loaded">\"Lista ma %1$d elementów.\"</string>

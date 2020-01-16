@@ -14,15 +14,22 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.CollapseFullScreenDialogContent
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.CollapseFullScreenDialogController
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
+import org.wordpress.android.fluxc.store.SiteStore
 
 class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogContent {
     @Inject lateinit var viewModel: CommentFullScreenDialogViewModel
+    @Inject lateinit var siteStore: SiteStore
     private lateinit var dialogController: CollapseFullScreenDialogController
     private lateinit var reply: SuggestionAutoCompleteText
+    private lateinit var siteModel: SiteModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,9 +62,29 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
             reply.setText(it.getString(EXTRA_REPLY))
             reply.setSelection(it.getInt(EXTRA_SELECTION_START), it.getInt(EXTRA_SELECTION_END))
             viewModel.init()
+
+            siteModel = siteStore.getSiteBySiteId(it.getLong(EXTRA_SITE_ID))
+            setupSuggestionServiceAndAdapter(siteModel)
         }
 
         return layout
+    }
+
+    private fun setupSuggestionServiceAndAdapter(site: SiteModel) {
+        if (!isAdded || !SiteUtils.isAccessedViaWPComRest(site)) {
+            return
+        }
+        val suggestionServiceConnectionManager = SuggestionServiceConnectionManager(
+                activity,
+                site.siteId
+        )
+        val suggestionAdapter = SuggestionUtils.setupSuggestions(
+                site, activity,
+                suggestionServiceConnectionManager
+        )
+        if (suggestionAdapter != null) {
+            this.reply.setAdapter(suggestionAdapter)
+        }
     }
 
     override fun onCollapseClicked(controller: CollapseFullScreenDialogController): Boolean {
@@ -95,12 +122,14 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
         private const val EXTRA_REPLY = "EXTRA_REPLY"
         private const val EXTRA_SELECTION_START = "EXTRA_SELECTION_START"
         private const val EXTRA_SELECTION_END = "EXTRA_SELECTION_END"
+        private const val EXTRA_SITE_ID = "EXTRA_SITE_ID"
 
-        fun newBundle(reply: String, selectionStart: Int, selectionEnd: Int): Bundle {
+        fun newBundle(reply: String, selectionStart: Int, selectionEnd: Int, siteId: Long): Bundle {
             val bundle = Bundle()
             bundle.putString(EXTRA_REPLY, reply)
             bundle.putInt(EXTRA_SELECTION_START, selectionStart)
             bundle.putInt(EXTRA_SELECTION_END, selectionEnd)
+            bundle.putLong(EXTRA_SITE_ID, siteId)
             return bundle
         }
     }
