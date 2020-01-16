@@ -83,7 +83,6 @@ ImageButtons with labels should have contentDescription set to null. Setting imp
 
 <img src="images/accessibility-guidelines/image-with-label.png" width="300">
 
-
 #### Headings
 
 One of the many navigation modes provided by TalkBack is that of "Heading". This mode allows the user to jump to a different section of the screen utilizing the heading of that area. This functionality was introduced in Android Pie, and it can be enabled by putting the `android:accessibilityHeading="true"` on the element that needs to become a heading. If the min sdk is less than 28 then this can be enabled using the `AccessibilityDelegate`. 
@@ -327,6 +326,12 @@ When you are performing your audit, you can utilize these guiding questions to h
  Interact with your app using Android accessibility services.
 
 You can test the app using TalkBack since it's simply an app that's built on top of the accessibility services. TalkBack allows you to interact with the app utilizing it’s screen reading functionality where selecting or swiping over elements reads out their descriptions and actions. Utilizing this creates the experience a visually impaired person would have while using the app.
+
+* Once TalkBack is enabled, you can navigate to TalkBack Settings to optimize it's behavior, so that you can get as much diagnostics from your audit. One of the best options available is the enabling of captions. This allows TalkBack to display it's output at the bottom of the screen so you can validate what you are hearing. If necessary, you can also take screenshots that encapsulate TalkBack behavior when captions are enabled. 
+
+* To enable captions, go to Accessibility -> TalkBack -> Settings -> Miscellaneous -> Developer settings and then enable "Display speech output" similar to the screenshot below. 
+
+	<img src="images/accessibility-guidelines/talkback_captions.png" width="300">
 
 Testing with analysis tools
 
