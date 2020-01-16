@@ -175,7 +175,7 @@ You can add a live region attribute to it so that when `setText` is called TalkB
    android:accessibilityLiveRegion="polite"/>
 ```
 
-The live region attribute is set to `polite` so that means it won't interrupt TalkBack if it is currently announcing something but if it is important that it gets announced it can be set to `assertive`. This should be used sparing.
+The live region attribute is set to `polite` so that means it won't interrupt TalkBack if it is currently announcing something but if it is important that it gets announced it can be set to `assertive`. This should be used sparingly.
 
 ### <a name="spoken-order"></a>Traversal/Spoken Order
 
@@ -200,7 +200,8 @@ If the Android framework is announcing something that needs more customization o
 
 #### Custom Events
 For full accessibility support within custom views, you have to hook the accessibility events within different the different actions and events that are occurring within that view. For full backward compatibility `ViewCompat.setAccessibilityDelegate()` can be utilized. 
-An example of this is the Usage hint / View action. When TalkBack is making an announcement for an actionable control it normally says "Tap to activate". There might be times when this needs to be customized and this can be done via the `AccessibilityDelegate` like so : 
+An example of this is the Usage hint / View action. When TalkBack is announcing an actionable control, it normally says "Tap to activate". There might be times when this needs to be customized and this can be done via the `AccessibilityDelegate` like so:
+ 
 
 ```java
 	@Override
