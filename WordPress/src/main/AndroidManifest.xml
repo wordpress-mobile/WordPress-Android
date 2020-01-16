@@ -262,21 +262,21 @@
         <activity
             android:name=".ui.stats.refresh.StatsActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.StatsViewAllActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity"
             android:label="@string/stats_manage_insights"
             android:launchMode="singleTop"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.lists.detail.StatsDetailActivity"
             android:label="@string/stats"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.WPWebViewActivity"
             android:theme="@style/Calypso.NoActionBar"/>
