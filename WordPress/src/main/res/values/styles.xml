@@ -138,11 +138,6 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
 
-    <style name="DialogTheme.WordPress" parent="android:Theme.Material.Dialog">
-        <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
-        <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
-    </style>
-
     <style name="DatePicker.WordPress" parent="android:Widget.Material.DatePicker">
         <item name="android:datePickerMode">spinner</item>
     </style>
