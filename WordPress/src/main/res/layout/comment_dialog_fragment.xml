@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:clipChildren="false"
     android:clipToPadding="false"
@@ -8,20 +9,33 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:padding="@dimen/margin_extra_large"
-    android:scrollbarStyle="outsideOverlay" >
+    android:scrollbarStyle="outsideOverlay">
 
-    <org.wordpress.android.widgets.SuggestionAutoCompleteText
-        android:id="@+id/edit_comment_expand"
-        android:background="@android:color/transparent"
-        android:gravity="start|top"
-        android:hint="@string/reader_hint_comment_on_post"
-        android:imeOptions="actionSend"
-        android:inputType="text|textCapSentences|textMultiLine"
-        android:layout_height="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:textAlignment="viewStart"
-        android:textColorHint="@color/neutral_40"
-        android:textSize="@dimen/text_sz_large" >
-    </org.wordpress.android.widgets.SuggestionAutoCompleteText>
+        android:layout_height="wrap_content">
 
+        <org.wordpress.android.widgets.SuggestionAutoCompleteText
+            android:id="@+id/edit_comment_expand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:gravity="start|top"
+            android:hint="@string/reader_hint_comment_on_post"
+            android:imeOptions="actionSend"
+            android:inputType="text|textCapSentences|textMultiLine"
+            android:textAlignment="viewStart"
+            android:textColorHint="@color/neutral_40"
+            android:textSize="@dimen/text_sz_large"
+            app:layout_constraintTop_toTopOf="parent"
+            android:dropDownAnchor="@+id/dummy_hidden_view" />
+
+        <View
+            android:id="@+id/dummy_hidden_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

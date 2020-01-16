@@ -18,11 +18,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DiffUtil;
@@ -30,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -40,6 +40,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.ColorUtils;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -89,7 +90,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         mPopularPluginsRecycler = findViewById(R.id.popular_plugins_recycler);
         mNewPluginsRecycler = findViewById(R.id.new_plugins_recycler);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -112,43 +113,20 @@ public class PluginBrowserActivity extends AppCompatActivity
         mViewModel.start();
 
         // site plugin list
-        findViewById(R.id.text_manage).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showListFragment(PluginListType.SITE);
-            }
-        });
+        findViewById(R.id.text_manage).setOnClickListener(v -> showListFragment(PluginListType.SITE));
 
         // featured plugin list
-        findViewById(R.id.text_all_featured).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showListFragment(PluginListType.FEATURED);
-            }
-        });
+        findViewById(R.id.text_all_featured).setOnClickListener(v -> showListFragment(PluginListType.FEATURED));
 
         // popular plugin list
-        findViewById(R.id.text_all_popular).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showListFragment(PluginListType.POPULAR);
-            }
-        });
+        findViewById(R.id.text_all_popular).setOnClickListener(v -> showListFragment(PluginListType.POPULAR));
 
         // new plugin list
-        findViewById(R.id.text_all_new).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showListFragment(PluginListType.NEW);
-            }
-        });
+        findViewById(R.id.text_all_new).setOnClickListener(v -> showListFragment(PluginListType.NEW));
 
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                    mViewModel.setTitle(getString(R.string.plugins));
-                }
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                mViewModel.setTitle(getString(R.string.plugins));
             }
         });
 
@@ -161,67 +139,50 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mViewModel.writeToBundle(outState);
     }
 
     private void setupObservers() {
-        mViewModel.getTitle().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String title) {
-                setTitle(title);
-            }
-        });
+        mViewModel.getTitle().observe(this, title -> setTitle(title));
 
         mViewModel.getSitePluginsLiveData()
-                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
-                      @Override
-                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
-                          if (listState != null) {
-                              reloadPluginAdapterAndVisibility(PluginListType.SITE, listState);
+                  .observe(this, listState -> {
+                      if (listState != null) {
+                          reloadPluginAdapterAndVisibility(PluginListType.SITE, listState);
 
-                              showProgress(listState.isFetchingFirstPage() && listState.getData().isEmpty());
+                          showProgress(listState.isFetchingFirstPage() && listState.getData().isEmpty());
 
-                              // We should ignore the errors due to network condition, unless this is the first
-                              // fetch, the user
-                              // can use the cached data and showing the error while the data is loaded might cause
-                              // confusion
-                              if (listState instanceof ListState.Error
-                                  && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
-                                  ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
-                              }
+                          // We should ignore the errors due to network condition, unless this is the first
+                          // fetch, the user
+                          // can use the cached data and showing the error while the data is loaded might cause
+                          // confusion
+                          if (listState instanceof ListState.Error
+                              && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
+                              ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
                           }
                       }
                   });
 
         mViewModel.getFeaturedPluginsLiveData()
-                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
-                      @Override
-                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
-                          if (listState != null) {
-                              reloadPluginAdapterAndVisibility(PluginListType.FEATURED, listState);
-                          }
+                  .observe(this, listState -> {
+                      if (listState != null) {
+                          reloadPluginAdapterAndVisibility(PluginListType.FEATURED, listState);
                       }
                   });
 
         mViewModel.getPopularPluginsLiveData()
-                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
-                      @Override
-                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
-                          if (listState != null) {
-                              reloadPluginAdapterAndVisibility(PluginListType.POPULAR, listState);
-                          }
+                  .observe(this, listState -> {
+                      if (listState != null) {
+                          reloadPluginAdapterAndVisibility(PluginListType.POPULAR, listState);
                       }
                   });
 
         mViewModel.getNewPluginsLiveData()
-                  .observe(this, new Observer<ListState<ImmutablePluginModel>>() {
-                      @Override
-                      public void onChanged(@Nullable ListState<ImmutablePluginModel> listState) {
-                          if (listState != null) {
-                              reloadPluginAdapterAndVisibility(PluginListType.NEW, listState);
-                          }
+                  .observe(this, listState -> {
+                      if (listState != null) {
+                          reloadPluginAdapterAndVisibility(PluginListType.NEW, listState);
                       }
                   });
     }
@@ -281,19 +242,19 @@ public class PluginBrowserActivity extends AppCompatActivity
         switch (pluginType) {
             case SITE:
                 adapter = (PluginBrowserAdapter) mSitePluginsRecycler.getAdapter();
-                cardView = findViewById(R.id.installed_plugins_cardview);
+                cardView = findViewById(R.id.installed_plugins_container);
                 break;
             case FEATURED:
                 adapter = (PluginBrowserAdapter) mFeaturedPluginsRecycler.getAdapter();
-                cardView = findViewById(R.id.featured_plugins_cardview);
+                cardView = findViewById(R.id.featured_plugins_container);
                 break;
             case POPULAR:
                 adapter = (PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter();
-                cardView = findViewById(R.id.popular_plugins_cardview);
+                cardView = findViewById(R.id.popular_plugins_container);
                 break;
             case NEW:
                 adapter = (PluginBrowserAdapter) mNewPluginsRecycler.getAdapter();
-                cardView = findViewById(R.id.new_plugins_cardview);
+                cardView = findViewById(R.id.new_plugins_container);
                 break;
             case SEARCH:
                 return;
@@ -331,7 +292,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     private void showListFragment(@NonNull PluginListType listType) {
         PluginListFragment listFragment = PluginListFragment.newInstance(mViewModel.getSite(), listType);
         getSupportFragmentManager().beginTransaction()
-                                   .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
+                                   .replace(R.id.fragment_container, listFragment, PluginListFragment.TAG)
                                    .addToBackStack(null)
                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                                    .commit();
@@ -398,14 +359,15 @@ public class PluginBrowserActivity extends AppCompatActivity
             return mItems.getItemId(position);
         }
 
+        @NotNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
             View view = mLayoutInflater.inflate(R.layout.plugin_browser_row, parent, false);
             return new PluginBrowserViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        public void onBindViewHolder(@NotNull ViewHolder viewHolder, int position) {
             PluginBrowserViewHolder holder = (PluginBrowserViewHolder) viewHolder;
             ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
             if (plugin == null) {
@@ -423,23 +385,28 @@ public class PluginBrowserActivity extends AppCompatActivity
                 boolean isAutoManaged = PluginUtils.isAutoManaged(mViewModel.getSite(), plugin);
                 if (isAutoManaged) {
                     textResId = R.string.plugin_auto_managed;
-                    colorResId = R.color.success_50;
+                    colorResId = ContextExtensionsKt
+                            .getColorResIdFromAttribute(holder.mStatusIcon.getContext(), R.attr.wpColorSuccess);
                     drawableResId = android.R.color.transparent;
                 } else if (PluginUtils.isUpdateAvailable(plugin)) {
                     textResId = R.string.plugin_needs_update;
-                    colorResId = R.color.warning_50;
+                    colorResId = ContextExtensionsKt
+                            .getColorResIdFromAttribute(holder.mStatusIcon.getContext(), R.attr.wpColorWarningDark);
                     drawableResId = R.drawable.ic_sync_white_24dp;
                 } else if (plugin.isActive()) {
                     textResId = R.string.plugin_active;
-                    colorResId = R.color.success_50;
+                    colorResId = ContextExtensionsKt
+                            .getColorResIdFromAttribute(holder.mStatusIcon.getContext(), R.attr.wpColorSuccess);
                     drawableResId = R.drawable.ic_checkmark_white_24dp;
                 } else {
                     textResId = R.string.plugin_inactive;
-                    colorResId = R.color.neutral_30;
+                    colorResId = ContextExtensionsKt
+                            .getColorResIdFromAttribute(holder.mStatusIcon.getContext(), R.attr.wpColorOnSurfaceMedium);
                     drawableResId = R.drawable.ic_cross_white_24dp;
                 }
                 holder.mStatusText.setText(textResId);
-                holder.mStatusText.setTextColor(getResources().getColor(colorResId));
+                holder.mStatusText.setTextColor(
+                        AppCompatResources.getColorStateList(holder.mStatusText.getContext(), colorResId));
                 holder.mStatusIcon.setVisibility(isAutoManaged ? View.GONE : View.VISIBLE);
                 ColorUtils.INSTANCE.setImageResourceWithTint(holder.mStatusIcon, drawableResId, colorResId);
                 holder.mStatusContainer.setVisibility(View.VISIBLE);
@@ -471,18 +438,15 @@ public class PluginBrowserActivity extends AppCompatActivity
                 mStatusText = mStatusContainer.findViewById(R.id.plugin_status_text);
                 mStatusIcon = mStatusContainer.findViewById(R.id.plugin_status_icon);
 
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int position = getAdapterPosition();
-                        ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
-                        if (plugin == null) {
-                            return;
-                        }
-
-                        ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mViewModel.getSite(),
-                                plugin.getSlug());
+                view.setOnClickListener(v -> {
+                    int position = getAdapterPosition();
+                    ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
+                    if (plugin == null) {
+                        return;
                     }
+
+                    ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mViewModel.getSite(),
+                            plugin.getSlug());
                 });
             }
         }

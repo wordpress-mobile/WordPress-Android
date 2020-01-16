@@ -56,6 +56,20 @@
             app:menu="@menu/bottom_nav_main"/>
     </LinearLayout>
 
+    <org.wordpress.android.ui.WPTooltipView
+        android:id="@+id/fab_tooltip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:wpTooltipPosition="above"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:wpTooltipMessage="@string/create_post_page_fab_tooltip"
+        app:wpArrowHorizontalOffsetFromEnd="@dimen/main_fab_tooltip_offset_end"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_above="@+id/fab_button"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_button"
         android:layout_width="wrap_content"
@@ -69,6 +83,5 @@
         android:contentDescription="@string/fab_create_desc"
         android:src="@drawable/ic_create_white_24dp"
         app:borderWidth="0dp"/>
-
 
 </RelativeLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-03 19:31:28+0000
+Translation-Revision-Date: 2019-12-17 08:43:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
@@ -69,9 +69,9 @@ Language: es
     <string name="gutenberg_native_my_post_status_info">Información del estado de mi entrada</string>
     <string name="gutenberg_native_my_post_publish_panel">Mi panel de publicación de entradas</string>
     <string name="gutenberg_native_my_document_setting_panel">Panel de ajustes de mis documentos</string>
-    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mover el bloque hacia arriba, desde la fila %1$s a la fila %2$s</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mover el bloque hacia arriba, de la fila %1$s a la fila %2$s</string>
     <string name="gutenberg_native_move_block_up">Mover el bloque arriba</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover el bloque hacia abajo, desde la fila %1$s a la fila %2$s</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover el bloque hacia abajo, de la fila %1$s a la fila %2$s</string>
     <string name="gutenberg_native_move_block_down">Mover el bloque abajo</string>
     <string name="gutenberg_native_link_text">Texto del enlace</string>
     <string name="gutenberg_native_link_inserted">Enlace insertado</string>
