@@ -2436,7 +2436,6 @@
     <string name="navigate_up_desc">navigate up</string>
     <string name="fab_add_tag_desc">Create Tag</string>
     <string name="fab_create_desc">create</string>
-    <string name="reader_blavatar_desc">site icon</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
     <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
