@@ -278,10 +278,10 @@
             },
             "meta": {
                 "links": {
-                    "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880",
-                    "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/help",
-                    "posts": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/posts/",
-                    "comments": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/comments/",
+                    "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880",
+                    "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/help",
+                    "posts": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/posts/",
+                    "comments": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/comments/",
                     "xmlrpc": "https://infocusphotographers.wordpress.com/xmlrpc.php"
                 }
             },

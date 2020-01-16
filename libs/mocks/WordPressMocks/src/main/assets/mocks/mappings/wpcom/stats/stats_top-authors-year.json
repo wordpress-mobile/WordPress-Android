@@ -1,13 +1,13 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/106707880/stats/top-authors/",
+        "urlPathPattern": "\/rest\/v1.1\/sites\/106707880\/stats\/top-authors\/*",
         "queryParameters": {
             "period": {
                 "equalTo": "year"
             },
             "max": {
-                "equalTo": "7"
+                "matches": "[0-9]+"
             },
             "date": {
                 "matches": "(.*)"

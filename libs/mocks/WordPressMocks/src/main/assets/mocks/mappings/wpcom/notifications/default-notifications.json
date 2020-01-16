@@ -83,7 +83,7 @@
                             "site": 106707880
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/106707880"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/106707880"
                         }
                     },
                     "title": "First Post"
@@ -430,7 +430,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "7 Followers",
@@ -613,8 +613,8 @@
                             "post": 132
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/132"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/132"
                         }
                     },
                     "title": "2 Likes",
@@ -742,8 +742,8 @@
                             "post": 147
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/147"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/147"
                         }
                     },
                     "title": "1 Like",
@@ -962,8 +962,8 @@
                             "post": 161
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/161"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/161"
                         }
                     },
                     "title": "3 Likes",
@@ -1090,8 +1090,8 @@
                             "post": 79
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/79"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/79"
                         }
                     },
                     "title": "1 Like",
@@ -1287,10 +1287,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/35",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/911487",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/161",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/35",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/911487",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/161",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -1306,10 +1306,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/911487",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/35",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/161",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/911487",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/35",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/161",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -1410,7 +1410,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "5 Followers!"
@@ -1475,7 +1475,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "20 Posts"
@@ -1700,8 +1700,8 @@
                             "post": 1
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/1"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/1"
                         }
                     },
                     "title": "3 Likes",
@@ -1811,7 +1811,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "Boom!"
@@ -1932,10 +1932,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/30",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74237684",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/18",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/30",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74237684",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/18",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -1951,10 +1951,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74237684",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/30",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/18",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74237684",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/30",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/18",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -2109,10 +2109,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/27",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/45",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/27",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/45",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -2128,10 +2128,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/27",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/45",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/27",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/45",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -2315,8 +2315,8 @@
                             "post": 45
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/45"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/45"
                         }
                     },
                     "title": "2 Likes",
@@ -2471,10 +2471,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/24",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/40",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/24",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/40",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -2490,10 +2490,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/24",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/40",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/24",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/40",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -2647,10 +2647,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/23",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74237684",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/56",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/23",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74237684",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/56",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -2666,10 +2666,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74237684",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/23",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/56",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74237684",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/23",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/56",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -2811,10 +2811,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/21",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74005263",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/45",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/21",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74005263",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/45",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -2830,10 +2830,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74005263",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/21",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/45",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74005263",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/21",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/45",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -2988,10 +2988,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/20",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/20",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -3007,10 +3007,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/20",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/20",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -3164,10 +3164,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/19",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74237684",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/18",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/19",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74237684",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/18",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -3183,10 +3183,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74237684",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/19",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/18",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74237684",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/19",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/18",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -3328,10 +3328,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/18",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74005263",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/18",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74005263",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -3347,10 +3347,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74005263",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/18",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74005263",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/18",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -3492,10 +3492,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/17",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74006837",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/40",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/17",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74006837",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/40",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -3511,10 +3511,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74006837",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/17",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/40",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74006837",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/17",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/40",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -3669,10 +3669,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/16",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/45",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/16",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/45",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -3688,10 +3688,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/16",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/45",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/16",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/45",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -3833,10 +3833,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/15",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74005263",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/79",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/15",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74005263",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/79",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -3852,10 +3852,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74005263",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/15",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/79",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74005263",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/15",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/79",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -3965,7 +3965,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "Boom!"
@@ -4074,10 +4074,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/14",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74006837",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/14",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74006837",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -4093,10 +4093,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74006837",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/14",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74006837",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/14",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -4251,10 +4251,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/13",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/45",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/13",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/45",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -4270,10 +4270,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/13",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/45",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/13",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/45",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -4415,10 +4415,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/12",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74005263",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/56",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/12",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74005263",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/56",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -4434,10 +4434,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74005263",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/12",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/56",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74005263",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/12",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/56",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -4579,10 +4579,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/11",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74006837",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/40",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/11",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74006837",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/40",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -4598,10 +4598,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74006837",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/11",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/40",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74006837",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/11",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/40",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -4756,10 +4756,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/10",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/10",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -4775,10 +4775,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/74004255",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/10",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/74004255",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/10",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -4905,8 +4905,8 @@
                             "post": 56
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/56"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/56"
                         }
                     },
                     "title": "1 Like",
@@ -5007,7 +5007,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "20 Likes"
@@ -5084,7 +5084,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "Boom!"
@@ -5205,10 +5205,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/9",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/10183950",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/1",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/9",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/10183950",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/1",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -5224,10 +5224,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/10183950",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/9",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/1",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/10183950",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/9",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/1",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -5337,7 +5337,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "Boom!"
@@ -5416,7 +5416,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "2 Followers"
@@ -5602,8 +5602,8 @@
                             "post": 22
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/22"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/22"
                         }
                     },
                     "title": "3 Likes",
@@ -5758,10 +5758,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/6",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/2193192",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/6",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/2193192",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -5777,10 +5777,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/2193192",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/6",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/2193192",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/6",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -6136,8 +6136,8 @@
                             "post": 38
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/38"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38"
                         }
                     },
                     "title": "6 Likes",
@@ -6293,10 +6293,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/5",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/2193192",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/40",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/5",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/2193192",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/40",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -6313,11 +6313,11 @@
                             "site": 71769073
                         },
                         "links": {
-                            "parent_comment": "https://public-api.wordpress.com/rest/v1/comments/1",
-                            "user": "https://public-api.wordpress.com/rest/v1/users/2193192",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/5",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/40",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "parent_comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/1",
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/2193192",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/5",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/40",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -6638,8 +6638,8 @@
                             "post": 40
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/40"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/40"
                         }
                     },
                     "title": "5 Likes",
@@ -6793,10 +6793,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/4",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/4275359",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/18",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/4",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/4275359",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/18",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -6812,10 +6812,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/4275359",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/4",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/18",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/4275359",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/4",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/18",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -7033,8 +7033,8 @@
                             "post": 18
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/18"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/18"
                         }
                     },
                     "title": "3 Likes",
@@ -7189,10 +7189,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/3",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/876809",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/3",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/876809",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -7208,10 +7208,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/876809",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/3",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/876809",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/3",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -7312,7 +7312,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "10 Likes"
@@ -7380,7 +7380,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "5 Likes"
@@ -7454,7 +7454,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "5 Likes"
@@ -7575,10 +7575,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/2",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/4275359",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/2",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/4275359",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -7594,10 +7594,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/4275359",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/2",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/38",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/4275359",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/2",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/38",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -7751,10 +7751,10 @@
                                     "site": 71769073
                                 },
                                 "links": {
-                                    "comment": "https://public-api.wordpress.com/rest/v1/comments/1",
-                                    "user": "https://public-api.wordpress.com/rest/v1/users/4275359",
-                                    "post": "https://public-api.wordpress.com/rest/v1/posts/40",
-                                    "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                                    "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/1",
+                                    "user": "{{request.requestLine.baseUrl}}/rest/v1/users/4275359",
+                                    "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/40",
+                                    "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                                 }
                             },
                             "type": "comment",
@@ -7770,10 +7770,10 @@
                             "site": 71769073
                         },
                         "links": {
-                            "user": "https://public-api.wordpress.com/rest/v1/users/4275359",
-                            "comment": "https://public-api.wordpress.com/rest/v1/comments/1",
-                            "post": "https://public-api.wordpress.com/rest/v1/posts/40",
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "user": "{{request.requestLine.baseUrl}}/rest/v1/users/4275359",
+                            "comment": "{{request.requestLine.baseUrl}}/rest/v1/comments/1",
+                            "post": "{{request.requestLine.baseUrl}}/rest/v1/posts/40",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "header": [
@@ -7871,7 +7871,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "5 Posts"
@@ -7936,7 +7936,7 @@
                             "site": 71769073
                         },
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1/sites/71769073"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1/sites/71769073"
                         }
                     },
                     "title": "First Post"

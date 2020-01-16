@@ -7,7 +7,7 @@
                 "equalTo": "day"
             },
             "max": {
-                "equalTo": "7"
+                "matches": "[0-9]+"
             },
             "date": {
                 "matches": "(.*)"
@@ -20,10 +20,10 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{fnow format='yyyy-MM-dd'}}",
+            "date": "{{now format='yyyy-MM-dd'}}",
             "period": "day",
             "days": {
-                "{{fnow format='yyyy-MM-dd'}}": {
+                "{{now format='yyyy-MM-dd'}}": {
                     "plays": [],
                     "other_plays": 0,
                     "total_plays": 0

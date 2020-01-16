@@ -7,7 +7,7 @@
                 "equalTo": "day"
             },
             "quantity": {
-                "equalTo": "1"
+                "matches": "[0-9]+"
             },
             "date": {
                 "matches": "(.*)"
@@ -20,7 +20,7 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{fnow format='yyyy-MM-dd'}}",
+            "date": "{{now format='yyyy-MM-dd'}}",
             "unit": "day",
             "fields": [
                 "period",
@@ -33,7 +33,7 @@
             ],
             "data": [
                 [
-                    "{{fnow format='yyyy-MM-dd'}}",
+                    "{{now format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,

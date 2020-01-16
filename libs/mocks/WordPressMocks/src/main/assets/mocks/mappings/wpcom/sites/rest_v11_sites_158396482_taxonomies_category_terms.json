@@ -18,9 +18,9 @@
                     "parent": 0,
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/categories/slug:uncategorized",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/categories/slug:uncategorized/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -34,9 +34,9 @@
                     "parent": 0,
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/categories/slug:wedding",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/categories/slug:wedding/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:wedding",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:wedding/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 }

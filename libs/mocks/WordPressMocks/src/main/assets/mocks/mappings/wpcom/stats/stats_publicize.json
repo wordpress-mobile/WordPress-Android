@@ -1,7 +1,15 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/rest/v1.1/sites/.*/stats/publicize/"
+        "urlPath": "/rest/v1.1/sites/106707880/stats/publicize/",
+         "queryParameters": {
+            "locale": {
+                "matches": "(.*)"
+            },
+            "max": {
+                "matches": "(.*)"
+            }
+        }
     },
     "response": {
         "status": 200,

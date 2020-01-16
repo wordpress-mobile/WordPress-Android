@@ -4,7 +4,7 @@
         "urlPath": "/rest/v1.1/sites/106707880/media/",
         "queryParameters": {
             "number": {
-                "equalTo": "48"
+                "matches": "(48)?"
             },
             "locale": {
                 "matches": "(.*)"
@@ -60,9 +60,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/384",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/384/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/384",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/384/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -110,9 +110,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/383",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/383/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/383",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/383/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -160,9 +160,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/382",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/382/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/382",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/382/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -210,9 +210,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/381",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/381/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/381",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/381/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -260,9 +260,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/379",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/379/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/379",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/379/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -310,9 +310,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/377",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/377/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/377",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/377/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -360,9 +360,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/376",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/376/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/376",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/376/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -410,9 +410,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/375",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/375/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/375",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/375/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -460,9 +460,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/374",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/374/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/374",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/374/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -510,9 +510,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/373",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/373/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/373",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/373/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -560,9 +560,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/372",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/372/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/372",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/372/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -610,9 +610,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/371",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/371/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/371",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/371/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -660,9 +660,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/370",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/370/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/370",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/370/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -710,9 +710,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/369",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/369/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/369",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/369/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -760,9 +760,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/368",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/368/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/368",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/368/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -810,9 +810,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/367",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/367/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/367",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/367/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -860,9 +860,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/365",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/365/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/365",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/365/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -910,9 +910,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/364",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/364/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/364",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/364/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -960,9 +960,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/363",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/363/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/363",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/363/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1010,9 +1010,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/362",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/362/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/362",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/362/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1060,9 +1060,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/361",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/361/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/361",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/361/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1110,9 +1110,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/360",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/360/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/360",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/360/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1160,9 +1160,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/359",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/359/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/359",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/359/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1210,9 +1210,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/358",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/358/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/358",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/358/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1260,9 +1260,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/357",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/357/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/357",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/357/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1310,9 +1310,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/356",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/356/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/356",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/356/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1360,9 +1360,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/355",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/355/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/355",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/355/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1410,9 +1410,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/354",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/354/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/354",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/354/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1460,9 +1460,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/353",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/353/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/353",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/353/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1510,9 +1510,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/352",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/352/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/352",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/352/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1560,9 +1560,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/351",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/351/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/351",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/351/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1610,9 +1610,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/350",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/350/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/350",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/350/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1660,9 +1660,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/349",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/349/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/349",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/349/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1710,9 +1710,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/348",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/348/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/348",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/348/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1760,9 +1760,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/347",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/347/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/347",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/347/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1810,9 +1810,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/346",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/346/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/346",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/346/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1860,9 +1860,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/345",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/345/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/345",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/345/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1910,9 +1910,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/344",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/344/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/344",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/344/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -1960,9 +1960,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/343",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/343/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/343",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/343/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -2010,9 +2010,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/342",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/342/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/342",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/342/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -2060,9 +2060,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/341",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/341/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/341",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/341/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -2110,9 +2110,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/340",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/340/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/340",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/340/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -2160,9 +2160,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/339",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/339/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/339",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/339/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -2210,9 +2210,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/338",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/338/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/338",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/338/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 },
@@ -2260,9 +2260,9 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/337",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/337/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/337",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/337/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 }

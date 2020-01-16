@@ -7,7 +7,7 @@
                 "equalTo": "year"
             },
             "num": {
-                "equalTo": "7"
+                "matches": "[0-9]+"
             },
             "date": {
                 "matches": "(.*)"
