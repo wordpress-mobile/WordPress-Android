@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ImageEditor</string>
+    <string name="home">Home</string>
 </resources>

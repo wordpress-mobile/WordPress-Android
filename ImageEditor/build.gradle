@@ -23,6 +23,10 @@ android {
         }
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         release.java.srcDirs += 'src/release/kotlin'
@@ -34,16 +38,22 @@ android {
 }
 
 dependencies {
+    def nav_version = "2.0.0"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.core:core-ktx:1.0.1'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     implementation ('com.github.yalantis:ucrop:2.2.2') {
         exclude group: 'com.squareup.okhttp3'
     }
+
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
