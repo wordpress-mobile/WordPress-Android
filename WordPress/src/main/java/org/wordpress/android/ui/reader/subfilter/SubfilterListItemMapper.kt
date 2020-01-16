@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader.subfilter
 
 import com.google.gson.Gson
-import org.wordpress.android.datasets.ReaderBlogTable
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE
@@ -10,7 +10,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
-import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import javax.inject.Inject
 
 private data class MappedItem(
@@ -21,13 +21,15 @@ private data class MappedItem(
     var tagType: Int = 0
 )
 
-class SubfilterListItemMapper @Inject constructor() {
+class SubfilterListItemMapper @Inject constructor(
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper
+) {
     fun fromJson(
         json: String,
-        onClickAction: ((filter: SubfilterListItem) -> Unit),
+        onClickAction: (filter: SubfilterListItem) -> Unit,
         isSelected: Boolean
     ): SubfilterListItem {
-
         val mappedItem = if (json.isEmpty()) {
             MappedItem(type = SITE_ALL.value)
         } else {
@@ -38,9 +40,9 @@ class SubfilterListItemMapper @Inject constructor() {
         return when (mappedItem.type) {
             SITE.value -> {
                 val blogInfo: ReaderBlog? = if (mappedItem.blogId != 0L) {
-                    ReaderBlogTable.getBlogInfo(mappedItem.blogId)
+                    readerBlogTableWrapper.getBlogInfo(mappedItem.blogId)
                 } else if (mappedItem.feedId != 0L) {
-                    ReaderBlogTable.getFeedInfo(mappedItem.feedId)
+                    readerBlogTableWrapper.getFeedInfo(mappedItem.feedId)
                 } else null
 
                 blogInfo?.let {
@@ -53,7 +55,7 @@ class SubfilterListItemMapper @Inject constructor() {
             }
             TAG.value -> {
                 if (mappedItem.tagSlug.isNotEmpty()) {
-                    val tag = ReaderUtils.getTagFromTagName(
+                    val tag = readerUtilsWrapper.getTagFromTagName(
                             mappedItem.tagSlug,
                             ReaderTagType.fromInt(mappedItem.tagType)
                     )
