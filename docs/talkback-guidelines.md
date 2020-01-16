@@ -8,6 +8,7 @@
 	- [Grouping Content](#grouping-content)
 	- [Live Regions](#live-regions)
 	- [Spoken Order](#spoken-order)
+	- [Focusing Views](#focusing-views)
 	- [Horizontal Scrolling](#horizontal-scrolling)
 	- [Appearing and Disappearing Elements](#appearing-disappearing)
 	- [Custom Views](#custom-views)
@@ -190,6 +191,28 @@ The reading order of the views are determined by the order in which XML elements
 	        info?.setTraversalAfter(imageView3)
 	        super.onInitializeAccessibilityNodeInfo(host, info) }})
 
+### <a name="focusing-views"></a>Focusing Views
+
+Proper focusing of views is one of the most important parts of proper TalkBack navigation. 
+
+#### Focus Navigation
+
+In Android, focus is provided to views that require user interactions. Some examples are `EditText`, `Switch`, `CheckBox`. 
+
+ Some views are focusable by default and others are made focusable by having `focusable` set to `true`. 
+
+#### Accessibility Focus
+TalkBack is able to gain focus an all meaningful views of the screen which includes views that are non-focusable such as `ImageView` or `TextView`.
+
+To make a view focusable for accessible you can utilize : 
+* `android:importantForAccessibility` 
+*  In Android Pie and onwards,  `android:screenReaderFocusable`. 
+*  You can also make the view focusable by utilizing `setFocusable(boolean focusable)` in the `AccessibilityNodeInfo` of an `AccessibilityDelegate`. 
+
+#### Focus Guidelines
+* It is important that you manage how focus is being set. Ensure you don't confuse keyboard focus/input focus with accessibility focus, as you can end up in a situation where you set `focusable` to true for accessibility reasons and it impacts the user experience for users using the app without TalkBack. 
+* Do not attempt to force TalkBack to focus on a specific view, as it breaks predictable navigation and you might make the app more inaccessible. TalkBack also attaches itself late in the activity lifecyle so it might be difficult to get this to work properly without a hacky solution. 
+
 ### <a name="horizontal-scrolling"></a>Horizontal Scrolling
 
 Horizontal scrolling views are common UI components in every developer's arsenal. In Android, we primarily utilize the `ViewPager` to create this experience. These views have to be optimized for TalkBack, since a visually impaired might find it difficult to know that it needs to be scrolled horizontally. To remedy this situation, visual indicators can be added so that TalkBack can scroll horizontally if necessary. This could be as simple as putting a Previous and Next button within the view or modifying the TalkBack announcement of the element, so that users know they can scroll for more content.
@@ -315,6 +338,7 @@ When you are performing your audit, you can utilize these guiding questions to h
 * Is the touch target of the view large enough for it to be easily selected?
 * Do all elements have the appropriate contrast ratio for maximum visibility?
 * Are there any state changes that aren't being announced?
+* Does TalkBack function well with in app gestures such as swiping, zooming, and scrolling?
 
 #### Manual testing
 
