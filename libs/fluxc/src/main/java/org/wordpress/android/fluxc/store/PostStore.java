@@ -1071,14 +1071,14 @@ public class PostStore extends Store {
     }
 
     /**
-     * Since we only fetch the ids of a post while fetching the post list, new need to keep a small table in the
+     * Since we only fetch the ids of a post while fetching the post list, we need to keep a small table in the
      * DB to be able to check post statuses for sectioning.
      */
     private void updatePostSummaries(SiteModel site, List<PostListItem> postListItems) {
         List<PostSummaryModel> postSummaryModelList = new ArrayList<>(postListItems.size());
         for (PostListItem item : postListItems) {
             postSummaryModelList
-                    .add(PostSummaryModel.newInstance(site, item.remotePostId, item.status, item.dateCreated));
+                    .add(new PostSummaryModel(site, item.remotePostId, item.status, item.dateCreated));
         }
         mPostSqlUtils.insertOrUpdatePostSummaries(postSummaryModelList);
     }
