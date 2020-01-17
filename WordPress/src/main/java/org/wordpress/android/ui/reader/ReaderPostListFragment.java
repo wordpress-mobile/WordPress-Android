@@ -40,6 +40,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
@@ -860,6 +861,8 @@ public class ReaderPostListFragment extends Fragment
                     R.string.reader_screen_title,
                     getResources().getDimensionPixelSize(R.dimen.margin_extra_large)
             );
+            mRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                                                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
         } else {
             mRecyclerView.setToolbarLeftAndRightPadding(
                     getResources().getDimensionPixelSize(R.dimen.margin_medium),
