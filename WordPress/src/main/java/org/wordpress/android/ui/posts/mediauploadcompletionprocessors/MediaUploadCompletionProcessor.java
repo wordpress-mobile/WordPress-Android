@@ -9,6 +9,14 @@ import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.Med
 public class MediaUploadCompletionProcessor {
     private final BlockProcessorFactory mBlockProcessorFactory;
 
+    /**
+     * Processor used for replacing local media id(s) and url(s) with their remote counterparts after an upload has
+     * completed.
+     *
+     * @param localId The local media id that needs replacement
+     * @param mediaFile The mediaFile containing the remote id and remote url
+     * @param siteUrl The site url - used to generate the attachmentPage url
+     */
     public MediaUploadCompletionProcessor(String localId, MediaFile mediaFile, String siteUrl) {
         mBlockProcessorFactory = new BlockProcessorFactory()
                 .init(localId, mediaFile, siteUrl);
