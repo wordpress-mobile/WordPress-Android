@@ -6,7 +6,6 @@ import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MediaTextBlockProcessor extends BlockProcessor {
     /**
@@ -18,27 +17,12 @@ public class MediaTextBlockProcessor extends BlockProcessor {
                                                               + "(.*)" // block contents
                                                               + "(<!-- /wp:media-text -->\n?)"; // closing comment
 
-    /**
-     * A {@link Pattern} to extract media-text block contents and splice the header with a remote id. The pattern has
-     * the following capture groups:
-     *
-     * <ol>
-     * <li>Block header before id</li>
-     * <li>The localId (to be replaced)</li>
-     * <li>Block header after id</li>
-     * <li>Block contents</li>
-     * <li>Block closing comment and any following characters</li>
-     * </ol>
-     */
-    private Pattern mMediaTextBlockPattern;
-
     public MediaTextBlockProcessor(String localId, MediaFile mediaFile) {
         super(localId, mediaFile);
-        mMediaTextBlockPattern = Pattern.compile(String.format(PATTERN_TEMPLATE_MEDIA_TEXT, localId), Pattern.DOTALL);
     }
 
     @Override public String processBlock(String block) {
-        Matcher matcher = mMediaTextBlockPattern.matcher(block);
+        Matcher matcher = getMatcherForBlock(block);
 
         if (matcher.find()) {
             String headerComment = new StringBuilder()
@@ -92,5 +76,9 @@ public class MediaTextBlockProcessor extends BlockProcessor {
 
         // leave block unchanged
         return block;
+    }
+
+    @Override String getBlockPatternTemplate() {
+        return PATTERN_TEMPLATE_MEDIA_TEXT;
     }
 }

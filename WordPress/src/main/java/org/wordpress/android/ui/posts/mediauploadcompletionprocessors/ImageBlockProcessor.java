@@ -6,7 +6,6 @@ import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ImageBlockProcessor extends BlockProcessor {
     /**
@@ -18,27 +17,12 @@ public class ImageBlockProcessor extends BlockProcessor {
                                                          + "(.*)" // block contents
                                                          + "(<!-- /wp:image -->\n?)"; // closing comment
 
-    /**
-     * A {@link Pattern} to extract image block contents and splice the header with a remote id. The pattern has the
-     * following capture groups:
-     *
-     * <ol>
-     * <li>Block header before id</li>
-     * <li>The localId (to be replaced)</li>
-     * <li>Block header after id</li>
-     * <li>Block contents</li>
-     * <li>Block closing comment and any following characters</li>
-     * </ol>
-     */
-    private Pattern mImageBlockPattern;
-
     public ImageBlockProcessor(String localId, MediaFile mediaFile) {
         super(localId, mediaFile);
-        mImageBlockPattern = Pattern.compile(String.format(PATTERN_TEMPLATE_IMAGE, localId), Pattern.DOTALL);
     }
 
     @Override public String processBlock(String block) {
-        Matcher matcher = mImageBlockPattern.matcher(block);
+        Matcher matcher = getMatcherForBlock(block);
 
         if (matcher.find()) {
             String headerComment = new StringBuilder()
@@ -76,5 +60,9 @@ public class ImageBlockProcessor extends BlockProcessor {
 
         // leave block unchanged
         return block;
+    }
+
+    @Override String getBlockPatternTemplate() {
+        return PATTERN_TEMPLATE_IMAGE;
     }
 }

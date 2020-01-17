@@ -40,23 +40,8 @@ public class GalleryBlockProcessor extends BlockProcessor {
      */
     private String mGalleryImageQuerySelector;
 
-    /**
-     * A {@link Pattern} to extract gallery block contents and splice the header with a remote id. The pattern has the
-     * following capture groups:
-     *
-     * <ol>
-     * <li>Block header before id</li>
-     * <li>The localId (to be replaced)</li>
-     * <li>Block header after id</li>
-     * <li>Block contents</li>
-     * <li>Block closing comment and any following characters</li>
-     * </ol>
-     */
-    private Pattern mGalleryBlockPattern;
-
     public GalleryBlockProcessor(String localId, MediaFile mediaFile, String siteUrl) {
         super(localId, mediaFile);
-        mGalleryBlockPattern = Pattern.compile(String.format(PATTERN_TEMPLATE_GALLERY, localId), Pattern.DOTALL);
         mGalleryImageQuerySelector = new StringBuilder()
                 .append("img[data-id=\"")
                 .append(localId)
@@ -66,7 +51,7 @@ public class GalleryBlockProcessor extends BlockProcessor {
     }
 
     @Override public String processBlock(String block) {
-        Matcher matcher = mGalleryBlockPattern.matcher(block);
+        Matcher matcher = getMatcherForBlock(block);
 
         if (matcher.find()) {
             String headerComment = new StringBuilder()
@@ -127,5 +112,9 @@ public class GalleryBlockProcessor extends BlockProcessor {
 
         // leave block unchanged
         return block;
+    }
+
+    @Override String getBlockPatternTemplate() {
+        return PATTERN_TEMPLATE_GALLERY;
     }
 }

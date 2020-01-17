@@ -6,7 +6,6 @@ import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class VideoBlockProcessor extends BlockProcessor {
     /**
@@ -18,28 +17,12 @@ public class VideoBlockProcessor extends BlockProcessor {
                                                          + "(.*)" // block contents
                                                          + "(<!-- /wp:video -->\n?)"; // closing comment
 
-    /**
-     * A {@link Pattern} to extract video block contents and splice the header with a remote id. The pattern has the
-     * following capture groups:
-     *
-     * <ol>
-     * <li>Block header before id</li>
-     * <li>The localId (to be replaced)</li>
-     * <li>Block header after id</li>
-     * <li>Block contents</li>
-     * <li>Block closing comment and any following characters</li>
-     * </ol>
-     */
-    private Pattern mVideoBlockPattern;
-
     public VideoBlockProcessor(String localId, MediaFile mediaFile) {
         super(localId, mediaFile);
-        mVideoBlockPattern = Pattern.compile(String.format(PATTERN_TEMPLATE_VIDEO, localId), Pattern.DOTALL);
     }
 
     @Override public String processBlock(String block) {
-        // TODO: process block header JSON in a more robust way (current processing uses RexEx)
-        Matcher matcher = mVideoBlockPattern.matcher(block);
+        Matcher matcher = getMatcherForBlock(block);
 
         if (matcher.find()) {
             String headerComment = new StringBuilder()
@@ -73,6 +56,10 @@ public class VideoBlockProcessor extends BlockProcessor {
 
         // leave block unchanged
         return block;
+    }
+
+    @Override String getBlockPatternTemplate() {
+        return PATTERN_TEMPLATE_VIDEO;
     }
 }
 

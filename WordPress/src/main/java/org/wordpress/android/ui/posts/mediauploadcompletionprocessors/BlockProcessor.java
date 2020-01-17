@@ -4,6 +4,9 @@ import org.jsoup.nodes.Document.OutputSettings;
 import org.wordpress.android.editor.Utils;
 import org.wordpress.android.util.helpers.MediaFile;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Abstract class to be extended for each enumerated {@link MediaBlockType}.
  */
@@ -22,6 +25,8 @@ abstract class BlockProcessor {
     String mRemoteId;
     String mRemoteUrl;
 
+    private Pattern mBlockPattern;
+
     /**
      * @param localId The local media id that needs replacement
      * @param mediaFile The mediaFile containing the remote id and remote url
@@ -30,6 +35,25 @@ abstract class BlockProcessor {
         mLocalId = localId;
         mRemoteId = mediaFile.getMediaId();
         mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
+        mBlockPattern = Pattern.compile(String.format(getBlockPatternTemplate(), localId), Pattern.DOTALL);
+    }
+
+    // TODO: consider processing block header JSON in a more robust way (current processing uses RexEx)
+    /**
+     * @param block The raw block contents of the block to be matched
+     * @return A {@link Matcher} to extract block contents and splice the header with a remote id. The matcher has the
+     * following capture groups:
+     *
+     * <ol>
+     * <li>Block header before id</li>
+     * <li>The localId (to be replaced)</li>
+     * <li>Block header after id</li>
+     * <li>Block contents</li>
+     * <li>Block closing comment and any following characters</li>
+     * </ol>
+     */
+    Matcher getMatcherForBlock(String block) {
+        return mBlockPattern.matcher(block);
     }
 
     /**
@@ -40,4 +64,25 @@ abstract class BlockProcessor {
      * @return A string containing content with ids and urls replaced
      */
     abstract String processBlock(String block);
+
+    /**
+     * All concrete implementations must implement this method to return a regex pattern template for the particular
+     * block type.<br>
+     * <br>
+     * The pattern template should contain a format specifier for the local id that needs to be matched and
+     * replaced in the block header, and the format specifier should be within its own capture group, e.g. `(%1$s)`.<br>
+     * <br>
+     * The pattern template should result in a matcher with the following capture groups:
+     *
+     * <ol>
+     * <li>Block header before id</li>
+     * <li>The format specifier for the local id (to be replaced by the local id when generating the pattern)</li>
+     * <li>Block header after id</li>
+     * <li>Block contents</li>
+     * <li>Block closing comment and any following characters</li>
+     * </ol>
+     *
+     * @return String with the regex pattern template
+     */
+    abstract String getBlockPatternTemplate();
 }
