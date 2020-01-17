@@ -54,15 +54,10 @@ class PostSummaryModel(@PrimaryKey @Column private var id: Int = 0) : Identifiab
         this.id = id
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(site: SiteModel, remoteId: Long, postStatus: String?, dateCreated: String?): PostSummaryModel {
-            return PostSummaryModel().apply {
-                this.localSiteId = site.id
-                this.remoteId = remoteId
-                this.status = postStatus
-                this.dateCreated = dateCreated
-            }
-        }
+    constructor(site: SiteModel, remoteId: Long, postStatus: String?, dateCreated: String?): this() {
+        this.localSiteId = site.id
+        this.remoteId = remoteId
+        this.status = postStatus
+        this.dateCreated = dateCreated
     }
 }
