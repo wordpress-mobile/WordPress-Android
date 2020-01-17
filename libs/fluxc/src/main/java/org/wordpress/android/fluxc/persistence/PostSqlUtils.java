@@ -28,8 +28,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveMod
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -412,11 +414,34 @@ public class PostSqlUtils {
         if (site == null || remotePostIds == null || remotePostIds.isEmpty()) {
             return Collections.emptyList();
         }
-        return WellSql.select(PostSummaryModel.class)
+        List<PostSummaryModel> postSummaryModelList = WellSql.select(PostSummaryModel.class)
                       .where()
                       .equals(PostSummaryModelTable.LOCAL_SITE_ID, site.getId())
                       .isIn(PostSummaryModelTable.REMOTE_ID, remotePostIds)
                       .endWhere()
                       .getAsModel();
+        // Re-order the post summaries to preserve the list order
+        return orderPostSummaries(remotePostIds, postSummaryModelList);
+    }
+
+    /**
+     * Orders the `postSummaryModelList` for the given `remotePostIds`.
+     */
+    private List<PostSummaryModel> orderPostSummaries(List<Long> remotePostIds,
+                                                      List<PostSummaryModel> postSummaryModelList) {
+        Map<Long, PostSummaryModel> map = new HashMap<>();
+        for (PostSummaryModel postSummaryModel : postSummaryModelList) {
+            if (postSummaryModel.getRemoteId() != null) {
+                map.put(postSummaryModel.getRemoteId(), postSummaryModel);
+            }
+        }
+        List<PostSummaryModel> resultList = new ArrayList<>(postSummaryModelList.size());
+        for (Long remotePostId : remotePostIds) {
+            @Nullable PostSummaryModel postSummaryModel = map.get(remotePostId);
+            if (postSummaryModel != null) {
+                resultList.add(postSummaryModel);
+            }
+        }
+        return resultList;
     }
 }
