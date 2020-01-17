@@ -81,24 +81,34 @@ class PostListItemDataSourceTest {
     }
 
     /**
-     * This helper function sets up and tests sectioned identifiers for a test.
+     * This helper function tests sectioning posts. When posts are sectioned, they are sorted by
+     * their post list type that's decided through their status. Then, specific section headers are added at the
+     * beginning of them. Finally, an [EndListIndicatorIdentifier] is added if all posts are fetched.
      *
-     * 1. First create postSummaries & posts to be used for remote and local posts respectively.
-     * 2. Use these lists as mocks for PostStore getters.
-     * 3. Use the actual data source to get the identifiers which will use the mocked data.
-     * 4. Create a reversed mutable section headers list while respecting the [excludeListTypes] parameter:
-     * 5. For each identifier:
-     * * If it's a post, find its status by using the mocked data and then verify that it belongs to
+     * In this helper, we want to test the following:
+     * * All [SECTION_HEADERS] that are not excluded through [excludeListTypes] are present.
+     * * [EndListIndicatorIdentifier] present if [isListFullyFetched] is true.
+     * * Posts are put under the correct post list type.
+     * * There are no [SECTION_HEADERS] that don't have any items under them.
+     *
+     * We achieve all this by going through the identifiers and updating a mutable list of expected [SECTION_HEADERS].
+     * We do this in reverse order, because it's easier to keep track of the current section that way.
+     *
+     * For each identifier:
+     * * If it's an end list indicator, we check if we were expecting one.
+     * * If it's a post, we find its status by using the mocked data and then verify that it belongs to
      * the current section.
-     * * If it's an end list indicator, check if we were expecting one.
-     * * If it's a section header, check that it's the current section header and then pop the current section header
+     * * If it's a section header, we check that it's the current section header and then pop the current section header
      * from the mutable list, so the next section becomes available.
-     * 6. Finally, verify that all expected sections are accounted for.
+     *
+     * Finally, we verify that all expected sections are accounted for by checking that the mutable [SECTION_HEADERS]
+     * list is empty.
      */
     private fun testSectionedItemIdentifiers(
         isListFullyFetched: Boolean,
         excludeListTypes: List<PostListType> = emptyList()
     ) {
+        // Create postSummaries & posts to be used for remote and local posts respectively.
         val postSummaries = createPostSummaries(excludeListTypes)
         val posts = createLocalPosts(excludeListTypes)
         setupPostStoreMocks(postSummaries, posts)
