@@ -29,6 +29,12 @@ class MediaTextBlockProcessorTest {
     }
 
     @Test
+    fun `processBlock replaces temporary local id and url for media-text block when id is not first`() {
+        val processedBlock = processor.processBlock(TestContent.oldMediaTextBlockIdNotFirst)
+        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newMediaTextBlockIdNotFirst)
+    }
+
+    @Test
     fun `processBlock also works for video`() {
         whenever(mediaFile.fileURL).thenReturn(TestContent.remoteVideoUrl)
         processor = MediaTextBlockProcessor(TestContent.localMediaId, mediaFile)

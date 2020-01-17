@@ -23,4 +23,10 @@ class VideoBlockProcessorTest {
         val processedBlock = processor.processBlock(TestContent.oldVideoBlock)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newVideoBlock)
     }
+
+    @Test
+    fun `processBlock replaces id and url in matching block when id is not first`() {
+        val processedBlock = processor.processBlock(TestContent.oldVideoBlockIdNotFirst)
+        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newVideoBlockIdNotFirst)
+    }
 }

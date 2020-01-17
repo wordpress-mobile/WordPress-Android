@@ -29,6 +29,12 @@ class GalleryBlockProcessorTest {
     }
 
     @Test
+    fun `processBlock replaces temporary local id and url for gallery block when ids are not first`() {
+        val processedBlock = processor.processBlock(TestContent.oldGalleryBlockIdsNotFirst)
+        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newGalleryBlockIdsNotFirst)
+    }
+
+    @Test
     fun `processBlock can handle ids with mixed types`() {
         val processedBlock = processor.processBlock(TestContent.oldGalleryBlockMixTypeIds)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newGalleryBlock)

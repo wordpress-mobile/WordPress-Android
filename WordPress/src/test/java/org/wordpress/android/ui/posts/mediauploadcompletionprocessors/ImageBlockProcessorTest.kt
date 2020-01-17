@@ -26,6 +26,12 @@ class ImageBlockProcessorTest {
     }
 
     @Test
+    fun `processBlock replaces id and url in matching block when id is not first`() {
+        val processedBlock = processor.processBlock(TestContent.oldImageBlockIdNotFirst)
+        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newImageBlockIdNotFirst)
+    }
+
+    @Test
     fun `processBlock leaves non-matching block unchanged`() {
         val nonMatchingId = "123"
         val imageBlockProcessor = ImageBlockProcessor(nonMatchingId, mediaFile)
