@@ -14,7 +14,7 @@ public class ImageBlockProcessor extends BlockProcessor {
      */
     private static final String PATTERN_TEMPLATE_IMAGE = "(<!-- wp:image \\{[^\\}]*\"id\":)" // block
                                                          + "(%1$s)" // local id must match to be replaced
-                                                         + "([,\\]][^>]*-->\n?)" // rest of header
+                                                         + "([,\\}][^>]*-->\n?)" // rest of header
                                                          + "(.*)" // block contents
                                                          + "(<!-- /wp:image -->\n?)"; // closing comment
 
