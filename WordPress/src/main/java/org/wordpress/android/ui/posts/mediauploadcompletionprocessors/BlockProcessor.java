@@ -26,6 +26,9 @@ abstract class BlockProcessor {
     String mRemoteUrl;
 
     private Pattern mBlockPattern;
+    private String mHeaderComment;
+    private String mBlockContent;
+    private String mClosingComment;
 
     /**
      * @param localId The local media id that needs replacement
@@ -54,6 +57,40 @@ abstract class BlockProcessor {
      */
     Matcher getMatcherForBlock(String block) {
         return mBlockPattern.matcher(block);
+    }
+
+    boolean matchAndSpliceBlockHeader(String block) {
+        Matcher matcher = getMatcherForBlock(block);
+
+        boolean matchFound = matcher.find();
+
+        if (matchFound) {
+            mHeaderComment = new StringBuilder()
+                    .append(matcher.group(1))
+                    .append(mRemoteId) // here we substitute remote id in place of the local id
+                    .append(matcher.group(3))
+                    .toString();
+            mBlockContent = matcher.group(4);
+            mClosingComment = matcher.group(5);
+        } else {
+            mHeaderComment = null;
+            mBlockContent = null;
+            mClosingComment = null;
+        }
+
+        return matchFound;
+    }
+
+    String getHeaderComment() {
+        return mHeaderComment;
+    }
+
+    String getBlockContent() {
+        return mBlockContent;
+    }
+
+    String getClosingComment() {
+        return mClosingComment;
     }
 
     /**

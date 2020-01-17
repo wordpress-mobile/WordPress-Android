@@ -5,8 +5,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
-import java.util.regex.Matcher;
-
 public class ImageBlockProcessor extends BlockProcessor {
     /**
      * Template pattern used to match and splice image blocks
@@ -22,19 +20,9 @@ public class ImageBlockProcessor extends BlockProcessor {
     }
 
     @Override public String processBlock(String block) {
-        Matcher matcher = getMatcherForBlock(block);
-
-        if (matcher.find()) {
-            String headerComment = new StringBuilder()
-                    .append(matcher.group(1))
-                    .append(mRemoteId) // here we substitute remote id in place of the local id
-                    .append(matcher.group(3))
-                    .toString();
-            String blockContent = matcher.group(4);
-            String closingComment = matcher.group(5);
-
+        if (matchAndSpliceBlockHeader(block)) {
             // create document from block content
-            Document document = Jsoup.parse(blockContent);
+            Document document = Jsoup.parse(getBlockContent());
             document.outputSettings(OUTPUT_SETTINGS);
 
             // select image element with our local id
@@ -51,9 +39,9 @@ public class ImageBlockProcessor extends BlockProcessor {
 
                 // return injected block
                 return new StringBuilder()
-                        .append(headerComment)
+                        .append(getHeaderComment())
                         .append(document.body().html()) // parser output
-                        .append(closingComment)
+                        .append(getClosingComment())
                         .toString();
             }
         }
