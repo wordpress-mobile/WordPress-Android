@@ -62,7 +62,7 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
 
         setContentView(R.layout.stats_jetpack_connection_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();

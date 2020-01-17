@@ -286,8 +286,8 @@
             android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
-            android:theme="@style/Calypso.NoActionBar" />
-        <activity android:name=".ui.JetpackConnectionResultActivity" android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity android:name=".ui.JetpackConnectionResultActivity" android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

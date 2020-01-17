@@ -2,8 +2,7 @@
 <resources>
     <!-- TextViews -->
 
-    <style name="JetpackConnectionText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?attr/wpColorText</item>
+    <style name="JetpackConnectionText" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
@@ -13,41 +12,23 @@
         <item name="android:paddingStart">@dimen/margin_extra_medium_large</item>
     </style>
 
-    <style name="JetpackInstallTitleText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textSize">@dimen/text_sz_extra_large</item>
-        <item name="android:textColor">@color/neutral_40</item>
+    <style name="JetpackInstallTitleText" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="JetpackInstallMessageText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColor">?attr/wpColorText</item>
+    <style name="JetpackInstallMessageText" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="JetpackFaqButton">
+    <style name="JetpackFaqButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Body2</item>
-        <item name="android:textColor">@color/primary_40</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="JetpackTermsAndConditionsButton">
+    <style name="JetpackTermsAndConditionsButton" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:autoLink">all</item>
         <item name="android:linksClickable">false</item>
         <item name="android:selectAllOnFocus">false</item>
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-    </style>
-
-    <style name="BlueMediumProgressBar" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:colorAccent">@color/primary_40</item>
-        <item name="android:indeterminateTint">@color/primary_40</item>
     </style>
 
     <!-- Stats Refresh -->
