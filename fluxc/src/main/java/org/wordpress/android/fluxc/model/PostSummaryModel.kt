@@ -54,7 +54,7 @@ class PostSummaryModel(@PrimaryKey @Column private var id: Int = 0) : Identifiab
         this.id = id
     }
 
-    constructor(site: SiteModel, remoteId: Long, postStatus: String?, dateCreated: String?): this() {
+    constructor(site: SiteModel, remoteId: Long, postStatus: String?, dateCreated: String?) : this() {
         this.localSiteId = site.id
         this.remoteId = remoteId
         this.status = postStatus
