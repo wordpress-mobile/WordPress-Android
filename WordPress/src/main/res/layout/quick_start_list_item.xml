@@ -1,55 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
+    style="@style/QuickStartListCard"
     android:layout_width="match_parent"
-    style="@style/QuickStartListCard" >
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
-        style="@style/QuickStartLayout" >
+    <RelativeLayout style="@style/QuickStartLayout">
 
         <View
             android:id="@+id/popup_anchor"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_height="1dp"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_width="1dp" >
-        </View>
+            android:layout_marginEnd="@dimen/margin_extra_large" />
 
         <ImageView
             android:id="@+id/icon"
+            style="@style/QuickStartIcon"
             android:importantForAccessibility="no"
-            tools:src="@drawable/ic_plus_white_24dp"
-            style="@style/QuickStartIcon" >
-        </ImageView>
+            tools:src="@drawable/ic_plus_white_24dp" />
 
         <TextView
             android:id="@+id/title"
+            style="@style/QuickStartTitle"
             android:layout_toEndOf="@+id/icon"
-            tools:text="@string/quick_start_list_create_site_title"
-            style="@style/QuickStartTitle" >
-        </TextView>
+            tools:text="@string/quick_start_list_create_site_title" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/subtitle"
+            style="@style/QuickStartSubtitle"
             android:layout_below="@+id/title"
             android:layout_toEndOf="@+id/icon"
             app:fixWidowWords="true"
-            tools:text="@string/quick_start_list_create_site_subtitle"
-            style="@style/QuickStartSubtitle" >
-        </org.wordpress.android.widgets.WPTextView>
+            tools:text="@string/quick_start_list_create_site_subtitle" />
 
         <View
             android:id="@+id/divider"
-            android:layout_alignStart="@+id/title"
+            style="@style/QuickStartDivider"
             android:layout_below="@+id/subtitle"
-            style="@style/QuickStartDivider" >
-        </View>
+            android:layout_alignStart="@+id/title" />
 
     </RelativeLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

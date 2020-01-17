@@ -1,41 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/QuickStartListCard"
     android:layout_width="match_parent"
-    style="@style/QuickStartListCard" >
+    android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:background="?attr/selectableItemBackground"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent" >
+        android:background="?attr/selectableItemBackground">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/completed_tasks_header_title"
-            android:ellipsize="end"
-            android:enabled="false"
+            style="@style/QuickStartTitle"
             android:layout_alignParentStart="true"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_toStartOf="@id/completed_tasks_header_chevron"
+            android:ellipsize="end"
             android:minHeight="@dimen/quick_start_complete_tasks_header_height"
-            android:text="@string/quick_start_complete_tasks_header"
-            style="@style/QuickStartTitle" >
-        </TextView>
+            android:text="@string/quick_start_complete_tasks_header" />
 
         <ImageView
             android:id="@+id/completed_tasks_header_chevron"
-            android:contentDescription="@string/quick_start_completed_tasks_header_chevron_expand_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_width="wrap_content"
+            android:contentDescription="@string/quick_start_completed_tasks_header_chevron_expand_desc"
             android:minHeight="@dimen/one_line_list_item_height"
             android:src="@drawable/ic_chevron_down_white_24dp"
-            android:tint="@color/neutral_50" >
-        </ImageView>
+            android:tint="?attr/colorOnSurface" />
 
     </RelativeLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
