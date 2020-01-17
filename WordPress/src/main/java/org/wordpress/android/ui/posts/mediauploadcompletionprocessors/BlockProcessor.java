@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Document.OutputSettings;
 import org.wordpress.android.editor.Utils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -100,7 +102,26 @@ abstract class BlockProcessor {
      * @param block The raw block contents
      * @return A string containing content with ids and urls replaced
      */
-    abstract String processBlock(String block);
+     String processBlock(String block) {
+         if (matchAndSpliceBlockHeader(block)) {
+             // create document from block content
+             Document document = Jsoup.parse(mBlockContent);
+             document.outputSettings(OUTPUT_SETTINGS);
+
+             if (processBlockContentDocument(document)) {
+
+                 // return injected block
+                 return new StringBuilder()
+                         .append(getHeaderComment())
+                         .append(document.body().html()) // parser output
+                         .append(mClosingComment)
+                         .toString();
+             }
+         }
+
+         // leave block unchanged
+         return block;
+     }
 
     /**
      * All concrete implementations must implement this method to return a regex pattern template for the particular
