@@ -87,14 +87,6 @@ abstract class BlockProcessor {
         return mHeaderComment;
     }
 
-    String getBlockContent() {
-        return mBlockContent;
-    }
-
-    String getClosingComment() {
-        return mClosingComment;
-    }
-
     /**
      * Processes a block returning a raw content replacement string. If a match is not found for the block content, this
      * method should return the original block contents unchanged.
@@ -143,4 +135,16 @@ abstract class BlockProcessor {
      * @return String with the regex pattern template
      */
     abstract String getBlockPatternTemplate();
+
+    /**
+     * All concrete implementations must implement this method for the particular block type. The document represents
+     * the html contents of the block to be processed, and is to be mutated in place.<br>
+     * <br>
+     * This method should return true to indicate success. Returning false will result in the block contents being
+     * unmodified.
+     *
+     * @param document The document to be mutated to make the necessary replacements
+     * @return A boolean value indicating whether or not the block contents should be replaced
+     */
+    abstract boolean processBlockContentDocument(Document document);
 }

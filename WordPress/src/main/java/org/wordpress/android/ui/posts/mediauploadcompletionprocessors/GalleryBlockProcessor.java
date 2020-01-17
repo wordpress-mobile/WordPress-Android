@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -50,61 +49,50 @@ public class GalleryBlockProcessor extends BlockProcessor {
         mAttachmentPageUrl = mediaFile.getAttachmentPageURL(siteUrl);
     }
 
-    @Override public String processBlock(String block) {
-        if (matchAndSpliceBlockHeader(block)) {
-            // create document from block content
-            Document document = Jsoup.parse(getBlockContent());
-            document.outputSettings(OUTPUT_SETTINGS);
-
-            // select image element with our local id
-            Element targetImg = document.select(mGalleryImageQuerySelector).first();
-
-            // if a match is found, proceed with replacement
-            if (targetImg != null) {
-                // replace attributes
-                targetImg.attr("src", mRemoteUrl);
-                targetImg.attr("data-id", mRemoteId);
-                targetImg.attr("data-full-url", mRemoteUrl);
-                targetImg.attr("data-link", mAttachmentPageUrl);
-
-                // replace class
-                targetImg.removeClass("wp-image-" + mLocalId);
-                targetImg.addClass("wp-image-" + mRemoteId);
-
-                // check for linkTo property
-                Matcher linkToMatcher = PATTERN_GALLERY_LINK_TO.matcher(getHeaderComment());
-
-                // set parent anchor href if necessary
-                Element parent = targetImg.parent();
-                if (parent != null && parent.is("a") && linkToMatcher.find()) {
-                    String linkToValue = linkToMatcher.group(2);
-
-                    switch (linkToValue) {
-                        case "media":
-                            parent.attr("href", mRemoteUrl);
-                            break;
-                        case "attachment":
-                            parent.attr("href", mAttachmentPageUrl);
-                            break;
-                        default:
-                            return block;
-                    }
-                }
-
-                // return injected block
-                return new StringBuilder()
-                        .append(getHeaderComment())
-                        .append(document.body().html()) // parser output
-                        .append(getClosingComment())
-                        .toString();
-            }
-        }
-
-        // leave block unchanged
-        return block;
-    }
-
     @Override String getBlockPatternTemplate() {
         return PATTERN_TEMPLATE_GALLERY;
+    }
+
+    @Override boolean processBlockContentDocument(Document document) {
+        // select image element with our local id
+        Element targetImg = document.select(mGalleryImageQuerySelector).first();
+
+        // if a match is found, proceed with replacement
+        if (targetImg != null) {
+            // replace attributes
+            targetImg.attr("src", mRemoteUrl);
+            targetImg.attr("data-id", mRemoteId);
+            targetImg.attr("data-full-url", mRemoteUrl);
+            targetImg.attr("data-link", mAttachmentPageUrl);
+
+            // replace class
+            targetImg.removeClass("wp-image-" + mLocalId);
+            targetImg.addClass("wp-image-" + mRemoteId);
+
+            // check for linkTo property
+            Matcher linkToMatcher = PATTERN_GALLERY_LINK_TO.matcher(getHeaderComment());
+
+            // set parent anchor href if necessary
+            Element parent = targetImg.parent();
+            if (parent != null && parent.is("a") && linkToMatcher.find()) {
+                String linkToValue = linkToMatcher.group(2);
+
+                switch (linkToValue) {
+                    case "media":
+                        parent.attr("href", mRemoteUrl);
+                        break;
+                    case "attachment":
+                        parent.attr("href", mAttachmentPageUrl);
+                        break;
+                    default:
+                        return false;
+                }
+            }
+
+            // return injected block
+            return true;
+        }
+
+        return false;
     }
 }

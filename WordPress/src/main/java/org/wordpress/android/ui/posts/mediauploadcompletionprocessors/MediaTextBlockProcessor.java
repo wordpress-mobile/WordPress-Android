@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -19,54 +18,39 @@ public class MediaTextBlockProcessor extends BlockProcessor {
         super(localId, mediaFile);
     }
 
-    @Override public String processBlock(String block) {
-        if (matchAndSpliceBlockHeader(block)) {
-            // create document from block content
-            Document document = Jsoup.parse(getBlockContent());
-            document.outputSettings(OUTPUT_SETTINGS);
+    @Override String getBlockPatternTemplate() {
+        return PATTERN_TEMPLATE_MEDIA_TEXT;
+    }
 
-            // select image element with our local id
-            Element targetImg = document.select("img").first();
+    @Override boolean processBlockContentDocument(Document document) {
+        // select image element with our local id
+        Element targetImg = document.select("img").first();
 
-            // if a match is found for img, proceed with replacement
-            if (targetImg != null) {
-                // replace attributes
-                targetImg.attr("src", mRemoteUrl);
+        // if a match is found for img, proceed with replacement
+        if (targetImg != null) {
+            // replace attributes
+            targetImg.attr("src", mRemoteUrl);
 
-                // replace class
-                targetImg.removeClass("wp-image-" + mLocalId);
-                targetImg.addClass("wp-image-" + mRemoteId);
+            // replace class
+            targetImg.removeClass("wp-image-" + mLocalId);
+            targetImg.addClass("wp-image-" + mRemoteId);
+
+            // return injected block
+            return true;
+        } else { // try video
+            // select video element with our local id
+            Element targetVideo = document.select("video").first();
+
+            // if a match is found for video, proceed with replacement
+            if (targetVideo != null) {
+                // replace attribute
+                targetVideo.attr("src", mRemoteUrl);
 
                 // return injected block
-                return new StringBuilder()
-                        .append(getHeaderComment())
-                        .append(document.body().html()) // parser output
-                        .append(getClosingComment())
-                        .toString();
-            } else { // try video
-                // select video element with our local id
-                Element targetVideo = document.select("video").first();
-
-                // if a match is found for video, proceed with replacement
-                if (targetVideo != null) {
-                    // replace attribute
-                    targetVideo.attr("src", mRemoteUrl);
-
-                    // return injected block
-                    return new StringBuilder()
-                            .append(getHeaderComment())
-                            .append(document.body().html()) // parser output
-                            .append(getClosingComment())
-                            .toString();
-                }
+                return true;
             }
         }
 
-        // leave block unchanged
-        return block;
-    }
-
-    @Override String getBlockPatternTemplate() {
-        return PATTERN_TEMPLATE_MEDIA_TEXT;
+        return false;
     }
 }
