@@ -33,7 +33,7 @@
                 android:layout_width="@dimen/blavatar_sz"
                 android:layout_height="@dimen/blavatar_sz"
                 android:layout_gravity="top|start"
-                android:contentDescription="@string/reader_blavatar_desc"
+                android:importantForAccessibility="no"
                 android:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
 
             <ImageView
@@ -41,7 +41,7 @@
                 style="@style/ReaderImageView.Avatar.Small"
                 android:layout_gravity="bottom|end"
                 android:layout_marginTop="14dp"
-                android:contentDescription="@string/reader_avatar_desc"
+                android:importantForAccessibility="no"
                 android:src="@drawable/bg_rectangle_neutral_10_user_32dp"
                 android:layout_marginStart="14dp"/>
         </FrameLayout>

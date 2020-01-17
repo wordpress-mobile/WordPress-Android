@@ -105,7 +105,6 @@
     <string name="delete_yes">Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
-    <string name="write_post">Write Post</string>
     <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
     <string name="ok">OK</string>
@@ -1799,8 +1798,9 @@
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_content_description">Change site icon</string>
 
-    <string name="my_site_bottom_sheet_add_post">Create new post</string>
-    <string name="my_site_bottom_sheet_add_page">Create new page</string>
+    <string name="my_site_bottom_sheet_title">Add new</string>
+    <string name="my_site_bottom_sheet_add_post">Blog post</string>
+    <string name="my_site_bottom_sheet_add_page">Site page</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -1832,8 +1832,6 @@
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
-    <string name="tabbar_accessibility_label_me">Me. View your profile and make changes.</string>
-    <string name="tabbar_accessibility_label_write">New post. Write a new post.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
 
@@ -2438,7 +2436,6 @@
     <string name="navigate_up_desc">navigate up</string>
     <string name="fab_add_tag_desc">Create Tag</string>
     <string name="fab_create_desc">create</string>
-    <string name="reader_blavatar_desc">site icon</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
     <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
