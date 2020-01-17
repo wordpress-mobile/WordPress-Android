@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-04 20:22:38+0000
+Translation-Revision-Date: 2019-12-17 21:44:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
@@ -33,7 +33,7 @@ Language: sq_AL
     <string name="site_cannot_be_loaded">S’ngarkojmë dot të dhënat për sajtin tuaj tani. Ju lutemi, riprovoni më vonë</string>
     <string name="gutenberg_native_wordpress_media_library">Mediatekë WordPress</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim. Ndërkohë mundeni ta përpunoni këtë postim edhe në internet.</string>
-    <string name="gutenberg_native_unsupported">Ee pambuluar</string>
+    <string name="gutenberg_native_unsupported">E pambuluar</string>
     <string name="gutenberg_native_ungroup">Hiqi Grupin</string>
     <string name="gutenberg_native_translate">Përktheni</string>
     <string name="gutenberg_native_title">Titull:</string>
@@ -65,15 +65,15 @@ Language: sq_AL
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">S’ka aplikacion për ta trajtuar këtë kërkesë. Ju lutemi, instaloni një shfletues.</string>
     <string name="gutenberg_native_navigate_up">Ngjituni</string>
     <string name="gutenberg_native_my_pre_publish_panel">Paneli im para-publikim</string>
-    <string name="gutenberg_native_my_post_status_info">Paneli i gjendjes së postimeve</string>
+    <string name="gutenberg_native_my_post_status_info">Të dhëna gjendjeje postimi</string>
     <string name="gutenberg_native_my_post_publish_panel">Paneli im i botimit të postimeve</string>
     <string name="gutenberg_native_my_document_setting_panel">Paneli Im i Rregullimeve Për Dokumente</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Kaloje bllokun nga rreshti %1$s sipër te rreshti %2$s</string>
-    <string name="gutenberg_native_move_block_up">Lëvizei bllokun lartë</string>
+    <string name="gutenberg_native_move_block_up">Shpjere bllokun më sipër</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Kaloje bllokun nga rreshti %1$s poshtë te rreshti %2$s</string>
-    <string name="gutenberg_native_move_block_down">Lëvizei bllokun poshtë</string>
-    <string name="gutenberg_native_link_text">Titull lidhjeje</string>
-    <string name="gutenberg_native_link_inserted">Lidhja u fut.</string>
+    <string name="gutenberg_native_move_block_down">Shpjere bllokun më poshtë</string>
+    <string name="gutenberg_native_link_text">Tekst lidhjeje</string>
+    <string name="gutenberg_native_link_inserted">Lidhja u fut</string>
     <string name="gutenberg_native_level_s_empty">Nivel %s. E zbrazët.</string>
     <string name="gutenberg_native_level_1_s_2_s">Nivel %1$s. %2$s</string>
     <string name="gutenberg_native_image_caption_s">Titull figure. %s</string>
@@ -82,9 +82,9 @@ Language: sq_AL
     <string name="gutenberg_native_help_icon">Ikonë ndihme</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">S’u arrit të futej media.\nJu lutemi, prekeni për mundësi.</string>
     <string name="gutenberg_native_empty">E zbrazët</string>
-    <string name="gutenberg_native_double_tap_to_undo_last_change">ë të zhbëhet ndryshimi i fundit, prekeni dyfish</string>
+    <string name="gutenberg_native_double_tap_to_undo_last_change">Që të zhbëhet ndryshimi i fundit, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Që shfaqet/fshihet rregullimi, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_select_an_image">ë të përzgjidhni një figurë, prekeni dyfish</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image">Që të përzgjidhni një figurë, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Që të përzgjidhni një video, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_select">Që të përzgjidhet, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_remove_the_block">Që të hiqet blloku, prekeni dyfish</string>

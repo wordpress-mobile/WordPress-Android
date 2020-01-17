@@ -6,7 +6,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -405,8 +404,9 @@ public class AppPrefs {
         remove(DeletablePrefKey.LAST_ACTIVITY_STR);
     }
 
-    public static int getMainPageIndex() {
-        return getInt(DeletablePrefKey.MAIN_PAGE_INDEX);
+    public static int getMainPageIndex(int maxIndexValue) {
+        int value = getInt(DeletablePrefKey.MAIN_PAGE_INDEX);
+        return value > maxIndexValue ? 0 : value;
     }
 
     public static void setMainPageIndex(int index) {
@@ -902,8 +902,7 @@ public class AppPrefs {
     }
 
     public static boolean isMainFabTooltipDisabled() {
-        return !BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
-               || getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
+        return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
     }
 
     public static void setQuickStartMigrationDialogShown(Boolean shown) {

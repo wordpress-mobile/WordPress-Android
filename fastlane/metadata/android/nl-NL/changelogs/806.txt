@@ -1,5 +1,0 @@
-13.8:
-* Verbeteringen aan de blok-editor: Vulelementblok toegevoegd voor het creëren van lege ruimte tussen content.
-* De zoekfunctie voor blogberichten is aangepast en bevat nu berichten onder alle categorieën.
-* Veel onopvallende verbeteringen in de gehele app: in totaal 26 unieke crash-oplossingen en bugverwijderingen.
-
