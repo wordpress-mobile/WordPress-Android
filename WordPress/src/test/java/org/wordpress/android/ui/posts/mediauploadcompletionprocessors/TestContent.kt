@@ -13,7 +13,8 @@ object TestContent {
     const val localVideoUrl = "file://local-video.mov"
     const val remoteVideoUrl = "https://videos.files.wordpress.com/qeJFeNa2/macintosh-plus-floral-shoppe-02-e383aae382b5e38395e383a9e383b3e382af420-e78fbee4bba3e381aee382b3e383b3e38394e383a5e383bc-1_hd.mp4"
     const val localMediaId = "112"
-    private const val collidingMediaId = "${localMediaId}42"
+    private const val collidingPrefixMediaId = "${localMediaId}42"
+    private const val collidingSuffixMediaId = "42${localMediaId}"
     const val remoteMediaId = "97629"
     const val attachmentPageUrl = "https://wordpress.org?p=${remoteMediaId}"
 
@@ -49,13 +50,22 @@ object TestContent {
 <!-- /wp:image -->
 """
 
-    const val imageBlockWithPrefixCollision = """<!-- wp:image {"id":${collidingMediaId},"align":"full"} -->
+    const val imageBlockWithPrefixCollision = """<!-- wp:image {"id":${collidingPrefixMediaId},"align":"full"} -->
 <figure class="wp-block-image alignfull">
-  <img src="$remoteImageUrl2" alt="" class="wp-image-${collidingMediaId}">
+  <img src="$remoteImageUrl2" alt="" class="wp-image-${collidingPrefixMediaId}">
   <figcaption><em>Gutenberg</em> on web</figcaption>
 </figure>
 <!-- /wp:image -->
 """
+
+    const val imageBlockWithSuffixCollision = """<!-- wp:image {"id":${collidingSuffixMediaId},"align":"full"} -->
+<figure class="wp-block-image alignfull">
+  <img src="$remoteImageUrl2" alt="" class="wp-image-${collidingSuffixMediaId}">
+  <figcaption><em>Gutenberg</em> on web</figcaption>
+</figure>
+<!-- /wp:image -->
+"""
+
 
     const val oldMediaTextBlock = """<!-- wp:media-text {"mediaId":${localMediaId},"mediaType":"image"} -->
 <div class="wp-block-media-text alignwide is-stacked-on-mobile">

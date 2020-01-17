@@ -46,4 +46,12 @@ class ImageBlockProcessorTest {
         )
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.imageBlockWithPrefixCollision)
     }
+
+    @Test
+    fun `processBlock leaves image block with colliding suffix unchanged`() {
+        val processedBlock = processor.processBlock(
+                TestContent.imageBlockWithSuffixCollision
+        )
+        Assertions.assertThat(processedBlock).isEqualTo(TestContent.imageBlockWithSuffixCollision)
+    }
 }
