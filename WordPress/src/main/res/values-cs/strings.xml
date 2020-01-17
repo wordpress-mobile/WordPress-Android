@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-28 12:57:35+0000
+Translation-Revision-Date: 2020-01-05 15:09:12+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
-    <string name="gutenberg_native_translate">\"Překlad\"</string>
-    <string name="gutenberg_native_title">\"Název:\"</string>
+    <string name="send_verification_email">Poslat ověřovací email</string>
+    <string name="gutenberg_native_translate">Přeložit</string>
+    <string name="gutenberg_native_title">Název:</string>
+    <string name="gutenberg_native_size">Velikost</string>
     <string name="domain_registration_state_picker_dialog_title">Vybrat stát</string>
     <string name="domain_registration_country_picker_dialog_title">Vybrat zemi</string>
     <string name="domain_registration_result_continue_button">Další</string>
@@ -84,7 +86,6 @@ Language: cs_CZ
     <string name="preference_strip_image_location">Odstranit polohu z médií</string>
     <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
     <string name="giphy_picker_search_hint">Prohledat Giphy</string>
-    <string name="photo_picker_giphy">Zvolit z Giphy</string>
     <string name="stats_author_views_label">Zobrazení</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autoři</string>
@@ -1382,7 +1383,6 @@ Language: cs_CZ
     <string name="auth_required">Pro pokračování, se přihlaste ještě jednou.</string>
     <string name="invalid_verification_code">Neplatný ověřovací kód</string>
     <string name="verification_code">Ověřovací kód</string>
-    <string name="editor_toast_invalid_path">Neplatná cesta k souboru</string>
     <string name="language">Jazyk</string>
     <string name="media_fetching">Načítám mediální soubory…</string>
     <string name="posts_fetching">Načítám příspěvky…</string>

@@ -50,6 +50,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getSystemNotificationsEnabled()
         set(value) = AppPrefs.setSystemNotificationsEnabled(value)
 
+    var shouldShowPostSignupInterstitial: Boolean
+        get() = AppPrefs.shouldShowPostSignupInterstitial()
+        set(shouldShow) = AppPrefs.setShouldShowPostSignupInterstitial(shouldShow)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
@@ -104,6 +108,10 @@ class AppPrefsWrapper @Inject constructor() {
     }
 
     fun removeAppWidgetHasData(appWidgetId: Int) = AppPrefs.removeStatsWidgetHasData(appWidgetId)
+
+    fun setMainFabTooltipDisabled(disable: Boolean) = AppPrefs.setMainFabTooltipDisabled(disable)
+
+    fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
 
     companion object {
         private const val LIGHT_MODE_ID = 0

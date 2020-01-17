@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-12 18:27:03+0000
+Translation-Revision-Date: 2019-12-08 17:50:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: eu_ES
 -->
 <resources>
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000_000_000">%sQa</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
+    <string name="reader_filter_all_sites">Gune guztiak</string>
+    <string name="reader_filter_sites_title">Guneak</string>
+    <string name="reader_filter_tags_title">Etiketak</string>
+    <string name="reader_save_for_later_display_name">Gordeta</string>
+    <string name="reader_discover_display_name">Aurkitu</string>
+    <string name="reader_my_likes_display_name">Atsegiteak</string>
+    <string name="site_cannot_be_loaded">Ezin ditugu zure gunearentzako datuak kargatu orain. Mesedez, saiatu geroago</string>
     <string name="add_media_progress">Media gehitzen</string>
     <string name="post_title">Izenburua</string>
     <string name="post_settings_post_format">Bidalketa formatua</string>
@@ -256,7 +269,6 @@ Language: eu_ES
     <string name="auth_required">Hasi saioa berriro jarraitzeko.</string>
     <string name="invalid_verification_code">Egiaztaketa kode okerra</string>
     <string name="verification_code">Egiaztaketa kodea</string>
-    <string name="editor_toast_invalid_path">Fitxategiaren bide okerra</string>
     <string name="language">Hizkuntza</string>
     <string name="media_fetching">Media eskuratzen…</string>
     <string name="posts_fetching">Bidalketak eskuratzen…</string>

@@ -154,7 +154,6 @@ Language: es_CL
     <string name="giphy_picker_empty_search_list">No hay medios que coincidan con tu búsqueda</string>
     <string name="giphy_picker_initial_empty_text">¡Busca para encontrar GIFs para añadirlos a tu Biblioteca de Medios!</string>
     <string name="giphy_picker_search_hint">Buscar en Giphy</string>
-    <string name="photo_picker_giphy">Elige desde Giphy</string>
     <string name="stats_author_views_label">Vistas</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>
@@ -1471,7 +1470,6 @@ Language: es_CL
     <string name="auth_required">Inicie sesión de nuevo para continuar.</string>
     <string name="invalid_verification_code">Código de verificación no válido</string>
     <string name="verification_code">Código de verificación</string>
-    <string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
     <string name="language">Idioma</string>
     <string name="media_fetching">Recuperando medios…</string>
     <string name="posts_fetching">Recuperando entradas…</string>

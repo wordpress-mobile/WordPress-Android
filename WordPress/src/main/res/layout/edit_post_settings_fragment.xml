@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!--Status-->
+        <!--Publish-->
 
         <androidx.cardview.widget.CardView
             style="@style/PostSettingsCardView"
@@ -22,6 +22,10 @@
             <LinearLayout
                 style="@style/PostSettingsCardViewInnerLayout">
 
+                <TextView
+                    android:id="@+id/post_settings_publish"
+                    style="@style/PostSettingsSectionHeader"
+                    android:text="@string/post_settings_publish"/>
                 <LinearLayout
                     android:id="@+id/post_status_container"
                     style="@style/PostSettingsContainer">
@@ -81,6 +85,7 @@
                 style="@style/PostSettingsCardViewInnerLayout">
 
                 <TextView
+                    android:id="@+id/post_settings_categories_and_tags_header"
                     style="@style/PostSettingsSectionHeader"
                     android:text="@string/post_settings_categories_and_tags"/>
 
@@ -128,6 +133,7 @@
                 style="@style/PostSettingsCardViewInnerLayout">
 
                 <TextView
+                    android:id="@+id/post_settings_featured_image_header"
                     style="@style/PostSettingsSectionHeader"
                     android:text="@string/post_settings_featured_image"/>
 
@@ -245,6 +251,7 @@
                 style="@style/PostSettingsCardViewInnerLayout">
 
                 <TextView
+                    android:id="@+id/post_settings_more_options_header"
                     style="@style/PostSettingsSectionHeader"
                     android:text="@string/post_settings_more_options"/>
 

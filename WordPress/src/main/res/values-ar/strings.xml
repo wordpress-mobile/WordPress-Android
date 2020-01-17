@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-22 01:21:31+0000
+Translation-Revision-Date: 2019-12-12 00:55:12+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="login_discovery_error_generic">تعذر علينا الوصول إلى موقعك. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
+    <string name="login_discovery_error_ssl">تعذر علينا الوصول إلى موقعك بسبب حدوث مشكلة في &lt;b>شهادة SSL&lt;/b>. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
+    <string name="login_discovery_error_http_auth">تعذر علينا الوصول إلى موقعك لأنه يتطلب &lt;b>مصادقة HTTP&lt;/b>. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
+    <string name="login_discovery_error_xmlrpc">تعذر علينا الوصول إلى &lt;b>ملف XMLRPC&lt;/b> على موقعك. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
+    <string name="login_site_credentials_magic_link_label">تقريبًا هناك! يتعين علينا فقط التحقق من صحة عنوان بريدك الإلكتروني المتصل بـ Jetpack &lt;b>%1$s&lt;/b></string>
+    <string name="enter_site_credentials_instead">تسجيل الدخول باستخدام بيانات اعتماد الموقع</string>
+    <string name="enter_credentials_for_site">تسجيل الدخول باستخدام بيانات اعتماد الموقع %1$s الخاصة بك</string>
+    <string name="send_verification_email">إرسال رسالة تحقق عبر البريد الإلكتروني</string>
+    <string name="my_site_bottom_sheet_add_page">إنشاء صفحة جديدة</string>
+    <string name="my_site_bottom_sheet_add_post">إنشاء مقالة جديدة</string>
+    <string name="reader_following_display_name">المتابعة</string>
+    <string name="posts_cannot_be_started">يتعذر علينا فتح هذه المقالات الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
+    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000_000_000">%sQa</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
+    <string name="reader_filter_all_sites">جميع المواقع</string>
+    <string name="reader_filter_sites_title">المواقع</string>
+    <string name="reader_filter_tags_title">الوسوم</string>
+    <string name="reader_save_for_later_display_name">تم الحفظ</string>
+    <string name="reader_discover_display_name">اكتشاف</string>
+    <string name="reader_my_likes_display_name">الإعجابات</string>
+    <string name="site_cannot_be_loaded">يتعذر علينا تحميل بيانات موقعك الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="reader_empty_saved_posts_content_description">أنقر فوق الزرّ \"حفظ المقالات\" لحفظ مقالةٍ في قائمتك.</string>
     <string name="reader_acessibility_list_loaded">\"تم تحميل القائمة بعناصر %1$d.\"</string>
     <string name="notifications_tab_dialog_switch_desc">التنبيهات</string>
@@ -81,7 +106,6 @@ Language: ar
     <string name="site_settings_site_accelerator">مُسرِّع الموقع</string>
     <string name="site_settings_lazy_load_images_summary">حسِّن سرعة موقعك من خلال تحميل الصور المرئية فقط على الشاشة.</string>
     <string name="site_settings_performance">الأداء</string>
-    <string name="notification_settings_moved_notices">يمكن الآن العثور على إعدادات التنبيهات ضمن علامة تبويب \"التنبيهات\".</string>
     <string name="stats_file_downloads_value_label">التنزيلات</string>
     <string name="stats_file_downloads_title_label">ملف</string>
     <string name="stats_file_downloads">تنزيلات الملفات</string>
@@ -144,9 +168,9 @@ Language: ar
     <string name="post_settings_retry_featured_image">إعادة محاولة الرفع</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">جاري رفع الوسائط.\nيرجى النقر على الخيارات.</string>
     <string name="link_open_new_window">فتح الرابط في نافذة/علامة تبويب جديدة</string>
-    <string name="post_list_search_prompt">بحث في المقالات المنشورة</string>
     <string name="stats_widget_error_no_access_token">لعرض إحصائياتك، سجّل الدخول إلى حساب WordPress.com.</string>
     <string name="post_list_search_nothing_found">لا تتطابق أي مقالة مع بحثك</string>
+    <string name="post_list_search_prompt">بحث في المقالات</string>
     <string name="domains_suggestions_intro_description">هذا هو المكان الذي سيجده الأشخاص على الإنترنت.</string>
     <string name="domains_suggestions_intro_title">اختيار اسم نطاق متميز</string>
     <string name="my_site_custom_domain_name">تتضمن جميع خطط WordPress.com اسم نطاق مخصص. سجّل نطاقك المميز المجاني الآن.</string>
@@ -402,7 +426,6 @@ Language: ar
     <string name="giphy_picker_empty_search_list">لا توجد وسائط مطابقة لبحثك</string>
     <string name="giphy_picker_initial_empty_text">ابحث للعثور على صور بتنسيق GIF لإضافتها إلى مكتبة الوسائط الخاصة بك!</string>
     <string name="giphy_picker_search_hint">البحث في Giphy</string>
-    <string name="photo_picker_giphy">اختيار من Giphy</string>
     <string name="stats_author_views_label">مشاهدات</string>
     <string name="stats_author_label">الكاتب</string>
     <string name="stats_authors">الكُتّاب</string>
@@ -1730,7 +1753,6 @@ Language: ar
     <string name="auth_required">سجّل الدخول مرة أخرى للمتابعة.</string>
     <string name="invalid_verification_code">رمز التحقق غير صالح</string>
     <string name="verification_code">رمز التحقق</string>
-    <string name="editor_toast_invalid_path">مسار الملف غير صالح</string>
     <string name="language">اللغة</string>
     <string name="media_fetching">جاري جلب الوسائط…</string>
     <string name="posts_fetching">جاري جلب المقالات…</string>

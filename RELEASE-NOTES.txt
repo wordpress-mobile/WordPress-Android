@@ -1,5 +1,19 @@
+14.1
+-----
+ 
+14.0
+-----
+* Block Editor: Fix displaying placeholder for images
+* Block Editor: Fix crash on undo
+* Block Editor: Fix styling on navigation UI
+* Information Architecture revised: moved the access to the Me screen to an option menu into My Site; added Floating Action Button in My Site to allow the creation of a new Blog post or Site page.
+
 13.9
 -----
+* Block Editor: New block "Gallery". You can now create image galleries using WordPress Media library.
+* Block Editor: Add support for the Preformatted block.
+* Block Editor: Add support for changing Settings in the List Block.
+* Block Editor: Add support for Video block settings.
  
 13.8
 -----

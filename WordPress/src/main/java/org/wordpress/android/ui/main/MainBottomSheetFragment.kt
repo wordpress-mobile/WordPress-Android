@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.add_content_bottom_sheet.*
 import org.wordpress.android.R
@@ -34,13 +37,26 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.create_actions_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = AddContentAdapter()
+        recyclerView.adapter = AddContentAdapter(requireActivity())
 
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(WPMainActivityViewModel::class.java)
 
         viewModel.mainActions.observe(this, Observer {
             (dialog.create_actions_recycler_view.adapter as? AddContentAdapter)?.update(it ?: listOf())
         })
+
+        dialog.setOnShowListener { dialogInterface ->
+            val sheetDialog = dialogInterface as? BottomSheetDialog
+
+            val bottomSheet = sheetDialog?.findViewById<View>(
+                    com.google.android.material.R.id.design_bottom_sheet
+            ) as? FrameLayout
+
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
     }
 
     override fun onAttach(context: Context?) {

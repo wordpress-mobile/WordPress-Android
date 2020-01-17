@@ -1,90 +1,74 @@
+<ar>
+13.9:
+• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
+• Block editor enhancements: Added support for settings in the List and Video blocks.
+</ar>
 <de-DE>
-13.7:
-* Updates im Block-Editor: Nicht unterstützte Blöcke zeigen jetzt einen Titel an, Indikatoren für neue Blöcke werden sowohl in leeren Editoren als auch nach dem letzten Block angezeigt, Hinzufügen von Links aus bestehenden URLs in deiner Zwischenablage, Medien- und Textblöcke haben jetzt mehr Ausrichtungsoptionen, Bildblöcke sind jetzt für die Vorschau im Vollbildmodus antippbar.
-
-* Allgemeine Verbesserungen: Einige Fehler und Abstürze wurden behoben, im Reader gibt es einen besseren Support für den TalkBack-Screenreader.
+13.9:
+• Neu im Block-Editor: Neuer Galerie-Block zur Erstellung von Bildgalerien mit Dateien aus deiner Mediathek sowie Unterstützung des vorformatierten Blocks hinzugefügt.
+• Verbesserungen am Block-Editor: Unterstützung für Einstellungen in den Listen- und Video-Blöcken hinzugefügt.
 </de-DE>
 <en-US>
-13.7:
-* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.
-
-* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.
+13.9:
+• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
+• Block editor enhancements: Added support for settings in the List and Video blocks.
 </en-US>
 <es-ES>
-13.7:
-* Actualizaciones del editor de bloques: ahora, los bloques no compatibles muestran un título, los indicadores de nuevos bloques se muestran tanto en los editores vacíos como después del último bloque, añadir enlaces a las URLs existentes en tu portapapeles, los bloques de medios y texto tienen más opciones de alineación, los bloques de imagen se pueden tocar para obtener una vista previa a pantalla completa.
-
-* Mejoras generales: corregidos algunos fallos y roturas y añadido una mejor compatibilidad para el lector de pantalla TalkBack en el lector.
+13.9:
+- Adiciones al editor de bloques: Añadido un nuevo bloque de galería para crear galerías de imágenes usando archivos de tu biblioteca de medios, junto con compatibilidad para el bloque preformateado.
+- Mejoras en el editor de bloques: Añadida compatibilidad para los ajustes de los bloques de lista y vídeo.
 </es-ES>
-<fr-CA>
-13.7 :
-*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
-
-* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
-</fr-CA>
-<fr-FR>
-13.7 :
-*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
-
-* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
-</fr-FR>
 <iw-IL>
-13.7:
-* עדכונים בעורך הבלוקים: בלוקים שלא נתמכים כעת מציגים כותרת, סממנים של בלוקים חדשים מוצגים בעורכים ריקים ולאחר הבלוק האחרון, הוספה של קישורים אפשרית מכתובות URL שנמצאות בלוח שלך, בלוקים של טקסט ומדיה כוללים אפשרויות יישור נוספות, ניתן להקיש על בלוקים של תמונה לתצוגה במסך מלא.
-
-* שיפורים כלליים: תיקנו כמה באגים וקריסות ושיפרנו את התמיכה בקורא של מסך TalkBack ב-Reader.
+13.9:
+• תוספות לעורך הבלוקים: הוספנו בלוק גלריה חדש ליצירת גלריית תמונות באמצעות קבצים מספריית המדיה שלך ותמיכה בבלוק Preformatted.
+• שיפורים בעורך הבלוקים: הוספנו תמיכה להגדרות בבלוק הרשימה ובבלוק הווידאו.
 </iw-IL>
 <id>
-13.7.
-* Pembaruan penyunting blok: blok yang tidak didukung kini menampilkan judul, indikator blok baru ditampilkan baik di penyunting kosong maupun setelah blok terakhir, menambahkan tautan dari URL yang sudah ada di papan klip Anda, blok Media dan Teks memiliki lebih banyak pilihan perataan, blok gambar kini dapat diketuk untuk pratinjau layar penuh.
-
-* Penyempurnaan umum: memperbaiki beberapa bug dan kesalahan, serta menambahkan dukungan pembaca layar TalkBack yang lebih baik di Pembaca.
+13.9:
+• Tambahan pada penyunting blok: Menambahkan blok Galeri yang baru untuk membuat galeri gambar menggunakan file dari Pustaka Media Anda, bersama dengan dukungan untuk blok Yang diformat sebelumnya.
+• Peningkatan pada penyunting blok: Menambahkan dukungan untuk pengaturan di blok Daftar dan Video.
 </id>
+<it-IT>
+13.9:
+• Aggiunte all'editor dei blocchi: aggiunto un nuovo blocco Galleria per creare gallerie di immagini usando file dalla libreria multimediale, insieme al supporto per il blocco Preformattato.
+• Miglioramenti all'editor dei blocchi: aggiunto supporto per le impostazioni nei blocchi Elenco e Video.
+</it-IT>
 <ja-JP>
-13.7:
-* ブロックエディターの更新 :サポート対象外のブロックにタイトルが表示されるようになり、新しいブロックインジケータが空のエディターと最後のブロック後の両方に表示され、リンクを追加するとクリップボードで既存の URL から抽出され、メディアブロックとテキストブロックに他の配置オプションが追加され、画像ブロックをタップするとフルスクリーンのプレビューが可能になります。
-
-* 一般的な改善 :いくつかのバグとクラッシュが修正され、TalkBack 画面の読者サポートが Reader で改善されました。
+13.9:
+•Block editor additions:Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
+•Block editor enhancements:Added support for settings in the List and Video blocks.
 </ja-JP>
 <ko-KR>
-13.7:
-* 블록 편집기 업데이트: 지원되지 않는 블록에 이제 제목이 표시됨, 새 블록 표시기가 빈 편집기와 마지막 블록 뒤에 모두 표시됨, 링크를 추가하면 클립보드의 기존 URL에서 가져옴, 미디어 및 텍스트 블록에 정렬 옵션이 추가됨, 이미지 블록을 탭하여 전체 화면으로 미리보기 가능.
-
-* 일반 개선 사항 : 일부 버그 및 충돌을 수정하고 리더에서 더 나은 TalkBack 화면 판독기 지원을 추가했습니다.
+13.9:
+• 블록 편집기 추가 기능: 미디어 라이브러리의 파일을 사용하여 이미지 갤러리를 만들 수 있는 새로운 갤러리 블록이 사전 서식 지정된 블록 지원과 함께 추가되었습니다.
+• 블록 편집기의 향상된 기능: 목록 및 비디오 블록의 설정에 대한 지원이 추가되었습니다.
 </ko-KR>
 <nl-NL>
-13.7:
-* Updates van de blokeditor: in niet-ondersteunde blokken wordt nu een titel weergegeven, indicators van nieuwe blokken worden zowel in lege editors als na het laatste blok weergegeven, links kunnen worden toegevoegd vanuit bestaande URL's in je klembord, de blokken Media en Tekst bevatten nu meer opties voor uitlijning, er kan op afbeeldingsblokken worden getikt voor weergave op volledig scherm.
-
-* Algemene verbeteringen: een paar bugs en crashes zijn opgelost en er is verbeterde ondersteuning voor de TalkBack-schermreader in de Reader.
+13.9:
+• Aanvullingen op de blokeditor: We hebben een nieuw Galerijblok toegevoegd om afbeeldinggalerijen te maken met bestanden uit je Mediabibliotheek, en ondersteuning voor het Vooraf ingesteld-blok.
+• Verbeteringen aan de blokeditor: Toegevoegde ondersteuning voor instellingen in de Lijst- en videoblokken.
 </nl-NL>
 <ru-RU>
-13.7:
-* Обновления для редактора блоков: для неподдерживаемых блоков показывается их название, индикаторы нового блока показываются и в пустом редакторе и после последнего блока, добавление ссылки может использовать содержимое буфера обмена, мультимедиа и текстовые блоки имеют больше возможностей выравнивания, блоки изображений можно развернуть на полноэкранный просмотр при нажатии.
-
-* Общие улучшения: исправлены некоторые ошибки и падения, добавлена поддержка чтения с экрана TalkBack в Чтиво.
+13.9:
+• Улучшения редактора блоков: добавлен блок галереи для создания галерей из файлов медиатеки, а также поддержка блока преформатированного текста. Возможность настройки блоков списков и видео.
 </ru-RU>
 <sv-SE>
-13.7:
-* Blockredigeraren: block utan stöd har nu en särskild rubrik, nya indikatorer visar tomma redigerare och slutet på sista blocket, vid tillägg av ny länk hämtas eventuell URL i urklippet, media- och textblock har fler justeringsalternativ, man kan klicka på bildblock för förhandsvisning i fullskärm.
-
-* Allmänna förbättringar: korrigerat olika fel och programkrascher och förbättrat stödet för skärmläsaren TalkBack i läsaren.
+13.9:
+• Nyheter i blockredigeraren: Nytt galleri-block för bildgallerier med filer från mediabiblioteket, och även stöd för ett förformaterat block.
+• Förbättringar i blockredigeraren: Nu finns det stöd för inställningar i list- och videoblock.
 </sv-SE>
 <tr-TR>
-13.7:
-* Blok düzenleyici güncellemeleri: desteklenmeyen bloklarda artık bir başlık görüntülenir, yeni blok göstergeleri hem boş düzenleyicilerde hem de son bloktan sonra gösterilir, bağlantılar eklendiğinde panodaki mevcut URL'lerden alınır, Ortam ve Metin bloklarında daha fazla hizalama seçeneği bulunur, görsel bloklarına dokunularak tam ekran önizleme yapılabilir.
-
-* Genel iyileştirmeler: Bazı hatalar ve kilitlenme durumları düzeltildi, Okuyucu'daki TalkBack ekran okuyucu desteği geliştirildi.
+13.9:
+• Blok düzenleyici eklemeleri: Önceden Biçimli blok desteğinin yanı sıra, Ortam Kütüphanenizdeki dosyaları kullanarak görsel galerileri oluşturmanız için yeni bir Galeri bloku eklendi.
+• Blok düzenleyici geliştirmeleri: Liste ve Video bloklarındaki ayarlar için destek eklendi.
 </tr-TR>
 <zh-CN>
-13.7：
-* 更新了区块编辑器：不支持的区块现可显示标题；新区块指示器同时显示在空白编辑器中和最后一个区块之后；添加从剪贴板的现有 URL 中提取的链接；“媒体和文本”区块具有更多对齐选项；轻点“图片”区块可进行全屏预览。
-
-* 常规改进：修复了一些错误和崩溃，并在阅读器中添加了更好的 TalkBack 屏幕阅读器支持。
+13.9：
+•区块编辑器添加内容：添加了一个新的“图库”区块，用于使用媒体库中的文件创建图片库，并支持“预格式化”区块。
+•区块编辑器增强功能：添加了对“列表”和“视频”区块中设置的支持。
 </zh-CN>
 <zh-TW>
-13.7：
-* 區塊編輯器更新：不支援的區塊現在會顯示標題；在空白編輯器內和前一個區塊之後，都會顯示新區塊指標；你可從剪貼簿拖入現有網址以新增連結；媒體和文字區塊可提供更多對齊選項；點選圖片區塊即可進行全螢幕預覽。
-
-* 一般改善項目：修正一些錯誤和故障情況，並為讀取器新增更完善的 TalkBack 螢幕讀取器支援。
+13.9：
+•區塊編輯器新增功能：已新增「圖庫」區塊，讓你可用媒體庫內的檔案建立圖庫，並取得「未格式化」區塊的支援。
+•區塊編輯器增強功能：已新增「清單」和「視訊」區塊內的設定支援。
 </zh-TW>

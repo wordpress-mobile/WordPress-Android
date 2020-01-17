@@ -222,7 +222,6 @@ Language: hr
     <string name="deselect_all">Odznači sve</string>
     <string name="language">Jezik</string>
     <string name="verification_code">Kod za provjeru</string>
-    <string name="editor_toast_invalid_path">Neispravna putanja datoteke</string>
     <string name="invalid_verification_code">Neispravan verifikacijski kod</string>
     <string name="auth_required">Ponovno se prijavite za nastavak.</string>
     <string name="publisher">Izdavač:</string>

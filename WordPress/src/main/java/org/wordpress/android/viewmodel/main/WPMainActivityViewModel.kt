@@ -8,16 +8,19 @@ import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
+import org.wordpress.android.ui.main.MainFabUiState
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
-class WPMainActivityViewModel @Inject constructor() : ViewModel() {
+class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) : ViewModel() {
     private var isStarted = false
 
-    private val _showMainActionFab = MutableLiveData<Boolean>()
-    val showMainActionFab: LiveData<Boolean> = _showMainActionFab
+    private val _fabUiState = MutableLiveData<MainFabUiState>()
+    val fabUiState: LiveData<MainFabUiState> = _fabUiState
 
     private val _mainActions = MutableLiveData<List<MainActionListItem>>()
     val mainActions: LiveData<List<MainActionListItem>> = _mainActions
@@ -32,13 +35,20 @@ class WPMainActivityViewModel @Inject constructor() : ViewModel() {
         if (isStarted) return
         isStarted = true
 
-        _showMainActionFab.value = isFabVisible
+        setMainFabUiState(isFabVisible)
+
         loadMainActions()
     }
 
     private fun loadMainActions() {
         val actionsList = ArrayList<MainActionListItem>()
 
+        actionsList.add(CreateAction(
+                actionType = NO_ACTION,
+                iconRes = 0,
+                labelRes = R.string.my_site_bottom_sheet_title,
+                onClickAction = null
+        ))
         actionsList.add(CreateAction(
                 actionType = CREATE_NEW_POST,
                 iconRes = R.drawable.ic_posts_white_24dp,
@@ -61,10 +71,32 @@ class WPMainActivityViewModel @Inject constructor() : ViewModel() {
     }
 
     fun setIsBottomSheetShowing(showing: Boolean) {
+        appPrefsWrapper.setMainFabTooltipDisabled(true)
+        setMainFabUiState(true)
+
         _isBottomSheetShowing.value = Event(showing)
     }
 
     fun onPageChanged(showFab: Boolean) {
-        _showMainActionFab.value = showFab
+        setMainFabUiState(showFab)
+    }
+
+    fun onTooltipTapped() {
+        val oldState = _fabUiState.value
+        oldState?.let {
+            _fabUiState.value = MainFabUiState(
+                    isFabVisible = it.isFabVisible,
+                    isFabTooltipVisible = false
+            )
+        }
+    }
+
+    private fun setMainFabUiState(isFabVisible: Boolean) {
+        val newState = MainFabUiState(
+                        isFabVisible = isFabVisible,
+                        isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible
+        )
+
+        _fabUiState.value = newState
     }
 }
