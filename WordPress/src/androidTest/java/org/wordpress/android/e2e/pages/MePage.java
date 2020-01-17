@@ -1,5 +1,6 @@
 package org.wordpress.android.e2e.pages;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 
 import org.wordpress.android.R;
@@ -31,7 +32,8 @@ public class MePage {
     public MePage go() {
         // Using the settings button as a marker for successfully navigating to the page
         while (!isElementDisplayed(appSettings)) {
-            clickOn(R.id.nav_me);
+            clickOn(R.id.nav_sites);
+            clickOn(R.id.me_item);
         }
 
         if (!isSelfHosted()) {
@@ -39,6 +41,10 @@ public class MePage {
         }
 
         return this;
+    }
+
+    public void goBack() {
+        Espresso.pressBack();
     }
 
     public MePage verifyUsername(String username) {

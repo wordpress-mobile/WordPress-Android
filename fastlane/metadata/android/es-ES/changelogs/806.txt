@@ -1,5 +1,0 @@
-13.8:
-* Mejoras en el editor de bloques: Añadido bloque espaciador para crear espacios vacíos entre contenidos.
-* Modificada la búsqueda de entradas del blog para incluir entradas en todas las categorías.
-* Montones de mejoras bajo el capó en toda la aplicación  26 correcciones de errores y problemas en total.
-

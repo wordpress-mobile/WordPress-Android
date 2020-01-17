@@ -8,6 +8,7 @@ import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -42,6 +43,12 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
     private fun loadMainActions() {
         val actionsList = ArrayList<MainActionListItem>()
 
+        actionsList.add(CreateAction(
+                actionType = NO_ACTION,
+                iconRes = 0,
+                labelRes = R.string.my_site_bottom_sheet_title,
+                onClickAction = null
+        ))
         actionsList.add(CreateAction(
                 actionType = CREATE_NEW_POST,
                 iconRes = R.drawable.ic_posts_white_24dp,

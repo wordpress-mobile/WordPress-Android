@@ -59,7 +59,7 @@ class WPMainActivityViewModelTest {
     fun `bottom sheet action is new post when new post is tapped`() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull
-        action.onClickAction.invoke(CREATE_NEW_POST)
+        action.onClickAction?.invoke(CREATE_NEW_POST)
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
     }
 
@@ -67,7 +67,7 @@ class WPMainActivityViewModelTest {
     fun `bottom sheet action is new page when new page is tapped`() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_PAGE } as CreateAction
         assertThat(action).isNotNull
-        action.onClickAction.invoke(CREATE_NEW_PAGE)
+        action.onClickAction?.invoke(CREATE_NEW_PAGE)
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_PAGE)
     }
 }
