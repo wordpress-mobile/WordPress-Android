@@ -13,6 +13,4 @@
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="QuickStartListCard" />
-
 </resources>

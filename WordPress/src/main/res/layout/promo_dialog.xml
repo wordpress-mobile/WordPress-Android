@@ -59,34 +59,23 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/promo_dialog_button_positive"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/PromoDialogButton"
             android:layout_alignParentEnd="true"
-            android:minWidth="@dimen/min_touch_target_sz"
-            android:minHeight="@dimen/default_dialog_button_height"
             tools:text="Yes" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/promo_dialog_button_negative"
-             style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/PromoDialogButton"
             android:layout_toStartOf="@+id/promo_dialog_button_positive"
-            android:minWidth="@dimen/min_touch_target_sz"
-            android:minHeight="@dimen/default_dialog_button_height"
             android:visibility="gone"
             tools:text="No"
             tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/promo_dialog_button_neutral"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/PromoDialogButton"
             android:layout_alignParentStart="true"
-            android:minWidth="@dimen/min_touch_target_sz"
-            android:minHeight="@dimen/default_dialog_button_height"
+            android:letterSpacing="-0.005"
             android:visibility="gone"
             tools:text="Maybe"
             tools:visibility="visible" />

@@ -489,10 +489,6 @@
         <item name="android:layout_width">match_parent</item>
     </style>
 
-    <style name="QuickStartListCard">
-        <item name="cardElevation">0dp</item>
-    </style>
-
     <style name="QuickStartLayout">
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:layout_height">wrap_content</item>
@@ -653,7 +649,7 @@
     </style>
 
     <!--Promo Dialog Styles-->
-    <style name="PromoDialogTitle" parent="WordPress">
+    <style name="PromoDialogTitle" >
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -661,7 +657,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="PromoDialogDescription" parent="WordPress">
+    <style name="PromoDialogDescription">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_width">match_parent</item>
@@ -669,12 +665,18 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
-    <style name="PromoDialogLink" parent="WordPress">
+    <style name="PromoDialogLink">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="PromoDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:letterSpacing">-0.005</item>
     </style>
 
     <!--Plugin Styles-->

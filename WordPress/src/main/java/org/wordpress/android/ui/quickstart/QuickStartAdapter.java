@@ -84,12 +84,10 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                     mTaskCompleted.size()));
 
             if (mIsCompletedTaskListExpanded) {
-                headerViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_surface_radius_top_card);
                 headerViewHolder.mChevron.setRotation(EXPANDED_CHEVRON_ROTATION);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_collapse_desc));
             } else {
-                headerViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_surface_radius_card);
                 headerViewHolder.mChevron.setRotation(COLLAPSED_CHEVRON_ROTATION);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_expand_desc));
@@ -105,23 +103,6 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;
-
-        // When first list item...
-        if (position == 0) {
-            // Use rounded background when next item is header.
-            if (getItemViewType(position + 1) == VIEW_TYPE_COMPLETED_TASKS_HEADER) {
-                taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_surface_radius_card);
-            // Use top rounded background when next item is not header (i.e. middle or bottom).
-            } else {
-                taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_surface_radius_top_card);
-            }
-        // When last list item or next item is header, use bottom rounded background.
-        } else if (position == mTasks.size() - 1 || getItemViewType(position + 1) == VIEW_TYPE_COMPLETED_TASKS_HEADER) {
-            taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_white_radius_bottom_card);
-        // Otherwise, use middle unrounded background.
-        } else {
-            taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_surface);
-        }
 
         QuickStartTask task = mTasks.get(position);
         boolean isEnabled = mTasksUncompleted.contains(task);
