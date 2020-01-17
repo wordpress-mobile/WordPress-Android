@@ -790,7 +790,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
             int mediaId = isNetworkUrl ? Integer.valueOf(mediaEntry.getValue().getMediaId())
-                    : mediaEntry.getValue().getId();
+                    : -mediaEntry.getValue().getId(); // negate local id here
             String url = isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey();
             rnMediaList.add(createRNMediaUsingMimeType(mediaId, url, mediaEntry.getValue().getMimeType()));
         }
