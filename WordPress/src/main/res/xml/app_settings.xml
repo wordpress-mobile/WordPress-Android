@@ -7,12 +7,10 @@
 
     <org.wordpress.android.ui.prefs.DetailListPreference
         android:key="@string/pref_key_language"
-        android:layout="@layout/wp_preference_layout"
         android:title="@string/interface_language"/>
 
     <ListPreference
         android:key="@string/pref_key_app_theme"
-        android:layout="@layout/wp_preference_layout"
         android:title="@string/app_theme"
         android:defaultValue="@string/app_theme_entry_value_default"
         android:summary="%s"
@@ -29,9 +27,8 @@
             android:defaultValue="true"
             android:key="@string/pref_key_send_usage"
             android:icon="@drawable/ic_stats_white_24dp"
-            android:layout="@layout/wp_preference_layout"
             android:title="@string/preference_collect_information"
-            app:iconTint="@color/neutral"/>
+            app:iconTint="?attr/colorOnSurface"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/cookie_policy_learn_more_header"
@@ -55,7 +52,6 @@
             android:defaultValue="true"
             android:key="@string/pref_key_send_crash"
             android:icon="@drawable/ic_bug_white_24dp"
-            android:layout="@layout/wp_preference"
             android:summary="@string/preference_crash_reports_summary"
             android:title="@string/preference_crash_reports"
             app:iconTint="@color/neutral"/>
@@ -64,18 +60,15 @@
 
     <Preference
         android:key="@string/pref_key_device_settings"
-        android:layout="@layout/wp_preference_layout"
         android:title="@string/preference_open_device_settings"/>
 
     <PreferenceCategory
         android:key="@string/pref_key_optimize_media"
-        android:layout="@layout/wp_preference_category"
         android:title="@string/media">
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_image"
             android:key="@string/pref_key_optimize_image"
-            android:layout="@layout/wp_preference_layout"
             android:summary="@string/site_settings_optimize_images_summary"
             android:title="@string/site_settings_optimize_images"/>
 
@@ -100,14 +93,12 @@
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_strip_image_location"
             android:defaultValue="false"
-            android:layout="@layout/wp_preference_layout"
             android:key="@string/pref_key_strip_image_location"
             android:title="@string/preference_strip_image_location"/>
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_video"
             android:key="@string/pref_key_optimize_video"
-            android:layout="@layout/wp_preference_layout"
             android:summary="@string/site_settings_optimize_video_summary"
             android:title="@string/site_settings_optimize_videos"/>
 
@@ -133,17 +124,14 @@
 
     <PreferenceCategory
         android:key="@string/pref_key_about_section"
-        android:layout="@layout/wp_preference_category"
         android:title="@string/about_the_app">
 
         <Preference
             android:key="@string/pref_key_app_about"
-            android:layout="@layout/wp_preference_layout"
             android:title="@string/app_title"/>
 
         <Preference
             android:key="@string/pref_key_oss_licenses"
-            android:layout="@layout/wp_preference_layout"
             android:title="@string/open_source_licenses"/>
 
     </PreferenceCategory>
