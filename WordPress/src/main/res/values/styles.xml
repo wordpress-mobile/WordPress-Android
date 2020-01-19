@@ -409,7 +409,7 @@
     </style>
 
     <style name="MeListRowIcon">
-        <item name="android:tint">@color/neutral_60</item>
+        <item name="android:tint">?attr/colorOnSurface</item>
         <item name="android:layout_width">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_gravity">center_vertical</item>
@@ -424,17 +424,16 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:padding">@dimen/margin_extra_large</item>
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:gravity">start</item>
     </style>
 
     <style name="MeListSectionDividerView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">@dimen/divider_size</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">@color/divider</item>
+        <item name="android:background">?android:attr/listDivider</item>
         <item name="android:layout_marginEnd">@dimen/content_margin</item>
         <item name="android:layout_marginStart">@dimen/content_margin</item>
     </style>
@@ -456,21 +455,19 @@
     <style name="MyProfileLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
     <style name="MyProfileText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
     </style>
 
     <style name="MyProfileDividerView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/divider</item>
+        <item name="android:layout_height">@dimen/divider_size</item>
+        <item name="android:background">?android:attr/listDivider</item>
     </style>
 
     <!--Quick Start-->
@@ -791,14 +788,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/margin_extra_large</item>
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
-    </style>
-
-    <style name="HelpActivityDivider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/list_divider_height</item>
-        <item name="android:background">@color/neutral_10</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
     <style name="ActionableEmptyStateTitle">
