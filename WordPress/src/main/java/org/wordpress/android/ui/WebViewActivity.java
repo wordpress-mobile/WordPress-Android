@@ -105,7 +105,7 @@ public abstract class WebViewActivity extends AppCompatActivity {
     public void configureView() {
         setContentView(R.layout.webview);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
