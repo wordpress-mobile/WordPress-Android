@@ -104,7 +104,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener,
         Preference.OnPreferenceClickListener,
         AdapterView.OnItemLongClickListener,
-        ViewGroup.OnHierarchyChangeListener,
         Dialog.OnDismissListener,
         SiteSettingsInterface.SiteSettingsListener {
     /**
@@ -474,26 +473,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             setupMorePreferenceScreen();
             setupJetpackSecurityScreen();
         }
-    }
-
-    @Override
-    public void onChildViewAdded(View parent, View child) {
-        if (child.getId() == android.R.id.title && child instanceof TextView) {
-            // style preference category title views
-            TextView title = (TextView) child;
-            WPPrefUtils.layoutAsBody2(title);
-        } else {
-            // style preference title views
-            TextView title = child.findViewById(android.R.id.title);
-            if (title != null) {
-                WPPrefUtils.layoutAsSubhead(title);
-            }
-        }
-    }
-
-    @Override
-    public void onChildViewRemoved(View parent, View child) {
-        // NOP
     }
 
     @Override
@@ -868,8 +847,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         // handle long clicks on preferences to display hints
         prefList.setOnItemLongClickListener(this);
-        // required to customize (Calypso) preference views
-        prefList.setOnHierarchyChangeListener(this);
         // remove footer divider bar
         prefList.setFooterDividersEnabled(false);
         prefList.setOverscrollFooter(res.getDrawable(android.R.color.transparent));
@@ -1636,7 +1613,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         button.setOnClickListener(v -> {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
             final EditText input = new EditText(getActivity());
-            WPPrefUtils.layoutAsInput(input);
             input.setWidth(getResources().getDimensionPixelSize(R.dimen.list_editor_input_max_width));
             input.setHint(R.string.site_settings_list_editor_input_hint);
             builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {

@@ -25,7 +25,6 @@ import androidx.core.view.ViewCompat;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.Locale;
 
@@ -87,13 +86,8 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     protected void onBindView(@NonNull View view) {
         super.onBindView(view);
 
-        TextView titleView = view.findViewById(android.R.id.title);
         TextView summaryView = view.findViewById(android.R.id.summary);
-
-        if (titleView != null) WPPrefUtils.layoutAsSubhead(titleView);
-
         if (summaryView != null) {
-            WPPrefUtils.layoutAsBody1(summaryView);
             summaryView.setEllipsize(TextUtils.TruncateAt.END);
             summaryView.setInputType(getEditText().getInputType());
             if (mLines != -1) summaryView.setLines(mLines);
@@ -163,13 +157,11 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             }
             onAddEditTextToDialogView(view, editText);
         }
-        WPPrefUtils.layoutAsInput(editText);
         editText.setSelection(editText.getText().length());
         // RtL language support
         editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
 
-        TextView message = (TextView) view.findViewById(android.R.id.message);
-        WPPrefUtils.layoutAsDialogMessage(message);
+        TextView message = view.findViewById(android.R.id.message);
 
         // Dialog message has some extra bottom margin we don't want
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) message.getLayoutParams();
