@@ -72,6 +72,13 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
+    fun `fab tooltip disabled when fab long pressed`() {
+        viewModel.onFabLongPressed()
+        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
+        assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
+    }
+
+    @Test
     fun `bottom sheet action is new post when new post is tapped`() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull

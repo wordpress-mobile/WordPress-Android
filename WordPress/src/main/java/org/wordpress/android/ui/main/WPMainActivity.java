@@ -423,7 +423,7 @@ public class WPMainActivity extends AppCompatActivity implements
             if (v.isHapticFeedbackEnabled()) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
-
+            mViewModel.onFabLongPressed();
             Toast.makeText(v.getContext(), R.string.create_post_page_fab_tooltip, Toast.LENGTH_SHORT).show();
             return true;
         });
