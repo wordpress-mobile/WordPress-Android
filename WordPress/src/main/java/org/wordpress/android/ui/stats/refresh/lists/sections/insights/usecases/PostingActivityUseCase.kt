@@ -104,7 +104,11 @@ class PostingActivityUseCase
                         )
                         descriptions.add(activityDescription)
                     }
-            blocks.add(Block(block.label, block.boxes, block.contentDescription, descriptions))
+            val labelContentDescription = resourceProvider.getString(
+                    R.string.stats_posting_activity_label_content_description,
+                    block.contentDescription
+            )
+            blocks.add(Block(block.label, block.boxes, labelContentDescription, descriptions))
         }
 
         return ActivityItem(blocks)
