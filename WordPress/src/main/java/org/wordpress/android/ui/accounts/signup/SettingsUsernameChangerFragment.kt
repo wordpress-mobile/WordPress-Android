@@ -6,20 +6,17 @@ import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
-import android.view.ContextThemeWrapper
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.style
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACCOUNT_SETTINGS_CHANGE_USERNAME_FAILED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACCOUNT_SETTINGS_CHANGE_USERNAME_SUCCEEDED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACCOUNT_SETTINGS_CHANGE_USERNAME_SUGGESTIONS_FAILED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.*
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS
 import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged
@@ -87,11 +84,11 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
                 ), HtmlCompat.FROM_HTML_MODE_LEGACY
         )
 
-        AlertDialog.Builder(ContextThemeWrapper(activity, style.Calypso_Dialog_Alert)).apply {
+        MaterialAlertDialogBuilder(activity).apply {
             setTitle(R.string.settings_username_changer_confirm_dialog_title)
             setView(layout)
             setPositiveButton(
-                    R.string.settings_username_changer_confirm_dialog_positive_action
+                  R.string.settings_username_changer_confirm_dialog_positive_action
             ) { _, _ -> saveUsername(username) }
             setNegativeButton(android.R.string.cancel, null)
             create()
