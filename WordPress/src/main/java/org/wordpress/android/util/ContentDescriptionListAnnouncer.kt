@@ -13,11 +13,11 @@ class ContentDescriptionListAnnouncer constructor(
     @StringRes private val endOfListText: Int,
     @StringRes private val clickActionText: Int? = null,
     private val contentDescriptions: List<String>,
-    targetView: View
+    private val targetView: View
 ) {
     private var currentIndex = 0
 
-    init {
+    fun setupAnnouncer() {
         AccessibilityUtils.setAccessibilityDelegateSafely(
                 targetView,
                 object : AccessibilityDelegateCompat() {
