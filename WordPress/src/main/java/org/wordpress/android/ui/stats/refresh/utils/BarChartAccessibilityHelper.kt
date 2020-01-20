@@ -11,17 +11,20 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 
 class BarChartAccessibilityHelper(
     private val barChart: BarChart,
-    private val contentDescriptions: List<String>,
+    contentDescriptions: List<String>,
     private val hasOverlappingEntries: Boolean,
     private val accessibilityEvent: BarChartAccessibilityEvent,
     private val dataSet: IBarDataSet = barChart.data.dataSets.first()
 ) : ExploreByTouchHelper(barChart) {
+    private val cutContentDescriptions:List<String>
+
     interface BarChartAccessibilityEvent {
         fun onHighlight(index: Int, hasOverlappingEntries: Boolean)
     }
 
     init {
         barChart.setOnHoverListener { _, event -> dispatchHoverEvent(event) }
+        cutContentDescriptions = contentDescriptions.take(dataSet.entryCount)
     }
 
     override fun getVirtualViewAt(x: Float, y: Float): Int {
@@ -62,7 +65,7 @@ class BarChartAccessibilityHelper(
         virtualViewId: Int,
         node: AccessibilityNodeInfoCompat
     ) {
-        node.contentDescription = contentDescriptions[virtualViewId]
+        node.contentDescription = cutContentDescriptions[virtualViewId]
 
         barChart.highlighted?.let { highlights ->
             highlights.forEach { highlight ->
