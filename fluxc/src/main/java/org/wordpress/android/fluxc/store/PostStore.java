@@ -28,6 +28,8 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoveAllPosts;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostSummary;
+import org.wordpress.android.fluxc.model.PostSummaryModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.ListOrder;
@@ -91,12 +93,15 @@ public class PostStore extends Store {
         public String lastModified;
         public String status;
         public String autoSaveModified;
+        public String dateCreated;
 
-        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified) {
+        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified,
+                            String dateCreated) {
             this.remotePostId = remotePostId;
             this.lastModified = lastModified;
             this.status = status;
             this.autoSaveModified = autoSaveModified;
+            this.dateCreated = dateCreated;
         }
     }
 
@@ -754,6 +759,8 @@ public class PostStore extends Store {
             }
         }
 
+        updatePostSummaries(payload.listDescriptor.getSite(), payload.postListItems);
+
         FetchedListItemsPayload fetchedListItemsPayload =
                 new FetchedListItemsPayload(payload.listDescriptor, postIds,
                         payload.loadedMore, payload.canLoadMore, fetchedListItemsError);
@@ -1061,5 +1068,27 @@ public class PostStore extends Store {
 
     public void deleteLocalRevisionOfAPostOrPage(PostModel post) {
         mPostSqlUtils.deleteLocalRevisionAndDiffsOfAPostOrPage(post);
+    }
+
+    /**
+     * Since we only fetch the ids of a post while fetching the post list, we need to keep a small table in the
+     * DB to be able to check post statuses for sectioning.
+     */
+    private void updatePostSummaries(SiteModel site, List<PostListItem> postListItems) {
+        List<PostSummaryModel> postSummaryModelList = new ArrayList<>(postListItems.size());
+        for (PostListItem item : postListItems) {
+            postSummaryModelList
+                    .add(new PostSummaryModel(site, item.remotePostId, item.status, item.dateCreated));
+        }
+        mPostSqlUtils.insertOrUpdatePostSummaries(postSummaryModelList);
+    }
+
+    public List<PostSummary> getPostSummaries(@NonNull SiteModel site, @NonNull List<Long> remotePostIds) {
+        List<PostSummaryModel> postSummaryModelList = mPostSqlUtils.getPostSummaries(site, remotePostIds);
+        List<PostSummary> postSummaryList = new ArrayList<>(postSummaryModelList.size());
+        for (PostSummaryModel postSummaryModel : postSummaryModelList) {
+            postSummaryList.add(PostSummary.fromPostSummaryModel(postSummaryModel));
+        }
+        return postSummaryList;
     }
 }
