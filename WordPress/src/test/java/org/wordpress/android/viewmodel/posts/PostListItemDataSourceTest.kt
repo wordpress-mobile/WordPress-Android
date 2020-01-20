@@ -3,7 +3,7 @@ package org.wordpress.android.viewmodel.posts
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import org.junit.Assert.assertTrue
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.fluxc.model.PostModel
@@ -131,22 +131,24 @@ class PostListItemDataSourceTest {
             val currentSection = mutableSectionHeaders.first()
             when (identifier) {
                 is LocalPostId -> {
-                    assertTrue(PostListType.fromPostStatus(getLocalPostStatus(identifier)) == currentSection.type)
+                    assertThat(PostListType.fromPostStatus(getLocalPostStatus(identifier)))
+                            .isEqualTo(currentSection.type)
                 }
                 is RemotePostId -> {
-                    assertTrue(PostListType.fromPostStatus(getRemotePostStatus(identifier)) == currentSection.type)
+                    assertThat(PostListType.fromPostStatus(getRemotePostStatus(identifier)))
+                            .isEqualTo(currentSection.type)
                 }
                 EndListIndicatorIdentifier -> {
-                    assertTrue(isListFullyFetched)
+                    assertThat(isListFullyFetched).isTrue()
                 }
                 is SectionHeaderIdentifier -> {
                     // Check that the header is correct and then remove it so
-                    assertTrue(identifier == currentSection)
+                    assertThat(identifier).isEqualTo(currentSection)
                     mutableSectionHeaders.remove(currentSection)
                 }
             }
         }
-        assertTrue(mutableSectionHeaders.isEmpty())
+        assertThat(mutableSectionHeaders).isEmpty()
     }
 
     private fun createLocalPosts(excludeListTypes: List<PostListType> = emptyList()): List<PostModel> =
