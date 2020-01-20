@@ -16,7 +16,7 @@ class BarChartAccessibilityHelper(
     private val accessibilityEvent: BarChartAccessibilityEvent
 ) : ExploreByTouchHelper(barChart) {
     private val dataSet: IBarDataSet = barChart.data.dataSets.first()
-    private val cutContentDescriptions:List<String>
+    private val cutContentDescriptions: List<String>
 
     interface BarChartAccessibilityEvent {
         fun onHighlight(entry: BarEntry, index: Int, hasOverlappingEntries: Boolean)
