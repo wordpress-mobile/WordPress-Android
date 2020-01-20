@@ -410,8 +410,8 @@ public class PostSqlUtils {
         WellSql.insert(postSummaryModelList).asSingleTransaction(true).execute();
     }
 
-    public List<PostSummaryModel> getPostSummaries(SiteModel site, List<Long> remotePostIds) {
-        if (site == null || remotePostIds == null || remotePostIds.isEmpty()) {
+    public List<PostSummaryModel> getPostSummaries(@NonNull SiteModel site, @NonNull List<Long> remotePostIds) {
+        if (remotePostIds.isEmpty()) {
             return Collections.emptyList();
         }
         List<PostSummaryModel> postSummaryModelList = WellSql.select(PostSummaryModel.class)
