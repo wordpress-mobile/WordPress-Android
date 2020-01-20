@@ -892,7 +892,7 @@
     <string name="stats_box_type_very_high">very high</string>
 
     <string name="stats_posting_activity_action">navigate all stats for this period</string>
-    <string name="stats_posting_activity_content_description">"The days with %1$s views for %2$s are : %2$s %3$s, tap for more."</string>
+    <string name="stats_posting_activity_content_description">"The days with %1$s views for %2$s are : %2$s %3$s.Tap for more."</string>
     <string name="stats_posting_activity_label_content_description">"Posting Activity for %1$s</string>
     <string name="stats_posting_activity_empty_description">There are no stats in this period.</string>
     <string name="stats_posting_activity_end_description">You have heard all stats for this period.
