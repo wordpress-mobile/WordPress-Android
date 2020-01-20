@@ -13,13 +13,13 @@ class BarChartAccessibilityHelper(
     private val barChart: BarChart,
     contentDescriptions: List<String>,
     private val hasOverlappingEntries: Boolean,
-    private val accessibilityEvent: BarChartAccessibilityEvent,
-    private val dataSet: IBarDataSet = barChart.data.dataSets.first()
+    private val accessibilityEvent: BarChartAccessibilityEvent
 ) : ExploreByTouchHelper(barChart) {
+    private val dataSet: IBarDataSet = barChart.data.dataSets.first()
     private val cutContentDescriptions:List<String>
 
     interface BarChartAccessibilityEvent {
-        fun onHighlight(index: Int, hasOverlappingEntries: Boolean)
+        fun onHighlight(entry: BarEntry, index: Int, hasOverlappingEntries: Boolean)
     }
 
     init {
@@ -53,7 +53,8 @@ class BarChartAccessibilityHelper(
     ): Boolean {
         when (action) {
             AccessibilityNodeInfoCompat.ACTION_CLICK -> {
-                accessibilityEvent.onHighlight(virtualViewId, hasOverlappingEntries)
+                val entry = dataSet.getEntryForIndex(virtualViewId)
+                accessibilityEvent.onHighlight(entry, virtualViewId, hasOverlappingEntries)
                 return true
             }
         }
