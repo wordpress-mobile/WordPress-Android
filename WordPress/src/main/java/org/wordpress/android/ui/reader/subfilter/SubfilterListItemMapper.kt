@@ -13,7 +13,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import javax.inject.Inject
 
-private data class MappedItem(
+private data class MappedSubfilterListItem(
     val type: Int,
     var feedId: Long = 0,
     var blogId: Long = 0,
@@ -31,10 +31,10 @@ class SubfilterListItemMapper @Inject constructor(
         isSelected: Boolean
     ): SubfilterListItem {
         val mappedItem = if (json.isEmpty()) {
-            MappedItem(type = SITE_ALL.value)
+            MappedSubfilterListItem(type = SITE_ALL.value)
         } else {
             val gson = Gson()
-            gson.fromJson(json, MappedItem::class.java)
+            gson.fromJson(json, MappedSubfilterListItem::class.java)
         }
 
         return when (mappedItem.type) {
@@ -76,7 +76,7 @@ class SubfilterListItemMapper @Inject constructor(
     fun toJson(item: SubfilterListItem): String {
         val gson = Gson()
 
-        val mappedItem = MappedItem(type = item.type.value)
+        val mappedItem = MappedSubfilterListItem(type = item.type.value)
 
         when (item) {
             is Site -> {
