@@ -144,7 +144,7 @@
         <activity
             android:name=".ui.prefs.AboutActivity"
             android:label="@string/about_the_app"
-            android:theme="@style/WordPress.TransparentToolbarTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|screenSize"

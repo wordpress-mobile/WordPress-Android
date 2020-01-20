@@ -54,7 +54,7 @@
             android:icon="@drawable/ic_bug_white_24dp"
             android:summary="@string/preference_crash_reports_summary"
             android:title="@string/preference_crash_reports"
-            app:iconTint="@color/neutral"/>
+            app:iconTint="?attr/colorOnSurface"/>
 
     </PreferenceScreen>
 
