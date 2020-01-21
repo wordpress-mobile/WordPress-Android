@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Test
 
-import org.junit.Assert.*
 import org.junit.Before
 import org.wordpress.android.util.helpers.MediaFile
 
@@ -20,7 +18,6 @@ class MediaTextBlockProcessorTest {
         whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
         processor = MediaTextBlockProcessor(TestContent.localMediaId, mediaFile)
     }
-
 
     @Test
     fun `processBlock replaces temporary local id and url for media-text block`() {
@@ -41,5 +38,4 @@ class MediaTextBlockProcessorTest {
         val processedBlock = processor.processBlock(TestContent.oldMediaTextBlockWithVideo)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newMediaTextBlockWithVideo)
     }
-
 }
