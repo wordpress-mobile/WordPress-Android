@@ -28,7 +28,7 @@ class PostingActivityMapper
 ) {
     fun buildActivityItem(months: List<Month>, max: Int): ActivityItem {
         val blocks = mutableListOf<Block>()
-        val boxDaysForAccessibility = mutableListOf<Pair<Box,Int>>()
+        val boxDaysForAccessibility = mutableListOf<Pair<Box, Int>>()
         val veryHighLimit = (max * VERY_HIGH_LEVEL).toInt()
         val highLimit = (max * HIGH_LEVEL).toInt()
         val mediumLimit = (max * MEDIUM_LEVEL).toInt()

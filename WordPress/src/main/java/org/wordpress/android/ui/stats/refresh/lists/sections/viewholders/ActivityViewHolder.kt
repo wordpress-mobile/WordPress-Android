@@ -61,13 +61,13 @@ class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
         blocks.forEachIndexed { index, block ->
             block.label.contentDescription = item.blocks[index].contentDescription
 
-            val announcer = ContentDescriptionListAnnouncer(
+            val announcer = ContentDescriptionListAnnouncer()
+            announcer.setupAnnouncer(
                     R.string.stats_posting_activity_empty_description,
                     R.string.stats_posting_activity_end_description,
                     R.string.stats_posting_activity_action,
                     requireNotNull(item.blocks[index].activityContentDescriptions), block
             )
-            announcer.setupAnnouncer()
         }
     }
 

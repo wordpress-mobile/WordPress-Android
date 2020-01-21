@@ -8,16 +8,16 @@ import androidx.annotation.StringRes
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 
-class ContentDescriptionListAnnouncer constructor(
-    @StringRes private val emptyListText: Int,
-    @StringRes private val endOfListText: Int,
-    @StringRes private val clickActionText: Int? = null,
-    private val contentDescriptions: List<String>,
-    private val targetView: View
-) {
+class ContentDescriptionListAnnouncer {
     private var currentIndex = 0
 
-    fun setupAnnouncer() {
+    fun setupAnnouncer(
+        @StringRes emptyListText: Int,
+        @StringRes endOfListText: Int,
+        @StringRes clickActionText: Int? = null,
+        contentDescriptions: List<String>,
+        targetView: View
+    ) {
         AccessibilityUtils.setAccessibilityDelegateSafely(
                 targetView,
                 object : AccessibilityDelegateCompat() {
