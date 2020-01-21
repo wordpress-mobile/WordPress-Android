@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
 // CHECKSTYLE IGNORE LineLength
-// CHECKSTYLE IGNORE StringTemplate
+// CHECKSTYLE IGNORE StringTemplateRule
 
 @Suppress("LineLength", "StringTemplate")
 object TestContent {
