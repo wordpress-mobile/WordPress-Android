@@ -28,7 +28,7 @@ class PostingActivityMapper
 ) {
     fun buildActivityItem(months: List<Month>, max: Int): ActivityItem {
         val blocks = mutableListOf<Block>()
-        val boxDays = mutableListOf<Pair<Box,Int>>()
+        val boxDaysForAccessibility = mutableListOf<Pair<Box,Int>>()
         val veryHighLimit = (max * VERY_HIGH_LEVEL).toInt()
         val highLimit = (max * HIGH_LEVEL).toInt()
         val mediumLimit = (max * MEDIUM_LEVEL).toInt()
@@ -59,7 +59,7 @@ class PostingActivityMapper
                     else -> VERY_LOW
                 }
                 boxes.add(box)
-                boxDays.add(Pair(box,day.key))
+                boxDaysForAccessibility.add(Pair(box, day.key))
             }
             val monthDisplayName = getMonthDisplayName(Calendar.LONG)
             val labelContentDescription = resourceProvider.getString(
@@ -71,7 +71,7 @@ class PostingActivityMapper
                             getMonthDisplayName(Calendar.SHORT),
                             boxes,
                             labelContentDescription,
-                            addBlockContentDescriptions(boxDays, monthDisplayName)
+                            addBlockContentDescriptions(boxDaysForAccessibility, monthDisplayName)
                     )
             )
         }
@@ -79,7 +79,7 @@ class PostingActivityMapper
         return ActivityItem(blocks)
     }
 
-    private fun addBlockContentDescriptions(boxes: List<Pair<Box,Int>>, month: String): List<String> {
+    private fun addBlockContentDescriptions(boxes: List<Pair<Box, Int>>, month: String): List<String> {
         val resolveBoxTypeStringId = { box: Box ->
             when (box) {
                 MEDIUM -> R.string.stats_box_type_medium

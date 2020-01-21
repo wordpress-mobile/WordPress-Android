@@ -19,7 +19,7 @@ class PostingActivityMapperTest : BaseUnitTest() {
     private lateinit var mapper: PostingActivityMapper
     @Before
     fun setUp() {
-        mapper = PostingActivityMapper(localeManagerWrapper,resourceProvider)
+        mapper = PostingActivityMapper(localeManagerWrapper, resourceProvider)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 

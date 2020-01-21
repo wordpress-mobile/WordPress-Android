@@ -11,17 +11,10 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Block
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.HIGH
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.MEDIUM
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_HIGH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Named
@@ -30,7 +23,6 @@ class PostingActivityUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
-    private val resourceProvider: ResourceProvider,
     private val store: PostingActivityStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val postingActivityMapper: PostingActivityMapper,
@@ -70,7 +62,6 @@ class PostingActivityUseCase
         items.add(activityItem)
         return items
     }
-
 
     private fun buildTitle() = Title(R.string.stats_insights_posting_activity, menuAction = this::onMenuClick)
 
