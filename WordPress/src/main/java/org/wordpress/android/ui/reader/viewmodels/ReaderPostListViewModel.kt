@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.news.NewsManager
 import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Divider
@@ -23,9 +25,9 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SectionTitle
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -36,7 +38,9 @@ class ReaderPostListViewModel @Inject constructor(
     private val newsManager: NewsManager,
     private val newsTracker: NewsTracker,
     private val newsTrackerHelper: NewsTrackerHelper,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val subfilterListItemMapper: SubfilterListItemMapper
 ) : ScopedViewModel(bgDispatcher) {
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
@@ -79,7 +83,7 @@ class ReaderPostListViewModel @Inject constructor(
             onTagChanged(tag)
             newsManager.pull()
 
-            _currentSubFilter.value = getCurrentSubfilterValue()
+            updateSubfilter(getCurrentSubfilterValue())
             _shouldShowSubFilters.value = shouldShowSubfilter
         }
 
@@ -133,7 +137,6 @@ class ReaderPostListViewModel @Inject constructor(
             filterList.add(SectionTitle(UiStringRes(R.string.reader_filter_sites_title)))
             filterList.add(
                     SiteAll(
-                        label = UiStringRes(R.string.reader_filter_all_sites),
                         onClickAction = ::onSubfilterClicked,
                         isSelected = (getCurrentSubfilterValue() is SiteAll)
                     )
@@ -148,8 +151,6 @@ class ReaderPostListViewModel @Inject constructor(
 
             for (blog in followedBlogs) {
                 filterList.add(Site(
-                        label = if (blog.name.isNotEmpty()) UiStringText(blog.name) else UiStringRes(
-                            R.string.reader_untitled_post),
                         onClickAction = ::onSubfilterClicked,
                         blog = blog,
                         isSelected = (getCurrentSubfilterValue() is Site) &&
@@ -165,7 +166,6 @@ class ReaderPostListViewModel @Inject constructor(
 
             for (tag in tags) {
                 filterList.add(Tag(
-                        label = UiStringText(tag.tagTitle),
                         onClickAction = ::onSubfilterClicked,
                         tag = tag,
                         isSelected = (getCurrentSubfilterValue() is Tag) &&
@@ -185,22 +185,30 @@ class ReaderPostListViewModel @Inject constructor(
             it
         })
 
-        _currentSubFilter.postValue(filter)
+        updateSubfilter(filter)
     }
 
     fun setSubfiltersVisibility(show: Boolean) = _shouldShowSubFilters.postValue(show)
 
     fun getCurrentSubfilterValue(): SubfilterListItem {
-        return _currentSubFilter.value ?: SiteAll(
-                label = UiStringRes(R.string.reader_filter_all_sites),
-                onClickAction = ::onSubfilterClicked,
-                isSelected = true)
+        return if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            _currentSubFilter.value ?: SiteAll(
+                    onClickAction = ::onSubfilterClicked,
+                    isSelected = true)
+        } else {
+            _currentSubFilter.value ?: appPrefsWrapper.getReaderSubfilter().let {
+                subfilterListItemMapper.fromJson(
+                        json = it,
+                        onClickAction = ::onSubfilterClicked,
+                        isSelected = true
+                )
+            }
+        }
     }
 
     fun setSubfilterFromTag(tag: ReaderTag) {
-        _currentSubFilter.postValue(
+        updateSubfilter(
                 Tag(
-                    label = UiStringText(tag.tagTitle),
                     onClickAction = ::onSubfilterClicked,
                     tag = tag,
                     isSelected = true
@@ -208,9 +216,8 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun setDefaultSubfilter() {
-        _currentSubFilter.postValue(
+        updateSubfilter(
                 SiteAll(
-                        label = UiStringRes(R.string.reader_filter_all_sites),
                         onClickAction = ::onSubfilterClicked,
                         isSelected = true
                 ))
@@ -270,6 +277,12 @@ class ReaderPostListViewModel @Inject constructor(
 
     fun setCollapseToolbar(collapse: Boolean) {
         _shouldCollapseToolbar.value = collapse
+    }
+
+    private fun updateSubfilter(filter: SubfilterListItem) {
+        _currentSubFilter.postValue(filter)
+        val json = subfilterListItemMapper.toJson(filter)
+        appPrefsWrapper.setReaderSubfilter(json)
     }
 
     override fun onCleared() {

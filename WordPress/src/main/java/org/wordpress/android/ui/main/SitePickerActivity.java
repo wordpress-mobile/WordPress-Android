@@ -523,7 +523,7 @@ public class SitePickerActivity extends AppCompatActivity
         if (site == null) {
             return false;
         }
-        if (site.isWPCom()) {
+        if (site.isUsingWpComRestApi()) {
             if (mActionMode != null) {
                 return false;
             }

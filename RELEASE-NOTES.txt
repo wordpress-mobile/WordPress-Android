@@ -1,5 +1,8 @@
 14.1
 -----
+* Fixes an issue where searching for posts sometimes doesn't show some results.
+
+* Disable the option to remove a Jetpack site from site picker
  
 14.0
 -----
