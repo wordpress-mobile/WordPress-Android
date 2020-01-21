@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
-// CHECKSTYLE IGNORE linelength
-// CHECKSTYLE IGNORE stringtemplate
+// CHECKSTYLE IGNORE LineLength
+// CHECKSTYLE IGNORE StringTemplate
 
 @Suppress("LineLength", "StringTemplate")
 object TestContent {
@@ -68,7 +68,6 @@ object TestContent {
 </figure>
 <!-- /wp:image -->
 """
-
 
     const val oldMediaTextBlock = """<!-- wp:media-text {"mediaId":${localMediaId},"mediaType":"image"} -->
 <div class="wp-block-media-text alignwide is-stacked-on-mobile">
