@@ -237,7 +237,7 @@ sealed class BlockListItem(val type: Type) {
             val label: String,
             val boxes: List<Box>,
             val contentDescription: String,
-            val activityContentDescriptions: List<String>? = null
+            val activityContentDescriptions: List<String>
         )
 
         enum class Box {
