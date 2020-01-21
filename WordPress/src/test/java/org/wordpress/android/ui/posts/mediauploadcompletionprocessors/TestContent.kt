@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
-@Suppress("MAX_LINE_LENGTH", "STRING_TEMPLATE_RULE")
+/* ktlint-disable max-line-length */
+/* ktlint-disable string-template */
 object TestContent {
     const val siteUrl = "https://wordpress.org"
     private const val localImageUrl = "file://Screenshot-1-1.png"
