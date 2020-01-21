@@ -13,62 +13,62 @@ object TestContent {
     const val remoteVideoUrl = "https://videos.files.wordpress.com/qeJFeNa2/macintosh-plus-floral-shoppe-02-e383aae382b5e38395e383a9e383b3e382af420-e78fbee4bba3e381aee382b3e383b3e38394e383a5e383bc-1_hd.mp4"
     const val localMediaId = "112"
     private const val collidingPrefixMediaId = "${localMediaId}42"
-    private const val collidingSuffixMediaId = "42${localMediaId}"
+    private const val collidingSuffixMediaId = "42$localMediaId"
     const val remoteMediaId = "97629"
-    const val attachmentPageUrl = "https://wordpress.org?p=${remoteMediaId}"
+    const val attachmentPageUrl = "https://wordpress.org?p=$remoteMediaId"
 
-    const val oldImageBlock = """<!-- wp:image {"id":${localMediaId},"align":"full"} -->
+    const val oldImageBlock = """<!-- wp:image {"id":$localMediaId,"align":"full"} -->
 <figure class="wp-block-image alignfull">
-  <img src="$localImageUrl" alt="" class="wp-image-${localMediaId}">
+  <img src="$localImageUrl" alt="" class="wp-image-$localMediaId">
   <figcaption><em>Gutenberg</em> on web</figcaption>
 </figure>
 <!-- /wp:image -->
 """
 
-    const val newImageBlock = """<!-- wp:image {"id":${remoteMediaId},"align":"full"} -->
+    const val newImageBlock = """<!-- wp:image {"id":$remoteMediaId,"align":"full"} -->
 <figure class="wp-block-image alignfull">
-  <img src="$remoteImageUrl" alt="" class="wp-image-${remoteMediaId}">
+  <img src="$remoteImageUrl" alt="" class="wp-image-$remoteMediaId">
   <figcaption><em>Gutenberg</em> on web</figcaption>
 </figure>
 <!-- /wp:image -->
 """
 
-    const val oldImageBlockIdNotFirst = """<!-- wp:image {"align":"full","id":${localMediaId}} -->
+    const val oldImageBlockIdNotFirst = """<!-- wp:image {"align":"full","id":$localMediaId} -->
 <figure class="wp-block-image alignfull">
-  <img src="$localImageUrl" alt="" class="wp-image-${localMediaId}">
+  <img src="$localImageUrl" alt="" class="wp-image-$localMediaId">
   <figcaption><em>Gutenberg</em> on web</figcaption>
 </figure>
 <!-- /wp:image -->
 """
 
-    const val newImageBlockIdNotFirst = """<!-- wp:image {"align":"full","id":${remoteMediaId}} -->
+    const val newImageBlockIdNotFirst = """<!-- wp:image {"align":"full","id":$remoteMediaId} -->
 <figure class="wp-block-image alignfull">
-  <img src="$remoteImageUrl" alt="" class="wp-image-${remoteMediaId}">
+  <img src="$remoteImageUrl" alt="" class="wp-image-$remoteMediaId">
   <figcaption><em>Gutenberg</em> on web</figcaption>
 </figure>
 <!-- /wp:image -->
 """
 
-    const val imageBlockWithPrefixCollision = """<!-- wp:image {"id":${collidingPrefixMediaId},"align":"full"} -->
+    const val imageBlockWithPrefixCollision = """<!-- wp:image {"id":$collidingPrefixMediaId,"align":"full"} -->
 <figure class="wp-block-image alignfull">
-  <img src="$remoteImageUrl2" alt="" class="wp-image-${collidingPrefixMediaId}">
+  <img src="$remoteImageUrl2" alt="" class="wp-image-$collidingPrefixMediaId">
   <figcaption><em>Gutenberg</em> on web</figcaption>
 </figure>
 <!-- /wp:image -->
 """
 
-    const val imageBlockWithSuffixCollision = """<!-- wp:image {"id":${collidingSuffixMediaId},"align":"full"} -->
+    const val imageBlockWithSuffixCollision = """<!-- wp:image {"id":$collidingSuffixMediaId,"align":"full"} -->
 <figure class="wp-block-image alignfull">
-  <img src="$remoteImageUrl2" alt="" class="wp-image-${collidingSuffixMediaId}">
+  <img src="$remoteImageUrl2" alt="" class="wp-image-$collidingSuffixMediaId">
   <figcaption><em>Gutenberg</em> on web</figcaption>
 </figure>
 <!-- /wp:image -->
 """
 
 
-    const val oldMediaTextBlock = """<!-- wp:media-text {"mediaId":${localMediaId},"mediaType":"image"} -->
+    const val oldMediaTextBlock = """<!-- wp:media-text {"mediaId":$localMediaId,"mediaType":"image"} -->
 <div class="wp-block-media-text alignwide is-stacked-on-mobile">
-  <figure class="wp-block-media-text__media"><img src="$localImageUrl" alt="" class="wp-image-${localMediaId}"></figure>
+  <figure class="wp-block-media-text__media"><img src="$localImageUrl" alt="" class="wp-image-$localMediaId"></figure>
   <div class="wp-block-media-text__content">
     <!-- wp:paragraph {"placeholder":"Content…","fontSize":"large"} -->
     <p class="has-large-font-size"></p>
@@ -78,9 +78,9 @@ object TestContent {
 <!-- /wp:media-text -->
 """
 
-    const val newMediaTextBlock = """<!-- wp:media-text {"mediaId":${remoteMediaId},"mediaType":"image"} -->
+    const val newMediaTextBlock = """<!-- wp:media-text {"mediaId":$remoteMediaId,"mediaType":"image"} -->
 <div class="wp-block-media-text alignwide is-stacked-on-mobile">
-  <figure class="wp-block-media-text__media"><img src="$remoteImageUrl" alt="" class="wp-image-${remoteMediaId}"></figure>
+  <figure class="wp-block-media-text__media"><img src="$remoteImageUrl" alt="" class="wp-image-$remoteMediaId"></figure>
   <div class="wp-block-media-text__content">
     <!-- wp:paragraph {"placeholder":"Content…","fontSize":"large"} -->
     <p class="has-large-font-size"></p>
@@ -90,9 +90,9 @@ object TestContent {
 <!-- /wp:media-text -->
 """
 
-    const val oldMediaTextBlockIdNotFirst = """<!-- wp:media-text {"mediaType":"image","mediaId":${localMediaId}} -->
+    const val oldMediaTextBlockIdNotFirst = """<!-- wp:media-text {"mediaType":"image","mediaId":$localMediaId} -->
 <div class="wp-block-media-text alignwide is-stacked-on-mobile">
-  <figure class="wp-block-media-text__media"><img src="$localImageUrl" alt="" class="wp-image-${localMediaId}"></figure>
+  <figure class="wp-block-media-text__media"><img src="$localImageUrl" alt="" class="wp-image-$localMediaId"></figure>
   <div class="wp-block-media-text__content">
     <!-- wp:paragraph {"placeholder":"Content…","fontSize":"large"} -->
     <p class="has-large-font-size"></p>
@@ -102,9 +102,9 @@ object TestContent {
 <!-- /wp:media-text -->
 """
 
-    const val newMediaTextBlockIdNotFirst = """<!-- wp:media-text {"mediaType":"image","mediaId":${remoteMediaId}} -->
+    const val newMediaTextBlockIdNotFirst = """<!-- wp:media-text {"mediaType":"image","mediaId":$remoteMediaId} -->
 <div class="wp-block-media-text alignwide is-stacked-on-mobile">
-  <figure class="wp-block-media-text__media"><img src="$remoteImageUrl" alt="" class="wp-image-${remoteMediaId}"></figure>
+  <figure class="wp-block-media-text__media"><img src="$remoteImageUrl" alt="" class="wp-image-$remoteMediaId"></figure>
   <div class="wp-block-media-text__content">
     <!-- wp:paragraph {"placeholder":"Content…","fontSize":"large"} -->
     <p class="has-large-font-size"></p>
@@ -114,7 +114,7 @@ object TestContent {
 <!-- /wp:media-text -->
 """
 
-    const val oldMediaTextBlockWithVideo = """<!-- wp:media-text {"mediaId":${localMediaId},"mediaType":"video"} -->
+    const val oldMediaTextBlockWithVideo = """<!-- wp:media-text {"mediaId":$localMediaId,"mediaType":"video"} -->
 <div class="wp-block-media-text alignwide">
   <figure class="wp-block-media-text__media"><video controls src="$localVideoUrl"></video></figure>
   <div class="wp-block-media-text__content">
@@ -126,7 +126,7 @@ object TestContent {
 <!-- /wp:media-text -->
 """
 
-    const val newMediaTextBlockWithVideo = """<!-- wp:media-text {"mediaId":${remoteMediaId},"mediaType":"video"} -->
+    const val newMediaTextBlockWithVideo = """<!-- wp:media-text {"mediaId":$remoteMediaId,"mediaType":"video"} -->
 <div class="wp-block-media-text alignwide">
   <figure class="wp-block-media-text__media"><video controls src="$remoteVideoUrl"></video></figure>
   <div class="wp-block-media-text__content">
@@ -138,14 +138,14 @@ object TestContent {
 <!-- /wp:media-text -->
 """
 
-    const val oldGalleryBlock = """<!-- wp:gallery {"ids":[203,${localMediaId},369]} -->
+    const val oldGalleryBlock = """<!-- wp:gallery {"ids":[203,$localMediaId,369]} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
       <figure><img src="$remoteImageUrlWithSize" alt="" data-id="203" data-full-url="$remoteImageUrl" data-link="$remoteImageUrlBlogLink" class="wp-image-203"></figure>
     </li>
     <li class="blocks-gallery-item">
-      <figure><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-${localMediaId}"></figure>
+      <figure><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-$localMediaId"></figure>
     </li>
     <li class="blocks-gallery-item">
       <figure><img src="$remoteImageUrl2WithSize" alt="" data-id="369" data-full-url="$remoteImageUrl2" data-link="$remoteImageUrl2BlogLink" class="wp-image-369"></figure>
@@ -155,14 +155,14 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val newGalleryBlock = """<!-- wp:gallery {"ids":[203,${remoteMediaId},369]} -->
+    const val newGalleryBlock = """<!-- wp:gallery {"ids":[203,$remoteMediaId,369]} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
       <figure><img src="$remoteImageUrlWithSize" alt="" data-id="203" data-full-url="$remoteImageUrl" data-link="$remoteImageUrlBlogLink" class="wp-image-203"></figure>
     </li>
     <li class="blocks-gallery-item">
-      <figure><img src="$remoteImageUrl" alt="" data-id="$remoteMediaId" data-full-url="$remoteImageUrl" data-link="$attachmentPageUrl" class="wp-image-${remoteMediaId}"></figure>
+      <figure><img src="$remoteImageUrl" alt="" data-id="$remoteMediaId" data-full-url="$remoteImageUrl" data-link="$attachmentPageUrl" class="wp-image-$remoteMediaId"></figure>
     </li>
     <li class="blocks-gallery-item">
       <figure><img src="$remoteImageUrl2WithSize" alt="" data-id="369" data-full-url="$remoteImageUrl2" data-link="$remoteImageUrl2BlogLink" class="wp-image-369"></figure>
@@ -172,14 +172,14 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val oldGalleryBlockIdsNotFirst = """<!-- wp:gallery {"linkTo":"attachment","ids":[203,${localMediaId},369]} -->
+    const val oldGalleryBlockIdsNotFirst = """<!-- wp:gallery {"linkTo":"attachment","ids":[203,$localMediaId,369]} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
       <figure><img src="$remoteImageUrlWithSize" alt="" data-id="203" data-full-url="$remoteImageUrl" data-link="$remoteImageUrlBlogLink" class="wp-image-203"></figure>
     </li>
     <li class="blocks-gallery-item">
-      <figure><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-${localMediaId}"></figure>
+      <figure><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-$localMediaId"></figure>
     </li>
     <li class="blocks-gallery-item">
       <figure><img src="$remoteImageUrl2WithSize" alt="" data-id="369" data-full-url="$remoteImageUrl2" data-link="$remoteImageUrl2BlogLink" class="wp-image-369"></figure>
@@ -189,14 +189,14 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val newGalleryBlockIdsNotFirst = """<!-- wp:gallery {"linkTo":"attachment","ids":[203,${remoteMediaId},369]} -->
+    const val newGalleryBlockIdsNotFirst = """<!-- wp:gallery {"linkTo":"attachment","ids":[203,$remoteMediaId,369]} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
       <figure><img src="$remoteImageUrlWithSize" alt="" data-id="203" data-full-url="$remoteImageUrl" data-link="$remoteImageUrlBlogLink" class="wp-image-203"></figure>
     </li>
     <li class="blocks-gallery-item">
-      <figure><img src="$remoteImageUrl" alt="" data-id="$remoteMediaId" data-full-url="$remoteImageUrl" data-link="$attachmentPageUrl" class="wp-image-${remoteMediaId}"></figure>
+      <figure><img src="$remoteImageUrl" alt="" data-id="$remoteMediaId" data-full-url="$remoteImageUrl" data-link="$attachmentPageUrl" class="wp-image-$remoteMediaId"></figure>
     </li>
     <li class="blocks-gallery-item">
       <figure><img src="$remoteImageUrl2WithSize" alt="" data-id="369" data-full-url="$remoteImageUrl2" data-link="$remoteImageUrl2BlogLink" class="wp-image-369"></figure>
@@ -213,7 +213,7 @@ object TestContent {
       <figure><img src="$remoteImageUrlWithSize" alt="" data-id="203" data-full-url="$remoteImageUrl" data-link="$remoteImageUrlBlogLink" class="wp-image-203"></figure>
     </li>
     <li class="blocks-gallery-item">
-      <figure><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-${localMediaId}"></figure>
+      <figure><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-$localMediaId"></figure>
     </li>
     <li class="blocks-gallery-item">
       <figure><img src="$remoteImageUrl2WithSize" alt="" data-id="369" data-full-url="$remoteImageUrl2" data-link="$remoteImageUrl2BlogLink" class="wp-image-369"></figure>
@@ -223,7 +223,7 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val oldGalleryBlockMixTypeIds2 = """<!-- wp:gallery {"ids":[203,"369",${localMediaId}]} -->
+    const val oldGalleryBlockMixTypeIds2 = """<!-- wp:gallery {"ids":[203,"369",$localMediaId]} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
@@ -233,14 +233,14 @@ object TestContent {
       <figure><img src="$remoteImageUrl2WithSize" alt="" data-id="369" data-full-url="$remoteImageUrl2" data-link="$remoteImageUrl2BlogLink" class="wp-image-369"></figure>
     </li>
     <li class="blocks-gallery-item">
-      <figure><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-${localMediaId}"></figure>
+      <figure><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-$localMediaId"></figure>
     </li>
   </ul>
 </figure>
 <!-- /wp:gallery -->
 """
 
-    const val newGalleryBlockWithMixTypeIds2 = """<!-- wp:gallery {"ids":[203,"369",${remoteMediaId}]} -->
+    const val newGalleryBlockWithMixTypeIds2 = """<!-- wp:gallery {"ids":[203,"369",$remoteMediaId]} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
@@ -250,7 +250,7 @@ object TestContent {
       <figure><img src="$remoteImageUrl2WithSize" alt="" data-id="369" data-full-url="$remoteImageUrl2" data-link="$remoteImageUrl2BlogLink" class="wp-image-369"></figure>
     </li>
     <li class="blocks-gallery-item">
-      <figure><img src="$remoteImageUrl" alt="" data-id="$remoteMediaId" data-full-url="$remoteImageUrl" data-link="$attachmentPageUrl" class="wp-image-${remoteMediaId}"></figure>
+      <figure><img src="$remoteImageUrl" alt="" data-id="$remoteMediaId" data-full-url="$remoteImageUrl" data-link="$attachmentPageUrl" class="wp-image-$remoteMediaId"></figure>
     </li>
   </ul>
 </figure>
@@ -262,42 +262,42 @@ object TestContent {
 <!-- /wp:paragraph -->
 """"
 
-    const val oldVideoBlock = """<!-- wp:video {"id":${localMediaId}} -->
+    const val oldVideoBlock = """<!-- wp:video {"id":$localMediaId} -->
 <figure class="wp-block-video"><video controls src="$localVideoUrl"></video>
   <figcaption>Videos too!</figcaption>
 </figure>
 <!-- /wp:video -->
 """
 
-    const val newVideoBlock = """<!-- wp:video {"id":${remoteMediaId}} -->
+    const val newVideoBlock = """<!-- wp:video {"id":$remoteMediaId} -->
 <figure class="wp-block-video"><video controls src="$remoteVideoUrl"></video>
   <figcaption>Videos too!</figcaption>
 </figure>
 <!-- /wp:video -->
 """
 
-    const val oldVideoBlockIdNotFirst = """<!-- wp:video {"preload":"none","id":${localMediaId}} -->
+    const val oldVideoBlockIdNotFirst = """<!-- wp:video {"preload":"none","id":$localMediaId} -->
 <figure class="wp-block-video"><video controls src="$localVideoUrl"></video>
   <figcaption>Videos too!</figcaption>
 </figure>
 <!-- /wp:video -->
 """
 
-    const val newVideoBlockIdNotFirst = """<!-- wp:video {"preload":"none","id":${remoteMediaId}} -->
+    const val newVideoBlockIdNotFirst = """<!-- wp:video {"preload":"none","id":$remoteMediaId} -->
 <figure class="wp-block-video"><video controls src="$remoteVideoUrl"></video>
   <figcaption>Videos too!</figcaption>
 </figure>
 <!-- /wp:video -->
 """
 
-    const val oldGalleryBlockLinkToMediaFile = """<!-- wp:gallery {"ids":[203,${localMediaId},369],"linkTo":"media"} -->
+    const val oldGalleryBlockLinkToMediaFile = """<!-- wp:gallery {"ids":[203,$localMediaId,369],"linkTo":"media"} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
       <figure><a href="$remoteImageUrl"><img src="$remoteImageUrlWithSize" alt="" data-id="203" data-full-url="$remoteImageUrl" data-link="$remoteImageUrlBlogLink" class="wp-image-203"></a></figure>
     </li>
     <li class="blocks-gallery-item">
-      <figure><a href="$localImageUrl"><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-${localMediaId}"></a></figure>
+      <figure><a href="$localImageUrl"><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-$localMediaId"></a></figure>
     </li>
     <li class="blocks-gallery-item">
       <figure><a href="$remoteImageUrl2"><img src="$remoteImageUrl2WithSize" alt="" data-id="369" data-full-url="$remoteImageUrl2" data-link="$remoteImageUrl2BlogLink" class="wp-image-369"></a></figure>
@@ -307,14 +307,14 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val newGalleryBlockLinkToMediaFile = """<!-- wp:gallery {"ids":[203,${remoteMediaId},369],"linkTo":"media"} -->
+    const val newGalleryBlockLinkToMediaFile = """<!-- wp:gallery {"ids":[203,$remoteMediaId,369],"linkTo":"media"} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
       <figure><a href="$remoteImageUrl"><img src="$remoteImageUrlWithSize" alt="" data-id="203" data-full-url="$remoteImageUrl" data-link="$remoteImageUrlBlogLink" class="wp-image-203"></a></figure>
     </li>
     <li class="blocks-gallery-item">
-      <figure><a href="$remoteImageUrl"><img src="$remoteImageUrl" alt="" data-id="$remoteMediaId" data-full-url="$remoteImageUrl" data-link="$attachmentPageUrl" class="wp-image-${remoteMediaId}"></a></figure>
+      <figure><a href="$remoteImageUrl"><img src="$remoteImageUrl" alt="" data-id="$remoteMediaId" data-full-url="$remoteImageUrl" data-link="$attachmentPageUrl" class="wp-image-$remoteMediaId"></a></figure>
     </li>
     <li class="blocks-gallery-item">
       <figure><a href="$remoteImageUrl2"><img src="$remoteImageUrl2WithSize" alt="" data-id="369" data-full-url="$remoteImageUrl2" data-link="$remoteImageUrl2BlogLink" class="wp-image-369"></a></figure>
@@ -324,14 +324,14 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val oldGalleryBlockLinkToAttachmentPage = """<!-- wp:gallery {"ids":[203,${localMediaId},369],"linkTo":"attachment"} -->
+    const val oldGalleryBlockLinkToAttachmentPage = """<!-- wp:gallery {"ids":[203,$localMediaId,369],"linkTo":"attachment"} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
       <figure><a href="$remoteImageUrl"><img src="$remoteImageUrlWithSize" alt="" data-id="203" data-full-url="$remoteImageUrl" data-link="$remoteImageUrlBlogLink" class="wp-image-203"></a></figure>
     </li>
     <li class="blocks-gallery-item">
-      <figure><a href="$localImageUrl"><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-${localMediaId}"></a></figure>
+      <figure><a href="$localImageUrl"><img src="$localImageUrl" alt="" data-id="$localMediaId" data-full-url="$localImageUrl" data-link="$localImageUrl" class="wp-image-$localMediaId"></a></figure>
     </li>
     <li class="blocks-gallery-item">
       <figure><a href="$remoteImageUrl2"><img src="$remoteImageUrl2WithSize" alt="" data-id="369" data-full-url="$remoteImageUrl2" data-link="$remoteImageUrl2BlogLink" class="wp-image-369"></a></figure>
@@ -341,14 +341,14 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val newGalleryBlockLinkToAttachmentPage = """<!-- wp:gallery {"ids":[203,${remoteMediaId},369],"linkTo":"attachment"} -->
+    const val newGalleryBlockLinkToAttachmentPage = """<!-- wp:gallery {"ids":[203,$remoteMediaId,369],"linkTo":"attachment"} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
       <figure><a href="$remoteImageUrl"><img src="$remoteImageUrlWithSize" alt="" data-id="203" data-full-url="$remoteImageUrl" data-link="$remoteImageUrlBlogLink" class="wp-image-203"></a></figure>
     </li>
     <li class="blocks-gallery-item">
-      <figure><a href="$attachmentPageUrl"><img src="$remoteImageUrl" alt="" data-id="$remoteMediaId" data-full-url="$remoteImageUrl" data-link="$attachmentPageUrl" class="wp-image-${remoteMediaId}"></a></figure>
+      <figure><a href="$attachmentPageUrl"><img src="$remoteImageUrl" alt="" data-id="$remoteMediaId" data-full-url="$remoteImageUrl" data-link="$attachmentPageUrl" class="wp-image-$remoteMediaId"></a></figure>
     </li>
     <li class="blocks-gallery-item">
       <figure><a href="$remoteImageUrl2"><img src="$remoteImageUrl2WithSize" alt="" data-id="369" data-full-url="$remoteImageUrl2" data-link="$remoteImageUrl2BlogLink" class="wp-image-369"></a></figure>
