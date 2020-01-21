@@ -132,7 +132,6 @@
     <dimen name="text_sz_larger">18sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
-    <dimen name="text_sz_triple_extra_large">26sp</dimen>
     <dimen name="text_sz_extra_extra_large">32sp</dimen>
     <dimen name="text_sz_post_content">18sp</dimen>
 
