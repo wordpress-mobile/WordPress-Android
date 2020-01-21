@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
-@Suppress("checkstyle:linelength", "checkstyle:stringtemplate")
+@Suppress("LineLength", "StringTemplate")
 object TestContent {
     const val siteUrl = "https://wordpress.org"
     private const val localImageUrl = "file://Screenshot-1-1.png"
