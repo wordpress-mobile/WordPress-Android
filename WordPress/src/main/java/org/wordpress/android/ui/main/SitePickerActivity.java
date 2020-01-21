@@ -457,6 +457,7 @@ public class SitePickerActivity extends AppCompatActivity
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
 
         mMenuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
