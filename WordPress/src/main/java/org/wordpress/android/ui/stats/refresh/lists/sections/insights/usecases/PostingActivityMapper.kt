@@ -28,6 +28,7 @@ class PostingActivityMapper
 ) {
     fun buildActivityItem(months: List<Month>, max: Int): ActivityItem {
         val blocks = mutableListOf<Block>()
+        val boxDays = mutableListOf<Pair<Box,Int>>()
         val veryHighLimit = (max * VERY_HIGH_LEVEL).toInt()
         val highLimit = (max * HIGH_LEVEL).toInt()
         val mediumLimit = (max * MEDIUM_LEVEL).toInt()
@@ -50,32 +51,35 @@ class PostingActivityMapper
                 firstDayOfWeek.add(Calendar.DAY_OF_MONTH, 1)
             }
             for (day in month.days) {
-                boxes.add(
-
-                        when {
-                            day.value > veryHighLimit -> VERY_HIGH
-                            day.value > highLimit -> HIGH
-                            day.value > mediumLimit -> MEDIUM
-                            day.value > LOW_LEVEL -> LOW
-                            else -> VERY_LOW
-                        }
-
-                )
+                val box = when {
+                    day.value > veryHighLimit -> VERY_HIGH
+                    day.value > highLimit -> HIGH
+                    day.value > mediumLimit -> MEDIUM
+                    day.value > LOW_LEVEL -> LOW
+                    else -> VERY_LOW
+                }
+                boxes.add(box)
+                boxDays.add(Pair(box,day.key))
             }
+            val monthDisplayName = getMonthDisplayName(Calendar.LONG)
+            val labelContentDescription = resourceProvider.getString(
+                    R.string.stats_posting_activity_label_content_description,
+                    monthDisplayName
+            )
             blocks.add(
                     Block(
                             getMonthDisplayName(Calendar.SHORT),
-                            boxes, getMonthDisplayName(Calendar.LONG)
+                            boxes,
+                            labelContentDescription,
+                            addBlockContentDescriptions(boxDays, monthDisplayName)
                     )
             )
         }
+
         return ActivityItem(blocks)
     }
 
-    /*
-    private fun addBlockContentDescriptions(activityItem: ActivityItem): ActivityItem {
-        val blocks = mutableListOf<Block>()
-
+    private fun addBlockContentDescriptions(boxes: List<Pair<Box,Int>>, month: String): List<String> {
         val resolveBoxTypeStringId = { box: Box ->
             when (box) {
                 MEDIUM -> R.string.stats_box_type_medium
@@ -85,34 +89,26 @@ class PostingActivityMapper
             }
         }
 
-        activityItem.blocks.forEach { block ->
-            val descriptions = mutableListOf<String>()
-            block.boxes.filter { box -> box.box != Box.INVISIBLE && box.box != Box.VERY_LOW }
-                    .sortedByDescending { box -> box.box }
-                    .groupBy { box -> box.box }
-                    .forEach { entry ->
-                        val readableBoxType = resourceProvider.getString(
-                                resolveBoxTypeStringId(
-                                        entry.key
-                                )
-                        )
-                        val days = entry.value.map { box -> box.day }.joinToString(separator = ". ")
-                        val activityDescription = resourceProvider.getString(
-                                R.string.stats_posting_activity_content_description,
-                                readableBoxType,
-                                block.contentDescription,
-                                days
-                        )
-                        descriptions.add(activityDescription)
-                    }
-            val labelContentDescription = resourceProvider.getString(
-                    R.string.stats_posting_activity_label_content_description,
-                    block.contentDescription
-            )
-            blocks.add(Block(block.label, block.boxes, labelContentDescription, descriptions))
-        }
+        val descriptions = mutableListOf<String>()
+        boxes.filter { box -> box.first != INVISIBLE && box.first != VERY_LOW }
+                .sortedByDescending { box -> box.first }
+                .groupBy { box -> box.first }
+                .forEach { entry ->
+                    val readableBoxType = resourceProvider.getString(
+                            resolveBoxTypeStringId(
+                                    entry.key
+                            )
+                    )
+                    val days = entry.value.map { box -> box.second }.joinToString(separator = ". ")
+                    val activityDescription = resourceProvider.getString(
+                            R.string.stats_posting_activity_content_description,
+                            readableBoxType,
+                            month,
+                            days
+                    )
+                    descriptions.add(activityDescription)
+                }
 
-        return ActivityItem(blocks)
-    }*/
-
+        return descriptions
+    }
 }
