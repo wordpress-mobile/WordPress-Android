@@ -1,10 +1,13 @@
 package org.wordpress.android.login.widgets;
 
 import android.app.Dialog;
+import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.WindowManager;
+import android.view.Gravity;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -27,17 +30,29 @@ public class WPBottomSheetDialogFragment extends BottomSheetDialogFragment {
     public void onResume() {
         super.onResume();
 
-        if (getDialog() != null) {
-            // Limit width of bottom sheet on wide screens; non-zero width defined only for large qualifier.
-            int dp = (int) getDialog().getContext().getResources().getDimension(R.dimen.bottom_sheet_dialog_width);
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            restrictMaxWidthForDialog(dialog);
+        }
+    }
 
-            if (dp > 0) {
-                WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-                layoutParams.copyFrom(getDialog().getWindow() != null ? getDialog().getWindow().getAttributes() : null);
-                layoutParams.width = dp;
-                layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-                getDialog().getWindow().setAttributes(layoutParams);
-            }
+    private void restrictMaxWidthForDialog(@NonNull Dialog dialog) {
+        Resources resources = dialog.getContext().getResources();
+        int dp = (int) resources.getDimension(R.dimen.bottom_sheet_dialog_width);
+        // Limit width of bottom sheet on wide screens; non-zero width defined only for large qualifier.
+        if (dp > 0) {
+            FrameLayout bottomSheetLayout =
+                    dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+
+            CoordinatorLayout.LayoutParams coordinatorLayoutParams =
+                    (CoordinatorLayout.LayoutParams) bottomSheetLayout.getLayoutParams();
+            coordinatorLayoutParams.width = dp;
+            bottomSheetLayout.setLayoutParams(coordinatorLayoutParams);
+
+            CoordinatorLayout coordinatorLayout = (CoordinatorLayout) bottomSheetLayout.getParent();
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) coordinatorLayout.getLayoutParams();
+            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+            coordinatorLayout.setLayoutParams(layoutParams);
         }
     }
 }
