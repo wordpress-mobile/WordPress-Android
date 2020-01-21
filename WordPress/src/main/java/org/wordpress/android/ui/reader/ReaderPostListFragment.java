@@ -395,9 +395,6 @@ public class ReaderPostListFragment extends Fragment
         mViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
                                        .get(ReaderPostListViewModel.class);
 
-        AppLog.d(T.READER, "DBEUG VIEWMODEL - " + mViewModel);
-
-
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             mViewModel.getCurrentSubFilter().observe(this, subfilterListItem -> {
                 if (ReaderUtils.isFollowing(
