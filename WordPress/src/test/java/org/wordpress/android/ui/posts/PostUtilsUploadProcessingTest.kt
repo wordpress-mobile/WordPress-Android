@@ -55,7 +55,7 @@ class PostUtilsUploadProcessingTest {
 <!-- /wp:media-text -->
 """
 
-    val mediaFile: MediaFile = mock()
+    private val mediaFile: MediaFile = mock()
 
     @Before
     fun before() {
@@ -63,7 +63,6 @@ class PostUtilsUploadProcessingTest {
         whenever(mediaFile.fileURL).thenReturn(remoteImageUrl)
         whenever(mediaFile.getAttachmentPageURL(any())).thenReturn(attachmentPageUrl)
     }
-
 
     @Test
     fun `replaceMediaFileWithUrlInGutenbergPost replaces temporary local id and url for image block`() {
