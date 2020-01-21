@@ -58,6 +58,9 @@ class ReaderPostListViewModel @Inject constructor(
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
+    private val _shouldCollapseToolbar = MutableLiveData<Boolean>()
+    val shouldCollapseToolbar: LiveData<Boolean> = _shouldCollapseToolbar
+
     /**
      * First tag for which the card was shown.
      */
@@ -68,7 +71,7 @@ class ReaderPostListViewModel @Inject constructor(
     /**
      * Tag may be null for Blog previews for instance.
      */
-    fun start(tag: ReaderTag?, shouldShowSubfilter: Boolean) {
+    fun start(tag: ReaderTag?, shouldShowSubfilter: Boolean, collapseToolbar: Boolean) {
         if (isStarted) {
             return
         }
@@ -79,6 +82,9 @@ class ReaderPostListViewModel @Inject constructor(
             _currentSubFilter.value = getCurrentSubfilterValue()
             _shouldShowSubFilters.value = shouldShowSubfilter
         }
+
+        _shouldCollapseToolbar.value = collapseToolbar
+
         isStarted = true
     }
 
@@ -260,6 +266,10 @@ class ReaderPostListViewModel @Inject constructor(
             ))
         }
         isFirstLoad = false
+    }
+
+    fun setCollapseToolbar(collapse: Boolean) {
+        _shouldCollapseToolbar.value = collapse
     }
 
     override fun onCleared() {

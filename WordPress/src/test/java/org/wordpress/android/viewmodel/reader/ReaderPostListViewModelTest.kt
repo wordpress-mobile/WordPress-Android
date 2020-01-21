@@ -61,13 +61,13 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun verifyPullInvokedInOnStart() {
-        viewModel.start(initialTag, false)
+        viewModel.start(initialTag, false, false)
         verify(newsManager).pull(false)
     }
 
     @Test
     fun verifyViewModelPropagatesNewsItems() {
-        viewModel.start(initialTag, false)
+        viewModel.start(initialTag, false, false)
         liveData.postValue(item)
         liveData.postValue(null)
         liveData.postValue(item)
@@ -86,7 +86,7 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun emitNullOnInitialTagChanged() {
-        viewModel.start(otherTag, false)
+        viewModel.start(otherTag, false, false)
         // propagates the item since the card hasn't been shown yet
         liveData.postValue(item)
         viewModel.onTagChanged(initialTag)
@@ -101,7 +101,7 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun verifyNewsItemAvailableOnlyForFirstTagForWhichCardWasShown() {
-        viewModel.start(otherTag, false)
+        viewModel.start(otherTag, false, false)
         // propagate the item since the card hasn't been shown yet
         liveData.postValue(item)
         viewModel.onTagChanged(initialTag)
