@@ -240,9 +240,7 @@ sealed class BlockListItem(val type: Type) {
             val activityContentDescriptions: List<String>? = null
         )
 
-        data class Box(val boxType: BoxType, val day: Int? = null)
-
-        enum class BoxType {
+        enum class Box {
             INVISIBLE, VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH
         }
 

@@ -1,16 +1,18 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Month
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Block
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.HIGH
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.INVISIBLE
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.LOW
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.MEDIUM
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.VERY_HIGH
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.VERY_LOW
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.HIGH
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.INVISIBLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.LOW
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.MEDIUM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_HIGH
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_LOW
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -20,7 +22,10 @@ private const val MEDIUM_LEVEL = 0.25
 private const val LOW_LEVEL = 0
 
 class PostingActivityMapper
-@Inject constructor(private val localeManagerWrapper: LocaleManagerWrapper) {
+@Inject constructor(
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val resourceProvider: ResourceProvider
+) {
     fun buildActivityItem(months: List<Month>, max: Int): ActivityItem {
         val blocks = mutableListOf<Block>()
         val veryHighLimit = (max * VERY_HIGH_LEVEL).toInt()
@@ -41,20 +46,20 @@ class PostingActivityMapper
             firstDayOfWeek.set(Calendar.DAY_OF_WEEK, firstDayOfWeek.firstDayOfWeek)
             val boxes = mutableListOf<Box>()
             while (firstDayOfWeek.before(firstDayOfMonth)) {
-                boxes.add(Box(INVISIBLE))
+                boxes.add(INVISIBLE)
                 firstDayOfWeek.add(Calendar.DAY_OF_MONTH, 1)
             }
             for (day in month.days) {
                 boxes.add(
-                        Box(
-                                when {
-                                    day.value > veryHighLimit -> VERY_HIGH
-                                    day.value > highLimit -> HIGH
-                                    day.value > mediumLimit -> MEDIUM
-                                    day.value > LOW_LEVEL -> LOW
-                                    else -> VERY_LOW
-                                }, day.key
-                        )
+
+                        when {
+                            day.value > veryHighLimit -> VERY_HIGH
+                            day.value > highLimit -> HIGH
+                            day.value > mediumLimit -> MEDIUM
+                            day.value > LOW_LEVEL -> LOW
+                            else -> VERY_LOW
+                        }
+
                 )
             }
             blocks.add(
@@ -66,4 +71,48 @@ class PostingActivityMapper
         }
         return ActivityItem(blocks)
     }
+
+    /*
+    private fun addBlockContentDescriptions(activityItem: ActivityItem): ActivityItem {
+        val blocks = mutableListOf<Block>()
+
+        val resolveBoxTypeStringId = { box: Box ->
+            when (box) {
+                MEDIUM -> R.string.stats_box_type_medium
+                HIGH -> R.string.stats_box_type_high
+                VERY_HIGH -> R.string.stats_box_type_very_high
+                else -> R.string.stats_box_type_low
+            }
+        }
+
+        activityItem.blocks.forEach { block ->
+            val descriptions = mutableListOf<String>()
+            block.boxes.filter { box -> box.box != Box.INVISIBLE && box.box != Box.VERY_LOW }
+                    .sortedByDescending { box -> box.box }
+                    .groupBy { box -> box.box }
+                    .forEach { entry ->
+                        val readableBoxType = resourceProvider.getString(
+                                resolveBoxTypeStringId(
+                                        entry.key
+                                )
+                        )
+                        val days = entry.value.map { box -> box.day }.joinToString(separator = ". ")
+                        val activityDescription = resourceProvider.getString(
+                                R.string.stats_posting_activity_content_description,
+                                readableBoxType,
+                                block.contentDescription,
+                                days
+                        )
+                        descriptions.add(activityDescription)
+                    }
+            val labelContentDescription = resourceProvider.getString(
+                    R.string.stats_posting_activity_label_content_description,
+                    block.contentDescription
+            )
+            blocks.add(Block(block.label, block.boxes, labelContentDescription, descriptions))
+        }
+
+        return ActivityItem(blocks)
+    }*/
+
 }

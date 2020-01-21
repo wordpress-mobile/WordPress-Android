@@ -13,10 +13,10 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Block
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.HIGH
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.MEDIUM
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.BoxType.VERY_HIGH
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.HIGH
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.MEDIUM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_HIGH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
@@ -67,52 +67,10 @@ class PostingActivityUseCase
                 domainModel.months,
                 domainModel.max
         )
-        val activityItemWithContentDescription = addBlockContentDescriptions(activityItem)
-        items.add(activityItemWithContentDescription)
+        items.add(activityItem)
         return items
     }
 
-    private fun addBlockContentDescriptions(activityItem: ActivityItem): ActivityItem {
-        val blocks = mutableListOf<Block>()
-
-        val resolveBoxTypeStringId = { boxType: BoxType ->
-            when (boxType) {
-                MEDIUM -> R.string.stats_box_type_medium
-                HIGH -> R.string.stats_box_type_high
-                VERY_HIGH -> R.string.stats_box_type_very_high
-                else -> R.string.stats_box_type_low
-            }
-        }
-
-        activityItem.blocks.forEach { block ->
-            val descriptions = mutableListOf<String>()
-            block.boxes.filter { box -> box.boxType != BoxType.INVISIBLE && box.boxType != BoxType.VERY_LOW }
-                    .sortedByDescending { box -> box.boxType }
-                    .groupBy { box -> box.boxType }
-                    .forEach { entry ->
-                        val readableBoxType = resourceProvider.getString(
-                                resolveBoxTypeStringId(
-                                        entry.key
-                                )
-                        )
-                        val days = entry.value.map { box -> box.day }.joinToString(separator = ". ")
-                        val activityDescription = resourceProvider.getString(
-                                R.string.stats_posting_activity_content_description,
-                                readableBoxType,
-                                block.contentDescription,
-                                days
-                        )
-                        descriptions.add(activityDescription)
-                    }
-            val labelContentDescription = resourceProvider.getString(
-                    R.string.stats_posting_activity_label_content_description,
-                    block.contentDescription
-            )
-            blocks.add(Block(block.label, block.boxes, labelContentDescription, descriptions))
-        }
-
-        return ActivityItem(blocks)
-    }
 
     private fun buildTitle() = Title(R.string.stats_insights_posting_activity, menuAction = this::onMenuClick)
 
