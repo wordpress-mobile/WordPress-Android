@@ -29,6 +29,7 @@ import org.wordpress.android.util.DisplayUtils
 private const val MIN_COLUMN_COUNT = 5
 private const val MIN_VALUE = 5f
 
+private typealias BarCount = Int
 class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_bar_chart_item
@@ -38,22 +39,18 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     private val labelEnd = itemView.findViewById<TextView>(R.id.label_end)
     private lateinit var accessibilityHelper: BarChartAccessibilityHelper
 
-    fun bind(
-        item: BarChartItem,
-        barSelected: Boolean
-    ) {
+    fun bind(item: BarChartItem) {
         chart.setNoDataText("")
         GlobalScope.launch(Dispatchers.Main) {
             delay(50)
-            chart.draw(item, labelStart, labelEnd)
+            val barCount = chart.draw(item, labelStart, labelEnd)
             chart.post {
                 val accessibilityEvent = object : BarChartAccessibilityEvent {
                     override fun onHighlight(
                         entry: BarEntry,
-                        index: Int,
-                        hasOverlappingEntries: Boolean
+                        index: Int
                     ) {
-                        chart.highlightColumn(index, hasOverlappingEntries)
+                        chart.highlightColumn(index, item.overlappingEntries != null)
                         val value = entry.data as? String
                         value?.let {
                             item.onBarSelected?.invoke(it)
@@ -61,10 +58,10 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     }
                 }
 
+                val cutContentDescriptions = takeEntriesWithinGraphWidth(barCount, item.entryContentDescriptions)
                 accessibilityHelper = BarChartAccessibilityHelper(
                         chart,
-                        contentDescriptions = item.entryContentDescriptions,
-                        hasOverlappingEntries = item.overlappingEntries != null,
+                        contentDescriptions = cutContentDescriptions,
                         accessibilityEvent = accessibilityEvent
                 )
 
@@ -77,26 +74,26 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         item: BarChartItem,
         labelStart: TextView,
         labelEnd: TextView
-    ) {
+    ): BarCount {
         resetChart()
         val graphWidth = DisplayUtils.pxToDp(context, width)
         val columnNumber = (graphWidth / 24) - 1
         val count = if (columnNumber > MIN_COLUMN_COUNT) columnNumber else MIN_COLUMN_COUNT
-        val cut = cutEntries(count, item.entries)
-        val mappedEntries = cut.mapIndexed { index, pair -> toBarEntry(pair, index) }
-        val maxYValue = cut.maxBy { it.value }!!.value
+        val cutEntries = takeEntriesWithinGraphWidth(count, item.entries)
+        val mappedEntries = cutEntries.mapIndexed { index, pair -> toBarEntry(pair, index) }
+        val maxYValue = cutEntries.maxBy { it.value }!!.value
         val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
         val dataSet = if (hasData) {
             buildDataSet(context, mappedEntries)
         } else {
-            buildEmptyDataSet(context, cut.size)
+            buildEmptyDataSet(context, cutEntries.size)
         }
         item.onBarChartDrawn?.invoke(dataSet.entryCount)
         val dataSets = mutableListOf<IBarDataSet>()
         dataSets.add(dataSet)
         val hasOverlappingEntries = hasData && item.overlappingEntries != null
         if (hasData && item.overlappingEntries != null) {
-            val overlappingCut = cutEntries(count, item.overlappingEntries)
+            val overlappingCut = takeEntriesWithinGraphWidth(count, item.overlappingEntries)
             val mappedOverlappingEntries = overlappingCut.mapIndexed { index, pair -> toBarEntry(pair, index) }
             val overlappingDataSet = buildOverlappingDataSet(context, mappedOverlappingEntries)
             dataSets.add(overlappingDataSet)
@@ -145,8 +142,8 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawGridLines(false)
             setDrawLabels(false)
         }
-        labelStart.text = cut.first().label
-        labelEnd.text = cut.last().label
+        labelStart.text = cutEntries.first().label
+        labelEnd.text = cutEntries.last().label
         setPinchZoom(false)
         setScaleEnabled(false)
         legend.isEnabled = false
@@ -157,7 +154,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onNothingSelected() {
                     item.selectedItem
-                    highlightColumn(cut.indexOfFirst { it.id == item.selectedItem }, hasOverlappingEntries)
+                    highlightColumn(cutEntries.indexOfFirst { it.id == item.selectedItem }, hasOverlappingEntries)
                     item.onBarSelected?.invoke(item.selectedItem)
                 }
 
@@ -178,7 +175,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         this.description = description
 
         if (item.selectedItem != null) {
-            val index = cut.indexOfFirst { it.id == item.selectedItem }
+            val index = cutEntries.indexOfFirst { it.id == item.selectedItem }
             if (index >= 0) {
                 highlightColumn(index, hasOverlappingEntries)
             } else {
@@ -186,6 +183,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             }
         }
         invalidate()
+        return cutEntries.size
     }
 
     private fun BarChart.highlightColumn(index: Int, hasOverlappingColumns: Boolean) {
@@ -298,10 +296,10 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         return dataSet
     }
 
-    private fun cutEntries(
+    private fun <T> takeEntriesWithinGraphWidth(
         count: Int,
-        entries: List<Bar>
-    ): List<Bar> {
+        entries: List<T>
+    ): List<T> {
         return if (count < entries.size) entries.subList(
                 entries.size - count,
                 entries.size
