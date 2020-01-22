@@ -394,7 +394,7 @@
     </style>
 
     <style name="MeListRowIcon">
-        <item name="android:tint">?attr/colorOnSurface</item>
+        <item name="android:tint">?attr/wpIconColorOnSurface</item>
         <item name="android:layout_width">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_gravity">center_vertical</item>
