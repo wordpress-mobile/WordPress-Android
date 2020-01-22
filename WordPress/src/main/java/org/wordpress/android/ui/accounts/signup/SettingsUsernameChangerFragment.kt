@@ -16,7 +16,9 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.*
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACCOUNT_SETTINGS_CHANGE_USERNAME_FAILED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACCOUNT_SETTINGS_CHANGE_USERNAME_SUCCEEDED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACCOUNT_SETTINGS_CHANGE_USERNAME_SUGGESTIONS_FAILED
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS
 import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged
@@ -59,7 +61,10 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
         dialogController.setActionEnabled(hasUsernameChanged())
     }
 
-    override fun onUsernameConfirmed(controller: FullScreenDialogController, usernameSelected: String) {
+    override fun onUsernameConfirmed(
+        controller: FullScreenDialogController,
+        usernameSelected: String
+    ) {
         showUsernameConfirmationDialog(usernameSelected)
     }
 
@@ -88,7 +93,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
             setTitle(R.string.settings_username_changer_confirm_dialog_title)
             setView(layout)
             setPositiveButton(
-                  R.string.settings_username_changer_confirm_dialog_positive_action
+                    R.string.settings_username_changer_confirm_dialog_positive_action
             ) { _, _ -> saveUsername(username) }
             setNegativeButton(android.R.string.cancel, null)
             create()
@@ -106,7 +111,12 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
                     }
                 }
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -169,7 +179,11 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
     }
 
     private fun showChangeUsernameActionCancelledMessage() = view?.let {
-        WPDialogSnackbar.make(it, getString(R.string.settings_username_changer_snackbar_cancel), Snackbar.LENGTH_LONG)
+        WPDialogSnackbar.make(
+                it,
+                getString(R.string.settings_username_changer_snackbar_cancel),
+                Snackbar.LENGTH_LONG
+        )
                 .show()
     }
 }
