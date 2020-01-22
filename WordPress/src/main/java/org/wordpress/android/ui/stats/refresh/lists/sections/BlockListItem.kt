@@ -193,7 +193,8 @@ sealed class BlockListItem(val type: Type) {
         val overlappingEntries: List<Bar>? = null,
         val selectedItem: String? = null,
         val onBarSelected: ((period: String?) -> Unit)? = null,
-        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null
+        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null,
+        val entryContentDescriptions: List<String>
     ) : BlockListItem(BAR_CHART) {
         data class Bar(val label: String, val id: String, val value: Int)
 
