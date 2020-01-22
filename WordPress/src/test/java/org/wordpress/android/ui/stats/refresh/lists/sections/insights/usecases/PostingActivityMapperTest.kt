@@ -59,7 +59,7 @@ class PostingActivityMapperTest : BaseUnitTest() {
                         Month(
                                 2019,
                                 Calendar.DECEMBER,
-                                mapOf(Pair(3, 60),Pair(4, 70), Pair(5, 10), Pair(6, 10))
+                                mapOf(Pair(3, 60), Pair(4, 70), Pair(5, 10), Pair(6, 10))
                         ),
                         Month(
                                 2019,
