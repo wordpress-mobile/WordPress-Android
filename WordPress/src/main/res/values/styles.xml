@@ -32,6 +32,7 @@
         <item name="wpColorAppBar">@color/primary</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
+        <item name="wpIconColorOnSurface">@color/material_on_surface_emphasis_medium</item>
 
         <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">
