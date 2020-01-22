@@ -31,6 +31,7 @@
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorAppBar">@color/primary</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
+        <item name="wpIconColorOnSurface">@color/material_on_surface_emphasis_medium</item>
 
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">
@@ -302,7 +303,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorSurface</item>
-        <item name="tint">?attr/colorOnSurface</item>
+        <item name="tint">?attr/wpIconColorOnSurface</item>
+        <item name="android:tint">?attr/wpIconColorOnSurface</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
@@ -322,7 +324,7 @@
     </style>
 
     <style name="MySiteListRowIcon">
-        <item name="android:tint">?attr/colorOnSurface</item>
+        <item name="android:tint">?attr/wpIconColorOnSurface</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentStart">true</item>
@@ -390,7 +392,7 @@
     <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">
         <item name="android:layout_width">16dp</item>
         <item name="android:layout_height">16dp</item>
-        <item name="android:tint">?attr/colorOnSurface</item>
+        <item name="android:tint">?attr/wpIconColorOnSurface</item>
     </style>
 
     <style name="MySiteListHeader">
