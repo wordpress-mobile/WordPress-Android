@@ -7,7 +7,7 @@
                 "equalTo": "edit"
             },
             "fields": {
-                "equalTo": "ID,modified,status,meta"
+                "equalTo": "ID,modified,status,meta,date"
             },
             "status": {
                 "equalTo": "future"

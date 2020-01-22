@@ -7,7 +7,7 @@
                 "equalTo": "edit"
             },
             "fields": {
-                "equalTo": "ID,modified,status,meta"
+                "equalTo": "ID,modified,status,meta,date"
             },
             "status": {
                 "equalTo": "draft,pending"
@@ -22,16 +22,19 @@
                 {
                     "ID": 3,
                     "modified": "2019-03-05T14:48:47+00:00",
+                    "date": "2019-03-05T14:48:47+00:00",
                     "status": "draft"
                 },
                 {
                     "ID": 2,
                     "modified": "2019-03-05T14:48:47+00:00",
+                    "date": "2019-03-05T14:48:47+00:00",
                     "status": "draft"
                 },
                 {
                     "ID": 1,
                     "modified": "2019-03-21T17:22:03+00:00",
+                    "date": "2019-03-21T17:22:03+00:00",
                     "status": "draft"
                 }
             ],

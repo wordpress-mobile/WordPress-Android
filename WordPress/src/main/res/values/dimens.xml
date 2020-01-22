@@ -177,6 +177,7 @@
     <dimen name="reader_remove_button_extra_padding">12dp</dimen>
     <dimen name="reader_more_image_extra_padding">12dp</dimen>
     <dimen name="reader_follow_button_extra_padding">32dp</dimen>
+    <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
     <dimen name="empty_list_title_text_size">24sp</dimen>
     <dimen name="empty_list_title_side_margin">32dp</dimen>
@@ -425,7 +426,6 @@
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
 
-    <dimen name="keyline_first">16dp</dimen>
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>

@@ -521,6 +521,9 @@ public class ReaderPostListFragment extends Fragment
                 mLastTappedSiteSearchResult = null;
             }
 
+            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+                return;
+            }
             ReaderTag discoverTag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
             ReaderTag readerTag = AppPrefs.getReaderTag();
 
