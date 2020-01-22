@@ -58,16 +58,27 @@ class PostingActivityMapperTest : BaseUnitTest() {
                 listOf(
                         Month(
                                 2019,
+                                Calendar.DECEMBER,
+                                mapOf(Pair(3, 60),Pair(4, 70), Pair(5, 10), Pair(6, 10))
+                        ),
+                        Month(
+                                2019,
                                 Calendar.JANUARY,
                                 mapOf(Pair(1, 60), Pair(2, 10))
                         )
                 ), 100
         )
 
-        assertThat(result.blocks[0].contentDescription).isEqualTo("Posting Activity for January")
+        assertThat(result.blocks[0].contentDescription).isEqualTo("Posting Activity for December")
         assertThat(result.blocks[0].activityContentDescriptions[0])
-                .isEqualTo("The days with high views for January are : January 1.Tap for more.")
+                .isEqualTo("The days with high views for December are : December 3. 4.Tap for more.")
         assertThat(result.blocks[0].activityContentDescriptions[1])
+                .isEqualTo("The days with low views for December are : December 5. 6.Tap for more.")
+
+        assertThat(result.blocks[1].contentDescription).isEqualTo("Posting Activity for January")
+        assertThat(result.blocks[1].activityContentDescriptions[0])
+                .isEqualTo("The days with high views for January are : January 1.Tap for more.")
+        assertThat(result.blocks[1].activityContentDescriptions[1])
                 .isEqualTo("The days with low views for January are : January 2.Tap for more.")
     }
 
