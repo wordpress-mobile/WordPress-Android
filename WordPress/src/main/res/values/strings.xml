@@ -877,7 +877,6 @@
 
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
-    <string name="stats_bar_chart_content_description">Graph of site views.</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_expand_content_description">Expand</string>
@@ -886,6 +885,8 @@
     <string name="stats_item_collapsed">Item collapsed</string>
     <string name="stats_posting_activity_graph">Graph of posting activity.</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">&#160; &amp; %1$d %2$s</string>
 
     <string name="stats_manage_your_stats">Manage Your Stats</string>
     <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
