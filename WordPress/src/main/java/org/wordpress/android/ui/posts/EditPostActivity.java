@@ -2048,7 +2048,7 @@ public class EditPostActivity extends AppCompatActivity implements
         return content;
     }
 
-    private String migrateToGutenbergEditor(String content){
+    private String migrateToGutenbergEditor(String content) {
         // If it is a href we want to convert it into Gutenberg paragaph block
         // otherwise Gutenberg can't handle it
         if (content.startsWith("<a href=\"")) {
