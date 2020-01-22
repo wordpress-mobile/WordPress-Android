@@ -17,115 +17,99 @@
             android:orientation="vertical"
             tools:ignore="UselessParent">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/content_margin"
-                    android:layout_marginTop="@dimen/margin_large"
-                    android:layout_marginEnd="@dimen/content_margin"
-                    android:layout_marginBottom="@dimen/margin_large"
-                    android:orientation="vertical"
-                    android:paddingStart="@dimen/margin_medium"
-                    android:paddingEnd="@dimen/margin_medium">
-
-                    <org.wordpress.android.widgets.WPTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_medium"
-                        android:text="@string/connections_label"
-                        android:textAppearance="?attr/textAppearanceSubtitle1"
-                        android:textColor="?attr/colorPrimary" />
-
-                    <org.wordpress.android.widgets.WPTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_large"
-                        android:text="@string/connections_description"
-                        android:textAppearance="?attr/textAppearanceCaption" />
-
-                    <org.wordpress.android.ui.reader.views.ReaderRecyclerView
-                        android:id="@+id/recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/empty_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/margin_extra_large"
-                        android:textAppearance="?attr/textAppearanceCaption"
-                        android:textSize="@dimen/text_sz_extra_large"
-                        android:visibility="gone"
-                        tools:text="@string/empty_list_default"
-                        tools:visibility="visible" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/manage_card"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_margin"
                 android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginBottom="@dimen/margin_large">
+                android:layout_marginEnd="@dimen/content_margin"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium">
 
-                <RelativeLayout
-                    android:id="@+id/sharing_module"
+                <org.wordpress.android.widgets.WPTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:text="@string/connections_label"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textColor="?attr/colorPrimary" />
+
+                <org.wordpress.android.widgets.WPTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/content_margin"
-                    android:layout_marginEnd="@dimen/content_margin"
-                    android:layout_marginBottom="@dimen/margin_extra_large"
-                    android:paddingStart="@dimen/margin_medium"
-                    android:paddingEnd="@dimen/margin_medium">
+                    android:layout_marginBottom="@dimen/margin_large"
+                    android:text="@string/connections_description"
+                    android:textAppearance="?attr/textAppearanceCaption" />
+
+                <org.wordpress.android.ui.reader.views.ReaderRecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/empty_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textSize="@dimen/text_sz_extra_large"
+                    android:visibility="gone"
+                    tools:text="@string/empty_list_default"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/manage_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_margin"
+                android:layout_marginEnd="@dimen/content_margin"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium"
+                android:paddingBottom="@dimen/margin_large">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/text_manage_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_large"
+                    android:text="@string/sharing_buttons"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textColor="?attr/colorPrimary" />
+
+                <LinearLayout
+                    android:id="@+id/manage_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_manage_label"
+                    android:background="?android:selectableItemBackground"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_manage"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_cog_white_24dp"
+                        android:tint="?attr/colorPrimary" />
 
                     <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/text_manage_label"
+                        android:id="@+id/text_manage_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginBottom="@dimen/margin_large"
-                        android:text="@string/sharing_buttons"
-                        android:textAppearance="?attr/textAppearanceSubtitle1"
-                        android:textColor="?attr/colorPrimary" />
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/margin_extra_large"
+                        android:text="@string/manage"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+                </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/container_manage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/text_manage_label"
-                        android:background="?android:selectableItemBackground"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/image_manage"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center_vertical"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_cog_white_24dp"
-                            android:tint="?attr/colorPrimary" />
-
-                        <org.wordpress.android.widgets.WPTextView
-                            android:id="@+id/text_manage_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="@dimen/margin_extra_large"
-                            android:text="@string/manage"
-                            android:textAppearance="?attr/textAppearanceSubtitle1" />
-                    </LinearLayout>
-
-                </RelativeLayout>
-
-            </com.google.android.material.card.MaterialCardView>
+            </RelativeLayout>
 
         </LinearLayout>
     </RelativeLayout>

@@ -100,17 +100,17 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         mEmptyView = rootView.findViewById(R.id.empty_view);
 
         boolean isAdminOrSelfHosted = mSite.getHasCapabilityManageOptions() || !SiteUtils.isAccessedViaWPComRest(mSite);
-        View manageCard = rootView.findViewById(R.id.manage_card);
+        View manageContainer = rootView.findViewById(R.id.manage_container);
         if (isAdminOrSelfHosted) {
-            manageCard.setVisibility(View.VISIBLE);
-            View manageContainer = rootView.findViewById(R.id.container_manage);
-            manageContainer.setOnClickListener(view -> {
+            manageContainer.setVisibility(View.VISIBLE);
+            View manageButton = rootView.findViewById(R.id.manage_button);
+            manageButton.setOnClickListener(view -> {
                 if (mListener != null) {
                     mListener.onButtonPrefsClicked();
                 }
             });
         } else {
-            manageCard.setVisibility(View.GONE);
+            manageContainer.setVisibility(View.GONE);
         }
 
         if (mQuickStartEvent != null) {

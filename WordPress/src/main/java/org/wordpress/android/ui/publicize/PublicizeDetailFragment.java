@@ -34,8 +34,8 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
     private ConnectButton mConnectBtn;
     private RecyclerView mRecycler;
-    private View mConnectionsCardView;
-    private ViewGroup mServiceCardView;
+    private View mConnectionsContainer;
+    private ViewGroup mServiceContainer;
 
     @Inject AccountStore mAccountStore;
 
@@ -82,9 +82,9 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_detail_fragment, container, false);
 
-        mConnectionsCardView = rootView.findViewById(R.id.card_view_connections);
-        mServiceCardView = rootView.findViewById(R.id.card_view_service);
-        mConnectBtn = mServiceCardView.findViewById(R.id.button_connect);
+        mConnectionsContainer = rootView.findViewById(R.id.connections_container);
+        mServiceContainer = rootView.findViewById(R.id.service_container);
+        mConnectBtn = mServiceContainer.findViewById(R.id.button_connect);
         mRecycler = rootView.findViewById(R.id.recycler_view);
 
         return rootView;
@@ -112,18 +112,18 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
         // disable the ability to add another G+ connection
         if (isGooglePlus()) {
-            mServiceCardView.setVisibility(View.GONE);
+            mServiceContainer.setVisibility(View.GONE);
         } else {
             String serviceLabel = String.format(getString(R.string.connection_service_label), mService.getLabel());
-            TextView txtService = mServiceCardView.findViewById(R.id.text_service);
+            TextView txtService = mServiceContainer.findViewById(R.id.text_service);
             txtService.setText(serviceLabel);
 
             String description = String.format(getString(R.string.connection_service_description), mService.getLabel());
-            TextView txtDescription = mServiceCardView.findViewById(R.id.text_description);
+            TextView txtDescription = mServiceContainer.findViewById(R.id.text_description);
             txtDescription.setText(description);
 
             // Hide the Learn More button by default as at the moment it is only used for the Facebook warning below.
-            TextView learnMoreButton = mServiceCardView.findViewById(R.id.learn_more_button);
+            TextView learnMoreButton = mServiceContainer.findViewById(R.id.learn_more_button);
             learnMoreButton.setVisibility(View.GONE);
 
             if (isFacebook()) {
@@ -151,11 +151,11 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
     private void showFacebookWarning() {
         String noticeText = getString(R.string.connection_service_facebook_notice);
-        TextView txtNotice = mServiceCardView.findViewById(R.id.text_description_notice);
+        TextView txtNotice = mServiceContainer.findViewById(R.id.text_description_notice);
         txtNotice.setText(noticeText);
         txtNotice.setVisibility(View.VISIBLE);
 
-        TextView learnMoreButton = mServiceCardView.findViewById(R.id.learn_more_button);
+        TextView learnMoreButton = mServiceContainer.findViewById(R.id.learn_more_button);
         learnMoreButton.setOnClickListener(v -> WPWebViewActivity.openURL(getActivity(),
                 FACEBOOK_SHARING_CHANGE_BLOG_POST));
         learnMoreButton.setVisibility(View.VISIBLE);
@@ -178,7 +178,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
             return;
         }
 
-        mConnectionsCardView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mConnectionsContainer.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
 
         if (hasOnPublicizeActionListener()) {
             if (isEmpty) {
