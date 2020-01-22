@@ -503,7 +503,7 @@
         <item name="android:layout_height">24dp</item>
         <item name="android:layout_marginEnd">32dp</item>
         <item name="android:layout_width">24dp</item>
-        <item name="android:tint">?attr/colorOnSurface</item>
+        <item name="android:tint">?attr/wpIconColorOnSurface</item>
     </style>
 
     <style name="QuickStartTitle">
