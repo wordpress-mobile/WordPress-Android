@@ -46,6 +46,6 @@ public class MySitesPage {
     }
 
     public void startNewPost() {
-        clickOn("id/fab_button");
+        clickOn(R.id.fab_button);
     }
 }

@@ -894,7 +894,6 @@
 
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
-    <string name="stats_bar_chart_content_description">Graph of site views.</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_expand_content_description">Expand</string>
@@ -903,6 +902,8 @@
     <string name="stats_item_collapsed">Item collapsed</string>
     <string name="stats_posting_activity_graph">Graph of posting activity.</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">&#160; &amp; %1$d %2$s</string>
 
     <string name="stats_manage_your_stats">Manage Your Stats</string>
     <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
@@ -2452,7 +2453,7 @@
     <string name="notifications_tab_dialog_switch_desc">Notifications</string>
     <string name="navigate_up_desc">navigate up</string>
     <string name="fab_add_tag_desc">Create Tag</string>
-    <string name="fab_create_desc">create</string>
+    <string name="fab_create_desc">Create a post</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
     <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
@@ -2575,6 +2576,7 @@
 
 
     <!-- Posts -->
+    <string name="post_list_author">Post author</string>
     <string name="post_list_author_me">Me</string>
     <string name="post_list_author_everyone">Everyone</string>
     <string name="post_list_published">Published</string>
