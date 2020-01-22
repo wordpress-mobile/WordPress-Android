@@ -39,7 +39,7 @@ public class WPBottomSheetDialogFragment extends BottomSheetDialogFragment {
     private void restrictMaxWidthForDialog(@NonNull Dialog dialog) {
         Resources resources = dialog.getContext().getResources();
         int dp = (int) resources.getDimension(R.dimen.bottom_sheet_dialog_width);
-        // Limit width of bottom sheet on wide screens; non-zero width defined only for large qualifier.
+        // Limit width of bottom sheet on wide screens; non-zero width defined only for sw600dp qualifier.
         if (dp > 0) {
             FrameLayout bottomSheetLayout =
                     dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
