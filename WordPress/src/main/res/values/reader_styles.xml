@@ -45,10 +45,10 @@
         <item name="android:fontFamily">serif</item>
     </style>
     <style name="ReaderTextView.Date" parent="ReaderTextView">
-        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
-        <item name="android:drawableTint">@color/neutral</item>
+        <item name="android:drawableTint">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:drawableStart">@drawable/ic_time_neutral_400_16dp</item>
     </style>
     <style name="ReaderTextView.EmptyList" parent="ReaderTextView">
