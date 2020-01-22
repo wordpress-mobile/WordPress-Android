@@ -454,6 +454,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         post.setCustomFields(jsonCustomFieldsArray.toString());
 
         post.setExcerpt(MapUtils.getMapStr(postMap, "post_excerpt"));
+        post.setSlug(MapUtils.getMapStr(postMap, "post_name"));
 
         post.setPassword(MapUtils.getMapStr(postMap, "post_password"));
         post.setStatus(MapUtils.getMapStr(postMap, "post_status"));
@@ -562,6 +563,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
 
         contentStruct.put("post_excerpt", post.getExcerpt());
+        contentStruct.put("post_name", post.getSlug());
         contentStruct.put("post_status", post.getStatus());
 
         // Geolocation
