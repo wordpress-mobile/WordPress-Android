@@ -28,11 +28,11 @@ class PostingActivityMapper
 ) {
     fun buildActivityItem(months: List<Month>, max: Int): ActivityItem {
         val blocks = mutableListOf<Block>()
-        val boxDaysForAccessibility = mutableListOf<Pair<Box, Int>>()
         val veryHighLimit = (max * VERY_HIGH_LEVEL).toInt()
         val highLimit = (max * HIGH_LEVEL).toInt()
         val mediumLimit = (max * MEDIUM_LEVEL).toInt()
         for (month in months) {
+            val boxDaysForAccessibility = mutableListOf<Pair<Box, Int>>()
             val firstDayOfMonth = Calendar.getInstance(localeManagerWrapper.getLocale())
             firstDayOfMonth.set(month.year, month.month, firstDayOfMonth.getActualMinimum(Calendar.DAY_OF_MONTH))
             val getMonthDisplayName = { style: Int ->
