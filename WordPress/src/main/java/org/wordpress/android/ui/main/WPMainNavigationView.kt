@@ -189,7 +189,9 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     private fun setTitleViewSelected(position: Int, isSelected: Boolean) {
         getTitleViewForPosition(position)?.setTextColor(
-                context.getColorStateListFromAttribute(if (isSelected) R.attr.colorPrimary else R.attr.wpColorOnSurfaceMedium)
+                context.getColorStateListFromAttribute(
+                        if (isSelected) R.attr.colorPrimary else R.attr.wpColorOnSurfaceMedium
+                )
         )
     }
 
