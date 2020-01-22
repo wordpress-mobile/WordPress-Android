@@ -8,7 +8,6 @@ import android.os.Build;
 import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,14 +21,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.ContextExtensionsKt;
 
 public class WPSwitchPreference extends SwitchPreference implements PreferenceHint {
     private String mHint;
     private ColorStateList mTint;
     private ColorStateList mThumbTint;
     private ColorStateList mTrackTint;
-    private @ColorRes int mTextColor = 0;
     private @ColorRes int mBackgroundCheckedColor = 0;
     private @ColorRes int mBackgroundUncheckedColor = 0;
     private int mStartOffset = 0;
@@ -47,14 +44,12 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             } else if (index == R.styleable.SummaryEditTextPreference_iconTint) {
                 int resourceId = array.getResourceId(index, 0);
                 if (resourceId != 0) {
-                     mTint = AppCompatResources.getColorStateList(context, resourceId);
+                    mTint = AppCompatResources.getColorStateList(context, resourceId);
                 }
             } else if (index == R.styleable.SummaryEditTextPreference_switchThumbTint) {
                 mThumbTint = array.getColorStateList(index);
             } else if (index == R.styleable.SummaryEditTextPreference_switchTrackTint) {
                 mTrackTint = array.getColorStateList(index);
-            } else if (index == R.styleable.SummaryEditTextPreference_preferenceTextColor) {
-                mTextColor = array.getResourceId(index, android.R.color.white);
             } else if (index == R.styleable.SummaryEditTextPreference_backgroundColorChecked) {
                 mBackgroundCheckedColor = array.getResourceId(index, android.R.color.white);
             } else if (index == R.styleable.SummaryEditTextPreference_backgroundColorUnchecked) {
@@ -78,30 +73,15 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         }
 
         TextView titleView = view.findViewById(android.R.id.title);
-        TextView coloredTitleView = view.findViewById(R.id.colored_title);
-        if (titleView != null && coloredTitleView != null) {
+        if (titleView != null) {
             Resources res = getContext().getResources();
-            coloredTitleView.setText(titleView.getText());
-            coloredTitleView.setVisibility(View.VISIBLE);
-            titleView.setVisibility(View.GONE);
-            titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
-            if (mTextColor == 0) {
-                coloredTitleView.setTextColor(res.getColor(
-                        isEnabled() ? ContextExtensionsKt
-                                .getColorResIdFromAttribute(getContext(), R.attr.colorOnSurface)
-                                : ContextExtensionsKt
-                                        .getColorResIdFromAttribute(getContext(), R.attr.wpColorOnSurfaceMedium)));
-            } else {
-                coloredTitleView.setTextColor(ContextCompat.getColor(this.getContext(), ContextExtensionsKt
-                                .getColorResIdFromAttribute(getContext(), R.attr.colorOnSurface)));
-            }
 
             // add padding to the start of nested preferences
             if (!TextUtils.isEmpty(getDependency())) {
                 int margin = res.getDimensionPixelSize(R.dimen.margin_large);
-                ViewCompat.setPaddingRelative(coloredTitleView, margin + mStartOffset, 0, 0, 0);
+                ViewCompat.setPaddingRelative(titleView, margin + mStartOffset, 0, 0, 0);
             } else {
-                ViewCompat.setPaddingRelative(coloredTitleView, mStartOffset, 0, 0, 0);
+                ViewCompat.setPaddingRelative(titleView, mStartOffset, 0, 0, 0);
             }
         }
 
