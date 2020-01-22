@@ -1,6 +1,8 @@
 14.1
 -----
 * Disable the option to remove a Jetpack site from site picker
+* Block Editor: Reduced padding around text on Rich Text based blocks.
+* Block Editor: Improved stability on very long posts.
  
 14.0
 -----
