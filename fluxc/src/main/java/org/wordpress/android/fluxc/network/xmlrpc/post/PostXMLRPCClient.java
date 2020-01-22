@@ -563,6 +563,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
 
         contentStruct.put("post_excerpt", post.getExcerpt());
+        contentStruct.put("post_name", post.getSlug());
         contentStruct.put("post_status", post.getStatus());
 
         // Geolocation
