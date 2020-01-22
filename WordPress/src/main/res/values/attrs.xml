@@ -23,7 +23,6 @@
         <attr name="iconTint" format="color|reference" />
         <attr name="switchThumbTint" format="integer" />
         <attr name="switchTrackTint" format="integer" />
-        <attr name="preferenceTextColor" format="color|reference" />
         <attr name="backgroundColorChecked" format="color|reference" />
         <attr name="backgroundColorUnchecked" format="color|reference" />
         <attr name="startOffset" format="dimension|reference" />
