@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -44,15 +45,21 @@ public class WPBottomSheetDialogFragment extends BottomSheetDialogFragment {
             FrameLayout bottomSheetLayout =
                     dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
-            CoordinatorLayout.LayoutParams coordinatorLayoutParams =
-                    (CoordinatorLayout.LayoutParams) bottomSheetLayout.getLayoutParams();
-            coordinatorLayoutParams.width = dp;
-            bottomSheetLayout.setLayoutParams(coordinatorLayoutParams);
+            if (bottomSheetLayout != null) {
+                ViewParent bottomSheetParent = bottomSheetLayout.getParent();
+                if (bottomSheetParent instanceof CoordinatorLayout) {
+                    CoordinatorLayout.LayoutParams coordinatorLayoutParams =
+                            (CoordinatorLayout.LayoutParams) bottomSheetLayout.getLayoutParams();
+                    coordinatorLayoutParams.width = dp;
+                    bottomSheetLayout.setLayoutParams(coordinatorLayoutParams);
 
-            CoordinatorLayout coordinatorLayout = (CoordinatorLayout) bottomSheetLayout.getParent();
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) coordinatorLayout.getLayoutParams();
-            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-            coordinatorLayout.setLayoutParams(layoutParams);
+                    CoordinatorLayout coordinatorLayout = (CoordinatorLayout) bottomSheetParent;
+                    FrameLayout.LayoutParams layoutParams =
+                            (FrameLayout.LayoutParams) coordinatorLayout.getLayoutParams();
+                    layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+                    coordinatorLayout.setLayoutParams(layoutParams);
+                }
+            }
         }
     }
 }
