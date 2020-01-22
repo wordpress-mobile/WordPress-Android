@@ -10,6 +10,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase.LinkClickParams
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -17,7 +18,8 @@ class LatestPostSummaryMapper
 @Inject constructor(
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    private val statsDateFormatter: StatsDateFormatter
+    private val statsDateFormatter: StatsDateFormatter,
+    private val statsUtils: StatsUtils
 ) {
     fun buildMessageItem(
         model: InsightsLatestPostModel?,
@@ -62,6 +64,11 @@ class LatestPostSummaryMapper
     fun buildBarChartItem(dayViews: List<Pair<String, Int>>): BarChartItem {
         val barEntries = dayViews.subList(Math.max(0, dayViews.size - 30), dayViews.size)
                 .map { pair -> BarChartItem.Bar(statsDateFormatter.printDate(pair.first), pair.first, pair.second) }
-        return BarChartItem(barEntries)
+
+        val contentDescriptions = statsUtils.getBarChartEntryContentDescriptions(
+                R.string.stats_views,
+                barEntries)
+
+        return BarChartItem(barEntries, entryContentDescriptions = contentDescriptions)
     }
 }

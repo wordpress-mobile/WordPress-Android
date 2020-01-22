@@ -210,6 +210,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
 
         PluginListFragment currentFragment = getCurrentFragment();
         if (currentFragment != null && currentFragment.getListType() == PluginListType.SEARCH) {
