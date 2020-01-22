@@ -63,8 +63,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         void onBindViewHolder(RecyclerView.ViewHolder holder, SiteList sites);
     }
 
-    private static final int SELECTED_SITE_BG_OPACITY = 20;
-
     private final @LayoutRes int mItemLayoutReourceId;
 
     private static int mBlavatarSz;
@@ -164,7 +162,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mDisabledSiteOpacity = disabledAlpha.getFloat();
         mSelectedItemBackground = ColorUtils
                 .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface),
-                        SELECTED_SITE_BG_OPACITY);
+                        context.getResources().getInteger(R.integer.selected_list_item_opacity));
 
         mHeaderHandler = headerHandler;
         mSelectedItemPos = getPositionOffset();

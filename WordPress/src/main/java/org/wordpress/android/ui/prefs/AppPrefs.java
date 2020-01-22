@@ -51,6 +51,8 @@ public class AppPrefs {
         // last selected tag in the reader
         READER_TAG_NAME,
         READER_TAG_TYPE,
+        // last selected subfilter in the reader
+        READER_SUBFILTER,
 
         // title of the last active page in ReaderSubsActivity
         READER_SUBS_PAGE_TITLE,
@@ -317,6 +319,14 @@ public class AppPrefs {
                    .remove(DeletablePrefKey.READER_TAG_TYPE.name())
                    .apply();
         }
+    }
+
+    public static String getReaderSubfilter() {
+        return getString(DeletablePrefKey.READER_SUBFILTER);
+    }
+
+    public static void setReaderSubfilter(@NonNull String json) {
+        setString(DeletablePrefKey.READER_SUBFILTER, json);
     }
 
     /**
