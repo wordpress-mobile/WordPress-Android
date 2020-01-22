@@ -313,10 +313,10 @@ public class EditCommentActivity extends AppCompatActivity {
         dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
         dialogBuilder.setMessage(getResources().getText(R.string.sure_to_cancel_edit_comment));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                (dialog12, whichButton) -> finish());
+                (dialog, whichButton) -> finish());
         dialogBuilder.setNegativeButton(
                 getResources().getText(R.string.no),
-                (dialog1, whichButton) -> {
+                (dialog, whichButton) -> {
                     // just close the dialog
                 });
         dialogBuilder.setCancelable(true);

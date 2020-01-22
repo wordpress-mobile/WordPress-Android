@@ -272,7 +272,7 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
         toolbar.setTitle(mTitle);
         toolbar.setNavigationContentDescription(R.string.description_collapse);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_chevron_down_white_24dp));
-        toolbar.setNavigationOnClickListener(view1 -> onCollapseClicked());
+        toolbar.setNavigationOnClickListener(v -> onCollapseClicked());
 
         if (!mAction.isEmpty()) {
             Menu menu = toolbar.getMenu();
