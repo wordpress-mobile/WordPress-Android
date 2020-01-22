@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
@@ -25,7 +26,7 @@ import org.wordpress.android.util.ContextExtensionsKt;
 
 public class WPSwitchPreference extends SwitchPreference implements PreferenceHint {
     private String mHint;
-    private @ColorRes int mTint = 0;
+    private ColorStateList mTint;
     private ColorStateList mThumbTint;
     private ColorStateList mTrackTint;
     private @ColorRes int mTextColor = 0;
@@ -44,7 +45,10 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             if (index == R.styleable.SummaryEditTextPreference_longClickHint) {
                 mHint = array.getString(index);
             } else if (index == R.styleable.SummaryEditTextPreference_iconTint) {
-                mTint = array.getResourceId(index, R.color.neutral);
+                int resourceId = array.getResourceId(index, 0);
+                if (resourceId != 0) {
+                     mTint = AppCompatResources.getColorStateList(context, resourceId);
+                }
             } else if (index == R.styleable.SummaryEditTextPreference_switchThumbTint) {
                 mThumbTint = array.getColorStateList(index);
             } else if (index == R.styleable.SummaryEditTextPreference_switchTrackTint) {
@@ -69,8 +73,8 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         mContainer = view;
 
         ImageView icon = view.findViewById(android.R.id.icon);
-        if (icon != null && mTint != 0) {
-            icon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(view.getContext(), mTint)));
+        if (icon != null && mTint != null) {
+            icon.setImageTintList(mTint);
         }
 
         TextView titleView = view.findViewById(android.R.id.title);
@@ -83,10 +87,13 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
             if (mTextColor == 0) {
                 coloredTitleView.setTextColor(res.getColor(
-                        isEnabled() ? ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorText)
-                                : R.color.neutral_20));
+                        isEnabled() ? ContextExtensionsKt
+                                .getColorResIdFromAttribute(getContext(), R.attr.colorOnSurface)
+                                : ContextExtensionsKt
+                                        .getColorResIdFromAttribute(getContext(), R.attr.wpColorOnSurfaceMedium)));
             } else {
-                coloredTitleView.setTextColor(ContextCompat.getColor(this.getContext(), R.color.white));
+                coloredTitleView.setTextColor(ContextCompat.getColor(this.getContext(), ContextExtensionsKt
+                                .getColorResIdFromAttribute(getContext(), R.attr.colorOnSurface)));
             }
 
             // add padding to the start of nested preferences
@@ -102,16 +109,10 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Switch switchControl = getSwitch((ViewGroup) view);
             if (switchControl != null) {
-                if (mThumbTint == null) {
-                    switchControl.setThumbTintList(ContextCompat.getColorStateList(this.getContext(),
-                            R.color.primary_40_gray_20_gray_40_selector));
-                } else {
+                if (mThumbTint != null) {
                     switchControl.setThumbTintList(mThumbTint);
                 }
-                if (mTrackTint == null) {
-                    switchControl.setTrackTintList(ContextCompat.getColorStateList(this.getContext(),
-                            R.color.primary_40_gray_90_gray_50_selector));
-                } else {
+                if (mTrackTint != null) {
                     switchControl.setTrackTintList(mTrackTint);
                 }
                 setBackground(switchControl.isChecked());
