@@ -33,6 +33,7 @@ public class SignUpTests extends BaseTest {
                 E2E_SIGNUP_DISPLAY_NAME,
                 E2E_SIGNUP_USERNAME);
         signupFlow.enterPassword(E2E_SIGNUP_PASSWORD);
+        signupFlow.dismissInterstitial();
         signupFlow.confirmSignup();
     }
 }

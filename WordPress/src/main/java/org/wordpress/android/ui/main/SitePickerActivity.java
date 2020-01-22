@@ -455,7 +455,9 @@ public class SitePickerActivity extends AppCompatActivity
     private void setupSearchView() {
         mSearchView = (SearchView) mMenuSearch.getActionView();
         mSearchView.setIconifiedByDefault(false);
+        mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
 
         mMenuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
@@ -522,7 +524,7 @@ public class SitePickerActivity extends AppCompatActivity
         if (site == null) {
             return false;
         }
-        if (site.isWPCom()) {
+        if (site.isUsingWpComRestApi()) {
             if (mActionMode != null) {
                 return false;
             }

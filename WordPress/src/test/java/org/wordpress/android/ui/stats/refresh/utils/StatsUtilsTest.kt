@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -28,17 +27,17 @@ class StatsUtilsTest {
     fun setUp() {
         statsUtils = StatsUtils(resourceProvider, localeManagerWrapper)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
-        whenever(resourceProvider.getString(eq(R.string.suffix_1_000), any())).then { invocation ->
-            invocation.arguments[1] as String + suffixThousand
-        }
-        whenever(resourceProvider.getString(eq(R.string.suffix_1_000_000), any())).then { invocation ->
-            invocation.arguments[1] as String + suffixMillion
-        }
-        whenever(resourceProvider.getString(eq(R.string.suffix_1_000_000_000), any())).then { invocation ->
-            invocation.arguments[1] as String + suffixBillion
-        }
-        whenever(resourceProvider.getString(eq(R.string.suffix_1_000_000_000_000), any())).then { invocation ->
-            invocation.arguments[1] as String + suffixTrillion
+        whenever(resourceProvider.getString(any(), any())).then {
+            val resourceId = it.getArgument<Int>(0)
+            val value = it.getArgument<String>(1)
+            when (resourceId) {
+                R.string.negative_prefix -> "-$value"
+                R.string.suffix_1_000 -> value + suffixThousand
+                R.string.suffix_1_000_000 -> value + suffixMillion
+                R.string.suffix_1_000_000_000 -> value + suffixBillion
+                R.string.suffix_1_000_000_000_000 -> value + suffixTrillion
+                else -> value
+            }
         }
     }
 
