@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:fillViewport="true"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
     android:padding="@dimen/margin_extra_large"
     android:scrollbarStyle="outsideOverlay">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
 
         <org.wordpress.android.widgets.SuggestionAutoCompleteText
             android:id="@+id/edit_comment_expand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
+            android:dropDownAnchor="@+id/dummy_hidden_view"
             android:gravity="start|top"
             android:hint="@string/reader_hint_comment_on_post"
             android:imeOptions="actionSend"
             android:inputType="text|textCapSentences|textMultiLine"
             android:textAlignment="viewStart"
-            android:textColorHint="@color/neutral_40"
-            android:textSize="@dimen/text_sz_large"
-            app:layout_constraintTop_toTopOf="parent"
-            android:dropDownAnchor="@+id/dummy_hidden_view" />
+            android:textAppearance="?attr/textAppearanceBody1"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/dummy_hidden_view"
@@ -37,5 +36,6 @@
             android:layout_height="1dp"
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

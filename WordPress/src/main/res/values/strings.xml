@@ -448,7 +448,6 @@
     <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
 
     <!-- edit comment view -->
-    <string name="hint_comment_content">Comment</string>
     <string name="saving_changes">Saving changes</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
     <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
