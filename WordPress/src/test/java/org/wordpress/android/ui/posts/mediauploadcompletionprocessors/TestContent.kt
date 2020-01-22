@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
+/* ktlint-disable max-line-length */
+/* ktlint-disable string-template */
 object TestContent {
-    // TODO: prettify the test content
     const val siteUrl = "https://wordpress.org"
     private const val localImageUrl = "file://Screenshot-1-1.png"
     const val remoteImageUrl = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg"
@@ -10,7 +11,7 @@ object TestContent {
     private const val remoteImageUrl2 = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg"
     private const val remoteImageUrl2BlogLink = "http://onetwoonetwothisisjustatest.home.blog/?attachment_id=369"
     private const val remoteImageUrl2WithSize = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg?w=768"
-    const val localVideoUrl = "file://local-video.mov"
+    private const val localVideoUrl = "file://local-video.mov"
     const val remoteVideoUrl = "https://videos.files.wordpress.com/qeJFeNa2/macintosh-plus-floral-shoppe-02-e383aae382b5e38395e383a9e383b3e382af420-e78fbee4bba3e381aee382b3e383b3e38394e383a5e383bc-1_hd.mp4"
     const val localMediaId = "112"
     private const val collidingPrefixMediaId = "${localMediaId}42"
@@ -65,7 +66,6 @@ object TestContent {
 </figure>
 <!-- /wp:image -->
 """
-
 
     const val oldMediaTextBlock = """<!-- wp:media-text {"mediaId":${localMediaId},"mediaType":"image"} -->
 <div class="wp-block-media-text alignwide is-stacked-on-mobile">

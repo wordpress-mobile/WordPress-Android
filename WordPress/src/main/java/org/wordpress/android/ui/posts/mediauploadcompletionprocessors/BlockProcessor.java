@@ -101,7 +101,6 @@ abstract class BlockProcessor {
              document.outputSettings(OUTPUT_SETTINGS);
 
              if (processBlockContentDocument(document)) {
-
                  // return injected block
                  return new StringBuilder()
                          .append(getHeaderComment())

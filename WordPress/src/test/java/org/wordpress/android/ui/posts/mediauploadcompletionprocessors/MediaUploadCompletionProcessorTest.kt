@@ -5,16 +5,16 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Test
-
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+
 import org.wordpress.android.util.helpers.MediaFile
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaUploadCompletionProcessorTest {
     private val mediaFile: MediaFile = mock()
-    private lateinit var processor : MediaUploadCompletionProcessor
+    private lateinit var processor: MediaUploadCompletionProcessor
 
     @Before
     fun before() {

@@ -4,13 +4,13 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Test
-
 import org.junit.Before
+
 import org.wordpress.android.util.helpers.MediaFile
 
 class ImageBlockProcessorTest {
     private val mediaFile: MediaFile = mock()
-    private lateinit var processor : BlockProcessor
+    private lateinit var processor: BlockProcessor
 
     @Before
     fun before() {

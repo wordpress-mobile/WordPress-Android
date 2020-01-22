@@ -5,11 +5,12 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
+
 import org.wordpress.android.util.helpers.MediaFile
 
 class VideoBlockProcessorTest {
     private val mediaFile: MediaFile = mock()
-    private lateinit var processor : BlockProcessor
+    private lateinit var processor: BlockProcessor
 
     @Before
     fun before() {
