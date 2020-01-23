@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,43 +11,50 @@
         android:layout_height="match_parent"
         app:wpSpinnerItemView="@layout/toolbar_main_spinner_item"
         app:wpToolbarDisableScrollGestures="true"
-        app:wpUseTabsForFiltering="true"/>
+        app:wpUseTabsForFiltering="true" />
 
     <include
         android:id="@+id/empty_custom_view"
-        layout="@layout/reader_empty_view"/>
+        layout="@layout/reader_empty_view" />
 
-    <LinearLayout
+
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/layout_new_posts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:background="@drawable/reader_new_posts_bar_background"
-        android:elevation="@dimen/message_bar_elevation"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingEnd="24dp"
-        android:paddingStart="24dp"
-        android:paddingTop="@dimen/margin_large"
         android:visibility="gone"
-        tools:visibility="visible" >
+        app:cardBackgroundColor="?attr/colorPrimaryVariant"
+        app:cardCornerRadius="24dp"
+        tools:visibility="visible">
 
-        <org.wordpress.android.widgets.WPTextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/reader_label_new_posts"
-            android:textColor="@color/neutral_0"
-            android:textSize="@dimen/text_sz_large"/>
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="@dimen/margin_large"
+            android:paddingEnd="24dp"
+            android:paddingBottom="@dimen/margin_large">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reader_label_new_posts_subtitle"
-            android:textColor="@color/neutral_0"
-            android:textSize="@dimen/text_sz_small"/>
-    </LinearLayout>
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_label_new_posts"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/colorOnPrimarySurface" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_label_new_posts_subtitle"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="?attr/colorOnPrimarySurface" />
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <ProgressBar
         android:id="@+id/progress_footer"
@@ -58,6 +64,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 </RelativeLayout>
