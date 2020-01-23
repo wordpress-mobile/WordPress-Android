@@ -12,6 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -19,6 +20,7 @@ import java.util.Date
 class LatestPostSummaryMapperTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
+    @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     private lateinit var mapper: LatestPostSummaryMapper
     private val date = Date(10)
@@ -31,7 +33,8 @@ class LatestPostSummaryMapperTest {
         mapper = LatestPostSummaryMapper(
                 statsUtilsWrapper,
                 resourceProvider,
-                statsDateFormatter
+                statsDateFormatter,
+                statsUtils
         )
     }
 

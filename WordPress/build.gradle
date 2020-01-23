@@ -267,6 +267,8 @@ dependencies {
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
     implementation project(path:':libs:utils:WordPressUtils')
+    testImplementation project(path:':libs:utils:WordPressUtils')
+    debugImplementation project(path:':libs:utils:WordPressUtils')
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
     }
@@ -297,6 +299,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 
     implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:2.0.1'
+    implementation "org.jsoup:jsoup:1.10.3"
 }
 
 configurations.all {
