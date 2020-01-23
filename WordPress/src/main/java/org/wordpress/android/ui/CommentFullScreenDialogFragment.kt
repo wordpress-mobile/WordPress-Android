@@ -66,8 +66,8 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
             // Allow @username suggestion in full screen comment Editor on the Reader,
             // but only on sites in the siteStore (i.e: current user's site).
             // No suggestion is available for external sites that the user follows in the Reader.
-            val siteModel : SiteModel? = siteStore.getSiteBySiteId(it.getLong(EXTRA_SITE_ID))
-            if(siteModel != null) {
+            val siteModel: SiteModel? = siteStore.getSiteBySiteId(it.getLong(EXTRA_SITE_ID))
+            if (siteModel != null) {
                 setupSuggestionServiceAndAdapter(siteModel)
             }
         }
