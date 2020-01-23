@@ -50,10 +50,10 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     // We need to use theme-styled colors in NoteBlockClickableSpan but current Notifications architecture makes it
     // difficult to get right type of context to this span to style the colors. We are doing it in this method instead.
     public void enableColors(Context context) {
-        mTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
+        mTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface);
         mBackgroundColor = ContextCompat.getColor(context, R.color.primary_5);
-        mLinkColor = ContextCompat.getColor(context, R.color.primary_40);
-        mLightTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
+        mLinkColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorPrimary);
+        mLightTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface);
     }
 
     public void setColors(@ColorInt int textColor, @ColorInt int backgroundColor, @ColorInt int linkColor,

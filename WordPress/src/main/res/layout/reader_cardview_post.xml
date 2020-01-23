@@ -181,7 +181,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/margin_large"
                 android:src="@drawable/bg_rectangle_neutral_10_user_32dp"
-                android:contentDescription="@string/reader_blavatar_desc"
+                android:importantForAccessibility="no"
                 style="@style/ReaderImageView.Avatar.Small" >
             </ImageView>
 

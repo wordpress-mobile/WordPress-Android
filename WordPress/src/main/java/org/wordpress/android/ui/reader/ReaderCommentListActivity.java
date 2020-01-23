@@ -42,6 +42,8 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
@@ -117,7 +119,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private long mCommentId;
     private int mRestorePosition;
     private String mInterceptedUri;
+    private SiteModel mSite;
 
+    @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private ReaderCommentListViewModel mViewModel;
@@ -256,6 +260,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
 
+        mSite = mSiteStore.getSiteBySiteId(mBlogId);
+
         ImageView buttonExpand = findViewById(R.id.button_expand);
         buttonExpand.setOnClickListener(
             new OnClickListener() {
@@ -264,7 +270,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     Bundle bundle = CommentFullScreenDialogFragment.Companion
                             .newBundle(mEditComment.getText().toString(),
                                     mEditComment.getSelectionStart(),
-                                    mEditComment.getSelectionEnd());
+                                    mEditComment.getSelectionEnd(),
+                                    mBlogId
+                            );
 
                     new Builder(ReaderCommentListActivity.this)
                         .setTitle(R.string.comment)

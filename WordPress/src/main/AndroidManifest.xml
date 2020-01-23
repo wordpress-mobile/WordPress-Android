@@ -189,16 +189,16 @@
         <!-- Comments activities -->
         <activity
             android:name=".ui.comments.CommentsActivity"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:launchMode="singleTop"
             android:label="@string/comments"/>
         <activity
             android:name=".ui.comments.EditCommentActivity"
-            android:theme="@style/CalypsoTheme"
+            android:theme="@style/WordPress.NoActionBar"
             android:label="@string/edit_comment"/>
         <activity
             android:name=".ui.comments.CommentsDetailActivity"
-            android:theme="@style/CalypsoTheme"
+            android:theme="@style/WordPress.NoActionBar"
             android:label="@string/comments"/>
 
         <!-- Posts activities -->
@@ -253,10 +253,12 @@
             android:theme="@style/CalypsoTheme" />
 
         <!-- plans -->
-        <activity android:name=".ui.plans.PlansActivity"
-                  android:theme="@style/Calypso.NoActionBar"
-                  android:launchMode="singleTop"
-                  android:parentActivityName=".ui.main.WPMainActivity"/>
+        <activity
+            android:name=".ui.plans.PlansActivity"
+            android:label="@string/plans"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.main.WPMainActivity"
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Stats Activities -->
         <activity
@@ -536,28 +538,28 @@
         <!--Plugins-->
         <activity
             android:name=".ui.plugins.PluginDetailActivity"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
         <activity
             android:name=".ui.plugins.PluginBrowserActivity"
             android:label="@string/plugins"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <!--Activity log-->
         <activity
             android:name=".ui.activitylog.list.ActivityLogListActivity"
             android:label="@string/activity_log"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
         <activity
             android:name=".ui.activitylog.detail.ActivityLogDetailActivity"
             android:label="@string/activity_log_event"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <!--Domain Registration-->
         <activity
             android:name=".ui.domains.DomainRegistrationActivity"
             android:label="@string/register_domain"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Me activities -->
         <activity

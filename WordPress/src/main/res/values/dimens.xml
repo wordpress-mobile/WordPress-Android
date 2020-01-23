@@ -17,6 +17,8 @@
     <dimen name="fab_margin_tablet">24dp</dimen>
     <dimen name="design_fab_size">56dp</dimen>
 
+    <item format="float" name="primary_button_disabled_alpha" type="dimen">0.12</item>
+
     <dimen name="divider_size">1dp</dimen>
 
     <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
@@ -175,6 +177,7 @@
     <dimen name="reader_remove_button_extra_padding">12dp</dimen>
     <dimen name="reader_more_image_extra_padding">12dp</dimen>
     <dimen name="reader_follow_button_extra_padding">32dp</dimen>
+    <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
     <dimen name="empty_list_title_text_size">24sp</dimen>
     <dimen name="empty_list_title_side_margin">32dp</dimen>
@@ -431,7 +434,6 @@
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
 
-    <dimen name="keyline_first">16dp</dimen>
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
@@ -451,6 +453,9 @@
 
     <!--Main bottom sheet icon size -->
     <dimen name="main_bottom_sheet_list_row_icon_size">32dp</dimen>
+    <dimen name="main_fab_tooltip_offset_end">20dp</dimen>
+    <dimen name="main_fab_tooltip_elevation">6dp</dimen>
+    <dimen name="main_fab_tooltip_arrow_size">16dp</dimen>
 
     <!-- shimmering skeleton -->
     <dimen name="skeleton_shimmer_base_alpha">0.33</dimen>

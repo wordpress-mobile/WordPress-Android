@@ -1,6 +1,16 @@
+14.1
+-----
+* Fixes an issue where searching for posts sometimes doesn't show some results.
+
+* Disable the option to remove a Jetpack site from site picker
+ 
 14.0
 -----
- 
+* Block Editor: Fix displaying placeholder for images
+* Block Editor: Fix crash on undo
+* Block Editor: Fix styling on navigation UI
+* Information Architecture revised: moved the access to the Me screen to an option menu into My Site; added Floating Action Button in My Site to allow the creation of a new Blog post or Site page.
+
 13.9
 -----
 * Block Editor: New block "Gallery". You can now create image galleries using WordPress Media library.
