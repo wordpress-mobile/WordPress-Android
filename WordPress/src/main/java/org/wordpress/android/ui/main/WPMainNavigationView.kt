@@ -47,7 +47,10 @@ class WPMainNavigationView @JvmOverloads constructor(
     private lateinit var fragmentManager: FragmentManager
     private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
-    private var unselectedButtonAlpha = 0.0f
+    private var unselectedButtonAlpha = ResourcesCompat.getFloat(
+            resources,
+            R.dimen.material_emphasis_disabled
+    )
 
     private var currentPosition: Int
         get() = getPositionForItemId(selectedItemId)
@@ -72,11 +75,6 @@ class WPMainNavigationView @JvmOverloads constructor(
         navAdapter = NavAdapter()
         assignNavigationListeners(true)
         disableShiftMode()
-
-        unselectedButtonAlpha = ResourcesCompat.getFloat(
-                resources,
-                R.dimen.material_emphasis_disabled
-        )
 
         // overlay each item with our custom view
         val menuView = getChildAt(0) as BottomNavigationMenuView
@@ -179,11 +177,9 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
-        getImageViewForPosition(position)?.isSelected = isSelected
-        if (isSelected) {
-            getImageViewForPosition(position)?.alpha = 1f
-        } else {
-            getImageViewForPosition(position)?.alpha = unselectedButtonAlpha
+        getImageViewForPosition(position)?.let {
+            it.isSelected = isSelected
+            it.alpha = if (isSelected) 1f else unselectedButtonAlpha
         }
     }
 
