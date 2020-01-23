@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:stateListAnimator="@anim/pressed_card"
-    app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="@dimen/default_cardview_radius"
-    app:cardElevation="@dimen/reader_card_elevation" >
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/removed_item_container"
@@ -17,10 +11,10 @@
         android:layout_height="?android:attr/listPreferredItemHeight"
         android:background="?android:selectableItemBackground"
         android:gravity="center_vertical"
-        android:paddingEnd="@dimen/reader_card_content_padding"
-        android:paddingStart="@dimen/reader_card_content_padding">
+        android:paddingStart="@dimen/reader_card_content_padding"
+        android:paddingEnd="@dimen/reader_card_content_padding">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/removed_post_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,18 +22,18 @@
             android:layout_toStartOf="@+id/undo_remove"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:textColor="?attr/wpColorTextSubtle"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="Removed Best post ever"/>
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
+            tools:text="Removed Best post ever" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/undo_remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:drawablePadding="@dimen/margin_small"
             android:text="@string/undo"
-            android:textColor="@color/primary_40"
-            android:textSize="@dimen/text_sz_large"/>
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorPrimary" />
     </RelativeLayout>
-</androidx.cardview.widget.CardView>
+</FrameLayout>
