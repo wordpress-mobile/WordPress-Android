@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/rest/v1.1/sites/.*/stats/video-plays/"
+        "urlPath": "/rest/v1.1/sites/106707880/stats/video-plays/"
     },
     "response": {
         "status": 200,

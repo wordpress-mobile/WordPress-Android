@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/rest/v1.1/sites/.*/stats/referrers/"
+        "urlPath": "/rest/v1.1/sites/106707880/stats/referrers/"
     },
     "response": {
         "status": 200,
