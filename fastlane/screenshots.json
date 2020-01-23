@@ -1,232 +1,261 @@
 {
 	"version": 0.1,
-	"shadow_offset": 40,
+	"shadow_offset": 0,
 	"background_color": "#016087",
 	"stylesheet": "playstoreres/assets/style.css",
 	"devices": [
 		{
 			"name": "Pixel 2 XL",
 			"canvas_size": [1080,1920],
-			"text_size": [1024, 313],
-			"text_offset": [0, 48],
+			"text_size": [1024, 319],
+			"text_offset": [0, 0],
 			"font_size": "70px",
-			"screenshot_size": [741, 1482],
-			"screenshot_offset": [170, 536],
+			"screenshot_size": [740, 1480],
+			"screenshot_offset": [170, 440],
 			"device_frame": "playstoreres/assets/pixel-2-xl.svg",
-			"device_frame_size": [813, 1539],
-			"device_frame_offset": [142, 452]
+			"device_frame_size": [833, 1708],
+			"device_frame_offset": [124, 317]
+		},
+		{
+			"name": "Pixel 3",
+			"canvas_size": [1080,1920],
+			"text_size": [1080, 372],
+			"font_size": "84px",
+			"screenshot_size": [696, 1391],
+			"screenshot_offset": [193, 501],
+			"screenshot_mask": "playstoreres/assets/pixel-3-mask.png",
+			"device_frame": "playstoreres/assets/pixel-3.png",
+			"device_frame_size": [966, 1826],
+			"device_frame_offset": [58, 286]
 		},
 		{
 			"name": "Nexus 9",
 			"canvas_size": [3000,2000],
 			"text_size": [3000, 317],
-			"text_offset": [0, 48],
+			"text_offset": [0, 0],
 			"font_size": "70px",
 			"screenshot_size": [2107, 1581],
-			"screenshot_offset": [446, 520],
-			"device_frame": "playstoreres/assets/nexus-9.svg",
-			"device_frame_size": [2642, 1778],
-			"device_frame_offset": [179, 419]
+			"screenshot_offset": [446, 424],
+			"device_frame": "playstoreres/assets/nexus-9.png",
+			"device_frame_size": [2715, 1827],
+			"device_frame_offset": [149, 301]
 		}
 	],
 	"entries": [
 		{
-			"device": "Pixel 2 XL",
+			"device": "Pixel 3",
+			"filename": "images/phoneScreenshots/1-build-and-manage-your-website-pt1.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/Intro-1.png",
+					"size": [1080, 1920],
+					"position": [0, 0]
+				},
+				{
+					"text": "playstoreres/metadata/%s/play_store_screenshot_7.html",
+					"size": [881,744],
+					"position": [110,75 ],
+					"font-size": 140,
+					"alignment": "left",
+					"stylesheet": "playstoreres/assets/intro-text.css"
+				}
+			]
+		},
+		{
+			"device": "Pixel 3",
+			"filename": "images/phoneScreenshots/1-build-and-manage-your-website-pt2.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/Intro-2.png",
+					"size": [1080, 1920],
+					"position": [0, 0]
+				}
+			]
+		},
+		{
+			"device": "Pixel 3",
 			"text": "playstoreres/metadata/%s/play_store_screenshot_1.html",
-			"screenshot": "images/phoneScreenshots/1-posteditor.png",
+			"screenshot": "images/phoneScreenshots/2-create-beautiful-posts-and-pages.png",
+			"background": "#9658A3",
 			"attachments": [
 				{
-					"file": "playstoreres/assets/attachments/1-top.png",
-					"size": [767,483],
-					"position": [107, 967]
+					"file": "playstoreres/assets/attachments/phone-white-keyboard-with-status-bar.png",
+					"size": [696, 560],
+					"position": [193, 1360]
+					
 				},
 				{
-					"file": "playstoreres/assets/attachments/1-bottom.png",
-					"size": [767,483],
-					"position": [200, 1488]
+					"file": "playstoreres/assets/attachments/02-gutenberg-toolbar.png",
+					"size": [980, 203],
+					"position": [48, 1216]
 				}
 			]
 		},
 		{
-			"device": "Pixel 2 XL",
+			"device": "Pixel 3",
 			"text": "playstoreres/metadata/%s/play_store_screenshot_2.html",
-			"screenshot": "images/phoneScreenshots/2-stats.png",
+			"screenshot": "images/phoneScreenshots/3-track-what-your-visitors-love.png",
+			"background": "#006088",
 			"attachments": [
 				{
-					"file": "playstoreres/assets/attachments/2-chart.png",
-					"size": [860,744],
-					"position": [110, 732]
+					"file": "playstoreres/assets/attachments/03-stats-phone.png",
+					"size": [924,808],
+					"position": [78, 695]
 				}
 			]
 		},
 		{
-			"device": "Pixel 2 XL",
+			"device": "Pixel 3",
 			"text": "playstoreres/metadata/%s/play_store_screenshot_3.html",
-			"screenshot": "images/phoneScreenshots/3-notifications.png",
+			"screenshot": "images/phoneScreenshots/4-check-whats-happening-in-real-time.png",
+			"background": "#9658A3",
 			"attachments": [
 				{
-					"file": "playstoreres/assets/attachments/3-1.png",
-					"size": [784,233],
-					"position": [94, 813]
+					"file": "playstoreres/assets/attachments/04-1.png",
+					"size": [848,297],
+					"position": [62, 685]
 				},
 				{
-					"file": "playstoreres/assets/attachments/3-2.png",
-					"size": [784,233],
-					"position": [193, 1212]
+					"file": "playstoreres/assets/attachments/04-2.png",
+					"size": [869,297],
+					"position": [161, 1084]
 				},
 				{
-					"file": "playstoreres/assets/attachments/3-3.png",
-					"size": [784,233],
-					"position": [107, 1594]
+					"file": "playstoreres/assets/attachments/04-3.png",
+					"size": [848, 297],
+					"position": [75, 1413]
 				}
 			]
 		},
 		{
-			"device": "Pixel 2 XL",
+			"device": "Pixel 3",
 			"text": "playstoreres/metadata/%s/play_store_screenshot_4.html",
-			"screenshot": "images/phoneScreenshots/4-media.png",
+			"screenshot": "images/phoneScreenshots/5-share-from-anywhere.png",
+			"background": "#006088",
 			"attachments": [
 				{
-					"file": "playstoreres/assets/attachments/4-1.png",
-					"size": [392,312],
-					"position": [349, 1665]
-				},
-				{
-					"file": "playstoreres/assets/attachments/4-2.png",
-					"size": [392,312],
-					"position": [88, 1216]
-				},
-				{
-					"file": "playstoreres/assets/attachments/4-3.png",
-					"size": [517,394],
-					"position": [480, 731]
-				},
-				{
-					"file": "playstoreres/assets/attachments/4-4.png",
-					"size": [326,256],
-					"position": [623, 1336]
-				},
-				{
-					"file": "playstoreres/assets/attachments/4-5.png",
-					"size": [314,246],
-					"position": [71, 701]
+					"file": "playstoreres/assets/attachments/05-photos.png",
+					"size": [1000,1207],
+					"position": [36, 580]
 				}
 			]
 		},
 		{
-			"device": "Pixel 2 XL",
+			"device": "Pixel 3",
 			"text": "playstoreres/metadata/%s/play_store_screenshot_5.html",
-			"screenshot": "images/phoneScreenshots/5-drafteditor.png",
+			"screenshot": "images/phoneScreenshots/6-capture-ideas-on-the-go.png",
+			"background": "#9658A3",
 			"attachments": [
 				{
-					"file": "playstoreres/assets/attachments/5-1.png",
-					"size": [662,564],
-					"position": [210, 1316]
+					"file": "playstoreres/assets/attachments/listening-keyboard.png",
+					"size": [697,688],
+					"position": [192, 1203]
 				},
 				{
-					"file": "playstoreres/assets/attachments/5-2.png",
-					"size": [902,151],
-					"position": [89, 1372]
+				 	"file": "playstoreres/assets/attachments/06-listening-bar.png",
+				 	"size": [990,226],
+				 	"position": [46, 1237]
 				}
 			]
 		},
+		// Build and manage your website
+		{
+			"device": "Nexus 9",
+			"text": "playstoreres/metadata/%s/play_store_screenshot_7.html",
+			"screenshot": "images/tenInchScreenshots/1-build-and-manage-your-website.png",
+			"background": "#006088",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/01-tablet-website.png",
+					"size": [2107, 1581],
+					"position": [446, 424]
+				}
+			]
+		},
+		// Create beautiful posts and pages
 		{
 			"device": "Nexus 9",
 			"text": "playstoreres/metadata/%s/play_store_screenshot_1.html",
-			"screenshot": "images/tenInchScreenshots/1-posteditor.png",
+			"screenshot": "images/tenInchScreenshots/7-create-beautiful-posts-and-pages.png",
+			"filename": "images/tenInchScreenshots/2-create-beautiful-posts-and-pages.png",
+			"background": "#9658A3",
 			"attachments": [
 				{
-					"file": "playstoreres/assets/attachments/1-top.png",
-					"size": [980,571],
-					"position": [518, 1110]
-				},
-				{
-					"file": "playstoreres/assets/attachments/1-bottom.png",
-					"size": [906,571],
-					"position": [1575, 1110]
+					"file": "playstoreres/assets/attachments/gutenberg-toolbar-tablet.png",
+					"size": [2107, 100],
+					"position": [446, 1803]
 				}
 			]
 		},
+		// Track what your visitors love
 		{
 			"device": "Nexus 9",
 			"text": "playstoreres/metadata/%s/play_store_screenshot_2.html",
-			"screenshot": "images/tenInchScreenshots/2-stats.png",
+			"screenshot": "images/tenInchScreenshots/3-track-what-your-visitors-love.png",
+			"background": "#006088",
 			"attachments": [
 				{
-					"file": "playstoreres/assets/attachments/2-chart-tablet.png",
-					"size": [1578,864],
-					"position": [711, 687]
+					"file": "playstoreres/assets/attachments/03-stats-tablet.png",
+					"size": [1642, 925],
+					"position": [679, 694]
 				}
 			]
 		},
+		// Check what's happening in real-time
 		{
 			"device": "Nexus 9",
 			"text": "playstoreres/metadata/%s/play_store_screenshot_3.html",
-			"screenshot": "images/tenInchScreenshots/3-notifications.png",
+			"screenshot": "images/tenInchScreenshots/4-check-whats-happening-in-real-time.png",
+			"background": "#9658A3",
 			"attachments": [
 				{
-					"file": "playstoreres/assets/attachments/3-1-tablet.png",
-					"size": [1345,233],
-					"position": [748, 825]
+					"file": "playstoreres/assets/attachments/04-1-tablet.png",
+					"size": [1409, 297],
+					"position": [716, 697]
 				},
 				{
-					"file": "playstoreres/assets/attachments/3-2-tablet.png",
-					"size": [1345,233],
-					"position": [870, 1205]
+					"file": "playstoreres/assets/attachments/04-2-tablet.png",
+					"size": [1409, 297],
+					"position": [838, 1077]
 				},
 				{
-					"file": "playstoreres/assets/attachments/3-3-tablet.png",
-					"size": [1345,233],
-					"position": [788, 1598]
+					"file": "playstoreres/assets/attachments/04-3-tablet.png",
+					"size": [1409, 297],
+					"position": [756, 1430]
 				}
 			]
 		},
+		// Share from anywhere
 		{
 			"device": "Nexus 9",
 			"text": "playstoreres/metadata/%s/play_store_screenshot_4.html",
-			"screenshot": "images/tenInchScreenshots/4-media.png",
+			"screenshot": "images/tenInchScreenshots/5-share-from-anywhere.png",
+			"background": "#006088",
 			"attachments": [
 				{
-					"file": "playstoreres/assets/attachments/4-1.png",
-					"size": [809,644],
-					"position": [1100, 1343]
-				},
-				{
-					"file": "playstoreres/assets/attachments/4-2.png",
-					"size": [392,312],
-					"position": [368, 1343]
-				},
-				{
-					"file": "playstoreres/assets/attachments/4-3.png",
-					"size": [688,524],
-					"position": [1342, 657]
-				},
-				{
-					"file": "playstoreres/assets/attachments/4-4.png",
-					"size": [530,416],
-					"position": [2083, 1249]
-				},
-				{
-					"file": "playstoreres/assets/attachments/4-5.png",
-					"size": [530,415],
-					"position": [668, 712]
+					"file": "playstoreres/assets/attachments/share-from-anywhere-tablet-photos.png",
+					"size": [2309, 1353],
+					"position": [336, 519]
 				}
 			]
 		},
+		// Write without compromises
 		{
 			"device": "Nexus 9",
 			"text": "playstoreres/metadata/%s/play_store_screenshot_6.html",
-			"screenshot": "images/tenInchScreenshots/6-writing.png",
+			"screenshot": "images/tenInchScreenshots/8-write-without-compromises.png",
+			"filename": "images/tenInchScreenshots/6-write-without-compromises.png",
+			"background": "#9658A3",
 			"attachments": [
 				{
-					"file": "playstoreres/assets/attachments/6-1.png",
-					"size": [2027,649],
-					"position": [486, 1386]
+					"file": "playstoreres/assets/attachments/08-screen.png",
+					"size": [2107, 1414],
+					"position": [446, 586]
 				},
 				{
-					"file": "playstoreres/assets/attachments/6-2.png",
-					"size": [925,126],
-					"position": [416, 1288]
+					"file": "playstoreres/assets/attachments/aztec-toolbar-overlay-tablet.png",
+					"size": [966, 194],
+					"position": [351, 1077]
 				}
 			]
 		}
