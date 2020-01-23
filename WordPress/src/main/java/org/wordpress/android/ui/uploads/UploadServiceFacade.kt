@@ -44,4 +44,7 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
 
     fun isPendingOrInProgressMediaUpload(mediaModel: MediaModel): Boolean =
             UploadService.isPendingOrInProgressMediaUpload(mediaModel)
+
+    fun getUploadProgressForMedia(mediaModel: MediaModel): Float =
+            UploadService.getUploadProgressForMedia(mediaModel)
 }
