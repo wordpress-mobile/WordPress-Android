@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:wp="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
+    android:id="@+id/post_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <RelativeLayout
             android:id="@+id/layout_post_header"
@@ -25,11 +27,11 @@
             android:paddingBottom="@dimen/margin_large">
 
             <ImageView
-                 android:background="@android:color/white"
                 android:id="@+id/image_avatar_or_blavatar"
                 style="@style/ReaderImageView.Avatar"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/reader_card_avatar_margin_end"
+                android:background="@android:color/white"
                 android:importantForAccessibility="no"
                 android:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
 
@@ -177,8 +179,8 @@
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
                 android:maxLines="3"
-                android:textColor="?attr/wpColorOnSurfaceMedium"
                 android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/wpColorOnSurfaceMedium"
                 tools:text="text_attribution" />
 
         </LinearLayout>
@@ -279,6 +281,11 @@
 
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_size"
+            android:background="?android:attr/listDivider" />
+
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>
