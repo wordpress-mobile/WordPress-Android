@@ -520,6 +520,11 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
             }
 
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
+                // Remove sticky event if not consumed
+                EventBus.getDefault().removeStickyEvent(ReaderEvents.TagAdded.class);
+            }
+
             // if the user tapped a site to show site preview, it's possible they also changed the follow
             // status so tell the search adapter to check whether it has the correct follow status
             if (getPostListType() == ReaderPostListType.SEARCH_RESULTS && mLastTappedSiteSearchResult != null) {
