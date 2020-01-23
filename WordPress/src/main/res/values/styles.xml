@@ -35,6 +35,7 @@
         <item name="wpIconColorOnSurface">@color/material_on_surface_emphasis_medium</item>
 
         <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
+        <item name="listPopupWindowStyle">@style/Widget.MaterialComponents.PopupMenu.ListPopupWindow</item>
         <item name="actionOverflowMenuStyle">
             @style/Widget.MaterialComponents.PopupMenu.Overflow
         </item>
