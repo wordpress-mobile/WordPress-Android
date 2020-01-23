@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/rest/v1.1/sites/[0-9]+/stats/comments(.*)"
+        "urlPath": "/rest/v1.1/sites/106707880/stats/comments/"
     },
     "response": {
         "status": 200,

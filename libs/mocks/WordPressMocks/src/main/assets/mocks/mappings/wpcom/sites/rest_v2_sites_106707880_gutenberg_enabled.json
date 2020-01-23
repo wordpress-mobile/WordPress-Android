@@ -1,22 +1,14 @@
 {
     "scenarioName": "gutenberg",
-    "newScenarioState": "Started",
+    "requiredScenarioState": "enabled",
     "request": {
-        "urlPath": "/wpcom/v2/sites/106707880/gutenberg/",
-        "method": "POST",
-        "queryParameters": {
-            "editor": {
-                "equalTo": "aztec"
-            },
-            "platform": {
-                "equalTo": "mobile"
-            }
-        }
+        "urlPattern": "/wpcom/v2/sites/106707880/gutenberg(/)?($|\\?.*)",
+        "method": "GET"
     },
     "response": {
         "status": 200,
         "jsonBody": {
-            "editor_mobile": "aztec",
+            "editor_mobile": "gutenberg",
             "editor_web": "gutenberg",
             "opt_in": "{{request.requestLine.baseUrl}}/wpcom/v2/sites/106707880/gutenberg?editor=gutenberg&platform=mobile"
         },

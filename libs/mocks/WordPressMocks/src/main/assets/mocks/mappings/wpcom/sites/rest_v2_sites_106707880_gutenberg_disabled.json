@@ -1,17 +1,9 @@
 {
     "scenarioName": "gutenberg",
-    "newScenarioState": "Started",
+    "requiredScenarioState": "Started",
     "request": {
-        "urlPath": "/wpcom/v2/sites/106707880/gutenberg/",
-        "method": "POST",
-        "queryParameters": {
-            "editor": {
-                "equalTo": "aztec"
-            },
-            "platform": {
-                "equalTo": "mobile"
-            }
-        }
+        "urlPattern": "/wpcom/v2/sites/106707880/gutenberg(/)?($|\\?.*)",
+        "method": "GET"
     },
     "response": {
         "status": 200,
