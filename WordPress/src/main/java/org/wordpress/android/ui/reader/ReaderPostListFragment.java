@@ -858,11 +858,11 @@ public class ReaderPostListFragment extends Fragment
         // the following will change the look and feel of the toolbar to match the current design
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
         float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
-        int elevatedColor = elevationOverlayProvider
+        int elevatedAppBarColor = elevationOverlayProvider
                 .compositeOverlayIfNeeded(
                         ContextExtensionsKt.getColorFromAttribute(mRecyclerView.getContext(), R.attr.wpColorAppBar),
                         appbarElevation);
-        mRecyclerView.setToolbarBackgroundColor(elevatedColor);
+        mRecyclerView.setToolbarBackgroundColor(elevatedAppBarColor);
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
@@ -906,6 +906,9 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mSubFilterComponent = inflater.inflate(R.layout.subfilter_component, rootView, false);
+        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
+        int elevatedCardColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(cardElevation);
+        mSubFilterComponent.setBackgroundColor(elevatedCardColor);
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             mRecyclerView.getAppBarLayout().addView(mSubFilterComponent);
