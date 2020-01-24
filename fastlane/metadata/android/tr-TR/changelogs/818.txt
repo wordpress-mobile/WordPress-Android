@@ -1,0 +1,4 @@
+14.0:
+- Blok düzenleyici: Geri almaya çalıştığınızda bazen blok düzenleyici çökebilir, bu biraz fazla ger al yapıldığında olur. Bununla birlikte, resim yer tutucularını etkileyen bir hata da düzeltildi.
+- Uygulamanın "Ben" bölümünü "Sitem" içine taşıdı.
+- Yeni yazıların ve sayfaların hızlı bir şekilde oluşturulması için Siteme yüzen bir işlem düğmesi eklendi.
