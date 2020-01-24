@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-
-    <!--
-        Drawables of list items with card background for smaller than 600dp screen width devices.  All variants (top,
-        middle, and single) for small devices use bg_rectangle_white with flat white color and unrounded corners.
-    -->
-    <item name="bg_rectangle_white_radius_bottom_card" type="drawable">@drawable/bg_rectangle_white</item>
-    <item name="bg_rectangle_white_radius_top_card" type="drawable">@drawable/bg_rectangle_white</item>
-    <item name="bg_rectangle_white_radius_card" type="drawable">@drawable/bg_rectangle_white</item>
-
     <!--
         Aliases for login library.
     -->

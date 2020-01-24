@@ -2,6 +2,10 @@
 -----
 * Block Editor: Add support for Dark Mode
 
+* Fixes an issue where searching for posts sometimes doesn't show some results.
+
+* Disable the option to remove a Jetpack site from site picker
+ 
 14.0
 -----
 * Block Editor: Fix displaying placeholder for images

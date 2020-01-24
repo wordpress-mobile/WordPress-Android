@@ -45,7 +45,7 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
             (dialog?.create_actions_recycler_view?.adapter as? AddContentAdapter)?.update(it ?: listOf())
         })
 
-        requireDialog().setOnShowListener { dialogInterface ->
+        dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
 
             val bottomSheet = sheetDialog?.findViewById<View>(
