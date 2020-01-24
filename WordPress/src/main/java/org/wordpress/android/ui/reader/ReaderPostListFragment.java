@@ -40,6 +40,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
@@ -442,6 +443,17 @@ public class ReaderPostListFragment extends Fragment
             });
         }
 
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            mViewModel.getShouldCollapseToolbar().observe(this, collapse -> {
+                if (collapse) {
+                    mRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                                                        | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                } else {
+                    mRecyclerView.setToolbarScrollFlags(0);
+                }
+            });
+        }
+
         mViewModel.start(
                 mCurrentTag,
                 (ReaderUtils.isFollowing(
@@ -449,7 +461,8 @@ public class ReaderPostListFragment extends Fragment
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
                 ) || ReaderUtils.isDefaultTag(mCurrentTag))
-                && BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel
+                && BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
+                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel
         );
     }
 
@@ -973,6 +986,9 @@ public class ReaderPostListFragment extends Fragment
                 mSettingsMenuItem.setVisible(false);
                 mRecyclerView.setTabLayoutVisibility(false);
                 mViewModel.setSubfiltersVisibility(false);
+                if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
+                    mViewModel.setCollapseToolbar(false);
+                }
 
                 // hide the bottom navigation when search is active
                 if (mBottomNavController != null) {
@@ -1018,6 +1034,7 @@ public class ReaderPostListFragment extends Fragment
                     mViewModel.setSubfiltersVisibility(
                             ReaderUtils.isFollowing(mCurrentTag, mIsTopLevel, mRecyclerView)
                     );
+                    mViewModel.setCollapseToolbar(true);
                 } else {
                     // return to the followed tag that was showing prior to searching
                     resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
