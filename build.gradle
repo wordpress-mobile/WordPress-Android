@@ -12,6 +12,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.5.1'
         classpath 'com.automattic.android:fetchstyle:1.1'
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -30,6 +31,7 @@ allprojects {
         google()
         jcenter()
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
+        maven { url "https://jitpack.io" }
 
         if (rootProject.ext.buildGutenbergFromSource) {
             // nested RN libraries need the RN maven repo defined from outside so, do it here when building from source
