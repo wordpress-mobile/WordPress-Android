@@ -309,21 +309,22 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="MySiteQuickActionButton" parent="Widget.Design.FloatingActionButton">
+    <style name="MySiteQuickActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="borderWidth">0dp</item>
         <item name="elevation">@dimen/card_elevation</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:backgroundTint">@android:color/white</item>
-        <item name="android:tint">@color/neutral_60</item>
+        <item name="android:backgroundTint">?attr/colorSurface</item>
+        <item name="tint">?attr/wpIconColorOnSurface</item>
+        <item name="android:tint">?attr/wpIconColorOnSurface</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">?attr/wpColorText</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
     </style>
 
     <style name="MySiteListRowLayout">
@@ -331,12 +332,11 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingEnd">@dimen/content_margin_site_row_end</item>
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
-        <item name="android:background">@android:color/white</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="MySiteListRowIcon">
-        <item name="android:tint">@color/neutral_60</item>
+        <item name="android:tint">?attr/wpIconColorOnSurface</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentStart">true</item>
@@ -348,7 +348,7 @@
     </style>
 
     <style name="MySiteListRowAlertIcon">
-        <item name="android:tint">@color/alert_yellow</item>
+        <item name="android:tint">?attr/wpColorWarningDark</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentStart">true</item>
@@ -367,8 +367,7 @@
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingEnd">0dp</item>
@@ -377,8 +376,8 @@
     <style name="MySiteListRowDescription">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_40</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:paddingTop">@dimen/margin_medium</item>
         <item name="android:paddingBottom">@dimen/margin_extra_large</item>
@@ -396,8 +395,7 @@
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingStart">@dimen/margin_extra_large</item>
@@ -406,21 +404,20 @@
     <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">
         <item name="android:layout_width">16dp</item>
         <item name="android:layout_height">16dp</item>
-        <item name="android:tint">@color/neutral_60</item>
+        <item name="android:tint">?attr/wpIconColorOnSurface</item>
     </style>
 
     <style name="MySiteListHeader">
         <item name="android:ellipsize">end</item>
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:paddingBottom">@dimen/my_site_margin_general</item>
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:paddingTop">@dimen/my_site_margin_general</item>
-        <item name="android:textColor">@color/neutral_40</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>
 
     <style name="MeListRowLayout">
@@ -570,8 +567,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textColor">@color/quick_start_title_selector</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
     <style name="QuickStartTypeSubtitle">
@@ -581,8 +577,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
     </style>
 
     <!--People Management Styles-->
