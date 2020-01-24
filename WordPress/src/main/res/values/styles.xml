@@ -40,6 +40,10 @@
             @style/Widget.MaterialComponents.PopupMenu.Overflow
         </item>
 
+        <item name="bottomSheetDialogTheme">
+            @style/ThemeOverlay.MaterialComponents.BottomSheetDialog
+        </item>
+
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
         <item name="android:actionModeCloseButtonStyle">
@@ -1070,9 +1074,8 @@
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
     </style>
 
-    <style name="SubfilterSectionTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/neutral_30</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
+    <style name="SubfilterSectionTitle">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
     </style>
 
     <style name="SubfilterSiteTagItem">
@@ -1091,11 +1094,12 @@
     </style>
 
     <style name="SubfilterDivider">
-        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:layout_height">@dimen/divider_size</item>
         <item name="android:layout_marginStart">@dimen/margin_medium</item>
         <item name="android:layout_marginEnd">@dimen/margin_medium</item>
-        <item name="android:background">@color/neutral_30</item>
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">?attr/colorOnSurface</item>
+        <item name="android:alpha">@dimen/material_emphasis_disabled</item>
     </style>
 
     <style name="TooltipContainer">
