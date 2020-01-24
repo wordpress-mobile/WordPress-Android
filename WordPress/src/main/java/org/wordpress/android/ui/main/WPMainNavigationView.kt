@@ -47,7 +47,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     private lateinit var fragmentManager: FragmentManager
     private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
-    private var unselectedButtonAlpha = ResourcesCompat.getFloat(
+    private val unselectedButtonAlpha = ResourcesCompat.getFloat(
             resources,
             R.dimen.material_emphasis_disabled
     )
