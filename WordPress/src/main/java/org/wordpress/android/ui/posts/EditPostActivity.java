@@ -2024,12 +2024,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private String migrateToGutenbergEditor(String content) {
-        // If it is a href we want to convert it into Gutenberg paragaph block
-        // otherwise Gutenberg can't handle it
-        if (content.startsWith("<a href=\"")) {
-            content = "<!-- wp:paragraph --><p>" + content + "</p><!-- /wp:paragraph -->";
-        }
-        return content;
+        return "<!-- wp:paragraph --><p>" + content + "</p><!-- /wp:paragraph -->";;
     }
 
     private void fillContentEditorFields() {
