@@ -150,7 +150,6 @@ androidExtensions {
 }
 
 dependencies {
-    implementation project(':ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Provided by maven central
