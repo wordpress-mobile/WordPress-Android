@@ -56,18 +56,14 @@
     </style>
 
     <!-- EditTexts -->
-    <style name="ReaderEditText" parent="android:Widget.EditText">
-        <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColorHint">@color/neutral_50</item>
-    </style>
-    <style name="ReaderEditText.Topic" parent="ReaderEditText">
+
+    <style name="ReaderEditText">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:padding">@dimen/margin_medium</item>
         <item name="android:inputType">text</item>
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:maxLength">@integer/max_length_reader_topic_name</item>
-        <item name="android:textColorHint">@color/neutral_40</item>
     </style>
 
     <!-- images -->
