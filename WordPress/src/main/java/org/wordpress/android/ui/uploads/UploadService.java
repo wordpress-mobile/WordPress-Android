@@ -575,7 +575,7 @@ public class UploadService extends Service {
         uploadingOrQueuedMedia.addAll(queuedMedia);
 
         for (final MediaModel media : uploadingOrQueuedMedia) {
-            if (media != null && !UploadService.isPendingOrInProgressMediaUpload(media)) {
+            if (!UploadService.isPendingOrInProgressMediaUpload(media)) {
                 // it is NOT being uploaded or queued in the actual UploadService, mark it failed
                 media.setUploadState(MediaUploadState.FAILED);
                 dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
