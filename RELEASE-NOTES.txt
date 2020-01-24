@@ -3,6 +3,7 @@
 * Fixes an issue where searching for posts sometimes doesn't show some results.
 
 * Disable the option to remove a Jetpack site from site picker
+* Block editor: small performance improvements
  
 14.0
 -----
