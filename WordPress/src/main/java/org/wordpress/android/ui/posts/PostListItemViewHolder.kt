@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.expandTouchTargetArea
 import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -111,6 +112,7 @@ sealed class PostListItemViewHolder(
 
             itemView.setOnClickListener { item.onSelected.invoke() }
             uiHelpers.updateVisibility(moreButton, item.compactActions.actions.isNotEmpty())
+            moreButton.expandTouchTargetArea(R.dimen.post_list_more_button_extra_padding)
             moreButton.setOnClickListener { onMoreClicked(item.compactActions.actions, moreButton) }
         }
     }
