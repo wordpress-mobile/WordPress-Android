@@ -14,8 +14,6 @@ Language: he_IL
     <string name="enter_site_credentials_instead">יש להתחבר עם פרטי הכניסה של האתר</string>
     <string name="enter_credentials_for_site">יש להתחבר עם פרטי הכניסה שלך לאתר %1$s</string>
     <string name="send_verification_email">לשלוח את הודעת האימייל לאישור</string>
-    <string name="my_site_bottom_sheet_add_page">ליצור עמוד חדש</string>
-    <string name="my_site_bottom_sheet_add_post">ליצור פוסט חדש</string>
     <string name="reader_following_display_name">מעקב</string>
     <string name="posts_cannot_be_started">אין לנו אפשרות לפתוח את הפוסטים כרגע. יש לנסות שוב מאוחר יותר</string>
     <string name="suffix_1_000">%sk</string>
@@ -156,8 +154,6 @@ Language: he_IL
     <string name="site_settings_editor">עורך</string>
     <string name="description_expand">להרחיב</string>
     <string name="description_collapse">למזער</string>
-    <string name="editor_retry_failed_uploads">לנסות שוב את ההעלאה</string>
-    <string name="editor_toast_failed_uploads">מספר העלאות מדיה נכשלו. לא ניתן לשמור או לפרסם\n הפוסט שלך במצב זה.</string>
     <string name="my_site_verify_your_email_without_email">עליך לאמת את כתובת האימייל שלך - ההוראות נשלחו לכתובת האימייל שלך</string>
     <string name="my_site_verify_your_email">יש לאמת את כתובת האימייל שלך - ההוראות נשלחו לכתובת %s</string>
     <string name="link_dialog_button_cancel">ביטול</string>
@@ -644,7 +640,6 @@ Language: he_IL
     <string name="activity_log_rewind_started_snackbar_message">אנחנו משחזרים את האתר שלך כעת\nמשחזר לתאריך %1$s %2$s</string>
     <string name="activity_log_button">כפתור לפעולות ביומן הפעילות</string>
     <string name="plugin_auto_managed">ניהול אוטומטי</string>
-    <string name="reader_save_posts_locally_dialog_message">באפשרותך לשמור את הפוסט הנוכחי ולקרוא אותו במועד מאוחר יותר כרצונך. הפוסט יהיה זמין במכשיר זה בלבד - פוסטים שנשמרו לא מסתנכרנים בין מכשירים. (עדיין! אנחנו עובדים על זה).</string>
     <string name="reader_save_posts_locally_dialog_title">שמירת פוסטים למועד מאוחר יותר</string>
     <string name="reader_empty_search_request_failed">אין אפשרות לבצע את החיפוש</string>
     <string name="reader_empty_search_title">לא נמצאו תוצאות</string>
@@ -669,7 +664,6 @@ Language: he_IL
     <string name="reader_add_bookmark">הוספה לפוסטים שנשמרו</string>
     <string name="reader_save_for_later_title">פוסטים שנשמרו</string>
     <string name="removed">נמחק</string>
-    <string name="tabbar_accessibility_label_write">פוסט חדש. כתיבת פוסט חדש.</string>
     <string name="my_site_icon_content_description">שינוי סמל אתר</string>
     <string name="my_site_icon_dialog_cancel_button">ביטול</string>
     <string name="my_site_icon_dialog_remove_button">מחיקה</string>
@@ -700,7 +694,6 @@ Language: he_IL
     <string name="preference_privacy_settings">הגדרות פרטיות</string>
     <string name="preference_collect_information">איסוף מידע</string>
     <string name="post_submitted">הפוסט נשלח</string>
-    <string name="write_post">כתיבת פוסט</string>
     <string name="login_email_button_signup">אין לך חשבון עדיין? %1$sהרשמה%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">כדי להוסיף את התוסף, האתר חייב להיות יציב.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">כדי להוסיף את התוסף, הרישום לעדכונים בדומיין חייב להיות משויך למשתמש זה.</string>
@@ -1254,7 +1247,6 @@ Language: he_IL
     <string name="sharing">שיתוף</string>
     <string name="tabbar_accessibility_label_notifications">הודעות. ניהול התראות.</string>
     <string name="tabbar_accessibility_label_reader">Reader. מעקב אחר תוכן מאתרים אחרים.</string>
-    <string name="tabbar_accessibility_label_me">אני. הצגת הפרופיל שלך והוספת שינויים.</string>
     <string name="tabbar_accessibility_label_my_site">האתר שלי. הצגת האתר שלך וניהולו, כולל נתונים סטטיסטיים.</string>
     <string name="my_site_btn_sharing">שיתוף</string>
     <string name="button_not_now">לא עכשיו</string>

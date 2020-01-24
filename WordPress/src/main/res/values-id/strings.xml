@@ -14,8 +14,6 @@ Language: id
     <string name="enter_site_credentials_instead">Login dengan kredensial situs</string>
     <string name="enter_credentials_for_site">Login dengan kredensial situs %1$s</string>
     <string name="send_verification_email">Kirim email verifikasi</string>
-    <string name="my_site_bottom_sheet_add_page">Buat halaman baru</string>
-    <string name="my_site_bottom_sheet_add_post">Buat pos baru</string>
     <string name="reader_following_display_name">Mengikuti</string>
     <string name="posts_cannot_be_started">Kami saat ini tidak dapat membuka pos. Harap coba lagi nanti</string>
     <string name="suffix_1_000">%sk</string>
@@ -156,8 +154,6 @@ Language: id
     <string name="site_settings_editor">Penyunting</string>
     <string name="description_expand">Bentangkan</string>
     <string name="description_collapse">Ciutkan</string>
-    <string name="editor_retry_failed_uploads">Coba mengunggah ulang</string>
-    <string name="editor_toast_failed_uploads">Gagal mengunggah beberapa media. Tidak dapat menyimpan atau menerbitkan\n pos Anda dalam status ini.</string>
     <string name="my_site_verify_your_email_without_email">Verifikasi alamat email - instruksi dikirim ke email Anda</string>
     <string name="my_site_verify_your_email">Verifikasi alamat email - instruksi dikirim ke %s</string>
     <string name="link_dialog_button_cancel">Batal</string>
@@ -618,7 +614,6 @@ Language: id
     <string name="activity_log_rewind_started_snackbar_message">Situs Anda sedang dipulihkan\nMemutar balik ke %1$s %2$s</string>
     <string name="activity_log_button">Tombol tindakan Log Aktivitas</string>
     <string name="plugin_auto_managed">Pengelolaan otomatis</string>
-    <string name="reader_save_posts_locally_dialog_message">Simpan pos ini, dan buka kembali untuk membacanya kapan saja. Pos ini hanya akan tersedia pada perangkat ini — pos yang disimpan tidak disinkronkan ke perangkat Anda yang lain. (Belum! Kami sedang mengusahakannya.)</string>
     <string name="reader_save_posts_locally_dialog_title">Simpan Pos untuk Nanti</string>
     <string name="reader_empty_search_request_failed">Tidak dapat melakukan pencarian</string>
     <string name="reader_empty_search_title">Tema tidak ditemukan</string>
@@ -643,7 +638,6 @@ Language: id
     <string name="reader_add_bookmark">Tambahkan ke pos saya yang disimpan</string>
     <string name="reader_save_for_later_title">Pos yang disimpan</string>
     <string name="removed">Dibuang</string>
-    <string name="tabbar_accessibility_label_write">Pos baru. Tulis pos baru.</string>
     <string name="my_site_icon_content_description">Ubah ikon situs</string>
     <string name="my_site_icon_dialog_cancel_button">Batalkan</string>
     <string name="my_site_icon_dialog_remove_button">Buang</string>
@@ -674,7 +668,6 @@ Language: id
     <string name="preference_privacy_settings">Pengaturan privasi</string>
     <string name="preference_collect_information">Kumpulkan informasi</string>
     <string name="post_submitted">Pos telah dikirim</string>
-    <string name="write_post">Tulis Pos</string>
     <string name="login_email_button_signup">Belum memiliki akun? %1$sDaftar%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Fitur plugin memerlukan situs dalam reputasi yang baik.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Fitur plugin memerlukan langganan domain utama untuk dikaitkan dengan pengguna ini.</string>
@@ -1201,7 +1194,6 @@ Language: id
     <string name="sharing">Berbagi</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Kelola pemberitahuan.</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikuti konten dari situs lain.</string>
-    <string name="tabbar_accessibility_label_me">Saya. Melihat profil Anda dan lakukan perubahan.</string>
     <string name="tabbar_accessibility_label_my_site">Situs Saya. Lihat situs dan kelola, termasuk statusnya.</string>
     <string name="my_site_btn_sharing">Berbagi</string>
     <string name="button_not_now">Jangan sekarang</string>
