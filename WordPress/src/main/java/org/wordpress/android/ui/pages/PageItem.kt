@@ -24,7 +24,8 @@ sealed class PageItem(open val type: Type) {
         open var imageUrl: String?,
         open val actions: Set<Action>,
         open var actionsEnabled: Boolean,
-        open val tapActionEnabled: Boolean
+        open val tapActionEnabled: Boolean,
+        open val progressBarState: PageItemProgressBar
     ) : PageItem(PAGE)
 
     data class PublishedPage(
@@ -34,7 +35,8 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<Int> = emptyList(),
         override var indent: Int = 0,
         override var imageUrl: String? = null,
-        override var actionsEnabled: Boolean = true
+        override var actionsEnabled: Boolean = true,
+        override val progressBarState: PageItemProgressBar
     ) : Page(
             id = id,
             title = title,
@@ -44,7 +46,8 @@ sealed class PageItem(open val type: Type) {
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
-            tapActionEnabled = true
+            tapActionEnabled = true,
+            progressBarState = progressBarState
     )
 
     data class DraftPage(
@@ -53,7 +56,8 @@ sealed class PageItem(open val type: Type) {
         override val date: Date,
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
-        override var actionsEnabled: Boolean = true
+        override var actionsEnabled: Boolean = true,
+        override val progressBarState: PageItemProgressBar
     ) : Page(
             id = id,
             title = title,
@@ -63,7 +67,8 @@ sealed class PageItem(open val type: Type) {
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
-            tapActionEnabled = true
+            tapActionEnabled = true,
+            progressBarState = progressBarState
     )
 
     data class ScheduledPage(
@@ -72,7 +77,8 @@ sealed class PageItem(open val type: Type) {
         override val date: Date,
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
-        override var actionsEnabled: Boolean = true
+        override var actionsEnabled: Boolean = true,
+        override val progressBarState: PageItemProgressBar
     ) : Page(
             id = id,
             title = title,
@@ -82,7 +88,8 @@ sealed class PageItem(open val type: Type) {
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
-            tapActionEnabled = true
+            tapActionEnabled = true,
+            progressBarState = progressBarState
     )
 
     data class TrashedPage(
@@ -90,7 +97,8 @@ sealed class PageItem(open val type: Type) {
         override val title: String,
         override val date: Date,
         override var imageUrl: String? = null,
-        override var actionsEnabled: Boolean = true
+        override var actionsEnabled: Boolean = true,
+        override val progressBarState: PageItemProgressBar
     ) : Page(
             id = id,
             title = title,
@@ -100,7 +108,8 @@ sealed class PageItem(open val type: Type) {
             imageUrl = imageUrl,
             actions = setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY),
             actionsEnabled = actionsEnabled,
-            tapActionEnabled = false
+            tapActionEnabled = false,
+            progressBarState = progressBarState
     )
 
     data class ParentPage(
@@ -125,6 +134,12 @@ sealed class PageItem(open val type: Type) {
         EMPTY(3),
         PARENT(4),
         TOP_LEVEL_PARENT(5)
+    }
+
+    sealed class PageItemProgressBar(val visibility: Boolean){
+        object Hidden : PageItemProgressBar(visibility = false)
+        object Indeterminate : PageItemProgressBar(visibility = true)
+        data class Determinate(val progress: Int) : PageItemProgressBar(visibility = true)
     }
 
     enum class Action(@IdRes val itemId: Int) {
