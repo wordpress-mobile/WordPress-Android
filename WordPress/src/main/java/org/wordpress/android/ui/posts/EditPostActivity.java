@@ -2024,7 +2024,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private String migrateToGutenbergEditor(String content) {
-        return "<!-- wp:paragraph --><p>" + content + "</p><!-- /wp:paragraph -->";;
+        return "<!-- wp:paragraph --><p>" + content + "</p><!-- /wp:paragraph -->";
     }
 
     private void fillContentEditorFields() {
