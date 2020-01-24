@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.fragment.app.Fragment
-import org.wordpress.android.imageeditor.R
 
 class HomeFragment : Fragment() {
     override fun onCreateView(
