@@ -116,7 +116,6 @@ public class ReaderSubsActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
         View bottomBar = findViewById(R.id.layout_bottom);
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
