@@ -397,11 +397,11 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             mViewModel.getCurrentSubFilter().observe(this, subfilterListItem -> {
-                if (ReaderUtils.isFollowing(
+                if ((ReaderUtils.isFollowing(
                         mCurrentTag,
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
-                ) || ReaderUtils.isDefaultTag(mCurrentTag)) {
+                ) || ReaderUtils.isDefaultTag(mCurrentTag)) && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                   mViewModel.applySubfilter(subfilterListItem, true);
                 }
             });
