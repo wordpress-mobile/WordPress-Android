@@ -112,7 +112,6 @@ public class ReaderSubsActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Shadow removed on Activities with a tab toolbar
-            actionBar.setElevation(0.0f);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
