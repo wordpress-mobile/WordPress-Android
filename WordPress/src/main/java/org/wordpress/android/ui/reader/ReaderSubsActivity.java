@@ -48,8 +48,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.ArrayList;
@@ -284,12 +284,12 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         if (!ReaderTag.isValidTagName(entry)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_tag_invalid);
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_invalid));
             return;
         }
 
         if (ReaderTagTable.isFollowedTagName(entry)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists);
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_exists));
             return;
         }
 
@@ -323,7 +323,7 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         // make sure it isn't already followed
         if (ReaderBlogTable.isFollowedBlogUrl(normUrl) || ReaderBlogTable.isFollowedFeedUrl(normUrl)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_already_follow_blog);
+            showInfoSnackbar(getString(R.string.reader_toast_err_already_follow_blog));
             return;
         }
 
@@ -354,10 +354,10 @@ public class ReaderSubsActivity extends AppCompatActivity
 
                 if (succeeded) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
-                    showInfoToast(getString(R.string.reader_label_added_tag, tag.getLabel()));
+                    showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
                     mLastAddedTagName = tag.getTagSlug();
                 } else {
-                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
+                    showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
                     mLastAddedTagName = null;
                 }
             }
@@ -405,7 +405,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                                     .toString(statusCode) + ")";
                             break;
                     }
-                    ToastUtils.showToast(ReaderSubsActivity.this, errMsg);
+                    showInfoSnackbar(errMsg);
                 }
             }
         };
@@ -424,10 +424,10 @@ public class ReaderSubsActivity extends AppCompatActivity
                     // clear the edit text and hide the soft keyboard
                     mEditAdd.setText(null);
                     EditTextUtils.hideSoftInput(mEditAdd);
-                    showInfoToast(getString(R.string.reader_label_followed_blog));
+                    showInfoSnackbar(getString(R.string.reader_label_followed_blog));
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 } else {
-                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
+                    showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
                 }
             }
         };
@@ -458,11 +458,13 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     /*
-     * toast message shown when adding/removing a tag - appears above the edit text at the bottom
+     * Snackbar message shown when adding/removing or something goes wrong
      */
-    private void showInfoToast(String text) {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.layout_bottom), text, Snackbar.LENGTH_LONG);
-        snackbar.setAnchorView(findViewById(R.id.layout_bottom));
+    private void showInfoSnackbar(String text) {
+        View bottomView = findViewById(R.id.layout_bottom);
+
+        WPSnackbar snackbar = WPSnackbar.make(bottomView, text, Snackbar.LENGTH_LONG);
+        snackbar.setAnchorView(bottomView);
         snackbar.show();
     }
 
@@ -477,7 +479,7 @@ public class ReaderSubsActivity extends AppCompatActivity
             mLastAddedTagName = null;
         }
         String labelRemovedTag = getString(R.string.reader_label_removed_tag);
-        showInfoToast(String.format(labelRemovedTag, tag.getLabel()));
+        showInfoSnackbar(String.format(labelRemovedTag, tag.getLabel()));
     }
 
     /*
