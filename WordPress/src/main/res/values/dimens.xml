@@ -118,7 +118,6 @@
     <dimen name="reader_xpost_padding_left">50dp</dimen>
 
     <dimen name="reader_card_gutters">1px</dimen>
-    <dimen name="reader_card_elevation">0dp</dimen>
     <dimen name="reader_card_avatar_margin_end">18dp</dimen>
 
     <dimen name="reader_video_overlay_size">56dp</dimen>
