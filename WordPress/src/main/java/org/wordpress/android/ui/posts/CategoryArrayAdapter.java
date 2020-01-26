@@ -41,18 +41,22 @@ public class CategoryArrayAdapter extends ArrayAdapter<CategoryNode> {
         CategoryNode node = getItem(position);
         if (node != null) {
             viewHolder.mCategoryRowText.setText(StringEscapeUtils.unescapeHtml4(node.getName()));
-            ViewCompat.setPaddingRelative(viewHolder.mCategoryRowText,
-                    DisplayUtils.dpToPx(getContext(), 16) * node.getLevel(), 0,
-                    DisplayUtils.dpToPx(getContext(), 16), 0);
+            if (node.getLevel() > 1) {
+                ViewCompat.setPaddingRelative(viewHolder.mCategoryRowLayout,
+                        DisplayUtils.dpToPx(getContext(), 8) * node.getLevel(), 0, 0, 0);
+            }
         }
         return rowView;
     }
 
     private static class ViewHolder {
         private final TextView mCategoryRowText;
+        private final View mCategoryRowLayout;
+
 
         private ViewHolder(View view) {
             this.mCategoryRowText = view.findViewById(R.id.categoryRowText);
+            this.mCategoryRowLayout = view.findViewById(R.id.categoryRowLayout);
         }
     }
 }
