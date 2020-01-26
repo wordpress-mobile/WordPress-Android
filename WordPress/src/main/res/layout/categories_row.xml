@@ -5,8 +5,8 @@
     android:id="@+id/categoryRowLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/category_row_height"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+    android:minHeight="@dimen/category_row_height">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/checkbox_keyline"
@@ -27,9 +27,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_large"
-        android:textAlignment="viewStart"
         android:ellipsize="end"
         android:maxLines="2"
+        android:textAlignment="viewStart"
         android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toBottomOf="parent"
