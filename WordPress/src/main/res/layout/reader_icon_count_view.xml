@@ -28,7 +28,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/margin_extra_small"
         android:importantForAccessibility="no"
-        android:textColor="?attr/wpColorOnSurfaceMedium"
         android:textAppearance="?attr/textAppearanceBody2"
         tools:text="2"/>
 
