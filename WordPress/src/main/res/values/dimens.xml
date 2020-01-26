@@ -17,7 +17,9 @@
     <dimen name="fab_margin_tablet">24dp</dimen>
     <dimen name="design_fab_size">56dp</dimen>
 
-    <item format="float" name="primary_button_disabled_alpha" type="dimen">0.12</item>
+    <item name="primary_button_disabled_alpha" format="float" type="dimen">@dimen/disabled_alpha
+    </item>
+    <item name="disabled_alpha" format="float" type="dimen">0.12</item>
 
     <dimen name="divider_size">1dp</dimen>
 

@@ -23,6 +23,7 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -246,6 +247,14 @@ class ReaderPostDetailFragment : Fragment(),
         scrollView.setScrollDirectionListener(this)
 
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
+
+        val elevationOverlayProvider = ElevationOverlayProvider(layoutFooter.context)
+        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
+        val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
+                appbarElevation
+        )
+        layoutFooter.setBackgroundColor(elevatedSurfaceColor)
+
         likingUsersView = view.findViewById(R.id.layout_liking_users_view)
         likingUsersDivider = view.findViewById(R.id.layout_liking_users_divider)
         likingUsersLabel = view.findViewById(R.id.text_liking_users_label)
@@ -362,7 +371,8 @@ class ReaderPostDetailFragment : Fragment(),
                 hasTrackedLocalRelatedPosts
         )
 
-        outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE,
+        outState.putSerializable(
+                ReaderConstants.ARG_POST_LIST_TYPE,
                 this.postListType
         )
 
@@ -1183,7 +1193,8 @@ class ReaderPostDetailFragment : Fragment(),
                         activity?.overridePendingTransition(0, 0)
                         return
                     }
-                    POST_LIKE -> { }
+                    POST_LIKE -> {
+                    }
                 }
                 // Liking needs to be handled "later" after the post has been updated from the server so,
                 // nothing special to do here

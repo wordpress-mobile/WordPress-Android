@@ -14,12 +14,15 @@
     <style name="ReaderTextView" parent="android:Widget.TextView">
         <item name="android:textColorLink">?attr/colorPrimary</item>
     </style>
+
     <style name="ReaderTextView.Label" parent="ReaderTextView">
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
     </style>
+
     <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
-        <item name="android:textAppearance">@dimen/text_sz_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
+
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -28,10 +31,12 @@
         <item name="android:maxLines">3</item>
         <item name="android:fontFamily">serif</item>
     </style>
+
     <style name="ReaderTextView.Post.Title.Detail" parent="ReaderTextView.Post.Title">
-        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:maxLines">5</item>
     </style>
+
     <style name="ReaderTextView.Post.Excerpt" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -41,6 +46,14 @@
         <item name="android:ellipsize">end</item>
         <item name="android:fontFamily">serif</item>
     </style>
+
+    <style name="ReaderTextView.MetaHeader">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
@@ -48,6 +61,7 @@
         <item name="android:drawableTint">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:drawableStart">@drawable/ic_time_neutral_400_16dp</item>
     </style>
+
     <style name="ReaderTextView.EmptyList" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
