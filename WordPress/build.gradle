@@ -41,10 +41,10 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "10.9.3"
-        versionCode 628
+        versionName "10.9.4"
+        versionCode 818
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 28
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
