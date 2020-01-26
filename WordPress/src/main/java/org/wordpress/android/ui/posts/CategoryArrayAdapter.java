@@ -14,7 +14,6 @@ import androidx.core.view.ViewCompat;
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.models.CategoryNode;
-import org.wordpress.android.util.DisplayUtils;
 
 import java.util.List;
 
@@ -43,7 +42,8 @@ public class CategoryArrayAdapter extends ArrayAdapter<CategoryNode> {
             viewHolder.mCategoryRowText.setText(StringEscapeUtils.unescapeHtml4(node.getName()));
             if (node.getLevel() > 1) {
                 ViewCompat.setPaddingRelative(viewHolder.mCategoryRowLayout,
-                        DisplayUtils.dpToPx(getContext(), 8) * node.getLevel(), 0, 0, 0);
+                        getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium) * node.getLevel(), 0,
+                        0, 0);
             }
         }
         return rowView;

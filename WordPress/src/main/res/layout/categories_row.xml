@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintGuide_begin="@dimen/row_text_keyline"
+        app:layout_constraintGuide_begin="@dimen/keyline_second"
         android:id="@+id/row_text_keyline"
         android:orientation="vertical"
         />
@@ -34,6 +34,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@id/row_text_keyline"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         tools:text="Pony Category" />
 
     <CheckBox

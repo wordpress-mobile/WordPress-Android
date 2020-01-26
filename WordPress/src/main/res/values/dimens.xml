@@ -453,7 +453,7 @@
 
     <!--Main bottom sheet icon size -->
     <dimen name="main_bottom_sheet_list_row_icon_size">32dp</dimen>
-    <dimen name="row_text_keyline">72dp</dimen>
-    <dimen name="checkbox_keyline">16dp</dimen>
+
+    <dimen name="checkbox_keyline">12dp</dimen>
 
 </resources>
