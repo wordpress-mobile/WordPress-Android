@@ -125,7 +125,7 @@ class UploadStarterTest {
     }
 
     @Test
-    fun `when the internet connection is restored and the app is in foreground, it uploads changed posts&pages`() {
+    fun `when the internet connection is restored and the app is in foreground, it uploads changed posts & pages`() {
         // Given
         val connectionStatus = createConnectionStatusLiveData(UNAVAILABLE)
         val uploadServiceFacade = createMockedUploadServiceFacade()
@@ -175,7 +175,7 @@ class UploadStarterTest {
     }
 
     @Test
-    fun `when the app is placed in the foreground, it uploads locally changed posts&pages`() {
+    fun `when the app is placed in the foreground, it uploads locally changed posts & pages`() {
         // Given
         val connectionStatus = createConnectionStatusLiveData(AVAILABLE)
         val uploadServiceFacade = createMockedUploadServiceFacade()
@@ -197,7 +197,7 @@ class UploadStarterTest {
     }
 
     @Test
-    fun `when uploading a single site, only posts&pages of that site are uploaded`() {
+    fun `when uploading a single site, only posts & pages of that site are uploaded`() {
         // Given
         val site: SiteModel = sites[1]
 
@@ -220,7 +220,7 @@ class UploadStarterTest {
     }
 
     @Test
-    fun `when uploading, it ignores locally changed posts&pages that are not publishable`() {
+    fun `when uploading, it ignores locally changed posts & pages that are not publishable`() {
         // Given
         val site: SiteModel = sites[1]
 
@@ -250,7 +250,7 @@ class UploadStarterTest {
     }
 
     @Test
-    fun `when uploading, it ignores posts&pages that are already queued`() {
+    fun `when uploading, it ignores posts & pages that are already queued`() {
         // Given
         val site: SiteModel = sites[1]
         val (expectedQueuedPosts, expectedUploadedPosts) = sitesAndDraftPosts.getValue(site).let { posts ->
