@@ -56,8 +56,6 @@ Language: ku_TR
     <string name="site_settings_editor">Sererastker</string>
     <string name="description_expand">Fireh bike</string>
     <string name="description_collapse">Teng bike</string>
-    <string name="editor_retry_failed_uploads">Hilxistinê dîsa biceribîne</string>
-    <string name="editor_toast_failed_uploads">Hilxistina hinek medyayan bi serneket. Di vê rewşê de \ntu nikare şandiya xwe biweşîne an jî tomar bike.</string>
     <string name="my_site_verify_your_email_without_email">Navnîşana epeyama xwe piştrast bike - rêname bo epeyama te hat şandin</string>
     <string name="my_site_verify_your_email">Navnîşana epeyama xwe piştrast bike - rêname bo %s hate şandin</string>
     <string name="link_dialog_button_cancel">Betal</string>
@@ -546,7 +544,6 @@ Language: ku_TR
     <string name="activity_log_rewind_started_snackbar_message">Malpera te bi serkeftî hat vegerandin\nLi şûna %1$s %2$s ê tê vegerandin</string>
     <string name="activity_log_button">Bişkoka çalakiyê ya Tomarên Çalakê</string>
     <string name="plugin_auto_managed">Yên bi otomatikî tê rêvebirin</string>
-    <string name="reader_save_posts_locally_dialog_message">Vê şandiyê tomar bike û kengî kêfa te xwast, ji bo xwendinê dîsa vegere. Tenê di vê amûrê de dikarî bi kar bînî — şandiyên tomarkirî bi amûrên din re nayên hevdemkirin. (Niha! Em li ser wê dixebitin.)</string>
     <string name="reader_save_posts_locally_dialog_title">Şandiyan ji bo Piştre Tomar Bike</string>
     <string name="reader_empty_search_request_failed">Lêgerîn nayê kirin</string>
     <string name="reader_empty_search_title">Ti encam nehatin dîtin</string>
@@ -571,7 +568,6 @@ Language: ku_TR
     <string name="reader_add_bookmark">Tevlî şandiyên tomarkirî bike</string>
     <string name="reader_save_for_later_title">Şandiyên tomarkirî</string>
     <string name="removed">Hat rakirin</string>
-    <string name="tabbar_accessibility_label_write">Şandiya nû. Şandeyike nû binivîse.</string>
     <string name="my_site_icon_content_description">Nîşaneka malperê biguherîne</string>
     <string name="my_site_icon_dialog_cancel_button">Betal</string>
     <string name="my_site_icon_dialog_remove_button">Rake</string>
@@ -602,7 +598,6 @@ Language: ku_TR
     <string name="preference_privacy_settings">Sazkariyên Nihêniyê</string>
     <string name="preference_collect_information">Agahî berhev bike</string>
     <string name="post_submitted">Hat şandin</string>
-    <string name="write_post">Şandî Binivîse</string>
     <string name="login_email_button_signup">Ajimêra te tune ye? %1$sTomar Bibe%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Taybetiya pêvekê pêwîstî bi rewşa baş a malperê dike.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Taybetiya pêvekê pêwîst dike ku endamtiya bingehîn a navperê bi vê bikarhênerê ve girêdayî be.</string>
@@ -1157,7 +1152,6 @@ Language: ku_TR
     <string name="sharing">Parvekirin</string>
     <string name="tabbar_accessibility_label_notifications">Danezan. Danezanên xwe bi rê ve bibe.</string>
     <string name="tabbar_accessibility_label_reader">Xwîner. Ji malperên din naverokan bişopîne.</string>
-    <string name="tabbar_accessibility_label_me">Min. Profîla xwe bibîne û guhertinan bike.</string>
     <string name="tabbar_accessibility_label_my_site">Malpera Min. Malpera xwe bibine, bi rê ve bibe û li rêjejimaran meyzîne.</string>
     <string name="my_site_btn_sharing">Parvekirin</string>
     <string name="button_not_now">Ne aniha</string>

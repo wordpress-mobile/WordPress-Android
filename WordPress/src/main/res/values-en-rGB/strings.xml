@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-17 08:58:16+0000
+Translation-Revision-Date: 2020-01-15 17:02:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">Remove Image</string>
+    <string name="gutenberg_native_move_image_forward">Move Image Forward</string>
+    <string name="gutenberg_native_move_image_backward">Move Image Backward</string>
+    <string name="gutenberg_native_gallery_caption_s">Gallery caption. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Current value is %2$s</string>
+    <string name="create_post_page_fab_tooltip">Create a post or page</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">Tap %1$s Add Post %2$s to create a new post.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Tap %1$s Blog Posts %2$s to continue.</string>
+    <string name="content_description_person_building_website">Person building website</string>
+    <string name="post_signup_interstitial_not_right_now">Not right now</string>
+    <string name="post_signup_interstitial_subtitle">Whatever you want to create or share, we’ll help you do it right here.</string>
+    <string name="post_signup_interstitial_title">Welcome to WordPress</string>
+    <string name="stock_media_picker_list_content_description">Photo library</string>
+    <string name="photo_picker_image_thumbnail_unselected">Image unselected</string>
+    <string name="photo_picker_image_selected">, Selected</string>
+    <string name="photo_picker_image_thumbnail_selected">Image selected</string>
+    <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
+    <string name="my_site_bottom_sheet_add_post">Blog post</string>
+    <string name="my_site_bottom_sheet_title">Add new</string>
+    <string name="post_settings_publish">Publish</string>
+    <string name="dialog_gutenberg_informative_description_v2">We made big improvements to the block editor and think it\'s worth a try! We enabled it for new posts and pages, but, if you\'d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Sync now</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">This post will be synced immediately.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">Ready to Sync?</string>
+    <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
+    <string name="login_promo_viewpager_content_description">Introduction</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b>SSL Certificate&lt;/b>. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b>HTTP Authentication&lt;/b>. You will need to reach out to your host to resolve this.</string>
@@ -14,8 +41,7 @@ Language: en_GB
     <string name="enter_site_credentials_instead">Log in with site credentials</string>
     <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
     <string name="send_verification_email">Send verification email</string>
-    <string name="my_site_bottom_sheet_add_page">Create new page</string>
-    <string name="my_site_bottom_sheet_add_post">Create new post</string>
+    <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="reader_following_display_name">Following</string>
     <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="suffix_1_000">%sk</string>
@@ -33,7 +59,6 @@ Language: en_GB
     <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress Media Library</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">We are working hard to add more blocks with each release. In the meantime, you can also edit this post on the web.</string>
-    <string name="gutenberg_native_unsupported">Unsupported</string>
     <string name="gutenberg_native_ungroup">Ungroup</string>
     <string name="gutenberg_native_translate">Translate</string>
     <string name="gutenberg_native_title">Title:</string>
@@ -53,7 +78,6 @@ Language: en_GB
     <string name="gutenberg_native_s_block">%s Block</string>
     <string name="gutenberg_native_row_d">Row %d.</string>
     <string name="gutenberg_native_reset_block">Reset Block</string>
-    <string name="gutenberg_native_reset">RESET</string>
     <string name="gutenberg_native_remove_block_at_row_s">Remove block at row %s</string>
     <string name="gutenberg_native_remove_annotations">Remove annotations</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem opening the video</string>
@@ -236,8 +260,6 @@ Language: en_GB
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Expand</string>
     <string name="description_collapse">Collapse</string>
-    <string name="editor_retry_failed_uploads">Retry uploading</string>
-    <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish\n        your post in this state.</string>
     <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
     <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
     <string name="link_dialog_button_cancel">Cancel</string>
@@ -727,7 +749,7 @@ Language: en_GB
     <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %1$s %2$s</string>
     <string name="activity_log_button">Activity Log action button</string>
     <string name="plugin_auto_managed">Auto-managed</string>
-    <string name="reader_save_posts_locally_dialog_message">Save this post, and come back to read it whenever you\'d like. It will only be available on this device — saved posts don\'t sync to your other devices. (Yet! We\'re working on it.)</string>
+    <string name="reader_save_posts_locally_dialog_message">Save this post and come back to read it whenever you like. It will only be available on this device — saved posts don\'t sync to your other devices.</string>
     <string name="reader_save_posts_locally_dialog_title">Save Posts for Later</string>
     <string name="reader_empty_search_request_failed">Unable to perform search</string>
     <string name="reader_empty_search_title">No results found</string>
@@ -752,7 +774,6 @@ Language: en_GB
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_save_for_later_title">Saved posts</string>
     <string name="removed">Removed</string>
-    <string name="tabbar_accessibility_label_write">New post. Write a new post.</string>
     <string name="my_site_icon_content_description">Change site icon</string>
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_dialog_remove_button">Remove</string>
@@ -783,7 +804,6 @@ Language: en_GB
     <string name="preference_privacy_settings">Privacy settings</string>
     <string name="preference_collect_information">Collect information</string>
     <string name="post_submitted">Post submitted</string>
-    <string name="write_post">Write Post</string>
     <string name="login_email_button_signup">Don\'t have an account? %1$sSign up%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Plugin feature requires the site to be in good standing.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Plugin feature requires primary domain subscription to be associated with this user.</string>
@@ -1338,7 +1358,6 @@ Language: en_GB
     <string name="sharing">Sharing</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
-    <string name="tabbar_accessibility_label_me">Me. View your profile and make changes.</string>
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
     <string name="my_site_btn_sharing">Sharing</string>
     <string name="button_not_now">Not now</string>
