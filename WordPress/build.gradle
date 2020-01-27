@@ -150,7 +150,7 @@ dependencies {
     implementation 'org.wordpress:emailchecker2:1.1.0'
     implementation 'com.squareup.okio:okio:1.13.0'
     implementation 'org.apache.commons:commons-text:1.1'
-    implementation 'com.airbnb.android:lottie:2.0.0-rc2'
+    implementation 'com.airbnb.android:lottie:2.2.4'
 
     implementation ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'
