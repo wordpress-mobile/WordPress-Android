@@ -57,7 +57,7 @@ android {
         } else {
             versionName "alpha-205"
         }
-        versionCode 817
+        versionCode 820
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -86,7 +86,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "14.0"
             }
-            versionCode 819
+            versionCode 821
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
