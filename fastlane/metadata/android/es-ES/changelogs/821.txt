@@ -1,0 +1,4 @@
+14.0:
+- Editor de bloques: Algunas veces, el editor de bloques falla cuando intentas deshacer, cuando es demasiado lo que hay que deshacer. Eso está corregido, junto con un fallo que afecta a los marcadores de posición de las imágenes.
+- Se ha movido la sección «Yo» de la aplicación a «Mi sitio».
+- Añadido un botón de acción flotante a «Mi sitio» para la creación rápida de nuevas entradas y páginas.

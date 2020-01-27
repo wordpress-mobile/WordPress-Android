@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-11 08:50:23+0000
+Translation-Revision-Date: 2020-01-23 06:38:08+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: sk
@@ -256,7 +256,7 @@ Language: sk
     <string name="activity_log_rewind_started_snackbar_message">Vaše webové stránky sa obnovujú\nNávrat na %1$s %2$s</string>
     <string name="activity_log_button">tlačidlo Záznamu aktivít</string>
     <string name="plugin_auto_managed">automaticky spravované</string>
-    <string name="reader_save_posts_locally_dialog_message">Uložte tento príspevok a vráťte sa k jeho prečítaniu, kedykoľvek budete chcieť. Bude k dispozícii iba v tomto zariadení - uložené príspevky sa nesynchronizujú s vašimi ďalšími zariadeniami. (Zatiaľ! Pracujeme na tom.)</string>
+    <string name="reader_save_posts_locally_dialog_message">Uložte tento článok a vráťte sa k jeho prečítaniu, kedykoľvek budete chcieť. Bude k dispozícii na tomto zariadení - uložené články sa nesynchronizujú s vašimi ďalšími zariadeniami.</string>
     <string name="reader_save_posts_locally_dialog_title">Uložiť články na neskôr</string>
     <string name="reader_empty_search_request_failed">Nie je možné vyhľadávať</string>
     <string name="reader_empty_search_title">Žiadne výsledky neboli nájdené</string>
@@ -281,7 +281,6 @@ Language: sk
     <string name="reader_add_bookmark">Pridať do uložených článkov</string>
     <string name="reader_save_for_later_title">Uložené články</string>
     <string name="removed">Odstránený</string>
-    <string name="tabbar_accessibility_label_write">Nový článok. Napíšte nový článok.</string>
     <string name="my_site_icon_content_description">Zmeniť ikonu webovej stránky</string>
     <string name="my_site_icon_dialog_cancel_button">Zrušiť</string>
     <string name="my_site_icon_dialog_remove_button">Odstrániť</string>
@@ -312,7 +311,6 @@ Language: sk
     <string name="preference_privacy_settings">Nastavenia súkromia</string>
     <string name="preference_collect_information">Zbierajte informácie</string>
     <string name="post_submitted">Článok bol odoslaný</string>
-    <string name="write_post">Napísať článok</string>
     <string name="login_email_button_signup">Nemáte účet? %1$sZaregistrujte sa%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Vlastnosť pluginu vyžaduje, aby bola webová stránka v dobrom stave.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funkcia pluginu vyžaduje, aby predplatenie primárnej domény bolo spojené s týmto používateľom.</string>
@@ -866,7 +864,6 @@ Language: sk
     <string name="sharing">Zdieľanie</string>
     <string name="tabbar_accessibility_label_notifications">Upozornenia. Upraviť upozornenia.</string>
     <string name="tabbar_accessibility_label_reader">Čitateľ. Nasledovať obsah z ostatných webový stránok.</string>
-    <string name="tabbar_accessibility_label_me">Ja. Zobraziť profil a spraviť zmeny.</string>
     <string name="tabbar_accessibility_label_my_site">Moja webová stránka. Zobraziť moju webovú stránku a spravovať ju, vrátane štatistky.</string>
     <string name="my_site_btn_sharing">Zdieľanie</string>
     <string name="button_not_now">Teraz nie</string>

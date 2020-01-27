@@ -263,7 +263,6 @@ Language: ms
     <string name="connections_label">Sambungan</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Urus pemberitahuan anda.</string>
     <string name="sharing">Berkongsi</string>
-    <string name="tabbar_accessibility_label_me">Saya. Lihat profail anda dan buat perubahan.</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikut kandungan dari laman lain.</string>
     <string name="tabbar_accessibility_label_my_site">Laman Saya. Lihat laman anda dan uruskannya, termasuk statistik.</string>
     <string name="button_not_now">Bikan sekarang</string>

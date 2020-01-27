@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-16 19:19:53+0000
+Translation-Revision-Date: 2020-01-14 20:11:59+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="new_site_creation_unavailable_domain">Este domínio não está disponível</string>
+    <string name="login_promo_viewpager_content_description">Introdução</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Não foi possível acessar seu site. Entre em contato com sua hospedagem para resolver isso.</string>
     <string name="login_discovery_error_ssl">Não foi possível acessar seu site devido a um problema com o &lt;b>certificado SSL&lt;/b>. Entre em contato com sua hospedagem para resolver isso.</string>
     <string name="login_discovery_error_http_auth">Não foi possível acessar seu site porque ele requer &lt;b>autenticação HTTP&lt;/b>. Entre em contato com sua hospedagem para resolver isso.</string>
@@ -14,8 +17,6 @@ Language: pt_BR
     <string name="enter_site_credentials_instead">Acessar com as credenciais do site</string>
     <string name="enter_credentials_for_site">Acessar com as credenciais do site %1$s</string>
     <string name="send_verification_email">Enviar um e-mail de verificação</string>
-    <string name="my_site_bottom_sheet_add_page">Criar nova página</string>
-    <string name="my_site_bottom_sheet_add_post">Criar novo post</string>
     <string name="reader_following_display_name">Seguindo</string>
     <string name="posts_cannot_be_started">Não conseguimos abrir os posts agora. Tente novamente mais tarde.</string>
     <string name="suffix_1_000">%sk</string>
@@ -31,6 +32,84 @@ Language: pt_BR
     <string name="reader_discover_display_name">Explorar</string>
     <string name="reader_my_likes_display_name">Curtidas</string>
     <string name="site_cannot_be_loaded">Não conseguimos carregar os dados de seu site no momento. Tente novamente mais tarde.</string>
+    <string name="gutenberg_native_wordpress_media_library">Biblioteca de mídia do WordPress</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabalhando para adicionar novos blocos a cada versão. Enquanto isso, você também pode editar o post no navegador.</string>
+    <string name="gutenberg_native_ungroup">Desagrupar</string>
+    <string name="gutenberg_native_translate">Traduzir</string>
+    <string name="gutenberg_native_title">Título:</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard">Toque para ocultar o teclado</string>
+    <string name="gutenberg_native_tap_here_to_show_help">Toque aqui para mostrar ajuda</string>
+    <string name="gutenberg_native_take_a_video">Gravar um vídeo</string>
+    <string name="gutenberg_native_take_a_photo_or_video">Fotografar ou filmar</string>
+    <string name="gutenberg_native_take_a_photo">Tirar uma foto</string>
+    <string name="gutenberg_native_start_writing">Comece a escrever…</string>
+    <string name="gutenberg_native_size">Tamanho</string>
+    <string name="gutenberg_native_sidebar_title_plugin">Barra lateral de título do plugin</string>
+    <string name="gutenberg_native_show_section">Mostrar seção</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\' ainda não é suportado no WordPress para iOS</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' ainda não é suportado no WordPress para Android</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloco %s. Este bloco tem conteúdo inválido.</string>
+    <string name="gutenberg_native_s_block_empty">Bloco %s. Vazio.</string>
+    <string name="gutenberg_native_s_block">Bloco %s</string>
+    <string name="gutenberg_native_row_d">Linha %d.</string>
+    <string name="gutenberg_native_reset_block">Redefinir bloco</string>
+    <string name="gutenberg_native_remove_block_at_row_s">Remover bloco na linha %s</string>
+    <string name="gutenberg_native_remove_annotations">Remover anotações</string>
+    <string name="gutenberg_native_problem_opening_the_video">Problema ao abrir o vídeo</string>
+    <string name="gutenberg_native_problem_displaying_block">Problema ao exibir o bloco</string>
+    <string name="gutenberg_native_post_title_s">Título do post. %s</string>
+    <string name="gutenberg_native_post_title_empty">Título do post. Vazio</string>
+    <string name="gutenberg_native_paste_url">Colar URL</string>
+    <string name="gutenberg_native_page_break_block_s">Bloco de quebra de página. %s</string>
+    <string name="gutenberg_native_open_settings">Abrir configurações</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Nenhum aplicativo pode responder essa requisição. Instale um navegador de internet.</string>
+    <string name="gutenberg_native_navigate_up">Navegar acima</string>
+    <string name="gutenberg_native_my_pre_publish_panel">Meu painel de pré publicação</string>
+    <string name="gutenberg_native_my_post_status_info">Minhas informações de status do post</string>
+    <string name="gutenberg_native_my_post_publish_panel">Meu painel de publicação do post</string>
+    <string name="gutenberg_native_my_document_setting_panel">Meu painel de configurações do documento</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mover o bloco acima da linha %1$s para a linha %2$s</string>
+    <string name="gutenberg_native_move_block_up">Mover o bloco para cima</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover o bloco abaixo da linha %1$s para a linha %2$s</string>
+    <string name="gutenberg_native_move_block_down">Mover o bloco para baixo</string>
+    <string name="gutenberg_native_link_text">Texto do link</string>
+    <string name="gutenberg_native_link_inserted">Link adicionado</string>
+    <string name="gutenberg_native_level_s_empty">Nível %s. Vazio.</string>
+    <string name="gutenberg_native_level_1_s_2_s">Nível %1$s. %2$s</string>
+    <string name="gutenberg_native_image_caption_s">Legenda da imagem. %s</string>
+    <string name="gutenberg_native_hide_keyboard">Esconder teclado</string>
+    <string name="gutenberg_native_here_is_the_panel_content">Aqui está o painel de conteúdo!</string>
+    <string name="gutenberg_native_help_icon">Ícone de ajuda</string>
+    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Falha ao inserir a mídia.\nToque para ver mais opções.</string>
+    <string name="gutenberg_native_empty">Vazio</string>
+    <string name="gutenberg_native_double_tap_to_undo_last_change">Toque duas vezes para desfazer a última alteração</string>
+    <string name="gutenberg_native_double_tap_to_toggle_setting">Toque duas vezes para alternar as configurações</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image">Toque duas vezes para selecionar uma imagem</string>
+    <string name="gutenberg_native_double_tap_to_select_a_video">Toque duas vezes para selecionar um vídeo</string>
+    <string name="gutenberg_native_double_tap_to_select">Toque duas vezes para selecionar</string>
+    <string name="gutenberg_native_double_tap_to_remove_the_block">Toque duas vezes para remover o bloco</string>
+    <string name="gutenberg_native_double_tap_to_redo_last_change">Toque duas vezes para refazer a última alteração</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up">Toque duas vezes para mover o bloco para cima</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down">Toque duas vezes para mover o bloco para baixo</string>
+    <string name="gutenberg_native_double_tap_to_edit_this_value">Toque duas vezes para editar esse valor</string>
+    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Toque duas vezes para alterar o valor usando um slider</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block">Toque duas vezes para adicionar um bloco</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Toque duas vezes e segure para editar</string>
+    <string name="gutenberg_native_current_value_is_s">O valor atual é %s</string>
+    <string name="gutenberg_native_content">Conteúdo…</string>
+    <string name="gutenberg_native_clear_all_settings">Limpar todas as configurações</string>
+    <string name="gutenberg_native_choose_from_device">Escolher no dispositivo</string>
+    <string name="gutenberg_native_annotations_sidebar">Barra lateral de anotações</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ocorreu um erro desconhecido. Tente novamente.</string>
+    <string name="gutenberg_native_alt_text">Texto alternativo</string>
+    <string name="gutenberg_native_add_video">Adicionar vídeo</string>
+    <string name="gutenberg_native_add_url">Adicionar URL</string>
+    <string name="gutenberg_native_add_link_text">Adicionar texto do link</string>
+    <string name="gutenberg_native_add_image_or_video">Adicionar imagem ou vídeo</string>
+    <string name="gutenberg_native_add_image">Adicionar imagem</string>
+    <string name="gutenberg_native_add_block_here">Adicionar um bloco aqui</string>
+    <string name="gutenberg_native_add_annotation">Adicionar anotação</string>
+    <string name="gutenberg_native_add_a_description">Adicionar uma descrição</string>
     <string name="reader_empty_saved_posts_content_description">\"Toque no botão Adicionar para salvar posts para adicionar um post à sua lista\"</string>
     <string name="reader_acessibility_list_loaded">\"A lista foi carregada com %1$d itens.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Notificações</string>
@@ -156,8 +235,6 @@ Language: pt_BR
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Expandir</string>
     <string name="description_collapse">Recolher</string>
-    <string name="editor_retry_failed_uploads">Tentar enviar novamente</string>
-    <string name="editor_toast_failed_uploads">Não foi possível enviar alguns arquivos de mídia. Você não pode salvar ou publicar\nseu post nesse estado.</string>
     <string name="my_site_verify_your_email_without_email">Verifique seu e-mail. As instruções foram enviadas para lá</string>
     <string name="my_site_verify_your_email">Verifique seu e-mail. As instruções foram enviadas para %s</string>
     <string name="link_dialog_button_cancel">Cancelar</string>
@@ -248,7 +325,7 @@ Language: pt_BR
     <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">Ocorreu um erro ao restaurar o post</string>
     <string name="backdated_for">Retroceder para: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Os itens acima serão exibidos em sua aba de informações. Arraste e solte para personalizar.</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Os itens acima serão exibidos em sua aba resumo. Arraste e solte para personalizar.</string>
     <string name="stats_insights_add_insights_header">Adicionar informações</string>
     <string name="stats_insights_management_title">Ver apenas as estatísticas mais relevantes. Adicione e organize duas informações abaixo.</string>
     <string name="stats_insights_social">Social</string>
@@ -259,7 +336,7 @@ Language: pt_BR
     <string name="domains_suggestions_empty_list">Nenhuma sugestão encontrada</string>
     <string name="register_domain">Registrar domínio</string>
     <string name="jetpack_installed_message">Agora que o Jetpack está instalado, só precisamos configurá-lo. Isso levará apenas um minuto.</string>
-    <string name="stats_menu_remove">Remover de informações</string>
+    <string name="stats_menu_remove">Remover do resumo</string>
     <string name="stats_menu_move_down">Mover para baixo</string>
     <string name="stats_menu_move_up">Mover para cima</string>
     <string name="stats_item_settings">Configurações do item de estatística</string>
@@ -477,7 +554,7 @@ Language: pt_BR
     <string name="stats_followers_count_message">Total de seguidores por %1$s: %2$s</string>
     <string name="stats_followers_email">E-mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">Gerenciar informações</string>
+    <string name="stats_manage_insights">Gerenciar resumo</string>
     <string name="stats_empty_insights_title">Nenhuma informação adicionada ainda</string>
     <string name="stats_no_data_yet">Nenhum dado ainda</string>
     <string name="menu_debug">Menu de depuração</string>
@@ -647,7 +724,6 @@ Language: pt_BR
     <string name="activity_log_rewind_started_snackbar_message">Seu site está sendo restaurado\nRetrocedendo para %1$s %2$s</string>
     <string name="activity_log_button">Botão do histórico de atividades</string>
     <string name="plugin_auto_managed">Auto gerenciado</string>
-    <string name="reader_save_posts_locally_dialog_message">Salve esse post e volte para lê-lo quando quiser. Ele ficará disponível apenas nesse dispositivo por que posts salvos ainda não são sincronizados entre dispositivos (estamos trabalhando nisso).</string>
     <string name="reader_save_posts_locally_dialog_title">Salvar posts para depois</string>
     <string name="reader_empty_search_request_failed">Não foi possível pesquisar</string>
     <string name="reader_empty_search_title">Nenhum resultado encontrado</string>
@@ -672,7 +748,6 @@ Language: pt_BR
     <string name="reader_add_bookmark">Adicionar aos posts salvos</string>
     <string name="reader_save_for_later_title">Posts salvos</string>
     <string name="removed">Removido</string>
-    <string name="tabbar_accessibility_label_write">Novo post. Escreva um novo post.</string>
     <string name="my_site_icon_content_description">Mudar o ícone do site</string>
     <string name="my_site_icon_dialog_cancel_button">Cancelar</string>
     <string name="my_site_icon_dialog_remove_button">Remover</string>
@@ -703,7 +778,6 @@ Language: pt_BR
     <string name="preference_privacy_settings">Configurações de privacidade</string>
     <string name="preference_collect_information">Coletar informação</string>
     <string name="post_submitted">Post enviado</string>
-    <string name="write_post">Escrever post</string>
     <string name="login_email_button_signup">Não tem uma conta? %1$sRegistre-se%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">O recurso de plugins requer que seu site cumpra alguns requisitos.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">O recurso de plugins precisa que o domínio principal esteja associado a esse usuário.</string>
@@ -1258,7 +1332,6 @@ Language: pt_BR
     <string name="sharing">Compartilhamento</string>
     <string name="tabbar_accessibility_label_notifications">Notificações. Gerencie suas notificações.</string>
     <string name="tabbar_accessibility_label_reader">Leitor. Siga conteúdo de outros sites.</string>
-    <string name="tabbar_accessibility_label_me">Eu. Veja e altere seu perfil.</string>
     <string name="tabbar_accessibility_label_my_site">Meu site. Veja e gerencie seu site, incluindo estatísticas.</string>
     <string name="my_site_btn_sharing">Compartilhar</string>
     <string name="button_not_now">Não agora</string>
@@ -1725,7 +1798,7 @@ Language: pt_BR
     <string name="stats_insights_best_ever">Melhores visualizações</string>
     <string name="stats_insights_today">Estatísticas de hoje</string>
     <string name="stats_insights_all_time">Todos os posts, visualizações e visitantes</string>
-    <string name="stats_insights">Informações</string>
+    <string name="stats_insights">Resumo</string>
     <string name="me_disconnect_from_wordpress_com">Fazer logout do WordPress.com</string>
     <string name="me_btn_login_logout">Entrar/Sair</string>
     <string name="me_connect_to_wordpress_com">Fazer login no WordPress.com</string>

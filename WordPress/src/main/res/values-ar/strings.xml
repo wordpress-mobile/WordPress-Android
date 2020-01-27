@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-12 00:55:12+0000
+Translation-Revision-Date: 2020-01-24 00:54:10+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">إزالة الصورة</string>
+    <string name="gutenberg_native_move_image_forward">تحريك الصورة إلى الأمام</string>
+    <string name="gutenberg_native_move_image_backward">تحريك الصورة إلى الخلف</string>
+    <string name="gutenberg_native_gallery_caption_s">التسمية التوضيحية لمعرض الصور. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. القيمة الحالية هي %2$s</string>
+    <string name="create_post_page_fab_tooltip">إنشاء مقالة أو صفحة</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">انقر على %1$sإضافة مقالة%2$s لإنشاء مقالة جديدة.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">انقر على %1$sمقالات المدونة%2$s للمتابعة.</string>
+    <string name="content_description_person_building_website">شخص ينشئ موقعًا على الويب</string>
+    <string name="post_signup_interstitial_not_right_now">ليس الآن</string>
+    <string name="post_signup_interstitial_subtitle">سواء أرغبتَ في الإنشاء أو المشاركة، فإنَّنا سنساعدك على القيام بذلك بشكل صحيح.</string>
+    <string name="post_signup_interstitial_title">مرحبًا بك في ووردبريس.</string>
+    <string name="stock_media_picker_list_content_description">مكتبة الصور</string>
+    <string name="photo_picker_image_thumbnail_unselected">لم تُحدَّد أي صور</string>
+    <string name="photo_picker_image_selected">، محدَّدة</string>
+    <string name="photo_picker_image_thumbnail_selected">تم تحديد صورة</string>
+    <string name="photo_picker_image_thumbnail_content_description">الصورة المصغَّرة</string>
+    <string name="my_site_bottom_sheet_add_post">مقالة المدونة</string>
+    <string name="my_site_bottom_sheet_title">إضافة جديد</string>
+    <string name="post_settings_publish">نشر</string>
+    <string name="dialog_gutenberg_informative_description_v2">أجرينا تحسينات هائلة في محرِّر المكوّن، ونظن أنها تستحق عناء المحاولة! قمنا بتمكينها في المقالات والصفحات الجديدة، ولكن إذا رغبتَ في التغيير إلى المحرِّر التقليدي فانتقل إلى \"موقعي\" > \"إعدادات الموقع\".</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">المزامنة الآن</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">ستتم مزامنة هذه المقالة فورًا.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">هل أنت جاهز للمزامنة؟</string>
+    <string name="new_site_creation_unavailable_domain">هذا النطاق غير متاح.</string>
+    <string name="login_promo_viewpager_content_description">المقدمة</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">تعذر علينا الوصول إلى موقعك. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
     <string name="login_discovery_error_ssl">تعذر علينا الوصول إلى موقعك بسبب حدوث مشكلة في &lt;b>شهادة SSL&lt;/b>. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
     <string name="login_discovery_error_http_auth">تعذر علينا الوصول إلى موقعك لأنه يتطلب &lt;b>مصادقة HTTP&lt;/b>. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
@@ -14,8 +41,6 @@ Language: ar
     <string name="enter_site_credentials_instead">تسجيل الدخول باستخدام بيانات اعتماد الموقع</string>
     <string name="enter_credentials_for_site">تسجيل الدخول باستخدام بيانات اعتماد الموقع %1$s الخاصة بك</string>
     <string name="send_verification_email">إرسال رسالة تحقق عبر البريد الإلكتروني</string>
-    <string name="my_site_bottom_sheet_add_page">إنشاء صفحة جديدة</string>
-    <string name="my_site_bottom_sheet_add_post">إنشاء مقالة جديدة</string>
     <string name="reader_following_display_name">المتابعة</string>
     <string name="posts_cannot_be_started">يتعذر علينا فتح هذه المقالات الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="suffix_1_000">%sk</string>
@@ -156,8 +181,6 @@ Language: ar
     <string name="site_settings_editor">المُحرر</string>
     <string name="description_expand">توسيع</string>
     <string name="description_collapse">طيّ</string>
-    <string name="editor_retry_failed_uploads">إعادة محاولة الرفع</string>
-    <string name="editor_toast_failed_uploads">فشلت بعض عمليات رفع الوسائط. لا يمكنك حفظ أو نشر\n        مقالتك في هذه الحالة.</string>
     <string name="my_site_verify_your_email_without_email">تحقق من عنوان بريدك الإلكتروني - تم إرسال الإرشادات إلى بريدك الإلكتروني</string>
     <string name="my_site_verify_your_email">تحقق من عنوان بريدك الإلكتروني - تم إرسال الإرشادات إلى %s</string>
     <string name="link_dialog_button_cancel">إلغاء</string>
@@ -647,7 +670,6 @@ Language: ar
     <string name="activity_log_rewind_started_snackbar_message">يتم الآن استعادة موقعك\nالاسترجاع إلى %1$s %2$s</string>
     <string name="activity_log_button">زر الإجراء في سجل النشاط</string>
     <string name="plugin_auto_managed">إدارة تلقائية</string>
-    <string name="reader_save_posts_locally_dialog_message">احفظ هذه المقالة، وعُد إلى قراءتها وقتما تشاء. لن تكون متاحة إلا على هذا الجهاز — لا تقوم المقالات المحفوظة بالمزامنة مع الأجهزة الأخرى. (ومع ذلك! نحن نعمل على إيجاد حل لهذا الأمر.)</string>
     <string name="reader_save_posts_locally_dialog_title">حفظ المقالات لوقت لاحق</string>
     <string name="reader_empty_search_request_failed">يتعذر إجراء البحث</string>
     <string name="reader_empty_search_title">لم يتم العثور على نتائج</string>
@@ -672,7 +694,6 @@ Language: ar
     <string name="reader_add_bookmark">إضافة إلى المقالات المحفوظة</string>
     <string name="reader_save_for_later_title">المقالات المحفوظة</string>
     <string name="removed">تم الحذف</string>
-    <string name="tabbar_accessibility_label_write">مقالة جديدة. كتابة مقالة جديدة.</string>
     <string name="my_site_icon_content_description">تغيير رمز الموقع</string>
     <string name="my_site_icon_dialog_cancel_button">إلغاء</string>
     <string name="my_site_icon_dialog_remove_button">إزالة</string>
@@ -703,7 +724,6 @@ Language: ar
     <string name="preference_privacy_settings">إعدادات الخصوصية</string>
     <string name="preference_collect_information">جمع المعلومات</string>
     <string name="post_submitted">تم إرسال المقالة</string>
-    <string name="write_post">كتابة مقالة</string>
     <string name="login_email_button_signup">ليس لديك حساب؟ %1$sالتسجيل%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">تتطلب ميزة المكوّن الإضافي أن يكون الموقع في وضع جيد.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">تتطلب ميزة المكوّن الإضافي ربط اشترك النطاق الأساسي بهذا المستخدم.</string>
@@ -1258,7 +1278,6 @@ Language: ar
     <string name="sharing">مشاركة</string>
     <string name="tabbar_accessibility_label_notifications">تنبيهات. قم بإدارة تنبيهاتك.</string>
     <string name="tabbar_accessibility_label_reader">القارئ. متابعة محتوى من مواقع أخرى.</string>
-    <string name="tabbar_accessibility_label_me">أنا. اعرض ملفك الشخصي وقم بإجراء تغييرات.</string>
     <string name="tabbar_accessibility_label_my_site">موقعي. اعرض موقعك وقم بإدارته، بما في ذلك الإحصاءات.</string>
     <string name="my_site_btn_sharing">مشاركة</string>
     <string name="button_not_now">ليس الآن</string>

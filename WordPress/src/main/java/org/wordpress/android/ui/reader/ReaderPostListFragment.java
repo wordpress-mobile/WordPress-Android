@@ -76,6 +76,7 @@ import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
 import org.wordpress.android.models.FilterCriteria;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
@@ -107,6 +108,7 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.Up
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -399,12 +401,12 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             mViewModel.getCurrentSubFilter().observe(this, subfilterListItem -> {
-                if (ReaderUtils.isFollowing(
+                if ((ReaderUtils.isFollowing(
                         mCurrentTag,
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
-                ) || ReaderUtils.isDefaultTag(mCurrentTag)) {
-                    mViewModel.applySubfilter(subfilterListItem, true);
+                ) || ReaderUtils.isDefaultTag(mCurrentTag)) && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
+                  mViewModel.applySubfilter(subfilterListItem, true);
                 }
             });
 
@@ -523,10 +525,19 @@ public class ReaderPostListFragment extends Fragment
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
 
+            Site currentSite;
+
             if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                 resumeFollowedTag();
+            } else if ((currentSite = getSiteIfBlogPreview()) != null) {
+                resumeFollowedSite(currentSite);
             } else {
                 refreshPosts();
+            }
+
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
+                // Remove sticky event if not consumed
+                EventBus.getDefault().removeStickyEvent(ReaderEvents.TagAdded.class);
             }
 
             // if the user tapped a site to show site preview, it's possible they also changed the follow
@@ -585,6 +596,38 @@ public class ReaderPostListFragment extends Fragment
             // posts in the current tag if it's time
             refreshPosts();
             updateCurrentTagIfTime();
+        }
+    }
+
+    @Nullable
+    private Site getSiteIfBlogPreview() {
+        Site currentSite = null;
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
+            && mIsTopLevel
+            && getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+            currentSite = mViewModel.getCurrentSubfilterValue() instanceof Site ? (Site) (mViewModel
+                    .getCurrentSubfilterValue()) : null;
+        }
+
+        return currentSite;
+    }
+
+    private void resumeFollowedSite(Site currentSite) {
+        ReaderBlog blog = currentSite.getBlog();
+        boolean isSiteStillAvailable = false;
+
+        if (blog != null) {
+            if ((blog.hasFeedUrl() && ReaderBlogTable.isFollowedFeed(blog.feedId))
+                || ReaderBlogTable.isFollowedBlog(blog.blogId)) {
+                isSiteStillAvailable = true;
+            }
+        }
+
+        if (isSiteStillAvailable) {
+            refreshPosts();
+        } else {
+            mViewModel.setDefaultSubfilter();
         }
     }
 
