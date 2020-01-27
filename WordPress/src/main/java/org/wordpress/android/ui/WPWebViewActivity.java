@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -45,6 +43,8 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ConfigurationExtensionsKt;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -150,9 +150,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private void setLightStatusBar() {
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
             Window window = getWindow();
-            window.setStatusBarColor(getColor(R.color.white));
-            window.getDecorView().setSystemUiVisibility(
-                    window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(this, R.attr.colorSurface));
+
+            if (!ConfigurationExtensionsKt.isDarkTheme(getResources().getConfiguration())) {
+                window.getDecorView().setSystemUiVisibility(
+                        window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
         }
     }
 
@@ -239,12 +242,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 showSubtitle(actionBar);
                 actionBar.setDisplayShowTitleEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
-
-                Drawable upIcon = toolbar.getNavigationIcon();
-                if (upIcon != null) {
-                    upIcon.setColorFilter(getResources().getColor(R.color.gray_60), PorterDuff.Mode.SRC_ATOP);
-                }
-
                 if (isActionableDirectUsage()) {
                     String title = getIntent().getStringExtra(ACTION_BAR_TITLE);
                     if (title != null) {
@@ -522,7 +519,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             Context context,
             WPWebViewUsageCategory directUsageCategory,
             String postTitle
-                                                      ) {
+    ) {
         Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, directUsageCategory.getValue());
         intent.putExtra(WPWebViewActivity.ACTION_BAR_TITLE, postTitle);
@@ -598,7 +595,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             String shareSubject,
             boolean allowPreviewModeSelection,
             boolean startPreviewForResult
-                                    ) {
+    ) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -788,7 +785,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                     URLEncoder.encode(StringUtils.notNullStr(username), ENCODING_UTF8),
                     URLEncoder.encode(StringUtils.notNullStr(password), ENCODING_UTF8),
                     URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8)
-                                           );
+            );
 
             // Add token authorization when signing in to WP.com
             if (WPUrlUtils.safeToAddWordPressComAuthToken(authenticationUrl)
