@@ -12,10 +12,12 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
-        release {
+        release { // TODO: enable proguard, resource shrinking
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -27,8 +29,6 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-        release.java.srcDirs += 'src/release/kotlin'
-        debug.java.srcDirs += 'src/debug/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
