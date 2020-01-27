@@ -281,7 +281,7 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.WPWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
         <activity
             android:name=".ui.JetpackConnectionWebViewActivity"
             android:theme="@style/Calypso.NoActionBar"
