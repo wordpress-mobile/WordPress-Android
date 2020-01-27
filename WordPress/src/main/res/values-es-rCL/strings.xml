@@ -370,7 +370,6 @@ Language: es_CL
     <string name="activity_log_rewind_started_snackbar_message">Su sitio se está restaurando\nRebobinando a %1$s %2$s</string>
     <string name="activity_log_button">Botón de acción del Registro de Actividad</string>
     <string name="plugin_auto_managed">Auto-administrado</string>
-    <string name="reader_save_posts_locally_dialog_message">Guarda este post, y vuelve a leerlo cuando quieras. Sólo estará disponible en este dispositivo: los mensajes guardados no se sincronizan con otros dispositivos. (¡todavía estamos trabajando en ello!)</string>
     <string name="reader_save_posts_locally_dialog_title">Guardar Entrada para Más tarde</string>
     <string name="reader_empty_search_request_failed">No se pudo realizar la búsqueda</string>
     <string name="reader_empty_search_title">No se encontraron resultados</string>
@@ -395,7 +394,6 @@ Language: es_CL
     <string name="reader_add_bookmark">Agregar a entradas guardadas</string>
     <string name="reader_save_for_later_title">Entradas guardadas</string>
     <string name="removed">Eliminado</string>
-    <string name="tabbar_accessibility_label_write">Nueva entrada. Escribe una nueva entrada.</string>
     <string name="my_site_icon_content_description">Cambiar el icono del sitio</string>
     <string name="my_site_icon_dialog_cancel_button">Cancelar</string>
     <string name="my_site_icon_dialog_remove_button">Eliminar</string>
@@ -426,7 +424,6 @@ Language: es_CL
     <string name="preference_privacy_settings">Opciones de privacidad</string>
     <string name="preference_collect_information">Recopilar información</string>
     <string name="post_submitted">Entrada enviada</string>
-    <string name="write_post">Escribir entrada</string>
     <string name="login_email_button_signup">¿No tienes una cuenta? %1$sIngresar%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">La característica del plugin requiere que el sitio esté en buena forma.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">La característica del plugin requiere que la suscripción de dominio principal se asocie con este usuario.</string>
@@ -976,7 +973,6 @@ Language: es_CL
     <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Notificaciones. Administra tus notificaciones.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue el contenido de otros sitios.</string>
-    <string name="tabbar_accessibility_label_me">Yo. Ve tu perfil y haz cambios.</string>
     <string name="tabbar_accessibility_label_my_site">Mi sitio. Ve tu sitio y adminístralo, incluyendo estadísticas.</string>
     <string name="my_site_btn_sharing">Compartir</string>
     <string name="button_not_now">No ahora</string>

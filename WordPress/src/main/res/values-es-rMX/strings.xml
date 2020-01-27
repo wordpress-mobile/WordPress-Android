@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-20 16:55:53+0000
+Translation-Revision-Date: 2020-01-15 19:29:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es_MX
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">Eliminar imagen</string>
+    <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>
+    <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
+    <string name="gutenberg_native_gallery_caption_s">Leyenda de la galería. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. El valor actual es %2$s</string>
+    <string name="create_post_page_fab_tooltip">Crear una entrada o página</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">Toca en %1$s Añadir entrada %2$s para crear una nueva entrada.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Toca en %1$s Entradas del blog %2$s para continuar.</string>
+    <string name="content_description_person_building_website">Creador de la web</string>
+    <string name="post_signup_interstitial_not_right_now">Ahorita No</string>
+    <string name="post_signup_interstitial_subtitle">Cualquier cosa que quieras crear o compartir, te ayudaremos a hacerlo aquí mismo.</string>
+    <string name="post_signup_interstitial_title">Bienvenido a WordPress</string>
+    <string name="stock_media_picker_list_content_description">Biblioteca de fotos</string>
+    <string name="photo_picker_image_thumbnail_unselected">Imagen no seleccionada</string>
+    <string name="photo_picker_image_selected">, seleccionada</string>
+    <string name="photo_picker_image_thumbnail_selected">Imagen seleccionada</string>
+    <string name="photo_picker_image_thumbnail_content_description">Miniatura de la imagen</string>
+    <string name="my_site_bottom_sheet_add_post">Entrada del blog</string>
+    <string name="my_site_bottom_sheet_title">Añadir nuevo</string>
+    <string name="post_settings_publish">Publicar</string>
+    <string name="dialog_gutenberg_informative_description_v2">Hemos hecho grandes mejoras en el editor de bloques y creemos que ¡vale la pena probarlo! Lo hemos activado para nuevas entradas y páginas, pero si quieres cambiar al editor clásico, ve a «Mi sitio > Ajustes del sitio».</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Sincroniza ahora</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">Esta entrada se sincronizará inmediatamente.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">¿Preparado para sincronizar?</string>
+    <string name="new_site_creation_unavailable_domain">Este dominio no está disponible</string>
+    <string name="login_promo_viewpager_content_description">Introducción</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">No hemos podido acceder a tu sitio. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
     <string name="login_discovery_error_ssl">No hemos podido acceder a tu sitio debido a un problema con el &lt;b>certificado SSL&lt;/b>. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
     <string name="login_discovery_error_http_auth">No hemos podido acceder a tu sitio porque necesita &lt;b>identificación HTTP&lt;/b>. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
@@ -14,8 +41,7 @@ Language: es_MX
     <string name="enter_site_credentials_instead">Accede con las credenciales del sitio</string>
     <string name="enter_credentials_for_site">Accede con las credenciales del sitio %1$s</string>
     <string name="send_verification_email">Enviar el correo electrónico de verificación</string>
-    <string name="my_site_bottom_sheet_add_page">Crear nueva página</string>
-    <string name="my_site_bottom_sheet_add_post">Crear nueva entrada</string>
+    <string name="my_site_bottom_sheet_add_page">Página del sitio</string>
     <string name="reader_following_display_name">Siguiendo</string>
     <string name="posts_cannot_be_started">No podemos abrir las entradas en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="suffix_1_000">%sk</string>
@@ -33,7 +59,6 @@ Language: es_MX
     <string name="site_cannot_be_loaded">No podemos cargar los datos para tu sitio en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabajando duro para añadir más bloques con cada versión. Mientras tanto, también puedes editar esta entrada en la web.</string>
-    <string name="gutenberg_native_unsupported">No compatible</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traducir</string>
     <string name="gutenberg_native_title">Titulo:</string>
@@ -53,7 +78,6 @@ Language: es_MX
     <string name="gutenberg_native_s_block">Bloque %s</string>
     <string name="gutenberg_native_row_d">Fila %d.</string>
     <string name="gutenberg_native_reset_block">Restablecer el bloque</string>
-    <string name="gutenberg_native_reset">RESTABLECER</string>
     <string name="gutenberg_native_remove_block_at_row_s">Eliminar el bloque de la fila %s</string>
     <string name="gutenberg_native_remove_annotations">Eliminar las notas</string>
     <string name="gutenberg_native_problem_opening_the_video">Problema al abrir el video</string>
@@ -236,8 +260,6 @@ Language: es_MX
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Expandir</string>
     <string name="description_collapse">Contraer</string>
-    <string name="editor_retry_failed_uploads">Reintentar la subida</string>
-    <string name="editor_toast_failed_uploads">Algunas subidas de medios han fallado. Puedes guardar o publicar\ntu publicación en este estado.</string>
     <string name="my_site_verify_your_email_without_email">Verifica tu dirección de correo electrónico - las instrucciones se enviaron a tu correo electrónico</string>
     <string name="my_site_verify_your_email">Verifica tu dirección de correo electrónico - las instrucciones se enviaron a %s</string>
     <string name="link_dialog_button_cancel">Cancelar</string>
@@ -727,7 +749,7 @@ Language: es_MX
     <string name="activity_log_rewind_started_snackbar_message">Tu sitio está siendo restaurado\nRebobinando a %1$s %2$s</string>
     <string name="activity_log_button">Botón de acción del registro de actividad</string>
     <string name="plugin_auto_managed">Gestionado automáticamente</string>
-    <string name="reader_save_posts_locally_dialog_message">Guarda esta entrada y vuelva a leerla cuando lo desees.  Solo estará disponible en este dispositivo —  las entradas guardadas no se sincronizarán con tus otros dispositivos. (¡Aún! estamos trabajando en ello.)</string>
+    <string name="reader_save_posts_locally_dialog_message">Guarda esta entrada y vuelve cuando quieras para leerla. Solo estará disponible en este dispositivo — las entradas guardadas no se sincronizan con otros dispositivos.</string>
     <string name="reader_save_posts_locally_dialog_title">Guardar entradas para más tarde</string>
     <string name="reader_empty_search_request_failed">No ha sido posible realizar la búsqueda</string>
     <string name="reader_empty_search_title">No se han encontrado resultados</string>
@@ -752,7 +774,6 @@ Language: es_MX
     <string name="reader_add_bookmark">Añadida a las entradas guardadas</string>
     <string name="reader_save_for_later_title">Entradas guardadas</string>
     <string name="removed">Borrado</string>
-    <string name="tabbar_accessibility_label_write">Nueva entrada. Escribe una nueva entrada.</string>
     <string name="my_site_icon_content_description">Cambiar icono del sitio</string>
     <string name="my_site_icon_dialog_cancel_button">Cancelar</string>
     <string name="my_site_icon_dialog_remove_button">Eliminar</string>
@@ -783,7 +804,6 @@ Language: es_MX
     <string name="preference_privacy_settings">Ajustes de privacidad</string>
     <string name="preference_collect_information">Recopilar información</string>
     <string name="post_submitted">Entrada enviada</string>
-    <string name="write_post">Escribir entrada</string>
     <string name="login_email_button_signup">¿No tienes una cuenta? %1$s Regístrate %2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Una característica del plugin requiere que el sitio esté en buen estado.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Una característica del plugin necesita que la suscripción principal del dominio esté asociada con este usuario.</string>
@@ -1338,7 +1358,6 @@ Language: es_MX
     <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Avisos. Gestiona tus avisos.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue contenido de otros sitios.</string>
-    <string name="tabbar_accessibility_label_me">Yo. Ve tu perfil y hazle cambios.</string>
     <string name="tabbar_accessibility_label_my_site">Mi sitio. Ve tu sitio y gestiónalo, estadísticas incluidas.</string>
     <string name="my_site_btn_sharing">Compartir</string>
     <string name="button_not_now">Ahora no</string>

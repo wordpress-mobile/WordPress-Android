@@ -195,7 +195,6 @@ Language: el_GR
     <string name="reader_btn_bookmark">Αποθήκευση</string>
     <string name="reader_save_for_later_title">Αποθηκευμένα άρθρα</string>
     <string name="removed">Αφαιρέθηκε</string>
-    <string name="tabbar_accessibility_label_write">Νέο άρθρο. Γράψτε ένα νέο άρθρο.</string>
     <string name="my_site_icon_content_description">Αλλαγή εικονιδίου ιστότοπου</string>
     <string name="my_site_icon_dialog_cancel_button">Άκυρο</string>
     <string name="my_site_icon_dialog_remove_button">Αφαίρεση</string>
@@ -214,7 +213,6 @@ Language: el_GR
     <string name="preference_privacy_settings">Ρυθμίσεις Ιδιωτικότητας</string>
     <string name="preference_collect_information">Συλλογή πληροφοριών</string>
     <string name="post_submitted">Το άρθρο υποβλήθηκε</string>
-    <string name="write_post">Γράψτε άρθρο</string>
     <string name="login_email_button_signup">Δεν έχετε λογαριασμό; %1$sΕγγραφείτε%2$s</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Εγκατάσταση</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Εγκατάσταση πρόσθετου</string>

@@ -5,6 +5,7 @@ import android.webkit.MimeTypeMap;
 
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.util.Date;
 import java.util.Locale;
@@ -337,5 +338,11 @@ public class MediaFile {
         }
 
         return content;
+    }
+
+    public String getAttachmentPageURL(String siteUrl) {
+        siteUrl = UrlUtils.makeHttps(siteUrl);
+        String attachmentPageUrl = UrlUtils.appendUrlParameter(siteUrl, "p", mMediaId);
+        return attachmentPageUrl;
     }
 }

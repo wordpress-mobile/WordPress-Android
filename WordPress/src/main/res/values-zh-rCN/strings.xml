@@ -14,8 +14,6 @@ Language: zh_CN
     <string name="enter_site_credentials_instead">使用站点凭据登录</string>
     <string name="enter_credentials_for_site">使用 %1$s 站点凭据登录</string>
     <string name="send_verification_email">发送验证电子邮件</string>
-    <string name="my_site_bottom_sheet_add_page">创建新页面</string>
-    <string name="my_site_bottom_sheet_add_post">创建新文章</string>
     <string name="reader_following_display_name">关注中</string>
     <string name="posts_cannot_be_started">我们现在无法打开文章。请稍后重试</string>
     <string name="suffix_1_000">%sk</string>
@@ -146,8 +144,6 @@ Language: zh_CN
     <string name="stats_loading_card">正在加载选定的卡片数据</string>
     <string name="description_expand">展开</string>
     <string name="description_collapse">折叠</string>
-    <string name="editor_retry_failed_uploads">重试上传</string>
-    <string name="editor_toast_failed_uploads">部分媒体上传失败。您无法保存或发布\n此状态下的文章。</string>
     <string name="my_site_verify_your_email_without_email">请验证您的电子邮件地址（说明已发送至您的电子邮件地址）</string>
     <string name="my_site_verify_your_email">请验证您的电子邮件地址（说明已发送至 %s）</string>
     <string name="link_dialog_button_cancel">取消</string>
@@ -578,7 +574,6 @@ Language: zh_CN
     <string name="activity_log_rewind_started_snackbar_message">正在恢复您的站点\n正在还原至 %1$s %2$s</string>
     <string name="activity_log_button">活动日志操作按钮</string>
     <string name="plugin_auto_managed">已自动托管</string>
-    <string name="reader_save_posts_locally_dialog_message">保存此文章，方便您随时回来阅读。但您只能在此设备上阅读该文章，也就是说已保存的文章不会同步到其他设备（但我们正在努力改进）。</string>
     <string name="reader_save_posts_locally_dialog_title">保存文章供稍后查看</string>
     <string name="reader_empty_search_request_failed">无法执行搜索</string>
     <string name="reader_empty_search_title">未找到结果</string>
@@ -603,7 +598,6 @@ Language: zh_CN
     <string name="reader_add_bookmark">添加到已保存的文章</string>
     <string name="reader_save_for_later_title">已保存的文章</string>
     <string name="removed">已删除</string>
-    <string name="tabbar_accessibility_label_write">新文章。撰写新文章。</string>
     <string name="my_site_icon_content_description">更改站点图标</string>
     <string name="my_site_icon_dialog_cancel_button">取消</string>
     <string name="my_site_icon_dialog_remove_button">删除</string>
@@ -634,7 +628,6 @@ Language: zh_CN
     <string name="preference_privacy_settings">隐私设置</string>
     <string name="preference_collect_information">收集信息</string>
     <string name="post_submitted">文章已提交</string>
-    <string name="write_post">写文章</string>
     <string name="login_email_button_signup">还没有帐户？%1$s注册%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">使用插件功能需要站点具有良好的信誉。</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">使用插件功能需要具有与该用户关联的主域订阅。</string>
@@ -1178,7 +1171,6 @@ Language: zh_CN
     <string name="sharing">分享</string>
     <string name="tabbar_accessibility_label_notifications">通知。管理您的通知。</string>
     <string name="tabbar_accessibility_label_reader">阅读器。查看其他站点的内容。</string>
-    <string name="tabbar_accessibility_label_me">本人。查看自己的个人资料并更改。</string>
     <string name="tabbar_accessibility_label_my_site">我的站点。查看并管理自己的站点，包括统计信息。</string>
     <string name="my_site_btn_sharing">分享</string>
     <string name="button_not_now">现在不行</string>

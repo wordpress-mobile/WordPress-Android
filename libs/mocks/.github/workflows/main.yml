@@ -1,0 +1,26 @@
+name: Validate Mocks
+
+on: [push]
+
+jobs:
+  lint-mocks:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-ruby@v1
+      with:
+        ruby-version: '2.6.x'
+    - name: Install Bundler
+      run: gem install bundler
+    - name: Restore Dependency Cache
+      id: restore-dependency-cache
+      uses: actions/cache@v1
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+    - name: Install Dependencies
+      if: steps.restore-dependency-cache.outputs.cache-hit != 'true'
+      run: bundle install --jobs 4 --retry 3
+    - name: Lint Mocks
+      run: bundle exec rake lint
+

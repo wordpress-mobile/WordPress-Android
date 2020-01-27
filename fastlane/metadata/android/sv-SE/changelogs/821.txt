@@ -1,0 +1,4 @@
+14.0:
+- Blockredigeraren: Ibland kunde den krascha om du försökte ångra vissa åtgärder, vilket innebar att backa för långt. Det är rättat, liksom ett fel som berörde platshållare för bilder.
+- Appens sektion ”Jag” ligger nu under ”Min webbplats”.
+- Ny, flytande, åtgärdsknapp under ”Min webbplats” för att smidigt skapa nya sidor och inlägg.
