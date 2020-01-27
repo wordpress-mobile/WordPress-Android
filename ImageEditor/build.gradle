@@ -34,9 +34,11 @@ android {
     }
 }
 
-dependencies {
-    def navComponentVersion = "2.0.0"
+ext {
+    navComponentVersion = '2.0.0'
+}
 
+dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
