@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-203"
+            versionName "alpha-205"
         }
-        versionCode 813
+        versionCode 820
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -84,9 +84,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "14.0-rc-1"
+                versionName "14.0"
             }
-            versionCode 812
+            versionCode 821
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
@@ -272,6 +272,8 @@ dependencies {
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
     implementation project(path:':libs:utils:WordPressUtils')
+    testImplementation project(path:':libs:utils:WordPressUtils')
+    debugImplementation project(path:':libs:utils:WordPressUtils')
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
     }
@@ -302,6 +304,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 
     implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:2.0.1'
+    implementation "org.jsoup:jsoup:1.10.3"
 }
 
 configurations.all {

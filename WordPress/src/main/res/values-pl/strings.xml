@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-11 09:44:29+0000
+Translation-Revision-Date: 2020-01-15 17:40:18+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">Usuń zdjęcie</string>
+    <string name="create_post_page_fab_tooltip">Stwórz wpis lub stronę</string>
+    <string name="post_signup_interstitial_not_right_now">Nie teraz</string>
     <string name="login_discovery_error_generic">Nie byliśmy w stanie uzyskać dostępu do twojej witryny. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
     <string name="login_discovery_error_ssl">Nie byliśmy w stanie uzyskać dostępu do twojej witryny z powodu problemu z &lt;b>SSL Certificatem&lt;/b>. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
     <string name="login_discovery_error_http_auth">Nie byliśmy w stanie uzyskać dostępu do twojej witryny ponieważ wymaga &lt;b>Authentykacji HTTP&lt;/b>. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
@@ -14,8 +17,7 @@ Language: pl
     <string name="enter_site_credentials_instead">Zaloguj się za pomocą danych uwierzytelniających tej witryny</string>
     <string name="enter_credentials_for_site">Zaloguj się za pomocą danych uwierzytelniających %1$s tej witryny</string>
     <string name="send_verification_email">Wyślij email weryfikacyjny</string>
-    <string name="my_site_bottom_sheet_add_page">Utwórz nową stronę</string>
-    <string name="my_site_bottom_sheet_add_post">Utwórz nowy wpis</string>
+    <string name="my_site_bottom_sheet_add_page">Strona witryny</string>
     <string name="reader_following_display_name">Obserwowane</string>
     <string name="posts_cannot_be_started">Nie możemy w tym momencie otworzyć wpisów. Proszę spróbować ponownie później</string>
     <string name="suffix_1_000">%s tys.</string>
@@ -33,7 +35,6 @@ Language: pl
     <string name="site_cannot_be_loaded">Nie możemy w tym momencie wyczytać danych dla twojej witryny. Proszę spróbować ponownie później.</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteka mediów WordPressa</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Pracujemy ciężko aby dodać więcj bloków z każdym wydaniem. W międzyczasie, możesz również edytować ten wpis na sieci.</string>
-    <string name="gutenberg_native_unsupported">Niewspierane</string>
     <string name="gutenberg_native_ungroup">Rozgrupuj</string>
     <string name="gutenberg_native_translate">Przetłumacz</string>
     <string name="gutenberg_native_title">Tytuł:</string>
@@ -53,7 +54,6 @@ Language: pl
     <string name="gutenberg_native_s_block">%s blok</string>
     <string name="gutenberg_native_row_d">Wiersz %d.</string>
     <string name="gutenberg_native_reset_block">Resetuj blok</string>
-    <string name="gutenberg_native_reset">RESETUJ</string>
     <string name="gutenberg_native_remove_block_at_row_s">Usuń blok we wierszu %s</string>
     <string name="gutenberg_native_remove_annotations">Usuń przypis</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem podczas otwierania filmu</string>
@@ -236,8 +236,6 @@ Language: pl
     <string name="site_settings_editor">Edytor</string>
     <string name="description_expand">Rozwiń</string>
     <string name="description_collapse">Zwiń</string>
-    <string name="editor_retry_failed_uploads">Prześlij ponownie</string>
-    <string name="editor_toast_failed_uploads">Nie udało się przesłać niektórych plików mediów.  Nie możesz zapisać lub opublikować\nswoich wpisów w tej sytuacji.  </string>
     <string name="my_site_verify_your_email_without_email">Sprawdź swój adres e-mailowy - instrukcje zostały wysłane na twój e-mail</string>
     <string name="my_site_verify_your_email">Sprawdź swój adres e-mailowy - instrukcje zostały wysłane na adres %s</string>
     <string name="link_dialog_button_cancel">Anuluj</string>
@@ -727,7 +725,7 @@ Language: pl
     <string name="activity_log_rewind_started_snackbar_message">Twoja witryna jest w trakcie przywracania\nPrzywracanie do stanu z %1$s %2$s</string>
     <string name="activity_log_button">Przycisk aktywności logu/dziennika aktywności</string>
     <string name="plugin_auto_managed">Zarządzane automatycznie</string>
-    <string name="reader_save_posts_locally_dialog_message">Zapisz ten wpis i wróć do niego w późniejszym czasie. Będzie dostępny jedynie na tym urządzeniu - zapisane wpisy nie synchronizują się na innych urządzeniach. (Jeszcze nie! Pracujemy nad tym.)</string>
+    <string name="reader_save_posts_locally_dialog_message">Zapisz ten wpis i wróć do niego w późniejszym czasie. Będzie dostępny jedynie na tym urządzeniu - zapisane wpisy nie synchronizują się na innych twoich urządzeniach.</string>
     <string name="reader_save_posts_locally_dialog_title">Zapisz wpis na później</string>
     <string name="reader_empty_search_request_failed">Nie można było wykonać wyszukiwania</string>
     <string name="reader_empty_search_title">Nie znaleziono wyników wyszukiwania</string>
@@ -752,7 +750,6 @@ Language: pl
     <string name="reader_add_bookmark">Dodaj do zapisanych wpisów</string>
     <string name="reader_save_for_later_title">Zapisane wpisy</string>
     <string name="removed">Usunięto</string>
-    <string name="tabbar_accessibility_label_write">Nowy wpis. Napisz nowy wpis.</string>
     <string name="my_site_icon_content_description">Zmień ikonę witryny</string>
     <string name="my_site_icon_dialog_cancel_button">Anuluj</string>
     <string name="my_site_icon_dialog_remove_button">Usuń</string>
@@ -783,7 +780,6 @@ Language: pl
     <string name="preference_privacy_settings">Ustawienia prywatności</string>
     <string name="preference_collect_information">Zbieranie informacji</string>
     <string name="post_submitted">Zamieszczono wpis</string>
-    <string name="write_post">Napisz wpis</string>
     <string name="login_email_button_signup">Nie masz konta? %1$sZarejestruj się%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funkcja wtyczki wymaga, aby witryna była w dobrej kondycji.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funkcjonalność wtyczek wymaga aby subskrypcja domeny głównej była przypisana do tego użytkownika.</string>
@@ -1338,7 +1334,6 @@ Language: pl
     <string name="sharing">Udostępnianie</string>
     <string name="tabbar_accessibility_label_notifications">Powiadomienia. Zarządzaj powiadomieniami.</string>
     <string name="tabbar_accessibility_label_reader">Czytnik. Śledź treści z innych witryn.</string>
-    <string name="tabbar_accessibility_label_me">Ja. Zobacz swój profil i wprowadź zmiany.</string>
     <string name="tabbar_accessibility_label_my_site">Moja witryna. Zobacz swoją witrynę i zarządzaj ją.</string>
     <string name="my_site_btn_sharing">Udostępnianie</string>
     <string name="button_not_now">Nie teraz</string>

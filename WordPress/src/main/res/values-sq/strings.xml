@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-17 21:44:20+0000
+Translation-Revision-Date: 2020-01-21 18:34:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">Hiqe Figurën</string>
+    <string name="gutenberg_native_move_image_forward">Lëvize Figurën Përpara</string>
+    <string name="gutenberg_native_move_image_backward">Lëvize Figurën Mbrapsht</string>
+    <string name="gutenberg_native_gallery_caption_s">Përshkrim galerie. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Vlera e tanishme është %2$s</string>
+    <string name="create_post_page_fab_tooltip">Krijoni një postim ose faqe</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">Prekni %1$s Shtoni Postim %2$s që të krijohet një postim i ri.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Prekni %1$s Postime Blogu %2$s që të vazhdohet.</string>
+    <string name="content_description_person_building_website">Personi që po krijon sajt</string>
+    <string name="post_signup_interstitial_not_right_now">Jo tani</string>
+    <string name="post_signup_interstitial_subtitle">Çfarëdo që doni të krijoni ose ndani me të tjerët, do t’ju ndihmojmë ta bëni mu këtu.</string>
+    <string name="post_signup_interstitial_title">Mirë se vini në WordPress</string>
+    <string name="stock_media_picker_list_content_description">Fototekë</string>
+    <string name="photo_picker_image_thumbnail_unselected">U shpërzgjodh figurë</string>
+    <string name="photo_picker_image_selected">,E përzgjedhur</string>
+    <string name="photo_picker_image_thumbnail_selected">U përzgjodh figurë</string>
+    <string name="photo_picker_image_thumbnail_content_description">Miniaturë Figure</string>
+    <string name="my_site_bottom_sheet_add_post">Postim blogu</string>
+    <string name="my_site_bottom_sheet_title">Shtoni të ri</string>
+    <string name="post_settings_publish">Botoje</string>
+    <string name="dialog_gutenberg_informative_description_v2">Bëmë përmirësime të mëdha te përpunuesi me blloqe dhe mendojmë se ia vlen të provohet! E kemi aktivizuar për postime dhe faqe të reja, por nëse doni të ktheheni te përpunuesi klasik, shkoni te \'Sajti Im\' > \'Rregullime Sajti\'.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Njëkohësoje tani</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">Ky postim do të njëkohësohet menjëherë.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">Gati për Njëkohësim?</string>
+    <string name="new_site_creation_unavailable_domain">Kjo përkatësi s’është e lirë</string>
+    <string name="login_promo_viewpager_content_description">Hyrje</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">S’qemë në gjendje të hyjmë në sajtin tuaj. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
     <string name="login_discovery_error_ssl">S’qemë në gjendje të hyjmë në sajtin tuaj, për shkak të një problemi me &lt;b>Dëshminë SSL&lt;/b>. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
     <string name="login_discovery_error_http_auth">S’qemë në gjendje të hyjmë në sajtin tuaj, ngaqë lyp &lt;b>Mirëfilltësim HTTP&lt;/b>. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
@@ -14,8 +41,7 @@ Language: sq_AL
     <string name="enter_site_credentials_instead">Hyni me kredenciale sajti</string>
     <string name="enter_credentials_for_site">Hyni me kredencialet tuaja për sajtin %1$s</string>
     <string name="send_verification_email">Dërgo email verifikimi</string>
-    <string name="my_site_bottom_sheet_add_page">Krijoni faqe të re</string>
-    <string name="my_site_bottom_sheet_add_post">Krijoni një postim të ri</string>
+    <string name="my_site_bottom_sheet_add_page">Faqe sajti</string>
     <string name="reader_following_display_name">Ndjekur prej jush</string>
     <string name="posts_cannot_be_started">S’i hapim dot postimet tani. Ju lutemi, riprovoni më vonë</string>
     <string name="suffix_1_000">%sk</string>
@@ -33,7 +59,6 @@ Language: sq_AL
     <string name="site_cannot_be_loaded">S’ngarkojmë dot të dhënat për sajtin tuaj tani. Ju lutemi, riprovoni më vonë</string>
     <string name="gutenberg_native_wordpress_media_library">Mediatekë WordPress</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim. Ndërkohë mundeni ta përpunoni këtë postim edhe në internet.</string>
-    <string name="gutenberg_native_unsupported">E pambuluar</string>
     <string name="gutenberg_native_ungroup">Hiqi Grupin</string>
     <string name="gutenberg_native_translate">Përktheni</string>
     <string name="gutenberg_native_title">Titull:</string>
@@ -161,7 +186,7 @@ Language: sq_AL
     <string name="post_waiting_for_connection_private">Do ta botojmë postimin tuaj privat kur pajisja juaj të jetë sërish në linjë.</string>
     <string name="post_waiting_for_connection_scheduled">Do ta vëmë në plan postimin tuaj kur pajisja juaj të jetë sërish në linjë.</string>
     <string name="post_waiting_for_connection_pending">Do ta parashtrojmë për shqyrtim postimin tuaj kur pajisja juaj të jetë sërish në linjë.</string>
-    <string name="post_waiting_for_connection_publish">Do ta botojmë postimin kur pajisja juaj të jetë sërish në linjë</string>
+    <string name="post_waiting_for_connection_publish">Do ta botojmë postimin kur pajisja juaj të jetë sërish në linjë.</string>
     <string name="settings_username_changer_snackbar_cancel">Ky veprim s\'mund të anulohet. Emri i përdoruesit mund të jetë përditësuar tashmë.</string>
     <string name="settings_username_changer_toast_content">Emri juaj i ri si përdorues është %1$s</string>
     <string name="settings_username_changer_progress_dialog">Po ruhet emër përdoruesi…</string>
@@ -235,8 +260,6 @@ Language: sq_AL
     <string name="site_settings_editor">Përpunues</string>
     <string name="description_expand">Zgjeroje</string>
     <string name="description_collapse">Tkurre</string>
-    <string name="editor_retry_failed_uploads">Riprovoni ngarkimin</string>
-    <string name="editor_toast_failed_uploads">Disa ngarkime mediash dështuan. S’mund ta ruani apo botoni\n        postimin tuaj në këtë gjendje.</string>
     <string name="my_site_verify_your_email_without_email">Kontrolloni adresën tuaj email - udhëzimet u dërguan te email-i juaj</string>
     <string name="my_site_verify_your_email">Verifikoni adresën tuaj email - udhëzimet u dërguan te %s</string>
     <string name="link_dialog_button_cancel">Anuloje</string>
@@ -725,7 +748,7 @@ Language: sq_AL
     <string name="activity_log_rewind_started_snackbar_message">Sajti juaj po rikthehet\nRikthim te %1$s %2$s</string>
     <string name="activity_log_button">Buton veprimesh Regjistri Veprimtarie</string>
     <string name="plugin_auto_managed">E vetëadministruar</string>
-    <string name="reader_save_posts_locally_dialog_message">Ruajeni këtë postim, dhe rikthejuni leximit kur të doni. Do ta keni vetëm në këtë pajisje — postimet e ruajtur nuk njëkohësohen në pajisje të tjera (Ende jo! Po punojmë për këtë).</string>
+    <string name="reader_save_posts_locally_dialog_message">Ruajeni këtë postim, dhe rikthejuni leximit kur të doni. Do ta keni vetëm në këtë pajisje — postimet e ruajtur nuk njëkohësohen në pajisje të tjera.</string>
     <string name="reader_save_posts_locally_dialog_title">Ruani Postime për Më Vonë</string>
     <string name="reader_empty_search_request_failed">S’arrihet të kryhet kërkimi</string>
     <string name="reader_empty_search_title">S’u gjetën përfundime</string>
@@ -750,7 +773,6 @@ Language: sq_AL
     <string name="reader_add_bookmark">Shtoje te postime të ruajtura</string>
     <string name="reader_save_for_later_title">Postime të ruajtur</string>
     <string name="removed">U hoq</string>
-    <string name="tabbar_accessibility_label_write">Postim i ri. Shkruani një postim të ri.</string>
     <string name="my_site_icon_content_description">Ndryshoni ikonë sajti</string>
     <string name="my_site_icon_dialog_cancel_button">Anuloje</string>
     <string name="my_site_icon_dialog_remove_button">Hiqe</string>
@@ -781,7 +803,6 @@ Language: sq_AL
     <string name="preference_privacy_settings">Rregullime privatësie</string>
     <string name="preference_collect_information">Grumbullo të dhëna</string>
     <string name="post_submitted">Postimi u parashtrua</string>
-    <string name="write_post">Shkruani Postim</string>
     <string name="login_email_button_signup">S’keni llogari? %1$sRegjistrohuni%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Veçoria e shtojcës lyp që sajti të jetë në rregull.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Veçoria e shtojcës lyp që pajtimi i përkatësisë parësore të jetë përshoqëruar me këtë përdorues.</string>
@@ -1336,7 +1357,6 @@ Language: sq_AL
     <string name="sharing">Ndarje Me të Tjerët</string>
     <string name="tabbar_accessibility_label_notifications">Njoftime. Administroni njoftimet tuaja.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Ndiqni lëndë nga sajte të tjerë.</string>
-    <string name="tabbar_accessibility_label_me">Unë. Shihni profilin tuaj dhe bëni ndryshime.</string>
     <string name="tabbar_accessibility_label_my_site">Sajti Im. Shiheni sajtin tuaj dhe administrojeni, përfshi statistika.</string>
     <string name="my_site_btn_sharing">Ndarje Me të Tjerët</string>
     <string name="button_not_now">Jo tani</string>

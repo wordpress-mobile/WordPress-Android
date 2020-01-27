@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-13 12:42:58+0000
+Translation-Revision-Date: 2020-01-22 00:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">Retirer l\'image</string>
+    <string name="gutenberg_native_move_image_forward">Déplacer l\'image vers l\'avant</string>
+    <string name="gutenberg_native_move_image_backward">Déplacer l\'image vers l\'arrière</string>
+    <string name="gutenberg_native_gallery_caption_s">Légende de la galerie. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. La valeur actuelle est %2$s</string>
+    <string name="create_post_page_fab_tooltip">Créer un article ou une page</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">Appuyez sur %1$s Ajouter un article %2$s pour créer un article.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Appuyez sur %1$s Articles de blog %2$s pour continuer.</string>
+    <string name="content_description_person_building_website">Personne en pleine création d\'un site Web</string>
+    <string name="post_signup_interstitial_not_right_now">Pas maintenant</string>
+    <string name="post_signup_interstitial_subtitle">Quoi que vous vouliez créer ou partager, nous vous y aiderons.</string>
+    <string name="post_signup_interstitial_title">Bienvenue dans WordPress</string>
+    <string name="stock_media_picker_list_content_description">Bibliothèque de photos</string>
+    <string name="photo_picker_image_thumbnail_unselected">Image désélectionnée</string>
+    <string name="photo_picker_image_selected">,sélectionnée</string>
+    <string name="photo_picker_image_thumbnail_selected">Image sélectionnée</string>
+    <string name="photo_picker_image_thumbnail_content_description">Miniature de l\'image</string>
+    <string name="my_site_bottom_sheet_add_post">Article de blog</string>
+    <string name="my_site_bottom_sheet_title">Ajouter</string>
+    <string name="post_settings_publish">Publier</string>
+    <string name="dialog_gutenberg_informative_description_v2">Nous avons apporté de grandes améliorations à l\'éditeur de blocs. Essayez-le vite ! Nous l\'avons rendu disponible pour les nouveaux articles et les nouvelles pages, mais si vous souhaitez repasser à l\'éditeur classique, accédez à « Mon site » > « Paramètres du site ».</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Synchroniser maintenant</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">Cet article sera synchronisé immédiatement.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">Prêt à synchroniser ?</string>
+    <string name="new_site_creation_unavailable_domain">Ce domaine n\'est pas disponible</string>
+    <string name="login_promo_viewpager_content_description">Introduction</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Nous n\'avons pas pu accéder à votre site. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
     <string name="login_discovery_error_ssl">Nous n\'avons pas pu accéder à votre site à cause d\'un problème avec le &lt;b>certificat SSL&lt;/b>. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
     <string name="login_discovery_error_http_auth">Nous n\'avons pas pu accéder à votre site car il requiert une &lt;b>authentification HTTP&lt;/b>. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
@@ -14,8 +41,6 @@ Language: fr
     <string name="enter_site_credentials_instead">Connexion avec les identifiants au site</string>
     <string name="enter_credentials_for_site">Connexion avec vos identifiants au site %1$s</string>
     <string name="send_verification_email">Envoyer l\'e-mail de vérification</string>
-    <string name="my_site_bottom_sheet_add_page">Créer une nouvelle page</string>
-    <string name="my_site_bottom_sheet_add_post">Créer un nouvel article</string>
     <string name="reader_following_display_name">Abonné</string>
     <string name="posts_cannot_be_started">Nous ne pouvons pas ouvrir les articles pour le moment. Réessayez ultérieurement.</string>
     <string name="suffix_1_000">%s mille</string>
@@ -156,8 +181,6 @@ Language: fr
     <string name="site_settings_editor">Éditeur</string>
     <string name="description_expand">Déplier</string>
     <string name="description_collapse">Replier</string>
-    <string name="editor_retry_failed_uploads">Retenter le téléversement</string>
-    <string name="editor_toast_failed_uploads">Certains téléversements ont échoué. Vous ne pouvez pas enregistrer ou publier votre article dans cet état.</string>
     <string name="my_site_verify_your_email_without_email">Vérifiez votre adresse de messagerie - Instructions envoyées dans votre e-mail</string>
     <string name="my_site_verify_your_email">Vérifiez votre adresse de messagerie - Instructions envoyées vers %s</string>
     <string name="link_dialog_button_cancel">Annuler</string>
@@ -647,7 +670,6 @@ Language: fr
     <string name="activity_log_rewind_started_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %1$s %2$s</string>
     <string name="activity_log_button">Bouton d’action de journal d’activité</string>
     <string name="plugin_auto_managed">Auto-géré</string>
-    <string name="reader_save_posts_locally_dialog_message">Enregistrez cet article, et revenez pour le lire quand vous le souhaitez. Il ne sera disponible que sur cet appareil — les articles enregistrés ne sont pas encore synchronisés avec les autres périphériques. (On y travaille.)</string>
     <string name="reader_save_posts_locally_dialog_title">Enregistrer les articles pour plus tard</string>
     <string name="reader_empty_search_request_failed">Impossible d’effectuer la recherche</string>
     <string name="reader_empty_search_title">Aucun résultat trouvé</string>
@@ -672,7 +694,6 @@ Language: fr
     <string name="reader_add_bookmark">Ajouter aux articles enregistrés</string>
     <string name="reader_save_for_later_title">Articles enregistrés</string>
     <string name="removed">Supprimé</string>
-    <string name="tabbar_accessibility_label_write">Nouvel article. Rédigez un nouvel article.</string>
     <string name="my_site_icon_content_description">Modifier l\'icône du site</string>
     <string name="my_site_icon_dialog_cancel_button">Annuler</string>
     <string name="my_site_icon_dialog_remove_button">Supprimer</string>
@@ -703,7 +724,6 @@ Language: fr
     <string name="preference_privacy_settings">Paramètres de confidentialité</string>
     <string name="preference_collect_information">Collecter des informations</string>
     <string name="post_submitted">Article envoyé</string>
-    <string name="write_post">Écrire un article</string>
     <string name="login_email_button_signup">Vous n\'avez pas encore de compte ? %1$sS\'inscrire%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">La fonctionnalité d\'extension requiert un site en règle.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Vous devez associer cet utilisateur et l’abonnement du domaine principal pour utiliser les extensions.</string>
@@ -1258,7 +1278,6 @@ Language: fr
     <string name="sharing">Partage</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Gérez vos notifications.</string>
     <string name="tabbar_accessibility_label_reader">Lecteur. Suivez le contenu d\'autres sites.</string>
-    <string name="tabbar_accessibility_label_me">Moi. Affichez votre profil et faites des modifications.</string>
     <string name="tabbar_accessibility_label_my_site">Mon site. Affichez votre site et gérez-le, y compris les statistiques.</string>
     <string name="my_site_btn_sharing">Partage</string>
     <string name="button_not_now">Pas maintenant</string>
