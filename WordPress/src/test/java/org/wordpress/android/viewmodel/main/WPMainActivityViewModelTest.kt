@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -52,6 +53,28 @@ class WPMainActivityViewModelTest {
     @Test
     fun `fab tooltip hidden when asked`() {
         viewModel.onPageChanged(false)
+        assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `fab tooltip disabled when tapped`() {
+        viewModel.onTooltipTapped()
+        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
+        assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `fab tooltip disabled when bottom sheet opened`() {
+        whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
+        viewModel.setIsBottomSheetShowing(true)
+        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
+        assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `fab tooltip disabled when fab long pressed`() {
+        viewModel.onFabLongPressed()
+        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
 

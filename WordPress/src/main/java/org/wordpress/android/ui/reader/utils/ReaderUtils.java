@@ -378,7 +378,7 @@ public class ReaderUtils {
 
                     // it's possible the default tag won't exist if the user just changed the app's
                     // language, in which case default to the first tag in the table
-                    if (!ReaderTagTable.tagExists(tag)) {
+                    if (!ReaderTagTable.tagExists(validTag)) {
                         validTag = ReaderTagTable.getFirstTag();
                     }
                 }

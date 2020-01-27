@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-27 13:10:40+0000
+Translation-Revision-Date: 2020-01-18 13:21:59+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">Görseli kaldır</string>
+    <string name="gutenberg_native_move_image_forward">Görseli öne taşı</string>
+    <string name="gutenberg_native_move_image_backward">Görseli geriye taşı</string>
+    <string name="gutenberg_native_gallery_caption_s">Galeri yazısı. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Mevcut değer %2$s</string>
+    <string name="create_post_page_fab_tooltip">Yazı veya sayfa oluştur</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">Yeni bir yazı oluşturmak için %1$s Yazı ekleye %2$s dokunun.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Devam etmek için %1$s Blog yazılarına %2$s dokunun.</string>
+    <string name="content_description_person_building_website">İnsan yapımı websitesi</string>
+    <string name="post_signup_interstitial_not_right_now">Şimdi değil</string>
+    <string name="post_signup_interstitial_subtitle">Oluşturmak veya paylaşmak istediğiniz her şeyi burada yapmanıza yardımcı olacağız.</string>
+    <string name="post_signup_interstitial_title">WordPress\'e hoşgeldiniz</string>
+    <string name="stock_media_picker_list_content_description">Fotoğraf kütüphanesi</string>
+    <string name="photo_picker_image_thumbnail_unselected">Görsel seçilmedi</string>
+    <string name="photo_picker_image_selected">,Seçildi</string>
+    <string name="photo_picker_image_thumbnail_selected">Görsel seçildi</string>
+    <string name="photo_picker_image_thumbnail_content_description">Görsel küçük resmi</string>
+    <string name="my_site_bottom_sheet_add_post">Blog yazısı</string>
+    <string name="my_site_bottom_sheet_title">Yeni ekle</string>
+    <string name="post_settings_publish">Yayımla</string>
+    <string name="dialog_gutenberg_informative_description_v2">Blok düzenleyicide büyük iyileştirmeler yaptık ve denemeye değer olduğunu düşünüyoruz! Yeni yazılar ve sayfalar için etkinleştirdik, ancak klasik düzenleyiciye geçmek isterseniz, \'Sitem\'> \'Site Ayarları\'na gidin.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Şimdi senkronize et</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">Bu yazı hemen yayınlanacak.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">Senkronize etmeye hazır mısınız?</string>
+    <string name="new_site_creation_unavailable_domain">Bu alan adı kullanılamaz.</string>
+    <string name="login_promo_viewpager_content_description">Önsöz</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Sitenize erişimi başaramadık. Bu sorunu çözmek için sunucunuza ulaşmanız gerekecektir.</string>
     <string name="login_discovery_error_ssl">&lt;b>SSL Sertifikası&lt;/b> ile ilgili bir sorun nedeniyle sitenize erişemedik. Bu sorunu çözmek için sunucunuza ulaşmanız gerekecektir.</string>
     <string name="login_discovery_error_http_auth">&lt;b>HTTP Kimlik Doğrulaması&lt;/b> gerektiğinden sitenize erişemedik. Bu sorunu çözmek için sunucunuza ulaşmanız gerekecektir.</string>
@@ -14,8 +41,7 @@ Language: tr
     <string name="enter_site_credentials_instead">Site kimlik bilgileriyle giriş yapın</string>
     <string name="enter_credentials_for_site">%1$s site kimlik bilginizle giriş yapın</string>
     <string name="send_verification_email">Doğrulama e-postası gönder</string>
-    <string name="my_site_bottom_sheet_add_page">Yeni sayfa oluştur</string>
-    <string name="my_site_bottom_sheet_add_post">Yeni gönderi oluştur</string>
+    <string name="my_site_bottom_sheet_add_page">Site sayfası</string>
     <string name="reader_following_display_name">Takip Ediliyor</string>
     <string name="posts_cannot_be_started">Şu anda gönderileri açamıyoruz. Lütfen daha sonra tekrar deneyin</string>
     <string name="suffix_1_000">%sk</string>
@@ -33,7 +59,6 @@ Language: tr
     <string name="site_cannot_be_loaded">Şu anda siteniz için veri yüklemesi yapamıyoruz. Lütfen daha sonra tekrar deneyin</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress Ortam Kütüphanesi</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz. Bu arada, bu gönderiyi web’de de düzenleyebilirsiniz.</string>
-    <string name="gutenberg_native_unsupported">Desteklenmeyen</string>
     <string name="gutenberg_native_ungroup">Gruplamayı Kaldır</string>
     <string name="gutenberg_native_translate">Çevir</string>
     <string name="gutenberg_native_title">Başlık:</string>
@@ -53,7 +78,6 @@ Language: tr
     <string name="gutenberg_native_s_block">%s bloğu</string>
     <string name="gutenberg_native_row_d">\"%d. satır</string>
     <string name="gutenberg_native_reset_block">Bloğu sıfırla</string>
-    <string name="gutenberg_native_reset">SIFIRLA</string>
     <string name="gutenberg_native_remove_block_at_row_s">%s. satırdaki bloğu kaldır</string>
     <string name="gutenberg_native_remove_annotations">Ek açıklamaları kaldır</string>
     <string name="gutenberg_native_problem_opening_the_video">Video açılırken bir sorun oluştu</string>
@@ -236,8 +260,6 @@ Language: tr
     <string name="site_settings_editor">Düzenleyici</string>
     <string name="description_expand">Genişlet</string>
     <string name="description_collapse">Daralt</string>
-    <string name="editor_retry_failed_uploads">Yüklemeyi yeniden dene</string>
-    <string name="editor_toast_failed_uploads">Bazı ortam yüklemeleri başarısız oldu. Yazınızı bu durumda \nkaydedemez veya yayınlayamazsınız.</string>
     <string name="my_site_verify_your_email_without_email">E-posta adresinizi doğrulayın - talimatlar e-postanıza gönderildi</string>
     <string name="my_site_verify_your_email">E-posta adresinizi doğrulayın - talimatlar %s gönderildi</string>
     <string name="link_dialog_button_cancel">İptal</string>
@@ -727,7 +749,7 @@ Language: tr
     <string name="activity_log_rewind_started_snackbar_message">Siteniz geri yüklendi\n%1$s %2$s durumuna geri alınıyor</string>
     <string name="activity_log_button">Etkinlik kaydı eylem düğmesi</string>
     <string name="plugin_auto_managed">Otomatik yönetilen</string>
-    <string name="reader_save_posts_locally_dialog_message">Bu yazıyı saklayın ve istediğiniz zaman okumak için geri dönün. Yalnızca bu cihazda kullanılabilir; kaydedilen yazılar diğer cihazlarınızla senkronize edilmez. (Henüz! Üzerinde çalışıyoruz.)</string>
+    <string name="reader_save_posts_locally_dialog_message">Bu yazıyı saklayın ve istediğiniz zaman okumak için geri dönün. Yalnızca bu cihazda kullanılabilir; kaydedilen yazılar diğer cihazlarınızla senkronize edilmez.</string>
     <string name="reader_save_posts_locally_dialog_title">Yazıyı sonrası için kaydet</string>
     <string name="reader_empty_search_request_failed">Arama yapılamıyor</string>
     <string name="reader_empty_search_title">Sonuç bulunamadı</string>
@@ -752,7 +774,6 @@ Language: tr
     <string name="reader_add_bookmark">Kaydedilen yazılara ekle</string>
     <string name="reader_save_for_later_title">Kaydedilen gönderiler</string>
     <string name="removed">Kaldırıldı</string>
-    <string name="tabbar_accessibility_label_write">Yeni yazı. Yeni bir yazı yazın.</string>
     <string name="my_site_icon_content_description">Site simgesini değiştir</string>
     <string name="my_site_icon_dialog_cancel_button">İptal</string>
     <string name="my_site_icon_dialog_remove_button">Kaldır</string>
@@ -783,7 +804,6 @@ Language: tr
     <string name="preference_privacy_settings">Gizlilik ayarları</string>
     <string name="preference_collect_information">Bilgi topla</string>
     <string name="post_submitted">Yazı gönderildi</string>
-    <string name="write_post">Yazı yaz</string>
     <string name="login_email_button_signup">Hesabınız yok mu? %1$sKaydolun%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Eklenti özelliği sitenin olumlu itibara sahip olmasını gerektirir.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Eklenti özelliği birincil alan adı aboneliğinin bu kullanıcıyla ilişkilendirilmesini gerektirir.</string>
@@ -1338,7 +1358,6 @@ Language: tr
     <string name="sharing">Paylaşım</string>
     <string name="tabbar_accessibility_label_notifications">Bildirimler. Bildirimlerinizi yönetin.</string>
     <string name="tabbar_accessibility_label_reader">Okuyucu. Diğer sitelerden içerikleri takip edin.</string>
-    <string name="tabbar_accessibility_label_me">Ben. Profilinizi görüntüleyin ve değişiklik yapın.</string>
     <string name="tabbar_accessibility_label_my_site">Sitem. Sitenizi görüntüleyin, yönetin ve istatistikleri inceleyin.</string>
     <string name="my_site_btn_sharing">Paylaşım</string>
     <string name="button_not_now">Şimdi değil</string>

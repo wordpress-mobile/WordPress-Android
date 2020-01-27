@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:contentDescription="@string/stats_posting_activity_graph">
+    android:importantForAccessibility="no">
 
-    <include
+<include
         android:id="@+id/first_activity"
         layout="@layout/stats_block_single_activity"
         android:layout_width="0dp"
