@@ -86,7 +86,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "14.0"
             }
-            versionCode 818
+            versionCode 819
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
