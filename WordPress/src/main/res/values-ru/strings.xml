@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-17 10:12:52+0000
+Translation-Revision-Date: 2020-01-15 16:10:07+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">Удалить изображение</string>
+    <string name="gutenberg_native_move_image_forward">Переместить изображение вперед</string>
+    <string name="gutenberg_native_move_image_backward">Переместить изображение назад</string>
+    <string name="gutenberg_native_gallery_caption_s">Подпись галереи. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Текущее значение - %2$s</string>
+    <string name="create_post_page_fab_tooltip">Создать запись или страницу</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">Нажмите %1$s Создать запись %2$s для создания новой записи.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Нажмите %1$s Записи блога %2$s для продолжения.</string>
+    <string name="content_description_person_building_website">Личность, создающая сайт</string>
+    <string name="post_signup_interstitial_not_right_now">Не сейчас</string>
+    <string name="post_signup_interstitial_subtitle">Хотите ли вы создавать или делиться - мы поможем вам.</string>
+    <string name="post_signup_interstitial_title">Добро пожаловать в WordPress!</string>
+    <string name="stock_media_picker_list_content_description">Библиотека фотографий</string>
+    <string name="photo_picker_image_thumbnail_unselected">Выделение изображения снято</string>
+    <string name="photo_picker_image_selected">,Выбрано</string>
+    <string name="photo_picker_image_thumbnail_selected">Изображение выбрано</string>
+    <string name="photo_picker_image_thumbnail_content_description">Миниатюра</string>
+    <string name="my_site_bottom_sheet_add_post">Запись блога</string>
+    <string name="my_site_bottom_sheet_title">Добавить</string>
+    <string name="post_settings_publish">Опубликовать</string>
+    <string name="dialog_gutenberg_informative_description_v2">Мы значительно улучшили редактор блоков. Вы должны его попробовать! Мы включили редактор блоков для новых записей и страниц. Если вы захотите вернуться на классический редактор, то перейдите в \'Мой сайт\' > \'Настройки сайта\'.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Синхронизировать сейчас</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">Эта запись будет синхронизирована прямо сейчас.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">Готовы начать синхронизацию?</string>
+    <string name="new_site_creation_unavailable_domain">Этот домен недоступен</string>
+    <string name="login_promo_viewpager_content_description">Вступление</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Мы не смогли подключиться к сайту. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
     <string name="login_discovery_error_ssl">Мы не смогли подключиться к сайту, поскольку имеется проблема с &lt;b>сертификатом SSL&lt;/b>. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
     <string name="login_discovery_error_http_auth">Мы не смогли подключиться к сайту, поскольку он требует &lt;b>HTTP авторизации&lt;/b>. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
@@ -14,8 +41,7 @@ Language: ru
     <string name="enter_site_credentials_instead">Войдите с именем пользователя и паролем для сайта</string>
     <string name="enter_credentials_for_site">Войдите с именем пользователя и паролем для сайта %1$s</string>
     <string name="send_verification_email">Отправить письмо с подтверждением</string>
-    <string name="my_site_bottom_sheet_add_page">Создать страницу</string>
-    <string name="my_site_bottom_sheet_add_post">Создать запись</string>
+    <string name="my_site_bottom_sheet_add_page">Страница сайта</string>
     <string name="reader_following_display_name">Подписчик</string>
     <string name="posts_cannot_be_started">Сейчас невозможно загрузить записи вашего сайта. Попробуйте позже.</string>
     <string name="suffix_1_000">%sк</string>
@@ -33,7 +59,6 @@ Language: ru
     <string name="site_cannot_be_loaded">Сейчас невозможно загрузить данные для вашего сайта. Попробуйте позже.</string>
     <string name="gutenberg_native_wordpress_media_library">Медиатека WordPress</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Мы стараемся добавить больше блоков в каждом выпуске. А пока вы также можете отредактировать эту запись в веб-браузере.</string>
-    <string name="gutenberg_native_unsupported">Не поддерживается</string>
     <string name="gutenberg_native_ungroup">Разгруппировать</string>
     <string name="gutenberg_native_translate">Перевести</string>
     <string name="gutenberg_native_title">Заголовок:</string>
@@ -53,7 +78,6 @@ Language: ru
     <string name="gutenberg_native_s_block">Блок %s</string>
     <string name="gutenberg_native_row_d">Ряд %d.</string>
     <string name="gutenberg_native_reset_block">Сбросить блок</string>
-    <string name="gutenberg_native_reset">СБРОСИТЬ</string>
     <string name="gutenberg_native_remove_block_at_row_s">Убрать блок в ряду %s</string>
     <string name="gutenberg_native_remove_annotations">Удалить аннотации</string>
     <string name="gutenberg_native_problem_opening_the_video">Проблема с открытием видео</string>
@@ -236,8 +260,6 @@ Language: ru
     <string name="site_settings_editor">Редактор</string>
     <string name="description_expand">Развернуть</string>
     <string name="description_collapse">Свернуть</string>
-    <string name="editor_retry_failed_uploads">Повторить загрузку</string>
-    <string name="editor_toast_failed_uploads">Некоторые загрузки медиафайлов неудачны.\n Вы не можете сохранить или опубликовать запись.</string>
     <string name="my_site_verify_your_email_without_email">Проверьте ваш адрес электронной почты, на него были посланы инструкции</string>
     <string name="my_site_verify_your_email">Проверьте ваш адрес электронной почты, инструкции отосланы на %s</string>
     <string name="link_dialog_button_cancel">Отмена</string>
@@ -727,7 +749,7 @@ Language: ru
     <string name="activity_log_rewind_started_snackbar_message">Ваш сайт в процессе восстановления\nОткат на %1$s %2$s</string>
     <string name="activity_log_button">Кнопка действий с журналом активности</string>
     <string name="plugin_auto_managed">Управляется автоматически</string>
-    <string name="reader_save_posts_locally_dialog_message">Сохраните эту запись и вернитесь к её чтению в любое время. Это будет доступно только на этом устройстве (Мы работаем над синхронизацией с другими устройствами!).</string>
+    <string name="reader_save_posts_locally_dialog_message">Сохраните эту запись и вернитесь к её чтению в любое время. Это будет доступно только на этом устройстве, сохраненные записи не синхронизируюся между устройствами.</string>
     <string name="reader_save_posts_locally_dialog_title">Сохранить запись на потом</string>
     <string name="reader_empty_search_request_failed">Невозможно совершить поиск</string>
     <string name="reader_empty_search_title">Результатов не найдено</string>
@@ -752,7 +774,6 @@ Language: ru
     <string name="reader_add_bookmark">Добавить в сохраненные записи</string>
     <string name="reader_save_for_later_title">Сохраненные записи</string>
     <string name="removed">Удалено</string>
-    <string name="tabbar_accessibility_label_write">Новая запись. Написать новую запись.</string>
     <string name="my_site_icon_content_description">Сменить значок сайта</string>
     <string name="my_site_icon_dialog_cancel_button">Отменить</string>
     <string name="my_site_icon_dialog_remove_button">Удалить</string>
@@ -783,7 +804,6 @@ Language: ru
     <string name="preference_privacy_settings">Настройки конфиденциальности</string>
     <string name="preference_collect_information">Сбор информации</string>
     <string name="post_submitted">Запись отправлена</string>
-    <string name="write_post">Написать запись</string>
     <string name="login_email_button_signup">Еще нет учетной записи? %1$sЗарегистрируйтесь%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Возможность установки плагинов требует, чтобы сайт не был в серых списках.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Возможность установки плагинов требует связи подписки основного домена и этого пользователя.</string>
@@ -1338,7 +1358,6 @@ Language: ru
     <string name="sharing">Поделиться</string>
     <string name="tabbar_accessibility_label_notifications">Уведомления. Управление уведомлениями.</string>
     <string name="tabbar_accessibility_label_reader">Чтиво. Подписка на материалы других сайтов.</string>
-    <string name="tabbar_accessibility_label_me">Я. Просмотр профиля и внесение изменений.</string>
     <string name="tabbar_accessibility_label_my_site">Мой сайт. Просмотр сайта и управление параметрами, включая статистику.</string>
     <string name="my_site_btn_sharing">Поделиться</string>
     <string name="button_not_now">Не сейчас</string>

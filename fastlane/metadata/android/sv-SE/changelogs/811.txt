@@ -1,3 +1,0 @@
-13.9:
-• Nyheter i blockredigeraren: Nytt galleri-block för bildgallerier med filer från mediabiblioteket, och även stöd för ett förformaterat block.
-• Förbättringar i blockredigeraren: Nu finns det stöd för inställningar i list- och videoblock.

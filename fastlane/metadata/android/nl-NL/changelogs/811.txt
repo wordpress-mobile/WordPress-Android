@@ -1,3 +1,0 @@
-13.9:
-• Aanvullingen op de blokeditor: We hebben een nieuw Galerijblok toegevoegd om afbeeldinggalerijen te maken met bestanden uit je Mediabibliotheek, en ondersteuning voor het Vooraf ingesteld-blok.
-• Verbeteringen aan de blokeditor: Toegevoegde ondersteuning voor instellingen in de Lijst- en videoblokken.

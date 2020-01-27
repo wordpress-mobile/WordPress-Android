@@ -1,0 +1,4 @@
+14.0:
+- Blokeditor: Soms crashte de blokeditor wanneer je iets ongedaan wilde maken, waardoor er iets teveel ongedaan werd gemaakt. Dat is nu opgelost, net als een bug die invloed had op de placeholders van afbeeldingen.
+- Het gedeelte 'Ik' in de app is nu verplaatst naar 'Mijn site'.
+- Er is een zwevende activatieknop toegevoegd aan Mijn site om snel nieuwe berichten en pagina's te kunnen maken.
