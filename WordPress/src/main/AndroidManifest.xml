@@ -649,6 +649,9 @@
             android:exported="false"
             android:label="Site Creation Service" />
 
+        <!-- OkHttp is based on apache http library -->
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
         <!-- Samsung multiwindow support -->
         <uses-library
             android:name="com.sec.android.app.multiwindow"
