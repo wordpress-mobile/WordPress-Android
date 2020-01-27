@@ -1,13 +1,9 @@
 package org.wordpress.android.imageeditor
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityOptionsCompat
 import androidx.navigation.fragment.NavHostFragment
 
 class EditImageActivity : AppCompatActivity() {
@@ -42,16 +38,5 @@ class EditImageActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        fun startIntent(context: Context, intent: Intent) {
-            val options = ActivityOptionsCompat.makeCustomAnimation(
-                    context,
-                    R.anim.fade_in,
-                    R.anim.fade_out
-            )
-            ActivityCompat.startActivity(context, intent, options.toBundle())
-        }
     }
 }
