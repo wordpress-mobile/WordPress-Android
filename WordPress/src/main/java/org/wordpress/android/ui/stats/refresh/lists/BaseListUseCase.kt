@@ -122,7 +122,7 @@ class BaseListUseCase(
                 }
             }
         } else {
-            mutableSnackbarMessage.value = R.string.stats_site_not_loaded_yet
+            mutableSnackbarMessage.postValue(R.string.stats_site_not_loaded_yet)
         }
     }
 

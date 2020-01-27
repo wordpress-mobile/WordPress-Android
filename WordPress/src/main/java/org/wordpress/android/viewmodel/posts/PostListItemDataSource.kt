@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.PostSummary
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
@@ -31,6 +32,21 @@ sealed class PostListItemIdentifier {
     data class SectionHeaderIdentifier(val type: PostListType) : PostListItemIdentifier()
 }
 
+/**
+ * This is the post list data source to be used by `ListStore`. Before making any changes, it's important to know:
+ *
+ * 1. Lists managed by `ListStore` works by first fetching a smaller version of the models and then fetching the
+ * actual model if necessary.
+ * 2. During [getItemIdentifiers] the actual models might not be available and should not be relied upon. For post list
+ * specifically, we have [PostSummary] that's always available. If a field that's not in the [PostSummary] is necessary
+ * in [getItemIdentifiers], one should add that to [PostSummary] in FluxC and make sure that field is fetched
+ * and updated in [PostStore].
+ * 3. In [getItemsAndFetchIfNecessary], if the actual model is not available, this class is responsible for fetching
+ * that model. For this post list specifically, when the actual model is fetched the list will update itself.
+ *
+ * // TODO: We can add a link to the wiki for ListStore when that's available.
+ * For more information, please see the documentation for `ListStore` components.
+ */
 class PostListItemDataSource(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
@@ -48,15 +64,11 @@ class PostListItemDataSource(
         remoteItemIds: List<RemoteId>,
         isListFullyFetched: Boolean
     ): List<PostListItemIdentifier> {
-        val localItems = postStore.getLocalPostIdsForDescriptor(listDescriptor)
-                .map { LocalPostId(id = it) }
-        val remoteItems = remoteItemIds.map { RemotePostId(id = it) }
-        val actualItems: List<PostListItemIdentifier>
-
-        if (postListType == SEARCH) {
-            actualItems = getGroupedItemIdentifiers(listDescriptor, localItems + remoteItems)
+        val localPostIds = postStore.getLocalPostIdsForDescriptor(listDescriptor)
+        val actualItems: List<PostListItemIdentifier> = if (postListType == SEARCH) {
+            getGroupedItemIdentifiers(listDescriptor, localPostIds, remoteItemIds)
         } else {
-            actualItems = localItems + remoteItems
+            localPostIds.map { LocalPostId(id = it) } + remoteItemIds.map { RemotePostId(id = it) }
         }
 
         // We only want to show the end list indicator if the list is fully fetched and it's not empty
@@ -91,7 +103,7 @@ class PostListItemDataSource(
     private fun localOrRemoteIdsFromPostListItemIds(
         itemIdentifiers: List<PostListItemIdentifier>
     ): List<LocalOrRemoteId> {
-        val localOrRemoteIds = itemIdentifiers.mapNotNull {
+        return itemIdentifiers.mapNotNull {
             when (it) {
                 is LocalPostId -> it.id
                 is RemotePostId -> it.id
@@ -100,7 +112,6 @@ class PostListItemDataSource(
                 is SectionHeaderIdentifier -> null
             }
         }
-        return localOrRemoteIds
     }
 
     private fun fetchMissingRemotePosts(
@@ -128,30 +139,28 @@ class PostListItemDataSource(
 
     private fun getGroupedItemIdentifiers(
         listDescriptor: PostListDescriptor,
-        itemIdentifiers: List<PostListItemIdentifier>
+        localPostIds: List<LocalId>,
+        remotePostIds: List<RemoteId>
     ): List<PostListItemIdentifier> {
-        val localOrRemoteIds = localOrRemoteIdsFromPostListItemIds(itemIdentifiers)
-        val postList = postStore.getPostsByLocalOrRemotePostIds(localOrRemoteIds, listDescriptor.site)
         val listDrafts = mutableListOf<PostListItemIdentifier>()
         val listPublished = mutableListOf<PostListItemIdentifier>()
         val listScheduled = mutableListOf<PostListItemIdentifier>()
         val listTrashed = mutableListOf<PostListItemIdentifier>()
-        val mapToPostListItemIdentifier = { post: PostModel ->
-            if (post.remotePostId != 0L) {
-                RemotePostId(RemoteId(post.remotePostId))
-            } else {
-                LocalPostId(LocalId(post.id))
-            }
-        }
 
-        postList.forEach {
-            when (PostListType.fromPostStatus(PostStatus.fromPost(it))) {
-                PostListType.DRAFTS -> listDrafts.add(mapToPostListItemIdentifier(it))
-                PostListType.PUBLISHED -> listPublished.add(mapToPostListItemIdentifier(it))
-                PostListType.SCHEDULED -> listScheduled.add(mapToPostListItemIdentifier(it))
-                TRASHED -> listTrashed.add(mapToPostListItemIdentifier(it))
+        val localIdentifiers = postStore.getPostsByLocalOrRemotePostIds(localPostIds, listDescriptor.site)
+                .map { Pair(PostStatus.fromPost(it), LocalPostId(LocalId(it.id))) }
+        val remoteIdentifiers = postStore.getPostSummaries(
+                listDescriptor.site,
+                remotePostIds.map { it.value }).map { Pair(it.status, RemotePostId(RemoteId(it.remoteId))) }
+
+        (localIdentifiers + remoteIdentifiers).forEach {
+            when (PostListType.fromPostStatus(it.first)) {
+                PostListType.DRAFTS -> listDrafts.add(it.second)
+                PostListType.PUBLISHED -> listPublished.add(it.second)
+                PostListType.SCHEDULED -> listScheduled.add(it.second)
+                TRASHED -> listTrashed.add(it.second)
                 // We are grouping Post results into display groups. Search isn't a valid post type so it can be ignored.
-                PostListType.SEARCH -> {}
+                SEARCH -> {}
             }
         }
 
