@@ -57,7 +57,7 @@ android {
         } else {
             versionName "alpha-205"
         }
-        versionCode 817
+        versionCode 820
         minSdkVersion 21
         targetSdkVersion 28
 
