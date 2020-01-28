@@ -3,6 +3,8 @@ package org.wordpress.android.viewmodel.pages
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,6 +27,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.test
 import org.wordpress.android.ui.uploads.PostEvents
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -45,6 +48,7 @@ class PagesViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var actionPerformer: ActionPerformer
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock lateinit var uploadStarter: UploadStarter
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
@@ -62,7 +66,8 @@ class PagesViewModelTest {
                 previewStateHelper = mock(),
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
-                eventBusWrapper = mock()
+                eventBusWrapper = mock(),
+                uploadStarter = uploadStarter
         )
         listStates = mutableListOf()
         pages = mutableListOf()
@@ -181,6 +186,26 @@ class PagesViewModelTest {
 
         // Then
         assertThat(viewModel.arePageActionsEnabled).isTrue()
+    }
+
+    @Test
+    fun `Auto-upload is initiated when the user enters the screen`() {
+        // Given
+        // When
+        viewModel.start(site)
+        // Then
+        verify(uploadStarter).queueUploadFromSite(site)
+    }
+
+    @Test
+    fun `Auto-upload is initiated when the user pulls to refresh`() {
+        // Given
+        viewModel.start(site)
+        // When
+        viewModel.onPullToRefresh()
+        // Then
+        // invoked twice - once in start() and once in onPullToRefresh()
+        verify(uploadStarter, times(2)).queueUploadFromSite(site)
     }
 
     private suspend fun setUpPageStoreWithEmptyPages() {
