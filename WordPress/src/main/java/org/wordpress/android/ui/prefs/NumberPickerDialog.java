@@ -55,7 +55,11 @@ public class NumberPickerDialog extends DialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+        int topOffset = getResources().getDimensionPixelOffset(R.dimen.settings_fragment_dialog_vertical_inset);
+
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity())
+                .setBackgroundInsetTop(topOffset)
+                .setBackgroundInsetBottom(topOffset);
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
         TextView switchText = view.findViewById(R.id.number_picker_text);
         mSwitch = view.findViewById(R.id.number_picker_switch);

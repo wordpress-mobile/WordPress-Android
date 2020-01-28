@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.radiobutton.MaterialRadioButton;
@@ -106,7 +107,11 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         txtHelp.setOnClickListener(
                 v -> ActivityLauncher.openUrlExternal(v.getContext(), Constants.URL_DATETIME_FORMAT_HELP));
 
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
+        int topOffset = getResources().getDimensionPixelOffset(R.dimen.settings_fragment_dialog_vertical_inset);
+
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity())
+                .setBackgroundInsetTop(topOffset)
+                .setBackgroundInsetBottom(topOffset);
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
         builder.setView(view);

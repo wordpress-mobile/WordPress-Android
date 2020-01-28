@@ -77,7 +77,11 @@ public class DetailListPreference extends ListPreference
     protected void showDialog(Bundle state) {
         Context context = getContext();
         Resources res = context.getResources();
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+        int topOffset = res.getDimensionPixelOffset(R.dimen.settings_fragment_dialog_vertical_inset);
+
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(context)
+                .setBackgroundInsetTop(topOffset)
+                .setBackgroundInsetBottom(topOffset);
 
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
         builder.setPositiveButton(android.R.string.ok, this);

@@ -260,6 +260,7 @@
     <dimen name="related_posts_dialog_padding_bottom">12dp</dimen>
     <dimen name="list_divider_height">1dp</dimen>
     <dimen name="list_editor_input_max_width">500dp</dimen>
+    <dimen name="settings_fragment_dialog_vertical_inset">24dp</dimen>
 
     <!--theme browser-->
     <dimen name="theme_browser_default_column_width">320dp</dimen>
