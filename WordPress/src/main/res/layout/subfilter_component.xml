@@ -50,11 +50,11 @@
 
     <ImageView
         android:id="@+id/remove_filter_button"
-        android:layout_width="32dp"
+        android:layout_width="@dimen/reader_remove_filter_icon_width"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@null"
-        android:padding="4dp"
+        android:padding="@dimen/margin_small"
         android:src="@drawable/ic_cross_white_24dp"
         android:tint="@color/neutral_70"
         app:layout_constraintStart_toEndOf="@+id/selected_filter_name"
@@ -87,6 +87,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="58dp" />
+        app:layout_constraintGuide_end="@dimen/reader_subfilter_end_guideline_margin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

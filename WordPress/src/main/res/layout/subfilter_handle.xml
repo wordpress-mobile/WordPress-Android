@@ -8,8 +8,8 @@
     android:background="@color/transparent">
 
     <View
-        android:layout_height="5dp"
-        android:layout_width="32dp"
+        android:layout_height="@dimen/bottomsheet_handle_height"
+        android:layout_width="@dimen/bottomsheet_handle_width"
         android:background="@drawable/bg_bottom_sheet_handle"
         android:id="@+id/bottom_sheet_handle"/>
 

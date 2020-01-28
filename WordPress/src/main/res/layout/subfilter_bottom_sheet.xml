@@ -10,7 +10,7 @@
 
     <include layout="@layout/subfilter_handle"
         android:layout_width="match_parent"
-        android:layout_height="15dp"/>
+        android:layout_height="@dimen/reader_filter_bottom_sheet_handle_height"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title"
