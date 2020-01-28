@@ -4,8 +4,7 @@
     <application>
         <activity
             android:name=".EditImageActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Base.ImageEditorTheme">
         </activity>
     </application>
 </manifest>

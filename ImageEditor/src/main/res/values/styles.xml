@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="NoActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Base.ImageEditorTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/background_default</item>
     </style>
 </resources>
