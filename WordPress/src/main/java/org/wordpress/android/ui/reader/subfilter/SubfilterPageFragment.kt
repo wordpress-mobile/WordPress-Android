@@ -151,7 +151,7 @@ class SubfilterPagerAdapter(val context: Context, val fm: FragmentManager) : Fra
     }
 }
 
-enum class SubfilterCategory(@StringRes val titleRes: Int, val task: UpdateTask, val type: ItemType) {
-    SITES(R.string.reader_filter_sites_title, UpdateTask.FOLLOWED_BLOGS, SITE),
-    TAGS(R.string.reader_filter_tags_title, UpdateTask.TAGS, TAG)
+enum class SubfilterCategory(@StringRes val titleRes: Int, val type: ItemType) {
+    SITES(R.string.reader_filter_sites_title, SITE),
+    TAGS(R.string.reader_filter_tags_title, TAG)
 }
