@@ -458,4 +458,7 @@
     <dimen name="main_fab_tooltip_elevation">6dp</dimen>
     <dimen name="main_fab_tooltip_arrow_size">16dp</dimen>
 
+    <dimen name="bottom_sheet_handle_container_radius">8dp</dimen>
+    <dimen name="bottom_sheet_handle_radius">4dp</dimen>
+
 </resources>
