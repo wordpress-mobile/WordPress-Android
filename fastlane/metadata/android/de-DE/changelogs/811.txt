@@ -1,3 +1,0 @@
-13.9:
-• Neu im Block-Editor: Neuer Galerie-Block zur Erstellung von Bildgalerien mit Dateien aus deiner Mediathek sowie Unterstützung des vorformatierten Blocks hinzugefügt.
-• Verbesserungen am Block-Editor: Unterstützung für Einstellungen in den Listen- und Video-Blöcken hinzugefügt.

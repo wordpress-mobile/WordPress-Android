@@ -1,0 +1,4 @@
+14.0:
+- Block-Editor: Manchmal stürzte der Block-Editor ab, wenn man versuchte etwas rückgängig zu machen, was ein wenig zu viel des Guten war. Dies wurde behoben, zusammen mit einem Fehler, der Bildplatzhalter betraf.
+- Der „Ich“-Abschnitt der App wurde in „Meine Website“ verschoben.
+- Ein Aktions-Button wurde zu „Meine Website“ hinzugefügt, um neue Beiträge und Seiten schnell erstellen zu können.
