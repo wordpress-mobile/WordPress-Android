@@ -79,7 +79,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private String mGoogleEmail;
     private String mRequestedEmail;
     private boolean mIsSocialLogin;
-    private boolean mIsValidEmail = false;
+    private Boolean mIsValidEmail;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -315,7 +315,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mIsSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
             mIsDisplayingEmailHints = savedInstanceState.getBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS);
             mHasDismissedEmailHints = savedInstanceState.getBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS);
-            mIsValidEmail = savedInstanceState.getBoolean(VALIDITY_EMAIL);
+            if (savedInstanceState.getBoolean(VALIDITY_EMAIL) || !(savedInstanceState
+                    .getBoolean(VALIDITY_EMAIL))) {
+                mIsValidEmail = savedInstanceState.getBoolean(VALIDITY_EMAIL);
+            } else {
+                mIsValidEmail = null;
+            }
         } else {
             mAnalyticsListener.trackEmailFormViewed();
         }
@@ -330,7 +335,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         outState.putBoolean(KEY_IS_SOCIAL, mIsSocialLogin);
         outState.putBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS, mIsDisplayingEmailHints);
         outState.putBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS, mHasDismissedEmailHints);
-        outState.putBoolean(VALIDITY_EMAIL, mIsValidEmail);
+        if (mIsValidEmail != null) {
+            outState.putBoolean(VALIDITY_EMAIL, mIsValidEmail);
+        }
     }
 
     protected void next(String email) {
@@ -350,7 +357,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     }
 
     private void showErrorIfEmailInvalid() {
-        if (!mIsValidEmail && mEmailInput.getEditText().getText().length() > 0) {
+        if (mIsValidEmail != null && !mIsValidEmail) {
             showEmailError(R.string.email_invalid);
         }
     }
