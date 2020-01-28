@@ -163,6 +163,9 @@
     <dimen name="reader_remove_filter_icon_width">32dp</dimen>
     <dimen name="reader_subfilter_end_guideline_margin">58dp</dimen>
 
+    <dimen name="reader_subfilter_title_gone_margin_top">0dp</dimen>
+    <dimen name="reader_subfilter_title_gone_margin_bottom">10dp</dimen>
+
     <item name="reader_photo_title_shadow_offset" format="float" type="dimen">3.0</item>
     <item name="reader_photo_title_shadow_radius" format="float" type="dimen">1.5</item>
 
