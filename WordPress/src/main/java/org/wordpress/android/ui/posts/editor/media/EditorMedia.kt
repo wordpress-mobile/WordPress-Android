@@ -11,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -23,15 +24,18 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
+import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.ProgressDialogUiState.HiddenProgressDialog
 import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialog
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMediaIdle
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMultipleMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
+import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
@@ -59,6 +63,8 @@ class EditorMedia @Inject constructor(
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
     private val retryFailedMediaUploadUseCase: RetryFailedMediaUploadUseCase,
     private val cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase,
+    private val removeMediaUseCase: RemoveMediaUseCase,
+    private val reattachUploadingMediaUseCase: ReattachUploadingMediaUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     // region Fields
@@ -69,6 +75,8 @@ class EditorMedia @Inject constructor(
 
     private lateinit var site: SiteModel
     private lateinit var editorMediaListener: EditorMediaListener
+
+    private val deletedMediaItemIds = mutableListOf<String>()
 
     private val _uiState: MutableLiveData<AddMediaToPostUiState> = MutableLiveData()
     val uiState: LiveData<AddMediaToPostUiState> = _uiState
@@ -232,10 +240,58 @@ class EditorMedia @Inject constructor(
                     .purgeMediaToPostAssociationsIfNotInPostAnymore(editorMediaListener.getImmutablePost())
         }
     }
+
+    fun reattachUploadingMediaForAztec(
+        editPostRepository: EditPostRepository,
+        isAztec: Boolean,
+        editorMediaUploadListener: EditorMediaUploadListener
+    ) {
+        if (isAztec) {
+            reattachUploadingMediaUseCase.reattachUploadingMediaForAztec(
+                    editPostRepository,
+                    editorMediaUploadListener
+            )
+        }
+    }
+
+    /*
+    * When the user deletes a media item that was being uploaded at that moment, we only cancel the
+    * upload but keep the media item in FluxC DB because the user might have deleted it accidentally,
+    * and they can always UNDO the delete action in Aztec.
+    * So, when the user exits then editor (and thus we lose the undo/redo history) we are safe to
+    * physically delete from the FluxC DB those items that have been deleted by the user using backspace.
+    * */
+    fun definitelyDeleteBackspaceDeletedMediaItemsAsync() {
+        launch {
+            removeMediaUseCase.removeMediaIfNotUploading(deletedMediaItemIds)
+        }
+    }
+
+    fun updateDeletedMediaItemIds(localMediaId: String) {
+        deletedMediaItemIds.add(localMediaId)
+        UploadService.setDeletedMediaItemIds(deletedMediaItemIds)
+    }
+
     // endregion
 
     fun cancelAddMediaToEditorActions() {
         job.cancel()
+    }
+
+    fun onMediaDeleted(
+        showAztecEditor: Boolean,
+        showGutenbergEditor: Boolean,
+        localMediaId: String
+    ) {
+        updateDeletedMediaItemIds(localMediaId)
+        if (showAztecEditor && !showGutenbergEditor) {
+            // passing false here as we need to keep the media item in case the user wants to undo
+            cancelMediaUploadAsync(StringUtils.stringToInt(localMediaId), false)
+        } else {
+            launch {
+                removeMediaUseCase.removeMediaIfNotUploading(listOf(localMediaId))
+            }
+        }
     }
 
     enum class AddExistingMediaSource {

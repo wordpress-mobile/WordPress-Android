@@ -1,118 +1,78 @@
 <ar>
-13.8:
-* تحسينات محرِّر المكوّن: تمت إضافة مكوّن المباعد لإنشاء مسافة بيضاء بين المحتوى.
-* تم تعديل البحث عن المقالات لتضمين المقالات أسفل كل التصنيفات.
-* الكثير من التحسينات التي أجريت في الخلفية عبر التطبيق بالكامل – 26 من الإصلاحات الفريدة للأخطاء والأعطال إجمالاً.
-
+14.0:
+- محرِّر المكوِّن: قد يتعطَّل محرِّر المكوّن في بعض الأحيان عند محاولتك التراجع عن إجراء شيء ما، ما يُعد تراجعًا أكثر من اللازم بقليل. تم إصلاح هذا، إلى جانب خطأ يؤثر في العناصر النائبة للصور.
+- تم نقل قسم "خاص بي" من التطبيق إلى داخل "موقعي".
+- تمت إضافة زر إجراء متحرك إلى "موقعي" لإنشاء سريع للمقالات والصفحات الجديدة.
 </ar>
 <de-DE>
-13.8:
-* Verbesserungen am Block-Editor: Der Abstandshalter-Block wurde hinzugefügt, damit du Leerräume zwischen Inhalten erstellen kannst.
-* Die Suche nach Blogbeiträgen wurde verändert, um Beiträge unter allen Kategorien einzuschließen.
-* Die gesamte App wurde hinter den Kulissen an zahlreichen Stellen verbessert. Insgesamt wurden 26 Fehler, die zu Abstürzen und Problemen führten, behoben.
-
+14.0:
+- Block-Editor: Manchmal stürzte der Block-Editor ab, wenn man versuchte etwas rückgängig zu machen, was ein wenig zu viel des Guten war. Dies wurde behoben, zusammen mit einem Fehler, der Bildplatzhalter betraf.
+- Der „Ich“-Abschnitt der App wurde in „Meine Website“ verschoben.
+- Ein Aktions-Button wurde zu „Meine Website“ hinzugefügt, um neue Beiträge und Seiten schnell erstellen zu können.
 </de-DE>
 <en-US>
-13.8:
-* Block editor improvements: Added Spacer block for creating white space between content.
-* Modified Blog Post Search to include posts under all categories.
-* Lots of under-the-hood improvements across the entire app –26 unique crash and bug fixes in all.
-
+14.0:
+- Block editor: Sometimes the Block editor would crash when you tried to undo, which is a little too much undoing. That’s fixed, along with a bug affecting image placeholders.
+- Moved the “me” section of the app to within “My Site”.
+- Added a floating action button to My Site for quick creation of new posts and pages.
 </en-US>
 <es-ES>
-13.8:
-* Mejoras en el editor de bloques: Añadido bloque espaciador para crear espacios vacíos entre contenidos.
-* Modificada la búsqueda de entradas del blog para incluir entradas en todas las categorías.
-* Montones de mejoras bajo el capó en toda la aplicación  26 correcciones de errores y problemas en total.
-
+14.0:
+- Editor de bloques: Algunas veces, el editor de bloques falla cuando intentas deshacer, cuando es demasiado lo que hay que deshacer. Eso está corregido, junto con un fallo que afecta a los marcadores de posición de las imágenes.
+- Se ha movido la sección «Yo» de la aplicación a «Mi sitio».
+- Añadido un botón de acción flotante a «Mi sitio» para la creación rápida de nuevas entradas y páginas.
 </es-ES>
 <fr-CA>
-13.8 :
-* Améliorations de l'éditeur de blocs : un bloc d'espacement a été ajouté pour créer un espace blanc entre le contenu.
-* Modification de la recherche d'articles de blog pour inclure les articles appartenant à toutes les catégories.
-* Nombreuses améliorations en arrière-plan dans toute l'application. Résolution de 26 bugs ou pannes uniques.
-
+14.0 :
+- Éditeur de blocs : Parfois, l'éditeur de blocs plantait lorsque vous essayiez d'annuler une action, ce qui était très inconfortable. Le problème a été résolu, ainsi qu'un bug affectant les espaces réservés des images.
+- La section « Moi » de l'application a été remplacée par la section « Mon site ».
+- Ajout d'un bouton d'action flottant à la section « Mon site » pour créer rapidement de nouveaux messages et de nouvelles pages.
 </fr-CA>
 <fr-FR>
-13.8 :
-* Améliorations de l'éditeur de blocs : un bloc d'espacement a été ajouté pour créer un espace blanc entre le contenu.
-* Modification de la recherche d'articles de blog pour inclure les articles appartenant à toutes les catégories.
-* Nombreuses améliorations en arrière-plan dans toute l'application. Résolution de 26 bugs ou pannes uniques.
-
+14.0 :
+- Éditeur de blocs : Parfois, l'éditeur de blocs plantait lorsque vous essayiez d'annuler une action, ce qui était très inconfortable. Le problème a été résolu, ainsi qu'un bug affectant les espaces réservés des images.
+- La section « Moi » de l'application a été remplacée par la section « Mon site ».
+- Ajout d'un bouton d'action flottant à la section « Mon site » pour créer rapidement de nouveaux messages et de nouvelles pages.
 </fr-FR>
-<iw-IL>
-13.8:
-* שיפורים בעורך הבלוקים: הוספנו את בלוק המרווח כדי ליצור רווח ריק בין התכנים.
-* שינינו את חיפוש הפוסטים כדי לכלול פוסטים שמשויכים לכל הקטגוריות.
-* ביצענו המון שיפורים מתחת למכסה המנוע ברחבי האפליקציה – תיקנו 26 מקרים ייחודיים של קריסות ובאגים סך הכול.
-
-</iw-IL>
-<id>
-13.8:
-* Peningkatan penyunting blok: Menambahkan blok Spacer untuk membuat spasi putih di antara konten.
-* Memodifikasi Pencarian Pos Blog untuk menyertakan pos di semua kategori.
-* Banyak peningkatan di seluruh aplikasi – Memperbaiki 26 crash dan bug unik.
-
-</id>
-<it-IT>
-13.8:
-*Miglioramenti all'editor dei blocchi: blocco Spazio vuoto aggiunto per la creazione di spazio bianco tra i contenuti.
-*Ricerca dell'articolo del blog modificata per includere gli articoli presenti in tutte le categorie.
-*Molti miglioramenti sotto controllo nell'intera app, 26 arresti univoci e correzioni di bug in tutti.
-
-</it-IT>
 <ja-JP>
-13.8 :
-* ブロックエディターの改善 :コンテンツ間に空白を作成するためのスペーサーブロックが追加されました。
-* すべてのカテゴリーの投稿を含めるようにブログ投稿検索が変更されました。
-* アプリ全体でさまざまな改善がなされ、合計26個の固有のクラッシュとバグが修正されました。
-
+14.0:
+- ブロックエディター :操作を元に戻そうとするとブロックエディターがクラッシュするという問題がありました。これは、画像プレースホルダーに影響を与えるバグとあわせて修正されました。
+- アプリの「me」セクションを「参加サイト」内に移動しました。
+- 「参加サイト」にフローティングアクションボタンが追加され、新しい投稿やページを簡単に作成できるようになりました。
 </ja-JP>
 <ko-KR>
-13.8:
-* 블록 편집기 개선 사항: 콘텐츠 사이에 공백을 만들기 위한 스페이서 블록을 추가했습니다.
-* 모든 카테고리에 글을 포함하도록 블로그 글 검색을 수정했습니다.
-* 앱 내부 전체에서 많은 부분이 개선되었습니다(고유한 충돌 및 버그 수정 총 26개).
-
+14.0:
+- 블록 편집기: 실행을 취소하려고 할 때 블록 편집기가 충돌하여 좀 심하게 취소되는 경우가 있습니다. 이 문제는 이미지 자리표시자에 영향을 미치는 버그와 함께 수정되었습니다.
+- 앱의 “me” 섹션을 “내 사이트” 내로 옮겼습니다.
+- 새 글과 페이지를 빠르게 만들 수 있도록 내 사이트에 부동 작업 버튼을 추가했습니다.
 </ko-KR>
 <nl-NL>
-13.8:
-* Verbeteringen aan de blok-editor: Vulelementblok toegevoegd voor het creëren van lege ruimte tussen content.
-* De zoekfunctie voor blogberichten is aangepast en bevat nu berichten onder alle categorieën.
-* Veel onopvallende verbeteringen in de gehele app: in totaal 26 unieke crash-oplossingen en bugverwijderingen.
-
+14.0:
+- Blokeditor: Soms crashte de blokeditor wanneer je iets ongedaan wilde maken, waardoor er iets teveel ongedaan werd gemaakt. Dat is nu opgelost, net als een bug die invloed had op de placeholders van afbeeldingen.
+- Het gedeelte 'Ik' in de app is nu verplaatst naar 'Mijn site'.
+- Er is een zwevende activatieknop toegevoegd aan Mijn site om snel nieuwe berichten en pagina's te kunnen maken.
 </nl-NL>
 <ru-RU>
-13.8:
-* Улучшения в редакторе блоков: добавлен блок-заполнитель, для добавления пустого места между содержимым.
-* Поиск по записям в блоге будут включать записи во всех рубриках.
-* Целая куча исправлений ошибок и падений (26).
+14.0:
+- Исправлено падение редактора блоков при действии отмены. Исправлена проблема с заполнителями изображений.
+- Раздел "мой профиль" в приложении перемещен внутрь раздела "Мой сайт".
+- Добавлена плавающая кнопка действия в "Мой сайт" для быстрого создания страниц или записей.
 </ru-RU>
 <sv-SE>
-13.8:
-* Förbättringar i blockredigeraren: Nytt distanselement som kan skapa avstånd mellan olika innehållsblock.
-* Sökfunktionen för blogginlägg har modifierats så att den söker inom alla kategorier.
-* En rad förbättringar ”under motorhuven” i hela appen. Totalt 26 avhjälpta kraschorsaker och andra fel.
-
+14.0:
+- Blockredigeraren: Ibland kunde den krascha om du försökte ångra vissa åtgärder, vilket innebar att backa för långt. Det är rättat, liksom ett fel som berörde platshållare för bilder.
+- Appens sektion ”Jag” ligger nu under ”Min webbplats”.
+- Ny, flytande, åtgärdsknapp under ”Min webbplats” för att smidigt skapa nya sidor och inlägg.
 </sv-SE>
 <tr-TR>
-13.8:
-* Blok düzenleyici iyileştirmeleri: İçerik arasında beyaz boşluk oluşturmak için Spacer bloğu eklendi.
-* Blog Gönderi Arama tüm kategorilerin altındaki gönderileri içerecek şekilde değiştirildi.
-* Tüm uygulama içinde görünmeyen bir çok iyileştirme yapıldı -26 benzersiz kapanma ve hata düzeltmeleri.
-
+14.0:
+- Blok düzenleyici: Geri almaya çalıştığınızda bazen blok düzenleyici çökebilir, bu biraz fazla ger al yapıldığında olur. Bununla birlikte, resim yer tutucularını etkileyen bir hata da düzeltildi.
+- Uygulamanın "Ben" bölümünü "Sitem" içine taşıdı.
+- Yeni yazıların ve sayfaların hızlı bir şekilde oluşturulması için Siteme yüzen bir işlem düğmesi eklendi.
 </tr-TR>
-<zh-CN>
-13.8：
-* 区块编辑器改进：添加了用于在内容之间创建空白的空白区块。
-* 修改了博文搜索，将文章包含在所有类别下。
-* 在整个应用程序中进行了许多改进，包括全部 26 个独特的崩溃和错误修复。
-
-</zh-CN>
 <zh-TW>
-13.8：
-* 改善區塊編輯器：新增空白間隔區塊，你現可在內容之間建立空白字元。
-* 修改網誌文章搜尋功能，納入所有類別底下的文章。
-* 應用程式整體內部改善，一共修正 26 個不同的當機問題和錯誤。
-
+14.0：
+- 區塊編輯器：- 在你嘗試復原某些操作時，有時區塊編輯器會損毀，遇到這種情況就比復原不成還慘了。這個問題連帶一些影響圖片預留位置的錯誤都已獲得修正
+- 將應用程式中「我」的部分移至「我的網站」內。
+- 在「我的網站」新增一個浮動操作按鈕，能夠快速建立新文章和頁面。
 </zh-TW>

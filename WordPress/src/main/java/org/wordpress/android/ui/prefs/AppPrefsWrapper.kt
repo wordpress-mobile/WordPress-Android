@@ -109,6 +109,12 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun removeAppWidgetHasData(appWidgetId: Int) = AppPrefs.removeStatsWidgetHasData(appWidgetId)
 
+    fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
+    fun setMainFabTooltipDisabled(disable: Boolean) = AppPrefs.setMainFabTooltipDisabled(disable)
+
+    fun getReaderSubfilter() = AppPrefs.getReaderSubfilter()
+    fun setReaderSubfilter(json: String) = AppPrefs.setReaderSubfilter(json)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

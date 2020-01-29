@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    style="@style/TooltipContainer"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tooltip_message"
+        style="@style/TooltipTextView"
+        android:layout_weight="1"
+        tools:text="This is an example tooltip message"/>
+
+    <View
+        android:id="@+id/tooltip_arrow"
+        style="@style/TooltipArrowView"
+        android:layout_weight="1"
+        android:rotation="90"
+        android:background="@drawable/tooltip_arrow"
+        android:contentDescription="@null"/>
+
+</LinearLayout>

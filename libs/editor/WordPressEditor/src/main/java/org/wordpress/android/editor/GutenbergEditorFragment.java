@@ -49,6 +49,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveList
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
@@ -337,9 +338,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 new OnEditorAutosaveListener() {
                     @Override public void onEditorAutosave() {
-                        // FIXME the Editable field passed to postTextChanged is never used later, and also nullable,
-                        //  but in theory we should be able to pass either the content field or the title field.
-                        mTextWatcher.postTextChanged(null);
+                        mTextWatcher.postTextChanged();
                     }
                 },
                 new OnAuthHeaderRequestedListener() {
@@ -357,6 +356,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnImageFullscreenPreviewListener() {
                     @Override public void onImageFullscreenPreviewClicked(String mediaUrl) {
                         mEditorImagePreviewListener.onImagePreviewRequested(mediaUrl);
+                    }
+                },
+                new OnMediaEditorListener() {
+                    @Override public void onMediaEditorClicked(String mediaUrl) {
+                        // Show Media Editor
                     }
                 });
 

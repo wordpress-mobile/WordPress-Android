@@ -70,6 +70,6 @@ public class SignupFlow {
 
     public void confirmSignup() {
         // Confirm signup
-        waitForElementToBeDisplayed(R.id.nav_me);
+        waitForElementToBeDisplayed(R.id.nav_sites);
     }
 }

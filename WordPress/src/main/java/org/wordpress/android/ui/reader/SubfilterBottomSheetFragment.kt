@@ -84,8 +84,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         performUpdate(
                 EnumSet.of(
                         UpdateTask.TAGS,
-                        UpdateTask.FOLLOWED_BLOGS/*,
-                        UpdateTask.RECOMMENDED_BLOGS*/
+                        UpdateTask.FOLLOWED_BLOGS
                 )
         )
     }

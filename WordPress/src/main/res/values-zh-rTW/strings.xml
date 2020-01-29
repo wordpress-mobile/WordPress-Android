@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-12 00:55:12+0000
+Translation-Revision-Date: 2020-01-23 00:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">移除圖片</string>
+    <string name="gutenberg_native_move_image_forward">向前移動圖片</string>
+    <string name="gutenberg_native_move_image_backward">向後移動圖片</string>
+    <string name="gutenberg_native_gallery_caption_s">圖庫標題。%s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s。目前的值是 %2$s</string>
+    <string name="create_post_page_fab_tooltip">建立文章或頁面</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">點選%1$s「新增文章」%2$s以建立新文章</string>
+    <string name="quick_start_dialog_create_new_post_message_short">點選%1$s「網誌文章」%2$s以繼續操作。</string>
+    <string name="content_description_person_building_website">網站架設人員</string>
+    <string name="post_signup_interstitial_not_right_now">現在不用</string>
+    <string name="post_signup_interstitial_subtitle">無論你要建立或共享，我們都會為你提供協助。</string>
+    <string name="post_signup_interstitial_title">歡迎來到 WordPress</string>
+    <string name="stock_media_picker_list_content_description">圖庫</string>
+    <string name="photo_picker_image_thumbnail_unselected">取消選取的圖片</string>
+    <string name="photo_picker_image_selected">，已選取</string>
+    <string name="photo_picker_image_thumbnail_selected">已選取的圖片</string>
+    <string name="photo_picker_image_thumbnail_content_description">縮圖</string>
+    <string name="my_site_bottom_sheet_add_post">網誌文章</string>
+    <string name="my_site_bottom_sheet_title">新增</string>
+    <string name="post_settings_publish">發佈</string>
+    <string name="dialog_gutenberg_informative_description_v2">我們大幅改進了區塊編輯器，值得你一試！我們為新文章和頁面啟用了這項功能，但如果你希望變更為傳統編輯器，請前往「我的網站」>「網站設定」進行變更。</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">立即同步</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">此文章會立即同步。</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">準備好要同步了嗎？</string>
+    <string name="new_site_creation_unavailable_domain">此網域不可使用</string>
+    <string name="login_promo_viewpager_content_description">簡介</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
     <string name="login_discovery_error_ssl">由於 &lt;b>SSL 憑證&lt;/b>發生問題，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
     <string name="login_discovery_error_http_auth">由於你的網站須進行 &lt;b>HTTP 驗證&lt;/b>，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
@@ -14,8 +41,6 @@ Language: zh_TW
     <string name="enter_site_credentials_instead">請使用網站憑證登入</string>
     <string name="enter_credentials_for_site">請使用 %1$s 網站憑證登入</string>
     <string name="send_verification_email">傳送驗證電子郵件</string>
-    <string name="my_site_bottom_sheet_add_page">建立新頁面</string>
-    <string name="my_site_bottom_sheet_add_post">建立新文章</string>
     <string name="reader_following_display_name">關注中</string>
     <string name="posts_cannot_be_started">目前無法開啟文章。請稍後再試一次</string>
     <string name="suffix_1_000">%sk</string>
@@ -31,86 +56,6 @@ Language: zh_TW
     <string name="reader_discover_display_name">探索</string>
     <string name="reader_my_likes_display_name">按讚數</string>
     <string name="site_cannot_be_loaded">目前無法載入你的網站資料。請稍後再試一次</string>
-    <string name="gutenberg_native_wordpress_media_library">「WordPress 媒體庫」</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">我們正在努力開發，讓每次版本更新都可以新增更多區塊。在此期間，你也可在網路上編輯這篇文章。</string>
-    <string name="gutenberg_native_unsupported">「不支援」</string>
-    <string name="gutenberg_native_ungroup">「取消群組」</string>
-    <string name="gutenberg_native_translate">「翻譯」</string>
-    <string name="gutenberg_native_title">「標題：」</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">「點選即可隱藏鍵盤」</string>
-    <string name="gutenberg_native_tap_here_to_show_help">「點選此處顯示說明」</string>
-    <string name="gutenberg_native_take_a_video">「拍攝視訊」</string>
-    <string name="gutenberg_native_take_a_photo_or_video">「拍攝照片或視訊」</string>
-    <string name="gutenberg_native_take_a_photo">「拍攝照片」</string>
-    <string name="gutenberg_native_start_writing">「開始撰寫…」</string>
-    <string name="gutenberg_native_size">「尺寸」</string>
-    <string name="gutenberg_native_sidebar_title_plugin">「側邊欄標題外掛程式」</string>
-    <string name="gutenberg_native_show_section">「顯示區段」</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">WordPress iOS 版尚不支援「%s」</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">WordPress iOS 版尚不支援「%s」</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">「%s 區塊含有無效內容」</string>
-    <string name="gutenberg_native_s_block_empty">「%s 區塊為空白」</string>
-    <string name="gutenberg_native_s_block">「%s 區塊」</string>
-    <string name="gutenberg_native_row_d">「第 %d 列。」</string>
-    <string name="gutenberg_native_reset_block">「重設區塊」</string>
-    <string name="gutenberg_native_reset">「重設」</string>
-    <string name="gutenberg_native_remove_block_at_row_s">「移除第 %s 列的區塊」</string>
-    <string name="gutenberg_native_remove_annotations">「移除註解」</string>
-    <string name="gutenberg_native_problem_opening_the_video">「開啟視訊時發生問題」</string>
-    <string name="gutenberg_native_problem_displaying_block">「顯示區塊時發生問題」</string>
-    <string name="gutenberg_native_post_title_s">「文章標題%s」</string>
-    <string name="gutenberg_native_post_title_empty">「文章標題為空白」</string>
-    <string name="gutenberg_native_paste_url">「貼上網址」</string>
-    <string name="gutenberg_native_page_break_block_s">「分頁符號區塊%s」</string>
-    <string name="gutenberg_native_open_settings">「開啟設定」</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">「沒有應用程式可以處理這項要求。請安裝網路瀏覽器。」</string>
-    <string name="gutenberg_native_navigate_up">「瀏覽」</string>
-    <string name="gutenberg_native_my_pre_publish_panel">「我的發表前面板」</string>
-    <string name="gutenberg_native_my_post_status_info">「我的文章狀態資訊」</string>
-    <string name="gutenberg_native_my_post_publish_panel">「我的發表後面板」</string>
-    <string name="gutenberg_native_my_document_setting_panel">「我的文件設定面板」</string>
-    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">「將區塊從第 %1$s 列向上移至第 %2$s 列」</string>
-    <string name="gutenberg_native_move_block_up">「向上移動區塊」</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">「將區塊從第 %1$s 列向下移至第 %2$s 列」</string>
-    <string name="gutenberg_native_move_block_down">「向下移動區塊」</string>
-    <string name="gutenberg_native_link_text">「連結文字」</string>
-    <string name="gutenberg_native_link_inserted">「連結已插入」</string>
-    <string name="gutenberg_native_level_s_empty">「層級 %s為空白。」</string>
-    <string name="gutenberg_native_level_1_s_2_s">「層級 %1$s%2$s」</string>
-    <string name="gutenberg_native_image_caption_s">「圖片說明%s」</string>
-    <string name="gutenberg_native_hide_keyboard">「隱藏鍵盤」</string>
-    <string name="gutenberg_native_here_is_the_panel_content">「這裡是面板內容！」</string>
-    <string name="gutenberg_native_help_icon">「幫助圖示」</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">「無法插入媒體。\n請點選其他選項。」</string>
-    <string name="gutenberg_native_empty">「空白」</string>
-    <string name="gutenberg_native_double_tap_to_undo_last_change">「按兩下以復原上次變更」</string>
-    <string name="gutenberg_native_double_tap_to_toggle_setting">「按兩下以切換設定」</string>
-    <string name="gutenberg_native_double_tap_to_select_an_image">「按兩下以選擇圖片」</string>
-    <string name="gutenberg_native_double_tap_to_select_a_video">「按兩下以選擇視訊」</string>
-    <string name="gutenberg_native_double_tap_to_select">「按兩下以選擇」</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">「按兩下以移除區塊」</string>
-    <string name="gutenberg_native_double_tap_to_redo_last_change">「按兩下以取消復原上次變更」</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_up">「按兩下將區塊向上移」</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_down">「按兩下將區塊向下移」</string>
-    <string name="gutenberg_native_double_tap_to_edit_this_value">「按兩下以編輯此數值」</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">「按兩下以使用滑桿變更數值」</string>
-    <string name="gutenberg_native_double_tap_to_add_a_block">「按兩下以新增區塊」</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">「點兩下並按住不放即可編輯」</string>
-    <string name="gutenberg_native_current_value_is_s">「目前的值是 %s」</string>
-    <string name="gutenberg_native_content">「內容…」</string>
-    <string name="gutenberg_native_clear_all_settings">「清除所有設定」</string>
-    <string name="gutenberg_native_choose_from_device">「從裝置中選擇」</string>
-    <string name="gutenberg_native_annotations_sidebar">「註解側邊欄」</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">「發生未知的錯誤，請再試一次。」</string>
-    <string name="gutenberg_native_alt_text">「替代文字」</string>
-    <string name="gutenberg_native_add_video">「新增視訊」</string>
-    <string name="gutenberg_native_add_url">「新增網址」</string>
-    <string name="gutenberg_native_add_link_text">「新增連結文字」</string>
-    <string name="gutenberg_native_add_image_or_video">「新增圖片或視訊」</string>
-    <string name="gutenberg_native_add_image">「新增圖片」</string>
-    <string name="gutenberg_native_add_block_here">「在此新增區塊」</string>
-    <string name="gutenberg_native_add_annotation">「新增註解」</string>
-    <string name="gutenberg_native_add_a_description">「新增說明」</string>
     <string name="reader_empty_saved_posts_content_description">點選「新增至儲存文章」按鈕即可將文章儲存至你的清單。</string>
     <string name="reader_acessibility_list_loaded">「此清單已載入 %1$d 個項目。」</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
@@ -236,8 +181,6 @@ Language: zh_TW
     <string name="site_settings_editor">編輯器</string>
     <string name="description_expand">擴大</string>
     <string name="description_collapse">折疊</string>
-    <string name="editor_retry_failed_uploads">重新嘗試上傳</string>
-    <string name="editor_toast_failed_uploads">部分媒體上傳失敗。在此狀態中，你無法儲存或發表\n自己的文章。</string>
     <string name="my_site_verify_your_email_without_email">驗證你的電子郵件地址 - 已將說明傳送至你的電子郵件地址</string>
     <string name="my_site_verify_your_email">驗證你的電子郵件地址 - 已將說明傳送至 %s</string>
     <string name="link_dialog_button_cancel">取消</string>
@@ -703,7 +646,6 @@ Language: zh_TW
     <string name="activity_log_rewind_started_snackbar_message">正在還原網站\n正在還原至 %1$s %2$s</string>
     <string name="activity_log_button">活動記錄動作按鈕</string>
     <string name="plugin_auto_managed">自動管理</string>
-    <string name="reader_save_posts_locally_dialog_message">儲存這篇文章，即可隨時返回閱讀。儲存的文章不會同步至其他裝置，因此你只能在這部裝置上存取文章。(不過，我們正努力提供此功能！)</string>
     <string name="reader_save_posts_locally_dialog_title">儲存文章以供稍後使用</string>
     <string name="reader_empty_search_request_failed">無法執行搜尋</string>
     <string name="reader_empty_search_title">找不到結果</string>
@@ -728,7 +670,6 @@ Language: zh_TW
     <string name="reader_add_bookmark">加入已儲存文章</string>
     <string name="reader_save_for_later_title">已儲存文章</string>
     <string name="removed">已移除</string>
-    <string name="tabbar_accessibility_label_write">新文章。撰寫新文章。</string>
     <string name="my_site_icon_content_description">變更網站圖示</string>
     <string name="my_site_icon_dialog_cancel_button">取消</string>
     <string name="my_site_icon_dialog_remove_button">移除</string>
@@ -759,7 +700,6 @@ Language: zh_TW
     <string name="preference_privacy_settings">隱私權設定</string>
     <string name="preference_collect_information">收集資訊</string>
     <string name="post_submitted">文章已提交。</string>
-    <string name="write_post">撰寫文章</string>
     <string name="login_email_button_signup">還沒有帳號？%1$s註冊%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">外掛功能需要該網站具有良好聲譽。</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">外掛功能需要主要網域訂閱與此名使用者相關聯。</string>
@@ -1307,7 +1247,6 @@ Language: zh_TW
     <string name="sharing">分享</string>
     <string name="tabbar_accessibility_label_notifications">通知。管理你的通知。</string>
     <string name="tabbar_accessibility_label_reader">讀取器。關注其他網站的內容。</string>
-    <string name="tabbar_accessibility_label_me">我。檢視你的個人檔案並進行變更。</string>
     <string name="tabbar_accessibility_label_my_site">我的網站。檢視和管理你的網站，包括統計資料。</string>
     <string name="my_site_btn_sharing">分享</string>
     <string name="button_not_now">現在不要</string>

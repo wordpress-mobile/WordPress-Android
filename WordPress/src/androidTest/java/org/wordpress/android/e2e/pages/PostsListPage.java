@@ -7,12 +7,17 @@ import org.wordpress.android.R;
 
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.scrollToAndClickOnTextInRecyclerView;
+import static org.wordpress.android.support.WPSupportUtils.scrollToTopOfRecyclerView;
 
 public class PostsListPage {
     public PostsListPage() {}
 
     public static void tapPostWithName(String name) {
         scrollToAndClickOnTextInRecyclerView(name, getRecyclerView());
+    }
+
+    public static void scrollToTop() {
+        scrollToTopOfRecyclerView(getRecyclerView());
     }
 
     private static RecyclerView getRecyclerView() {

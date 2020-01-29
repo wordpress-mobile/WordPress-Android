@@ -588,7 +588,7 @@ public class UploadService extends Service {
             boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
             post.setFeaturedImageId(remoteMediaId);
             post.setIsLocallyChanged(true);
-            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            post.setDateLocallyChanged(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
             if (changesConfirmed) {
                 /*
                  * We are replacing local featured image with a remote version. We need to make sure
@@ -601,17 +601,21 @@ public class UploadService extends Service {
     }
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
                                                                  MediaUploadReadyListener processor) {
-        if (media != null && post != null && processor != null) {
+        if (media != null && post != null && processor != null && sInstance != null) {
             boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
+
+            // obtain site url used to generate attachment page url
+            SiteModel site = sInstance.mSiteStore.getSiteByLocalId(media.getLocalSiteId());
+
             // actually replace the media ID with the media uri
             processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
-                    FluxCUtils.mediaFileFromMediaModel(media));
+                    FluxCUtils.mediaFileFromMediaModel(media), site.getUrl());
 
             // we changed the post, so let’s mark this down
             if (!post.isLocalDraft()) {
                 post.setIsLocallyChanged(true);
             }
-            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            post.setDateLocallyChanged(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
             if (changesConfirmed) {
                 /*
                  * We are replacing image local path with a url. We need to make sure to retain the confirmation
@@ -635,7 +639,7 @@ public class UploadService extends Service {
             if (!post.isLocalDraft()) {
                 post.setIsLocallyChanged(true);
             }
-            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            post.setDateLocallyChanged(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
             if (changesConfirmed) {
                 /*
                  * We are updating media upload status, but we don't make any undesired changes to the post. We need to
@@ -976,7 +980,11 @@ public class UploadService extends Service {
         // This done for pending as well as cancelled and failed posts
         for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
             if (mPostUtilsWrapper.isPostCurrentlyBeingEdited(postModel)) {
-                // don't touch a Post that is being currently open in the Editor.
+                // Don't upload a Post that is being currently open in the Editor.
+                // This fixes the issue on self-hosted sites when you have a queued post which couldn't be
+                // remote autosaved. When you try to leave the editor without saving it will get stuck in queued
+                // upload state. In case of the post still being edited we cancel any ongoing upload post action.
+                mDispatcher.dispatch(UploadActionBuilder.newCancelPostAction(post));
                 continue;
             }
 

@@ -865,6 +865,17 @@ class PostListItemUiStateHelperTest {
         assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo(FORMATTER_DATE)
     }
 
+    @Test
+    fun `when a post is locally changed and is local draft only "Local draft" label is displayed`() {
+        // Arrange
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, isLocalDraft = true)
+        )
+
+        // Assert
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.local_draft))
+    }
+
     private fun createPostModel(
         status: String = POST_STATE_PUBLISH,
         isLocalDraft: Boolean = false,
