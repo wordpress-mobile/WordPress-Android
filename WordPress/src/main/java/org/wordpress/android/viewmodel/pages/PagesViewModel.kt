@@ -167,6 +167,12 @@ class PagesViewModel
         val previewType: RemotePreviewType
     )
 
+    val pageCriticalActionHandler: PageCriticalActionHandler by lazy {
+        PageCriticalActionHandler(
+                postStore, this::loadPagesAsync
+        )
+    }
+
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
         if (_site == null) {
