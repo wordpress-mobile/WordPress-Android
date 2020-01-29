@@ -18,6 +18,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -172,6 +173,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mUndoRemoveAction = itemView.findViewById(R.id.undo_remove);
         }
     }
+
     /*
      * full post
      */
@@ -457,10 +459,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzMedium);
             mImageManager.loadIntoCircle(holder.mImgAvatarOrBlavatar,
                     ImageType.AVATAR, imageUrl);
+            holder.mImgAvatarOrBlavatar.setBackgroundColor(0);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else if (post.hasBlogImageUrl()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzMedium);
             mImageManager.load(holder.mImgAvatarOrBlavatar, ImageType.BLAVATAR, imageUrl);
+            holder.mImgAvatarOrBlavatar
+                    .setBackgroundColor(
+                            ContextCompat.getColor(holder.mImgAvatarOrBlavatar.getContext(), android.R.color.white));
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else {
             mImageManager.cancelRequestAndClearImageView(holder.mImgAvatarOrBlavatar);
