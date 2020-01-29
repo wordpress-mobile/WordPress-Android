@@ -59,67 +59,60 @@
             android:background="@drawable/preview_mode_indicator_background"
             android:padding="@dimen/margin_medium"
             android:text="@string/web_preview_desktop"
-            android:textColor="@color/white" />
+            android:textColor="?attr/colorOnPrimarySurface" />
 
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
+            android:id="@+id/navbar_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="@dimen/appbar_elevation">
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:background="?android:attr/listDivider" />
 
             <LinearLayout
-                android:id="@+id/navbar_container"
+                android:id="@+id/navbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="@dimen/web_preview_navbar_height"
+                android:orientation="horizontal"
+                android:weightSum="100">
 
-                <View
-                    android:id="@+id/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_size"
-                    android:background="?android:attr/listDivider" />
+                <ImageButton
+                    android:id="@+id/back_button"
+                    style="@style/WebPreviewNavbarButton"
+                    android:contentDescription="@string/navigate_back_desc"
+                    android:src="@drawable/ic_arrow_left_white_24dp" />
 
-                <LinearLayout
-                    android:id="@+id/navbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/web_preview_navbar_height"
-                    android:orientation="horizontal"
-                    android:weightSum="100">
+                <ImageButton
+                    android:id="@+id/forward_button"
+                    style="@style/WebPreviewNavbarButton"
+                    android:contentDescription="@string/navigate_forward_desc"
+                    android:src="@drawable/ic_arrow_right_white_24dp" />
 
-                    <ImageButton
-                        android:id="@+id/back_button"
-                        style="@style/WebPreviewNavbarButton"
-                        android:contentDescription="@string/navigate_back_desc"
-                        android:src="@drawable/ic_arrow_left_white_24dp" />
+                <ImageButton
+                    android:id="@+id/share_button"
+                    style="@style/WebPreviewNavbarButton"
+                    android:contentDescription="@string/share_desc"
+                    android:src="@drawable/ic_share_white_24dp" />
 
-                    <ImageButton
-                        android:id="@+id/forward_button"
-                        style="@style/WebPreviewNavbarButton"
-                        android:contentDescription="@string/navigate_forward_desc"
-                        android:src="@drawable/ic_arrow_right_white_24dp" />
+                <ImageButton
+                    android:id="@+id/external_browser_button"
+                    style="@style/WebPreviewNavbarButton"
+                    android:contentDescription="@string/open_external_link_desc"
+                    android:src="@drawable/ic_globe_white_24dp" />
 
-                    <ImageButton
-                        android:id="@+id/share_button"
-                        style="@style/WebPreviewNavbarButton"
-                        android:contentDescription="@string/share_desc"
-                        android:src="@drawable/ic_share_white_24dp" />
+                <ImageButton
+                    android:id="@+id/preview_type_selector_button"
+                    style="@style/WebPreviewNavbarButton"
+                    android:contentDescription="@string/preview_type_desc"
+                    android:src="@drawable/ic_devices_white_24dp" />
 
-                    <ImageButton
-                        android:id="@+id/external_browser_button"
-                        style="@style/WebPreviewNavbarButton"
-                        android:contentDescription="@string/open_external_link_desc"
-                        android:src="@drawable/ic_globe_white_24dp" />
-
-                    <ImageButton
-                        android:id="@+id/preview_type_selector_button"
-                        style="@style/WebPreviewNavbarButton"
-                        android:contentDescription="@string/preview_type_desc"
-                        android:src="@drawable/ic_devices_white_24dp" />
-
-                </LinearLayout>
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
     </RelativeLayout>
 
     <org.wordpress.android.ui.ActionableEmptyView

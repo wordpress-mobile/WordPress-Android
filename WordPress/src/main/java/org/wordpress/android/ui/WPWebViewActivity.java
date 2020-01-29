@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -32,6 +33,8 @@ import androidx.appcompat.widget.TooltipCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -131,6 +134,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private ViewGroup mFullScreenProgressLayout;
     private WPWebViewViewModel mViewModel;
     private ListPopupWindow mPreviewModeSelector;
+    private ElevationOverlayProvider mElevationOverlayProvider;
     private View mNavBarContainer;
     private LinearLayout mNavBar;
     private View mNavigateForwardButton;
@@ -174,6 +178,15 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         initViewModel(webViewUsageCategory);
 
         mNavBarContainer = findViewById(R.id.navbar_container);
+
+        mElevationOverlayProvider = new ElevationOverlayProvider(WPWebViewActivity.this);
+
+        int elevatedAppbarColor =
+                mElevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
+                        getResources().getDimension(R.dimen.appbar_elevation));
+
+        mNavBarContainer.setBackgroundColor(elevatedAppbarColor);
+
         mNavBar = findViewById(R.id.navbar);
 
         mNavigateBackButton = findViewById(R.id.back_button);
@@ -390,6 +403,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                             mPreviewModeSelector.setHorizontalOffset(-popupOffset);
                             mPreviewModeSelector.setVerticalOffset(popupOffset);
                             mPreviewModeSelector.setModal(true);
+
+                            int elevatedPopupBackgroundColor =
+                                    mElevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
+                                            getResources().getDimension(R.dimen.popup_over_toolbar_elevation));
+                            mPreviewModeSelector.setBackgroundDrawable(new ColorDrawable(elevatedPopupBackgroundColor));
+
                             mPreviewModeSelector.setOnDismissListener(new OnDismissListener() {
                                 @Override public void onDismiss() {
                                     mViewModel.togglePreviewModeSelectorVisibility(false);
