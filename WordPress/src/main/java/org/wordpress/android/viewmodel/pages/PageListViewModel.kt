@@ -11,12 +11,14 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.PageItem
@@ -41,6 +43,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAF
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
+import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -52,8 +55,10 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
-    uploadActionUseCase: UploadActionUseCase,
-    uploadStore: UploadStore
+    private val uploadActionUseCase: UploadActionUseCase,
+    private val uploadStore: UploadStore,
+    private val postStore: PostStore,
+    private val progressHelper: PageItemProgressHelper
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Pair<List<PageItem>, Boolean>> = Transformations.map(_pages) {
@@ -250,9 +255,39 @@ class PageListViewModel @Inject constructor(
                     } else {
                         DEFAULT_INDENT
                     }
-                    PublishedPage(it.remoteId, it.title, it.date, labels, pageItemIndent,
-                            getFeaturedImageUrl(it.featuredImageId), actionsEnabled)
+                    val progressState = getProgressStateFromPage(LocalId(it.pageId))
+                    PublishedPage(
+                            it.remoteId,
+                            it.title,
+                            it.date,
+                            labels,
+                            pageItemIndent,
+                            getFeaturedImageUrl(it.featuredImageId),
+                            actionsEnabled,
+                            progressState.first,
+                            progressState.second
+                    )
                 }
+    }
+
+    private fun getProgressStateFromPage(pageId: LocalId): Pair<PostListItemProgressBar, ShouldShowOverlay> {
+        val post = postStore.getPostByLocalPostId(pageId.value)
+        val uploadStatus = uploadStatusTracker.getUploadStatus(
+                post, pagesViewModel.site
+        )
+        val uploadUiState = progressHelper.createUploadUiState(uploadStatus, post)
+        val isPerformingCriticalAction = pagesViewModel.pageCriticalActionHandler.isPerformingCriticalAction(
+                pageId
+        )
+        val shouldShowOverlay = progressHelper.shouldShowOverlay(
+                uploadUiState,
+                isPerformingCriticalAction
+        )
+        return Pair(
+                progressHelper.getProgressBarState(
+                        uploadUiState, shouldShowOverlay
+                ), shouldShowOverlay
+        )
     }
 
     private fun prepareScheduledPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
@@ -263,8 +298,15 @@ class PageListViewModel @Inject constructor(
                             if (it.hasLocalChanges)
                                 labels.add(R.string.local_changes)
 
-                            ScheduledPage(it.remoteId, it.title, it.date, labels,
-                                getFeaturedImageUrl(it.featuredImageId), actionsEnabled) }
+                            val progressState = getProgressStateFromPage(LocalId(it.pageId))
+                            ScheduledPage(
+                                    it.remoteId, it.title, it.date, labels,
+                                    getFeaturedImageUrl(it.featuredImageId),
+                                    actionsEnabled,
+                                    progressState.first,
+                                    progressState.second
+                            )
+                        }
                 }
                 .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
                     acc.addAll(list)
@@ -280,14 +322,24 @@ class PageListViewModel @Inject constructor(
             if (it.hasLocalChanges)
                 labels.add(R.string.local_draft)
 
+            val progressState = getProgressStateFromPage(LocalId(it.pageId))
             DraftPage(it.remoteId, it.title, it.date, labels,
-                    getFeaturedImageUrl(it.featuredImageId), actionsEnabled)
+                    getFeaturedImageUrl(it.featuredImageId), actionsEnabled,progressState.first,progressState.second)
         }
     }
 
     private fun prepareTrashedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.map {
-            TrashedPage(it.remoteId, it.title, it.date, getFeaturedImageUrl(it.featuredImageId), actionsEnabled)
+            val progressState = getProgressStateFromPage(LocalId(it.pageId))
+            TrashedPage(
+                    it.remoteId,
+                    it.title,
+                    it.date,
+                    getFeaturedImageUrl(it.featuredImageId),
+                    actionsEnabled,
+                    progressState.first,
+                    progressState.second
+            )
         }
     }
 
