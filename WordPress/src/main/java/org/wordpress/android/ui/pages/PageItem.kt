@@ -12,6 +12,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
+import org.wordpress.android.viewmodel.posts.PostItemProgressBar
 import java.util.Date
 
 sealed class PageItem(open val type: Type) {
@@ -25,7 +26,8 @@ sealed class PageItem(open val type: Type) {
         open val actions: Set<Action>,
         open var actionsEnabled: Boolean,
         open val tapActionEnabled: Boolean,
-        open val progressBarState: PageItemProgressBar
+        open val progressBarState: PostItemProgressBar?,
+        open val showOverlay: Boolean?
     ) : PageItem(PAGE)
 
     data class PublishedPage(
@@ -36,7 +38,8 @@ sealed class PageItem(open val type: Type) {
         override var indent: Int = 0,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PageItemProgressBar
+        override val progressBarState: PostItemProgressBar? = null,
+        override val showOverlay: Boolean? = null
     ) : Page(
             id = id,
             title = title,
@@ -47,7 +50,8 @@ sealed class PageItem(open val type: Type) {
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
             tapActionEnabled = true,
-            progressBarState = progressBarState
+            progressBarState = progressBarState,
+            showOverlay = showOverlay
     )
 
     data class DraftPage(
@@ -57,7 +61,8 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PageItemProgressBar
+        override val progressBarState: PostItemProgressBar? = null,
+        override val showOverlay: Boolean? = null
     ) : Page(
             id = id,
             title = title,
@@ -68,7 +73,8 @@ sealed class PageItem(open val type: Type) {
             actions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
             tapActionEnabled = true,
-            progressBarState = progressBarState
+            progressBarState = progressBarState,
+            showOverlay = showOverlay
     )
 
     data class ScheduledPage(
@@ -78,7 +84,8 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PageItemProgressBar
+        override val progressBarState: PostItemProgressBar? = null,
+        override val showOverlay: Boolean? = null
     ) : Page(
             id = id,
             title = title,
@@ -89,7 +96,8 @@ sealed class PageItem(open val type: Type) {
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
             tapActionEnabled = true,
-            progressBarState = progressBarState
+            progressBarState = progressBarState,
+            showOverlay = showOverlay
     )
 
     data class TrashedPage(
@@ -98,7 +106,8 @@ sealed class PageItem(open val type: Type) {
         override val date: Date,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PageItemProgressBar
+        override val progressBarState: PostItemProgressBar? = null,
+        override val showOverlay: Boolean? = null
     ) : Page(
             id = id,
             title = title,
@@ -109,7 +118,8 @@ sealed class PageItem(open val type: Type) {
             actions = setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY),
             actionsEnabled = actionsEnabled,
             tapActionEnabled = false,
-            progressBarState = progressBarState
+            progressBarState = progressBarState,
+            showOverlay = showOverlay
     )
 
     data class ParentPage(
@@ -134,12 +144,6 @@ sealed class PageItem(open val type: Type) {
         EMPTY(3),
         PARENT(4),
         TOP_LEVEL_PARENT(5)
-    }
-
-    sealed class PageItemProgressBar(val visibility: Boolean){
-        object Hidden : PageItemProgressBar(visibility = false)
-        object Indeterminate : PageItemProgressBar(visibility = true)
-        data class Determinate(val progress: Int) : PageItemProgressBar(visibility = true)
     }
 
     enum class Action(@IdRes val itemId: Int) {
