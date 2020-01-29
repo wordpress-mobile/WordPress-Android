@@ -33,7 +33,8 @@
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@color/primary"
             app:tabTextColor="?attr/wpColorText"
-            app:theme="@style/Base.Widget.Design.TabLayout"/>
+            app:theme="@style/Base.Widget.Design.TabLayout"
+            android:layout_marginStart="@dimen/content_margin_bottom_sheet_tab_start"/>
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
