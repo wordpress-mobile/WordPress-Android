@@ -74,7 +74,7 @@ function printVersion() {
   echo "$BUILDFILE version $gradle_version"
 }
 
-checkNewLanguages
+#checkNewLanguages
 checkENStrings
 printVersion
 # checkDeviceToTest

@@ -1,3 +1,0 @@
-13.9:
-• Tambahan pada penyunting blok: Menambahkan blok Galeri yang baru untuk membuat galeri gambar menggunakan file dari Pustaka Media Anda, bersama dengan dukungan untuk blok Yang diformat sebelumnya.
-• Peningkatan pada penyunting blok: Menambahkan dukungan untuk pengaturan di blok Daftar dan Video.

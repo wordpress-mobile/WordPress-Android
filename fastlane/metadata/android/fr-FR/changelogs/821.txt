@@ -1,0 +1,4 @@
+14.0 :
+- Éditeur de blocs : Parfois, l'éditeur de blocs plantait lorsque vous essayiez d'annuler une action, ce qui était très inconfortable. Le problème a été résolu, ainsi qu'un bug affectant les espaces réservés des images.
+- La section « Moi » de l'application a été remplacée par la section « Mon site ».
+- Ajout d'un bouton d'action flottant à la section « Mon site » pour créer rapidement de nouveaux messages et de nouvelles pages.
