@@ -54,9 +54,10 @@
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@null"
-        android:padding="@dimen/margin_small"
-        android:src="@drawable/ic_cross_white_24dp"
+        android:src="@drawable/ic_cross_small_white_24dp"
         android:tint="@color/neutral_70"
+        android:paddingEnd="@dimen/margin_small"
+        android:paddingStart="@dimen/margin_small"
         app:layout_constraintStart_toEndOf="@+id/selected_filter_name"
         app:layout_constraintEnd_toStartOf="@+id/guideline"/>
 
