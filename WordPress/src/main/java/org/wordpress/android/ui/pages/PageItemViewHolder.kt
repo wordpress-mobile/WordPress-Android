@@ -4,10 +4,12 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.PopupMenu
+import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.LayoutRes
@@ -46,6 +48,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val time = itemView.findViewById<TextView>(R.id.time_posted)
         private val labels = itemView.findViewById<TextView>(R.id.labels)
         private val featuredImage = itemView.findViewById<ImageView>(R.id.featured_image)
+        private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
+        private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
         private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
         private val pageLayout = itemView.findViewById<ViewGroup>(R.id.page_layout)
         private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(

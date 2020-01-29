@@ -34,14 +34,14 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="@string/featured_image_desc"
-            app:layout_constraintBottom_toBottomOf="@id/constraintLayout2"
+            app:layout_constraintBottom_toBottomOf="@id/text_layout"
             app:layout_constraintEnd_toStartOf="@id/page_more"
-            app:layout_constraintStart_toEndOf="@id/constraintLayout2"
-            app:layout_constraintTop_toTopOf="@id/constraintLayout2"
+            app:layout_constraintStart_toEndOf="@id/text_layout"
+            app:layout_constraintTop_toTopOf="@id/text_layout"
             tools:srcCompat="@tools:sample/avatars"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
+            android:id="@+id/text_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -83,7 +83,28 @@
                 tools:text="Local Draft"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <FrameLayout
+            android:id="@+id/disabled_overlay"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white_translucent_65"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
+        <ProgressBar
+            android:id="@+id/upload_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_layout"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
