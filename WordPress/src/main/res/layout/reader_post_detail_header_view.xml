@@ -44,8 +44,9 @@
             android:id="@+id/text_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:alpha="@dimen/material_emphasis_high_type"
             android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
             tools:text="text_header_author_name" />
@@ -54,8 +55,9 @@
             android:id="@+id/text_header_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:alpha="@dimen/material_emphasis_high_type"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="?attr/colorOnSurface"
             tools:text="text_header_blog_name" />
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
