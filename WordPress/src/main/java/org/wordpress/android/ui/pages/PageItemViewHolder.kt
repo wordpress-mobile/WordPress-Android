@@ -22,14 +22,18 @@ import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.util.currentLocale
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
+import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
+import org.wordpress.android.viewmodel.posts.PostListItemProgressBar.Determinate
+import org.wordpress.android.viewmodel.posts.PostListItemProgressBar.Indeterminate
 import java.util.Date
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
@@ -41,7 +45,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val onMenuAction: (PageItem.Action, Page) -> Boolean,
         private val onItemTapped: (Page) -> Unit,
         private val imageManager: ImageManager? = null,
-        private val isSitePhotonCapable: Boolean = false
+        private val isSitePhotonCapable: Boolean = false,
+        private val uiHelper: UiHelpers? = null
     ) : PageItemViewHolder(parentView, R.layout.page_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(R.id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(R.id.page_more)
@@ -90,6 +95,23 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 setBackground(page.tapActionEnabled)
                 showFeaturedImage(page.imageUrl)
+                page.showOverlay?.let {
+                    uiHelper?.updateVisibility(disabledOverlay,it)
+                }
+                page.progressBarState?.let {
+                    updateProgressBarState(it)
+                }
+            }
+        }
+
+        private fun updateProgressBarState(progressBarState: PostListItemProgressBar) {
+            uiHelper?.updateVisibility(uploadProgressBar,progressBarState.visibility)
+            when (progressBarState) {
+                Indeterminate -> uploadProgressBar.isIndeterminate = true
+                is Determinate -> {
+                    uploadProgressBar.isIndeterminate = false
+                    uploadProgressBar.progress = progressBarState.progress
+                }
             }
         }
 
