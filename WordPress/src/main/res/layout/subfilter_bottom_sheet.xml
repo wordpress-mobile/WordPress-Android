@@ -34,7 +34,9 @@
             app:tabSelectedTextColor="@color/primary"
             app:tabTextColor="?attr/wpColorText"
             app:theme="@style/Base.Widget.Design.TabLayout"
-            android:layout_marginStart="@dimen/content_margin_bottom_sheet_tab_start"/>
+            android:layout_marginStart="@dimen/content_margin_bottom_sheet_tab_start"
+            app:tabPaddingStart="@dimen/content_bottom_sheet_tab_padding"
+            app:tabPaddingEnd="@dimen/content_bottom_sheet_tab_padding"/>
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"

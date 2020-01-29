@@ -1080,8 +1080,8 @@
 
     <style name="SubfilterSiteTagItem">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
-        <item name="android:paddingEnd">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingStart">@dimen/content_margin_bottom_sheet_row_start</item>
+        <item name="android:paddingEnd">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
@@ -1091,8 +1091,8 @@
 
     <style name="SiteTagBottomSheetTitle" parent="SiteTagFilteredTitle">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
-        <item name="android:paddingEnd">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingStart">@dimen/content_margin_bottom_sheet_row_start</item>
+        <item name="android:paddingEnd">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 

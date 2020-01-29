@@ -63,9 +63,16 @@
     <dimen name="content_margin_site_row_start">@dimen/my_site_list_row_padding_left</dimen>
     <dimen name="content_margin_site_row_start_tablet">60dp</dimen>
     <dimen name="content_margin_site_row_start_tablet_big">108dp</dimen>
+
+    <dimen name="content_margin_bottom_sheet_row_start">16dp</dimen>
+    <dimen name="content_margin_bottom_sheet_row_start_tablet">60dp</dimen>
+    <dimen name="content_margin_bottom_sheet_row_start_tablet_big">108dp</dimen>
+
     <dimen name="content_margin_bottom_sheet_tab_start">0dp</dimen>
-    <dimen name="content_margin_bottom_sheet_tab_start_tablet">40dp</dimen>
-    <dimen name="content_margin_bottom_sheet_tab_start_tablet_big">88dp</dimen>
+    <dimen name="content_margin_bottom_sheet_tab_start_tablet">44dp</dimen>
+    <dimen name="content_margin_bottom_sheet_tab_start_tablet_big">92dp</dimen>
+
+    <dimen name="content_bottom_sheet_tab_padding">16dp</dimen>
 
     <dimen name="content_margin_none">0dp</dimen>
     <dimen name="site_creation_content_margin">@dimen/content_margin_none</dimen>
