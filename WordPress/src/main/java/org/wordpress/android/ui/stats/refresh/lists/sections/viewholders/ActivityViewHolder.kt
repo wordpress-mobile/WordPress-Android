@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
+import org.wordpress.android.util.ContentDescriptionListAnnouncer
 
 private const val SIZE_PADDING = 32
 private const val GAP = 8
@@ -49,6 +50,24 @@ class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
                 delay(50)
                 updateVisibility(item, parent.width / parent.context.resources.displayMetrics.density)
             }
+        }
+
+        setupBlocksForAccessibility(item)
+    }
+
+    private fun setupBlocksForAccessibility(item: ActivityItem) {
+        val blocks = listOf(firstBlock, secondBlock, thirdBlock)
+
+        blocks.forEachIndexed { index, block ->
+            block.label.contentDescription = item.blocks[index].contentDescription
+
+            val announcer = ContentDescriptionListAnnouncer()
+            announcer.setupAnnouncer(
+                    R.string.stats_posting_activity_empty_description,
+                    R.string.stats_posting_activity_end_description,
+                    R.string.stats_posting_activity_action,
+                    requireNotNull(item.blocks[index].activityContentDescriptions), block
+            )
         }
     }
 

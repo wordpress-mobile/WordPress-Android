@@ -21,6 +21,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.graphics.ColorUtils;
 
 import com.android.volley.RequestQueue;
@@ -112,6 +113,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
                 return true;
             }
         });
+
         mSearchView.setEnabled(false);
         mSearchView.setIconifiedByDefault(false);
         setSearchViewContentDescription(mSearchView);
@@ -120,7 +122,11 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         mEmptyView = view.findViewById(R.id.empty_view);
         mProgressView = view.findViewById(R.id.progress_view);
 
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
+        int topOffset = getResources().getDimensionPixelOffset(R.dimen.settings_fragment_dialog_vertical_inset);
+
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity())
+                .setBackgroundInsetTop(topOffset)
+                .setBackgroundInsetBottom(topOffset);
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
         builder.setView(view);

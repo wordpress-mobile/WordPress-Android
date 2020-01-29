@@ -5,7 +5,6 @@ import android.animation.Animator.AnimatorListener;
 import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
@@ -86,12 +84,10 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                     mTaskCompleted.size()));
 
             if (mIsCompletedTaskListExpanded) {
-                headerViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_white_radius_top_card);
                 headerViewHolder.mChevron.setRotation(EXPANDED_CHEVRON_ROTATION);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_collapse_desc));
             } else {
-                headerViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_white_radius_card);
                 headerViewHolder.mChevron.setRotation(COLLAPSED_CHEVRON_ROTATION);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_expand_desc));
@@ -107,23 +103,6 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;
-
-        // When first list item...
-        if (position == 0) {
-            // Use rounded background when next item is header.
-            if (getItemViewType(position + 1) == VIEW_TYPE_COMPLETED_TASKS_HEADER) {
-                taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_white_radius_card);
-            // Use top rounded background when next item is not header (i.e. middle or bottom).
-            } else {
-                taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_white_radius_top_card);
-            }
-        // When last list item or next item is header, use bottom rounded background.
-        } else if (position == mTasks.size() - 1 || getItemViewType(position + 1) == VIEW_TYPE_COMPLETED_TASKS_HEADER) {
-            taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_white_radius_bottom_card);
-        // Otherwise, use middle unrounded background.
-        } else {
-            taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_white);
-        }
 
         QuickStartTask task = mTasks.get(position);
         boolean isEnabled = mTasksUncompleted.contains(task);
@@ -218,35 +197,26 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
             mDivider = inflate.findViewById(R.id.divider);
             mPopupAnchor = inflate.findViewById(R.id.popup_anchor);
 
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mListener != null) {
-                        mListener.onTaskTapped(mTasks.get(getAdapterPosition()));
-                    }
+            View.OnClickListener clickListener = view -> {
+                if (mListener != null) {
+                    mListener.onTaskTapped(mTasks.get(getAdapterPosition()));
                 }
             };
 
-            View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    PopupMenu popup = new PopupMenu(mContext, mPopupAnchor);
-                    popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            if (item.getItemId() == R.id.quick_start_task_menu_skip) {
-                                if (mListener != null) {
-                                    mListener.onSkipTaskTapped(mTasks.get(getAdapterPosition()));
-                                }
-                                return true;
-                            }
-                            return false;
+            View.OnLongClickListener longClickListener = v -> {
+                PopupMenu popup = new PopupMenu(mContext, mPopupAnchor);
+                popup.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.quick_start_task_menu_skip) {
+                        if (mListener != null) {
+                            mListener.onSkipTaskTapped(mTasks.get(getAdapterPosition()));
                         }
-                    });
-                    popup.inflate(R.menu.quick_start_task_menu);
-                    popup.show();
-                    return true;
-                }
+                        return true;
+                    }
+                    return false;
+                });
+                popup.inflate(R.menu.quick_start_task_menu);
+                popup.show();
+                return true;
             };
 
             itemView.setOnClickListener(clickListener);
@@ -264,12 +234,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
             mChevron = inflate.findViewById(R.id.completed_tasks_header_chevron);
             mTitle = inflate.findViewById(R.id.completed_tasks_header_title);
 
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    toggleCompletedTasksList();
-                }
-            };
+            View.OnClickListener clickListener = view -> toggleCompletedTasksList();
 
             itemView.setOnClickListener(clickListener);
         }
@@ -284,7 +249,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
             viewPropertyAnimator.setListener(new AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    itemView.setClickable(false);
+                    itemView.setEnabled(false);
                 }
 
                 @Override
@@ -303,7 +268,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                     // Update header background based after collapsed and expanded.
                     notifyItemChanged(positionOfHeader);
                     mIsCompletedTaskListExpanded = !mIsCompletedTaskListExpanded;
-                    itemView.setClickable(true);
+                    itemView.setEnabled(true);
 
                     if (mListener != null) {
                         mListener.onCompletedTasksListToggled(mIsCompletedTaskListExpanded);
@@ -312,7 +277,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
 
                 @Override
                 public void onAnimationCancel(Animator animation) {
-                    itemView.setClickable(true);
+                    itemView.setEnabled(true);
                 }
 
                 @Override

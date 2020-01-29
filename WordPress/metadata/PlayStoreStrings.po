@@ -11,20 +11,19 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_140"
+msgid ""
+"14.0:\n"
+"- Block editor: Sometimes the Block editor would crash when you tried to undo, which is a little too much undoing. That’s fixed, along with a bug affecting image placeholders.\n"
+"- Moved the “me” section of the app to within "My Site".\n"
+"- Added a floating action button to My Site for quick creation of new posts and pages.\n"
+msgstr ""
+
 msgctxt "release_note_139"
 msgid ""
 "13.9:\n"
 "• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.\n"
 "• Block editor enhancements: Added support for settings in the List and Video blocks.\n"
-msgstr ""
-
-msgctxt "release_note_138"
-msgid ""
-"13.8:\n"
-"* Block editor improvements: Added Spacer block for creating white space between content.\n"
-"* Modified Blog Post Search to include posts under all categories.\n"
-"* Lots of under-the-hood improvements across the entire app –26 unique crash and bug fixes in all.\n"
-"\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

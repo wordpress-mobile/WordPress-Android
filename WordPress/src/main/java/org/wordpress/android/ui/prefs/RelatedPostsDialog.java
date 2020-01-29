@@ -18,6 +18,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.wordpress.android.R;
 
 import java.util.ArrayList;
@@ -90,8 +92,11 @@ public class RelatedPostsDialog extends DialogFragment
 
         toggleViews(mShowRelatedPosts.isChecked());
 
-        // Material alert dialog is not expanding vertically, so as exception we are using normal dialog here
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        int topOffset = getResources().getDimensionPixelOffset(R.dimen.settings_fragment_dialog_vertical_inset);
+
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity())
+                .setBackgroundInsetTop(topOffset)
+                .setBackgroundInsetBottom(topOffset);
         //noinspection InflateParams
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
         TextView titleText = titleView.findViewById(R.id.title);
