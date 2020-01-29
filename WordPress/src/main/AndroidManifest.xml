@@ -150,7 +150,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/settings"
             android:launchMode="singleTop"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.prefs.ReleaseNotesActivity"
             android:theme="@style/Calypso.NoActionBar"
@@ -160,7 +160,7 @@
             android:label="@string/license_screen_title"
             android:theme="@style/Calypso.NoActionBar" />
         <activity android:name=".ui.prefs.SiteSettingsTagListActivity"
-            android:theme="@style/CalypsoTheme"
+            android:theme="@style/WordPress.NoActionBar"
             android:label="@string/site_settings_tags_title" />
         <activity
             android:name=".ui.prefs.AccountSettingsActivity"

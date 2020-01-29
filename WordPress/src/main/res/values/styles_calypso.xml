@@ -66,16 +66,6 @@
         <item name="android:dividerHeight">@dimen/site_settings_divider_height</item>
     </style>
 
-    <style name="Calypso.TextAppearance.AlertDialog">
-        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-light</item>
-        <item name="android:background">@android:color/white</item>
-        <item name="android:textSize">@dimen/text_sz_extra_large</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:paddingStart">@dimen/dlp_title_padding_start</item>
-        <item name="android:paddingEnd">@dimen/dlp_title_padding_end</item>
-    </style>
-
     <style name="CalypsoTheme.NoActionBarShadow" parent="CalypsoTheme">
         <item name="android:windowContentOverlay">@null</item>
     </style>
