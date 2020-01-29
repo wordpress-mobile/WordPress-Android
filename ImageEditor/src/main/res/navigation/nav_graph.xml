@@ -6,7 +6,7 @@
     app:startDestination="@+id/home_dest">
     <fragment
         android:id="@+id/home_dest"
-        android:name="org.wordpress.android.imageeditor.HomeFragment"
+        android:name="org.wordpress.android.imageeditor.home.HomeFragment"
         android:label="@string/home"
         tools:layout="@layout/home_fragment">
     </fragment>

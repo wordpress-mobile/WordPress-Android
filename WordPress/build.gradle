@@ -176,7 +176,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 
     // ViewModel and LiveData
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensionsVersion"
 
     testImplementation('androidx.arch.core:core-testing:2.0.0', {
         exclude group: 'com.android.support', module: 'support-compat'

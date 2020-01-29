@@ -51,6 +51,9 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$navComponentVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navComponentVersion"
 
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensionsVersion"
+
     // uCrop
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
         exclude group: 'com.squareup.okhttp3'
