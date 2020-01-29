@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 import org.wordpress.android.R
@@ -60,6 +63,21 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             }
         })
+
+        dialog.setOnShowListener { dialogInterface ->
+            val sheetDialog = dialogInterface as? BottomSheetDialog
+
+            val bottomSheet = sheetDialog?.findViewById<View>(
+                    com.google.android.material.R.id.design_bottom_sheet
+            ) as? FrameLayout
+
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+                val metrics = resources.displayMetrics
+                behavior.peekHeight = metrics.heightPixels / 2
+                behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            }
+        }
     }
 
     override fun onAttach(context: Context?) {
