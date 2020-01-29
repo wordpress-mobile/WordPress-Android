@@ -318,7 +318,13 @@ class SitePreviewViewModel @Inject constructor(
         object SitePreviewFullscreenProgressUiState : SitePreviewUiState(
                 fullscreenProgressLayoutVisibility = true
         ) {
-            const val loadingTextResId = R.string.notification_new_site_creation_creating_site_subtitle
+            val loadingTextResId: List<Int> = listOf(
+                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_1,
+                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_2,
+                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_3,
+                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_4,
+                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_5,
+                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_6)
         }
 
         sealed class SitePreviewFullscreenErrorUiState constructor(

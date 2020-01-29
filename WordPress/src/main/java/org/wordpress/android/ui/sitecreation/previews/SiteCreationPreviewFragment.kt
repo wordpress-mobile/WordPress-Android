@@ -41,10 +41,13 @@ import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
 import org.wordpress.android.util.getColorFromAttribute
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 private const val ARG_DATA = "arg_site_creation_data"
 private const val SLIDE_IN_ANIMATION_DURATION = 450L
+// 2 seconds for preview of each text in the site creation "loading" state:
+private const val SITE_CREATION_PREVIEW_TEXT_DURATION_MS = 2000L
 
 class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         ErrorManagedWebViewClientListener {
@@ -72,6 +75,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private var okButtonContainer: View? = null
 
+    // an instance helping sequence texts while in `loading` state
+    private var textsProgressTextsHelper: SiteCreationTextsProgressHelper? = null
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context !is SitePreviewScreenListener) {
@@ -86,7 +92,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     override fun onResume() {
         super.onResume()
-        serviceEventConnection = ServiceEventConnection(context, SiteCreationService::class.java, viewModel)
+        serviceEventConnection = ServiceEventConnection(
+                context,
+                SiteCreationService::class.java,
+                viewModel
+        )
     }
 
     override fun onPause() {
@@ -127,17 +137,39 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     is SitePreviewFullscreenProgressUiState -> updateLoadingLayout(uiState)
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
                 }
-                uiHelpers.updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
+                uiHelpers.updateVisibility(
+                        fullscreenProgressLayout,
+                        uiState.fullscreenProgressLayoutVisibility
+                )
                 uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebError, uiState.webViewErrorVisibility)
-                uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
-                uiHelpers.updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
+                uiHelpers.updateVisibility(
+                        sitePreviewWebViewShimmerLayout,
+                        uiState.shimmerVisibility
+                )
+                uiHelpers.updateVisibility(
+                        fullscreenErrorLayout,
+                        uiState.fullscreenErrorLayoutVisibility
+                )
+
+                // special care required for the animated texts displayed while in loading state
+                // which may be currently running the sequence:
+                if (textsProgressTextsHelper != null && uiState !is SitePreviewFullscreenProgressUiState) {
+                    textsProgressTextsHelper?.let {
+                        // capture before using it
+                        it.cancel()
+                        textsProgressTextsHelper = null
+                    }
+                }
             }
         })
         viewModel.preloadPreview.observe(this, Observer { url ->
             url?.let {
-                sitePreviewWebView.webViewClient = URLFilteredWebViewClient(url, this@SiteCreationPreviewFragment)
+                sitePreviewWebView.webViewClient = URLFilteredWebViewClient(
+                        url,
+                        this@SiteCreationPreviewFragment
+                )
                 sitePreviewWebView.loadUrl(url)
             }
         })
@@ -214,14 +246,27 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private fun updateLoadingLayout(progressUiState: SitePreviewFullscreenProgressUiState) {
         progressUiState.apply {
-            uiHelpers.setTextOrHide(fullscreenProgressLayout.findViewById(R.id.progress_text), loadingTextResId)
+            fullscreenProgressLayout.findViewById<TextView>(R.id.progress_text)?.let { textView ->
+
+                // create a progress helper and let it run
+                SiteCreationTextsProgressHelper(WeakReference(textView), loadingTextResId).also {
+                    textsProgressTextsHelper = it
+                    textView.post(it)
+                }
+            }
         }
     }
 
     private fun updateErrorLayout(errorUiStateState: SitePreviewFullscreenErrorUiState) {
         errorUiStateState.apply {
-            uiHelpers.setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_title), titleResId)
-            uiHelpers.setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_subtitle), subtitleResId)
+            uiHelpers.setTextOrHide(
+                    fullscreenErrorLayout.findViewById(R.id.error_title),
+                    titleResId
+            )
+            uiHelpers.setTextOrHide(
+                    fullscreenErrorLayout.findViewById(R.id.error_subtitle),
+                    subtitleResId
+            )
             uiHelpers.updateVisibility(
                     fullscreenErrorLayout.findViewById(R.id.contact_support),
                     errorUiStateState.showContactSupport
@@ -329,9 +374,17 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     val contentHeight = contentLayout.measuredHeight.toFloat()
 
                     val titleAnim = createFadeInAnimator(sitePreviewTitle)
-                    val webViewAnim = createSlideInFromBottomAnimator(webviewContainer, contentHeight)
+                    val webViewAnim = createSlideInFromBottomAnimator(
+                            webviewContainer,
+                            contentHeight
+                    )
                     // OK button should slide in if the container exists and fade in otherwise
-                    val okAnim = okButtonContainer?.let { createSlideInFromBottomAnimator(it, contentHeight) }
+                    val okAnim = okButtonContainer?.let {
+                        createSlideInFromBottomAnimator(
+                                it,
+                                contentHeight
+                        )
+                    }
                             ?: createFadeInAnimator(okButton)
                     AnimatorSet().apply {
                         interpolator = DecelerateInterpolator()
@@ -355,6 +408,49 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun createFadeInAnimator(view: View) = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
+
+    /**
+     * A simple helper to switch texts used to display progress of site being created.
+     * The helper is a runnable and one started (externally) will keep running until cancelled
+     * Each run changes the text to the next one in the sequence (stringIds) in a cyclic manner
+     *
+     * using a WeakReference for the text view will prevent future executions once the view is
+     * destroyed (or at least no longer referenced by fullscreenProgressLayout)
+     *
+     * @param textView - a week-ref to a text-view onto which the sequence is displayed
+     * @param stringIds - a list of string resource ids to sequence
+     */
+    private inner class SiteCreationTextsProgressHelper(
+        val textView: WeakReference<TextView>,
+        val stringIds: List<Int>,
+        val delay: Long = SITE_CREATION_PREVIEW_TEXT_DURATION_MS
+    ) : Runnable {
+        val nText: Int = stringIds.size
+
+        // the count of how many time `run` was executed
+        var count = -1
+
+        var canceled = false
+
+        fun cancel() {
+            textView.get()?.removeCallbacks(this)
+            canceled = true
+        }
+
+        override fun run() {
+            if (canceled) {
+                return
+            }
+            textView.get()?.let {
+                // progress with the count and change the text
+                count++
+
+                // update to the next text
+                uiHelpers.setTextOrHide(it, stringIds[count % nText])
+                it.postDelayed(this, delay)
+            }
+        }
+    }
 
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"

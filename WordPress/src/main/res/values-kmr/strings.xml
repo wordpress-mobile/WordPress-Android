@@ -1917,4 +1917,10 @@ Language: ku_TR
     <string name="save">Tomar bike</string>
     <string name="cancel">Betal</string>
     <string name="error">Çewtî</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_1">Hooray! Almost done</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_2">Your site will be ready shortly</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_3">Grabbing site URL</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_4">Adding site features</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_5">Setting up theme</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_6">Creating dashboard</string>
 </resources>

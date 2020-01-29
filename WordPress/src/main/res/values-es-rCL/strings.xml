@@ -1737,4 +1737,10 @@ Language: es_CL
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>
     <string name="error">Error</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_1">Hooray! Almost done</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_2">Your site will be ready shortly</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_3">Grabbing site URL</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_4">Adding site features</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_5">Setting up theme</string>
+    <string name="notification_new_site_creation_creating_site_dynamic_subtitle_6">Creating dashboard</string>
 </resources>
