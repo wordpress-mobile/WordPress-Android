@@ -60,12 +60,6 @@ data class PostListItemUiStateData(
     val disableRippleEffect: Boolean
 )
 
-sealed class PostListItemProgressBar(val visibility: Boolean) {
-    object Hidden : PostListItemProgressBar(visibility = false)
-    object Indeterminate : PostListItemProgressBar(visibility = true)
-    data class Determinate(val progress: Int) : PostListItemProgressBar(visibility = true)
-}
-
 sealed class PostListItemAction(val buttonType: PostListButtonType, val onButtonClicked: (PostListButtonType) -> Unit) {
     class SingleItem(buttonType: PostListButtonType, onButtonClicked: (PostListButtonType) -> Unit) :
             PostListItemAction(buttonType, onButtonClicked)
