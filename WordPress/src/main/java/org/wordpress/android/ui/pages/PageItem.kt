@@ -12,7 +12,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
-import org.wordpress.android.viewmodel.posts.PostItemProgressBar
+import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
 import java.util.Date
 
 sealed class PageItem(open val type: Type) {
@@ -26,7 +26,7 @@ sealed class PageItem(open val type: Type) {
         open val actions: Set<Action>,
         open var actionsEnabled: Boolean,
         open val tapActionEnabled: Boolean,
-        open val progressBarState: PostItemProgressBar?,
+        open val progressBarState: PostListItemProgressBar?,
         open val showOverlay: Boolean?
     ) : PageItem(PAGE)
 
@@ -38,7 +38,7 @@ sealed class PageItem(open val type: Type) {
         override var indent: Int = 0,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PostItemProgressBar? = null,
+        override val progressBarState: PostListItemProgressBar? = null,
         override val showOverlay: Boolean? = null
     ) : Page(
             id = id,
@@ -61,7 +61,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PostItemProgressBar? = null,
+        override val progressBarState: PostListItemProgressBar? = null,
         override val showOverlay: Boolean? = null
     ) : Page(
             id = id,
@@ -84,7 +84,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PostItemProgressBar? = null,
+        override val progressBarState: PostListItemProgressBar? = null,
         override val showOverlay: Boolean? = null
     ) : Page(
             id = id,
@@ -106,7 +106,7 @@ sealed class PageItem(open val type: Type) {
         override val date: Date,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PostItemProgressBar? = null,
+        override val progressBarState: PostListItemProgressBar? = null,
         override val showOverlay: Boolean? = null
     ) : Page(
             id = id,
