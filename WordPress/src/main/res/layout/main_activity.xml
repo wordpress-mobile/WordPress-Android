@@ -68,6 +68,7 @@
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/margin_medium"
+        android:importantForAccessibility="noHideDescendants"
         android:layout_above="@+id/fab_button"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -80,7 +81,7 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:visibility="gone"
         tools:visibility="visible"
-        android:contentDescription="@string/fab_create_desc"
+        android:contentDescription="@string/create_post_page_fab_tooltip"
         android:src="@drawable/ic_create_white_24dp"
         app:borderWidth="0dp"/>
 

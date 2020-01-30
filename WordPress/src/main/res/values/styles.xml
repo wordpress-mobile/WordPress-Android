@@ -51,8 +51,6 @@
 
         <item name="colorButtonNormal">@color/light_gray</item>
 
-        <item name="android:dialogTheme">@style/DialogTheme.WordPress</item>
-        <item name="android:alertDialogTheme">@style/Calypso.Dialog.Alert</item>
         <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
         <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
 
@@ -76,7 +74,7 @@
     <style name="NumberPickerTheme" parent="WordPress">
         <item name="colorControlNormal">@color/transparent</item>
         <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
-        <item name="android:textColorPrimary">@color/primary</item>
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
@@ -140,11 +138,6 @@
     <style name="FilteredRecyclerViewFilterTextView.MainToolbar">
         <item name="android:textSize">@null</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
-    </style>
-
-    <style name="DialogTheme.WordPress" parent="android:Theme.Material.Dialog">
-        <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
-        <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
     </style>
 
     <style name="DatePicker.WordPress" parent="android:Widget.Material.DatePicker">
@@ -240,10 +233,6 @@
         <item name="android:layout_height">fill_parent</item>
         <item name="android:gravity">center_horizontal|center_vertical</item>
         <item name="android:textColor">@color/neutral_40</item>
-    </style>
-
-    <style name="WhiteButton" parent="Widget.AppCompat.Button">
-        <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
     <style name="WordPress.Button" parent="Widget.AppCompat.Button.Colored">

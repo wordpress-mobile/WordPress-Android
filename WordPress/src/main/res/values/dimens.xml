@@ -133,7 +133,6 @@
     <dimen name="text_sz_larger">18sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
-    <dimen name="text_sz_triple_extra_large">26sp</dimen>
     <dimen name="text_sz_extra_extra_large">32sp</dimen>
     <dimen name="text_sz_post_content">18sp</dimen>
 
@@ -215,10 +214,6 @@
     <dimen name="dlp_padding_bottom">6dp</dimen>
     <dimen name="dlp_text_margin_start">4dp</dimen>
     <dimen name="dlp_text_margin_end">4dp</dimen>
-    <dimen name="dlp_title_padding_start">24dp</dimen>
-    <dimen name="dlp_title_padding_end">24dp</dimen>
-    <dimen name="dlp_title_padding_top">24dp</dimen>
-    <dimen name="dlp_title_padding_bottom">16dp</dimen>
 
     <!-- stats -->
     <dimen name="stats_activity_box_size">12dp</dimen>
@@ -263,9 +258,9 @@
     <dimen name="related_posts_dialog_padding_top">12dp</dimen>
     <dimen name="related_posts_dialog_padding_right">24dp</dimen>
     <dimen name="related_posts_dialog_padding_bottom">12dp</dimen>
-    <dimen name="text_sz_related_post_small">11sp</dimen>
     <dimen name="list_divider_height">1dp</dimen>
     <dimen name="list_editor_input_max_width">500dp</dimen>
+    <dimen name="settings_fragment_dialog_vertical_inset">24dp</dimen>
 
     <!--theme browser-->
     <dimen name="theme_browser_default_column_width">320dp</dimen>
