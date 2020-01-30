@@ -26,7 +26,7 @@ msgctxt "release_note_140"
 msgid ""
 "14.0:\n"
 "- Block editor: Sometimes the Block editor would crash when you tried to undo, which is a little too much undoing. That’s fixed, along with a bug affecting image placeholders.\n"
-"- Moved the “me” section of the app to within "My Site".\n"
+"- Moved the “me” section of the app to within “My Site”.\n"
 "- Added a floating action button to My Site for quick creation of new posts and pages.\n"
 msgstr ""
 
