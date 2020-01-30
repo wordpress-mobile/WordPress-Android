@@ -62,6 +62,7 @@ import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorImageMetaData;
 import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorImageSettingsListener;
+import org.wordpress.android.editor.EditorEditMediaListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.GutenbergEditorFragment;
@@ -197,6 +198,7 @@ public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
         EditorImagePreviewListener,
+        EditorEditMediaListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
         OnRequestPermissionsResultCallback,
@@ -1646,6 +1648,8 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override public void onImagePreviewRequested(String mediaUrl) {
         MediaPreviewActivity.showPreview(this, null, mediaUrl);
     }
+
+    @Override public void onMediaEditorRequested(String mediaUrl) {}
 
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {
