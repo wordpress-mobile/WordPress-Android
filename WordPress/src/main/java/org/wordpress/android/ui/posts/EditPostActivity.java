@@ -1649,7 +1649,7 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaPreviewActivity.showPreview(this, null, mediaUrl);
     }
 
-    @Override public void onMediaEditorRequested(String mediaUrl) {}
+    @Override public void onMediaEditorRequested(String mediaUrl) { }
 
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {
