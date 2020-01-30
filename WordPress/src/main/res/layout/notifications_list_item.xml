@@ -1,54 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/header_text"
-        android:background="@color/background_default"
-        android:gravity="center_vertical"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingEnd="@dimen/margin_extra_large"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingTop="@dimen/margin_large"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-        android:textColor="?attr/wpColorTextSubtle"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_large"
+        android:textAppearance="?attr/textAppearanceSubtitle2"
+        android:textColor="?attr/wpColorOnSurfaceMedium"
         android:visibility="gone"
         tools:text="Today"
-        tools:visibility="visible" >
-    </org.wordpress.android.widgets.WPTextView>
+        tools:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/note_content_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header_text"
         android:background="?android:selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:layout_below="@+id/header_text"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
         android:minHeight="?attr/listPreferredItemHeight"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_medium" >
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_medium">
 
         <FrameLayout
             android:id="@+id/note_avatar_container"
-            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content" >
+            android:layout_alignParentStart="true">
 
             <ImageView
                 android:id="@+id/note_avatar"
                 android:layout_width="@dimen/activity_log_icon_size"
                 android:layout_height="@dimen/activity_log_icon_size"
-                android:layout_marginEnd="@dimen/activity_log_icon_margin"
                 android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/activity_log_icon_margin"
                 android:contentDescription="@null"
                 tools:src="@drawable/bg_oval_neutral_30_user_32dp" />
 
@@ -58,68 +55,63 @@
                 android:layout_height="@dimen/note_icon_sz"
                 android:layout_marginStart="@dimen/notifications_note_icon_margin"
                 android:layout_marginTop="@dimen/notifications_note_icon_margin"
-                android:background="@drawable/bg_oval_primary_40_stroke_notification_unread"
-                android:importantForAccessibility="no"
+                android:background="@drawable/bg_oval_primary_stroke_notification_unread"
                 android:gravity="center"
+                android:importantForAccessibility="no"
                 android:padding="4dp" />
 
         </FrameLayout>
 
         <FrameLayout
             android:id="@+id/note_subject_container"
-            android:layout_toEndOf="@+id/note_avatar_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent" >
+            android:layout_toEndOf="@+id/note_avatar_container">
 
             <org.wordpress.android.widgets.NoticonTextView
                 android:id="@+id/note_subject_noticon"
-                android:gravity="start"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_small"
-                android:layout_width="wrap_content"
+                android:gravity="start"
                 android:textAlignment="viewStart"
-                android:textColor="@color/neutral_40"
-                android:textSize="@dimen/text_sz_larger" >
-            </org.wordpress.android.widgets.NoticonTextView>
+                android:textColor="?attr/wpColorOnSurfaceMedium"
+                android:textSize="@dimen/text_sz_larger" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/note_subject"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
                 android:maxLines="2"
                 android:textAlignment="viewStart"
-                android:textColor="?attr/wpColorText"
-                android:textSize="@dimen/text_sz_large"
-                tools:text="Bob Ross commented on your post Happy Trees" >
-            </org.wordpress.android.widgets.WPTextView>
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                tools:text="Bob Ross commented on your post Happy Trees" />
 
         </FrameLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/note_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/note_subject_container"
+            android:layout_toEndOf="@+id/note_avatar_container"
             android:ellipsize="end"
             android:importantForAccessibility="no"
             android:maxLines="2"
-            android:layout_below="@+id/note_subject_container"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/note_avatar_container"
-            android:layout_width="wrap_content"
-            android:textColor="@color/neutral_60"
-            android:textSize="@dimen/text_sz_large"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
             android:visibility="gone"
             tools:text="What an amazing post!"
-            tools:visibility="visible" >
-        </org.wordpress.android.widgets.WPTextView>
+            tools:visibility="visible" />
 
     </RelativeLayout>
 
     <View
-        android:background="@color/neutral_0"
-        android:layout_below="@+id/note_content_container"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:layout_width="match_parent" >
-    </View>
+        android:layout_below="@+id/note_content_container"
+        android:background="?android:attr/listDivider" />
 
 </RelativeLayout>

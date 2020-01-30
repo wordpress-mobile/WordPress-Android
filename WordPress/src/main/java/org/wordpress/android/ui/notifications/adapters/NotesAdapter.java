@@ -11,6 +11,7 @@ import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.graphics.ColorUtils;
 import androidx.core.text.BidiFormatter;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -38,7 +40,6 @@ import javax.inject.Inject;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
     private final int mAvatarSz;
-    private final int mColorRead;
     private final int mColorUnread;
     private final int mTextIndentSize;
 
@@ -100,8 +101,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         setHasStableIds(false);
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
-        mColorRead = context.getResources().getColor(android.R.color.white);
-        mColorUnread = context.getResources().getColor(R.color.background_notification_unread);
+        mColorUnread = ColorUtils
+                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface),
+                        context.getResources().getInteger(R.integer.selected_list_item_opacity));
         mTextIndentSize = context.getResources().getDimensionPixelSize(R.dimen.notifications_text_indent_sz);
     }
 
@@ -298,15 +300,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         if (commentStatus == CommentStatus.UNAPPROVED) {
             noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning_stroke_white);
         } else if (isUnread) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_40_stroke_notification_unread);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_stroke_notification_unread);
         } else {
             noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_20_stroke_white);
         }
 
         if (isUnread) {
-            noteViewHolder.itemView.setBackgroundColor(mColorUnread);
+            noteViewHolder.mContentView.setBackgroundColor(mColorUnread);
         } else {
-            noteViewHolder.itemView.setBackgroundColor(mColorRead);
+            noteViewHolder.mContentView.setBackgroundColor(0);
         }
 
         // request to load more comments when we near the end
