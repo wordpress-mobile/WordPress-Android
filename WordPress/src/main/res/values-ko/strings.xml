@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-21 00:54:10+0000
+Translation-Revision-Date: 2020-01-23 03:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">이미지 삭제</string>
+    <string name="gutenberg_native_move_image_forward">이미지를 앞으로 이동</string>
+    <string name="gutenberg_native_move_image_backward">이미지를 뒤로 이동</string>
+    <string name="gutenberg_native_gallery_caption_s">갤러리 캡션. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s 현재 값은 %2$s입니다.</string>
+    <string name="create_post_page_fab_tooltip">글 또는 페이지 만들기</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">새 글을 작성하려면 %1$s글 추가%2$s를 탭합니다.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">%1$s블로그 글%2$s을 탭하여 계속합니다.</string>
+    <string name="content_description_person_building_website">사람 건물 웹사이트</string>
+    <string name="post_signup_interstitial_not_right_now">나중에</string>
+    <string name="post_signup_interstitial_subtitle">무엇을 만들거나 공유하려는 경우 지금 바로 도와드리겠습니다.</string>
+    <string name="post_signup_interstitial_title">워드프레스에 오신 것을 환영합니다.</string>
+    <string name="stock_media_picker_list_content_description">사진 라이브러리</string>
+    <string name="photo_picker_image_thumbnail_unselected">이미지가 선택되지 않음</string>
+    <string name="photo_picker_image_selected">,선택됨</string>
+    <string name="photo_picker_image_thumbnail_selected">이미지가 선택됨</string>
+    <string name="photo_picker_image_thumbnail_content_description">이미지 썸네일</string>
+    <string name="my_site_bottom_sheet_add_post">블로그 글</string>
+    <string name="my_site_bottom_sheet_title">새로 추가</string>
+    <string name="post_settings_publish">발행</string>
+    <string name="dialog_gutenberg_informative_description_v2">블록 편집기를 크게 개선했습니다. 한 번 시도해 볼 가치가 있다고 생각합니다! 새 글 및 페이지에서 사용하도록 설정했지만 클래식 편집기로 변경하려면 ‘내 사이트’ > ‘사이트 설정’으로 이동하세요.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">지금 동기화</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">이 글은 즉시 동기화됩니다.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">동기화할 준비가 되셨습니까?</string>
+    <string name="new_site_creation_unavailable_domain">이 도메인을 사용할 수 없습니다.</string>
+    <string name="login_promo_viewpager_content_description">소개</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
     <string name="login_discovery_error_ssl">&lt;b>SSL 인증서&lt;/b> 문제로 인해 사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
     <string name="login_discovery_error_http_auth">&lt;b>HTTP 인증&lt;/b>이 필요하므로 사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
@@ -14,8 +41,6 @@ Language: ko_KR
     <string name="enter_site_credentials_instead">사이트 자격 증명으로 로그인</string>
     <string name="enter_credentials_for_site">%1$s 사이트 자격 증명으로 로그인</string>
     <string name="send_verification_email">인증 이메일 보내기</string>
-    <string name="my_site_bottom_sheet_add_page">새 페이지 만들기</string>
-    <string name="my_site_bottom_sheet_add_post">새 글 작성</string>
     <string name="reader_following_display_name">팔로우 중</string>
     <string name="posts_cannot_be_started">지금 이 글을 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="suffix_1_000">%sk</string>
@@ -156,8 +181,6 @@ Language: ko_KR
     <string name="site_settings_editor">편집기</string>
     <string name="description_expand">확장</string>
     <string name="description_collapse">Collapse</string>
-    <string name="editor_retry_failed_uploads">Retry uploading</string>
-    <string name="editor_toast_failed_uploads">일부 미디어 업로드에 실패했습니다. 이 상태의 글은 저장하거나 게시할 수\n 없습니다.</string>
     <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
     <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
     <string name="link_dialog_button_cancel">취소</string>
@@ -647,7 +670,6 @@ Language: ko_KR
     <string name="activity_log_rewind_started_snackbar_message">사이트 복원 중\n%s %s(으)로 되돌리는 중</string>
     <string name="activity_log_button">활동 로그 작업 버튼</string>
     <string name="plugin_auto_managed">자동 관리</string>
-    <string name="reader_save_posts_locally_dialog_message">이 글을 저장하고 원할 때마다 돌아와서 다시 읽으세요. 글은 이 기기에서만 읽을 수 있습니다. 저장된 글은 다른 기기와 동기화되지 않습니다. (아직은 그렇습니다! 현재 동기화를 위한 작업이 진행 중입니다.)</string>
     <string name="reader_save_posts_locally_dialog_title">나중에 보기 위해 글 저장</string>
     <string name="reader_empty_search_request_failed">검색을 수행할 수 없음</string>
     <string name="reader_empty_search_title">일치하는 결과 없음</string>
@@ -672,7 +694,6 @@ Language: ko_KR
     <string name="reader_add_bookmark">저장된 글에 추가</string>
     <string name="reader_save_for_later_title">저장된 글</string>
     <string name="removed">제거됨</string>
-    <string name="tabbar_accessibility_label_write">새 글입니다. 새 글을 작성합니다.</string>
     <string name="my_site_icon_content_description">사이트 아이콘 변경</string>
     <string name="my_site_icon_dialog_cancel_button">취소</string>
     <string name="my_site_icon_dialog_remove_button">제거</string>
@@ -703,7 +724,6 @@ Language: ko_KR
     <string name="preference_privacy_settings">개인 정보 설정</string>
     <string name="preference_collect_information">정보 수집</string>
     <string name="post_submitted">글이 제출됨</string>
-    <string name="write_post">글 작성</string>
     <string name="login_email_button_signup">아직 계정이 없으신가요? %1$s가입하세요.%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">플러그인 기능을 사용하려면 사이트가 양호한 상태여야 합니다.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">플러그인 기능을 사용하려면 이 사용자와 연결된 기본 도메인 구독이 필요합니다.</string>
@@ -1258,7 +1278,6 @@ Language: ko_KR
     <string name="sharing">공유</string>
     <string name="tabbar_accessibility_label_notifications">알림. 알림을 관리합니다.</string>
     <string name="tabbar_accessibility_label_reader">리더. 다른 사이트의 콘텐츠를 팔로우합니다.</string>
-    <string name="tabbar_accessibility_label_me">나. 프로필을 보고 수정합니다.</string>
     <string name="tabbar_accessibility_label_my_site">내 사이트. 통계를 포함하여 사이트를 보고 관리합니다.</string>
     <string name="my_site_btn_sharing">공유</string>
     <string name="button_not_now">지금 안 함</string>

@@ -1,0 +1,4 @@
+14.0:
+- Block editor: Sometimes the Block editor would crash when you tried to undo, which is a little too much undoing. That’s fixed, along with a bug affecting image placeholders.
+- Moved the “me” section of the app to within “My Site”.
+- Added a floating action button to My Site for quick creation of new posts and pages.

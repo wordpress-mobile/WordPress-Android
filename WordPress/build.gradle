@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-203"
+            versionName "alpha-205"
         }
-        versionCode 813
+        versionCode 820
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -84,9 +84,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "14.0-rc-1"
+                versionName "14.0"
             }
-            versionCode 812
+            versionCode 821
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
@@ -133,6 +133,11 @@ android {
     packagingOptions {
         // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
         exclude 'META-INF/proguard/androidx-annotations.pro'
+
+        // Exclude React Native's JSC and Hermes debug binaries
+        exclude '**/libjscexecutor.so'
+        exclude '**/libhermes-inspector.so'
+        exclude '**/libhermes-executor-debug.so'
     }
 
     bundle {
@@ -150,6 +155,7 @@ androidExtensions {
 }
 
 dependencies {
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Provided by maven central
