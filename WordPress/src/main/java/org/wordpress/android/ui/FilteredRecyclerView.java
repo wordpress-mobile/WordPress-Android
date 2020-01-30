@@ -101,7 +101,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         mCurrentFilter = filter;
 
         if (mUseTabsForFiltering) {
-            int position = mFilteredPagerAdapter.getItemPosition(filter);
+            int position = filter == null ? -1 : mFilteredPagerAdapter.getItemPosition(filter);
             if (position > -1 && position != mViewPager.getCurrentItem()) {
                 mViewPager.setCurrentItem(position);
             } else if (position > -1 && position == mViewPager.getCurrentItem()) {
