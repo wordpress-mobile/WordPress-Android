@@ -102,7 +102,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         }
 
         private fun updateProgressBarState(progressBarState: PostListItemProgressBar) {
-            uiHelper.updateVisibility(uploadProgressBar,progressBarState.visibility)
+            uiHelper.updateVisibility(uploadProgressBar, progressBarState.visibility)
             when (progressBarState) {
                 Indeterminate -> uploadProgressBar.isIndeterminate = true
                 is Determinate -> {

@@ -28,7 +28,7 @@ sealed class PageItem(open val type: Type) {
         open val tapActionEnabled: Boolean,
         open val progressBarState: PostListItemProgressBar,
         open val showOverlay: Boolean
-            ) : PageItem(PAGE)
+    ) : PageItem(PAGE)
 
     data class PublishedPage(
         override val id: Long,
