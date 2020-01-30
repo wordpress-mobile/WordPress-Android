@@ -249,7 +249,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             fullscreenProgressLayout.findViewById<TextView>(R.id.progress_text)?.let { textView ->
 
                 // create a progress helper and let it run
-                SiteCreationTextsProgressHelper(WeakReference(textView), loadingTextResId).also {
+                SiteCreationTextsProgressHelper(WeakReference(textView), loadingTextResIds).also {
                     textsProgressTextsHelper = it
                     textView.post(it)
                 }

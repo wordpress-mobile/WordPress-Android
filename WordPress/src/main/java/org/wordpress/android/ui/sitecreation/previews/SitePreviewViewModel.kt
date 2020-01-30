@@ -318,7 +318,7 @@ class SitePreviewViewModel @Inject constructor(
         object SitePreviewFullscreenProgressUiState : SitePreviewUiState(
                 fullscreenProgressLayoutVisibility = true
         ) {
-            val loadingTextResId: List<Int> = listOf(
+            val loadingTextResIds: List<Int> = listOf(
                     R.string.notification_new_site_creation_creating_site_dynamic_subtitle_1,
                     R.string.notification_new_site_creation_creating_site_dynamic_subtitle_2,
                     R.string.notification_new_site_creation_creating_site_dynamic_subtitle_3,
