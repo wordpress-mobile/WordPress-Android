@@ -65,6 +65,9 @@ class ReaderPostListViewModel @Inject constructor(
     private val _filtersMatchCount = MutableLiveData<HashMap<SubfilterCategory, Int>>()
     val filtersMatchCount: LiveData<HashMap<SubfilterCategory, Int>> = _filtersMatchCount
 
+    private val _startSubsActivity = MutableLiveData<Event<Int>>()
+    val startSubsActivity: LiveData<Event<Int>> = _startSubsActivity
+
     /**
      * First tag for which the card was shown.
      */
@@ -279,6 +282,11 @@ class ReaderPostListViewModel @Inject constructor(
         }
 
         _filtersMatchCount.postValue(currentValue)
+    }
+
+    fun onBottomSheetActionClicked(selectedTabIndex: Int) {
+        _isBottomSheetShowing.postValue(Event(false))
+        _startSubsActivity.postValue(Event(selectedTabIndex))
     }
 
     private fun updateSubfilter(filter: SubfilterListItem) {
