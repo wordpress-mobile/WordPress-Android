@@ -1,3 +1,0 @@
-13.9:
-• Aggiunte all'editor dei blocchi: aggiunto un nuovo blocco Galleria per creare gallerie di immagini usando file dalla libreria multimediale, insieme al supporto per il blocco Preformattato.
-• Miglioramenti all'editor dei blocchi: aggiunto supporto per le impostazioni nei blocchi Elenco e Video.

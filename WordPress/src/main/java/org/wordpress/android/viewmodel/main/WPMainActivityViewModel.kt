@@ -70,6 +70,18 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
         _createAction.postValue(actionType)
     }
 
+    private fun disableTooltip() {
+        appPrefsWrapper.setMainFabTooltipDisabled(true)
+
+        val oldState = _fabUiState.value
+        oldState?.let {
+            _fabUiState.value = MainFabUiState(
+                    isFabVisible = it.isFabVisible,
+                    isFabTooltipVisible = false
+            )
+        }
+    }
+
     fun setIsBottomSheetShowing(showing: Boolean) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true)
@@ -82,13 +94,11 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
     }
 
     fun onTooltipTapped() {
-        val oldState = _fabUiState.value
-        oldState?.let {
-            _fabUiState.value = MainFabUiState(
-                    isFabVisible = it.isFabVisible,
-                    isFabTooltipVisible = false
-            )
-        }
+        disableTooltip()
+    }
+
+    fun onFabLongPressed() {
+        disableTooltip()
     }
 
     private fun setMainFabUiState(isFabVisible: Boolean) {
