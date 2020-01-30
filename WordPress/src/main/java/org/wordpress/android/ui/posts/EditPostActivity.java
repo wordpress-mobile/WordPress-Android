@@ -103,7 +103,6 @@ import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -1646,10 +1645,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
 
     @Override public void onImagePreviewRequested(String mediaUrl) {
-        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+//        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+        // Temporarily open image editor at this point
+        ActivityLauncher.openImageEditor(this);
     }
 
-    @Override public void onMediaEditorRequested(String mediaUrl) { }
+    @Override public void onMediaEditorRequested(String mediaUrl) {
+        ActivityLauncher.openImageEditor(this);
+    }
 
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {

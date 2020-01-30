@@ -155,7 +155,7 @@ androidExtensions {
 }
 
 dependencies {
-
+    implementation project(':ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Provided by maven central
@@ -346,18 +346,18 @@ android.buildTypes.all { buildType ->
 }
 
 task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
-   repositoryOwner = "wordpress-mobile";
-   repositoryName = "WordPress-Android"
-   pullRequestId = System.properties['GITHUB_PULLREQUESTID']
-   username = System.properties['GITHUB_USERNAME']
-   password = System.properties['GITHUB_PASSWORD']
-   oAuth2Token = System.properties['GITHUB_OAUTH2TOKEN']
-   gitHubUrl = "https://api.github.com/"
-   createCommentWithAllSingleFileComments = false
-   createSingleFileComments = true
-   commentOnlyChangedContent = true
-   minSeverity = se.bjurr.violations.lib.model.SEVERITY.INFO //ERROR, INFO, WARN
-   commentTemplate = """
+    repositoryOwner = "wordpress-mobile";
+    repositoryName = "WordPress-Android"
+    pullRequestId = System.properties['GITHUB_PULLREQUESTID']
+    username = System.properties['GITHUB_USERNAME']
+    password = System.properties['GITHUB_PASSWORD']
+    oAuth2Token = System.properties['GITHUB_OAUTH2TOKEN']
+    gitHubUrl = "https://api.github.com/"
+    createCommentWithAllSingleFileComments = false
+    createSingleFileComments = true
+    commentOnlyChangedContent = true
+    minSeverity = se.bjurr.violations.lib.model.SEVERITY.INFO //ERROR, INFO, WARN
+    commentTemplate = """
 **Reporter**: {{violation.reporter}}{{#violation.rule}}\n
 **Rule**: {{violation.rule}}{{/violation.rule}}
 **Severity**: {{violation.severity}}
@@ -365,9 +365,9 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
 **Source**: {{violation.source}}{{/violation.source}}
 {{violation.message}}
 """
-   violations = [
-    ["CHECKSTYLE", ".", ".*/build/.*\\.xml\$", "Checkstyle"]
-   ]
+    violations = [
+            ["CHECKSTYLE", ".", ".*/build/.*\\.xml\$", "Checkstyle"]
+    ]
 }
 
 def checkGradlePropertiesFile() {
