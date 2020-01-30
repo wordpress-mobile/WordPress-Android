@@ -9,15 +9,15 @@
         android:id="@+id/row_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="@dimen/min_touch_target_sz"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingTop="@dimen/margin_medium"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/min_touch_target_sz"
+        android:orientation="horizontal"
+        android:paddingStart="24dp"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingEnd="24dp"
+        android:paddingBottom="@dimen/margin_medium">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -27,20 +27,20 @@
             android:labelFor="@+id/notifications_switch"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/notifications_switch_title"
                 style="@android:style/TextAppearance.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="Comments" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/notifications_switch_summary"
                 style="@android:style/TextAppearance.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Some example sub text."
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:text="Some example sub text." />
         </LinearLayout>
 
         <androidx.appcompat.widget.SwitchCompat
@@ -49,16 +49,15 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:focusable="false"
-            android:theme="@style/SwitchBlueMedium"
             tools:checked="true" />
     </LinearLayout>
 
     <View
         android:id="@+id/notifications_list_divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider"
+        android:layout_height="@dimen/divider_size"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"/>
+        android:layout_marginEnd="24dp"
+        android:background="?android:attr/listDivider" />
 
 </LinearLayout>

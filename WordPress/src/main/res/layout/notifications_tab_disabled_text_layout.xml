@@ -1,39 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/notification_settings_disabled_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
-    android:visibility="gone"
-    android:layout_height="match_parent"
-    android:layout_width="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:visibility="gone">
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_width="match_parent"
-            android:paddingEnd="@dimen/margin_extra_large"
-            android:paddingStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
-            android:text="@string/notifications_tab_dialog_master_off_title"
-            style="@style/TextAppearance.AppCompat.Subhead">
-        </TextView>
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:text="@string/notifications_tab_dialog_master_off_title"
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_width="match_parent"
-            android:paddingEnd="@dimen/margin_extra_large"
-            android:paddingStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
-            android:text="@string/notifications_tab_dialog_master_off_message"
-            style="@style/TextAppearance.AppCompat.Body1">
-        </TextView>
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:text="@string/notifications_tab_dialog_master_off_message"
+        android:textAppearance="?attr/textAppearanceBody2" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_size"
+        android:background="?android:attr/listDivider" />
 
 </LinearLayout>
