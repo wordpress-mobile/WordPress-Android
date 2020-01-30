@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -20,6 +21,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.ReaderEvents
+import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
@@ -33,6 +35,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.widgets.WPTextView
 import java.lang.ref.WeakReference
 import java.util.EnumSet
 import javax.inject.Inject
@@ -73,6 +76,7 @@ class SubfilterPageFragment : DaggerFragment() {
         viewModel.subFilters.observe(this, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
                 val items = it?.filter { it.type == category.type } ?: listOf()
+                manageEmptyView(items.isEmpty(), category)
                 adapter.update(items)
                 viewModel.updateTabTitle(category, items.size)
             }
@@ -122,6 +126,41 @@ class SubfilterPageFragment : DaggerFragment() {
         }
 
         ReaderUpdateServiceStarter.startService(activity, tasks)
+    }
+
+    private fun manageEmptyView(isEmpty: Boolean, category: SubfilterCategory) {
+        if (!isAdded || view == null) {
+            return
+        }
+
+        val emptyStateContainer = view?.findViewById<LinearLayout>(R.id.empty_state_container) ?: return
+
+        if (isEmpty) {
+            emptyStateContainer.apply {
+                visibility = View.VISIBLE
+                val title = findViewById<WPTextView>(R.id.title)
+                val actionButton = findViewById<WPTextView>(R.id.action_button)
+                title.setText(
+                        if (category == SITES)
+                            R.string.reader_filter_empty_sites_list
+                        else
+                            R.string.reader_filter_empty_tags_list)
+                actionButton.setText(
+                        if (category == SITES)
+                            R.string.reader_filter_empty_sites_action
+                        else
+                            R.string.reader_filter_empty_tags_action)
+                actionButton.setOnClickListener {
+                    viewModel.onBottomSheetActionClicked(
+                            if (category == SITES)
+                                ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS
+                            else
+                                ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
+                }
+            }
+        } else {
+            emptyStateContainer.visibility = View.GONE
+        }
     }
 }
 
