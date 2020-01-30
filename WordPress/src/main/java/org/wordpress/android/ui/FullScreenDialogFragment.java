@@ -264,7 +264,6 @@ public class FullScreenDialogFragment extends DialogFragment {
         mToolbar = view.findViewById(R.id.toolbar_main);
         mToolbar.setTitle(mTitle);
         mToolbar.setSubtitle(mSubtitle);
-        mToolbar.setSubtitleTextAppearance(view.getContext(), R.style.Toolbar_Subtitle);
         mToolbar.setNavigationIcon(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_close_white_24dp));
         mToolbar.setNavigationContentDescription(R.string.close_dialog_button_desc);
         mToolbar.setNavigationOnClickListener(view1 -> onDismissClicked());

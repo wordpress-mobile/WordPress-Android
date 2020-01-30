@@ -179,25 +179,6 @@
         <item name="android:background">@color/primary_50</item>
     </style>
 
-    <style name="Toolbar.Primary" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/primary</item>
-        <item name="android:theme">@style/Toolbar.Theme</item>
-    </style>
-
-    <style name="Toolbar.Secondary" parent="@style/Toolbar.Primary">
-        <item name="android:background">@color/primary_40</item>
-        <item name="contentInsetStart">@dimen/toolbar_content_offset</item>
-    </style>
-
-    <style name="Toolbar.Subtitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-    </style>
-
-    <style name="Toolbar.Theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:listDivider">@null</item>
-    </style>
-
     <style name="ActionButton.CloseMode.WordPress" parent="android:Widget.Material.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
     </style>
@@ -583,9 +564,6 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="SwitchBlueLight">
-        <item name="colorControlActivated">@color/primary_30</item>
-    </style>
 
     <style name="SwitchBlueMedium">
         <item name="colorControlActivated">@color/primary_40</item>
