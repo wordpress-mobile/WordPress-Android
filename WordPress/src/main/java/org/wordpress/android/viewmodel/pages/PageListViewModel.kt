@@ -55,8 +55,8 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
-    private val uploadActionUseCase: UploadActionUseCase,
-    private val uploadStore: UploadStore,
+    uploadActionUseCase: UploadActionUseCase,
+    uploadStore: UploadStore,
     private val postStore: PostStore,
     private val progressHelper: PageItemProgressHelper
 ) : ScopedViewModel(coroutineDispatcher) {
@@ -276,18 +276,9 @@ class PageListViewModel @Inject constructor(
                 post, pagesViewModel.site
         )
         val uploadUiState = progressHelper.createUploadUiState(uploadStatus, post)
-        val isPerformingCriticalAction = pagesViewModel.pageCriticalActionHandler.isPerformingCriticalAction(
-                pageId
-        )
-        val shouldShowOverlay = progressHelper.shouldShowOverlay(
-                uploadUiState,
-                isPerformingCriticalAction
-        )
-        return Pair(
-                progressHelper.getProgressBarState(
-                        uploadUiState, shouldShowOverlay
-                ), shouldShowOverlay
-        )
+
+        val shouldShowOverlay = progressHelper.shouldShowOverlay(uploadUiState)
+        return Pair(progressHelper.getProgressBarState(uploadUiState), shouldShowOverlay)
     }
 
     private fun prepareScheduledPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {

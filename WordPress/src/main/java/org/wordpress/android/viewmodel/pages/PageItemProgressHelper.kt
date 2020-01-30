@@ -20,10 +20,9 @@ typealias ShouldShowOverlay = Boolean
 
 class PageItemProgressHelper @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) {
     fun getProgressBarState(
-        uploadUiState: PostUploadUiState,
-        performingCriticalAction: Boolean
+        uploadUiState: PostUploadUiState
     ): PostListItemProgressBar {
-        return if (shouldShowProgress(uploadUiState, performingCriticalAction)) {
+        return if (shouldShowProgress(uploadUiState)) {
             if (uploadUiState is UploadingMedia) {
                 PostListItemProgressBar.Determinate(uploadUiState.progress)
             } else {
@@ -35,10 +34,9 @@ class PageItemProgressHelper @Inject constructor(private val appPrefsWrapper: Ap
     }
 
     private fun shouldShowProgress(
-        uploadUiState: PostUploadUiState,
-        performingCriticalAction: Boolean
+        uploadUiState: PostUploadUiState
     ): Boolean {
-        return performingCriticalAction || uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
+        return uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
                 uploadUiState is UploadQueued
     }
 
@@ -59,7 +57,7 @@ class PageItemProgressHelper @Inject constructor(private val appPrefsWrapper: Ap
     fun createUploadUiState(
         uploadStatus: PostListItemUploadStatus,
         post: PostModel
-    ):PostUploadUiState {
+    ): PostUploadUiState {
         val postStatus = PostStatus.fromPost(post)
         return when {
             uploadStatus.hasInProgressMediaUpload -> UploadingMedia(
@@ -82,13 +80,9 @@ class PageItemProgressHelper @Inject constructor(private val appPrefsWrapper: Ap
         }
     }
 
-    fun shouldShowOverlay(
-        uploadUiState: PostUploadUiState,
-        performingCriticalAction: Boolean
-    ): Boolean {
+    fun shouldShowOverlay(uploadUiState: PostUploadUiState): Boolean {
         // show overlay when post upload is in progress or (media upload is in progress and the user is not using Aztec)
-        return performingCriticalAction ||
-                (uploadUiState is UploadingPost ||
-                        (!appPrefsWrapper.isAztecEditorEnabled && uploadUiState is UploadingMedia))
+        return (uploadUiState is UploadingPost ||
+                (!appPrefsWrapper.isAztecEditorEnabled && uploadUiState is UploadingMedia))
     }
 }
