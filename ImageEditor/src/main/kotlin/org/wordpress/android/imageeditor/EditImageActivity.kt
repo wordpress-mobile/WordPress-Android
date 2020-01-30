@@ -13,7 +13,7 @@ class EditImageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.edit_image_activity)
+        setContentView(R.layout.activity_edit_image)
 
         hostFragment = supportFragmentManager
                 .findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
