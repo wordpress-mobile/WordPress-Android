@@ -1241,6 +1241,10 @@
     <string name="reader_filter_sites_title">Sites</string>
     <string name="reader_filter_tags_title">Tags</string>
     <string name="reader_filter_main_title">Following</string>
+    <string name="reader_filter_empty_sites_list">See the newest posts from sites you follow</string>
+    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a tag</string>
+    <string name="reader_filter_empty_sites_action">Follow a site</string>
+    <string name="reader_filter_empty_tags_action">Add a tag</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
