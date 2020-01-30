@@ -18,7 +18,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.viewmodel.pages.PageItemProgressHelper
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PagesViewModel

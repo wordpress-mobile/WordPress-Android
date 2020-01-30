@@ -26,9 +26,9 @@ sealed class PageItem(open val type: Type) {
         open val actions: Set<Action>,
         open var actionsEnabled: Boolean,
         open val tapActionEnabled: Boolean,
-        open val progressBarState: PostListItemProgressBar?,
-        open val showOverlay: Boolean?
-    ) : PageItem(PAGE)
+        open val progressBarState: PostListItemProgressBar,
+        open val showOverlay: Boolean
+            ) : PageItem(PAGE)
 
     data class PublishedPage(
         override val id: Long,
@@ -38,8 +38,8 @@ sealed class PageItem(open val type: Type) {
         override var indent: Int = 0,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PostListItemProgressBar? = null,
-        override val showOverlay: Boolean? = null
+        override val progressBarState: PostListItemProgressBar,
+        override val showOverlay: Boolean
     ) : Page(
             id = id,
             title = title,
@@ -61,8 +61,8 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PostListItemProgressBar? = null,
-        override val showOverlay: Boolean? = null
+        override val progressBarState: PostListItemProgressBar,
+        override val showOverlay: Boolean
     ) : Page(
             id = id,
             title = title,
@@ -84,8 +84,8 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PostListItemProgressBar? = null,
-        override val showOverlay: Boolean? = null
+        override val progressBarState: PostListItemProgressBar,
+        override val showOverlay: Boolean
     ) : Page(
             id = id,
             title = title,
@@ -106,8 +106,8 @@ sealed class PageItem(open val type: Type) {
         override val date: Date,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarState: PostListItemProgressBar? = null,
-        override val showOverlay: Boolean? = null
+        override val progressBarState: PostListItemProgressBar,
+        override val showOverlay: Boolean
     ) : Page(
             id = id,
             title = title,

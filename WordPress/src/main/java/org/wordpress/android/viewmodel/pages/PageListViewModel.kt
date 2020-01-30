@@ -31,6 +31,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.ui.posts.PostListUploadStatusTracker
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -43,7 +44,6 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAF
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -57,8 +57,8 @@ class PageListViewModel @Inject constructor(
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
     uploadActionUseCase: UploadActionUseCase,
     uploadStore: UploadStore,
-    private val postStore: PostStore,
-    private val progressHelper: PageItemProgressHelper
+    appPrefsWrapper: AppPrefsWrapper,
+    private val postStore: PostStore
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Pair<List<PageItem>, Boolean>> = Transformations.map(_pages) {
@@ -84,6 +84,10 @@ class PageListViewModel @Inject constructor(
             uploadActionUseCase = uploadActionUseCase
     )
 
+    private val progressHelper: PageItemProgressHelper by lazy {
+        PageItemProgressHelper(appPrefsWrapper, postStore, uploadStatusTracker, pagesViewModel.site)
+    }
+
     enum class PageListType(val pageStatuses: List<PageStatus>) {
         PUBLISHED(listOf(PageStatus.PUBLISHED, PageStatus.PRIVATE)),
         DRAFTS(listOf(PageStatus.DRAFT, PageStatus.PENDING)),
@@ -100,6 +104,7 @@ class PageListViewModel @Inject constructor(
                 }
             }
         }
+
         val title: Int
             get() = when (this) {
                 PUBLISHED -> R.string.pages_published
@@ -199,7 +204,14 @@ class PageListViewModel @Inject constructor(
                     PUBLISHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_published)))
                     SCHEDULED -> _pages.postValue(listOf(Empty(R.string.pages_empty_scheduled)))
                     DRAFTS -> _pages.postValue(listOf(Empty(R.string.pages_empty_drafts)))
-                    TRASHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_trashed, isButtonVisible = false)))
+                    TRASHED -> _pages.postValue(
+                            listOf(
+                                    Empty(
+                                            R.string.pages_empty_trashed,
+                                            isButtonVisible = false
+                                    )
+                            )
+                    )
                 }
             }
         } else {
@@ -235,7 +247,10 @@ class PageListViewModel @Inject constructor(
         return null
     }
 
-    private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
+    private fun preparePublishedPages(
+        pages: List<PageModel>,
+        actionsEnabled: Boolean
+    ): List<PageItem> {
         val shouldSortTopologically = pages.size < MAX_TOPOLOGICAL_PAGE_COUNT
         val sortedPages = if (shouldSortTopologically) {
             topologicalSort(pages, listType = PUBLISHED)
@@ -255,7 +270,8 @@ class PageListViewModel @Inject constructor(
                     } else {
                         DEFAULT_INDENT
                     }
-                    val progressState = getProgressStateFromPage(LocalId(it.pageId))
+                    val progressState = progressHelper.getProgressStateForPage(LocalId(it.pageId))
+
                     PublishedPage(
                             it.remoteId,
                             it.title,
@@ -270,34 +286,32 @@ class PageListViewModel @Inject constructor(
                 }
     }
 
-    private fun getProgressStateFromPage(pageId: LocalId): Pair<PostListItemProgressBar, ShouldShowOverlay> {
-        val post = postStore.getPostByLocalPostId(pageId.value)
-        val uploadStatus = uploadStatusTracker.getUploadStatus(
-                post, pagesViewModel.site
-        )
-        val uploadUiState = progressHelper.createUploadUiState(uploadStatus, post)
-
-        val shouldShowOverlay = progressHelper.shouldShowOverlay(uploadUiState)
-        return Pair(progressHelper.getProgressBarState(uploadUiState), shouldShowOverlay)
-    }
-
-    private fun prepareScheduledPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
+    private fun prepareScheduledPages(
+        pages: List<PageModel>,
+        actionsEnabled: Boolean
+    ): List<PageItem> {
         return pages.asSequence().groupBy { it.date.toFormattedDateString() }
-                .map { (date, results) -> listOf(Divider(date)) +
-                        results.map {
-                            val labels = mutableListOf<Int>()
-                            if (it.hasLocalChanges)
-                                labels.add(R.string.local_changes)
+                .map { (date, results) ->
+                    listOf(Divider(date)) +
+                            results.map {
+                                val labels = mutableListOf<Int>()
+                                if (it.hasLocalChanges)
+                                    labels.add(R.string.local_changes)
 
-                            val progressState = getProgressStateFromPage(LocalId(it.pageId))
-                            ScheduledPage(
-                                    it.remoteId, it.title, it.date, labels,
-                                    getFeaturedImageUrl(it.featuredImageId),
-                                    actionsEnabled,
-                                    progressState.first,
-                                    progressState.second
-                            )
-                        }
+                                val progressState = progressHelper.getProgressStateForPage(
+                                        LocalId(
+                                                it.pageId
+                                        )
+                                )
+
+                                ScheduledPage(
+                                        it.remoteId, it.title, it.date, labels,
+                                        getFeaturedImageUrl(it.featuredImageId),
+                                        actionsEnabled,
+                                        progressState.first,
+                                        progressState.second
+                                )
+                            }
                 }
                 .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
                     acc.addAll(list)
@@ -313,15 +327,26 @@ class PageListViewModel @Inject constructor(
             if (it.hasLocalChanges)
                 labels.add(R.string.local_draft)
 
-            val progressState = getProgressStateFromPage(LocalId(it.pageId))
-            DraftPage(it.remoteId, it.title, it.date, labels,
-                    getFeaturedImageUrl(it.featuredImageId), actionsEnabled,progressState.first,progressState.second)
+            val progressState = progressHelper.getProgressStateForPage(LocalId(it.pageId))
+            DraftPage(
+                    it.remoteId,
+                    it.title,
+                    it.date,
+                    labels,
+                    getFeaturedImageUrl(it.featuredImageId),
+                    actionsEnabled,
+                    progressState.first,
+                    progressState.second
+            )
         }
     }
 
-    private fun prepareTrashedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
+    private fun prepareTrashedPages(
+        pages: List<PageModel>,
+        actionsEnabled: Boolean
+    ): List<PageItem> {
         return pages.map {
-            val progressState = getProgressStateFromPage(LocalId(it.pageId))
+            val progressState = progressHelper.getProgressStateForPage(LocalId(it.pageId))
             TrashedPage(
                     it.remoteId,
                     it.title,
@@ -370,3 +395,4 @@ class PageListViewModel @Inject constructor(
         }
     }
 }
+
