@@ -56,6 +56,7 @@
         android:contentDescription="@null"
         android:src="@drawable/ic_cross_small_white_24dp"
         android:tint="@color/neutral_70"
+        android:paddingTop="@dimen/margin_extra_small"
         android:paddingEnd="@dimen/margin_small"
         android:paddingStart="@dimen/margin_small"
         app:layout_constraintStart_toEndOf="@+id/selected_filter_name"
