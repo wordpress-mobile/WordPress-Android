@@ -1,6 +1,9 @@
 package org.wordpress.android.viewmodel.pages
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -9,26 +12,20 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -44,10 +41,7 @@ import org.wordpress.android.ui.posts.PostInfoType
 import org.wordpress.android.ui.posts.PostListRemotePreviewState
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
-import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
@@ -87,11 +81,14 @@ class PagesViewModel
     private val dispatcher: Dispatcher,
     private val actionPerfomer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
-    private val eventBusWrapper: EventBusWrapper,
     private val previewStateHelper: PreviewStateHelper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
-) : ScopedViewModel(uiDispatcher) {
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
+    private val pageListEventListenerFactory: PageListEventListener.Factory
+) : ScopedViewModel(uiDispatcher), LifecycleOwner {
+    private val lifecycleRegistry = LifecycleRegistry(this)
+    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
@@ -171,25 +168,30 @@ class PagesViewModel
         val previewType: RemotePreviewType
     )
 
+
+
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
         if (_site == null) {
             _site = site
 
-            eventBusWrapper.register(this)
-
             loadPagesAsync()
         }
-    }
 
-    init {
-        dispatcher.register(this)
+        pageListEventListenerFactory.createAndStartListening(
+                lifecycle = lifecycle,
+                dispatcher = dispatcher,
+                bgDispatcher = defaultDispatcher,
+                postStore = postStore,
+                site = site,
+                handlePostUploadedWithoutError = this::handlePostUploadedWithoutError,
+                invalidateUploadStatus = this::handleInvalidateUploadStatus,
+                handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
+                handlePostUploadedStarted = this::postUploadStarted
+        )
     }
 
     override fun onCleared() {
-        dispatcher.unregister(this)
-        eventBusWrapper.unregister(this)
-
         actionPerfomer.onCleanup()
     }
 
@@ -684,12 +686,10 @@ class PagesViewModel
     private fun hasRemoteAutoSavePreviewError() = _previewState.value != null &&
             _previewState.value == PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
-    fun onPostUploaded(event: OnPostUploaded) {
+    private fun handlePostUploadedWithoutError(remotePostId: RemoteId) {
         var id = 0L
         if (!pageUpdateContinuations.contains(id)) {
-            id = event.post.remotePostId
+            id = remotePostId.value
         }
 
         pageUpdateContinuations[id]?.let { cont ->
@@ -698,72 +698,25 @@ class PagesViewModel
         }
     }
 
-    /**
-     * Has lower priority than the PostUploadHandler and UploadService, which ensures that they already processed this
-     * OnPostChanged event. This means we can safely rely on their internal state being up to date.
-     */
-    @Suppress("unused")
-    @Subscribe(threadMode = BACKGROUND, priority = 5)
-    fun onPostChanged(event: OnPostChanged) {
-        when (event.causeOfChange) {
-            // Fetched post list event will be handled by OnListChanged
-            is CauseOfOnPostChanged.RemoteAutoSavePost -> {
-                val post = postStore.getPostByLocalPostId((event.causeOfChange as RemoteAutoSavePost).localPostId)
-                if (event.isError) {
-                    AppLog.d(
-                            T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
-                            event.error.type + " - " + event.error.message
-                    )
-                }
-                if (isRemotePreviewingFromPostsList()) {
-                    handleRemoteAutoSave(post, event.isError)
-                }
-            }
+    private fun handleRemoveAutoSaveEvent(pageId: LocalId, isError: Boolean) {
+        val post = postStore.getPostByLocalPostId(pageId.value)
 
-            is CauseOfOnPostChanged.UpdatePost -> {
-                if (event.isError) {
-                    AppLog.e(
-                            T.POSTS,
-                            "Error updating the post with type: ${event.error.type} and" +
-                                    " message: ${event.error.message}"
-                    )
-                } else {
-                    launch {
-                        _invalidateUploadStatus.postValue(
-                                listOf((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId).map { localId ->
-                                    LocalId(
-                                            localId
-                                    )
-                                }
-                        )
-                        refreshPages()
-                    }
-                }
-            }
+        if (isRemotePreviewingFromPostsList()) {
+            handleRemoteAutoSave(post, isError)
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
-    fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
-        if (!event.post.isPage) {
-            return
-        }
-
+    private fun handleInvalidateUploadStatus(ids: List<LocalId>) {
         launch {
-            _invalidateUploadStatus.postValue(
-                    listOf((event.post.id)).map { localId ->
-                        LocalId(
-                                localId
-                        )
-                    }
-            )
+            _invalidateUploadStatus.postValue(ids)
             refreshPages()
         }
+    }
 
+    private fun postUploadStarted(remoteId: RemoteId) {
         launch {
             performIfNetworkAvailableAsync {
-                waitForPageUpdate(event.post.remotePostId)
+                waitForPageUpdate(remoteId.value)
                 reloadPages()
             }
         }
