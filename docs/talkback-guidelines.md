@@ -228,7 +228,7 @@ Horizontal scrolling views are common UI components in every developer's arsenal
 If the Android framework is announcing something that needs more customization or a state change in the app needs to be made known to the user, the [`announceForAccessibility`](https://developer.android.com/reference/android/view/View.html#announceForAccessibility(java.lang.CharSequence)) method of the `view` can be utilized to specify this message. By default, the framework handles creating announcements for various events, and state changes well once the correct semantics are supplied. So this should only be utilized when necessary.
 
 #### Custom Events
-For full accessibility support within custom views, you have to hook the accessibility events within different the different actions and events that are occurring within that view. For full backward compatibility `ViewCompat.setAccessibilityDelegate()` can be utilized. 
+For full accessibility support within custom views, you have to hook the accessibility events within the different actions and events that are occurring within that view. For full backward compatibility `ViewCompat.setAccessibilityDelegate()` can be utilized. 
 An example of this is the Usage hint / View action. When TalkBack is announcing an actionable control, it normally says "Tap to activate". There might be times when this needs to be customized, and this can be done via the `AccessibilityDelegate` like so:
  
 
