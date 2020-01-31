@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.R
 
 class PreviewImageFragment : Fragment() {
@@ -21,5 +23,12 @@ class PreviewImageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(PreviewImageViewModel::class.java)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        GlobalScope.launch {
+            ImageEditor.dummyImageEditorSingleton.load("https://www.w3schools.com/w3css/img_snowtops.jpg")
+        }
     }
 }

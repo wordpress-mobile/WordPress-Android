@@ -12,4 +12,8 @@ class ImageEditor(private val loadImageIntoAFile: (suspend (String) -> File?)) :
 
         val fileUri: Uri = Uri.fromFile(highResImageFile)
     }
+
+    companion object {
+        lateinit var dummyImageEditorSingleton: ImageEditor
+    }
 }
