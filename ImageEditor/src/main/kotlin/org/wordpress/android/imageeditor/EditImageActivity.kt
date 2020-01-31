@@ -8,6 +8,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.navigateUp
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class EditImageActivity : AppCompatActivity() {
     private lateinit var hostFragment: NavHostFragment
@@ -16,10 +18,18 @@ class EditImageActivity : AppCompatActivity() {
     private val navController: NavController
         get() = hostFragment.navController
 
+    private var editor: ImageEditor? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_edit_image)
+
+        editor = intent.getSerializableExtra("editor") as ImageEditor?
+
+        GlobalScope.launch {
+            editor?.load("https://test287home.wpcomstaging.com/wp-content/uploads/2019/10/mountaindawn.jpg")
+        }
 
         hostFragment = supportFragmentManager
                 .findFragmentById(R.id.nav_host_fragment) as NavHostFragment?

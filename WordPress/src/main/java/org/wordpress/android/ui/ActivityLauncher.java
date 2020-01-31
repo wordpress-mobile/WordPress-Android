@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
+import org.wordpress.android.imageeditor.ImageEditor;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -906,8 +907,9 @@ public class ActivityLauncher {
         }
     }
 
-    public static void openImageEditor(Activity activity) {
+    public static void openImageEditor(Activity activity, ImageEditor editor) {
         Intent intent = new Intent(activity, EditImageActivity.class);
+        intent.putExtra("editor", editor);
         activity.startActivity(intent);
     }
 }

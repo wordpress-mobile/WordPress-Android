@@ -124,6 +124,7 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.PostFields;
+import org.wordpress.android.ui.posts.editor.PreviewImageLauncher;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
@@ -1647,11 +1648,12 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override public void onImagePreviewRequested(String mediaUrl) {
 //        MediaPreviewActivity.showPreview(this, null, mediaUrl);
         // Temporarily open image editor at this point
-        ActivityLauncher.openImageEditor(this);
+        PreviewImageLauncher previewImageLauncher = new PreviewImageLauncher(mImageManager);
+        previewImageLauncher.start(this);
     }
 
     @Override public void onMediaEditorRequested(String mediaUrl) {
-        ActivityLauncher.openImageEditor(this);
+//        ActivityLauncher.openImageEditor(this);
     }
 
     @Override
