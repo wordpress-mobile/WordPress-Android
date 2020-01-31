@@ -1,6 +1,15 @@
-14.1
+14.2
 -----
  
+14.1
+-----
+* Fixes an issue where searching for posts sometimes doesn't show some results.
+
+* Disable the option to remove a Jetpack site from site picker
+* Block Editor: Reduced padding around text on Rich Text based blocks.
+* Block Editor: Improved stability on very long posts.
+* Block Editor: New block "Shortcode". You can now create and edit Shortcode blocks in the editor.
+
 14.0
 -----
 * Block Editor: Fix displaying placeholder for images

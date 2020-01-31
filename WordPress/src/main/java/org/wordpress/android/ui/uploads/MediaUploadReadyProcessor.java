@@ -13,14 +13,17 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
     @Override
-    public PostModel replaceMediaFileWithUrlInPost(@Nullable PostModel post, String localMediaId, MediaFile mediaFile) {
+    public PostModel replaceMediaFileWithUrlInPost(@Nullable PostModel post, String localMediaId, MediaFile mediaFile,
+                                                   String siteUrl) {
         if (post != null) {
             boolean showAztecEditor = AppPrefs.isAztecEditorEnabled();
             boolean showGutenbergEditor = AppPrefs.isGutenbergEditorEnabled();
 
             if (showGutenbergEditor && PostUtils.contentContainsGutenbergBlocks(post.getContent())) {
                 post.setContent(
-                        PostUtils.replaceMediaFileWithUrlInGutenbergPost(post.getContent(), localMediaId, mediaFile));
+
+                        PostUtils.replaceMediaFileWithUrlInGutenbergPost(post.getContent(), localMediaId, mediaFile,
+                                siteUrl));
             } else if (showAztecEditor) {
                 post.setContent(AztecEditorFragment.replaceMediaFileWithUrl(WordPress.getContext(), post.getContent(),
                                                                             localMediaId, mediaFile));

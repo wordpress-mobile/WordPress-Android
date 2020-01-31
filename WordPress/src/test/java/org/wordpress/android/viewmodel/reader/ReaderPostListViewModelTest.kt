@@ -17,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
@@ -25,9 +26,11 @@ import org.wordpress.android.ui.news.NewsManager
 import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 
 @InternalCoroutinesApi
@@ -45,8 +48,11 @@ class ReaderPostListViewModelTest {
      */
     @Mock private lateinit var initialTag: ReaderTag
     @Mock private lateinit var otherTag: ReaderTag
+    @Mock private lateinit var savedTag: ReaderTag
     @Mock private lateinit var newsTracker: NewsTracker
     @Mock private lateinit var newsTrackerHelper: NewsTrackerHelper
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock private lateinit var subfilterListItemMapper: SubfilterListItemMapper
 
     private lateinit var viewModel: ReaderPostListViewModel
     private val liveData = MutableLiveData<NewsItem>()
@@ -54,20 +60,37 @@ class ReaderPostListViewModelTest {
     @Before
     fun setUp() {
         whenever(newsManager.newsItemSource()).thenReturn(liveData)
-        viewModel = ReaderPostListViewModel(newsManager, newsTracker, newsTrackerHelper, TEST_DISPATCHER)
+        whenever(savedTag.tagTitle).thenReturn("tag-title")
+        val tag = Tag(
+                tag = savedTag,
+                onClickAction = ::onClickActionDummy
+        )
+        val json = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":4}"
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            whenever(appPrefsWrapper.getReaderSubfilter()).thenReturn(json)
+            whenever(subfilterListItemMapper.fromJson(any(), any(), any())).thenReturn(tag)
+        }
+        viewModel = ReaderPostListViewModel(
+                newsManager,
+                newsTracker,
+                newsTrackerHelper,
+                TEST_DISPATCHER,
+                appPrefsWrapper,
+                subfilterListItemMapper
+        )
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
     }
 
     @Test
     fun verifyPullInvokedInOnStart() {
-        viewModel.start(initialTag, false)
+        viewModel.start(initialTag, false, false)
         verify(newsManager).pull(false)
     }
 
     @Test
     fun verifyViewModelPropagatesNewsItems() {
-        viewModel.start(initialTag, false)
+        viewModel.start(initialTag, false, false)
         liveData.postValue(item)
         liveData.postValue(null)
         liveData.postValue(item)
@@ -86,7 +109,7 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun emitNullOnInitialTagChanged() {
-        viewModel.start(otherTag, false)
+        viewModel.start(otherTag, false, false)
         // propagates the item since the card hasn't been shown yet
         liveData.postValue(item)
         viewModel.onTagChanged(initialTag)
@@ -101,7 +124,7 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun verifyNewsItemAvailableOnlyForFirstTagForWhichCardWasShown() {
-        viewModel.start(otherTag, false)
+        viewModel.start(otherTag, false, false)
         // propagate the item since the card hasn't been shown yet
         liveData.postValue(item)
         viewModel.onTagChanged(initialTag)
@@ -163,7 +186,11 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun getCurrentSubfilterReturnsDefaultAtStart() {
-        assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(SiteAll::class.java)
+        if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(SiteAll::class.java)
+        } else {
+            assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(Tag::class.java)
+        }
     }
 
     @Test
@@ -185,5 +212,9 @@ class ReaderPostListViewModelTest {
         viewModel.currentSubFilter.observeForever { item = it }
 
         assertThat(item).isInstanceOf(SiteAll::class.java)
+    }
+
+    private fun onClickActionDummy(filter: SubfilterListItem) {
+        return
     }
 }

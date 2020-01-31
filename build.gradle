@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = '1.3.11'
-    ext.kotlin_coroutines_version = '1.1.0'
+    ext.kotlin_version = '1.3.61'
+    ext.kotlin_coroutines_version = '1.3.3'
     ext.androidx_work_version = "2.0.1"
 
     repositories {
@@ -106,7 +106,7 @@ buildScan {
 
 ext {
     daggerVersion = '2.22.1'
-    fluxCVersion = '1.5.8'
+    fluxCVersion = '1.6.0'
 }
 
 // Onboarding and dev env setup tasks
