@@ -1237,9 +1237,10 @@
 
     <!-- reader -->
     <string name="reader">Reader</string>
-    <string name="reader_filter_all_sites">All sites</string>
+    <string name="reader_filter_cta">Filter</string>
     <string name="reader_filter_sites_title">Sites</string>
     <string name="reader_filter_tags_title">Tags</string>
+    <string name="reader_filter_main_title">Following</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
