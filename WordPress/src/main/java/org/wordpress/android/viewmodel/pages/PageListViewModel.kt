@@ -114,6 +114,7 @@ class PageListViewModel @Inject constructor(
             isStarted = true
 
             pagesViewModel.pages.observeForever(pagesObserver)
+            pagesViewModel.invalidateUploadStatus.observeForever(uploadStatusObserver)
 
             dispatcher.register(this)
         }
@@ -121,6 +122,7 @@ class PageListViewModel @Inject constructor(
 
     override fun onCleared() {
         pagesViewModel.pages.removeObserver(pagesObserver)
+        pagesViewModel.invalidateUploadStatus.removeObserver(uploadStatusObserver)
 
         dispatcher.unregister(this)
     }
@@ -154,6 +156,10 @@ class PageListViewModel @Inject constructor(
 
             pagesViewModel.checkIfNewPageButtonShouldBeVisible()
         }
+    }
+
+    private val uploadStatusObserver = Observer<List<LocalId>> { ids ->
+        progressHelper.uploadStatusTracker.invalidateUploadStatus(ids.map { localId -> localId.value })
     }
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {

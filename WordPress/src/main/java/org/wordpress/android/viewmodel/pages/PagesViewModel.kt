@@ -20,6 +20,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -129,6 +130,9 @@ class PagesViewModel
 
     private val _scrollToPage = SingleLiveEvent<PageModel>()
     val scrollToPage: LiveData<PageModel?> = _scrollToPage
+
+    private val _invalidateUploadStatus = MutableLiveData<List<LocalId>>()
+    val invalidateUploadStatus: LiveData<List<LocalId>> = _invalidateUploadStatus
 
     private var isInitialized = false
     private var scrollToPageId: Long? = null
@@ -694,8 +698,12 @@ class PagesViewModel
         }
     }
 
+    /**
+     * Has lower priority than the PostUploadHandler and UploadService, which ensures that they already processed this
+     * OnPostChanged event. This means we can safely rely on their internal state being up to date.
+     */
     @Suppress("unused")
-    @Subscribe(threadMode = BACKGROUND)
+    @Subscribe(threadMode = BACKGROUND, priority = 5)
     fun onPostChanged(event: OnPostChanged) {
         when (event.causeOfChange) {
             // Fetched post list event will be handled by OnListChanged
@@ -711,6 +719,27 @@ class PagesViewModel
                     handleRemoteAutoSave(post, event.isError)
                 }
             }
+
+            is CauseOfOnPostChanged.UpdatePost -> {
+                if (event.isError) {
+                    AppLog.e(
+                            T.POSTS,
+                            "Error updating the post with type: ${event.error.type} and" +
+                                    " message: ${event.error.message}"
+                    )
+                } else {
+                    launch {
+                        _invalidateUploadStatus.postValue(
+                                listOf((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId).map { localId ->
+                                    LocalId(
+                                            localId
+                                    )
+                                }
+                        )
+                        refreshPages()
+                    }
+                }
+            }
         }
     }
 
@@ -719,6 +748,17 @@ class PagesViewModel
     fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
         if (!event.post.isPage) {
             return
+        }
+
+        launch {
+            _invalidateUploadStatus.postValue(
+                    listOf((event.post.id)).map { localId ->
+                        LocalId(
+                                localId
+                        )
+                    }
+            )
+            refreshPages()
         }
 
         launch {

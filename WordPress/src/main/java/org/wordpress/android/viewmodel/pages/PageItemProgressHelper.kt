@@ -24,7 +24,7 @@ typealias ShouldShowOverlay = Boolean
 class PageItemProgressHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val postStore: PostStore,
-    private val uploadStatusTracker: PostListUploadStatusTracker
+    val uploadStatusTracker: PostListUploadStatusTracker
 ) {
     private lateinit var site: SiteModel
 
