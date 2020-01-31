@@ -50,8 +50,11 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(progressHelper.getProgressStateForPage(any())).thenReturn(Pair(
                 PostListItemProgressBar.Hidden, false))
 
+        val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
+
         whenever(pagesViewModel.arePageActionsEnabled).thenReturn(false)
         whenever(pagesViewModel.site).thenReturn(site)
+        whenever(pagesViewModel.invalidateUploadStatus).thenReturn(invalidateUploadStatus)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.getDefault())
         site.id = 10
         pageListState.value = PageListState.DONE

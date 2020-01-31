@@ -16,15 +16,14 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.test
-import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -62,7 +61,7 @@ class PagesViewModelTest {
                 previewStateHelper = mock(),
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
-                eventBusWrapper = mock()
+                pageListEventListenerFactory = mock()
         )
         listStates = mutableListOf()
         pages = mutableListOf()
@@ -159,7 +158,7 @@ class PagesViewModelTest {
         assertThat(viewModel.arePageActionsEnabled).isTrue()
 
         // Act
-        viewModel.onEventBackgroundThread(PostEvents.PostUploadStarted(createPostModel()))
+        viewModel.postUploadStarted(RemoteId(createPostModel().remotePostId))
 
         // Assert
         assertThat(viewModel.arePageActionsEnabled).isFalse()
@@ -173,11 +172,11 @@ class PagesViewModelTest {
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
 
-        viewModel.onEventBackgroundThread(PostEvents.PostUploadStarted(page))
+        viewModel.postUploadStarted(RemoteId(page.remotePostId))
         assertThat(viewModel.arePageActionsEnabled).isFalse()
 
         // When
-        viewModel.onPostUploaded(OnPostUploaded(page))
+        viewModel.handlePostUploadedWithoutError(RemoteId(page.remotePostId))
 
         // Then
         assertThat(viewModel.arePageActionsEnabled).isTrue()
