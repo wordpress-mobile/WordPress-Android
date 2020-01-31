@@ -2,6 +2,6 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Base.ImageEditorTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@color/background_default</item>
+        <item name="android:windowBackground">@color/bg_default</item>
     </style>
 </resources>
