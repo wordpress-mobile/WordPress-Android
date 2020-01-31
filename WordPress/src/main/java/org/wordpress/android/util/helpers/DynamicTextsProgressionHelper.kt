@@ -6,8 +6,8 @@ import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.TextSwitcher
-import org.wordpress.android.R
 import org.wordpress.android.R.anim
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import java.lang.ref.WeakReference
 
 /**
@@ -24,15 +24,16 @@ import java.lang.ref.WeakReference
  */
 class DynamicTextsProgressionHelper(
     private val textSwitcher: WeakReference<TextSwitcher>,
-    private val stringIds: List<Int>,
-    val delay: Long
+    private val stringIds: List<UiStringRes>,
+    private val delay: Long,
+    textLayoutId: Int
 ) : Runnable {
-    val nText: Int = stringIds.size
+    private val numberOfTexts: Int = stringIds.size
 
     // the count of how many times `nextText` was executed
-    var count = -1
+    private var count = -1
 
-    var canceled = false
+    private var canceled = false
 
     init {
         textSwitcher.get()?.apply {
@@ -41,7 +42,7 @@ class DynamicTextsProgressionHelper(
             setFactory {
                 // inflate a text view that matches the design for this screen
                 LayoutInflater.from(context)
-                        .inflate(R.layout.site_creation_progress_text, this, false)
+                        .inflate(textLayoutId, this, false)
             }
             // set fade in/out animations
             inAnimation = AnimationUtils.loadAnimation(
@@ -95,6 +96,6 @@ class DynamicTextsProgressionHelper(
     private fun nextText(): CharSequence? {
         // progress with the count and get the next text
         count++
-        return textSwitcher.get()?.context?.resources?.getString(stringIds[count % nText])
+        return textSwitcher.get()?.context?.resources?.getString(stringIds[count % numberOfTexts].stringRes)
     }
 }

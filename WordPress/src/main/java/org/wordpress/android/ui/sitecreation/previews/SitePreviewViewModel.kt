@@ -35,6 +35,7 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.S
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.IDLE
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.SUCCESS
 import org.wordpress.android.ui.sitecreation.usecases.isWordPressComSubDomain
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -318,13 +319,13 @@ class SitePreviewViewModel @Inject constructor(
         object SitePreviewFullscreenProgressUiState : SitePreviewUiState(
                 fullscreenProgressLayoutVisibility = true
         ) {
-            val loadingTextResIds: List<Int> = listOf(
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_1,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_2,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_3,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_4,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_5,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_6)
+            val loadingTextResIds: List<UiStringRes> = listOf(
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_1),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_2),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_3),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_4),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_5),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_6))
         }
 
         sealed class SitePreviewFullscreenErrorUiState constructor(

@@ -78,7 +78,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private var okButtonContainer: View? = null
 
     // an instance helping sequence texts while in `loading` state
-    private var mTextsProgressTextsHelper: DynamicTextsProgressionHelper? = null
+    private var dynamicTextsProgressionHelper: DynamicTextsProgressionHelper? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -144,11 +144,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
                 // special care required for the animated texts displayed while in loading state
                 // which may be currently running the sequence:
-                if (mTextsProgressTextsHelper != null && uiState !is SitePreviewFullscreenProgressUiState) {
-                    mTextsProgressTextsHelper?.let {
+                if (dynamicTextsProgressionHelper != null && uiState !is SitePreviewFullscreenProgressUiState) {
+                    dynamicTextsProgressionHelper?.let {
                         // capture before using it
                         it.cancel()
-                        mTextsProgressTextsHelper = null
+                        dynamicTextsProgressionHelper = null
                     }
                 }
             }
@@ -237,10 +237,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 DynamicTextsProgressionHelper(
                         WeakReference(this),
                         loadingTextResIds,
-                        SITE_CREATION_PREVIEW_TEXT_DURATION_MS
+                        SITE_CREATION_PREVIEW_TEXT_DURATION_MS,
+                        R.layout.site_creation_progress_text
                 ).also {
-                    mTextsProgressTextsHelper = it
-                    postDelayed(it, it.delay)
+                    dynamicTextsProgressionHelper = it
+                    postDelayed(it, SITE_CREATION_PREVIEW_TEXT_DURATION_MS)
                 }
             }
         }

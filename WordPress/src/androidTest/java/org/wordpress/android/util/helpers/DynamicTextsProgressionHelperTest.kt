@@ -15,13 +15,15 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.wordpress.android.R
+import org.wordpress.android.R.layout
 import org.wordpress.android.testing.TestActivity
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import java.lang.Thread.sleep
 import java.lang.ref.WeakReference
 
-class DynamicTextsProgressionHelperTest {
-    private val TEST_DISPLAY_DURATION: Long = 1000
+private const val TEST_DISPLAY_DURATION: Long = 100
 
+class DynamicTextsProgressionHelperTest {
     @Rule @JvmField val rule = ActivityTestRule(TestActivity::class.java)
 
     lateinit var textSwitcher: TextSwitcher
@@ -49,18 +51,19 @@ class DynamicTextsProgressionHelperTest {
         rule.runOnUiThread {
             DynamicTextsProgressionHelper(
                     WeakReference(textSwitcher), listOf(
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_1,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_2,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_3,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_4,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_5,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_6
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_1),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_2),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_3),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_4),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_5),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_6)
             ),
-                    TEST_DISPLAY_DURATION
+                    TEST_DISPLAY_DURATION,
+                    layout.site_creation_progress_text
             ).also {
                 // execute
 
-                textSwitcher.postDelayed(it, it.delay)
+                textSwitcher.postDelayed(it, TEST_DISPLAY_DURATION)
             }
         }
         // verify
@@ -124,15 +127,16 @@ class DynamicTextsProgressionHelperTest {
         rule.runOnUiThread {
             DynamicTextsProgressionHelper(
                     WeakReference(textSwitcher), listOf(
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_1,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_2,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_3
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_1),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_2),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_3)
             ),
-                    TEST_DISPLAY_DURATION
+                    TEST_DISPLAY_DURATION,
+                    layout.site_creation_progress_text
             ).also {
                 // execute
 
-                textSwitcher.postDelayed(it, it.delay)
+                textSwitcher.postDelayed(it, TEST_DISPLAY_DURATION)
             }
         }
         // verify
@@ -198,18 +202,19 @@ class DynamicTextsProgressionHelperTest {
         rule.runOnUiThread {
             DynamicTextsProgressionHelper(
                     WeakReference(textSwitcher), listOf(
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_1,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_2,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_3,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_4,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_5,
-                    R.string.notification_new_site_creation_creating_site_dynamic_subtitle_6
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_1),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_2),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_3),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_4),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_5),
+                    UiStringRes(R.string.notification_new_site_creation_creating_site_dynamic_subtitle_6)
             ),
-                    TEST_DISPLAY_DURATION
+                    TEST_DISPLAY_DURATION,
+                    layout.site_creation_progress_text
             ).also {
                 // execute
 
-                textSwitcher.postDelayed(it, it.delay)
+                textSwitcher.postDelayed(it, TEST_DISPLAY_DURATION)
 
                 helper = it
             }
