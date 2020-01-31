@@ -84,7 +84,8 @@
             android:layout_marginStart="@dimen/reader_card_content_padding"
             android:layout_marginEnd="@dimen/reader_card_content_padding"
             android:layout_marginBottom="@dimen/margin_small"
-            android:background="@drawable/reader_image_border">
+            android:padding="1dp"
+            android:background="?android:attr/listDivider">
 
             <ImageView
                 android:id="@+id/image_featured"
