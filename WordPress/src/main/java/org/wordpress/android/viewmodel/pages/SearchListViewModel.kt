@@ -10,8 +10,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -22,9 +20,6 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
-import org.wordpress.android.ui.posts.PostListUploadStatusTracker
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import java.util.SortedMap
@@ -35,25 +30,13 @@ class SearchListViewModel
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
-    uploadActionUseCase: UploadActionUseCase,
-    uploadStore: UploadStore,
-    appPrefsWrapper: AppPrefsWrapper,
-    private val postStore: PostStore
+    private val progressHelper: PageItemProgressHelper
 ) : ViewModel() {
     private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
     val searchResult: LiveData<List<PageItem>> = _searchResult
 
     private var isStarted: Boolean = false
     private lateinit var pagesViewModel: PagesViewModel
-
-    private val uploadStatusTracker = PostListUploadStatusTracker(
-            uploadStore = uploadStore,
-            uploadActionUseCase = uploadActionUseCase
-    )
-
-    private val progressHelper: PageItemProgressHelper by lazy {
-        PageItemProgressHelper(appPrefsWrapper, postStore, uploadStatusTracker, pagesViewModel.site)
-    }
 
     fun start(pagesViewModel: PagesViewModel) {
         this.pagesViewModel = pagesViewModel
@@ -62,6 +45,7 @@ class SearchListViewModel
             isStarted = true
 
             pagesViewModel.searchPages.observeForever(searchObserver)
+            progressHelper.attachSite(site = pagesViewModel.site)
         }
     }
 

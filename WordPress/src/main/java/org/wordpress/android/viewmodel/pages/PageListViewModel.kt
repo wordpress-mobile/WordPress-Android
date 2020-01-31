@@ -18,8 +18,6 @@ import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
-import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -30,9 +28,6 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
-import org.wordpress.android.ui.posts.PostListUploadStatusTracker
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtils
@@ -55,10 +50,7 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
-    uploadActionUseCase: UploadActionUseCase,
-    uploadStore: UploadStore,
-    appPrefsWrapper: AppPrefsWrapper,
-    private val postStore: PostStore
+    private val progressHelper: PageItemProgressHelper
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Pair<List<PageItem>, Boolean>> = Transformations.map(_pages) {
@@ -77,15 +69,6 @@ class PageListViewModel @Inject constructor(
 
     private val isSitePhotonCapable: Boolean by lazy {
         SiteUtils.isPhotonCapable(pagesViewModel.site)
-    }
-
-    private val uploadStatusTracker = PostListUploadStatusTracker(
-            uploadStore = uploadStore,
-            uploadActionUseCase = uploadActionUseCase
-    )
-
-    private val progressHelper: PageItemProgressHelper by lazy {
-        PageItemProgressHelper(appPrefsWrapper, postStore, uploadStatusTracker, pagesViewModel.site)
     }
 
     enum class PageListType(val pageStatuses: List<PageStatus>) {
@@ -124,6 +107,8 @@ class PageListViewModel @Inject constructor(
     fun start(listType: PageListType, pagesViewModel: PagesViewModel) {
         this.listType = listType
         this.pagesViewModel = pagesViewModel
+
+        progressHelper.attachSite(site = pagesViewModel.site)
 
         if (!isStarted) {
             isStarted = true
@@ -395,4 +380,3 @@ class PageListViewModel @Inject constructor(
         }
     }
 }
-
