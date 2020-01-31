@@ -28,7 +28,7 @@ class PageItemProgressHelper @Inject constructor(
 ) {
     private lateinit var site: SiteModel
 
-    fun attachSite(site: SiteModel){
+    fun attachSite(site: SiteModel) {
         this.site = site
     }
 
