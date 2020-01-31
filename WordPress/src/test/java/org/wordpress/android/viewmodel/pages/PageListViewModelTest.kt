@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.pages
 
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
 import java.util.Date
 import java.util.Locale
 
@@ -29,12 +31,23 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var pagesViewModel: PagesViewModel
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var progressHelper: PageItemProgressHelper
+
     private lateinit var viewModel: PageListViewModel
     private val site = SiteModel()
     private val pageListState = MutableLiveData<PageListState>()
     @Before
     fun setUp() {
-        viewModel = PageListViewModel(mediaStore, dispatcher, localeManagerWrapper, Dispatchers.Unconfined)
+        viewModel = PageListViewModel(
+                mediaStore,
+                dispatcher,
+                localeManagerWrapper,
+                Dispatchers.Unconfined,
+                progressHelper
+        )
+
+        whenever(progressHelper.getProgressStateForPage(any())).thenReturn(Pair(
+                PostListItemProgressBar.Hidden, false))
 
         whenever(pagesViewModel.arePageActionsEnabled).thenReturn(false)
         whenever(pagesViewModel.site).thenReturn(site)

@@ -26,6 +26,7 @@ import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
 import java.util.Date
 import java.util.SortedMap
 
@@ -37,6 +38,7 @@ class SearchListViewModelTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var pagesViewModel: PagesViewModel
+    @Mock lateinit var progressHelper: PageItemProgressHelper
 
     private lateinit var searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>>
     private lateinit var viewModel: SearchListViewModel
@@ -46,8 +48,10 @@ class SearchListViewModelTest {
     @Before
     fun setUp() {
         page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
-        viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE)
+        viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE, progressHelper)
         searchPages = MutableLiveData()
+
+        whenever(progressHelper.getProgressStateForPage(any())).thenReturn(Pair(PostListItemProgressBar.Hidden, false))
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         viewModel.start(pagesViewModel)
     }
@@ -112,7 +116,17 @@ class SearchListViewModelTest {
 
     @Test
     fun `passes action to page view model on menu action`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null, false)
+        val clickedPage = PageItem.PublishedPage(
+                1,
+                "title",
+                Date(),
+                listOf(),
+                0,
+                null,
+                false,
+                PostListItemProgressBar.Hidden,
+                false
+        )
         val action = VIEW_PAGE
 
         viewModel.onMenuAction(action, clickedPage)
@@ -122,7 +136,10 @@ class SearchListViewModelTest {
 
     @Test
     fun `passes page to page view model on item tapped`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null, false)
+        val clickedPage = PageItem.PublishedPage(
+                1, "title", Date(), listOf(), 0, null, false, PostListItemProgressBar.Hidden,
+                false
+        )
 
         viewModel.onItemTapped(clickedPage)
 
