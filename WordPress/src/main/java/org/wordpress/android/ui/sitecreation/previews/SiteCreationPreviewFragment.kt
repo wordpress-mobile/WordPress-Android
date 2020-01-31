@@ -8,13 +8,9 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.Animation.AnimationListener
-import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
 import android.widget.TextSwitcher
@@ -46,6 +42,7 @@ import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
 import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.helpers.DynamicTextsProgressionHelper
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
@@ -81,7 +78,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private var okButtonContainer: View? = null
 
     // an instance helping sequence texts while in `loading` state
-    private var textsProgressTextsHelper: SiteCreationTextsProgressHelper? = null
+    private var mTextsProgressTextsHelper: DynamicTextsProgressionHelper? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -147,11 +144,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
                 // special care required for the animated texts displayed while in loading state
                 // which may be currently running the sequence:
-                if (textsProgressTextsHelper != null && uiState !is SitePreviewFullscreenProgressUiState) {
-                    textsProgressTextsHelper?.let {
+                if (mTextsProgressTextsHelper != null && uiState !is SitePreviewFullscreenProgressUiState) {
+                    mTextsProgressTextsHelper?.let {
                         // capture before using it
                         it.cancel()
-                        textsProgressTextsHelper = null
+                        mTextsProgressTextsHelper = null
                     }
                 }
             }
@@ -237,8 +234,12 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         progressUiState.apply {
             fullscreenProgressLayout.findViewById<TextSwitcher>(R.id.progress_text)?.apply {
                 // create a progress helper and let it run
-                SiteCreationTextsProgressHelper(WeakReference(this), loadingTextResIds).also {
-                    textsProgressTextsHelper = it
+                DynamicTextsProgressionHelper(
+                        WeakReference(this),
+                        loadingTextResIds,
+                        SITE_CREATION_PREVIEW_TEXT_DURATION_MS
+                ).also {
+                    mTextsProgressTextsHelper = it
                     postDelayed(it, it.delay)
                 }
             }
@@ -382,90 +383,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun createFadeInAnimator(view: View) = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
-
-    /**
-     * A simple helper to switch texts used to display progress of site being created.
-     * The helper is a runnable and one started (externally) will keep running until cancelled
-     * Each run changes the text to the next one in the sequence (stringIds) in a cyclic manner
-     *
-     * using a WeakReference for the text view will prevent future executions once the view is
-     * destroyed (or at least no longer referenced by fullscreenProgressLayout)
-     *
-     * @param textSwitcher - a week-ref to a text-switcher which displays the sequence
-     * @param stringIds - a list of string resource ids to sequence
-     * @param delay - how long to delay the next text-change (i.e. how long is each text displayed)
-     */
-    private inner class SiteCreationTextsProgressHelper(
-        val textSwitcher: WeakReference<TextSwitcher>,
-        val stringIds: List<Int>,
-        val delay: Long = SITE_CREATION_PREVIEW_TEXT_DURATION_MS
-    ) : Runnable {
-        val nText: Int = stringIds.size
-
-        // the count of how many times `nextText` was executed
-        var count = -1
-
-        var canceled = false
-
-        init {
-            textSwitcher.get()?.apply {
-                removeAllViews()
-                visibility = View.VISIBLE
-                setFactory {
-                    // inflate a text view that matches the design for this screen
-                    LayoutInflater.from(context)
-                            .inflate(R.layout.site_creation_progress_text, this, false)
-                }
-                // set fade in/out animations
-                inAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_in)
-                outAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
-                // to avoid a cross-over effect - the `in` animation should wait till the `out` animation ends
-                inAnimation.startOffset = outAnimation.duration
-
-                inAnimation.setAnimationListener(object : AnimationListener {
-                    override fun onAnimationRepeat(animation: Animation?) {
-                    }
-
-                    override fun onAnimationEnd(animation: Animation?) {
-                        // if still running - post this change-text action again in `delay` ms
-                        if (!canceled) {
-                            postDelayed(this@SiteCreationTextsProgressHelper, delay)
-                        }
-                    }
-
-                    override fun onAnimationStart(animation: Animation?) {
-                    }
-                })
-                // now set the first text immediately
-                setCurrentText(nextText())
-            }
-        }
-
-        fun cancel() {
-            canceled = true
-            textSwitcher.get()?.apply {
-                removeCallbacks(this@SiteCreationTextsProgressHelper)
-                visibility = View.GONE
-            }
-        }
-
-        override fun run() {
-            if (canceled) {
-                return
-            }
-            // update to the next text
-            textSwitcher.get()?.apply {
-                setText(nextText())
-
-            }
-        }
-
-        private fun nextText(): CharSequence? {
-            // progress with the count and get the next text
-            count++
-            return textSwitcher.get()?.context?.resources?.getString(stringIds[count % nText])
-        }
-    }
 
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"
