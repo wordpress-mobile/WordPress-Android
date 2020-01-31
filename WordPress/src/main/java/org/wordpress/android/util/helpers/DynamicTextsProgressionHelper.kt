@@ -6,8 +6,8 @@ import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.TextSwitcher
+import org.wordpress.android.R
 import org.wordpress.android.R.anim
-import org.wordpress.android.R.layout
 import java.lang.ref.WeakReference
 
 /**
@@ -41,7 +41,7 @@ class DynamicTextsProgressionHelper(
             setFactory {
                 // inflate a text view that matches the design for this screen
                 LayoutInflater.from(context)
-                        .inflate(layout.site_creation_progress_text, this, false)
+                        .inflate(R.layout.site_creation_progress_text, this, false)
             }
             // set fade in/out animations
             inAnimation = AnimationUtils.loadAnimation(
