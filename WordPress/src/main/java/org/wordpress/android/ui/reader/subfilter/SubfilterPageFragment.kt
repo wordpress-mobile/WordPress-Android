@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
@@ -139,7 +140,7 @@ class SubfilterPageFragment : DaggerFragment() {
             emptyStateContainer.apply {
                 visibility = View.VISIBLE
                 val title = findViewById<WPTextView>(R.id.title)
-                val actionButton = findViewById<WPTextView>(R.id.action_button)
+                val actionButton = findViewById<Button>(R.id.action_button)
                 title.setText(
                         if (category == SITES)
                             R.string.reader_filter_empty_sites_list

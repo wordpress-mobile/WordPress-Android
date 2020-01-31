@@ -33,23 +33,19 @@
             style="@style/ActionableEmptyStateTitle"
             android:text="@string/reader_filter_empty_sites_list"/>
 
-        <org.wordpress.android.widgets.WPTextView
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/action_button"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:background="?attr/selectableItemBackground"
             android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:padding="@dimen/margin_medium"
-            android:text="@string/reader_filter_empty_sites_action"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:minWidth="@dimen/min_touch_target_sz"
             android:textAllCaps="true"
             android:textColor="@color/primary"
-            android:textSize="@dimen/text_sz_medium"/>
+            android:visibility="visible"
+            android:text="@string/reader_filter_empty_sites_action"
+            style="@style/Widget.AppCompat.Button.Borderless"/>
 
     </LinearLayout>
 </RelativeLayout>
