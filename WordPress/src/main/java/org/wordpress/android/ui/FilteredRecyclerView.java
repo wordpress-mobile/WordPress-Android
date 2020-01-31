@@ -234,6 +234,9 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         if (mTabLayout == null) {
             mTabLayout = findViewById(R.id.tab_layout);
+            mTabLayout.addOnLayoutChangeListener(
+                    (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
+                            mTabLayout.setScrollPosition(mTabLayout.getSelectedTabPosition(), 0f, true));
         }
 
         if (mUseTabsForFiltering) {
