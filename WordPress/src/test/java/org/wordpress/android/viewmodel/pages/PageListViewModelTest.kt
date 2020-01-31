@@ -10,6 +10,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
@@ -197,6 +198,46 @@ class PageListViewModelTest : BaseUnitTest() {
         assertThat(result).hasSize(1)
         assertThat((result[0].first[0] as PublishedPage).title).isEqualTo(firstPage.title)
         assertThat((result[0].first[1] as PublishedPage).title).isEqualTo(secondPage.title)
+    }
+
+    @Test
+    fun `checks if PageItems gets the correct progress state`() {
+        whenever(progressHelper.getProgressStateForPage(LocalId(0))).thenReturn(
+                Pair(
+                        PostListItemProgressBar.Indeterminate,
+                        true
+                )
+        )
+
+        whenever(progressHelper.getProgressStateForPage(LocalId(1))).thenReturn(
+                Pair(
+                        PostListItemProgressBar.Hidden,
+                        false
+                )
+        )
+
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+
+        viewModel.pages.observeForever { result.add(it) }
+
+        val firstPage = buildPageModel(0)
+        val secondPage = buildPageModel(1)
+
+        val pageModels = mutableListOf<PageModel>()
+        pageModels += secondPage
+        pageModels += firstPage
+        pages.value = pageModels
+
+        assertThat((result[0].first[0] as PublishedPage).progressBarState).isEqualTo(PostListItemProgressBar.Indeterminate)
+        assertThat((result[0].first[0] as PublishedPage).showOverlay).isEqualTo(true)
+
+        assertThat((result[0].first[1] as PublishedPage).progressBarState).isEqualTo(PostListItemProgressBar.Hidden)
+        assertThat((result[0].first[1] as PublishedPage).showOverlay).isEqualTo(false)
     }
 
     private fun buildPageModel(
