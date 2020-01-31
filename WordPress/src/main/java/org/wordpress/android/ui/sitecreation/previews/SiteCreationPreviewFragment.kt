@@ -97,11 +97,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     override fun onResume() {
         super.onResume()
-        serviceEventConnection = ServiceEventConnection(
-                context,
-                SiteCreationService::class.java,
-                viewModel
-        )
+        serviceEventConnection = ServiceEventConnection(context, SiteCreationService::class.java, viewModel)
     }
 
     override fun onPause() {
@@ -142,21 +138,12 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     is SitePreviewFullscreenProgressUiState -> updateLoadingLayout(uiState)
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
                 }
-                uiHelpers.updateVisibility(
-                        fullscreenProgressLayout,
-                        uiState.fullscreenProgressLayoutVisibility
-                )
+                uiHelpers.updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
                 uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebError, uiState.webViewErrorVisibility)
-                uiHelpers.updateVisibility(
-                        sitePreviewWebViewShimmerLayout,
-                        uiState.shimmerVisibility
-                )
-                uiHelpers.updateVisibility(
-                        fullscreenErrorLayout,
-                        uiState.fullscreenErrorLayoutVisibility
-                )
+                uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
+                uiHelpers.updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
 
                 // special care required for the animated texts displayed while in loading state
                 // which may be currently running the sequence:
@@ -171,10 +158,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         })
         viewModel.preloadPreview.observe(this, Observer { url ->
             url?.let {
-                sitePreviewWebView.webViewClient = URLFilteredWebViewClient(
-                        url,
-                        this@SiteCreationPreviewFragment
-                )
+                sitePreviewWebView.webViewClient = URLFilteredWebViewClient(url, this@SiteCreationPreviewFragment)
                 sitePreviewWebView.loadUrl(url)
             }
         })
@@ -263,14 +247,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private fun updateErrorLayout(errorUiStateState: SitePreviewFullscreenErrorUiState) {
         errorUiStateState.apply {
-            uiHelpers.setTextOrHide(
-                    fullscreenErrorLayout.findViewById(R.id.error_title),
-                    titleResId
-            )
-            uiHelpers.setTextOrHide(
-                    fullscreenErrorLayout.findViewById(R.id.error_subtitle),
-                    subtitleResId
-            )
+            uiHelpers.setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_title), titleResId)
+            uiHelpers.setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_subtitle), subtitleResId)
             uiHelpers.updateVisibility(
                     fullscreenErrorLayout.findViewById(R.id.contact_support),
                     errorUiStateState.showContactSupport
@@ -378,17 +356,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     val contentHeight = contentLayout.measuredHeight.toFloat()
 
                     val titleAnim = createFadeInAnimator(sitePreviewTitle)
-                    val webViewAnim = createSlideInFromBottomAnimator(
-                            webviewContainer,
-                            contentHeight
-                    )
+                    val webViewAnim = createSlideInFromBottomAnimator(webviewContainer, contentHeight)
                     // OK button should slide in if the container exists and fade in otherwise
-                    val okAnim = okButtonContainer?.let {
-                        createSlideInFromBottomAnimator(
-                                it,
-                                contentHeight
-                        )
-                    }
+                    val okAnim = okButtonContainer?.let { createSlideInFromBottomAnimator(it, contentHeight) }
                             ?: createFadeInAnimator(okButton)
                     AnimatorSet().apply {
                         interpolator = DecelerateInterpolator()
@@ -483,11 +453,10 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             if (canceled) {
                 return
             }
-            textSwitcher.get()?.let {
-                // update to the next text
-                textSwitcher.get()?.apply {
-                    setText(nextText())
-                }
+            // update to the next text
+            textSwitcher.get()?.apply {
+                setText(nextText())
+
             }
         }
 
