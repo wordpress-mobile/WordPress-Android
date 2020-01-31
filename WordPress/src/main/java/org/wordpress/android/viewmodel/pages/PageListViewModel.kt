@@ -189,14 +189,7 @@ class PageListViewModel @Inject constructor(
                     PUBLISHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_published)))
                     SCHEDULED -> _pages.postValue(listOf(Empty(R.string.pages_empty_scheduled)))
                     DRAFTS -> _pages.postValue(listOf(Empty(R.string.pages_empty_drafts)))
-                    TRASHED -> _pages.postValue(
-                            listOf(
-                                    Empty(
-                                            R.string.pages_empty_trashed,
-                                            isButtonVisible = false
-                                    )
-                            )
-                    )
+                    TRASHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_trashed, isButtonVisible = false)))
                 }
             }
         } else {
