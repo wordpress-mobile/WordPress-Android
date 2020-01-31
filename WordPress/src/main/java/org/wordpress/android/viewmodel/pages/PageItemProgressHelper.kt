@@ -17,15 +17,21 @@ import org.wordpress.android.viewmodel.pages.PageItemProgressHelper.PostUploadUi
 import org.wordpress.android.viewmodel.pages.PageItemProgressHelper.PostUploadUiState.UploadingPost
 import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
 import org.wordpress.android.viewmodel.posts.PostListItemUploadStatus
+import javax.inject.Inject
 
 typealias ShouldShowOverlay = Boolean
 
-class PageItemProgressHelper(
+class PageItemProgressHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val postStore: PostStore,
-    private val uploadStatusTracker: PostListUploadStatusTracker,
-    private val site: SiteModel
+    private val uploadStatusTracker: PostListUploadStatusTracker
 ) {
+    private lateinit var site: SiteModel
+
+    fun attachSite(site: SiteModel){
+        this.site = site
+    }
+
     private fun getProgressBarState(
         uploadUiState: PostUploadUiState
     ): PostListItemProgressBar {
