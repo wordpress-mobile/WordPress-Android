@@ -9,13 +9,11 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <TextView
+    <TextSwitcher
         android:id="@+id/progress_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/neutral_40"
-        android:textSize="@dimen/text_sz_extra_large"
+        android:layout_gravity="center_vertical"
         android:visibility="gone"
         tools:text="We're creating your new site!"/>
 
