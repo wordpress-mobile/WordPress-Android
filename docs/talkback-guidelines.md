@@ -34,7 +34,7 @@
 #### TalkBack
 This document will provide all the resources needed to improve an app's accessibility using TalkBack. If you have never worked with TalkBack you can visit the "Using TalkBack" document to get started.
 
-- [Using TalkBack](using-talback.md)
+- [Using TalkBack](docs/using-talback.md)
 
 ## <a name="guidelines"></a>Guidelines
 
