@@ -138,7 +138,6 @@ android {
         exclude '**/libjscexecutor.so'
         exclude '**/libhermes-inspector.so'
         exclude '**/libhermes-executor-debug.so'
-        exclude '**/libhermes.so'
     }
 
     bundle {
