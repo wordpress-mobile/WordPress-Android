@@ -2023,9 +2023,24 @@ public class EditPostActivity extends AppCompatActivity implements
         return content;
     }
 
+    private String migrateToGutenbergEditor(String content) {
+        return "<!-- wp:paragraph --><p>" + content + "</p><!-- /wp:paragraph -->";
+    }
+
     private void fillContentEditorFields() {
         // Needed blog settings needed by the editor
         mEditorFragment.setFeaturedImageSupported(mSite.isFeaturedImageSupported());
+
+        // Special actions - these only make sense for empty posts that are going to be populated now
+        if (TextUtils.isEmpty(mEditPostRepository.getContent())) {
+            String action = getIntent().getAction();
+            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                setPostContentFromShareAction();
+            } else if (NEW_MEDIA_POST.equals(action)) {
+                mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY,
+                        getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
+            }
+        }
 
         // Set post title and content
         if (mEditPostRepository.hasPost()) {
@@ -2050,17 +2065,6 @@ public class EditPostActivity extends AppCompatActivity implements
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
             mEditorFragment.setFeaturedImageId(mEditPostRepository.getFeaturedImageId());
         }
-
-        // Special actions - these only make sense for empty posts that are going to be populated now
-        if (TextUtils.isEmpty(mEditPostRepository.getContent())) {
-            String action = getIntent().getAction();
-            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-                setPostContentFromShareAction();
-            } else if (NEW_MEDIA_POST.equals(action)) {
-                mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY,
-                        getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
-            }
-        }
     }
 
     private void launchCamera() {
@@ -2075,13 +2079,19 @@ public class EditPostActivity extends AppCompatActivity implements
         final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
+            mHasSetPostContent = true;
             mEditPostRepository.updateAsync(postModel -> {
                 if (title != null) {
                     postModel.setTitle(title);
                 }
                 // Create an <a href> element around links
+                String updatedContent = AutolinkUtils.autoCreateLinks(text);
 
-                final String updatedContent = AutolinkUtils.autoCreateLinks(text);
+                // If editor is Gutenberg, add Gutenberg block around content
+                if (mShowGutenbergEditor) {
+                    updatedContent = migrateToGutenbergEditor(updatedContent);
+                }
+
                 // update PostModel
                 postModel.setContent(updatedContent);
                 mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
