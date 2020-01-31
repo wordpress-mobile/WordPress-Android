@@ -233,7 +233,9 @@ class PageListViewModelTest : BaseUnitTest() {
         pageModels += firstPage
         pages.value = pageModels
 
-        assertThat((result[0].first[0] as PublishedPage).progressBarState).isEqualTo(PostListItemProgressBar.Indeterminate)
+        assertThat((result[0].first[0] as PublishedPage).progressBarState).isEqualTo(
+                PostListItemProgressBar.Indeterminate
+        )
         assertThat((result[0].first[0] as PublishedPage).showOverlay).isEqualTo(true)
 
         assertThat((result[0].first[1] as PublishedPage).progressBarState).isEqualTo(PostListItemProgressBar.Hidden)
