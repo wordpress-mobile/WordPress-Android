@@ -31,12 +31,17 @@
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorAppBar">@color/primary</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
-        <item name="wpIconColorOnSurface">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
+        <item name="wpIconColorOnSurface">@color/material_on_surface_emphasis_medium</item>
 
+        <item name="listPopupWindowStyle">@style/Widget.MaterialComponents.PopupMenu.ListPopupWindow</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">
             @style/Widget.MaterialComponents.PopupMenu.Overflow
+        </item>
+
+        <item name="bottomSheetDialogTheme">
+            @style/ThemeOverlay.MaterialComponents.BottomSheetDialog
         </item>
 
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
@@ -1018,15 +1023,14 @@
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
     </style>
 
-    <style name="SubfilterSectionTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/neutral_30</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
+    <style name="SubfilterSectionTitle">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
     </style>
 
     <style name="SubfilterSiteTagItem">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
-        <item name="android:paddingEnd">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingStart">@dimen/content_margin_bottom_sheet_row_start</item>
+        <item name="android:paddingEnd">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
@@ -1034,16 +1038,24 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
+    <style name="SiteTagBottomSheetTitle" parent="SiteTagFilteredTitle">
+        <item name="android:layout_height">@dimen/one_line_list_item_height</item>
+        <item name="android:paddingStart">@dimen/content_margin_bottom_sheet_row_start</item>
+        <item name="android:paddingEnd">@dimen/content_margin_bottom_sheet_row_start</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <style name="SubfilterDividerItem">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
     </style>
 
     <style name="SubfilterDivider">
-        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:layout_height">@dimen/divider_size</item>
         <item name="android:layout_marginStart">@dimen/margin_medium</item>
         <item name="android:layout_marginEnd">@dimen/margin_medium</item>
-        <item name="android:background">@color/neutral_30</item>
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">?attr/colorOnSurface</item>
+        <item name="android:alpha">@dimen/material_emphasis_disabled</item>
     </style>
 
     <style name="TooltipContainer">
@@ -1077,7 +1089,18 @@
     <style name="LoginTheme.BottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowIsFloating">false</item>
+        <item name="android:fitsSystemWindows">true</item>
         <item name="bottomSheetStyle">@style/Widget.Design.BottomSheet.Modal</item>
     </style>
 
+    <style name="Handled.BottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="bottomSheetStyle">@style/BottomSheetStyleContainer</item>
+    </style>
+
+    <style name="BottomSheetStyleContainer" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>

@@ -384,7 +384,7 @@
         <activity
             android:name=".ui.reader.ReaderPostListActivity"
             android:label="@string/reader"
-            android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar">
         </activity>
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
@@ -462,7 +462,7 @@
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
             android:label="@string/reader_title_subs"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
