@@ -4,11 +4,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:fitsSystemWindows="true">
+    android:animateLayoutChanges="true">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/create_actions_recycler_view"
+        android:id="@+id/content_recycler_view"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:clipToPadding="false"

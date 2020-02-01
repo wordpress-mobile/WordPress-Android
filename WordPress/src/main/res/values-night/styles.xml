@@ -24,18 +24,23 @@
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
-        <item name="wpIconColorOnSurface">@color/material_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorPrimary</item>
+        <item name="wpIconColorOnSurface">@color/material_surface_emphasis_medium</item>
 
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
+        <item name="listPopupWindowStyle">
+            @style/Widget.MaterialComponents.PopupMenu.ListPopupWindow
+        </item>
 
         <item name="actionOverflowMenuStyle">
             @style/Widget.MaterialComponents.PopupMenu.Overflow
         </item>
 
-        <item name="listPopupWindowStyle">@style/Widget.MaterialComponents.PopupMenu.ListPopupWindow</item>
+        <item name="bottomSheetDialogTheme">
+            @style/ThemeOverlay.MaterialComponents.BottomSheetDialog
+        </item>
 
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>

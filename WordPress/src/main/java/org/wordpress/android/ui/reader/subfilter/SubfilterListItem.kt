@@ -53,7 +53,7 @@ sealed class SubfilterListItem(val type: ItemType) {
         override var isSelected: Boolean = false,
         override val onClickAction: (filter: SubfilterListItem) -> Unit
     ) : SubfilterListItem(SITE_ALL) {
-        override val label: UiString = UiStringRes(R.string.reader_filter_all_sites)
+        override val label: UiString = UiStringRes(R.string.reader_filter_cta)
     }
 
     data class Site(

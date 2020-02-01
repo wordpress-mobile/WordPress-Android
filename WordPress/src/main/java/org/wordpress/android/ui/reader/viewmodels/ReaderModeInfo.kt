@@ -11,5 +11,6 @@ data class ReaderModeInfo(
     val feedId: Long,
     val requestNewerPosts: Boolean,
     val label: UiString?,
-    val isFirstLoad: Boolean
+    val isFirstLoad: Boolean,
+    val isFiltered: Boolean
 )

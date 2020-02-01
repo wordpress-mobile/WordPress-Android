@@ -27,6 +27,8 @@ import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
+import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
@@ -212,6 +214,18 @@ class ReaderPostListViewModelTest {
         viewModel.currentSubFilter.observeForever { item = it }
 
         assertThat(item).isInstanceOf(SiteAll::class.java)
+    }
+
+    @Test
+    fun verifyUpdateTabTitle() {
+        val data = hashMapOf(SITES to 3, TAGS to 25)
+        viewModel.start(initialTag, false, false)
+
+        for (testStep in data.keys) {
+            viewModel.updateTabTitle(testStep, data.getOrDefault(testStep, 0))
+        }
+
+        assertThat(viewModel.filtersMatchCount.value).isEqualTo(data)
     }
 
     private fun onClickActionDummy(filter: SubfilterListItem) {
