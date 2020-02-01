@@ -57,7 +57,6 @@ class PageListEventListener(
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
 
-
     /**
      * Handles the [Lifecycle.Event.ON_DESTROY] event to cleanup the registration for dispatcher and removing the
      * observer for lifecycle.
