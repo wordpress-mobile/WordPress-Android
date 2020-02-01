@@ -45,7 +45,9 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                             R.color.accent
                     ) and 0xffffff
             )
-            val backgroundColor = Integer.toHexString(itemView.context.getColorFromAttribute(R.attr.colorSurface) and 0xffffff)
+            val backgroundColor = Integer.toHexString(
+                    itemView.context.getColorFromAttribute(R.attr.colorSurface) and 0xffffff
+            )
             val emptyColor = Integer.toHexString(
                     ContextCompat.getColor(
                             itemView.context,
