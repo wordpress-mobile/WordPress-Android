@@ -21,10 +21,7 @@
             app:contentInsetLeft="@dimen/toolbar_content_offset"
             app:contentInsetRight="@dimen/toolbar_content_offset_end"
             app:contentInsetStart="@dimen/toolbar_content_offset"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:subtitleTextColor="?attr/wpColorTextSubtle"
-            app:theme="@style/Theme.MaterialComponents.DayNight"
-            app:titleTextColor="?attr/colorOnSurface" />
+            app:theme="@style/WordPress.WebPreview.ActionBar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
