@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-20 08:51:28+0000
+Translation-Revision-Date: 2020-01-22 00:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">Afbeelding verwijderen</string>
+    <string name="gutenberg_native_move_image_forward">Afbeelding naar voren verplaatsen</string>
+    <string name="gutenberg_native_move_image_backward">Afbeelding naar achteren verplaatsen</string>
+    <string name="gutenberg_native_gallery_caption_s">Bijschrift galerij. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Huidige waarde is %2$s</string>
+    <string name="create_post_page_fab_tooltip">Een bericht of pagina maken</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">Tik op %1$s Bericht toevoegen %2$s om een nieuw bericht aan te maken.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Tik op %1$s Blogberichten %2$s om verder te gaan.</string>
+    <string name="content_description_person_building_website">Persoon die de website gebouwd heeft</string>
+    <string name="post_signup_interstitial_not_right_now">Niet nu</string>
+    <string name="post_signup_interstitial_subtitle">Wat je ook wilt creëren of delen, wij helpen je erbij.</string>
+    <string name="post_signup_interstitial_title">Welkom bij WordPress</string>
+    <string name="stock_media_picker_list_content_description">Fotobibliotheek</string>
+    <string name="photo_picker_image_thumbnail_unselected">Afbeelding gedeselecteerd</string>
+    <string name="photo_picker_image_selected">, geselecteerd</string>
+    <string name="photo_picker_image_thumbnail_selected">Afbeelding geselecteerd</string>
+    <string name="photo_picker_image_thumbnail_content_description">Miniatuurweergave afbeelding</string>
+    <string name="my_site_bottom_sheet_add_post">Blogbericht</string>
+    <string name="my_site_bottom_sheet_title">Nieuwe toevoegen</string>
+    <string name="post_settings_publish">Publiceren</string>
+    <string name="dialog_gutenberg_informative_description_v2">We hebben grote verbeteringen aan de blokeditor aangebracht en vinden het zeker de moeite waard! De editor is ingeschakeld voor nieuwe berichten en pagina\'s. Als je toch liever de klassieke editor gebruikt, ga dan naar \'Mijn site\' > \'Site-instellingen\'.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Nu synchroniseren</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">Dit bericht wordt onmiddellijk gesynchroniseerd.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">Klaar om te synchroniseren?</string>
+    <string name="new_site_creation_unavailable_domain">Dit domein is niet beschikbaar</string>
+    <string name="login_promo_viewpager_content_description">Inleiding</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">We konden geen toegang krijgen tot je site. Neem contact op met je host om dit probleem te verhelpen.</string>
     <string name="login_discovery_error_ssl">We konden geen toegang krijgen tot je site vanwege een probleem met het &lt;b>SSL-certificaat&lt;/b>. Neem contact op met je host om dit probleem te verhelpen.</string>
     <string name="login_discovery_error_http_auth">We konden geen toegang krijgen tot je site omdat hiervoor &lt;b>HTTP-authenticatie is vereist&lt;/b>. Neem contact op met je host om dit probleem te verhelpen.</string>
@@ -14,8 +41,6 @@ Language: nl
     <string name="enter_site_credentials_instead">Inloggen met site-inloggegevens</string>
     <string name="enter_credentials_for_site">Inloggen met je site-inloggegevens voor %1$s.</string>
     <string name="send_verification_email">Verificatiemail verzenden</string>
-    <string name="my_site_bottom_sheet_add_page">Nieuwe pagina maken</string>
-    <string name="my_site_bottom_sheet_add_post">Nieuw bericht opstellen</string>
     <string name="reader_following_display_name">Volgen</string>
     <string name="posts_cannot_be_started">We kunnen de berichten momenteel niet openen. Probeer het later opnieuw</string>
     <string name="suffix_1_000">%sk</string>
@@ -33,7 +58,6 @@ Language: nl
     <string name="site_cannot_be_loaded">We kunnen op dit moment geen gegevens voor je site laden. Probeer het later opnieuw</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress-mediabibliotheek</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">We doen ons best om bij elke release meer blokken toe te voegen. In de tussentijd kun je dit bericht ook online bewerken.</string>
-    <string name="gutenberg_native_unsupported">Niet-ondersteund</string>
     <string name="gutenberg_native_ungroup">Groep opheffen</string>
     <string name="gutenberg_native_translate">Vertalen</string>
     <string name="gutenberg_native_title">Titel:</string>
@@ -163,8 +187,6 @@ Language: nl
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Uitklappen</string>
     <string name="description_collapse">Inklappen</string>
-    <string name="editor_retry_failed_uploads">Upload opnieuw proberen</string>
-    <string name="editor_toast_failed_uploads">Enkele media konden niet worden geüpload. Het opslaan of publiceren\n van je bericht is niet mogelijk in deze staat.</string>
     <string name="my_site_verify_your_email_without_email">Je e-mail verifiëren: er zijn instructies naar je e-mailadres verzonden.</string>
     <string name="my_site_verify_your_email">Je e-mail verifiëren: er zijn instructies naar %s verzonden</string>
     <string name="link_dialog_button_cancel">Annuleren</string>
@@ -571,7 +593,6 @@ Language: nl
     <string name="activity_log_rewind_started_snackbar_message">Je site wordt hersteld\nTerugzetten naar %1$s %2$s</string>
     <string name="activity_log_button">Actieknop Activiteitenlog</string>
     <string name="plugin_auto_managed">Automatisch beheerd</string>
-    <string name="reader_save_posts_locally_dialog_message">Sla dit bericht op en keer op elk gewenst moment terug om het te lezen. Het bericht is alleen op deze device beschikbaar; opgeslagen berichten worden niet gesynchroniseerd met andere apparaten. (Nog niet, tenminste! We zijn ermee bezig.)</string>
     <string name="reader_save_posts_locally_dialog_title">Berichten opslaan voor later</string>
     <string name="reader_empty_search_request_failed">Kan zoekopdracht niet uitvoeren</string>
     <string name="reader_empty_search_title">Geen resultaten gevonden</string>
@@ -596,7 +617,6 @@ Language: nl
     <string name="reader_add_bookmark">Toevoegen aan opgeslagen berichten</string>
     <string name="reader_save_for_later_title">Opgeslagen berichten</string>
     <string name="removed">Verwijderd</string>
-    <string name="tabbar_accessibility_label_write">Nieuw bericht. Een nieuw bericht opstellen.</string>
     <string name="my_site_icon_content_description">Favicon wijzigen</string>
     <string name="my_site_icon_dialog_cancel_button">Annuleren</string>
     <string name="my_site_icon_dialog_remove_button">Verwijderen</string>
@@ -627,7 +647,6 @@ Language: nl
     <string name="preference_privacy_settings">Privacyinstellingen</string>
     <string name="preference_collect_information">Gegevens verzamelen</string>
     <string name="post_submitted">Bericht geplaatst</string>
-    <string name="write_post">Bericht opstellen</string>
     <string name="login_email_button_signup">Heb je nog geen account? %1$sRegistreren%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Voor deze plugin-functie moet de site in goede staat zijn.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Voor deze plugin-functie moet het abonnement op het primaire domein aan deze gebruiker zijn gekoppeld.</string>
@@ -1154,7 +1173,6 @@ Language: nl
     <string name="sharing">Delen</string>
     <string name="tabbar_accessibility_label_notifications">Meldingen. Beheer je meldingen</string>
     <string name="tabbar_accessibility_label_reader">Reader. Inhoud van andere sites volgen.</string>
-    <string name="tabbar_accessibility_label_me">Ik. Je profiel bekijken en wijzigingen aanbrengen.</string>
     <string name="tabbar_accessibility_label_my_site">Mijn site. Je site bekijken en beheren, inclusief statistieken.</string>
     <string name="my_site_btn_sharing">Delen</string>
     <string name="button_not_now">Niet nu</string>

@@ -1,74 +1,78 @@
 <ar>
-13.9:
-• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
-• Block editor enhancements: Added support for settings in the List and Video blocks.
+14.0:
+- محرِّر المكوِّن: قد يتعطَّل محرِّر المكوّن في بعض الأحيان عند محاولتك التراجع عن إجراء شيء ما، ما يُعد تراجعًا أكثر من اللازم بقليل. تم إصلاح هذا، إلى جانب خطأ يؤثر في العناصر النائبة للصور.
+- تم نقل قسم "خاص بي" من التطبيق إلى داخل "موقعي".
+- تمت إضافة زر إجراء متحرك إلى "موقعي" لإنشاء سريع للمقالات والصفحات الجديدة.
 </ar>
 <de-DE>
-13.9:
-• Neu im Block-Editor: Neuer Galerie-Block zur Erstellung von Bildgalerien mit Dateien aus deiner Mediathek sowie Unterstützung des vorformatierten Blocks hinzugefügt.
-• Verbesserungen am Block-Editor: Unterstützung für Einstellungen in den Listen- und Video-Blöcken hinzugefügt.
+14.0:
+- Block-Editor: Manchmal stürzte der Block-Editor ab, wenn man versuchte etwas rückgängig zu machen, was ein wenig zu viel des Guten war. Dies wurde behoben, zusammen mit einem Fehler, der Bildplatzhalter betraf.
+- Der „Ich“-Abschnitt der App wurde in „Meine Website“ verschoben.
+- Ein Aktions-Button wurde zu „Meine Website“ hinzugefügt, um neue Beiträge und Seiten schnell erstellen zu können.
 </de-DE>
 <en-US>
-13.9:
-• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
-• Block editor enhancements: Added support for settings in the List and Video blocks.
+14.0:
+- Block editor: Sometimes the Block editor would crash when you tried to undo, which is a little too much undoing. That’s fixed, along with a bug affecting image placeholders.
+- Moved the “me” section of the app to within “My Site”.
+- Added a floating action button to My Site for quick creation of new posts and pages.
 </en-US>
 <es-ES>
-13.9:
-- Adiciones al editor de bloques: Añadido un nuevo bloque de galería para crear galerías de imágenes usando archivos de tu biblioteca de medios, junto con compatibilidad para el bloque preformateado.
-- Mejoras en el editor de bloques: Añadida compatibilidad para los ajustes de los bloques de lista y vídeo.
+14.0:
+- Editor de bloques: Algunas veces, el editor de bloques falla cuando intentas deshacer, cuando es demasiado lo que hay que deshacer. Eso está corregido, junto con un fallo que afecta a los marcadores de posición de las imágenes.
+- Se ha movido la sección «Yo» de la aplicación a «Mi sitio».
+- Añadido un botón de acción flotante a «Mi sitio» para la creación rápida de nuevas entradas y páginas.
 </es-ES>
-<iw-IL>
-13.9:
-• תוספות לעורך הבלוקים: הוספנו בלוק גלריה חדש ליצירת גלריית תמונות באמצעות קבצים מספריית המדיה שלך ותמיכה בבלוק Preformatted.
-• שיפורים בעורך הבלוקים: הוספנו תמיכה להגדרות בבלוק הרשימה ובבלוק הווידאו.
-</iw-IL>
-<id>
-13.9:
-• Tambahan pada penyunting blok: Menambahkan blok Galeri yang baru untuk membuat galeri gambar menggunakan file dari Pustaka Media Anda, bersama dengan dukungan untuk blok Yang diformat sebelumnya.
-• Peningkatan pada penyunting blok: Menambahkan dukungan untuk pengaturan di blok Daftar dan Video.
-</id>
-<it-IT>
-13.9:
-• Aggiunte all'editor dei blocchi: aggiunto un nuovo blocco Galleria per creare gallerie di immagini usando file dalla libreria multimediale, insieme al supporto per il blocco Preformattato.
-• Miglioramenti all'editor dei blocchi: aggiunto supporto per le impostazioni nei blocchi Elenco e Video.
-</it-IT>
+<fr-CA>
+14.0 :
+- Éditeur de blocs : Parfois, l'éditeur de blocs plantait lorsque vous essayiez d'annuler une action, ce qui était très inconfortable. Le problème a été résolu, ainsi qu'un bug affectant les espaces réservés des images.
+- La section « Moi » de l'application a été remplacée par la section « Mon site ».
+- Ajout d'un bouton d'action flottant à la section « Mon site » pour créer rapidement de nouveaux messages et de nouvelles pages.
+</fr-CA>
+<fr-FR>
+14.0 :
+- Éditeur de blocs : Parfois, l'éditeur de blocs plantait lorsque vous essayiez d'annuler une action, ce qui était très inconfortable. Le problème a été résolu, ainsi qu'un bug affectant les espaces réservés des images.
+- La section « Moi » de l'application a été remplacée par la section « Mon site ».
+- Ajout d'un bouton d'action flottant à la section « Mon site » pour créer rapidement de nouveaux messages et de nouvelles pages.
+</fr-FR>
 <ja-JP>
-13.9:
-•Block editor additions:Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
-•Block editor enhancements:Added support for settings in the List and Video blocks.
+14.0:
+- ブロックエディター :操作を元に戻そうとするとブロックエディターがクラッシュするという問題がありました。これは、画像プレースホルダーに影響を与えるバグとあわせて修正されました。
+- アプリの「me」セクションを「参加サイト」内に移動しました。
+- 「参加サイト」にフローティングアクションボタンが追加され、新しい投稿やページを簡単に作成できるようになりました。
 </ja-JP>
 <ko-KR>
-13.9:
-• 블록 편집기 추가 기능: 미디어 라이브러리의 파일을 사용하여 이미지 갤러리를 만들 수 있는 새로운 갤러리 블록이 사전 서식 지정된 블록 지원과 함께 추가되었습니다.
-• 블록 편집기의 향상된 기능: 목록 및 비디오 블록의 설정에 대한 지원이 추가되었습니다.
+14.0:
+- 블록 편집기: 실행을 취소하려고 할 때 블록 편집기가 충돌하여 좀 심하게 취소되는 경우가 있습니다. 이 문제는 이미지 자리표시자에 영향을 미치는 버그와 함께 수정되었습니다.
+- 앱의 “me” 섹션을 “내 사이트” 내로 옮겼습니다.
+- 새 글과 페이지를 빠르게 만들 수 있도록 내 사이트에 부동 작업 버튼을 추가했습니다.
 </ko-KR>
 <nl-NL>
-13.9:
-• Aanvullingen op de blokeditor: We hebben een nieuw Galerijblok toegevoegd om afbeeldinggalerijen te maken met bestanden uit je Mediabibliotheek, en ondersteuning voor het Vooraf ingesteld-blok.
-• Verbeteringen aan de blokeditor: Toegevoegde ondersteuning voor instellingen in de Lijst- en videoblokken.
+14.0:
+- Blokeditor: Soms crashte de blokeditor wanneer je iets ongedaan wilde maken, waardoor er iets teveel ongedaan werd gemaakt. Dat is nu opgelost, net als een bug die invloed had op de placeholders van afbeeldingen.
+- Het gedeelte 'Ik' in de app is nu verplaatst naar 'Mijn site'.
+- Er is een zwevende activatieknop toegevoegd aan Mijn site om snel nieuwe berichten en pagina's te kunnen maken.
 </nl-NL>
 <ru-RU>
-13.9:
-• Улучшения редактора блоков: добавлен блок галереи для создания галерей из файлов медиатеки, а также поддержка блока преформатированного текста. Возможность настройки блоков списков и видео.
+14.0:
+- Исправлено падение редактора блоков при действии отмены. Исправлена проблема с заполнителями изображений.
+- Раздел "мой профиль" в приложении перемещен внутрь раздела "Мой сайт".
+- Добавлена плавающая кнопка действия в "Мой сайт" для быстрого создания страниц или записей.
 </ru-RU>
 <sv-SE>
-13.9:
-• Nyheter i blockredigeraren: Nytt galleri-block för bildgallerier med filer från mediabiblioteket, och även stöd för ett förformaterat block.
-• Förbättringar i blockredigeraren: Nu finns det stöd för inställningar i list- och videoblock.
+14.0:
+- Blockredigeraren: Ibland kunde den krascha om du försökte ångra vissa åtgärder, vilket innebar att backa för långt. Det är rättat, liksom ett fel som berörde platshållare för bilder.
+- Appens sektion ”Jag” ligger nu under ”Min webbplats”.
+- Ny, flytande, åtgärdsknapp under ”Min webbplats” för att smidigt skapa nya sidor och inlägg.
 </sv-SE>
 <tr-TR>
-13.9:
-• Blok düzenleyici eklemeleri: Önceden Biçimli blok desteğinin yanı sıra, Ortam Kütüphanenizdeki dosyaları kullanarak görsel galerileri oluşturmanız için yeni bir Galeri bloku eklendi.
-• Blok düzenleyici geliştirmeleri: Liste ve Video bloklarındaki ayarlar için destek eklendi.
+14.0:
+- Blok düzenleyici: Geri almaya çalıştığınızda bazen blok düzenleyici çökebilir, bu biraz fazla ger al yapıldığında olur. Bununla birlikte, resim yer tutucularını etkileyen bir hata da düzeltildi.
+- Uygulamanın "Ben" bölümünü "Sitem" içine taşıdı.
+- Yeni yazıların ve sayfaların hızlı bir şekilde oluşturulması için Siteme yüzen bir işlem düğmesi eklendi.
 </tr-TR>
-<zh-CN>
-13.9：
-•区块编辑器添加内容：添加了一个新的“图库”区块，用于使用媒体库中的文件创建图片库，并支持“预格式化”区块。
-•区块编辑器增强功能：添加了对“列表”和“视频”区块中设置的支持。
-</zh-CN>
 <zh-TW>
-13.9：
-•區塊編輯器新增功能：已新增「圖庫」區塊，讓你可用媒體庫內的檔案建立圖庫，並取得「未格式化」區塊的支援。
-•區塊編輯器增強功能：已新增「清單」和「視訊」區塊內的設定支援。
+14.0：
+- 區塊編輯器：- 在你嘗試復原某些操作時，有時區塊編輯器會損毀，遇到這種情況就比復原不成還慘了。這個問題連帶一些影響圖片預留位置的錯誤都已獲得修正
+- 將應用程式中「我」的部分移至「我的網站」內。
+- 在「我的網站」新增一個浮動操作按鈕，能夠快速建立新文章和頁面。
 </zh-TW>

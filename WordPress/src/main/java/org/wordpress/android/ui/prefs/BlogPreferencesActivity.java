@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -49,6 +50,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        setContentView(R.layout.site_settings_activity);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -61,6 +63,9 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -79,7 +84,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             siteSettingsFragment = new SiteSettingsFragment();
             siteSettingsFragment.setArguments(getIntent().getExtras());
             fragmentManager.beginTransaction()
-                           .replace(android.R.id.content, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
+                           .replace(R.id.fragment_container, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
                            .commit();
         }
     }

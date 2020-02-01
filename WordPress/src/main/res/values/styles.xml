@@ -31,15 +31,20 @@
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorAppBar">@color/primary</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
-        <item name="wpIconColorOnSurface">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
+        <item name="wpIconColorOnSurface">@color/material_on_surface_emphasis_medium</item>
 
         <item name="listPopupWindowStyle">
             @style/Widget.MaterialComponents.PopupMenu.ListPopupWindow
         </item>
+
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">
             @style/Widget.MaterialComponents.PopupMenu.Overflow
+        </item>
+
+        <item name="bottomSheetDialogTheme">
+            @style/ThemeOverlay.MaterialComponents.BottomSheetDialog
         </item>
 
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
@@ -54,8 +59,6 @@
 
         <item name="colorButtonNormal">@color/light_gray</item>
 
-        <item name="android:dialogTheme">@style/DialogTheme.WordPress</item>
-        <item name="android:alertDialogTheme">@style/Calypso.Dialog.Alert</item>
         <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
         <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
 
@@ -79,7 +82,7 @@
     <style name="NumberPickerTheme" parent="WordPress">
         <item name="colorControlNormal">@color/transparent</item>
         <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
-        <item name="android:textColorPrimary">@color/primary</item>
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
@@ -143,11 +146,6 @@
     <style name="FilteredRecyclerViewFilterTextView.MainToolbar">
         <item name="android:textSize">@null</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
-    </style>
-
-    <style name="DialogTheme.WordPress" parent="android:Theme.Material.Dialog">
-        <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
-        <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
     </style>
 
     <style name="DatePicker.WordPress" parent="android:Widget.Material.DatePicker">
@@ -247,10 +245,6 @@
         <item name="android:layout_height">fill_parent</item>
         <item name="android:gravity">center_horizontal|center_vertical</item>
         <item name="android:textColor">@color/neutral_40</item>
-    </style>
-
-    <style name="WhiteButton" parent="Widget.AppCompat.Button">
-        <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
     <style name="WordPress.Button" parent="Widget.AppCompat.Button.Colored">
@@ -1071,9 +1065,8 @@
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
     </style>
 
-    <style name="SubfilterSectionTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/neutral_30</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
+    <style name="SubfilterSectionTitle">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
     </style>
 
     <style name="SubfilterSiteTagItem">
@@ -1092,11 +1085,12 @@
     </style>
 
     <style name="SubfilterDivider">
-        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:layout_height">@dimen/divider_size</item>
         <item name="android:layout_marginStart">@dimen/margin_medium</item>
         <item name="android:layout_marginEnd">@dimen/margin_medium</item>
-        <item name="android:background">@color/neutral_30</item>
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">?attr/colorOnSurface</item>
+        <item name="android:alpha">@dimen/material_emphasis_disabled</item>
     </style>
 
     <style name="TooltipContainer">
@@ -1126,4 +1120,11 @@
         <item name="android:layout_height">@dimen/main_fab_tooltip_arrow_size</item>
         <item name="android:elevation">@dimen/main_fab_tooltip_elevation</item>
     </style>
+
+    <style name="LoginTheme.BottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/Widget.Design.BottomSheet.Modal</item>
+    </style>
+
 </resources>
