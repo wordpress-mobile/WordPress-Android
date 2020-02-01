@@ -7,21 +7,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground"
+    android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/margin_large"
+    android:paddingStart="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_large"
     android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingStart="@dimen/margin_extra_large">
+    android:paddingBottom="@dimen/margin_large">
 
     <ImageView
         android:id="@+id/image_blog"
         android:layout_width="@dimen/avatar_sz_medium"
         android:layout_height="@dimen/avatar_sz_medium"
-        android:layout_weight="0"
         android:layout_marginEnd="@dimen/margin_large"
-        android:contentDescription="@null"/>
+        android:layout_weight="0"
+        android:contentDescription="@null" />
 
     <LinearLayout
         android:id="@+id/layout_content"
@@ -31,40 +31,38 @@
         android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
-            android:textAlignment="viewStart"
-            android:gravity="start"
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:ellipsize="end"
+            android:gravity="start"
             android:maxLines="1"
-            android:textColor="?attr/wpColorText"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="text_title"
-            android:layout_marginEnd="@dimen/margin_medium"/>
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="text_title" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:textAlignment="viewStart"
-            android:gravity="start"
             android:id="@+id/text_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:gravity="start"
             android:maxLines="1"
-            android:textColor="@color/link_reader"
-            android:textSize="@dimen/text_sz_small"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="?attr/colorPrimary"
             tools:text="text_url" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:textAlignment="viewStart"
-            android:gravity="start"
             android:id="@+id/text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:gravity="start"
             android:maxLines="2"
-            android:textColor="@color/neutral_40"
-            android:textSize="@dimen/text_sz_small"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceCaption"
             tools:text="text_description" />
 
     </LinearLayout>
