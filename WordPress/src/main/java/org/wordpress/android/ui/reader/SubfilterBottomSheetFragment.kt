@@ -80,7 +80,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
