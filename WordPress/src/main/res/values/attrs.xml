@@ -21,12 +21,12 @@
         <attr name="maxSummaryLines" format="integer" />
         <attr name="longClickHint" />
         <attr name="dialogMessage" format="string" />
-        <attr name="iconTint" format="color" />
+        <attr name="iconTint" format="color|reference" />
         <attr name="switchThumbTint" format="integer" />
         <attr name="switchTrackTint" format="integer" />
-        <attr name="preferenceTextColor" format="color" />
-        <attr name="backgroundColorChecked" format="color" />
-        <attr name="backgroundColorUnchecked" format="color" />
+        <attr name="backgroundColorChecked" format="color|reference" />
+        <attr name="backgroundColorUnchecked" format="color|reference" />
+        <attr name="startOffset" format="dimension|reference" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->
