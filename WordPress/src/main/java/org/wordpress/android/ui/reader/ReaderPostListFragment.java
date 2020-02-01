@@ -178,6 +178,7 @@ public class ReaderPostListFragment extends Fragment
     private ImageView mSettingsButton;
     private View mSubFiltersListButton;
     private TextView mSubFilterTitle;
+    private View mRemoveFilterButton;
 
     private boolean mIsTopLevel = false;
     private static final String SUBFILTER_BOTTOM_SHEET_TAG = "SUBFILTER_BOTTOM_SHEET_TAG";
@@ -425,6 +426,12 @@ public class ReaderPostListFragment extends Fragment
                                         readerModeInfo.getLabel()
                                 )
                         );
+                    }
+
+                    if (readerModeInfo.isFiltered()) {
+                        mRemoveFilterButton.setVisibility(View.VISIBLE);
+                    } else {
+                        mRemoveFilterButton.setVisibility(View.GONE);
                     }
                 }
             });
@@ -980,6 +987,11 @@ public class ReaderPostListFragment extends Fragment
             });
 
             mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);
+
+            mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
+            mRemoveFilterButton.setOnClickListener(v -> {
+                mViewModel.setDefaultSubfilter();
+            });
         }
 
         return rootView;
@@ -1996,7 +2008,8 @@ public class ReaderPostListFragment extends Fragment
                                 0,
                                 false,
                                 null,
-                                false),
+                                false,
+                                mRemoveFilterButton.getVisibility() == View.VISIBLE),
                         false
                 );
             }
