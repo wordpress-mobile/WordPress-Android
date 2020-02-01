@@ -167,7 +167,6 @@ class PagesViewModel
         val post: PostModel,
         val previewType: RemotePreviewType
     )
-    
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
         if (_site == null) {
