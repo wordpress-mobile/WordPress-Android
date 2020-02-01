@@ -36,6 +36,10 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static org.wordpress.android.BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE;
+
 /*
  * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
  */
@@ -155,9 +159,13 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         blogHolder.mTxtUrl.setText("");
                     }
                     mImageManager.load(blogHolder.mImgBlog, ImageType.BLAVATAR, blogInfo.getImageUrl());
-                    blogHolder.mFollowButton.setIsFollowed(blogInfo.isFollowing);
-                    blogHolder.mFollowButton.setOnClickListener(
-                            v -> toggleFollow(blogHolder.itemView.getContext(), blogHolder.mFollowButton, blogInfo));
+                    if (INFORMATION_ARCHITECTURE_AVAILABLE) {
+                        blogHolder.mFollowButton.setIsFollowed(blogInfo.isFollowing);
+                        blogHolder.mFollowButton.setOnClickListener(v -> toggleFollow(
+                                blogHolder.itemView.getContext(),
+                                blogHolder.mFollowButton,
+                                blogInfo));
+                    }
                     break;
             }
 
@@ -203,12 +211,12 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // recommended blogs don't have a follow button
             switch (getBlogType()) {
                 case FOLLOWED:
-                    mTxtDescription.setVisibility(View.GONE);
-                    mFollowButton.setVisibility(View.VISIBLE);
+                    mTxtDescription.setVisibility(GONE);
+                    mFollowButton.setVisibility(INFORMATION_ARCHITECTURE_AVAILABLE ? VISIBLE : GONE);
                     break;
                 case RECOMMENDED:
-                    mTxtDescription.setVisibility(View.VISIBLE);
-                    mFollowButton.setVisibility(View.GONE);
+                    mTxtDescription.setVisibility(VISIBLE);
+                    mFollowButton.setVisibility(GONE);
                     break;
             }
         }
