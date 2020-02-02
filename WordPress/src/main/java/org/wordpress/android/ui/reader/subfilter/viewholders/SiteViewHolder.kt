@@ -21,12 +21,10 @@ class SiteViewHolder(
 
         val blog = site.blog
 
-        this.itemUrl.text = if (blog.hasUrl()) {
-            UrlUtils.getHost(blog.url)
-        } else if (blog.hasFeedUrl()) {
-            UrlUtils.getHost(blog.feedUrl)
-        } else {
-            ""
+        this.itemUrl.text = when {
+            blog.hasUrl() -> UrlUtils.getHost(blog.url)
+            blog.hasFeedUrl() -> UrlUtils.getHost(blog.feedUrl)
+            else -> ""
         }
     }
 }
