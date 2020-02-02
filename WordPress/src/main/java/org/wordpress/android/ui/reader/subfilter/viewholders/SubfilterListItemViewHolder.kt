@@ -26,10 +26,11 @@ open class SubfilterListItemViewHolder(
         itemText?.let {
             it.setTextColor(ContextCompat.getColor(
                     parent.context,
-                    if (filter.isSelected)
+                    if (filter.isSelected) {
                         R.color.primary
-                    else
+                    } else {
                         parent.context.getColorResIdFromAttribute(R.attr.wpColorText)
+                    }
             ))
         }
 
