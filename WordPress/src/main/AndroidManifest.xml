@@ -526,7 +526,7 @@
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!--People Management-->
         <activity
