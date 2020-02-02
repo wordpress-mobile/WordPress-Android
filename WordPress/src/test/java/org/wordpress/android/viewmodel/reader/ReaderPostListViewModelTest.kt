@@ -27,6 +27,7 @@ import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
@@ -226,6 +227,22 @@ class ReaderPostListViewModelTest {
         }
 
         assertThat(viewModel.filtersMatchCount.value).isEqualTo(data)
+    }
+
+    @Test
+    fun verifyOnBottomSheetActionClickedEmitsFollowedBlogs() {
+        viewModel.onBottomSheetActionClicked(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
+
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(false)
+        assertThat(viewModel.startSubsActivity.value!!.peekContent()).isEqualTo(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
+    }
+
+    @Test
+    fun verifyOnBottomSheetActionClickedEmitsFollowedTags() {
+        viewModel.onBottomSheetActionClicked(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
+
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(false)
+        assertThat(viewModel.startSubsActivity.value!!.peekContent()).isEqualTo(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
     }
 
     private fun onClickActionDummy(filter: SubfilterListItem) {
