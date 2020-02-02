@@ -234,7 +234,8 @@ class ReaderPostListViewModelTest {
         viewModel.onBottomSheetActionClicked(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
 
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(false)
-        assertThat(viewModel.startSubsActivity.value!!.peekContent()).isEqualTo(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
+        assertThat(viewModel.startSubsActivity.value!!.peekContent())
+                .isEqualTo(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
     }
 
     @Test
@@ -242,7 +243,8 @@ class ReaderPostListViewModelTest {
         viewModel.onBottomSheetActionClicked(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
 
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(false)
-        assertThat(viewModel.startSubsActivity.value!!.peekContent()).isEqualTo(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
+        assertThat(viewModel.startSubsActivity.value!!.peekContent())
+                .isEqualTo(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
     }
 
     private fun onClickActionDummy(filter: SubfilterListItem) {
