@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
@@ -17,6 +19,7 @@ import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
@@ -25,6 +28,9 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -37,7 +43,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val newsTrackerHelper: NewsTrackerHelper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val subfilterListItemMapper: SubfilterListItemMapper
+    private val subfilterListItemMapper: SubfilterListItemMapper,
+    private val eventBusWrapper: EventBusWrapper
 ) : ScopedViewModel(bgDispatcher) {
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
@@ -82,6 +89,9 @@ class ReaderPostListViewModel @Inject constructor(
         if (isStarted) {
             return
         }
+
+        eventBusWrapper.register(this)
+
         tag?.let {
             onTagChanged(tag)
             newsManager.pull()
@@ -295,8 +305,21 @@ class ReaderPostListViewModel @Inject constructor(
         appPrefsWrapper.setReaderSubfilter(json)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
+        AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
+        onLoadSubFilters()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
+        AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
+        onLoadSubFilters()
+    }
+
     override fun onCleared() {
         super.onCleared()
+        eventBusWrapper.unregister(this)
         newsManager.stop()
     }
 }

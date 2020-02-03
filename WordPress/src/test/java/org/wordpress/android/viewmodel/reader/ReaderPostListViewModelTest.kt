@@ -35,6 +35,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
+import org.wordpress.android.util.EventBusWrapper
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -56,6 +57,7 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var newsTrackerHelper: NewsTrackerHelper
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var subfilterListItemMapper: SubfilterListItemMapper
+    @Mock private lateinit var eventBusWrapper: EventBusWrapper
 
     private lateinit var viewModel: ReaderPostListViewModel
     private val liveData = MutableLiveData<NewsItem>()
@@ -79,7 +81,8 @@ class ReaderPostListViewModelTest {
                 newsTrackerHelper,
                 TEST_DISPATCHER,
                 appPrefsWrapper,
-                subfilterListItemMapper
+                subfilterListItemMapper,
+                eventBusWrapper
         )
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
@@ -233,7 +236,7 @@ class ReaderPostListViewModelTest {
     fun verifyOnBottomSheetActionClickedEmitsFollowedBlogs() {
         viewModel.onBottomSheetActionClicked(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
 
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(false)
+        assertThat(viewModel.changeBottomSheetVisibility.value!!.peekContent()).isEqualTo(false)
         assertThat(viewModel.startSubsActivity.value!!.peekContent())
                 .isEqualTo(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
     }
@@ -242,7 +245,7 @@ class ReaderPostListViewModelTest {
     fun verifyOnBottomSheetActionClickedEmitsFollowedTags() {
         viewModel.onBottomSheetActionClicked(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
 
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(false)
+        assertThat(viewModel.changeBottomSheetVisibility.value!!.peekContent()).isEqualTo(false)
         assertThat(viewModel.startSubsActivity.value!!.peekContent())
                 .isEqualTo(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
     }

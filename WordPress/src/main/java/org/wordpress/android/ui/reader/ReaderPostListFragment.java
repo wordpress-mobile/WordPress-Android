@@ -441,6 +441,8 @@ public class ReaderPostListFragment extends Fragment
                         SubfilterBottomSheetFragment bottomSheet =
                                 (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
                         if (isShowing && bottomSheet == null) {
+                            performTagsAndSitesUpdate();
+                            mViewModel.onLoadSubFilters();
                             bottomSheet = new SubfilterBottomSheetFragment();
                             bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                         } else if (!isShowing && bottomSheet != null) {
@@ -2634,6 +2636,17 @@ public class ReaderPostListFragment extends Fragment
             mHasPurgedReaderDb = true;
             ReaderDatabase.purgeAsync();
         }
+    }
+
+    private void performTagsAndSitesUpdate() {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            return;
+        }
+
+        ReaderUpdateServiceStarter.startService(getActivity(), EnumSet.of(
+                UpdateTask.TAGS,
+                UpdateTask.FOLLOWED_BLOGS
+        ));
     }
 
     /*
