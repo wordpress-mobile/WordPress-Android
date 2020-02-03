@@ -32,8 +32,7 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 /**
- * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
- * you see fit.
+ * This is a temporary class to make the PagesViewModel more manageable. It was inspired by the PostListEventListener
  */
 class PageListEventListener(
     private val lifecycle: Lifecycle,

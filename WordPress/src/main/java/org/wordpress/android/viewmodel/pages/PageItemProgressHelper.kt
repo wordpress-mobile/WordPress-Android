@@ -28,10 +28,16 @@ class PageItemProgressHelper @Inject constructor(
 ) {
     private lateinit var site: SiteModel
 
+    /**
+     * This was done so that this class could be injectable for testing, as this dependency wouldn't be provided by DI
+     */
     fun attachSite(site: SiteModel) {
         this.site = site
     }
 
+    /**
+     * Copied from PostListItemUiStateHelper since the behavior is similar for the Page List UI State.
+     */
     private fun getProgressBarState(
         uploadUiState: PostUploadUiState
     ): PostListItemProgressBar {
@@ -46,6 +52,9 @@ class PageItemProgressHelper @Inject constructor(
         }
     }
 
+    /**
+     * Copied from PostListItemUiStateHelper since the behavior is similar for the Page List UI State.
+     */
     private fun shouldShowProgress(
         uploadUiState: PostUploadUiState
     ): Boolean {
@@ -53,6 +62,9 @@ class PageItemProgressHelper @Inject constructor(
                 uploadUiState is UploadQueued
     }
 
+    /**
+     * Copied from PostListItemUiStateHelper since the behavior is similar for the Page List UI State.
+     */
     sealed class PostUploadUiState {
         data class UploadingMedia(val progress: Int) : PostUploadUiState()
         data class UploadingPost(val isDraft: Boolean) : PostUploadUiState()
@@ -67,6 +79,9 @@ class PageItemProgressHelper @Inject constructor(
         object NothingToUpload : PostUploadUiState()
     }
 
+    /**
+     * Copied from PostListItemUiStateHelper since the behavior is similar for the Page List UI State.
+     */
     private fun createUploadUiState(
         uploadStatus: PostListItemUploadStatus,
         post: PostModel
