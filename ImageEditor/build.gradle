@@ -59,6 +59,8 @@ dependencies {
         exclude group: 'com.squareup.okhttp3'
     }
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
+
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestVersion"

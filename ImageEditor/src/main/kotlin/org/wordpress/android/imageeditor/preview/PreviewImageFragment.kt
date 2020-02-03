@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.R
 
 class PreviewImageFragment : Fragment() {
@@ -28,5 +30,12 @@ class PreviewImageFragment : Fragment() {
 
     companion object {
         const val ARG_IMAGE_URL = "arg_image_url"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        GlobalScope.launch {
+            ImageEditor.dummyImageEditorSingleton.load("https://www.w3schools.com/w3css/img_snowtops.jpg")
+        }
     }
 }
