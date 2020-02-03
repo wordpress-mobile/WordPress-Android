@@ -2,8 +2,6 @@ package org.wordpress.android.util;
 
 import android.util.Base64;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import org.json.JSONException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,12 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.libsodium.jni.NaCl;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(MockitoJUnitRunner.class)
 public class EncryptionUtilsTest {
     byte[] mPublicKey;
     byte[] mSecretKey;
@@ -118,13 +117,13 @@ public class EncryptionUtilsTest {
     }
     private JSONObject getEncryptionDataJson(final byte[] publicKey, final String data) {
         try {
-            final String encryptionDataJsonString = EncryptionUtils.encryptStringData(
+            final String encryptionDataJsonString = EncryptionUtils.generateJSONEncryptedData(
                     Base64.encodeToString(publicKey, Base64.DEFAULT),
                     data);
 
             return new JSONObject(encryptionDataJsonString);
         } catch (JSONException e) {
-            fail("encryptStringData failed with JSONException: " + e.toString());
+            fail("generateJSONEncryptedData failed with JSONException: " + e.toString());
         }
         return null;
     }
