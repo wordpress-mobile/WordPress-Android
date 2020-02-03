@@ -191,7 +191,7 @@ class PageListEventListener(
     private fun uploadStatusChanged(vararg localPostIds: LocalId) {
         invalidateUploadStatus.invoke(localPostIds.toList())
     }
-    
+
     class Factory @Inject constructor() {
         fun createAndStartListening(
             lifecycle: Lifecycle,
@@ -215,7 +215,8 @@ class PageListEventListener(
                     handlePostUploadedWithoutError = handlePostUploadedWithoutError,
                     invalidateUploadStatus = invalidateUploadStatus,
                     handleRemoteAutoSave = handleRemoteAutoSave,
-                    handlePostUploadedStarted = handlePostUploadedStarted)
+                    handlePostUploadedStarted = handlePostUploadedStarted
+            )
         }
     }
 }
