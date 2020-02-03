@@ -48,10 +48,12 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPDATE
@@ -88,6 +90,7 @@ class PagesViewModel
     private val networkUtils: NetworkUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     private val previewStateHelper: PreviewStateHelper,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -114,6 +117,9 @@ class PagesViewModel
 
     private val _editPage = SingleLiveEvent<PageModel?>()
     val editPage: LiveData<PageModel?> = _editPage
+
+    private val _editAutoRevisionPage = SingleLiveEvent<Pair<PostModel,SiteModel>>()
+    val editAutoRevisionPage: LiveData<Pair<PostModel,SiteModel>> = _editAutoRevisionPage
 
     private val _previewPage = SingleLiveEvent<PostModel?>()
     val previewPage: LiveData<PostModel?> = _previewPage
@@ -146,6 +152,9 @@ class PagesViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
+    private val _dialogAction = SingleLiveEvent<DialogHolder>()
+    val dialogAction: LiveData<DialogHolder> = _dialogAction
+
     private var _site: SiteModel? = null
     val site: SiteModel
         get() = checkNotNull(_site) { "Trying to access unitialized site" }
@@ -161,6 +170,13 @@ class PagesViewModel
     private var searchJob: Job? = null
     private var pageUpdateContinuations: MutableMap<Long, Continuation<Unit>> = mutableMapOf()
     private var currentPageType = PUBLISHED
+
+    private val pageListDialogHelper: PageListDialogHelper by lazy {
+        PageListDialogHelper(
+                showDialog = { _dialogAction.postValue(it) },
+                analyticsTracker = analyticsTracker
+        )
+    }
 
     data class BrowsePreview(
         val post: PostModel,
@@ -672,6 +688,34 @@ class PagesViewModel
                     )
             )
         }
+    }
+
+    // BasicFragmentDialog Events
+
+    fun onPositiveClickedForBasicDialog(instanceTag: String) {
+        pageListDialogHelper.onPositiveClickedForBasicDialog(
+                instanceTag = instanceTag,
+                editRestoredAutoSavePage = this::editRestoredAutoSavePage
+        )
+    }
+
+    fun onNegativeClickedForBasicDialog(instanceTag: String) {
+        pageListDialogHelper.onNegativeClickedForBasicDialog(
+                instanceTag = instanceTag,
+                editLocalPage = this::editLocalPage
+        )
+    }
+
+    private fun editLocalPage(localPageId: Int) {
+        launch {
+            val page = pageStore.getPageByLocalId(localPageId, site)
+            _editPage.postValue(page)
+        }
+    }
+
+    private fun editRestoredAutoSavePage(localPageId: Int) {
+        val page = postStore.getPostByLocalPostId(localPageId)
+        _editAutoRevisionPage.postValue(Pair(page, site))
     }
 
     private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&
