@@ -1647,11 +1647,11 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override public void onImagePreviewRequested(String mediaUrl) {
 //        MediaPreviewActivity.showPreview(this, null, mediaUrl);
         // Temporarily open image editor at this point
-        ActivityLauncher.openImageEditor(this);
+        ActivityLauncher.openImageEditor(this, mediaUrl);
     }
 
     @Override public void onMediaEditorRequested(String mediaUrl) {
-        ActivityLauncher.openImageEditor(this);
+//        ActivityLauncher.openImageEditor(this, mediaUrl);
     }
 
     @Override

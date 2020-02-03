@@ -93,6 +93,7 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_IMAGE_URL;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
@@ -906,8 +907,9 @@ public class ActivityLauncher {
         }
     }
 
-    public static void openImageEditor(Activity activity) {
+    public static void openImageEditor(Activity activity, String imageUrl) {
         Intent intent = new Intent(activity, EditImageActivity.class);
+        intent.putExtra(ARG_IMAGE_URL, imageUrl); // TODO: Send separate thumb and full image url
         activity.startActivity(intent);
     }
 }
