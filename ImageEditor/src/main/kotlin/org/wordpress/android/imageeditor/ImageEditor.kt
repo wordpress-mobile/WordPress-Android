@@ -1,19 +1,21 @@
 package org.wordpress.android.imageeditor
 
-import android.net.Uri
-import android.util.Log
-import java.io.File
-import java.io.Serializable
+import android.widget.ImageView
+import java.util.concurrent.atomic.AtomicBoolean
 
-class ImageEditor(private val loadImageIntoAFile: (suspend (String) -> File?)) : Serializable {
-    suspend fun load(mediaUrl: String) {
-        val highResImageFile: File? = loadImageIntoAFile.invoke(mediaUrl)
-        Log.d("ImageEditor", "Image loaded into file")
-
-        val fileUri: Uri = Uri.fromFile(highResImageFile)
-    }
-
+class ImageEditor private constructor(
+    private val loadImageUrlIntoImageView: ((String, ImageView) -> Unit)
+) {
     companion object {
-        lateinit var dummyImageEditorSingleton: ImageEditor
+        private lateinit var INSTANCE: ImageEditor
+        private val initialized = AtomicBoolean()
+
+        val instance: ImageEditor get() = INSTANCE
+
+        fun init(loadImageUrlIntoImageView: ((String, ImageView) -> Unit)) {
+            if (initialized.getAndSet(true)) {
+                INSTANCE = ImageEditor(loadImageUrlIntoImageView)
+            }
+        }
     }
 }
