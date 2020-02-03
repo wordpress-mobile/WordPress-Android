@@ -150,7 +150,7 @@ class ReaderPostListViewModel @Inject constructor(
                         onClickAction = ::onSubfilterClicked,
                         blog = blog,
                         isSelected = (getCurrentSubfilterValue() is Site) &&
-                                (getCurrentSubfilterValue() as Site).blog.isSameAs(blog)
+                                (getCurrentSubfilterValue() as Site).blog.isSameAs(blog, false)
                 ))
             }
 
