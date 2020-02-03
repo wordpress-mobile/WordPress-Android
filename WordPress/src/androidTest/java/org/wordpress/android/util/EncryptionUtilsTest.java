@@ -2,6 +2,8 @@ package org.wordpress.android.util;
 
 import android.util.Base64;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.libsodium.jni.NaCl;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.libsodium.jni.Sodium;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,14 +21,14 @@ import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class EncryptionUtilsTest {
-    static final int BOX_PUBLIC_KEY_BYTES = NaCl.sodium().crypto_box_publickeybytes();
-    static final int BOX_SECRET_KEY_BYTES = NaCl.sodium().crypto_box_secretkeybytes();
-    static final int BASE64_DECODE_FLAGS = Base64.DEFAULT;
+    private static final int BOX_PUBLIC_KEY_BYTES = NaCl.sodium().crypto_box_publickeybytes();
+    private static final int BOX_SECRET_KEY_BYTES = NaCl.sodium().crypto_box_secretkeybytes();
+    private static final int BASE64_DECODE_FLAGS = Base64.DEFAULT;
     // test data
-    static final List<String> TEST_EMPTY_STRING = new ArrayList<>();
-    static final List<String> TEST_LOG_STRING = Arrays.asList("WordPress - 13.5 - Version code: 789\n",
+    private static final List<String> TEST_EMPTY_STRING = new ArrayList<>();
+    private static final List<String> TEST_LOG_STRING = Arrays.asList("WordPress - 13.5 - Version code: 789\n",
             "Android device name: Google Android SDK built for x86\n\n",
             "01 - [Nov-11 03:04 UTILS] WordPress.onCreate\n",
             "02 - [Nov-11 03:04 API] Dispatching action: ListAction-REMOVE_EXPIRED_LISTS\n",
@@ -43,20 +45,21 @@ public class EncryptionUtilsTest {
             "    at com.android.volley.NetworkDispatcher.processRequest(NetworkDispatcher.java:111)\n",
             "    at com.android.volley.NetworkDispatcher.run(NetworkDispatcher.java:90)\n");
 
-    static final List<String> TEST_CHAR_SAMPLE = Arrays.asList("!\"#$%&' ()*+,- ./{|}~[\\]^_`: ;<=>?Ⓟ @︼︽︾⑳₡\n",
-            "¢£¤¥¦§¨©ª«¬®¯ °±²ɇɈɉɊɋɌɎɏɐɑɒɓɔ ɕɖɗɘəɚ⤚▓⤜⤝⤞⤟ⰙⰚⰛⰜ⭑⬤⭒‰ ꕢ ꕣꕤ ꕥ￥￦ \n",
-            "❌ ⛱⛲⛳⛰⛴⛵ ⚡⏰⏱⏲⭐ ✋☕⛩⛺⛪✨ ⚽ ⛄⏳\n",
-            " ḛḜḝḞṶṷṸẂ ẃ ẄẅẆ ᾃᾄᾅ ᾆ Ṥṥ  ȊȋȌ ȍ Ȏȏ ȐṦṧåæçèéêë ì í ΔƟΘ\n",
-            "㥯㥰㥱㥲㥳㥴㥵 㥶㥷㥸㥹㥺 俋 俌 俍 俎 俏 俐 俑 俒 俓㞢㞣㞤㞥㞦㞧㞨쨜 쨝쨠쨦걵걷 걸걹걺ﾓﾔﾕ ﾖﾗﾘﾙ\n",
-            " ﵑﵓﵔ ﵕﵗ ﵘ  ﯿ ﰀﰁﰂ ﰃ ﮁﮂﮃﮄﮅᎹᏪ Ⴥჭᡴᠦᡀ\n");
-    byte[] mPublicKey;
-    byte[] mSecretKey;
+    private static final List<String> TEST_CHAR_SAMPLE =
+            Arrays.asList("!\"#$%&' ()*+,- ./{|}~[\\]^_`: ;<=>?Ⓟ @︼︽︾⑳₡\n",
+                    "¢£¤¥¦§¨©ª«¬®¯ °±²ɇɈɉɊɋɌɎɏɐɑɒɓɔ ɕɖɗɘəɚ⤚▓⤜⤝⤞⤟ⰙⰚⰛⰜ⭑⬤⭒‰ ꕢ ꕣꕤ ꕥ￥￦ \n",
+                    "❌ ⛱⛲⛳⛰⛴⛵ ⚡⏰⏱⏲⭐ ✋☕⛩⛺⛪✨ ⚽ ⛄⏳\n",
+                    " ḛḜḝḞṶṷṸẂ ẃ ẄẅẆ ᾃᾄᾅ ᾆ Ṥṥ  ȊȋȌ ȍ Ȏȏ ȐṦṧåæçèéêë ì í ΔƟΘ\n",
+                    "㥯㥰㥱㥲㥳㥴㥵 㥶㥷㥸㥹㥺 俋 俌 俍 俎 俏 俐 俑 俒 俓㞢㞣㞤㞥㞦㞧㞨쨜 쨝쨠쨦걵걷 걸걹걺ﾓﾔﾕ ﾖﾗﾘﾙ\n",
+                    " ﵑﵓﵔ ﵕﵗ ﵘ  ﯿ ﰀﰁﰂ ﰃ ﮁﮂﮃﮄﮅᎹᏪ Ⴥჭᡴᠦᡀ\n");
+    private byte[] mPublicKey;
+    private byte[] mSecretKey;
 
     @Before
     public void setup() {
         mPublicKey = new byte[BOX_PUBLIC_KEY_BYTES];
         mSecretKey = new byte[BOX_SECRET_KEY_BYTES];
-        NaCl.sodium().crypto_box_keypair(mPublicKey, mSecretKey);
+        Sodium.crypto_box_keypair(mPublicKey, mSecretKey);
     }
 
     @Test
@@ -74,19 +77,13 @@ public class EncryptionUtilsTest {
         testEncryption(TEST_CHAR_SAMPLE);
     }
 
+    /**
+     * This method exercises the encryption logic and verify the result is
+     * following the format returned from [EncryptionUtils.generateJSONEncryptedLogs()]
+     */
     private void testEncryption(final List<String> testString) {
         final JSONObject encryptionDataJson = getEncryptionDataJson(mPublicKey, testString);
         assertNotNull(encryptionDataJson);
-
-        /*
-            Expected Contents for JSON:
-            {
-            "keyedWith": "v1",
-            "encryptedKey": "$key_as_base_64",  // The encrypted AES key
-            "header": "base_64_encoded_header", // The xchacha20poly1305 stream header
-            "messages": []                      // the stream elements, base-64 encoded
-            }
-        */
 
         final byte[] dataSpecificKey = getDataSpecificKey(encryptionDataJson);
         assertNotNull(dataSpecificKey);
@@ -94,8 +91,8 @@ public class EncryptionUtilsTest {
         final byte[] header = getHeader(encryptionDataJson);
         assertNotNull(header);
 
-        final byte[] state = new byte[EncryptionUtils.XCHACHA20POLY1305_STATEBYTES];
-        final int initPullReturnCode = NaCl.sodium().crypto_secretstream_xchacha20poly1305_init_pull(
+        final byte[] state = new byte[EncryptionUtils.STATEBYTES];
+        final int initPullReturnCode = Sodium.crypto_secretstream_xchacha20poly1305_init_pull(
                 state,
                 header,
                 dataSpecificKey);
@@ -133,13 +130,13 @@ public class EncryptionUtilsTest {
 
     private byte[] getDataSpecificKey(final JSONObject encryptionDataJson) {
         try {
-            final byte[] decryptedKey = new byte[EncryptionUtils.XCHACHA20POLY1305_KEYBYTES];
+            final byte[] decryptedKey = new byte[EncryptionUtils.KEYBYTES];
             final String encryptedKeyBase64 = encryptionDataJson.getString("encryptedKey");
             final byte[] encryptedKey = Base64.decode(encryptedKeyBase64, BASE64_DECODE_FLAGS);
-            final int returnCode = NaCl.sodium().crypto_box_seal_open(
+            final int returnCode = Sodium.crypto_box_seal_open(
                     decryptedKey,
                     encryptedKey,
-                    EncryptionUtils.XCHACHA20POLY1305_KEYBYTES + EncryptionUtils.BOX_SEALBYTES,
+                    EncryptionUtils.KEYBYTES + EncryptionUtils.BOX_SEALBYTES,
                     mPublicKey,
                     mSecretKey);
             assertEquals(returnCode, 0);
@@ -182,12 +179,12 @@ public class EncryptionUtilsTest {
 
     private String getDecryptedString(final byte[] state, final byte[] encryptedLine) {
         final byte[] tag = new byte[1];
-        final int decryptedLineLength = encryptedLine.length - EncryptionUtils.XCHACHA20POLY1305_ABYTES;
+        final int decryptedLineLength = encryptedLine.length - EncryptionUtils.ABYTES;
         final byte[] decryptedLine = new byte[decryptedLineLength];
         final byte[] additionalData = new byte[0]; // opting not to use this value
         final int additionalDataLength = 0;
         final int[] decryptedLineLengthOutput = new int[0]; // opting not to get this value
-        final int returnCode = NaCl.sodium().crypto_secretstream_xchacha20poly1305_pull(
+        final int returnCode = Sodium.crypto_secretstream_xchacha20poly1305_pull(
                 state,
                 decryptedLine,
                 decryptedLineLengthOutput,
@@ -199,9 +196,9 @@ public class EncryptionUtilsTest {
         assertEquals(returnCode, 0);
 
         final int encryptionTag = tag[0];
-        if (encryptionTag == EncryptionUtils.XCHACHA20POLY1305_TAG_MESSAGE) {
+        if (encryptionTag == EncryptionUtils.TAG_MESSAGE) {
             return new String(decryptedLine);
-        } else if (encryptionTag == EncryptionUtils.XCHACHA20POLY1305_TAG_FINAL) {
+        } else if (encryptionTag == EncryptionUtils.TAG_FINAL) {
             return null;
         }
 
