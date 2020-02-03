@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
+import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -92,6 +93,7 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_IMAGE_URL;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
@@ -903,5 +905,11 @@ public class ActivityLauncher {
         } else if (url.startsWith("https") || url.startsWith("http")) {
             WPWebViewActivity.openURL(context, url);
         }
+    }
+
+    public static void openImageEditor(Activity activity, String imageUrl) {
+        Intent intent = new Intent(activity, EditImageActivity.class);
+        intent.putExtra(ARG_IMAGE_URL, imageUrl); // TODO: Send separate thumb and full image url
+        activity.startActivity(intent);
     }
 }
