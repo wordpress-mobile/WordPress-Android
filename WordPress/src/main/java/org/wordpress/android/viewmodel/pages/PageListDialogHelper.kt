@@ -36,7 +36,7 @@ class PageListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
-    fun showDeletePostConfirmationDialog(localPageId : RemoteId) {
+    fun showDeletePostConfirmationDialog(pageId : RemoteId) {
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_DELETE_PAGE_DIALOG_TAG,
                 title = UiStringRes(R.string.delete_page),
@@ -44,7 +44,7 @@ class PageListDialogHelper(
                 positiveButton = UiStringRes(R.string.delete),
                 negativeButton = UiStringRes(R.string.cancel)
         )
-        remotePageIdForDeleteDialog = localPageId
+        remotePageIdForDeleteDialog = pageId
         showDialog.invoke(dialogHolder)
     }
 
