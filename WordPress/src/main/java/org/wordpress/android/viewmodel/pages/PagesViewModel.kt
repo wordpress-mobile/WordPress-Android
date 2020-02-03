@@ -42,6 +42,7 @@ import org.wordpress.android.ui.posts.PostListRemotePreviewState
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
@@ -81,6 +82,7 @@ class PagesViewModel
     private val dispatcher: Dispatcher,
     private val actionPerfomer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
+    private val eventBusWrapper: EventBusWrapper,
     private val previewStateHelper: PreviewStateHelper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
@@ -180,6 +182,7 @@ class PagesViewModel
                 dispatcher = dispatcher,
                 bgDispatcher = defaultDispatcher,
                 postStore = postStore,
+                eventBusWrapper = eventBusWrapper,
                 site = site,
                 handlePostUploadedWithoutError = this::handlePostUploadedWithoutError,
                 invalidateUploadStatus = this::handleInvalidateUploadStatus,

@@ -61,6 +61,7 @@ class PagesViewModelTest {
                 previewStateHelper = mock(),
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
+                eventBusWrapper = mock(),
                 pageListEventListenerFactory = mock()
         )
         listStates = mutableListOf()

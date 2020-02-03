@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -28,6 +27,7 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.EventBusWrapper
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
@@ -39,6 +39,7 @@ class PageListEventListener(
     private val dispatcher: Dispatcher,
     private val bgDispatcher: CoroutineDispatcher,
     private val postStore: PostStore,
+    private val eventBusWrapper: EventBusWrapper,
     private val site: SiteModel,
     private val handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
     private val handlePostUploadedWithoutError: (RemoteId) -> Unit,
@@ -47,7 +48,7 @@ class PageListEventListener(
 ) : LifecycleObserver, CoroutineScope {
     init {
         dispatcher.register(this)
-        EventBus.getDefault().register(this)
+        eventBusWrapper.register(this)
         lifecycle.addObserver(this)
     }
 
@@ -65,7 +66,7 @@ class PageListEventListener(
         job.cancel()
         lifecycle.removeObserver(this)
         dispatcher.unregister(this)
-        EventBus.getDefault().unregister(this)
+        eventBusWrapper.unregister(this)
     }
 
     /**
@@ -197,6 +198,7 @@ class PageListEventListener(
             dispatcher: Dispatcher,
             bgDispatcher: CoroutineDispatcher,
             postStore: PostStore,
+            eventBusWrapper: EventBusWrapper,
             site: SiteModel,
             handlePostUploadedWithoutError: (RemoteId) -> Unit,
             invalidateUploadStatus: (List<LocalId>) -> Unit,
@@ -208,6 +210,7 @@ class PageListEventListener(
                     dispatcher = dispatcher,
                     bgDispatcher = bgDispatcher,
                     postStore = postStore,
+                    eventBusWrapper = eventBusWrapper,
                     site = site,
                     handlePostUploadedWithoutError = handlePostUploadedWithoutError,
                     invalidateUploadStatus = invalidateUploadStatus,
