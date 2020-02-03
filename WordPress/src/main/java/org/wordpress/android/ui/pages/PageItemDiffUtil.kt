@@ -28,7 +28,7 @@ class PageItemDiffUtil(val items: List<PageItem>, val result: List<PageItem>) : 
         val oldItem = items[oldItemPosition]
         val newItem = result[newItemPosition]
 
-        if(oldItem is Page && newItem is Page) {
+        if (oldItem is Page && newItem is Page) {
             /**
              * Suppresses the default animation if the progress has changed to prevent blinking as the upload progresses
              *
