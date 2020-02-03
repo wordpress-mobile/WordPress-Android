@@ -56,7 +56,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(ReaderPostListViewModel::class.java)
 
         performUpdate()
-        viewModel.loadSubFilters()
+        viewModel.onLoadSubFilters()
 
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
@@ -99,19 +99,19 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)
-        viewModel.setIsBottomSheetShowing(false)
+        viewModel.onChangeBottomSheetVisibility(false)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
-        viewModel.loadSubFilters()
+        viewModel.onLoadSubFilters()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
-        viewModel.loadSubFilters()
+        viewModel.onLoadSubFilters()
     }
 
     override fun onStart() {

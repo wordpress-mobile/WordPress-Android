@@ -405,7 +405,7 @@ public class ReaderPostListFragment extends Fragment
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
                 ) || ReaderUtils.isDefaultTag(mCurrentTag)) && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
-                  mViewModel.applySubfilter(subfilterListItem, true);
+                  mViewModel.onSubfilterChanged(subfilterListItem, true);
                 }
             });
 
@@ -434,7 +434,7 @@ public class ReaderPostListFragment extends Fragment
                 }
             });
 
-            mViewModel.isBottomSheetShowing().observe(this, event -> {
+            mViewModel.getChangeBottomSheetVisibility().observe(this, event -> {
                 event.applyIfNotHandled(isShowing -> {
                     FragmentManager fm = getFragmentManager();
                     if (fm != null) {
@@ -587,7 +587,7 @@ public class ReaderPostListFragment extends Fragment
             ReaderTag newTag = ReaderUtils.getTagFromTagName(tagName, ReaderTagType.FOLLOWED);
             setCurrentTag(newTag);
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-                mViewModel.setSubfilterFromTag(newTag);
+                mViewModel.onSetSubfilterFromTag(newTag);
             }
         } else if (!ReaderTagTable.tagExists(getCurrentTag())) {
             // current tag no longer exists, revert to default
@@ -601,7 +601,7 @@ public class ReaderPostListFragment extends Fragment
             setCurrentTag(tag);
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
                 if (tag.isFollowedSites()) {
-                    mViewModel.setDefaultSubfilter();
+                    mViewModel.onSetDefaultSubfilter();
                 }
             }
         } else {
@@ -640,7 +640,7 @@ public class ReaderPostListFragment extends Fragment
         if (isSiteStillAvailable) {
             refreshPosts();
         } else {
-            mViewModel.setDefaultSubfilter();
+            mViewModel.onSetDefaultSubfilter();
         }
     }
 
@@ -981,14 +981,14 @@ public class ReaderPostListFragment extends Fragment
 
             mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
             mSubFiltersListButton.setOnClickListener(v -> {
-                mViewModel.setIsBottomSheetShowing(true);
+                mViewModel.onChangeBottomSheetVisibility(true);
             });
 
             mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);
 
             mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
             mRemoveFilterButton.setOnClickListener(v -> {
-                mViewModel.setDefaultSubfilter();
+                mViewModel.onSetDefaultSubfilter();
             });
         }
 
@@ -1048,9 +1048,9 @@ public class ReaderPostListFragment extends Fragment
                 showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
                 mRecyclerView.setTabLayoutVisibility(false);
-                mViewModel.setSubfiltersVisibility(false);
+                mViewModel.onChangeSubfiltersVisibility(false);
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-                    mViewModel.setCollapseToolbar(false);
+                    mViewModel.onSearchMenuCollapse(false);
                 }
 
                 // hide the bottom navigation when search is active
@@ -1087,17 +1087,17 @@ public class ReaderPostListFragment extends Fragment
                             BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                             mRecyclerView)
                     ) {
-                        mViewModel.applySubfilter(mViewModel.getCurrentSubfilterValue(), false);
+                        mViewModel.onSubfilterChanged(mViewModel.getCurrentSubfilterValue(), false);
                     } else {
                         // return to the followed tag that was showing prior to searching
                         resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
                     }
 
                     mRecyclerView.setTabLayoutVisibility(true);
-                    mViewModel.setSubfiltersVisibility(
+                    mViewModel.onChangeSubfiltersVisibility(
                             ReaderUtils.isFollowing(mCurrentTag, mIsTopLevel, mRecyclerView)
                     );
-                    mViewModel.setCollapseToolbar(true);
+                    mViewModel.onSearchMenuCollapse(true);
                 } else {
                     // return to the followed tag that was showing prior to searching
                     resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
@@ -1714,7 +1714,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         setCurrentTag(tag, BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel);
-        mViewModel.setSubfiltersVisibility(
+        mViewModel.onChangeSubfiltersVisibility(
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
                 && mIsTopLevel
                 && tag.isFollowedSites());
@@ -1997,7 +1997,7 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && manageSubfilter) {
             if (mCurrentTag.isFollowedSites()) {
-                mViewModel.applySubfilter(mViewModel.getCurrentSubfilterValue(), false);
+                mViewModel.onSubfilterChanged(mViewModel.getCurrentSubfilterValue(), false);
             } else {
                 changeReaderMode(new ReaderModeInfo(
                         tag,
@@ -2042,7 +2042,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         getPostAdapter().setCurrentTag(mCurrentTag);
-        mViewModel.setSubfiltersVisibility(BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && ReaderUtils.isFollowing(
+        mViewModel.onChangeSubfiltersVisibility(BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && ReaderUtils.isFollowing(
                 mCurrentTag,
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                 mRecyclerView));

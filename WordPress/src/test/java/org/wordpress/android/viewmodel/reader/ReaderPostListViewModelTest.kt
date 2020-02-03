@@ -180,10 +180,10 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun verifySubfilterVisibility() {
-        viewModel.setSubfiltersVisibility(true)
+        viewModel.onChangeSubfiltersVisibility(true)
         assertThat(viewModel.shouldShowSubFilters.value).isEqualTo(true)
 
-        viewModel.setSubfiltersVisibility(false)
+        viewModel.onChangeSubfiltersVisibility(false)
         assertThat(viewModel.shouldShowSubFilters.value).isEqualTo(false)
     }
 
@@ -197,10 +197,10 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun verifySetSubfilterFromTag() {
+    fun verifyOnSetSubfilterFromTag() {
         val tag = ReaderTag("", "", "", "", BOOKMARKED)
         var item: SubfilterListItem? = null
-        viewModel.setSubfilterFromTag(tag)
+        viewModel.onSetSubfilterFromTag(tag)
 
         viewModel.currentSubFilter.observeForever { item = it }
 
@@ -208,9 +208,9 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun verifySetDefaultSubfilter() {
+    fun verifyOnSetDefaultSubfilter() {
         var item: SubfilterListItem? = null
-        viewModel.setDefaultSubfilter()
+        viewModel.onSetDefaultSubfilter()
 
         viewModel.currentSubFilter.observeForever { item = it }
 
@@ -218,12 +218,12 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun verifyUpdateTabTitle() {
+    fun verifyOnUpdateTabTitleCount() {
         val data = hashMapOf(SITES to 3, TAGS to 25)
         viewModel.start(initialTag, false, false)
 
         for (testStep in data.keys) {
-            viewModel.updateTabTitle(testStep, data.getOrDefault(testStep, 0))
+            viewModel.onUpdateTabTitleCount(testStep, data.getOrDefault(testStep, 0))
         }
 
         assertThat(viewModel.filtersMatchCount.value).isEqualTo(data)

@@ -56,8 +56,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val _readerModeInfo = SingleLiveEvent<ReaderModeInfo>()
     val readerModeInfo: LiveData<ReaderModeInfo> = _readerModeInfo
 
-    private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
-    val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
+    private val _changeBottomSheetVisibility = MutableLiveData<Event<Boolean>>()
+    val changeBottomSheetVisibility: LiveData<Event<Boolean>> = _changeBottomSheetVisibility
 
     private val _shouldCollapseToolbar = MutableLiveData<Boolean>()
     val shouldCollapseToolbar: LiveData<Boolean> = _shouldCollapseToolbar
@@ -134,7 +134,7 @@ class ReaderPostListViewModel @Inject constructor(
         newsTracker.trackNewsCardExtendedInfoRequested(READER, item.version)
     }
 
-    fun loadSubFilters() {
+    fun onLoadSubFilters() {
         launch {
             val filterList = ArrayList<SubfilterListItem>()
 
@@ -170,7 +170,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onSubfilterClicked(filter: SubfilterListItem) {
-        _isBottomSheetShowing.postValue(Event(false))
+        _changeBottomSheetVisibility.postValue(Event(false))
 
         _subFilters.postValue(_subFilters.value?.map {
             it.isSelected = it.isSameItem(filter)
@@ -180,7 +180,7 @@ class ReaderPostListViewModel @Inject constructor(
         updateSubfilter(filter)
     }
 
-    fun setSubfiltersVisibility(show: Boolean) = _shouldShowSubFilters.postValue(show)
+    fun onChangeSubfiltersVisibility(show: Boolean) = _shouldShowSubFilters.postValue(show)
 
     fun getCurrentSubfilterValue(): SubfilterListItem {
         return if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
@@ -198,7 +198,7 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
-    fun setSubfilterFromTag(tag: ReaderTag) {
+    fun onSetSubfilterFromTag(tag: ReaderTag) {
         updateSubfilter(
                 Tag(
                     onClickAction = ::onSubfilterClicked,
@@ -207,7 +207,7 @@ class ReaderPostListViewModel @Inject constructor(
                 ))
     }
 
-    fun setDefaultSubfilter() {
+    fun onSetDefaultSubfilter() {
         updateSubfilter(
                 SiteAll(
                         onClickAction = ::onSubfilterClicked,
@@ -215,11 +215,11 @@ class ReaderPostListViewModel @Inject constructor(
                 ))
     }
 
-    fun setIsBottomSheetShowing(showing: Boolean) {
-        _isBottomSheetShowing.value = Event(showing)
+    fun onChangeBottomSheetVisibility(show: Boolean) {
+        _changeBottomSheetVisibility.value = Event(show)
     }
 
-    fun applySubfilter(
+    fun onSubfilterChanged(
         subfilterListItem: SubfilterListItem,
         requestNewerPosts: Boolean
     ) {
@@ -270,11 +270,11 @@ class ReaderPostListViewModel @Inject constructor(
         isFirstLoad = false
     }
 
-    fun setCollapseToolbar(collapse: Boolean) {
+    fun onSearchMenuCollapse(collapse: Boolean) {
         _shouldCollapseToolbar.value = collapse
     }
 
-    fun updateTabTitle(category: SubfilterCategory, count: Int) {
+    fun onUpdateTabTitleCount(category: SubfilterCategory, count: Int) {
         val currentValue = _filtersMatchCount.value
 
         currentValue?.let {
@@ -285,7 +285,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun onBottomSheetActionClicked(selectedTabIndex: Int) {
-        _isBottomSheetShowing.postValue(Event(false))
+        _changeBottomSheetVisibility.postValue(Event(false))
         _startSubsActivity.postValue(Event(selectedTabIndex))
     }
 

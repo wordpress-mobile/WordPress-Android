@@ -69,7 +69,7 @@ class SubfilterPageFragment : DaggerFragment() {
                 val items = it?.filter { it.type == category.type } ?: listOf()
                 manageEmptyView(items.isEmpty(), category)
                 adapter.update(items)
-                viewModel.updateTabTitle(category, items.size)
+                viewModel.onUpdateTabTitleCount(category, items.size)
             }
         })
     }
