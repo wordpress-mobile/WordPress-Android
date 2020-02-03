@@ -37,7 +37,8 @@ class PageItemDiffUtil(val items: List<PageItem>, val result: List<PageItem>) : 
              */
             if (oldItem.progressBarState is Determinate &&
                     newItem.progressBarState is Determinate &&
-                    (oldItem.progressBarState as Determinate).progress != (newItem.progressBarState as Determinate).progress) {
+                    (oldItem.progressBarState as Determinate).progress !=
+                    (newItem.progressBarState as Determinate).progress) {
                 return true
             }
         }
