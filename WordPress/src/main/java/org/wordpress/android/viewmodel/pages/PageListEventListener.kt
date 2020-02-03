@@ -116,7 +116,7 @@ class PageListEventListener(
     @Subscribe(threadMode = BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
-            uploadStatusChanged(*event.mediaList.map { it.localPostId }.toIntArray())
+            uploadStatusChanged(*event.mediaList.map { LocalId(it.localPostId) }.toTypedArray())
         }
     }
 
@@ -124,7 +124,7 @@ class PageListEventListener(
     @Subscribe(threadMode = BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.localSiteId == site.id) {
-            uploadStatusChanged(event.post.id)
+            uploadStatusChanged(LocalId(event.post.id))
             if (!event.isError) {
                 handlePostUploadedWithoutError.invoke(RemoteId(event.post.remotePostId))
             }
@@ -141,7 +141,7 @@ class PageListEventListener(
             // Not interested in media not attached to posts or not belonging to the current site
             return
         }
-        uploadStatusChanged(event.media.localPostId)
+        uploadStatusChanged(LocalId(event.media.localPostId))
     }
 
     /**
@@ -155,7 +155,7 @@ class PageListEventListener(
         }
 
         if (site.id == event.post.localSiteId) {
-            uploadStatusChanged(event.post.id)
+            uploadStatusChanged(LocalId(event.post.id))
 
             handlePostUploadedStarted(RemoteId(event.post.remotePostId))
         }
@@ -168,29 +168,31 @@ class PageListEventListener(
     @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: PostEvents.PostUploadCanceled) {
         if (site.id == event.post.localSiteId) {
-            uploadStatusChanged(event.post.id)
+            uploadStatusChanged(LocalId(event.post.id))
         }
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
-        uploadStatusChanged(event.media.localPostId)
+        uploadStatusChanged(LocalId(event.media.localPostId))
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: UploadService.UploadMediaRetryEvent) {
-        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+        if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
             // if there' a Post to which the retried media belongs, clear their status
             val postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(postStore, event.mediaModelList)
-            uploadStatusChanged(*postsToRefresh.map { it.id }.toIntArray())
+            uploadStatusChanged(*postsToRefresh.map { LocalId(it.id) }.toTypedArray())
         }
     }
 
-    private fun uploadStatusChanged(vararg localPostIds: Int) {
-        invalidateUploadStatus.invoke(localPostIds.map { localId -> LocalId(localId) }.toList())
+    private fun uploadStatusChanged(vararg localPostIds: LocalId) {
+        invalidateUploadStatus.invoke(localPostIds.toList())
     }
+
+
 
     class Factory @Inject constructor() {
         fun createAndStartListening(
