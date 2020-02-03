@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.libsodium.jni.NaCl;
 
+import java.util.List;
+
 public class EncryptionUtils {
     public static final int BOX_SEALBYTES = NaCl.sodium().crypto_box_sealbytes();
     public static final int XCHACHA20POLY1305_ABYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_abytes();
@@ -27,36 +29,45 @@ public class EncryptionUtils {
 
     static final byte[] STATE = new byte[XCHACHA20POLY1305_STATEBYTES];
 
-    /*
-        Returns a JSON String containing following data:
-        {
-            "keyedWith": "v1",
-            "encryptedKey": "$key_as_base_64",  // The encrypted AES key
-            "header": "base_64_encoded_header", // The xchacha20poly1305 stream header
-            "messages": []                      // the stream elements, base-64 encoded
-        }
-    */
-    public static String generateJSONEncryptedData(final String publicKeyBase64,
-                                                   final String stringData) throws JSONException {
+    /**
+     * This method is in charge of encrypting logs using the symmetric cypher
+     * XCHACHA20 and the cryptographic message authentication code (MAC) POLY1305.
+     * For more information about the encryption process you can find it here
+     * https://libsodium.gitbook.io/doc/secret-key_cryptography/secretstream.
+     * @param publicKeyBase64 The public key encoded using Base64.
+     * @param logMessages     The list of messages we want to encrypt.
+     * @return a JSON String containing following structure:
+     *
+     * {
+     * "keyedWith": "v1",
+     * "encryptedKey": "<base_64_encrypted_key>",  // The encrypted AES key, base-64 encoded
+     * "header": "<base_64_encoded_header>",       // The xchacha20poly1305 stream header
+     * "messages": [<base_64_encrypted_msgs>]      // the encrypted log messages, base-64 encoded
+     * }
+     */
+    public static String generateJSONEncryptedLogs(final String publicKeyBase64,
+                                                   final List<String> logMessages) throws JSONException {
         JSONObject encryptionDataJson = new JSONObject();
+        // Schema version
         encryptionDataJson.put("keyedWith", KEYED_WITH);
 
+        // Encryption key
         final byte[] secretKey = createEncryptionKey();
         final byte[] encryptedSecretKey = encryptEncryptionKey(decodeFromBase64(publicKeyBase64), secretKey);
         encryptionDataJson.put("encryptedKey", encodeToBase64(encryptedSecretKey));
 
+        // Header
         final byte[] encryptedHeader = createEncryptedHeader(secretKey);
         encryptionDataJson.put("header", encodeToBase64(encryptedHeader));
 
+        // Log messages
         JSONArray encryptedAndEncodedMessagesJson = new JSONArray();
-        if (!stringData.isEmpty()) {
-            final String[] messages = stringData.split("\n");
-            for (String message : messages) {
-                final byte[] encryptedMessage = encryptMessage(message + "\n", XCHACHA20POLY1305_TAG_MESSAGE);
-                encryptedAndEncodedMessagesJson.put(encodeToBase64(encryptedMessage));
-            }
+        for (String message : logMessages) {
+            final byte[] encryptedMessage = encryptMessage(message, XCHACHA20POLY1305_TAG_MESSAGE);
+            encryptedAndEncodedMessagesJson.put(encodeToBase64(encryptedMessage));
         }
 
+        // Final Tag
         final byte[] encryptedDataBase64 = encryptMessage("", XCHACHA20POLY1305_TAG_FINAL);
         encryptedAndEncodedMessagesJson.put(encodeToBase64(encryptedDataBase64));
         encryptionDataJson.put("messages", encryptedAndEncodedMessagesJson);
@@ -96,7 +107,6 @@ public class EncryptionUtils {
         final int[] encryptedDataLengthOutput = new int[0]; // opting not to get this value
         final byte[] additionalData = new byte[0]; // opting not to use this value
         final int additionalDataLength = 0;
-
         final byte[] dataBytes = message.getBytes();
         final byte[] encryptedMessage = new byte[dataBytes.length + XCHACHA20POLY1305_ABYTES];
 

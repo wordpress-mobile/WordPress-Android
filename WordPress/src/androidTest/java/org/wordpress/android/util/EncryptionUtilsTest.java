@@ -2,8 +2,8 @@ package org.wordpress.android.util;
 
 import android.util.Base64;
 
-import org.json.JSONException;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,44 +11,46 @@ import org.junit.runner.RunWith;
 import org.libsodium.jni.NaCl;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EncryptionUtilsTest {
-    byte[] mPublicKey;
-    byte[] mSecretKey;
-
     static final int BOX_PUBLIC_KEY_BYTES = NaCl.sodium().crypto_box_publickeybytes();
     static final int BOX_SECRET_KEY_BYTES = NaCl.sodium().crypto_box_secretkeybytes();
-
     static final int BASE64_DECODE_FLAGS = Base64.DEFAULT;
-
     // test data
-    static final String TEST_EMPTY_STRING = "";
-    static final String TEST_LOG_STRING = "WordPress - 13.5 - Version code: 789\n"
-            + "Android device name: Google Android SDK built for x86\n\n"
-            + "01 - [Nov-11 03:04 UTILS] WordPress.onCreate\n"
-            + "02 - [Nov-11 03:04 API] Dispatching action: ListAction-REMOVE_EXPIRED_LISTS\n"
-            + "03 - [Nov-11 03:04 API] QuickStartStore onRegister\n"
-            + "04 - [Nov-11 03:04 STATS] 🔵 Tracked: deep_link_not_default_handler, "
-            + "Properties: {\"interceptor_classname\":\"com.google.android.setupwizard.util.WebDialogActivity\"}\n"
-            + "05 - [Nov-11 03:04 UTILS] App comes from background\n"
-            + "06 - [Nov-11 03:04 STATS] 🔵 Tracked: application_opened\n"
-            + "07 - [Nov-11 03:04 READER] notifications update job service > job scheduled\n"
-            + "08 - [Nov-11 03:04 API] Dispatching action: SiteAction-FETCH_SITES\n"
-            + "09 - [Nov-11 03:04 API] StackTrace: com.android.volley.AuthFailureError\n"
-            + "    at com.android.volley.toolbox.BasicNetwork.performRequest(BasicNetwork.java:195)\n"
-            + "    at com.android.volley.NetworkDispatcher.processRequest(NetworkDispatcher.java:131)\n"
-            + "    at com.android.volley.NetworkDispatcher.processRequest(NetworkDispatcher.java:111)\n"
-            + "    at com.android.volley.NetworkDispatcher.run(NetworkDispatcher.java:90)\n";
-    static final String TEST_CHAR_SAMPLE = "!\"#$%&' ()*+,- ./{|}~[\\]^_`: ;<=>?Ⓟ @︼︽︾⑳₡\n"
-            + "¢£¤¥¦§¨©ª«¬®¯ °±²ɇɈɉɊɋɌɎɏɐɑɒɓɔ ɕɖɗɘəɚ⤚▓⤜⤝⤞⤟ⰙⰚⰛⰜ⭑⬤⭒‰ ꕢ ꕣꕤ ꕥ￥￦ \n"
-            + "❌ ⛱⛲⛳⛰⛴⛵ ⚡⏰⏱⏲⭐ ✋☕⛩⛺⛪✨ ⚽ ⛄⏳\n"
-            + " ḛḜḝḞṶṷṸẂ ẃ ẄẅẆ ᾃᾄᾅ ᾆ Ṥṥ  ȊȋȌ ȍ Ȏȏ ȐṦṧåæçèéêë ì í ΔƟΘ\n"
-            + "㥯㥰㥱㥲㥳㥴㥵 㥶㥷㥸㥹㥺 俋 俌 俍 俎 俏 俐 俑 俒 俓㞢㞣㞤㞥㞦㞧㞨쨜 쨝쨠쨦걵걷 걸걹걺ﾓﾔﾕ ﾖﾗﾘﾙ\n"
-            + " ﵑﵓﵔ ﵕﵗ ﵘ  ﯿ ﰀﰁﰂ ﰃ ﮁﮂﮃﮄﮅᎹᏪ Ⴥჭᡴᠦᡀ\n";
+    static final List<String> TEST_EMPTY_STRING = new ArrayList<>();
+    static final List<String> TEST_LOG_STRING = Arrays.asList("WordPress - 13.5 - Version code: 789\n",
+            "Android device name: Google Android SDK built for x86\n\n",
+            "01 - [Nov-11 03:04 UTILS] WordPress.onCreate\n",
+            "02 - [Nov-11 03:04 API] Dispatching action: ListAction-REMOVE_EXPIRED_LISTS\n",
+            "03 - [Nov-11 03:04 API] QuickStartStore onRegister\n",
+            "04 - [Nov-11 03:04 STATS] 🔵 Tracked: deep_link_not_default_handler ",
+            "Properties: {\"interceptor_classname\":\"com.google.android.setupwizard.util.WebDialogActivity\"}\n",
+            "05 - [Nov-11 03:04 UTILS] App comes from background\n",
+            "06 - [Nov-11 03:04 STATS] 🔵 Tracked: application_opened\n",
+            "07 - [Nov-11 03:04 READER] notifications update job service > job scheduled\n",
+            "08 - [Nov-11 03:04 API] Dispatching action: SiteAction-FETCH_SITES\n",
+            "09 - [Nov-11 03:04 API] StackTrace: com.android.volley.AuthFailureError\n",
+            "    at com.android.volley.toolbox.BasicNetwork.performRequest(BasicNetwork.java:195)\n",
+            "    at com.android.volley.NetworkDispatcher.processRequest(NetworkDispatcher.java:131)\n",
+            "    at com.android.volley.NetworkDispatcher.processRequest(NetworkDispatcher.java:111)\n",
+            "    at com.android.volley.NetworkDispatcher.run(NetworkDispatcher.java:90)\n");
+
+    static final List<String> TEST_CHAR_SAMPLE = Arrays.asList("!\"#$%&' ()*+,- ./{|}~[\\]^_`: ;<=>?Ⓟ @︼︽︾⑳₡\n",
+            "¢£¤¥¦§¨©ª«¬®¯ °±²ɇɈɉɊɋɌɎɏɐɑɒɓɔ ɕɖɗɘəɚ⤚▓⤜⤝⤞⤟ⰙⰚⰛⰜ⭑⬤⭒‰ ꕢ ꕣꕤ ꕥ￥￦ \n",
+            "❌ ⛱⛲⛳⛰⛴⛵ ⚡⏰⏱⏲⭐ ✋☕⛩⛺⛪✨ ⚽ ⛄⏳\n",
+            " ḛḜḝḞṶṷṸẂ ẃ ẄẅẆ ᾃᾄᾅ ᾆ Ṥṥ  ȊȋȌ ȍ Ȏȏ ȐṦṧåæçèéêë ì í ΔƟΘ\n",
+            "㥯㥰㥱㥲㥳㥴㥵 㥶㥷㥸㥹㥺 俋 俌 俍 俎 俏 俐 俑 俒 俓㞢㞣㞤㞥㞦㞧㞨쨜 쨝쨠쨦걵걷 걸걹걺ﾓﾔﾕ ﾖﾗﾘﾙ\n",
+            " ﵑﵓﵔ ﵕﵗ ﵘ  ﯿ ﰀﰁﰂ ﰃ ﮁﮂﮃﮄﮅᎹᏪ Ⴥჭᡴᠦᡀ\n");
+    byte[] mPublicKey;
+    byte[] mSecretKey;
 
     @Before
     public void setup() {
@@ -72,7 +74,7 @@ public class EncryptionUtilsTest {
         testEncryption(TEST_CHAR_SAMPLE);
     }
 
-    private void testEncryption(final String testString) {
+    private void testEncryption(final List<String> testString) {
         final JSONObject encryptionDataJson = getEncryptionDataJson(mPublicKey, testString);
         assertNotNull(encryptionDataJson);
 
@@ -99,7 +101,7 @@ public class EncryptionUtilsTest {
                 dataSpecificKey);
         assertEquals(initPullReturnCode, 0);
 
-        String decryptedDataString = "";
+        final List<String> decryptedData = new ArrayList<>();
         final byte[][] encryptedLines = getEncryptedLines(encryptionDataJson);
         assertNotNull(encryptedLines);
         for (int i = 0; i < encryptedLines.length; ++i) {
@@ -110,20 +112,21 @@ public class EncryptionUtilsTest {
                 break;
             }
 
-            decryptedDataString = decryptedDataString + decryptedLine;
+            decryptedData.add(decryptedLine);
         }
 
-        assertEquals(testString, decryptedDataString);
+        assertEquals(testString, decryptedData);
     }
-    private JSONObject getEncryptionDataJson(final byte[] publicKey, final String data) {
+
+    private JSONObject getEncryptionDataJson(final byte[] publicKey, final List<String> data) {
         try {
-            final String encryptionDataJsonString = EncryptionUtils.generateJSONEncryptedData(
+            final String encryptionDataJsonString = EncryptionUtils.generateJSONEncryptedLogs(
                     Base64.encodeToString(publicKey, Base64.DEFAULT),
                     data);
 
             return new JSONObject(encryptionDataJsonString);
         } catch (JSONException e) {
-            fail("generateJSONEncryptedData failed with JSONException: " + e.toString());
+            fail("generateJSONEncryptedLogs failed with JSONException: " + e.toString());
         }
         return null;
     }
