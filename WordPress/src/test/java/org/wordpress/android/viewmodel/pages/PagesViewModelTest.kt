@@ -189,8 +189,9 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun `Auto-upload is initiated when the user enters the screen`() {
+    fun `Auto-upload is initiated when the user enters the screen`() = test {
         // Given
+        setUpPageStoreWithEmptyPages()
         // When
         viewModel.start(site)
         // Then
@@ -198,8 +199,9 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun `Auto-upload is initiated when the user pulls to refresh`() {
+    fun `Auto-upload is initiated when the user pulls to refresh`() = test {
         // Given
+        setUpPageStoreWithEmptyPages()
         viewModel.start(site)
         // When
         viewModel.onPullToRefresh()
