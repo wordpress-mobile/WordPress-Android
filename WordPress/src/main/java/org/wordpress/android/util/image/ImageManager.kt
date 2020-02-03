@@ -19,7 +19,6 @@ import androidx.annotation.DrawableRes
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.FutureTarget
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.Target
@@ -29,7 +28,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.util.AppLog
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -240,17 +238,6 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .load(imgUrl)
                 .applyScaleType(scaleType)
                 .into(target)
-    }
-
-    fun loadUrlIntoFile(imgUrl: String): File? {
-        val context = WordPress.getContext()
-        if (!context.isAvailable()) return null
-        val futureTarget: FutureTarget<File> = GlideApp.with(context)
-                .downloadOnly()
-                .load(imgUrl)
-                .submit()
-
-        return futureTarget.get()
     }
 
     /**
