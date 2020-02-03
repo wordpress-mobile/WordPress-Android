@@ -42,8 +42,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.pages.PageItem.Page
-import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PreviewStateHelper
@@ -345,10 +343,6 @@ class PagesFragment : Fragment() {
             page?.let { ActivityLauncher.viewPageParentForResult(this, page) }
         })
 
-        viewModel.displayDeleteDialog.observe(this, Observer { page ->
-            page?.let { displayDeleteDialog(page) }
-        })
-
         viewModel.isNewPageButtonVisible.observe(this, Observer { isVisible ->
             isVisible?.let {
                 if (isVisible) {
@@ -378,10 +372,6 @@ class PagesFragment : Fragment() {
         initializeSearchView()
     }
 
-    fun onPageDeleteConfirmed(remoteId: Long) {
-        viewModel.onDeleteConfirmed(remoteId)
-    }
-
     private fun refreshProgressBars(listState: PageListState?) {
         if (!isAdded || view == null) {
             return
@@ -408,16 +398,12 @@ class PagesFragment : Fragment() {
         }
     }
 
-    private fun displayDeleteDialog(page: Page) {
-        val dialog = BasicFragmentDialog()
-        dialog.initialize(
-                page.id.toString(),
-                getString(R.string.delete_page),
-                getString(R.string.page_delete_dialog_message, page.title),
-                getString(R.string.delete),
-                getString(R.string.cancel)
-        )
-        dialog.show(fragmentManager, page.id.toString())
+    fun onPositiveClickedForBasicDialog(instanceTag: String) {
+        viewModel.onPositiveClickedForBasicDialog(instanceTag)
+    }
+
+    fun onNegativeClickedForBasicDialog(instanceTag: String) {
+        viewModel.onNegativeClickedForBasicDialog(instanceTag)
     }
 
     override fun onStart() {

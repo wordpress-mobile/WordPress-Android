@@ -20,6 +20,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -99,9 +101,6 @@ class PagesViewModel
 
     private val _listState = MutableLiveData<PageListState>()
     val listState: LiveData<PageListState> = _listState
-
-    private val _displayDeleteDialog = SingleLiveEvent<Page>()
-    val displayDeleteDialog: LiveData<Page> = _displayDeleteDialog
 
     private val _isNewPageButtonVisible = MutableLiveData<Boolean>()
     val isNewPageButtonVisible: LiveData<Boolean> = _isNewPageButtonVisible
@@ -391,7 +390,7 @@ class PagesViewModel
 
     private fun deletePage(page: Page) {
         performIfNetworkAvailable {
-            _displayDeleteDialog.postValue(page)
+            pageListDialogHelper.showDeletePostConfirmationDialog(RemoteId(page.id))
         }
     }
 
@@ -454,12 +453,6 @@ class PagesViewModel
     fun onImagesChanged() {
         launch {
             refreshPages()
-        }
-    }
-
-    fun onDeleteConfirmed(remoteId: Long) {
-        launch(defaultDispatcher) {
-            pageMap[remoteId]?.let { deletePage(it) }
         }
     }
 
@@ -695,7 +688,8 @@ class PagesViewModel
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         pageListDialogHelper.onPositiveClickedForBasicDialog(
                 instanceTag = instanceTag,
-                editRestoredAutoSavePage = this::editRestoredAutoSavePage
+                editRestoredAutoSavePage = this::editRestoredAutoSavePage,
+                deletePage = this::onDeleteConfirmed
         )
     }
 
@@ -706,15 +700,21 @@ class PagesViewModel
         )
     }
 
-    private fun editLocalPage(localPageId: Int) {
+    private fun onDeleteConfirmed(pageId: RemoteId) {
+        launch(defaultDispatcher) {
+            pageMap[pageId.value]?.let { deletePage(it) }
+        }
+    }
+
+    private fun editLocalPage(pageId: LocalId) {
         launch {
-            val page = pageStore.getPageByLocalId(localPageId, site)
+            val page = pageStore.getPageByLocalId(pageId.value, site)
             _editPage.postValue(page)
         }
     }
 
-    private fun editRestoredAutoSavePage(localPageId: Int) {
-        val page = postStore.getPostByLocalPostId(localPageId)
+    private fun editRestoredAutoSavePage(pageId: LocalId) {
+        val page = postStore.getPostByLocalPostId(pageId.value)
         _editAutoRevisionPage.postValue(Pair(page, site))
     }
 
