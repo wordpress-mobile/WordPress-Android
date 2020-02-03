@@ -93,6 +93,7 @@ class PagesViewModel
     private val eventBusWrapper: EventBusWrapper,
     private val previewStateHelper: PreviewStateHelper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val pageConflictResolver: PageConflictResolver,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -117,8 +118,8 @@ class PagesViewModel
     private val _editPage = SingleLiveEvent<PageModel?>()
     val editPage: LiveData<PageModel?> = _editPage
 
-    private val _editAutoRevisionPage = SingleLiveEvent<Pair<PostModel,SiteModel>>()
-    val editAutoRevisionPage: LiveData<Pair<PostModel,SiteModel>> = _editAutoRevisionPage
+    private val _editAutoRevisionPage = SingleLiveEvent<Pair<PostModel?,SiteModel>>()
+    val editAutoRevisionPage: LiveData<Pair<PostModel?,SiteModel>> = _editAutoRevisionPage
 
     private val _previewPage = SingleLiveEvent<PostModel?>()
     val previewPage: LiveData<PostModel?> = _previewPage
@@ -457,6 +458,12 @@ class PagesViewModel
     }
 
     fun onItemTapped(pageItem: Page) {
+        val page = postStore.getPostByRemotePostId(pageItem.id, site)
+        // Then check if an autosave revision is available
+        if (pageConflictResolver.hasUnhandledAutoSave(page)) {
+            pageListDialogHelper.showAutoSaveRevisionDialog(page)
+            return
+        }
         _editPage.postValue(pageMap[pageItem.id])
     }
 

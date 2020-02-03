@@ -318,6 +318,10 @@ class PagesFragment : Fragment() {
             }
         })
 
+        viewModel.editAutoRevisionPage.observe(this, Observer { models -> models.first?.let {
+            ActivityLauncher.editPostOrPageForResult(activity, models.second, it)
+        } })
+
         viewModel.previewPage.observe(this, Observer { post ->
             post?.let {
                 previewPage(activity, post)
@@ -359,6 +363,10 @@ class PagesFragment : Fragment() {
                 pagesPager.currentItem = pagerIndex
                 (pagesPager.adapter as PagesPagerAdapter).scrollToPage(page)
             }
+        })
+
+        viewModel.dialogAction.observe(this, Observer {
+            it?.show(activity, activity.supportFragmentManager, uiHelpers)
         })
     }
 

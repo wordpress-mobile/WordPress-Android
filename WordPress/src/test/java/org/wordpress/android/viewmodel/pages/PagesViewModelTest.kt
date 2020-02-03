@@ -63,7 +63,8 @@ class PagesViewModelTest {
                 analyticsTracker = mock(),
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
-                eventBusWrapper = mock()
+                eventBusWrapper = mock(),
+                pageConflictResolver = mock()
         )
         listStates = mutableListOf()
         pages = mutableListOf()
