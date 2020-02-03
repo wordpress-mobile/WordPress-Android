@@ -62,6 +62,7 @@ import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorImageMetaData;
 import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorImageSettingsListener;
+import org.wordpress.android.editor.EditorEditMediaListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.GutenbergEditorFragment;
@@ -102,7 +103,6 @@ import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -197,6 +197,7 @@ public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
         EditorImagePreviewListener,
+        EditorEditMediaListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
         OnRequestPermissionsResultCallback,
@@ -1644,7 +1645,13 @@ public class EditPostActivity extends AppCompatActivity implements
 
 
     @Override public void onImagePreviewRequested(String mediaUrl) {
-        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+//        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+        // TODO: Temporarily open image editor at this point
+        ActivityLauncher.openImageEditor(this, mediaUrl);
+    }
+
+    @Override public void onMediaEditorRequested(String mediaUrl) {
+        ActivityLauncher.openImageEditor(this, mediaUrl);
     }
 
     @Override

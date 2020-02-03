@@ -21,5 +21,12 @@ class PreviewImageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(PreviewImageViewModel::class.java)
+
+        val bundle = requireActivity().intent?.extras
+        val imageUrl = bundle?.getString(ARG_IMAGE_URL)
+    }
+
+    companion object {
+        const val ARG_IMAGE_URL = "arg_image_url"
     }
 }
