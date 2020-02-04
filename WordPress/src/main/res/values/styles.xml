@@ -34,7 +34,9 @@
         <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
         <item name="wpIconColorOnSurface">@color/material_on_surface_emphasis_medium</item>
 
-        <item name="listPopupWindowStyle">@style/Widget.MaterialComponents.PopupMenu.ListPopupWindow</item>
+        <item name="listPopupWindowStyle">
+            @style/Widget.MaterialComponents.PopupMenu.ListPopupWindow
+        </item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">
             @style/Widget.MaterialComponents.PopupMenu.Overflow
@@ -240,9 +242,8 @@
         <item name="android:textColor">@color/neutral_40</item>
     </style>
 
-    <style name="WordPress.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@android:color/white</item>
-        <item name="android:textColor">?attr/wpColorText</item>
+    <style name="WordPress.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">?attr/colorOnPrimarySurface</item>
     </style>
 
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
@@ -651,7 +652,7 @@
     </style>
 
     <!--Promo Dialog Styles-->
-    <style name="PromoDialogTitle" >
+    <style name="PromoDialogTitle">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -957,74 +958,70 @@
     </style>
 
     <!-- Overload of Login Theme -->
-    <style name="LoginTheme" parent="WordPress">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="colorControlActivated">@color/accent</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
+    <style name="LoginTheme" parent="WordPress.NoActionBar">
+        <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
     </style>
 
-    <style name="LoginTheme.Toolbar" parent="LoginTheme">
-        <item name="colorControlNormal">@color/color_control_normal</item>
-        <item name="homeAsUpIndicator">@drawable/ic_arrow_left_white_24dp</item>
+    <style name="LoginTheme.ActionBar" parent="WordPress.ActionBar">
+        <item name="android:textColorSecondary">?attr/colorOnPrimarySurface</item>
     </style>
 
-    <style name="LoginTheme.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/login_base_button_normal_color</item>
+    <style name="LoginTheme.Button.Primary" parent="WordPress.Button.Primary" />
+
+    <style name="LoginTheme.BottomBar" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/appbar_elevation</item>
+        <item name="cardCornerRadius">0dp</item>
     </style>
 
-    <style name="LoginTheme.Button.Primary" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/login_primary_button_normal_color</item>
-        <item name="android:textColor">@color/login_primary_button_text_color</item>
+    <style name="LoginTheme.Button.Secondary" parent="@style/Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
     </style>
 
-    <style name="LoginTheme.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/login_secondary_button_text_color</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+    <style name="LoginTheme.Button.SignUp" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="LoginTheme.Button.Google" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/login_google_button_text_color</item>
+    <style name="LoginTheme.Button.LoginOption" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
-    <style name="LoginTheme.TextLabel" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/login_text_label_text_color</item>
+    <style name="LoginTheme.TextLabel.Icon">
+        <item name="android:tint">?attr/colorPrimary</item>
+        <item name="android:tintMode">src_in</item>
+    </style>
+
+    <style name="LoginTheme.TextLabel" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:lineSpacingExtra">2dp</item>
     </style>
 
-    <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/login_input_label_static_text_color</item>
+    <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.MaterialComponents.Subtitle2" />
+
+    <style name="LoginTheme.EditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="startIconTint">?attr/colorPrimary</item>
+        <item name="endIconTint">?attr/colorPrimary</item>
+        <item name="endIconDrawable">@drawable/ic_arrow_left_white_24dp</item>
     </style>
 
-    <style name="LoginTheme.EditText" parent="LoginTheme">
-        <item name="colorControlNormal">@color/login_edit_text_color_control_normal</item>
-        <item name="android:textColor">@color/login_edit_text_text_color</item>
-        <item name="android:textColorHint">@color/login_edit_text_text_hint_color</item>
-        <item name="colorControlActivated">@color/login_edit_text_color_control_activated</item>
-        <item name="colorControlHighlight">@color/login_edit_text_color_control_highlight</item>
-    </style>
-
-    <style name="LoginTheme.PromoText" parent="TextAppearance.AppCompat.Title">
+    <style name="LoginTheme.PromoText" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:gravity">center</item>
         <item name="android:lineSpacingExtra">2dp</item>
+        <item name="android:textColor">?attr/colorSurface</item>
     </style>
 
-    <style name="LoginTheme.Heading" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/login_heading_text_color</item>
-    </style>
+    <style name="LoginTheme.SiteTitle" parent="TextAppearance.MaterialComponents.Subtitle2" />
 
-    <style name="LoginTheme.Subhead" parent="TextAppearance.AppCompat.Subhead">
-        <item name="android:textColor">@color/login_subhead_text_color</item>
+    <style name="LoginTheme.SiteUrl" parent="TextAppearance.MaterialComponents.Body2" />
+
+    <style name="LoginTheme.Heading" parent="TextAppearance.MaterialComponents.Subtitle2" />
+
+    <style name="LoginTheme.Subhead" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="LoginTheme.Username" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/login_username_text_color</item>
-    </style>
+    <style name="LoginTheme.Username" parent="TextAppearance.MaterialComponents.Subtitle1"/>
 
-    <style name="LoginTheme.Footnote" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textColor">@color/login_footnote_text_color</item>
-    </style>
+    <style name="LoginTheme.Footnote" parent="TextAppearance.MaterialComponents.Caption" />
 
     <style name="LoginEpilogueSitesList">
         <item name="colorControlHighlight">@android:color/transparent</item>
