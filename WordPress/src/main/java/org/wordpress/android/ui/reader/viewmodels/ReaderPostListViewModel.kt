@@ -21,6 +21,7 @@ import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
@@ -34,6 +35,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -74,6 +76,9 @@ class ReaderPostListViewModel @Inject constructor(
 
     private val _startSubsActivity = MutableLiveData<Event<Int>>()
     val startSubsActivity: LiveData<Event<Int>> = _startSubsActivity
+
+    private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
+    val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
 
     /**
      * First tag for which the card was shown.
@@ -226,6 +231,12 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun onChangeBottomSheetVisibility(show: Boolean) {
+        if (show) {
+            _updateTagsAndSites.value = Event(EnumSet.of(
+                    UpdateTask.TAGS,
+                    UpdateTask.FOLLOWED_BLOGS
+            ))
+        }
         _changeBottomSheetVisibility.value = Event(show)
     }
 
