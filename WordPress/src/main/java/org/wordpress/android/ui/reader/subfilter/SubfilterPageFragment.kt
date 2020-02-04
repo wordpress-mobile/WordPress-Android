@@ -44,7 +44,6 @@ class SubfilterPageFragment : DaggerFragment() {
     private lateinit var title: WPTextView
     private lateinit var actionButton: Button
 
-
     companion object {
         const val CATEGORY_KEY = "category_key"
 
@@ -77,8 +76,8 @@ class SubfilterPageFragment : DaggerFragment() {
         title = emptyStateContainer.findViewById(R.id.title)
         actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
-
-        readerViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(ReaderPostListViewModel::class.java)
+        readerViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                .get(ReaderPostListViewModel::class.java)
 
         readerViewModel.subFilters.observe(this, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->

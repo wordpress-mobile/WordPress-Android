@@ -2043,10 +2043,12 @@ public class ReaderPostListFragment extends Fragment
         }
 
         getPostAdapter().setCurrentTag(mCurrentTag);
-        mViewModel.onChangeSubfiltersVisibility(BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && ReaderUtils.isFollowing(
+        mViewModel.onChangeSubfiltersVisibility(
+                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && ReaderUtils.isFollowing(
                 mCurrentTag,
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
-                mRecyclerView));
+                mRecyclerView)
+        );
         hideNewPostsBar();
         showLoadingProgress(false);
         updateCurrentTagIfTime();

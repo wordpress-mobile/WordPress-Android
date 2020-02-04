@@ -58,8 +58,8 @@ class SubfilterPageViewModelTest {
     }
 
     private companion object Fixtures {
-        fun getExpectedForCategory(category: SubfilterCategory) : BottomSheetEmptyUiState {
-            return when(category) {
+        fun getExpectedForCategory(category: SubfilterCategory): BottomSheetEmptyUiState {
+            return when (category) {
                 SITES -> {
                     VisibleEmptyUiState(
                             title = UiStringRes(
