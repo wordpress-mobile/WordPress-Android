@@ -41,7 +41,6 @@ public class EncryptionUtils {
      */
     public static String generateJSONEncryptedLogs(final String publicKeyBase64,
                                                    final List<String> logMessages) throws JSONException {
-
         // Schema version
         JSONObject encryptionDataJson = new JSONObject();
         encryptionDataJson.put("keyedWith", KEYED_WITH);
