@@ -697,7 +697,7 @@ class PagesViewModel
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         pageListDialogHelper.onPositiveClickedForBasicDialog(
                 instanceTag = instanceTag,
-                editRestoredAutoSavePage = this::editPage,
+                editPage = this::editPage,
                 deletePage = this::onDeleteConfirmed
         )
     }
@@ -705,7 +705,7 @@ class PagesViewModel
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         pageListDialogHelper.onNegativeClickedForBasicDialog(
                 instanceTag = instanceTag,
-                editLocalPage = this::editPage
+                editPage = this::editPage
         )
     }
 
