@@ -123,7 +123,7 @@ class PagesFragment : Fragment() {
 
             if (EditPostActivity.checkToRestart(data)) {
                 ActivityLauncher.editPageForResult(data, this@PagesFragment, viewModel.site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0))
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0), false)
 
                 // a restart will happen so, no need to continue here
                 return
@@ -312,15 +312,9 @@ class PagesFragment : Fragment() {
             }
         })
 
-        viewModel.editPage.observe(this, Observer { page ->
+        viewModel.editPage.observe(this, Observer { (page, loadAutoRevision) ->
             page?.let {
-                ActivityLauncher.editPageForResult(this, page)
-            }
-        })
-
-        viewModel.editAutoRevisionPage.observe(this, Observer { (page, site) ->
-            page?.let {
-                ActivityLauncher.editPostOrPageForResult(activity, site, page, true)
+                ActivityLauncher.editPageForResult(this, page, loadAutoRevision)
             }
         })
 

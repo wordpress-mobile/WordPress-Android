@@ -20,7 +20,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -83,6 +82,8 @@ private const val SNACKBAR_DELAY = 500L
 private const val SEARCH_COLLAPSE_DELAY = 500L
 private const val PAGE_UPLOAD_TIMEOUT = 5000L
 
+typealias LoadAutoSaveRevision = Boolean
+
 class PagesViewModel
 @Inject constructor(
     private val pageStore: PageStore,
@@ -115,11 +116,8 @@ class PagesViewModel
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
 
-    private val _editPage = SingleLiveEvent<PageModel?>()
-    val editPage: LiveData<PageModel?> = _editPage
-
-    private val _editAutoRevisionPage = SingleLiveEvent<Pair<PostModel?, SiteModel>>()
-    val editAutoRevisionPage: LiveData<Pair<PostModel?, SiteModel>> = _editAutoRevisionPage
+    private val _editPage = SingleLiveEvent<Pair<PageModel?, LoadAutoSaveRevision>>()
+    val editPage: LiveData<Pair<PageModel?, LoadAutoSaveRevision>> = _editPage
 
     private val _previewPage = SingleLiveEvent<PostModel?>()
     val previewPage: LiveData<PostModel?> = _previewPage
@@ -464,7 +462,7 @@ class PagesViewModel
             pageListDialogHelper.showAutoSaveRevisionDialog(page)
             return
         }
-        _editPage.postValue(pageMap[pageItem.id])
+        editPage(RemoteId(pageItem.id))
     }
 
     fun onNewPageButtonTapped() {
@@ -695,7 +693,7 @@ class PagesViewModel
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         pageListDialogHelper.onPositiveClickedForBasicDialog(
                 instanceTag = instanceTag,
-                editRestoredAutoSavePage = this::editRestoredAutoSavePage,
+                editRestoredAutoSavePage = this::editPage,
                 deletePage = this::onDeleteConfirmed
         )
     }
@@ -703,7 +701,7 @@ class PagesViewModel
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         pageListDialogHelper.onNegativeClickedForBasicDialog(
                 instanceTag = instanceTag,
-                editLocalPage = this::editLocalPage
+                editLocalPage = this::editPage
         )
     }
 
@@ -713,16 +711,8 @@ class PagesViewModel
         }
     }
 
-    private fun editLocalPage(pageId: LocalId) {
-        launch {
-            val page = pageStore.getPageByLocalId(pageId.value, site)
-            _editPage.postValue(page)
-        }
-    }
-
-    private fun editRestoredAutoSavePage(pageId: LocalId) {
-        val page = postStore.getPostByLocalPostId(pageId.value)
-        _editAutoRevisionPage.postValue(Pair(page, site))
+    private fun editPage(pageId: RemoteId, loadAutoSaveRevision: LoadAutoSaveRevision = false) {
+        _editPage.postValue(Pair(pageMap[pageId.value], loadAutoSaveRevision))
     }
 
     private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&

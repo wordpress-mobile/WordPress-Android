@@ -5,7 +5,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_SHOWN
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.PostUtils
@@ -21,7 +20,7 @@ class PageListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) {
-    private var pageIdForAutosaveRevisionResolutionDialog: LocalId? = null
+    private var pageIdForAutosaveRevisionResolutionDialog: RemoteId? = null
     private var pageIdForDeleteDialog: RemoteId? = null
 
     fun showAutoSaveRevisionDialog(post: PostModel) {
@@ -33,7 +32,7 @@ class PageListDialogHelper(
                 positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
                 negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
         )
-        pageIdForAutosaveRevisionResolutionDialog = LocalId(post.id)
+        pageIdForAutosaveRevisionResolutionDialog = RemoteId(post.remotePostId)
         showDialog.invoke(dialogHolder)
     }
 
@@ -56,7 +55,7 @@ class PageListDialogHelper(
     fun onPositiveClickedForBasicDialog(
         instanceTag: String,
         deletePage: (RemoteId) -> Unit,
-        editRestoredAutoSavePage: (LocalId) -> Unit
+        editRestoredAutoSavePage: (RemoteId, LoadAutoSaveRevision) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_PAGE_DIALOG_TAG -> pageIdForDeleteDialog?.let {
@@ -66,7 +65,7 @@ class PageListDialogHelper(
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> pageIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the restored auto save
                 pageIdForAutosaveRevisionResolutionDialog = null
-                editRestoredAutoSavePage(it)
+                editRestoredAutoSavePage(it, true)
                 analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED)
             }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
@@ -75,13 +74,13 @@ class PageListDialogHelper(
 
     fun onNegativeClickedForBasicDialog(
         instanceTag: String,
-        editLocalPage: (LocalId) -> Unit
+        editLocalPage: (RemoteId, LoadAutoSaveRevision) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_PAGE_DIALOG_TAG -> pageIdForDeleteDialog = null
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> pageIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the local post (don't use the auto save version)
-                editLocalPage(it)
+                editLocalPage(it, false)
                 analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED)
             }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
