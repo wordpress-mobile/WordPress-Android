@@ -82,9 +82,9 @@ class SubfilterPageFragment : DaggerFragment() {
         readerViewModel.subFilters.observe(this, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
                 val items = it?.filter { it.type == category.type } ?: listOf()
-                viewModel.onManageEmptyView(items.isEmpty())
+                viewModel.onSubFiltersChanged(items.isEmpty())
                 adapter.update(items)
-                readerViewModel.onUpdateTabTitleCount(category, items.size)
+                readerViewModel.onSubfilterPageUpdated(category, items.size)
             }
         })
 

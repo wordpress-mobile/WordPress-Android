@@ -226,7 +226,7 @@ class ReaderPostListViewModelTest {
         viewModel.start(initialTag, false, false)
 
         for (testStep in data.keys) {
-            viewModel.onUpdateTabTitleCount(testStep, data.getOrDefault(testStep, 0))
+            viewModel.onSubfilterPageUpdated(testStep, data.getOrDefault(testStep, 0))
         }
 
         assertThat(viewModel.filtersMatchCount.value).isEqualTo(data)

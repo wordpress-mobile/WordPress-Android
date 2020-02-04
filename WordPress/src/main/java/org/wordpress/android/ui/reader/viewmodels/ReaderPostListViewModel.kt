@@ -149,7 +149,7 @@ class ReaderPostListViewModel @Inject constructor(
         newsTracker.trackNewsCardExtendedInfoRequested(READER, item.version)
     }
 
-    fun onLoadSubFilters() {
+    fun loadSubFilters() {
         launch {
             val filterList = ArrayList<SubfilterListItem>()
 
@@ -295,7 +295,7 @@ class ReaderPostListViewModel @Inject constructor(
         _shouldCollapseToolbar.value = collapse
     }
 
-    fun onUpdateTabTitleCount(category: SubfilterCategory, count: Int) {
+    fun onSubfilterPageUpdated(category: SubfilterCategory, count: Int) {
         val currentValue = _filtersMatchCount.value
 
         currentValue?.let {
@@ -319,13 +319,13 @@ class ReaderPostListViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
-        onLoadSubFilters()
+        loadSubFilters()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
-        onLoadSubFilters()
+        loadSubFilters()
     }
 
     override fun onCleared() {

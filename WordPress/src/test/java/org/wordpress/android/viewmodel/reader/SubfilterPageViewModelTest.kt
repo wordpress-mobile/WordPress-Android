@@ -31,28 +31,28 @@ class SubfilterPageViewModelTest {
     }
 
     @Test
-    fun `onManageEmptyView hides the view when requested`() {
+    fun `onSubFiltersChanged hides the view when requested`() {
         viewModel.start(SITES)
 
-        viewModel.onManageEmptyView(false)
+        viewModel.onSubFiltersChanged(false)
 
         assertThat(viewModel.emptyState.value).isInstanceOf(HiddenEmptyUiState::class.java)
     }
 
     @Test
-    fun `onManageEmptyView shows empty view for sites when requested`() {
+    fun `onSubFiltersChanged shows empty view for sites when requested`() {
         viewModel.start(SITES)
 
-        viewModel.onManageEmptyView(true)
+        viewModel.onSubFiltersChanged(true)
 
         assertThat(viewModel.emptyState.value).isEqualTo(getExpectedForCategory(SITES))
     }
 
     @Test
-    fun `onManageEmptyView shows empty view for tags when requested`() {
+    fun `onSubFiltersChanged shows empty view for tags when requested`() {
         viewModel.start(TAGS)
 
-        viewModel.onManageEmptyView(true)
+        viewModel.onSubFiltersChanged(true)
 
         assertThat(viewModel.emptyState.value).isEqualTo(getExpectedForCategory(TAGS))
     }

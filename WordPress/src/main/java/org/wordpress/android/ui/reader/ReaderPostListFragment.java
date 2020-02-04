@@ -441,7 +441,7 @@ public class ReaderPostListFragment extends Fragment
                         SubfilterBottomSheetFragment bottomSheet =
                                 (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
                         if (isShowing && bottomSheet == null) {
-                            mViewModel.onLoadSubFilters();
+                            mViewModel.loadSubFilters();
                             bottomSheet = new SubfilterBottomSheetFragment();
                             bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                         } else if (!isShowing && bottomSheet != null) {

@@ -32,7 +32,7 @@ class SubfilterPageViewModel @Inject constructor() : ViewModel() {
         this.category = category
     }
 
-    fun onManageEmptyView(isEmpty: Boolean) {
+    fun onSubFiltersChanged(isEmpty: Boolean) {
         _emptyState.value = if (isEmpty) {
             VisibleEmptyUiState(
                     title = UiStringRes(
