@@ -55,7 +55,7 @@
                 android:layout_height="@dimen/note_icon_sz"
                 android:layout_marginStart="@dimen/notifications_note_icon_margin"
                 android:layout_marginTop="@dimen/notifications_note_icon_margin"
-                android:background="@drawable/bg_oval_primary_stroke_notification_unread"
+                android:background="@drawable/bg_oval_primary_stroke_surface"
                 android:gravity="center"
                 android:importantForAccessibility="no"
                 android:padding="4dp" />
