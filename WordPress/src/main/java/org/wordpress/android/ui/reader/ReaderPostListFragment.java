@@ -453,7 +453,6 @@ public class ReaderPostListFragment extends Fragment
                 });
             });
 
-
             mViewModel.getStartSubsActivity().observe(this, event -> {
                 event.applyIfNotHandled(tabIndex -> {
                     ReaderActivityLauncher.showReaderSubs(requireActivity(), tabIndex);
