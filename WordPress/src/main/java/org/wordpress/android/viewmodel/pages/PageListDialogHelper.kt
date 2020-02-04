@@ -21,8 +21,8 @@ class PageListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) {
-    private var localPageIdForAutosaveRevisionResolutionDialog: LocalId? = null
-    private var remotePageIdForDeleteDialog: RemoteId? = null
+    private var pageIdForAutosaveRevisionResolutionDialog: LocalId? = null
+    private var pageIdForDeleteDialog: RemoteId? = null
 
     fun showAutoSaveRevisionDialog(post: PostModel) {
         analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN)
@@ -33,11 +33,11 @@ class PageListDialogHelper(
                 positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
                 negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
         )
-        localPageIdForAutosaveRevisionResolutionDialog = LocalId(post.id)
+        pageIdForAutosaveRevisionResolutionDialog = LocalId(post.id)
         showDialog.invoke(dialogHolder)
     }
 
-    fun showDeletePostConfirmationDialog(pageId: RemoteId, pageTitle: String) {
+    fun showDeletePageConfirmationDialog(pageId: RemoteId, pageTitle: String) {
         val dialogMessage = {
             WordPress.getContext().getString(R.string.page_delete_dialog_message, pageTitle)
         }
@@ -49,7 +49,7 @@ class PageListDialogHelper(
                 positiveButton = UiStringRes(R.string.delete),
                 negativeButton = UiStringRes(R.string.cancel)
         )
-        remotePageIdForDeleteDialog = pageId
+        pageIdForDeleteDialog = pageId
         showDialog.invoke(dialogHolder)
     }
 
@@ -59,13 +59,13 @@ class PageListDialogHelper(
         editRestoredAutoSavePage: (LocalId) -> Unit
     ) {
         when (instanceTag) {
-            CONFIRM_DELETE_PAGE_DIALOG_TAG -> remotePageIdForDeleteDialog?.let {
-                remotePageIdForDeleteDialog = null
+            CONFIRM_DELETE_PAGE_DIALOG_TAG -> pageIdForDeleteDialog?.let {
+                pageIdForDeleteDialog = null
                 deletePage(it)
             }
-            CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> localPageIdForAutosaveRevisionResolutionDialog?.let {
+            CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> pageIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the restored auto save
-                localPageIdForAutosaveRevisionResolutionDialog = null
+                pageIdForAutosaveRevisionResolutionDialog = null
                 editRestoredAutoSavePage(it)
                 analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED)
             }
@@ -78,8 +78,8 @@ class PageListDialogHelper(
         editLocalPage: (LocalId) -> Unit
     ) {
         when (instanceTag) {
-            CONFIRM_DELETE_PAGE_DIALOG_TAG -> remotePageIdForDeleteDialog = null
-            CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> localPageIdForAutosaveRevisionResolutionDialog?.let {
+            CONFIRM_DELETE_PAGE_DIALOG_TAG -> pageIdForDeleteDialog = null
+            CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> pageIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the local post (don't use the auto save version)
                 editLocalPage(it)
                 analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED)

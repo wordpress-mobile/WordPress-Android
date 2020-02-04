@@ -391,7 +391,7 @@ class PagesViewModel
 
     private fun deletePage(page: Page) {
         performIfNetworkAvailable {
-            pageListDialogHelper.showDeletePostConfirmationDialog(RemoteId(page.id), page.title)
+            pageListDialogHelper.showDeletePageConfirmationDialog(RemoteId(page.id), page.title)
         }
     }
 
