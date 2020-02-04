@@ -45,6 +45,7 @@ import org.wordpress.android.ui.posts.PostListRemotePreviewState
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.PostEvents
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
@@ -93,6 +94,7 @@ class PagesViewModel
     private val networkUtils: NetworkUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     private val previewStateHelper: PreviewStateHelper,
+    private val uploadStarter: UploadStarter,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val pageConflictResolver: PageConflictResolver,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
@@ -189,6 +191,7 @@ class PagesViewModel
             eventBusWrapper.register(this)
 
             loadPagesAsync()
+            uploadStarter.queueUploadFromSite(site)
         }
     }
 
@@ -472,6 +475,7 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
+        uploadStarter.queueUploadFromSite(site)
         launch {
             reloadPages(FETCHING)
         }
