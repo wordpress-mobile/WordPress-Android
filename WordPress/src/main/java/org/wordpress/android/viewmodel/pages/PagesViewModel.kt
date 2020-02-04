@@ -118,8 +118,8 @@ class PagesViewModel
     private val _editPage = SingleLiveEvent<PageModel?>()
     val editPage: LiveData<PageModel?> = _editPage
 
-    private val _editAutoRevisionPage = SingleLiveEvent<Pair<PostModel?,SiteModel>>()
-    val editAutoRevisionPage: LiveData<Pair<PostModel?,SiteModel>> = _editAutoRevisionPage
+    private val _editAutoRevisionPage = SingleLiveEvent<Pair<PostModel?, SiteModel>>()
+    val editAutoRevisionPage: LiveData<Pair<PostModel?, SiteModel>> = _editAutoRevisionPage
 
     private val _previewPage = SingleLiveEvent<PostModel?>()
     val previewPage: LiveData<PostModel?> = _previewPage

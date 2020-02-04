@@ -17,7 +17,6 @@ import org.wordpress.android.viewmodel.helpers.DialogHolder
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 private const val CONFIRM_DELETE_PAGE_DIALOG_TAG = "CONFIRM_DELETE_PAGE_DIALOG_TAG"
 
-
 class PageListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
     private val analyticsTracker: AnalyticsTrackerWrapper
@@ -38,7 +37,7 @@ class PageListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
-    fun showDeletePostConfirmationDialog(pageId : RemoteId, pageTitle :String) {
+    fun showDeletePostConfirmationDialog(pageId: RemoteId, pageTitle: String) {
         val dialogMessage = {
             WordPress.getContext().getString(R.string.page_delete_dialog_message, pageTitle)
         }
