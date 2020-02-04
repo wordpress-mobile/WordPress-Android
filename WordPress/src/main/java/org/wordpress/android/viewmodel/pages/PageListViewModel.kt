@@ -50,7 +50,7 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
-    private val progressHelper: PageItemProgressHelper
+    private val progressHelper: PageItemUploadProgressHelper
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Pair<List<PageItem>, Boolean>> = Transformations.map(_pages) {

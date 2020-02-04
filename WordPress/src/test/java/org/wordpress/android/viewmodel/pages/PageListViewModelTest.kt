@@ -32,7 +32,7 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var pagesViewModel: PagesViewModel
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var progressHelper: PageItemProgressHelper
+    @Mock lateinit var progressHelper: PageItemUploadProgressHelper
 
     private lateinit var viewModel: PageListViewModel
     private val site = SiteModel()

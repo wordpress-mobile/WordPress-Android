@@ -30,7 +30,7 @@ class SearchListViewModel
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
-    private val progressHelper: PageItemProgressHelper
+    private val progressHelper: PageItemUploadProgressHelper
 ) : ViewModel() {
     private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
     val searchResult: LiveData<List<PageItem>> = _searchResult

@@ -38,7 +38,7 @@ class SearchListViewModelTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var pagesViewModel: PagesViewModel
-    @Mock lateinit var progressHelper: PageItemProgressHelper
+    @Mock lateinit var progressHelper: PageItemUploadProgressHelper
 
     private lateinit var searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>>
     private lateinit var viewModel: SearchListViewModel

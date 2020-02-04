@@ -9,19 +9,19 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.viewmodel.pages.PageItemProgressHelper.PostUploadUiState.NothingToUpload
-import org.wordpress.android.viewmodel.pages.PageItemProgressHelper.PostUploadUiState.UploadFailed
-import org.wordpress.android.viewmodel.pages.PageItemProgressHelper.PostUploadUiState.UploadQueued
-import org.wordpress.android.viewmodel.pages.PageItemProgressHelper.PostUploadUiState.UploadWaitingForConnection
-import org.wordpress.android.viewmodel.pages.PageItemProgressHelper.PostUploadUiState.UploadingMedia
-import org.wordpress.android.viewmodel.pages.PageItemProgressHelper.PostUploadUiState.UploadingPost
+import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.NothingToUpload
+import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadFailed
+import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadQueued
+import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadWaitingForConnection
+import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadingMedia
+import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadingPost
 import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
 import org.wordpress.android.viewmodel.posts.PostListItemUploadStatus
 import javax.inject.Inject
 
 typealias ShouldShowOverlay = Boolean
 
-class PageItemProgressHelper @Inject constructor(
+class PageItemUploadProgressHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val postStore: PostStore,
     val uploadStatusTracker: PostModelUploadStatusTracker
