@@ -35,6 +35,19 @@ class PageItemUploadProgressHelper @Inject constructor(
         this.site = site
     }
 
+    fun getProgressStateForPage(
+        pageId: LocalId
+    ): Pair<PostListItemProgressBar, ShouldShowOverlay> {
+        val post = postStore.getPostByLocalPostId(pageId.value)
+        val uploadStatus = uploadStatusTracker.getUploadStatus(
+                post, site
+        )
+        val uploadUiState = createUploadUiState(uploadStatus, post)
+
+        val shouldShowOverlay = shouldShowOverlay(uploadUiState)
+        return Pair(getProgressBarState(uploadUiState), shouldShowOverlay)
+    }
+
     /**
      * Copied from PostListItemUiStateHelper since the behavior is similar for the Page List UI State.
      */
@@ -112,18 +125,5 @@ class PageItemUploadProgressHelper @Inject constructor(
         // show overlay when post upload is in progress or (media upload is in progress and the user is not using Aztec)
         return (uploadUiState is UploadingPost ||
                 (!appPrefsWrapper.isAztecEditorEnabled && uploadUiState is UploadingMedia))
-    }
-
-    fun getProgressStateForPage(
-        pageId: LocalId
-    ): Pair<PostListItemProgressBar, ShouldShowOverlay> {
-        val post = postStore.getPostByLocalPostId(pageId.value)
-        val uploadStatus = uploadStatusTracker.getUploadStatus(
-                post, site
-        )
-        val uploadUiState = createUploadUiState(uploadStatus, post)
-
-        val shouldShowOverlay = shouldShowOverlay(uploadUiState)
-        return Pair(getProgressBarState(uploadUiState), shouldShowOverlay)
     }
 }
