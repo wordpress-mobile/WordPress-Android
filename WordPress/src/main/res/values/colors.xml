@@ -20,12 +20,6 @@
 
     <!-- LOGIN -->
     <color name="color_primary">@color/primary</color>
-    <color name="login_background_color">@color/background_default</color>
-    <color name="login_edit_text_color_control_activated">@color/primary_30</color>
-    <color name="login_edit_text_color_control_highlight">@color/neutral_10</color>
-    <color name="login_google_button_text_color">@color/primary</color>
-    <color name="login_secondary_button_text_color">@color/primary</color>
-    <color name="login_theme_accent_color">@color/accent</color>
 
     <!-- SEMANTIC -->
     <color name="accent">@color/pink_50</color>
