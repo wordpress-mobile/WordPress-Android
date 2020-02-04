@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -24,7 +26,6 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ViewUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 
@@ -41,7 +42,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     private RecyclerView mSitesList;
     private View mBottomShadow;
-    private View mBottomButtonsContainer;
+    private MaterialCardView mBottomButtonsContainer;
     private Button mConnectMore;
 
     private SitePickerAdapter mAdapter;
@@ -170,16 +171,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
                                 if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
                                     mBottomShadow.setVisibility(View.VISIBLE);
-                                    mBottomButtonsContainer.setBackgroundResource(android.R.color.white);
-                                    ViewUtils.setButtonBackgroundColor(getContext(), mConnectMore,
-                                                                       R.style.WordPress_Button_Grey,
-                                                                       R.attr.colorButtonNormal);
                                 } else {
                                     mBottomShadow.setVisibility(View.GONE);
-                                    mBottomButtonsContainer.setBackground(null);
-                                    ViewUtils.setButtonBackgroundColor(getContext(), mConnectMore,
-                                                                       R.style.WordPress_Button,
-                                                                       R.attr.colorButtonNormal);
                                 }
                             }
                         });
