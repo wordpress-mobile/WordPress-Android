@@ -134,7 +134,7 @@ class PostListMainViewModel @Inject constructor(
     private val _searchQuery = MutableLiveData<String>()
     val searchQuery: LiveData<String> = _searchQuery
 
-    private val uploadStatusTracker = PostListUploadStatusTracker(
+    private val uploadStatusTracker = PostModelUploadStatusTracker(
             uploadStore = uploadStore,
             uploadActionUseCase = uploadActionUseCase
     )

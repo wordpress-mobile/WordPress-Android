@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
-import org.wordpress.android.ui.posts.PostListUploadStatusTracker
+import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.pages.PageItemProgressHelper.PostUploadUiState.NothingToUpload
 import org.wordpress.android.viewmodel.pages.PageItemProgressHelper.PostUploadUiState.UploadFailed
@@ -24,7 +24,7 @@ typealias ShouldShowOverlay = Boolean
 class PageItemProgressHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val postStore: PostStore,
-    val uploadStatusTracker: PostListUploadStatusTracker
+    val uploadStatusTracker: PostModelUploadStatusTracker
 ) {
     private lateinit var site: SiteModel
 

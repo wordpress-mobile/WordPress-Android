@@ -13,7 +13,7 @@ import javax.inject.Inject
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
  * you see fit.
  */
-class PostListUploadStatusTracker @Inject constructor(
+class PostModelUploadStatusTracker @Inject constructor(
     private val uploadStore: UploadStore,
     private val uploadActionUseCase: UploadActionUseCase
 ) {
