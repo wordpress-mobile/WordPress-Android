@@ -318,9 +318,9 @@ class PagesFragment : Fragment() {
             }
         })
 
-        viewModel.editAutoRevisionPage.observe(this, Observer { models ->
-            models.first?.let {
-                ActivityLauncher.editPostOrPageForResult(activity, models.second, it)
+        viewModel.editAutoRevisionPage.observe(this, Observer { (page, site) ->
+            page?.let {
+                ActivityLauncher.editPostOrPageForResult(activity, site, page, true)
             }
         })
 
