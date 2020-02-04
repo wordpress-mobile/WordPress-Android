@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.pages
 
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_SHOWN
@@ -9,6 +10,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 
@@ -36,11 +38,15 @@ class PageListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
-    fun showDeletePostConfirmationDialog(pageId : RemoteId) {
+    fun showDeletePostConfirmationDialog(pageId : RemoteId, pageTitle :String) {
+        val dialogMessage = {
+            WordPress.getContext().getString(R.string.page_delete_dialog_message, pageTitle)
+        }
+
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_DELETE_PAGE_DIALOG_TAG,
                 title = UiStringRes(R.string.delete_page),
-                message = UiStringRes(R.string.page_delete_dialog_message),
+                message = UiStringText(dialogMessage()),
                 positiveButton = UiStringRes(R.string.delete),
                 negativeButton = UiStringRes(R.string.cancel)
         )
