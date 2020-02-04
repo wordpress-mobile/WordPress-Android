@@ -301,16 +301,13 @@ public class FilteredRecyclerView extends RelativeLayout {
         mSelectingRememberedFilterOnCreate = true;
 
         if (mUseTabsForFiltering) {
-            int currentFilterPosition = mFilterCriteriaOptions.indexOf(getCurrentFilter());
-
             mTabLayout.clearOnTabSelectedListeners();
             mTabLayout.removeAllTabs();
 
             for (int i = 0; i < mFilterCriteriaOptions.size(); i++) {
                 FilterCriteria filterCriteria = mFilterCriteriaOptions.get(i);
                 Tab newTab = mTabLayout.newTab().setText(filterCriteria.getLabel());
-                boolean setSelected = i == currentFilterPosition;
-                mTabLayout.addTab(newTab, i, setSelected);
+                mTabLayout.addTab(newTab, i);
             }
 
             mTabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
