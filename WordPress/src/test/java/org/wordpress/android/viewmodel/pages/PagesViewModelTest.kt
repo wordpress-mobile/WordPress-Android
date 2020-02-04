@@ -65,11 +65,11 @@ class PagesViewModelTest {
                 networkUtils = networkUtils,
                 previewStateHelper = mock(),
                 analyticsTracker = mock(),
-                uiDispatcher = Dispatchers.Unconfined,
+                pageConflictResolver = mock(),
+                        uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
                 eventBusWrapper = mock(),
                 uploadStarter = uploadStarter
-                pageConflictResolver = mock()
         )
         listStates = mutableListOf()
         pages = mutableListOf()
