@@ -18,7 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import org.wordpress.android.R
-import org.wordpress.android.ui.reader.ReaderSubsActivity
+import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState.HiddenEmptyUiState
+import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState.VisibleEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
 import org.wordpress.android.ui.reader.subfilter.adapters.SubfilterListAdapter
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
+import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.widgets.WPTextView
 import java.lang.ref.WeakReference
@@ -33,9 +35,15 @@ import javax.inject.Inject
 
 class SubfilterPageFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: ReaderPostListViewModel
     @Inject lateinit var uiHelpers: UiHelpers
+
+    private lateinit var readerViewModel: ReaderPostListViewModel
+    private lateinit var viewModel: SubfilterPageViewModel
     private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyStateContainer: LinearLayout
+    private lateinit var title: WPTextView
+    private lateinit var actionButton: Button
+
 
     companion object {
         const val CATEGORY_KEY = "category_key"
@@ -58,18 +66,42 @@ class SubfilterPageFragment : DaggerFragment() {
 
         val category = arguments?.getSerializable(CATEGORY_KEY) as SubfilterCategory
 
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SubfilterPageViewModel::class.java)
+        viewModel.start(category)
+
         recyclerView = view.findViewById(R.id.content_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter = SubfilterListAdapter(uiHelpers)
 
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(ReaderPostListViewModel::class.java)
+        emptyStateContainer = view.findViewById(R.id.empty_state_container)
+        title = emptyStateContainer.findViewById(R.id.title)
+        actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
-        viewModel.subFilters.observe(this, Observer {
+
+        readerViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(ReaderPostListViewModel::class.java)
+
+        readerViewModel.subFilters.observe(this, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
                 val items = it?.filter { it.type == category.type } ?: listOf()
-                manageEmptyView(items.isEmpty(), category)
+                viewModel.onManageEmptyView(items.isEmpty())
                 adapter.update(items)
-                viewModel.onUpdateTabTitleCount(category, items.size)
+                readerViewModel.onUpdateTabTitleCount(category, items.size)
+            }
+        })
+
+        viewModel.emptyState.observe(this, Observer { uiState ->
+            if (isAdded) {
+                when (uiState) {
+                    HiddenEmptyUiState -> emptyStateContainer.visibility = View.GONE
+                    is VisibleEmptyUiState -> {
+                        emptyStateContainer.visibility = View.VISIBLE
+                        title.setText(uiState.title.stringRes)
+                        actionButton.setText(uiState.buttonText.stringRes)
+                        actionButton.setOnClickListener {
+                            readerViewModel.onBottomSheetActionClicked(uiState.actionTabIndex)
+                        }
+                    }
+                }
             }
         })
     }
@@ -78,41 +110,6 @@ class SubfilterPageFragment : DaggerFragment() {
         if (!isAdded) return
 
         recyclerView.isNestedScrollingEnabled = enable
-    }
-
-    private fun manageEmptyView(isEmpty: Boolean, category: SubfilterCategory) {
-        if (!isAdded || view == null) {
-            return
-        }
-
-        val emptyStateContainer = view?.findViewById<LinearLayout>(R.id.empty_state_container) ?: return
-
-        if (isEmpty) {
-            emptyStateContainer.apply {
-                visibility = View.VISIBLE
-                val title = findViewById<WPTextView>(R.id.title)
-                val actionButton = findViewById<Button>(R.id.action_button)
-                title.setText(
-                        if (category == SITES)
-                            R.string.reader_filter_empty_sites_list
-                        else
-                            R.string.reader_filter_empty_tags_list)
-                actionButton.setText(
-                        if (category == SITES)
-                            R.string.reader_filter_empty_sites_action
-                        else
-                            R.string.reader_filter_empty_tags_action)
-                actionButton.setOnClickListener {
-                    viewModel.onBottomSheetActionClicked(
-                            if (category == SITES)
-                                ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS
-                            else
-                                ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
-                }
-            }
-        } else {
-            emptyStateContainer.visibility = View.GONE
-        }
     }
 }
 
