@@ -23,16 +23,16 @@ class PageListDialogHelper(
     private var pageIdForAutosaveRevisionResolutionDialog: RemoteId? = null
     private var pageIdForDeleteDialog: RemoteId? = null
 
-    fun showAutoSaveRevisionDialog(post: PostModel) {
+    fun showAutoSaveRevisionDialog(page: PostModel) {
         analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN)
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_autosave_title),
-                message = PostUtils.getCustomStringForAutosaveRevisionDialog(post, true),
+                message = PostUtils.getCustomStringForAutosaveRevisionDialog(page, true),
                 positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
                 negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
         )
-        pageIdForAutosaveRevisionResolutionDialog = RemoteId(post.remotePostId)
+        pageIdForAutosaveRevisionResolutionDialog = RemoteId(page.remotePostId)
         showDialog.invoke(dialogHolder)
     }
 
@@ -79,7 +79,7 @@ class PageListDialogHelper(
         when (instanceTag) {
             CONFIRM_DELETE_PAGE_DIALOG_TAG -> pageIdForDeleteDialog = null
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> pageIdForAutosaveRevisionResolutionDialog?.let {
-                // open the editor with the local post (don't use the auto save version)
+                // open the editor with the local page (don't use the auto save version)
                 editLocalPage(it, false)
                 analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED)
             }
