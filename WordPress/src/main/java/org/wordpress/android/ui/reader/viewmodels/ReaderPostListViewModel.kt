@@ -80,9 +80,6 @@ class ReaderPostListViewModel @Inject constructor(
     private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
     val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
 
-    private val _setInitialBottomSheetHeight = MutableLiveData<Event<Boolean>>()
-    val setInitialBottomSheetHeight: LiveData<Event<Boolean>> = _setInitialBottomSheetHeight
-
     /**
      * First tag for which the card was shown.
      */
@@ -238,7 +235,6 @@ class ReaderPostListViewModel @Inject constructor(
                 UpdateTask.TAGS,
                 UpdateTask.FOLLOWED_BLOGS
         ))
-        _setInitialBottomSheetHeight.value = Event(true)
         _changeBottomSheetVisibility.value = Event(true)
     }
 

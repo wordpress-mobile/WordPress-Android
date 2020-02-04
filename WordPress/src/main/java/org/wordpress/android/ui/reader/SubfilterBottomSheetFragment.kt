@@ -76,12 +76,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
                 val behavior = BottomSheetBehavior.from(it)
                 val metrics = resources.displayMetrics
                 behavior.peekHeight = metrics.heightPixels / 2
-                viewModel.setInitialBottomSheetHeight.observe(this, Observer { event ->
-                    event.applyIfNotHandled {
-                        behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-                        dialog.setOnShowListener(null)
-                    }
-                })
             }
         }
     }
