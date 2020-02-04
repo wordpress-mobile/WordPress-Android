@@ -100,9 +100,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         if (mUseTabsForFiltering) {
             int position = mFilterCriteriaOptions.indexOf(filter);
-            if (position > -1 && position != mTabLayout.getSelectedTabPosition()) {
-                setSelectedTab(position);
-            }
+            setSelectedTab(position);
         } else {
             int position = mSpinnerAdapter.getIndexOfCriteria(filter);
             if (position > -1 && position != mSpinner.getSelectedItemPosition()) {
@@ -300,6 +298,8 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     private void initFilterAdapter() {
+        mSelectingRememberedFilterOnCreate = true;
+
         if (mUseTabsForFiltering) {
             int currentFilterPosition = mFilterCriteriaOptions.indexOf(getCurrentFilter());
 
@@ -322,13 +322,13 @@ public class FilteredRecyclerView extends RelativeLayout {
                 }
 
                 @Override public void onTabReselected(Tab tab) {
+                    mSelectingRememberedFilterOnCreate = false;
                 }
             });
         } else {
             mSpinnerAdapter = new SpinnerAdapter(getContext(),
                     mFilterCriteriaOptions, mSpinnerItemView, mSpinnerDropDownItemView);
 
-            mSelectingRememberedFilterOnCreate = true;
             mSpinner.setAdapter(mSpinnerAdapter);
             mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
