@@ -594,7 +594,7 @@ public class ReaderPostListFragment extends Fragment
             ReaderTag newTag = ReaderUtils.getTagFromTagName(tagName, ReaderTagType.FOLLOWED);
             setCurrentTag(newTag);
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-                mViewModel.onSetSubfilterFromTag(newTag);
+                mViewModel.setSubfilterFromTag(newTag);
             }
         } else if (!ReaderTagTable.tagExists(getCurrentTag())) {
             // current tag no longer exists, revert to default
@@ -608,7 +608,7 @@ public class ReaderPostListFragment extends Fragment
             setCurrentTag(tag);
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
                 if (tag.isFollowedSites()) {
-                    mViewModel.onSetDefaultSubfilter();
+                    mViewModel.setDefaultSubfilter();
                 }
             }
         } else {
@@ -647,7 +647,7 @@ public class ReaderPostListFragment extends Fragment
         if (isSiteStillAvailable) {
             refreshPosts();
         } else {
-            mViewModel.onSetDefaultSubfilter();
+            mViewModel.setDefaultSubfilter();
         }
     }
 
@@ -988,14 +988,14 @@ public class ReaderPostListFragment extends Fragment
 
             mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
             mSubFiltersListButton.setOnClickListener(v -> {
-                mViewModel.onChangeBottomSheetVisibility(true);
+                mViewModel.onSubFiltersListButtonClicked();
             });
 
             mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);
 
             mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
             mRemoveFilterButton.setOnClickListener(v -> {
-                mViewModel.onSetDefaultSubfilter();
+                mViewModel.setDefaultSubfilter();
             });
         }
 
@@ -1055,7 +1055,7 @@ public class ReaderPostListFragment extends Fragment
                 showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
                 mRecyclerView.setTabLayoutVisibility(false);
-                mViewModel.onChangeSubfiltersVisibility(false);
+                mViewModel.changeSubfiltersVisibility(false);
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
                     mViewModel.onSearchMenuCollapse(false);
                 }
@@ -1101,7 +1101,7 @@ public class ReaderPostListFragment extends Fragment
                     }
 
                     mRecyclerView.setTabLayoutVisibility(true);
-                    mViewModel.onChangeSubfiltersVisibility(
+                    mViewModel.changeSubfiltersVisibility(
                             ReaderUtils.isFollowing(mCurrentTag, mIsTopLevel, mRecyclerView)
                     );
                     mViewModel.onSearchMenuCollapse(true);
@@ -1721,7 +1721,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         setCurrentTag(tag, BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel);
-        mViewModel.onChangeSubfiltersVisibility(
+        mViewModel.changeSubfiltersVisibility(
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
                 && mIsTopLevel
                 && tag.isFollowedSites());
@@ -2049,7 +2049,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         getPostAdapter().setCurrentTag(mCurrentTag);
-        mViewModel.onChangeSubfiltersVisibility(
+        mViewModel.changeSubfiltersVisibility(
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && ReaderUtils.isFollowing(
                 mCurrentTag,
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,

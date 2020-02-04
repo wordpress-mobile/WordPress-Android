@@ -198,7 +198,7 @@ class ReaderPostListViewModel @Inject constructor(
         updateSubfilter(filter)
     }
 
-    fun onChangeSubfiltersVisibility(show: Boolean) = _shouldShowSubFilters.postValue(show)
+    fun changeSubfiltersVisibility(show: Boolean) = _shouldShowSubFilters.postValue(show)
 
     fun getCurrentSubfilterValue(): SubfilterListItem {
         return if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
@@ -216,7 +216,7 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
-    fun onSetSubfilterFromTag(tag: ReaderTag) {
+    fun setSubfilterFromTag(tag: ReaderTag) {
         updateSubfilter(
                 Tag(
                     onClickAction = ::onSubfilterClicked,
@@ -225,7 +225,7 @@ class ReaderPostListViewModel @Inject constructor(
                 ))
     }
 
-    fun onSetDefaultSubfilter() {
+    fun setDefaultSubfilter() {
         updateSubfilter(
                 SiteAll(
                         onClickAction = ::onSubfilterClicked,
@@ -233,15 +233,17 @@ class ReaderPostListViewModel @Inject constructor(
                 ))
     }
 
-    fun onChangeBottomSheetVisibility(show: Boolean) {
-        if (show) {
-            _updateTagsAndSites.value = Event(EnumSet.of(
-                    UpdateTask.TAGS,
-                    UpdateTask.FOLLOWED_BLOGS
-            ))
-            _setInitialBottomSheetHeight.value = Event(true)
-        }
-        _changeBottomSheetVisibility.value = Event(show)
+    fun onSubFiltersListButtonClicked() {
+        _updateTagsAndSites.value = Event(EnumSet.of(
+                UpdateTask.TAGS,
+                UpdateTask.FOLLOWED_BLOGS
+        ))
+        _setInitialBottomSheetHeight.value = Event(true)
+        _changeBottomSheetVisibility.value = Event(true)
+    }
+
+    fun onBottomSheetCancelled() {
+        _changeBottomSheetVisibility.value = Event(false)
     }
 
     fun onSubfilterChanged(

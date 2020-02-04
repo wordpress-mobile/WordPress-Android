@@ -93,6 +93,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)
-        viewModel.onChangeBottomSheetVisibility(false)
+        viewModel.onBottomSheetCancelled()
     }
 }
