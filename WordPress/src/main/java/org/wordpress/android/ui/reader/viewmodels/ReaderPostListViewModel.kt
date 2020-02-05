@@ -95,7 +95,9 @@ class ReaderPostListViewModel @Inject constructor(
             return
         }
 
-        eventBusWrapper.register(this)
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            eventBusWrapper.register(this)
+        }
 
         tag?.let {
             onTagChanged(tag)
@@ -332,7 +334,9 @@ class ReaderPostListViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        eventBusWrapper.unregister(this)
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            eventBusWrapper.unregister(this)
+        }
         newsManager.stop()
     }
 }
