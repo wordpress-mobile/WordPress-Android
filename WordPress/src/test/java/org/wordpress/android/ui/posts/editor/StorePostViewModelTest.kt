@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState.SAVED_LOCALLY
@@ -68,9 +69,10 @@ class StorePostViewModelTest : BaseUnitTest() {
         whenever(siteStore.getSiteByLocalId(localSiteId)).thenReturn(site)
         whenever(postRepository.updateAsync(any(), any())).then {
             val action: (PostModel) -> Boolean = it.arguments[0] as ((PostModel) -> Boolean)
-            val onSuccess: (PostImmutableModel) -> Unit = it.arguments[1] as ((PostImmutableModel) -> Unit)
+            val onCompleted: (PostImmutableModel, UpdatePostResult) -> Unit =
+                    it.arguments[1] as ((PostImmutableModel, UpdatePostResult) -> Unit)
             if (action(postModel)) {
-                onSuccess(postModel)
+                onCompleted(postModel, UpdatePostResult.Updated)
             }
             null
         }
@@ -104,7 +106,7 @@ class StorePostViewModelTest : BaseUnitTest() {
         viewModel.updatePostObjectWithUIAsync(
                 postRepository,
                 getUpdatedTitleAndContent = { PostFields(title, content) },
-                onSuccess = {
+                onCompleted = { _, _ ->
                     postUpdated = true
                 })
 
@@ -121,7 +123,7 @@ class StorePostViewModelTest : BaseUnitTest() {
         viewModel.updatePostObjectWithUIAsync(
                 postRepository,
                 getUpdatedTitleAndContent = { PostFields(title, content) },
-                onSuccess = {
+                onCompleted = { _, _ ->
                     postUpdated = true
                 })
 
@@ -141,7 +143,7 @@ class StorePostViewModelTest : BaseUnitTest() {
                             RuntimeException("Not found")
                     )
                 },
-                onSuccess = {
+                onCompleted = { _, _ ->
                     postUpdated = true
                 })
 
@@ -162,7 +164,7 @@ class StorePostViewModelTest : BaseUnitTest() {
                             content
                     )
                 },
-                onSuccess = {
+                onCompleted = { _, _ ->
                     postUpdated = true
                 })
 
@@ -185,7 +187,7 @@ class StorePostViewModelTest : BaseUnitTest() {
                             updatedContent
                     )
                 },
-                onSuccess = {
+                onCompleted = { _, _ ->
                     postUpdated = true
                 })
 
