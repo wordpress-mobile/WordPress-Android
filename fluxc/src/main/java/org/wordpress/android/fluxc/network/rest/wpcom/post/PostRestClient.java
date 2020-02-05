@@ -42,6 +42,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResp
 import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostStatusResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType;
@@ -100,6 +101,36 @@ public class PostRestClient extends BaseWPComRestClient {
                     }
                 }
         );
+        add(request);
+    }
+
+    public void fetchPostStatus(final PostModel post, final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("fields", "status");
+        final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                PostWPComRestResponse.class,
+                new Listener<PostWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PostWPComRestResponse response) {
+                        PostModel fetchedPost = postResponseToPostModel(response);
+                        FetchPostStatusResponsePayload payload = new FetchPostStatusResponsePayload(post, site);
+                        payload.remotePostStatus = fetchedPost.getStatus();
+
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(payload));
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        FetchPostStatusResponsePayload payload = new FetchPostStatusResponsePayload(post, site);
+                        payload.error = new PostError(error.apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(payload));
+                    }
+                }
+                                                                                                );
         add(request);
     }
 
