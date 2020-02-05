@@ -41,6 +41,7 @@ import org.wordpress.android.ui.posts.PostInfoType
 import org.wordpress.android.ui.posts.PostListRemotePreviewState
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -84,9 +85,10 @@ class PagesViewModel
     private val networkUtils: NetworkUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     private val previewStateHelper: PreviewStateHelper,
+    private val uploadStarter: UploadStarter,
+    private val pageListEventListenerFactory: PageListEventListener.Factory,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
-    private val pageListEventListenerFactory: PageListEventListener.Factory
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher), LifecycleOwner {
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
@@ -175,6 +177,7 @@ class PagesViewModel
             _site = site
 
             loadPagesAsync()
+            uploadStarter.queueUploadFromSite(site)
         }
 
         pageListEventListenerFactory.createAndStartListening(
@@ -468,6 +471,7 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
+        uploadStarter.queueUploadFromSite(site)
         launch {
             reloadPages(FETCHING)
         }
