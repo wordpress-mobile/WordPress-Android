@@ -204,7 +204,7 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `progressBarUiState`() {
+    fun `progressState is specific to each page`() {
         whenever(progressHelper.getProgressStateForPage(LocalId(0))).thenReturn(
                 Pair(
                         ProgressBarUiState.Indeterminate,
@@ -243,6 +243,56 @@ class PageListViewModelTest : BaseUnitTest() {
 
         assertThat((result[0].first[1] as PublishedPage).progressBarUiState).isEqualTo(ProgressBarUiState.Hidden)
         assertThat((result[0].first[1] as PublishedPage).showOverlay).isEqualTo(false)
+    }
+
+    @Test
+    fun `showOverlay is correctly propagated from PageItemUploadProgressHelper`() {
+        whenever(progressHelper.getProgressStateForPage(LocalId(0))).thenReturn(
+                Pair(
+                        ProgressBarUiState.Indeterminate,
+                        true
+                )
+        )
+
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+
+        viewModel.pages.observeForever { result.add(it) }
+
+        val firstPage = buildPageModel(0)
+
+        pages.value = listOf(firstPage)
+
+        assertThat((result[0].first[0] as PublishedPage).showOverlay).isEqualTo(true)
+    }
+
+    @Test
+    fun `ProgressBarUiState is correctly propagated from PageItemUploadProgressHelper`() {
+        whenever(progressHelper.getProgressStateForPage(LocalId(0))).thenReturn(
+                Pair(
+                        ProgressBarUiState.Indeterminate,
+                        true
+                )
+        )
+
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+
+        viewModel.pages.observeForever { result.add(it) }
+
+        val firstPage = buildPageModel(0)
+
+        pages.value = listOf(firstPage)
+
+        assertThat((result[0].first[0] as PublishedPage).progressBarUiState).isEqualTo(ProgressBarUiState.Indeterminate)
     }
 
     private fun buildPageModel(
