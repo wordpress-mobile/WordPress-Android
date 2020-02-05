@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">ImageEditor</string>
     <string name="preview">Preview</string>
+
+    <string name="loading_media">Loading media</string>
 </resources>
