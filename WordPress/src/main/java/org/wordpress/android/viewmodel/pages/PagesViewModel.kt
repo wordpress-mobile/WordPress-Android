@@ -230,6 +230,10 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
+    private fun invalidatePages() {
+        pageMap = pageMap
+    }
+
     fun onPageEditFinished() {
         launch {
             refreshPages() // show local changes immediately
@@ -709,7 +713,7 @@ class PagesViewModel
     private fun handleInvalidateUploadStatus(ids: List<LocalId>) {
         launch {
             _invalidateUploadStatus.postValue(ids)
-            refreshPages()
+            invalidatePages()
         }
     }
 

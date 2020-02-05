@@ -13,6 +13,7 @@ import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.UpdatePost
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
@@ -103,6 +104,7 @@ class PageListEventListener(
                                         " message: ${event.error.message}"
                         )
                     } else {
+                        handlePostUploadedWithoutError.invoke(RemoteId((event.causeOfChange as UpdatePost).remotePostId))
                         invalidateUploadStatus.invoke(
                                 listOf(LocalId((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId))
                         )
