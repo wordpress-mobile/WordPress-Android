@@ -254,7 +254,7 @@ class PageListViewModel @Inject constructor(
                     } else {
                         DEFAULT_INDENT
                     }
-                    val progressState = progressHelper.getProgressStateForPage(LocalId(it.pageId))
+                    val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId))
 
                     PublishedPage(
                             it.remoteId,
@@ -264,8 +264,8 @@ class PageListViewModel @Inject constructor(
                             pageItemIndent,
                             getFeaturedImageUrl(it.featuredImageId),
                             actionsEnabled,
-                            progressState.first,
-                            progressState.second
+                            progressBarUiState,
+                            showOverlay
                     )
                 }
     }
@@ -282,18 +282,19 @@ class PageListViewModel @Inject constructor(
                                 if (it.hasLocalChanges)
                                     labels.add(R.string.local_changes)
 
-                                val progressState = progressHelper.getProgressStateForPage(
+                                val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(
                                         LocalId(
                                                 it.pageId
                                         )
                                 )
 
+
                                 ScheduledPage(
                                         it.remoteId, it.title, it.date, labels,
                                         getFeaturedImageUrl(it.featuredImageId),
                                         actionsEnabled,
-                                        progressState.first,
-                                        progressState.second
+                                        progressBarUiState,
+                                        showOverlay
                                 )
                             }
                 }
@@ -311,7 +312,7 @@ class PageListViewModel @Inject constructor(
             if (it.hasLocalChanges)
                 labels.add(R.string.local_draft)
 
-            val progressState = progressHelper.getProgressStateForPage(LocalId(it.pageId))
+            val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId))
             DraftPage(
                     it.remoteId,
                     it.title,
@@ -319,8 +320,8 @@ class PageListViewModel @Inject constructor(
                     labels,
                     getFeaturedImageUrl(it.featuredImageId),
                     actionsEnabled,
-                    progressState.first,
-                    progressState.second
+                    progressBarUiState,
+                    showOverlay
             )
         }
     }
@@ -330,15 +331,15 @@ class PageListViewModel @Inject constructor(
         actionsEnabled: Boolean
     ): List<PageItem> {
         return pages.map {
-            val progressState = progressHelper.getProgressStateForPage(LocalId(it.pageId))
+            val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId))
             TrashedPage(
                     it.remoteId,
                     it.title,
                     it.date,
                     getFeaturedImageUrl(it.featuredImageId),
                     actionsEnabled,
-                    progressState.first,
-                    progressState.second
+                    progressBarUiState,
+                    showOverlay
             )
         }
     }
