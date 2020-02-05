@@ -1,6 +1,10 @@
 14.2
 -----
- 
+ * Block editor: New Group block for nesting blocks.
+
+14.2
+-----
+
 14.1
 -----
 * Fixes an issue where searching for posts sometimes doesn't show some results.
