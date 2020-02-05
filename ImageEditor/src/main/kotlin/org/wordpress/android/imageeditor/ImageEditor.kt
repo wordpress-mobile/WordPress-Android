@@ -2,7 +2,6 @@ package org.wordpress.android.imageeditor
 
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import java.util.concurrent.atomic.AtomicBoolean
 
 class ImageEditor private constructor(
     private val loadImageUrlIntoImageView: ((String, ImageView, ScaleType) -> Unit)
@@ -13,14 +12,11 @@ class ImageEditor private constructor(
 
     companion object {
         private lateinit var INSTANCE: ImageEditor
-        private val initialized = AtomicBoolean()
 
         val instance: ImageEditor get() = INSTANCE
 
         fun init(loadImageUrlIntoImageView: ((String, ImageView, ScaleType) -> Unit)) {
-            if (!initialized.getAndSet(true)) {
-                INSTANCE = ImageEditor(loadImageUrlIntoImageView)
-            }
+            INSTANCE = ImageEditor(loadImageUrlIntoImageView)
         }
     }
 }
