@@ -35,10 +35,10 @@ class PageItemDiffUtil(val items: List<PageItem>, val result: List<PageItem>) : 
              * We don't need to use the payload in onBindViewHolder unless we want to. Passing a non-null value
              * suppresses the default ItemAnimator, which is all we need in this case.
              */
-            if (oldItem.progressBarUiStateState is Determinate &&
-                    newItem.progressBarUiStateState is Determinate &&
-                    (oldItem.progressBarUiStateState as Determinate).progress !=
-                    (newItem.progressBarUiStateState as Determinate).progress) {
+            if (oldItem.progressBarUiState is Determinate &&
+                    newItem.progressBarUiState is Determinate &&
+                    (oldItem.progressBarUiState as Determinate).progress !=
+                    (newItem.progressBarUiState as Determinate).progress) {
                 return true
             }
         }

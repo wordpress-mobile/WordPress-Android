@@ -26,7 +26,7 @@ sealed class PageItem(open val type: Type) {
         open val actions: Set<Action>,
         open var actionsEnabled: Boolean,
         open val tapActionEnabled: Boolean,
-        open val progressBarUiStateState: ProgressBarUiState,
+        open val progressBarUiState: ProgressBarUiState,
         open val showOverlay: Boolean
     ) : PageItem(PAGE)
 
@@ -38,7 +38,7 @@ sealed class PageItem(open val type: Type) {
         override var indent: Int = 0,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarUiStateState: ProgressBarUiState,
+        override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean
     ) : Page(
             id = id,
@@ -50,7 +50,7 @@ sealed class PageItem(open val type: Type) {
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
             tapActionEnabled = true,
-            progressBarUiStateState = progressBarUiStateState,
+            progressBarUiState = progressBarUiState,
             showOverlay = showOverlay
     )
 
@@ -61,7 +61,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarUiStateState: ProgressBarUiState,
+        override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean
     ) : Page(
             id = id,
@@ -73,7 +73,7 @@ sealed class PageItem(open val type: Type) {
             actions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
             tapActionEnabled = true,
-            progressBarUiStateState = progressBarUiStateState,
+            progressBarUiState = progressBarUiState,
             showOverlay = showOverlay
     )
 
@@ -84,7 +84,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarUiStateState: ProgressBarUiState,
+        override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean
     ) : Page(
             id = id,
@@ -96,7 +96,7 @@ sealed class PageItem(open val type: Type) {
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
             tapActionEnabled = true,
-            progressBarUiStateState = progressBarUiStateState,
+            progressBarUiState = progressBarUiState,
             showOverlay = showOverlay
     )
 
@@ -106,7 +106,7 @@ sealed class PageItem(open val type: Type) {
         override val date: Date,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
-        override val progressBarUiStateState: ProgressBarUiState,
+        override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean
     ) : Page(
             id = id,
@@ -118,7 +118,7 @@ sealed class PageItem(open val type: Type) {
             actions = setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY),
             actionsEnabled = actionsEnabled,
             tapActionEnabled = false,
-            progressBarUiStateState = progressBarUiStateState,
+            progressBarUiState = progressBarUiState,
             showOverlay = showOverlay
     )
 

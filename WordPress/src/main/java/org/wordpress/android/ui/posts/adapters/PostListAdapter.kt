@@ -204,9 +204,9 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
              * We don't need to use the payload in onBindViewHolder unless we want to. Passing a non-null value
              * suppresses the default ItemAnimator, which is all we need in this case.
              */
-            if (oldItem.data.progressBarUiStateState is ProgressBarUiState.Determinate &&
-                    newItem.data.progressBarUiStateState is ProgressBarUiState.Determinate &&
-                    oldItem.data.progressBarUiStateState.progress != newItem.data.progressBarUiStateState.progress) {
+            if (oldItem.data.progressBarUiState is ProgressBarUiState.Determinate &&
+                    newItem.data.progressBarUiState is ProgressBarUiState.Determinate &&
+                    oldItem.data.progressBarUiState.progress != newItem.data.progressBarUiState.progress) {
                 return true
             }
         }

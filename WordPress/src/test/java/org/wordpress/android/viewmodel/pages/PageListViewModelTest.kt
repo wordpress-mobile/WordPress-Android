@@ -204,7 +204,7 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `checks if PageItems gets the correct progress state`() {
+    fun `progressBarUiState`() {
         whenever(progressHelper.getProgressStateForPage(LocalId(0))).thenReturn(
                 Pair(
                         ProgressBarUiState.Indeterminate,
@@ -236,12 +236,12 @@ class PageListViewModelTest : BaseUnitTest() {
         pageModels += firstPage
         pages.value = pageModels
 
-        assertThat((result[0].first[0] as PublishedPage).progressBarUiStateState).isEqualTo(
+        assertThat((result[0].first[0] as PublishedPage).progressBarUiState).isEqualTo(
                 ProgressBarUiState.Indeterminate
         )
         assertThat((result[0].first[0] as PublishedPage).showOverlay).isEqualTo(true)
 
-        assertThat((result[0].first[1] as PublishedPage).progressBarUiStateState).isEqualTo(ProgressBarUiState.Hidden)
+        assertThat((result[0].first[1] as PublishedPage).progressBarUiState).isEqualTo(ProgressBarUiState.Hidden)
         assertThat((result[0].first[1] as PublishedPage).showOverlay).isEqualTo(false)
     }
 

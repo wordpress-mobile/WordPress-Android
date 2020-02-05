@@ -123,7 +123,7 @@ sealed class PostListItemViewHolder(
         uiHelpers.updateVisibility(statusesTextView, data.statuses.isNotEmpty())
         updateStatusesLabel(statusesTextView, data.statuses, data.statusesDelimiter, data.statusesColor)
         showFeaturedImage(data.imageUrl)
-        updateProgressBarState(data.progressBarUiStateState)
+        updateProgressBarState(data.progressBarUiState)
         uiHelpers.updateVisibility(disabledOverlay, data.showOverlay)
         if (data.disableRippleEffect) {
             container.background = null
@@ -149,13 +149,13 @@ sealed class PostListItemViewHolder(
         menu.show()
     }
 
-    private fun updateProgressBarState(progressBarUiStateState: ProgressBarUiState) {
-        uiHelpers.updateVisibility(uploadProgressBar, progressBarUiStateState.visibility)
-        when (progressBarUiStateState) {
+    private fun updateProgressBarState(progressBarUiState: ProgressBarUiState) {
+        uiHelpers.updateVisibility(uploadProgressBar, progressBarUiState.visibility)
+        when (progressBarUiState) {
             Indeterminate -> uploadProgressBar.isIndeterminate = true
             is Determinate -> {
                 uploadProgressBar.isIndeterminate = false
-                uploadProgressBar.progress = progressBarUiStateState.progress
+                uploadProgressBar.progress = progressBarUiState.progress
             }
         }
     }

@@ -56,7 +56,7 @@ data class PostListItemUiStateData(
     @ColorRes val statusesColor: Int?,
     val statuses: List<UiString>,
     val statusesDelimiter: UiString,
-    val progressBarUiStateState: ProgressBarUiState,
+    val progressBarUiState: ProgressBarUiState,
     val showOverlay: Boolean,
     val disableRippleEffect: Boolean
 )

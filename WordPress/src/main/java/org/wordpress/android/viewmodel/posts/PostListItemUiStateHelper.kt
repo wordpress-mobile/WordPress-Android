@@ -137,7 +137,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 statuses = statuses,
                 statusesColor = statusesColor,
                 statusesDelimiter = statusesDelimeter,
-                progressBarUiStateState = getProgressBarState(
+                progressBarUiState = getProgressBarState(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
                 ),

@@ -97,17 +97,17 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 showFeaturedImage(page.imageUrl)
 
                 uiHelper.updateVisibility(disabledOverlay, page.showOverlay)
-                updateProgressBarState(page.progressBarUiStateState)
+                updateProgressBarState(page.progressBarUiState)
             }
         }
 
-        private fun updateProgressBarState(progressBarUiStateState: ProgressBarUiState) {
-            uiHelper.updateVisibility(uploadProgressBar, progressBarUiStateState.visibility)
-            when (progressBarUiStateState) {
+        private fun updateProgressBarState(progressBarUiState: ProgressBarUiState) {
+            uiHelper.updateVisibility(uploadProgressBar, progressBarUiState.visibility)
+            when (progressBarUiState) {
                 Indeterminate -> uploadProgressBar.isIndeterminate = true
                 is Determinate -> {
                     uploadProgressBar.isIndeterminate = false
-                    uploadProgressBar.progress = progressBarUiStateState.progress
+                    uploadProgressBar.progress = progressBarUiState.progress
                 }
             }
         }
