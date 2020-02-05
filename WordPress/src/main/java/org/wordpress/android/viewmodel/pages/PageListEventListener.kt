@@ -104,7 +104,9 @@ class PageListEventListener(
                                         " message: ${event.error.message}"
                         )
                     } else {
-                        handlePostUploadedWithoutError.invoke(RemoteId((event.causeOfChange as UpdatePost).remotePostId))
+                        handlePostUploadedWithoutError.invoke(
+                                RemoteId((event.causeOfChange as UpdatePost).remotePostId)
+                        )
                         invalidateUploadStatus.invoke(
                                 listOf(LocalId((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId))
                         )
