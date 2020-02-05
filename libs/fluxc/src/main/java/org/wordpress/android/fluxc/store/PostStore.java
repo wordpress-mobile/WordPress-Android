@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.model.list.ListOrder;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite;
+import org.wordpress.android.fluxc.model.list.PostListOrderBy;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.model.revisions.Diff;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
@@ -247,6 +248,17 @@ public class PostStore extends Store {
         public RemoteAutoSavePostPayload(int localPostId, @NonNull PostError error) {
             this.localPostId = localPostId;
             this.error = error;
+        }
+    }
+
+    public static class FetchPostStatusResponsePayload extends Payload<PostError> {
+        public PostModel post;
+        public SiteModel site;
+        public String remotePostStatus;
+
+        public FetchPostStatusResponsePayload(PostModel post, SiteModel site) {
+            this.post = post;
+            this.site = site;
         }
     }
 
@@ -599,6 +611,9 @@ public class PostStore extends Store {
             case FETCH_POST:
                 fetchPost((RemotePostPayload) action.getPayload());
                 break;
+            case FETCH_POST_STATUS:
+                fetchPostStatus((RemotePostPayload) action.getPayload());
+                break;
             case FETCHED_POST:
                 handleFetchSinglePostCompleted((FetchPostResponsePayload) action.getPayload());
                 break;
@@ -674,6 +689,23 @@ public class PostStore extends Store {
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.fetchPost(payload.post, payload.site);
+        }
+    }
+
+    private void fetchPostStatus(RemotePostPayload payload) {
+        if (payload.post.isLocalDraft()) {
+            // If the post is a local draft, it won't have a remote post status
+            FetchPostStatusResponsePayload responsePayload =
+                    new FetchPostStatusResponsePayload(payload.post, payload.site);
+            responsePayload.error = new PostError(PostErrorType.UNKNOWN_POST);
+            mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(responsePayload));
+            return;
+        }
+        if (payload.site.isUsingWpComRestApi()) {
+            mPostRestClient.fetchPostStatus(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.fetchPostStatus(payload.post, payload.site);
         }
     }
 
