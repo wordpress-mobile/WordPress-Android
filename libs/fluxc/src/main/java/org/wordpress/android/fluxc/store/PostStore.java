@@ -328,6 +328,17 @@ public class PostStore extends Store {
         }
     }
 
+    public static class OnPostStatusFetched extends OnChanged<PostError> {
+        public PostModel post;
+        public String remotePostStatus;
+
+        OnPostStatusFetched(PostModel post, String remotePostStatus, PostError error) {
+            this.post = post;
+            this.remotePostStatus = remotePostStatus;
+            this.error = error;
+        }
+    }
+
     public enum PostDeleteActionType {
         TRASH,
         DELETE
@@ -616,6 +627,9 @@ public class PostStore extends Store {
                 break;
             case FETCHED_POST:
                 handleFetchSinglePostCompleted((FetchPostResponsePayload) action.getPayload());
+                break;
+            case FETCHED_POST_STATUS:
+                handleFetchPostStatusCompleted((FetchPostStatusResponsePayload) action.getPayload());
                 break;
             case PUSH_POST:
                 pushPost((RemotePostPayload) action.getPayload());
@@ -925,6 +939,10 @@ public class PostStore extends Store {
         } else {
             updatePost(payload.post, false);
         }
+    }
+
+    private void handleFetchPostStatusCompleted(FetchPostStatusResponsePayload payload) {
+        emitChange(new OnPostStatusFetched(payload.post, payload.remotePostStatus, payload.error));
     }
 
     private void handlePushPostCompleted(RemotePostPayload payload) {
