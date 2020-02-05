@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-205"
+            versionName "alpha-206"
         }
-        versionCode 820
+        versionCode 823
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -84,9 +84,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "14.0"
+                versionName "14.1-rc-1"
             }
-            versionCode 821
+            versionCode 822
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
@@ -346,18 +346,18 @@ android.buildTypes.all { buildType ->
 }
 
 task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
-    repositoryOwner = "wordpress-mobile";
-    repositoryName = "WordPress-Android"
-    pullRequestId = System.properties['GITHUB_PULLREQUESTID']
-    username = System.properties['GITHUB_USERNAME']
-    password = System.properties['GITHUB_PASSWORD']
-    oAuth2Token = System.properties['GITHUB_OAUTH2TOKEN']
-    gitHubUrl = "https://api.github.com/"
-    createCommentWithAllSingleFileComments = false
-    createSingleFileComments = true
-    commentOnlyChangedContent = true
-    minSeverity = se.bjurr.violations.lib.model.SEVERITY.INFO //ERROR, INFO, WARN
-    commentTemplate = """
+   repositoryOwner = "wordpress-mobile";
+   repositoryName = "WordPress-Android"
+   pullRequestId = System.properties['GITHUB_PULLREQUESTID']
+   username = System.properties['GITHUB_USERNAME']
+   password = System.properties['GITHUB_PASSWORD']
+   oAuth2Token = System.properties['GITHUB_OAUTH2TOKEN']
+   gitHubUrl = "https://api.github.com/"
+   createCommentWithAllSingleFileComments = false
+   createSingleFileComments = true
+   commentOnlyChangedContent = true
+   minSeverity = se.bjurr.violations.lib.model.SEVERITY.INFO //ERROR, INFO, WARN
+   commentTemplate = """
 **Reporter**: {{violation.reporter}}{{#violation.rule}}\n
 **Rule**: {{violation.rule}}{{/violation.rule}}
 **Severity**: {{violation.severity}}
@@ -365,9 +365,9 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
 **Source**: {{violation.source}}{{/violation.source}}
 {{violation.message}}
 """
-    violations = [
-            ["CHECKSTYLE", ".", ".*/build/.*\\.xml\$", "Checkstyle"]
-    ]
+   violations = [
+    ["CHECKSTYLE", ".", ".*/build/.*\\.xml\$", "Checkstyle"]
+   ]
 }
 
 def checkGradlePropertiesFile() {
