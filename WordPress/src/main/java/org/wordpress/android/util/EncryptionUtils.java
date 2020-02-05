@@ -26,7 +26,7 @@ public class EncryptionUtils {
      * XCHACHA20 and the cryptographic message authentication code (MAC) POLY1305.
      * For more information about the encryption process you can find it here
      * https://libsodium.gitbook.io/doc/secret-key_cryptography/secretstream.
-     * @param publicKeyBase64 The public key encoded using Base64.
+     * @param publicKey       The public key used to encrypt the encryption key or shared key.
      * @param logMessages     The list of messages we want to encrypt.
      * @return a JSON String containing following structure:
      *
@@ -34,12 +34,12 @@ public class EncryptionUtils {
      * {
      * "keyedWith": "v1",
      * "encryptedKey": "<base_64_encrypted_key>",  // The encrypted AES key, base-64 encoded
-     * "header": "<base_64_encoded_header>",       // The xchacha20poly1305 stream header
+     * "header": "<base_64_encoded_header>",       // The xchacha20poly1305 stream header, base-64 encoded
      * "messages": [<base_64_encrypted_msgs>]      // the encrypted log messages, base-64 encoded
      * }
      * ```
      */
-    public static String generateJSONEncryptedLogs(final String publicKeyBase64,
+    public static String generateJSONEncryptedLogs(final byte[] publicKey,
                                                    final List<String> logMessages) throws JSONException {
         // Schema version
         JSONObject encryptionDataJson = new JSONObject();
@@ -47,7 +47,7 @@ public class EncryptionUtils {
 
         // Encryption key
         final byte[] secretKey = createEncryptionKey();
-        final byte[] encryptedSecretKey = encryptEncryptionKey(decodeFromBase64(publicKeyBase64), secretKey);
+        final byte[] encryptedSecretKey = encryptEncryptionKey(publicKey, secretKey);
         encryptionDataJson.put("encryptedKey", encodeToBase64(encryptedSecretKey));
 
         // Header
@@ -111,10 +111,6 @@ public class EncryptionUtils {
 
     private static String encodeToBase64(byte[] data) {
         return Base64.encodeToString(data, BASE64_FLAGS);
-    }
-
-    private static byte[] decodeFromBase64(String encodedData) {
-        return Base64.decode(encodedData, Base64.DEFAULT);
     }
 }
 

@@ -117,9 +117,7 @@ public class EncryptionUtilsTest {
 
     private JSONObject getEncryptionDataJson(final byte[] publicKey, final List<String> data) {
         try {
-            final String encryptionDataJsonString = EncryptionUtils.generateJSONEncryptedLogs(
-                    Base64.encodeToString(publicKey, Base64.DEFAULT),
-                    data);
+            final String encryptionDataJsonString = EncryptionUtils.generateJSONEncryptedLogs(publicKey, data);
 
             return new JSONObject(encryptionDataJsonString);
         } catch (JSONException e) {
