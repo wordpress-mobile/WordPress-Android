@@ -15,7 +15,7 @@ import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUp
 import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadWaitingForConnection
 import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadingMedia
 import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadingPost
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUploadStatus
 import javax.inject.Inject
 
@@ -37,7 +37,7 @@ class PageItemUploadProgressHelper @Inject constructor(
 
     fun getProgressStateForPage(
         pageId: LocalId
-    ): Pair<PostListItemProgressBar, ShouldShowOverlay> {
+    ): Pair<ProgressBarUiState, ShouldShowOverlay> {
         val post = postStore.getPostByLocalPostId(pageId.value)
         val uploadStatus = uploadStatusTracker.getUploadStatus(
                 post, site
@@ -53,15 +53,15 @@ class PageItemUploadProgressHelper @Inject constructor(
      */
     private fun getProgressBarState(
         uploadUiState: PostUploadUiState
-    ): PostListItemProgressBar {
+    ): ProgressBarUiState {
         return if (shouldShowProgress(uploadUiState)) {
             if (uploadUiState is UploadingMedia) {
-                PostListItemProgressBar.Determinate(uploadUiState.progress)
+                ProgressBarUiState.Determinate(uploadUiState.progress)
             } else {
-                PostListItemProgressBar.Indeterminate
+                ProgressBarUiState.Indeterminate
             }
         } else {
-            PostListItemProgressBar.Hidden
+            ProgressBarUiState.Hidden
         }
     }
 

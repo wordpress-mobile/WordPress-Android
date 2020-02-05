@@ -3,7 +3,7 @@ package org.wordpress.android.ui.pages
 import androidx.recyclerview.widget.DiffUtil.Callback
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar.Determinate
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Determinate
 
 class PageItemDiffUtil(val items: List<PageItem>, val result: List<PageItem>) : Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -35,10 +35,10 @@ class PageItemDiffUtil(val items: List<PageItem>, val result: List<PageItem>) : 
              * We don't need to use the payload in onBindViewHolder unless we want to. Passing a non-null value
              * suppresses the default ItemAnimator, which is all we need in this case.
              */
-            if (oldItem.progressBarState is Determinate &&
-                    newItem.progressBarState is Determinate &&
-                    (oldItem.progressBarState as Determinate).progress !=
-                    (newItem.progressBarState as Determinate).progress) {
+            if (oldItem.progressBarUiStateState is Determinate &&
+                    newItem.progressBarUiStateState is Determinate &&
+                    (oldItem.progressBarUiStateState as Determinate).progress !=
+                    (newItem.progressBarUiStateState as Determinate).progress) {
                 return true
             }
         }

@@ -31,9 +31,9 @@ import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar.Determinate
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar.Indeterminate
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Determinate
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
 import java.util.Date
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
@@ -97,17 +97,17 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 showFeaturedImage(page.imageUrl)
 
                 uiHelper.updateVisibility(disabledOverlay, page.showOverlay)
-                updateProgressBarState(page.progressBarState)
+                updateProgressBarState(page.progressBarUiStateState)
             }
         }
 
-        private fun updateProgressBarState(progressBarState: PostListItemProgressBar) {
-            uiHelper.updateVisibility(uploadProgressBar, progressBarState.visibility)
-            when (progressBarState) {
+        private fun updateProgressBarState(progressBarUiStateState: ProgressBarUiState) {
+            uiHelper.updateVisibility(uploadProgressBar, progressBarUiStateState.visibility)
+            when (progressBarUiStateState) {
                 Indeterminate -> uploadProgressBar.isIndeterminate = true
                 is Determinate -> {
                     uploadProgressBar.isIndeterminate = false
-                    uploadProgressBar.progress = progressBarState.progress
+                    uploadProgressBar.progress = progressBarUiStateState.progress
                 }
             }
         }

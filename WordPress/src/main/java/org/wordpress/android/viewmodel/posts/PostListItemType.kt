@@ -6,6 +6,7 @@ import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 
 sealed class PostListItemType {
@@ -55,7 +56,7 @@ data class PostListItemUiStateData(
     @ColorRes val statusesColor: Int?,
     val statuses: List<UiString>,
     val statusesDelimiter: UiString,
-    val progressBarState: PostListItemProgressBar,
+    val progressBarUiStateState: ProgressBarUiState,
     val showOverlay: Boolean,
     val disableRippleEffect: Boolean
 )

@@ -26,7 +26,7 @@ import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.SortedMap
 
@@ -51,7 +51,7 @@ class SearchListViewModelTest {
         viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE, progressHelper)
         searchPages = MutableLiveData()
 
-        whenever(progressHelper.getProgressStateForPage(any())).thenReturn(Pair(PostListItemProgressBar.Hidden, false))
+        whenever(progressHelper.getProgressStateForPage(any())).thenReturn(Pair(ProgressBarUiState.Hidden, false))
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         viewModel.start(pagesViewModel)
     }
@@ -124,7 +124,7 @@ class SearchListViewModelTest {
                 0,
                 null,
                 false,
-                PostListItemProgressBar.Hidden,
+                ProgressBarUiState.Hidden,
                 false
         )
         val action = VIEW_PAGE
@@ -137,7 +137,7 @@ class SearchListViewModelTest {
     @Test
     fun `passes page to page view model on item tapped`() {
         val clickedPage = PageItem.PublishedPage(
-                1, "title", Date(), listOf(), 0, null, false, PostListItemProgressBar.Hidden,
+                1, "title", Date(), listOf(), 0, null, false, ProgressBarUiState.Hidden,
                 false
         )
 

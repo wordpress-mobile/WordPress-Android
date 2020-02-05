@@ -98,7 +98,7 @@ class SearchListViewModel
                         title,
                         date,
                         actionsEnabled = areActionsEnabled,
-                        progressBarState = progressState.first,
+                        progressBarUiStateState = progressState.first,
                         showOverlay = progressState.second
                 )
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
@@ -106,7 +106,7 @@ class SearchListViewModel
                     title,
                     date,
                     actionsEnabled = areActionsEnabled,
-                    progressBarState = progressState.first,
+                    progressBarUiStateState = progressState.first,
                     showOverlay = progressState.second
             )
             PageStatus.TRASHED -> TrashedPage(
@@ -114,7 +114,7 @@ class SearchListViewModel
                     title,
                     date,
                     actionsEnabled = areActionsEnabled,
-                    progressBarState = progressState.first,
+                    progressBarUiStateState = progressState.first,
                     showOverlay = progressState.second
             )
             PageStatus.SCHEDULED -> ScheduledPage(
@@ -122,7 +122,7 @@ class SearchListViewModel
                     title,
                     date,
                     actionsEnabled = areActionsEnabled,
-                    progressBarState = progressState.first,
+                    progressBarUiStateState = progressState.first,
                     showOverlay = progressState.second
             )
         }

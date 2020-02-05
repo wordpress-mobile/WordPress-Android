@@ -21,7 +21,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.Locale
 
@@ -48,7 +48,7 @@ class PageListViewModelTest : BaseUnitTest() {
         )
 
         whenever(progressHelper.getProgressStateForPage(any())).thenReturn(Pair(
-                PostListItemProgressBar.Hidden, false))
+                ProgressBarUiState.Hidden, false))
 
         val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
 
@@ -207,14 +207,14 @@ class PageListViewModelTest : BaseUnitTest() {
     fun `checks if PageItems gets the correct progress state`() {
         whenever(progressHelper.getProgressStateForPage(LocalId(0))).thenReturn(
                 Pair(
-                        PostListItemProgressBar.Indeterminate,
+                        ProgressBarUiState.Indeterminate,
                         true
                 )
         )
 
         whenever(progressHelper.getProgressStateForPage(LocalId(1))).thenReturn(
                 Pair(
-                        PostListItemProgressBar.Hidden,
+                        ProgressBarUiState.Hidden,
                         false
                 )
         )
@@ -236,12 +236,12 @@ class PageListViewModelTest : BaseUnitTest() {
         pageModels += firstPage
         pages.value = pageModels
 
-        assertThat((result[0].first[0] as PublishedPage).progressBarState).isEqualTo(
-                PostListItemProgressBar.Indeterminate
+        assertThat((result[0].first[0] as PublishedPage).progressBarUiStateState).isEqualTo(
+                ProgressBarUiState.Indeterminate
         )
         assertThat((result[0].first[0] as PublishedPage).showOverlay).isEqualTo(true)
 
-        assertThat((result[0].first[1] as PublishedPage).progressBarState).isEqualTo(PostListItemProgressBar.Hidden)
+        assertThat((result[0].first[1] as PublishedPage).progressBarUiStateState).isEqualTo(ProgressBarUiState.Hidden)
         assertThat((result[0].first[1] as PublishedPage).showOverlay).isEqualTo(false)
     }
 
