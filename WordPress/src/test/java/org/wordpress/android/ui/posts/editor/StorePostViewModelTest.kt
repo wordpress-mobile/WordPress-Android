@@ -68,9 +68,8 @@ class StorePostViewModelTest : BaseUnitTest() {
         whenever(postRepository.id).thenReturn(postId)
         whenever(siteStore.getSiteByLocalId(localSiteId)).thenReturn(site)
         whenever(postRepository.updateAsync(any(), any())).then {
-            val action: (PostModel) -> Boolean = it.arguments[0] as ((PostModel) -> Boolean)
-            val onCompleted: (PostImmutableModel, UpdatePostResult) -> Unit =
-                    it.arguments[1] as ((PostImmutableModel, UpdatePostResult) -> Unit)
+            val action: (PostModel) -> Boolean = it.getArgument(0)
+            val onCompleted: (PostImmutableModel, UpdatePostResult) -> Unit = it.getArgument(1)
             if (action(postModel)) {
                 onCompleted(postModel, UpdatePostResult.Updated)
             }
