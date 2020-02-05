@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- left/right margin for preview image view -->
+    <dimen name="preview_image_view_margin">16dp</dimen>
+
+    <dimen name="preview_image_reduced_size_factor">0.1dp</dimen>
+</resources>

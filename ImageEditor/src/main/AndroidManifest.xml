@@ -4,6 +4,7 @@
     <application>
         <activity
             android:name=".EditImageActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/Base.ImageEditorTheme">
         </activity>
     </application>

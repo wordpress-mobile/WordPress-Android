@@ -76,6 +76,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.posts.editor.ImageEditorInitializer;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
@@ -100,6 +101,7 @@ import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.io.File;
@@ -153,6 +155,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject StatsStore mStatsStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject ReaderTracker mReaderTracker;
+    @Inject ImageManager mImageManager;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -319,6 +322,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
 
         mSystemNotificationsTracker.checkSystemNotificationsState();
+        ImageEditorInitializer.Companion.init(mImageManager);
     }
 
     protected void initWorkManager() {
