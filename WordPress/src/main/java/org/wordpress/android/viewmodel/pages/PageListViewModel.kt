@@ -287,8 +287,7 @@ class PageListViewModel @Inject constructor(
                                                 it.pageId
                                         )
                                 )
-
-
+                                
                                 ScheduledPage(
                                         it.remoteId, it.title, it.date, labels,
                                         getFeaturedImageUrl(it.featuredImageId),
