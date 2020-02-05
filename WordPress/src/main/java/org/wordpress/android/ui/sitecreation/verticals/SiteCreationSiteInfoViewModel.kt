@@ -1,14 +1,11 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
-import androidx.annotation.ColorRes
-import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.NEXT
@@ -94,21 +91,9 @@ class SiteCreationSiteInfoViewModel @Inject constructor(
         val siteTitle: String,
         val tagLine: String
     ) {
-        enum class SkipNextButtonState(
-            @StringRes val text: Int,
-            @ColorRes val textColor: Int,
-            @ColorRes val backgroundColor: Int
-        ) {
-            SKIP(
-                    text = R.string.new_site_creation_button_skip,
-                    textColor = R.color.neutral_80,
-                    backgroundColor = android.R.color.white
-            ),
-            NEXT(
-                    text = R.string.next,
-                    textColor = android.R.color.white,
-                    backgroundColor = R.color.accent
-            )
+        enum class SkipNextButtonState {
+            SKIP,
+            NEXT
         }
 
         val skipButtonState = if (siteTitle.isEmpty() && tagLine.isEmpty()) SKIP else NEXT
