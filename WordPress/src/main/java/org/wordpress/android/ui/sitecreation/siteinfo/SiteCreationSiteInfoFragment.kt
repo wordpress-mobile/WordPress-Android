@@ -1,17 +1,14 @@
 package org.wordpress.android.ui.sitecreation.siteinfo
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.appcompat.widget.AppCompatButton
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -24,6 +21,8 @@ import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.OnSkipClickedListener
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationSiteInfoViewModel
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.NEXT
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.SKIP
 import javax.inject.Inject
 
 class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
@@ -32,7 +31,8 @@ class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var viewModel: SiteCreationSiteInfoViewModel
 
-    private lateinit var skipNextButton: AppCompatButton
+    private lateinit var skipButton: View
+    private lateinit var nextButton: View
     private lateinit var siteTitleEditText: TextInputEditText
     private lateinit var tagLineEditText: TextInputEditText
     private lateinit var headerContainer: ViewGroup
@@ -79,8 +79,10 @@ class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun initSkipNextButton(rootView: ViewGroup) {
-        skipNextButton = rootView.findViewById(R.id.btn_skip)
-        skipNextButton.setOnClickListener { viewModel.onSkipNextClicked() }
+        skipButton = rootView.findViewById(R.id.btn_skip)
+        nextButton = rootView.findViewById(R.id.btn_next)
+        skipButton.setOnClickListener { viewModel.onSkipNextClicked() }
+        nextButton.setOnClickListener { viewModel.onSkipNextClicked() }
     }
 
     private fun initTaglineEditText(rootView: ViewGroup) {
@@ -93,15 +95,24 @@ class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun initHeaderTitleAndSubtitleText(rootView: ViewGroup) {
-        rootView.findViewById<TextView>(R.id.title).setText(R.string.new_site_creation_site_info_header_title)
-        rootView.findViewById<TextView>(R.id.subtitle).setText(R.string.new_site_creation_site_info_header_subtitle)
+        rootView.findViewById<TextView>(R.id.title)
+                .setText(R.string.new_site_creation_site_info_header_title)
+        rootView.findViewById<TextView>(R.id.subtitle)
+                .setText(R.string.new_site_creation_site_info_header_subtitle)
     }
 
     private fun initTextWatchers() {
         val addTextWatcher = { editText: TextInputEditText, onTextChanged: (String) -> Unit ->
             editText.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {}
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     onTextChanged(s?.toString() ?: "")
                 }
@@ -125,18 +136,12 @@ class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
                 updateEditTextIfDifferent(siteTitleEditText, state.siteTitle)
                 updateEditTextIfDifferent(tagLineEditText, state.tagLine)
                 state.skipButtonState.let { buttonState ->
-                    skipNextButton.apply {
-                        setText(buttonState.text)
-                        setTextColor(ContextCompat.getColor(nonNullActivity, buttonState.textColor))
-                        ViewCompat.setBackgroundTintList(
-                                this,
-                                ColorStateList.valueOf(
-                                        ContextCompat.getColor(
-                                                nonNullActivity,
-                                                buttonState.backgroundColor
-                                        )
-                                )
-                        )
+                    if (buttonState == SKIP) {
+                        nextButton.visibility = View.GONE
+                        skipButton.visibility = View.VISIBLE
+                    } else if (buttonState == NEXT) {
+                        nextButton.visibility = View.VISIBLE
+                        skipButton.visibility = View.GONE
                     }
                 }
             }
