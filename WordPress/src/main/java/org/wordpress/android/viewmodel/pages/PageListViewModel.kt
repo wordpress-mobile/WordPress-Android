@@ -87,7 +87,6 @@ class PageListViewModel @Inject constructor(
                 }
             }
         }
-
         val title: Int
             get() = when (this) {
                 PUBLISHED -> R.string.pages_published
@@ -231,10 +230,7 @@ class PageListViewModel @Inject constructor(
         return null
     }
 
-    private fun preparePublishedPages(
-        pages: List<PageModel>,
-        actionsEnabled: Boolean
-    ): List<PageItem> {
+    private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         val shouldSortTopologically = pages.size < MAX_TOPOLOGICAL_PAGE_COUNT
         val sortedPages = if (shouldSortTopologically) {
             topologicalSort(pages, listType = PUBLISHED)
@@ -257,11 +253,7 @@ class PageListViewModel @Inject constructor(
                     val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId))
 
                     PublishedPage(
-                            it.remoteId,
-                            it.title,
-                            it.date,
-                            labels,
-                            pageItemIndent,
+                            it.remoteId, it.title, it.date, labels, pageItemIndent,
                             getFeaturedImageUrl(it.featuredImageId),
                             actionsEnabled,
                             progressBarUiState,
