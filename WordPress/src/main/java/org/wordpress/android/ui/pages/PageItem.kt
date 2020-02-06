@@ -129,6 +129,7 @@ sealed class PageItem(open val type: Type) {
 
     enum class Action(@IdRes val itemId: Int) {
         VIEW_PAGE(R.id.view_page),
+        CANCEL_AUTO_UPLOAD(R.id.cancel_auto_upload),
         SET_PARENT(R.id.set_parent),
         PUBLISH_NOW(R.id.publish_now),
         MOVE_TO_DRAFT(R.id.move_to_draft),
