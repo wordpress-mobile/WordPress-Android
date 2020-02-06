@@ -232,8 +232,12 @@ class PageListViewModelTest : BaseUnitTest() {
         val expectedProgressBarUiState = ProgressBarUiState.Indeterminate
         val pages = MutableLiveData<List<PageModel>>()
 
-        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).
-                thenReturn(Pair(expectedProgressBarUiState, true))
+        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
+                Pair(
+                        expectedProgressBarUiState,
+                        true
+                )
+        )
         whenever(pagesViewModel.pages).thenReturn(pages)
 
         viewModel.start(PUBLISHED, pagesViewModel)

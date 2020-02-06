@@ -51,7 +51,12 @@ class SearchListViewModelTest {
         viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE, progressHelper)
         searchPages = MutableLiveData()
 
-        whenever(progressHelper.getProgressStateForPage(any(), any())).thenReturn(Pair(ProgressBarUiState.Hidden, false))
+        whenever(progressHelper.getProgressStateForPage(any(), any())).thenReturn(
+                Pair(
+                        ProgressBarUiState.Hidden,
+                        false
+                )
+        )
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         whenever(pagesViewModel.site).thenReturn(site)
         viewModel.start(pagesViewModel)
