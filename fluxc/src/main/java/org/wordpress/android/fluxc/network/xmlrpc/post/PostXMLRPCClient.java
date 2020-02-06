@@ -139,19 +139,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    private PostError createPostErrorFromBaseNetworkError(@NonNull BaseNetworkError error) {
-        // Possible non-generic errors:
-        // 404 - "Invalid post ID."
-        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
-        // Convert GenericErrorType to PostErrorType where applicable
-        switch (error.type) {
-            case AUTHORIZATION_REQUIRED:
-                return new PostError(PostErrorType.UNAUTHORIZED, error.message);
-            default:
-                return new PostError(PostErrorType.GENERIC_ERROR, error.message);
-        }
-    }
-
     public void fetchPostList(final PostListDescriptorForXmlRpcSite listDescriptor, final long offset) {
         SiteModel site = listDescriptor.getSite();
         List<String> fields = Arrays.asList("post_id", "post_modified_gmt", "post_date_gmt", "post_status");
@@ -179,14 +166,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        PostError postError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
-                        }
+                        PostError postError = createPostErrorFromBaseNetworkError(error);
                         FetchPostListResponsePayload responsePayload =
                                 new FetchPostListResponsePayload(listDescriptor, Collections.<PostListItem>emptyList(),
                                         loadedMore, false, postError);
@@ -228,18 +208,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // Possible non-generic errors:
-                        // 403 - "The post type specified is not valid"
-                        // TODO: Check the error message and flag this as INVALID_POST_TYPE if applicable
-                        // Convert GenericErrorType to PostErrorType where applicable
-                        PostError postError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
-                        }
+                        PostError postError = createPostErrorFromBaseNetworkError(error);
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError, getPages);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
@@ -296,24 +265,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // Possible non-generic errors:
-                        // 403 - "Invalid post type"
-                        // 403 - "Invalid term ID" (invalid category or tag id)
-                        // 404 - "Invalid post ID." (editing only)
-                        // 404 - "Invalid attachment ID." (invalid featured image)
                         RemotePostPayload payload = new RemotePostPayload(post, site);
-                        // TODO: Check the error message and flag this as one of the above specific errors if applicable
-                        // Convert GenericErrorType to PostErrorType where applicable
-                        PostError postError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
-                        }
-                        payload.error = postError;
-
+                        payload.error = createPostErrorFromBaseNetworkError(error);
                         Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload)
                                 : UploadActionBuilder.newPushedPostAction(payload);
                         mDispatcher.dispatch(resultAction);
@@ -345,18 +298,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // Possible non-generic errors:
-                        // 404 - "Invalid post ID."
-                        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
-                        // Convert GenericErrorType to PostErrorType where applicable
-                        PostError deletePostError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                deletePostError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                deletePostError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
-                        }
+                        PostError deletePostError = createPostErrorFromBaseNetworkError(error);
                         DeletedPostPayload payload =
                                 new DeletedPostPayload(post, site, postDeleteActionType, deletePostError);
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
@@ -693,5 +635,21 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getPassword());
         params.add(post.getRemotePostId());
         return params;
+    }
+
+    private PostError createPostErrorFromBaseNetworkError(@NonNull BaseNetworkError error) {
+        // Possible non-generic errors:
+        // 403 - "Invalid post type"
+        // 403 - "Invalid term ID" (invalid category or tag id)
+        // 404 - "Invalid post ID." (editing only)
+        // 404 - "Invalid attachment ID." (invalid featured image)
+        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
+        // Convert GenericErrorType to PostErrorType where applicable
+        switch (error.type) {
+            case AUTHORIZATION_REQUIRED:
+                return new PostError(PostErrorType.UNAUTHORIZED, error.message);
+            default:
+                return new PostError(PostErrorType.GENERIC_ERROR, error.message);
+        }
     }
 }
