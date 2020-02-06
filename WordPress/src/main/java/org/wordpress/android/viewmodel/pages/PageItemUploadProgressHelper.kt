@@ -30,13 +30,17 @@ class PageItemUploadProgressHelper @Inject constructor(
         pageId: LocalId, site : SiteModel
     ): Pair<ProgressBarUiState, ShouldShowOverlay> {
         val post = postStore.getPostByLocalPostId(pageId.value)
-        val uploadStatus = uploadStatusTracker.getUploadStatus(
-                post, site
-        )
-        val uploadUiState = createUploadUiState(uploadStatus, post)
 
-        val shouldShowOverlay = shouldShowOverlay(uploadUiState)
-        return Pair(getProgressBarState(uploadUiState), shouldShowOverlay)
+        post?.let {
+            val uploadStatus = uploadStatusTracker.getUploadStatus(
+                    post, site
+            )
+            val uploadUiState = createUploadUiState(uploadStatus, post)
+
+            val shouldShowOverlay = shouldShowOverlay(uploadUiState)
+            return Pair(getProgressBarState(uploadUiState), shouldShowOverlay)
+        }
+        return Pair(ProgressBarUiState.Hidden, false)
     }
 
     /**
