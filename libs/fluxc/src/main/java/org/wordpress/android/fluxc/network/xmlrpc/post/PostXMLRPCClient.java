@@ -115,25 +115,25 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void fetchPostStatus(final PostModel post, final SiteModel site) {
+        final String postStatusField = "post_status";
         List<Object> params = fetchPostParams(post, site);
-        params.add("post_status");
+        params.add(postStatusField);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POST, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
+                        String remotePostStatus = null;
                         if (response instanceof Map) {
-                            PostModel postModel = postResponseObjectToPostModel((Map) response, site);
-                            FetchPostStatusResponsePayload payload;
-                            if (postModel != null) {
-                                payload = new FetchPostStatusResponsePayload(postModel, site);
-                            } else {
-                                payload = new FetchPostStatusResponsePayload(post, site);
-                                payload.error = new PostError(PostErrorType.INVALID_RESPONSE);
-                            }
-
-                            mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(payload));
+                            remotePostStatus = MapUtils.getMapStr((Map) response, postStatusField);
                         }
+                        FetchPostStatusResponsePayload payload = new FetchPostStatusResponsePayload(post, site);
+                        if (remotePostStatus != null) {
+                            payload.remotePostStatus = remotePostStatus;
+                        } else {
+                            payload.error = new PostError(PostErrorType.INVALID_RESPONSE);
+                        }
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(payload));
                     }
                 }, new BaseErrorListener() {
             @Override
