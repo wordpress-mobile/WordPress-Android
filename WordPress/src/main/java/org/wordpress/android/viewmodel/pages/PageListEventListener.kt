@@ -90,6 +90,7 @@ class PageListEventListener(
                         )
                     }
 
+                    uploadStatusChanged(LocalId((event.causeOfChange as RemoteAutoSavePost).localPostId))
                     handleRemoteAutoSave.invoke(
                             LocalId((event.causeOfChange as RemoteAutoSavePost).localPostId),
                             event.isError
