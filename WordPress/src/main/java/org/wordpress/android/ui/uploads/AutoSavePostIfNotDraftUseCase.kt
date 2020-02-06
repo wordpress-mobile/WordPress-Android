@@ -40,18 +40,28 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore
 ) {
-    // TODO: Make it reusable
-    private var postStatusPair: Pair<LocalId, Continuation<String>>? = null
-    private var autoSavePair: Pair<LocalId, Continuation<PostModel>>? = null
+    private val postStatusContinuations = HashMap<LocalId, Continuation<String>>()
+    private val autoSaveContinuations = HashMap<LocalId, Continuation<PostModel>>()
+
+    init {
+        dispatcher.register(this)
+    }
 
     fun autoSavePostOrUpdateDraft(
         remotePostPayload: RemotePostPayload,
         callback: OnAutoSavePostIfNotDraftCallback
     ) {
+        val localPostId = LocalId(remotePostPayload.post.id)
+        if (postStatusContinuations.containsKey(localPostId) ||
+                autoSaveContinuations.containsKey(localPostId)) {
+            // TODO: Consider canceling the previous job instead
+            // We are already handling this post
+            return
+        }
         // TODO: What scope should we use for this?
         GlobalScope.launch {
             val remotePostStatus: String = suspendCancellableCoroutine { cont ->
-                postStatusPair = Pair(LocalId(remotePostPayload.post.id), cont)
+                postStatusContinuations[localPostId] = cont
                 dispatcher.dispatch(PostActionBuilder.newFetchPostStatusAction(remotePostPayload))
             }
 
@@ -59,8 +69,12 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
                 callback.handleAutoSavePostIfNotDraftResult(PostIsDraftInRemote(remotePostPayload.post))
             } else {
                 val updatedPost: PostModel = suspendCancellableCoroutine { cont ->
-                    autoSavePair = Pair(LocalId(remotePostPayload.post.id), cont)
-                    dispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(remotePostPayload))
+                    autoSaveContinuations[localPostId] = cont
+                    dispatcher.dispatch(
+                            PostActionBuilder.newRemoteAutoSavePostAction(
+                                    remotePostPayload
+                            )
+                    )
                 }
                 callback.handleAutoSavePostIfNotDraftResult(PostAutoSaved(updatedPost))
             }
@@ -68,29 +82,26 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
     }
 
     // TODO: Handle errors
-    // TODO: Do we need to observe the event in `MAIN` thread? (Probably not)
     @Subscribe(threadMode = BACKGROUND)
     @Suppress("unused")
     fun onPostStatusFetched(event: OnPostStatusFetched) {
-        postStatusPair?.let {
-            if (event.post.id == it.first.value) {
-                it.second.resume(event.remotePostStatus)
-                postStatusPair = null
-            }
+        val localPostId = LocalId(event.post.id)
+        postStatusContinuations[localPostId]?.let { continuation ->
+            continuation.resume(event.remotePostStatus)
+            postStatusContinuations.remove(localPostId)
         }
     }
 
     // TODO: Handle errors
-    // TODO: Do we need to observe the event in `MAIN` thread? (Probably not)
     @Subscribe(threadMode = BACKGROUND)
     @Suppress("unused")
     fun onPostChanged(event: OnPostChanged) {
-        autoSavePair?.let {
-            if (event.causeOfChange is RemoteAutoSavePost) {
-                val postLocalId = (event.causeOfChange as RemoteAutoSavePost).localPostId
-                val post: PostModel = postStore.getPostByLocalPostId(postLocalId)
-                it.second.resume(post)
-                autoSavePair = null
+        if (event.causeOfChange is RemoteAutoSavePost) {
+            val localPostId = LocalId((event.causeOfChange as RemoteAutoSavePost).localPostId)
+            autoSaveContinuations[localPostId]?.let { continuation ->
+                val post: PostModel = postStore.getPostByLocalPostId(localPostId.value)
+                continuation.resume(post)
+                autoSaveContinuations.remove(localPostId)
             }
         }
     }
