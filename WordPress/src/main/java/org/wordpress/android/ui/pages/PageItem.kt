@@ -22,7 +22,7 @@ sealed class PageItem(open val type: Type) {
         open val labels: List<Int>,
         open var indent: Int,
         open var imageUrl: String?,
-        open val actions: Set<Action>,
+        open var actions: Set<Action>,
         open var actionsEnabled: Boolean,
         open val tapActionEnabled: Boolean
     ) : PageItem(PAGE)
