@@ -127,7 +127,7 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
-        if (event.post != null && event.post.localSiteId == site.id) {
+        if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
             if (!event.isError) {
                 handlePostUploadedWithoutError.invoke(RemoteId(event.post.remotePostId))
@@ -154,11 +154,7 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
-        if (!event.post.isPage) {
-            return
-        }
-
-        if (site.id == event.post.localSiteId) {
+        if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
 
             handlePostUploadedStarted(RemoteId(event.post.remotePostId))
@@ -171,7 +167,7 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: PostEvents.PostUploadCanceled) {
-        if (site.id == event.post.localSiteId) {
+        if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
         }
     }
@@ -179,7 +175,9 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
-        uploadStatusChanged(LocalId(event.media.localPostId))
+        if (event.media != null && site.id == event.media.localSiteId) {
+            uploadStatusChanged(LocalId(event.media.localPostId))
+        }
     }
 
     @Suppress("unused")
