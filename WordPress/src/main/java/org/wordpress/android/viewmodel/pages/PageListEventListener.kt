@@ -119,8 +119,7 @@ class PageListEventListener(
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             if (!event.isError) {
                 handlePostUploadedWithoutError.invoke(RemoteId(event.post.remotePostId))
-            }
-            else{
+            } else {
                 uploadStatusChanged(LocalId(event.post.id))
             }
         }
@@ -196,7 +195,7 @@ class PageListEventListener(
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
             handlePostUploadedStarted: (RemoteId, LocalId) -> Unit
-        ):PageListEventListener {
+        ): PageListEventListener {
             return PageListEventListener(
                     dispatcher = dispatcher,
                     bgDispatcher = bgDispatcher,

@@ -27,7 +27,7 @@ class PageItemUploadProgressHelper @Inject constructor(
     val uploadStatusTracker: PostModelUploadStatusTracker
 ) {
     fun getProgressStateForPage(
-        pageId: LocalId, site : SiteModel
+        pageId: LocalId, site: SiteModel
     ): Pair<ProgressBarUiState, ShouldShowOverlay> {
         val post = postStore.getPostByLocalPostId(pageId.value)
 
