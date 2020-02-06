@@ -47,7 +47,7 @@ class PageListViewModelTest : BaseUnitTest() {
                 progressHelper
         )
 
-        whenever(progressHelper.getProgressStateForPage(any())).thenReturn(Pair(
+        whenever(progressHelper.getProgressStateForPage(any(), any())).thenReturn(Pair(
                 ProgressBarUiState.Hidden, false))
 
         val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
@@ -205,14 +205,14 @@ class PageListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `progressState is specific to each page`() {
-        whenever(progressHelper.getProgressStateForPage(LocalId(0))).thenReturn(
+        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
                 Pair(
                         ProgressBarUiState.Indeterminate,
                         true
                 )
         )
 
-        whenever(progressHelper.getProgressStateForPage(LocalId(1))).thenReturn(
+        whenever(progressHelper.getProgressStateForPage(LocalId(1), site)).thenReturn(
                 Pair(
                         ProgressBarUiState.Hidden,
                         false
@@ -247,7 +247,7 @@ class PageListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `showOverlay is correctly propagated from PageItemUploadProgressHelper`() {
-        whenever(progressHelper.getProgressStateForPage(LocalId(0))).thenReturn(
+        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
                 Pair(
                         ProgressBarUiState.Indeterminate,
                         true
@@ -272,7 +272,7 @@ class PageListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `ProgressBarUiState is correctly propagated from PageItemUploadProgressHelper`() {
-        whenever(progressHelper.getProgressStateForPage(LocalId(0))).thenReturn(
+        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
                 Pair(
                         ProgressBarUiState.Indeterminate,
                         true

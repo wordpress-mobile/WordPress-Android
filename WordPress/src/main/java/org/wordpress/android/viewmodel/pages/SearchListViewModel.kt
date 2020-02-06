@@ -45,7 +45,6 @@ class SearchListViewModel
             isStarted = true
 
             pagesViewModel.searchPages.observeForever(searchObserver)
-            progressHelper.attachSite(site = pagesViewModel.site)
         }
     }
 
@@ -89,7 +88,7 @@ class SearchListViewModel
     }
 
     private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
-        val progressState = progressHelper.getProgressStateForPage(LocalId(pageId))
+        val progressState = progressHelper.getProgressStateForPage(LocalId(pageId), pagesViewModel.site)
 
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->

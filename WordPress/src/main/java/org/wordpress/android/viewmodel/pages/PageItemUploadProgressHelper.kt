@@ -26,17 +26,8 @@ class PageItemUploadProgressHelper @Inject constructor(
     private val postStore: PostStore,
     val uploadStatusTracker: PostModelUploadStatusTracker
 ) {
-    private lateinit var site: SiteModel
-
-    /**
-     * This was done so that this class could be injectable for testing, as this dependency wouldn't be provided by DI
-     */
-    fun attachSite(site: SiteModel) {
-        this.site = site
-    }
-
     fun getProgressStateForPage(
-        pageId: LocalId
+        pageId: LocalId, site : SiteModel
     ): Pair<ProgressBarUiState, ShouldShowOverlay> {
         val post = postStore.getPostByLocalPostId(pageId.value)
         val uploadStatus = uploadStatusTracker.getUploadStatus(

@@ -107,8 +107,6 @@ class PageListViewModel @Inject constructor(
         this.listType = listType
         this.pagesViewModel = pagesViewModel
 
-        progressHelper.attachSite(site = pagesViewModel.site)
-
         if (!isStarted) {
             isStarted = true
 
@@ -250,7 +248,8 @@ class PageListViewModel @Inject constructor(
                     } else {
                         DEFAULT_INDENT
                     }
-                    val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId))
+                    val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId),
+                            pagesViewModel.site)
 
                     PublishedPage(
                             it.remoteId, it.title, it.date, labels, pageItemIndent,
@@ -275,10 +274,8 @@ class PageListViewModel @Inject constructor(
                                     labels.add(R.string.local_changes)
 
                                 val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(
-                                        LocalId(
-                                                it.pageId
-                                        )
-                                )
+                                        LocalId(it.pageId),
+                                        pagesViewModel.site)
 
                                 ScheduledPage(
                                         it.remoteId, it.title, it.date, labels,
@@ -303,7 +300,8 @@ class PageListViewModel @Inject constructor(
             if (it.hasLocalChanges)
                 labels.add(R.string.local_draft)
 
-            val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId))
+            val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId),
+                    pagesViewModel.site)
             DraftPage(
                     it.remoteId,
                     it.title,
@@ -322,7 +320,8 @@ class PageListViewModel @Inject constructor(
         actionsEnabled: Boolean
     ): List<PageItem> {
         return pages.map {
-            val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId))
+            val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId),
+                    pagesViewModel.site)
             TrashedPage(
                     it.remoteId,
                     it.title,
