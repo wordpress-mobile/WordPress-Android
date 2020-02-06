@@ -122,7 +122,6 @@ public class PostRestClient extends BaseWPComRestClient {
                 new WPComErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
                         FetchPostStatusResponsePayload payload = new FetchPostStatusResponsePayload(post, site);
                         payload.error = new PostError(error.apiError, error.message);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(payload));
