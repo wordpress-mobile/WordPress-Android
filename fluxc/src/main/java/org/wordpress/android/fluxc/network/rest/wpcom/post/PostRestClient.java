@@ -114,9 +114,8 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<PostWPComRestResponse>() {
                     @Override
                     public void onResponse(PostWPComRestResponse response) {
-                        PostModel fetchedPost = postResponseToPostModel(response);
                         FetchPostStatusResponsePayload payload = new FetchPostStatusResponsePayload(post, site);
-                        payload.remotePostStatus = fetchedPost.getStatus();
+                        payload.remotePostStatus = response.getStatus();
 
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(payload));
                     }
