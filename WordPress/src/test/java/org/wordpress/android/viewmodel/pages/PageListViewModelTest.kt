@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.pages
 
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -17,6 +18,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
+import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
@@ -204,7 +206,51 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `showOverlay is correctly propagated from PageItemUploadProgressHelper`() {
+        // Arrange
+        val expectedShowOverlay = true
+        val pages = MutableLiveData<List<PageModel>>()
+
+        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(Pair(mock(),
+                expectedShowOverlay))
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        viewModel.pages.observeForever { result.add(it) }
+
+        // Act
+        pages.value = listOf(buildPageModel(0))
+
+        // Assert
+        assertThat((result[0].first[0] as Page).showOverlay).isEqualTo(expectedShowOverlay)
+    }
+
+    @Test
+    fun `ProgressBarUiState is correctly propagated from PageItemUploadProgressHelper`() {
+        // Arrange
+        val expectedProgressBarUiState = ProgressBarUiState.Indeterminate
+        val pages = MutableLiveData<List<PageModel>>()
+
+        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).
+                thenReturn(Pair(expectedProgressBarUiState, true))
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        viewModel.pages.observeForever { result.add(it) }
+
+        // Act
+        pages.value = listOf(buildPageModel(0))
+
+        // Assert
+        assertThat((result[0].first[0] as PublishedPage).progressBarUiState).isEqualTo(expectedProgressBarUiState)
+    }
+
+    @Test
     fun `progressState is specific to each page`() {
+        // Arrange
+        val pages = MutableLiveData<List<PageModel>>()
         whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
                 Pair(
                         ProgressBarUiState.Indeterminate,
@@ -219,7 +265,6 @@ class PageListViewModelTest : BaseUnitTest() {
                 )
         )
 
-        val pages = MutableLiveData<List<PageModel>>()
         whenever(pagesViewModel.pages).thenReturn(pages)
 
         viewModel.start(PUBLISHED, pagesViewModel)
@@ -231,11 +276,13 @@ class PageListViewModelTest : BaseUnitTest() {
         val firstPage = buildPageModel(0)
         val secondPage = buildPageModel(1)
 
+        // Act
         val pageModels = mutableListOf<PageModel>()
         pageModels += secondPage
         pageModels += firstPage
         pages.value = pageModels
 
+        // Assert
         assertThat((result[0].first[0] as PublishedPage).progressBarUiState).isEqualTo(
                 ProgressBarUiState.Indeterminate
         )
@@ -243,56 +290,6 @@ class PageListViewModelTest : BaseUnitTest() {
 
         assertThat((result[0].first[1] as PublishedPage).progressBarUiState).isEqualTo(ProgressBarUiState.Hidden)
         assertThat((result[0].first[1] as PublishedPage).showOverlay).isEqualTo(false)
-    }
-
-    @Test
-    fun `showOverlay is correctly propagated from PageItemUploadProgressHelper`() {
-        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
-                Pair(
-                        ProgressBarUiState.Indeterminate,
-                        true
-                )
-        )
-
-        val pages = MutableLiveData<List<PageModel>>()
-        whenever(pagesViewModel.pages).thenReturn(pages)
-
-        viewModel.start(PUBLISHED, pagesViewModel)
-
-        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
-
-        viewModel.pages.observeForever { result.add(it) }
-
-        val firstPage = buildPageModel(0)
-
-        pages.value = listOf(firstPage)
-
-        assertThat((result[0].first[0] as PublishedPage).showOverlay).isEqualTo(true)
-    }
-
-    @Test
-    fun `ProgressBarUiState is correctly propagated from PageItemUploadProgressHelper`() {
-        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
-                Pair(
-                        ProgressBarUiState.Indeterminate,
-                        true
-                )
-        )
-
-        val pages = MutableLiveData<List<PageModel>>()
-        whenever(pagesViewModel.pages).thenReturn(pages)
-
-        viewModel.start(PUBLISHED, pagesViewModel)
-
-        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
-
-        viewModel.pages.observeForever { result.add(it) }
-
-        val firstPage = buildPageModel(0)
-
-        pages.value = listOf(firstPage)
-
-        assertThat((result[0].first[0] as PublishedPage).progressBarUiState).isEqualTo(ProgressBarUiState.Indeterminate)
     }
 
     private fun buildPageModel(
