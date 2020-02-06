@@ -1,9 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
 import androidx.annotation.StringRes
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -89,10 +86,7 @@ class PagesViewModel
     private val pageListEventListenerFactory: PageListEventListener.Factory,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
-) : ScopedViewModel(uiDispatcher), LifecycleOwner {
-    private val lifecycleRegistry = LifecycleRegistry(this)
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
-
+) : ScopedViewModel(uiDispatcher) {
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
@@ -167,6 +161,8 @@ class PagesViewModel
     private var pageUpdateContinuations: MutableMap<Long, Continuation<Unit>> = mutableMapOf()
     private var currentPageType = PUBLISHED
 
+    private lateinit var pageListEventListener: PageListEventListener
+
     data class BrowsePreview(
         val post: PostModel,
         val previewType: RemotePreviewType
@@ -180,8 +176,7 @@ class PagesViewModel
             uploadStarter.queueUploadFromSite(site)
         }
 
-        pageListEventListenerFactory.createAndStartListening(
-                lifecycle = lifecycle,
+        pageListEventListener = pageListEventListenerFactory.createAndStartListening(
                 dispatcher = dispatcher,
                 bgDispatcher = defaultDispatcher,
                 postStore = postStore,
@@ -196,6 +191,7 @@ class PagesViewModel
 
     override fun onCleared() {
         actionPerfomer.onCleanup()
+        pageListEventListener.onDestroy()
     }
 
     private fun loadPagesAsync() = launch(defaultDispatcher) {

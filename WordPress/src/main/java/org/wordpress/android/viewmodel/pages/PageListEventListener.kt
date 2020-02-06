@@ -1,8 +1,5 @@
 package org.wordpress.android.viewmodel.pages
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -11,7 +8,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.UpdatePost
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
@@ -36,7 +32,6 @@ import kotlin.coroutines.CoroutineContext
  * This is a temporary class to make the PagesViewModel more manageable. It was inspired by the PostListEventListener
  */
 class PageListEventListener(
-    private val lifecycle: Lifecycle,
     private val dispatcher: Dispatcher,
     private val bgDispatcher: CoroutineDispatcher,
     private val postStore: PostStore,
@@ -46,11 +41,10 @@ class PageListEventListener(
     private val handlePostUploadedWithoutError: (RemoteId) -> Unit,
     private val handlePostUploadedStarted: (RemoteId, LocalId) -> Unit,
     private val invalidateUploadStatus: (List<LocalId>) -> Unit
-) : LifecycleObserver, CoroutineScope {
+) : CoroutineScope {
     init {
         dispatcher.register(this)
         eventBusWrapper.register(this)
-        lifecycle.addObserver(this)
     }
 
     private var job: Job = Job()
@@ -59,13 +53,10 @@ class PageListEventListener(
         get() = bgDispatcher + job
 
     /**
-     * Handles the [Lifecycle.Event.ON_DESTROY] event to cleanup the registration for dispatcher and removing the
-     * observer for lifecycle.
+     * Handles the onDestroy event to cleanup the registration for dispatcher and cancelling any pending jobs.
      */
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    private fun onDestroy() {
+    fun onDestroy() {
         job.cancel()
-        lifecycle.removeObserver(this)
         dispatcher.unregister(this)
         eventBusWrapper.unregister(this)
     }
@@ -82,7 +73,7 @@ class PageListEventListener(
         launch {
             when (event.causeOfChange) {
                 // Fetched post list event will be handled by OnListChanged
-                is CauseOfOnPostChanged.RemoteAutoSavePost -> {
+                is RemoteAutoSavePost -> {
                     if (event.isError) {
                         AppLog.d(
                                 T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
@@ -97,11 +88,9 @@ class PageListEventListener(
                     )
                 }
 
-                is CauseOfOnPostChanged.UpdatePost -> {
+                is UpdatePost -> {
                     if (event.isError) {
-                        invalidateUploadStatus.invoke(
-                                listOf(LocalId((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId))
-                        )
+                        uploadStatusChanged(LocalId((event.causeOfChange as UpdatePost).localPostId))
                         AppLog.e(
                                 T.POSTS,
                                 "Error updating the post with type: ${event.error.type} and" +
@@ -198,7 +187,6 @@ class PageListEventListener(
 
     class Factory @Inject constructor() {
         fun createAndStartListening(
-            lifecycle: Lifecycle,
             dispatcher: Dispatcher,
             bgDispatcher: CoroutineDispatcher,
             postStore: PostStore,
@@ -208,9 +196,8 @@ class PageListEventListener(
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
             handlePostUploadedStarted: (RemoteId, LocalId) -> Unit
-        ) {
-            PageListEventListener(
-                    lifecycle = lifecycle,
+        ):PageListEventListener {
+            return PageListEventListener(
                     dispatcher = dispatcher,
                     bgDispatcher = bgDispatcher,
                     postStore = postStore,
