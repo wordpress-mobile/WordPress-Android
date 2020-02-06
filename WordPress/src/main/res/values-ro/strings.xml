@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-18 14:08:47+0000
+Translation-Revision-Date: 2020-01-15 21:41:49+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">Înlătură imaginea</string>
+    <string name="gutenberg_native_move_image_forward">Mută imaginea înainte</string>
+    <string name="gutenberg_native_move_image_backward">Mută imaginea înapoi</string>
+    <string name="gutenberg_native_gallery_caption_s">Text asociat galerie. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Valoarea curentă este %2$s</string>
+    <string name="create_post_page_fab_tooltip">Creează un articol sau o pagină</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">Atinge %1$s Adaugă articol %2$s pentru a crea un articol nou.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Atinge %1$s Articole blog %2$s pentru a continua.</string>
+    <string name="content_description_person_building_website">Persoană care construiește un sit web</string>
+    <string name="post_signup_interstitial_not_right_now">Nu chiar acum</string>
+    <string name="post_signup_interstitial_subtitle">Indiferent dacă vrei să creezi sau să partajezi, te vom ajuta să o faci chiar aici.</string>
+    <string name="post_signup_interstitial_title">Bun venit la WordPress</string>
+    <string name="stock_media_picker_list_content_description">Bibliotecă fotografii</string>
+    <string name="photo_picker_image_thumbnail_unselected">Imagine neselectată</string>
+    <string name="photo_picker_image_selected">, selectată</string>
+    <string name="photo_picker_image_thumbnail_selected">Imagine selectată</string>
+    <string name="photo_picker_image_thumbnail_content_description">Miniatură imagine</string>
+    <string name="my_site_bottom_sheet_add_post">Articol blog</string>
+    <string name="my_site_bottom_sheet_title">Adaugă nou</string>
+    <string name="post_settings_publish">Publică</string>
+    <string name="dialog_gutenberg_informative_description_v2">Am făcut îmbunătățiri importante la editorul de blocuri și credem că merită să-l încerci! L-am activat pentru articole și pagini noi, dar dacă vrei să rămâi la editorul clasic mergi la „Situl meu” > „Setări sit”.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Sincronizează acum</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">Acest articol va fi sincronizat imediat.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">Ești gata pentru sincronizare?</string>
+    <string name="new_site_creation_unavailable_domain">Acest domeniu nu este disponibil</string>
+    <string name="login_promo_viewpager_content_description">Introducere</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Nu am putut să-ți accesăm situl. Pentru a rezolva acest lucru, va trebui să contactezi serviciul tău de găzduire.</string>
     <string name="login_discovery_error_ssl">Nu am putut să-ți accesăm situl din cauza unei probleme cu &lt;b>certificatul SSL&lt;/b>. Pentru a rezolva acest lucru, va trebui să contactezi serviciul tău de găzduire.</string>
     <string name="login_discovery_error_http_auth">Nu am putut să-ți accesăm situl deoarece solicită &lt;b>autentificarea HTTP&lt;/b>. Pentru a rezolva acest lucru, va trebui să contactezi serviciul tău de găzduire.</string>
@@ -14,8 +41,7 @@ Language: ro
     <string name="enter_site_credentials_instead">Autentifică-te cu datele de conectare ale sitului</string>
     <string name="enter_credentials_for_site">Autentifică-te cu datele de conectare ale sitului %1$s</string>
     <string name="send_verification_email">Trimite emailul de verificare</string>
-    <string name="my_site_bottom_sheet_add_page">Creează o pagină nouă</string>
-    <string name="my_site_bottom_sheet_add_post">Creează un articol nou</string>
+    <string name="my_site_bottom_sheet_add_page">Pagină sit</string>
     <string name="reader_following_display_name">Urmăresc</string>
     <string name="posts_cannot_be_started">Nu putem deschide articolele acum. Te rog reîncearcă mai târziu</string>
     <string name="suffix_1_000">kilo%s</string>
@@ -33,7 +59,6 @@ Language: ro
     <string name="site_cannot_be_loaded">Nu putem încărca datele pentru situl tău chiar acum. Te rog reîncearcă mai târziu</string>
     <string name="gutenberg_native_wordpress_media_library">Bibliotecă media WordPress</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Lucrăm cu sârguință pentru a adăuga mai multe blocuri la fiecare lansare a unei versiuni noi. Între timp, poți edita acest articol pe web.</string>
-    <string name="gutenberg_native_unsupported">Neacceptat</string>
     <string name="gutenberg_native_ungroup">Anulează gruparea</string>
     <string name="gutenberg_native_translate">Tradu</string>
     <string name="gutenberg_native_title">Titlu:</string>
@@ -53,7 +78,6 @@ Language: ro
     <string name="gutenberg_native_s_block">Bloc %s</string>
     <string name="gutenberg_native_row_d">Rândul %d.</string>
     <string name="gutenberg_native_reset_block">Resetează blocul</string>
-    <string name="gutenberg_native_reset">RESETEAZĂ</string>
     <string name="gutenberg_native_remove_block_at_row_s">Înlătură blocul de pe rândul %s</string>
     <string name="gutenberg_native_remove_annotations">Înlătură adnotările</string>
     <string name="gutenberg_native_problem_opening_the_video">Problemă la deschiderea videoului</string>
@@ -236,8 +260,6 @@ Language: ro
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Extinde</string>
     <string name="description_collapse">Restrânge</string>
-    <string name="editor_retry_failed_uploads">Reîncearcă încărcarea</string>
-    <string name="editor_toast_failed_uploads">Încărcarea unor elemente media a eșuat. Nu poți salva sau publica\n        articolul în această situație.</string>
     <string name="my_site_verify_your_email_without_email">Confirmă-ți adresa de email - instrucțiunile au fost trimise la adresa ta de email</string>
     <string name="my_site_verify_your_email">Confirmă-ți adresa de email - instrucțiunile au fost trimise la %s</string>
     <string name="link_dialog_button_cancel">Anulează</string>
@@ -727,7 +749,7 @@ Language: ro
     <string name="activity_log_rewind_started_snackbar_message">Situl tău este restaurat acum\nDerulez înapoi la %1$s %2$s</string>
     <string name="activity_log_button">Buton acțiune jurnal de activități</string>
     <string name="plugin_auto_managed">Administrat automat</string>
-    <string name="reader_save_posts_locally_dialog_message">Salvează acest articol și te poți întoarce să-l citești oricând vrei. El va fi disponibil numai pe acest dispozitiv — articolele salvate nu se sincronizează cu alte dispozitive (deocamdată, dar lucrăm la asta).</string>
+    <string name="reader_save_posts_locally_dialog_message">Salvează acest articol și te poți întoarce să-l citești oricând vrei. El va fi disponibil numai pe acest dispozitiv - articolele salvate nu sunt sincronizate pe alte dispozitive.</string>
     <string name="reader_save_posts_locally_dialog_title">Salvează articole pentru mai târziu</string>
     <string name="reader_empty_search_request_failed">Nu pot efectua căutarea</string>
     <string name="reader_empty_search_title">Niciun rezultat găsit</string>
@@ -752,7 +774,6 @@ Language: ro
     <string name="reader_add_bookmark">Adaugă la articole salvate</string>
     <string name="reader_save_for_later_title">Articole salvate</string>
     <string name="removed">Înlăturat</string>
-    <string name="tabbar_accessibility_label_write">Articol nou. Scrie un articol nou.</string>
     <string name="my_site_icon_content_description">Schimbă iconul sitului</string>
     <string name="my_site_icon_dialog_cancel_button">Anulează</string>
     <string name="my_site_icon_dialog_remove_button">Înlătură</string>
@@ -783,7 +804,6 @@ Language: ro
     <string name="preference_privacy_settings">Setări confidențialitate</string>
     <string name="preference_collect_information">Colectează informații</string>
     <string name="post_submitted">Articol trimis</string>
-    <string name="write_post">Scrie un articol</string>
     <string name="login_email_button_signup">Nu ai un cont? %1$sÎnregistrează-te%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funcționalitatea modulului necesită ca situl să fie în stare bună.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funcționalitatea modulului necesită ca abonamentul domeniul principal să fie asociat acestui utilizator.</string>
@@ -1250,7 +1270,7 @@ Language: ro
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Ciornă</string>
     <string name="post_status_pending_review">Revizie în așteptare</string>
-    <string name="post_status_publish_post">Public</string>
+    <string name="post_status_publish_post">Publică</string>
     <string name="change_location">Schimbă locația</string>
     <string name="remove_location">Înlătură locația</string>
     <string name="post_settings_error_placepicker_missing_play_services">Nu pot deschide selectorul de locație, serviciile Google Play nu sunt disponibile</string>
@@ -1338,7 +1358,6 @@ Language: ro
     <string name="sharing">Partajare</string>
     <string name="tabbar_accessibility_label_notifications">Notificări. Administrează-ți notificările.</string>
     <string name="tabbar_accessibility_label_reader">Cititor. Urmărește conținutul de pe alte situri.</string>
-    <string name="tabbar_accessibility_label_me">Eu. Vizualizează-ți profilul și fă modificări.</string>
     <string name="tabbar_accessibility_label_my_site">Situl meu. Vizualizează-ți situl și administrează-l, inclusiv statistici.</string>
     <string name="my_site_btn_sharing">Partajare</string>
     <string name="button_not_now">Nu acum</string>

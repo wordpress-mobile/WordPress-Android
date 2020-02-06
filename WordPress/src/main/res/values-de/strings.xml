@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-17 09:46:00+0000
+Translation-Revision-Date: 2020-01-19 10:22:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">Bild entfernen</string>
+    <string name="gutenberg_native_move_image_forward">Bild nach vorne verschieben</string>
+    <string name="gutenberg_native_move_image_backward">Bild nach hinten verschieben</string>
+    <string name="gutenberg_native_gallery_caption_s">Bildunterschrift der Galerie. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Aktueller Wert ist %2$s</string>
+    <string name="create_post_page_fab_tooltip">Seite oder Beitrag erstellen</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">Tippe auf %1$s Beitrag erstellen %2$s, um einen neuen Beitrag zu erstellen.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Tippe auf %1$s Beiträge %2$s, um fortzufahren.</string>
+    <string name="content_description_person_building_website">Ersteller der Website</string>
+    <string name="post_signup_interstitial_not_right_now">Nicht jetzt</string>
+    <string name="post_signup_interstitial_subtitle">Was immer du erstellen oder teilen möchtest, wir helfen dir dabei, es genau hier zu tun.</string>
+    <string name="post_signup_interstitial_title">Willkommen bei WordPress</string>
+    <string name="stock_media_picker_list_content_description">Foto-Bibliothek</string>
+    <string name="photo_picker_image_thumbnail_unselected">Bild nicht ausgewählt</string>
+    <string name="photo_picker_image_selected">Ausgewählt</string>
+    <string name="photo_picker_image_thumbnail_selected">Bild ausgewählt</string>
+    <string name="photo_picker_image_thumbnail_content_description">Vorschaubild</string>
+    <string name="my_site_bottom_sheet_add_post">Blogbeitrag</string>
+    <string name="my_site_bottom_sheet_title">Hinzufügen</string>
+    <string name="post_settings_publish">Veröffentlichen</string>
+    <string name="dialog_gutenberg_informative_description_v2">Wir haben große Verbesserungen am Block-Editor vorgenommen und denken, dass es sich lohnt, ihn auszuprobieren! Wir haben ihn für neue Beiträge und Seiten aktiviert, aber wenn du zum klassischen Editor wechseln möchtest, gehe zu „Meine Website“ > „Website-Einstellungen“.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Jetzt synchronisieren</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">Dieser Beitrag wird umgehend synchronisiert.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">Bereit für die Synchronisation?</string>
+    <string name="new_site_creation_unavailable_domain">Diese Domain ist nicht verfügbar</string>
+    <string name="login_promo_viewpager_content_description">Einführung</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Wir konnten nicht auf deine Website zugreifen. Du musst dich an deinen Host wenden, um dies zu beheben.</string>
     <string name="login_discovery_error_ssl">Wir konnten wegen eines Problems mit dem &lt;b>SSL-Zertifikat&lt;/b> nicht auf deine Website zugreifen. Du musst dich an deinen Host wenden, um dies zu beheben.</string>
     <string name="login_discovery_error_http_auth">Wir konnten nicht auf deine Website zugreifen, da &lt;b>HTTP-Authentifizierung&lt;/b> erforderlich ist. Du musst dich an deinen Host wenden, um dies zu beheben.</string>
@@ -14,8 +41,7 @@ Language: de
     <string name="enter_site_credentials_instead">Mit den Website-Anmeldedaten anmelden</string>
     <string name="enter_credentials_for_site">Mit deinen Anmeldedaten der Website %1$s anmelden</string>
     <string name="send_verification_email">Bestätigungs-E-Mail senden</string>
-    <string name="my_site_bottom_sheet_add_page">Neue Seite erstellen</string>
-    <string name="my_site_bottom_sheet_add_post">Neuen Beitrag erstellen</string>
+    <string name="my_site_bottom_sheet_add_page">Website-Seite</string>
     <string name="reader_following_display_name">Folgen</string>
     <string name="posts_cannot_be_started">Wir können die Beiträge momentan nicht öffnen. Bitte versuche es später erneut</string>
     <string name="suffix_1_000">%sk</string>
@@ -33,7 +59,6 @@ Language: de
     <string name="site_cannot_be_loaded">Wir können die Daten deiner Website momentan nicht laden. Bitte versuche es später erneut</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress-Mediathek</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Wir arbeiten intensiv daran, mit jedem Release mehr Blöcke hinzuzufügen. In der Zwischenzeit kannst du diesen Beitrag auch im Web bearbeiten.</string>
-    <string name="gutenberg_native_unsupported">Nicht unterstützt</string>
     <string name="gutenberg_native_ungroup">Gruppierung aufheben</string>
     <string name="gutenberg_native_translate">Übersetzen</string>
     <string name="gutenberg_native_title">Titel:</string>
@@ -53,7 +78,6 @@ Language: de
     <string name="gutenberg_native_s_block">Block %s</string>
     <string name="gutenberg_native_row_d">Zeile %d.</string>
     <string name="gutenberg_native_reset_block">Block zurücksetzen</string>
-    <string name="gutenberg_native_reset">ZURÜCKSETZEN</string>
     <string name="gutenberg_native_remove_block_at_row_s">Block in Zeile %s entfernen</string>
     <string name="gutenberg_native_remove_annotations">Anmerkungen entfernen</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem beim Öffnen des Videos</string>
@@ -236,8 +260,6 @@ Language: de
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Erweitern</string>
     <string name="description_collapse">Einklappen</string>
-    <string name="editor_retry_failed_uploads">Hochladen erneut starten</string>
-    <string name="editor_toast_failed_uploads">Einige Medien-Uploads sind fehlgeschlagen. Das Speichern oder Veröffentlichen\n deines Beitrags ist in diesem Status nicht möglich.</string>
     <string name="my_site_verify_your_email_without_email">Prüfe deinen Posteingang – eine Anleitung wurde an deine E-Mail-Adresse gesendet</string>
     <string name="my_site_verify_your_email">Prüfe deinen Posteingang – eine Anleitung wurde an %s gesendet</string>
     <string name="link_dialog_button_cancel">Abbrechen</string>
@@ -727,7 +749,7 @@ Language: de
     <string name="activity_log_rewind_started_snackbar_message">Deine Website wird wiederhergestellt\nWird zurückgesetzt auf %1$s %2$s</string>
     <string name="activity_log_button">Aktions-Button für Aktivitätsprotokoll</string>
     <string name="plugin_auto_managed">Automatisch verwaltet</string>
-    <string name="reader_save_posts_locally_dialog_message">Speichere diesen Beitrag und lese ihn später. Er wird nur auf diesem Gerät zur Verfügung stehen – gespeicherte Beiträge werden (noch) nicht mit deinen anderen Geräten synchronisiert. (Aber wir arbeiten daran!).</string>
+    <string name="reader_save_posts_locally_dialog_message">Speichere diesen Beitrag, um ihn später zu lesen. Er wird nur auf diesem Gerät zur Verfügung stehen – gespeicherte Beiträge werden nicht mit deinen anderen Geräten synchronisiert.</string>
     <string name="reader_save_posts_locally_dialog_title">Beiträge für später speichern</string>
     <string name="reader_empty_search_request_failed">Suche konnte nicht ausgeführt werden</string>
     <string name="reader_empty_search_title">Keine Ergebnisse gefunden</string>
@@ -752,7 +774,6 @@ Language: de
     <string name="reader_add_bookmark">Zu gespeicherten Beiträgen hinzufügen</string>
     <string name="reader_save_for_later_title">Gespeicherte Beiträge</string>
     <string name="removed">Entfernt</string>
-    <string name="tabbar_accessibility_label_write">Neuer Beitrag. Schreibe einen neuen Beitrag.</string>
     <string name="my_site_icon_content_description">Website-Symbol ändern</string>
     <string name="my_site_icon_dialog_cancel_button">Abbrechen</string>
     <string name="my_site_icon_dialog_remove_button">Entfernen</string>
@@ -783,7 +804,6 @@ Language: de
     <string name="preference_privacy_settings">Datenschutzeinstellungen</string>
     <string name="preference_collect_information">Informationen erfassen</string>
     <string name="post_submitted">Beitrag übermittelt</string>
-    <string name="write_post">Beitrag verfassen</string>
     <string name="login_email_button_signup">Du hast noch kein Konto? %1$sRegistrieren%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Für das Plugin-Feature ist eine einwandfreie Historie der Website erforderlich.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Für das Plugin-Feature muss dieser Benutzer dem Abonnement für die Hauptdomain zugeordnet sein.</string>
@@ -1338,7 +1358,6 @@ Language: de
     <string name="sharing">Teilen</string>
     <string name="tabbar_accessibility_label_notifications">Benachrichtigungen. Verwalte deine Benachrichtigungen.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Inhalten anderer Websites folgen.</string>
-    <string name="tabbar_accessibility_label_me">Ich. Zeige dein Profil an und nimm Änderungen vor.</string>
     <string name="tabbar_accessibility_label_my_site">Meine Website. Zeige deine Website an und verwalte sie, einschließlich Statistiken.</string>
     <string name="my_site_btn_sharing">Teilen</string>
     <string name="button_not_now">Nicht jetzt</string>
@@ -1499,7 +1518,7 @@ Language: de
     <string name="invite_message_remaining_zero">Keine weiteren Zeichen möglich</string>
     <string name="invite_message_title">Individuelle Nachricht</string>
     <string name="invite">Einladen</string>
-    <string name="invite_names_title">Benutzernamen oder E-Mails</string>
+    <string name="invite_names_title">Benutzernamen oder E-Mail-Adressen</string>
     <string name="invite_people">Personen einladen</string>
     <string name="my_site_header_external">Extern</string>
     <string name="send_link">Link senden</string>

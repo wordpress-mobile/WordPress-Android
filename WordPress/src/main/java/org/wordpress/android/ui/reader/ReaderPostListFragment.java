@@ -40,6 +40,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -75,6 +76,7 @@ import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
 import org.wordpress.android.models.FilterCriteria;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
@@ -106,6 +108,7 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.Up
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -116,6 +119,7 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -174,6 +178,7 @@ public class ReaderPostListFragment extends Fragment
     private ImageView mSettingsButton;
     private View mSubFiltersListButton;
     private TextView mSubFilterTitle;
+    private View mRemoveFilterButton;
 
     private boolean mIsTopLevel = false;
     private static final String SUBFILTER_BOTTOM_SHEET_TAG = "SUBFILTER_BOTTOM_SHEET_TAG";
@@ -397,11 +402,11 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             mViewModel.getCurrentSubFilter().observe(this, subfilterListItem -> {
-                if (ReaderUtils.isFollowing(
+                if ((ReaderUtils.isFollowing(
                         mCurrentTag,
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
-                ) || ReaderUtils.isDefaultTag(mCurrentTag)) {
+                ) || ReaderUtils.isDefaultTag(mCurrentTag)) && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                   mViewModel.applySubfilter(subfilterListItem, true);
                 }
             });
@@ -421,6 +426,12 @@ public class ReaderPostListFragment extends Fragment
                                         readerModeInfo.getLabel()
                                 )
                         );
+                    }
+
+                    if (readerModeInfo.isFiltered()) {
+                        mRemoveFilterButton.setVisibility(View.VISIBLE);
+                    } else {
+                        mRemoveFilterButton.setVisibility(View.GONE);
                     }
                 }
             });
@@ -521,10 +532,19 @@ public class ReaderPostListFragment extends Fragment
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
 
+            Site currentSite;
+
             if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                 resumeFollowedTag();
+            } else if ((currentSite = getSiteIfBlogPreview()) != null) {
+                resumeFollowedSite(currentSite);
             } else {
                 refreshPosts();
+            }
+
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
+                // Remove sticky event if not consumed
+                EventBus.getDefault().removeStickyEvent(ReaderEvents.TagAdded.class);
             }
 
             // if the user tapped a site to show site preview, it's possible they also changed the follow
@@ -583,6 +603,38 @@ public class ReaderPostListFragment extends Fragment
             // posts in the current tag if it's time
             refreshPosts();
             updateCurrentTagIfTime();
+        }
+    }
+
+    @Nullable
+    private Site getSiteIfBlogPreview() {
+        Site currentSite = null;
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
+            && mIsTopLevel
+            && getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+            currentSite = mViewModel.getCurrentSubfilterValue() instanceof Site ? (Site) (mViewModel
+                    .getCurrentSubfilterValue()) : null;
+        }
+
+        return currentSite;
+    }
+
+    private void resumeFollowedSite(Site currentSite) {
+        ReaderBlog blog = currentSite.getBlog();
+        boolean isSiteStillAvailable = false;
+
+        if (blog != null) {
+            if ((blog.hasFeedUrl() && ReaderBlogTable.isFollowedFeed(blog.feedId))
+                || ReaderBlogTable.isFollowedBlog(blog.blogId)) {
+                isSiteStillAvailable = true;
+            }
+        }
+
+        if (isSiteStillAvailable) {
+            refreshPosts();
+        } else {
+            mViewModel.setDefaultSubfilter();
         }
     }
 
@@ -867,8 +919,13 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.primary));
-        mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, android.R.color.white));
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
+        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
+        int elevatedAppBarColor = elevationOverlayProvider
+                .compositeOverlayIfNeeded(
+                        ContextExtensionsKt.getColorFromAttribute(mRecyclerView.getContext(), R.attr.wpColorAppBar),
+                        appbarElevation);
+        mRecyclerView.setToolbarBackgroundColor(elevatedAppBarColor);
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
@@ -912,6 +969,9 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mSubFilterComponent = inflater.inflate(R.layout.subfilter_component, rootView, false);
+        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
+        int elevatedCardColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(cardElevation);
+        mSubFilterComponent.setBackgroundColor(elevatedCardColor);
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             mRecyclerView.getAppBarLayout().addView(mSubFilterComponent);
@@ -927,6 +987,11 @@ public class ReaderPostListFragment extends Fragment
             });
 
             mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);
+
+            mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
+            mRemoveFilterButton.setOnClickListener(v -> {
+                mViewModel.setDefaultSubfilter();
+            });
         }
 
         return rootView;
@@ -948,7 +1013,7 @@ public class ReaderPostListFragment extends Fragment
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             mSettingsMenuItem.setVisible(false);
         } else {
-           mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     showSettings();
@@ -1045,23 +1110,23 @@ public class ReaderPostListFragment extends Fragment
         });
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    submitSearchQuery(query);
-                    return true;
-                }
+                                               @Override
+                                               public boolean onQueryTextSubmit(String query) {
+                                                   submitSearchQuery(query);
+                                                   return true;
+                                               }
 
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    if (TextUtils.isEmpty(newText)) {
-                        showSearchMessage();
-                        hideSearchTabs();
-                    } else {
-                        populateSearchSuggestionAdapter(newText);
-                    }
-                    return true;
-                    }
-                }
+                                               @Override
+                                               public boolean onQueryTextChange(String newText) {
+                                                   if (TextUtils.isEmpty(newText)) {
+                                                       showSearchMessage();
+                                                       hideSearchTabs();
+                                                   } else {
+                                                       populateSearchSuggestionAdapter(newText);
+                                                   }
+                                                   return true;
+                                               }
+                                           }
         );
     }
 
@@ -1424,8 +1489,8 @@ public class ReaderPostListFragment extends Fragment
             }
         };
         WPSnackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, undoListener)
-                .show();
+                  .setAction(R.string.undo, undoListener)
+                  .show();
     }
 
     /*
@@ -1750,18 +1815,18 @@ public class ReaderPostListFragment extends Fragment
         }
 
         WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
-                .setAction(R.string.reader_bookmark_snack_btn,
-                    new View.OnClickListener() {
-                        @Override public void onClick(View view) {
-                            AnalyticsTracker
-                                    .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
-                            ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                            if (getActivity() instanceof WPMainActivity) {
-                                getActivity().overridePendingTransition(0, 0);
-                            }
-                        }
-                    })
-                .show();
+                  .setAction(R.string.reader_bookmark_snack_btn,
+                          new View.OnClickListener() {
+                              @Override public void onClick(View view) {
+                                  AnalyticsTracker
+                                          .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
+                                  ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                                  if (getActivity() instanceof WPMainActivity) {
+                                      getActivity().overridePendingTransition(0, 0);
+                                  }
+                              }
+                          })
+                  .show();
     }
 
     /*
@@ -1937,13 +2002,14 @@ public class ReaderPostListFragment extends Fragment
                 mViewModel.applySubfilter(mViewModel.getCurrentSubfilterValue(), false);
             } else {
                 changeReaderMode(new ReaderModeInfo(
-                        tag,
-                        ReaderPostListType.TAG_FOLLOWED,
-                        0,
-                        0,
-                        false,
-                        null,
-                        false),
+                                tag,
+                                ReaderPostListType.TAG_FOLLOWED,
+                                0,
+                                0,
+                                false,
+                                null,
+                                false,
+                                mRemoveFilterButton.getVisibility() == View.VISIBLE),
                         false
                 );
             }
@@ -2512,17 +2578,18 @@ public class ReaderPostListFragment extends Fragment
 
         WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
                 "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.reader_followed_blog_notifications_action),
-                        new View.OnClickListener() {
-                            @Override public void onClick(View view) {
-                                AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
-                                AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
-                                        String.valueOf(blogId), SubscriptionAction.NEW);
-                                mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
-                                ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
-                            }
-                        })
-                .show();
+                  .setAction(getString(R.string.reader_followed_blog_notifications_action),
+                          new View.OnClickListener() {
+                              @Override public void onClick(View view) {
+                                  AnalyticsUtils
+                                          .trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
+                                  AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
+                                          String.valueOf(blogId), SubscriptionAction.NEW);
+                                  mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                                  ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
+                              }
+                          })
+                  .show();
     }
 
     @Override
@@ -2600,6 +2667,7 @@ public class ReaderPostListFragment extends Fragment
     public static void resetLastUpdateDate() {
         mLastAutoUpdateDt = null;
     }
+
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
 
