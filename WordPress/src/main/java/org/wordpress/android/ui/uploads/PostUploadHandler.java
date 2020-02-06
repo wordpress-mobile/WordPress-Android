@@ -14,14 +14,13 @@ import androidx.annotation.NonNull;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -31,12 +30,12 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.UploadMediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostAutoSaved;
 import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
@@ -62,7 +61,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-public class PostUploadHandler implements UploadHandler<PostModel> {
+public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePostIfNotDraftCallback {
     private static ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
     private static Set<Integer> sFirstPublishPosts = new HashSet<>();
     private static PostModel sCurrentUploadingPost = null;
@@ -79,6 +78,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @Inject MediaStore mMediaStore;
     @Inject UiHelpers mUiHelpers;
     @Inject UploadActionUseCase mUploadActionUseCase;
+    @Inject AutoSavePostIfNotDraftUseCase mAutoSavePostIfNotDraftUseCase;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
@@ -286,7 +286,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                     break;
                 case REMOTE_AUTO_SAVE:
                     AppLog.d(T.POSTS, "PostUploadHandler - REMOTE_AUTO_SAVE. Post: " + mPost.getTitle());
-                    mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(payload));
+                    mAutoSavePostIfNotDraftUseCase.autoSavePostOrUpdateDraft(payload, PostUploadHandler.this);
                     break;
                 case DO_NOTHING:
                     AppLog.d(T.POSTS, "PostUploadHandler - DO_NOTHING. Post: " + mPost.getTitle());
@@ -604,6 +604,23 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         }
     }
 
+    // TODO: document?
+    @Override
+    public void handleAutoSavePostIfNotDraftResult(@NotNull AutoSavePostIfNotDraftResult result) {
+        // TODO: handle other cases
+        if (result instanceof AutoSavePostIfNotDraftResult.PostAutoSaved) {
+            mPostUploadNotifier
+                    .incrementUploadedPostCountFromForegroundNotification(((PostAutoSaved) result).getPost());
+            finishUpload();
+        } else if (result instanceof AutoSavePostIfNotDraftResult.PostIsDraftInRemote) {
+            /**
+             * 1. If the post has a status that's not draft in local, remember that
+             * 2. Set the post status to draft and push post
+             * 3. Update the local copy of post with the previous post status
+             */
+        }
+    }
+
     /**
      * Has priority 9 on OnPostUploaded events, which ensures that PostUploadHandler is the first to receive
      * and process OnPostUploaded events, before they trickle down to other subscribers.
@@ -659,17 +676,5 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         }
 
         finishUpload();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
-    public void onPostChanged(OnPostChanged event) {
-        if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
-            int postLocalId = ((RemoteAutoSavePost) event.causeOfChange).getLocalPostId();
-            PostModel post = mPostStore.getPostByLocalPostId(postLocalId);
-            SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
-            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
-            finishUpload();
-        }
     }
 }
