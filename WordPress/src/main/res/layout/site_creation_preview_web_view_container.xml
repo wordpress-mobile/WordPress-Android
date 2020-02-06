@@ -5,6 +5,7 @@
     style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:cardCornerRadius="0dp"
     app:cardElevation="@dimen/card_elevation">
 
     <LinearLayout
@@ -16,7 +17,8 @@
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="@dimen/appbar_elevation">
+            app:cardCornerRadius="0dp"
+            app:cardElevation="@dimen/appbar_elevation">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -28,14 +30,14 @@
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingBottom="@dimen/margin_medium">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/sitePreviewWebUrlTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="?attr/wpColorTextSubtle"
-                    android:textSize="@dimen/text_sz_medium"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?attr/wpColorOnSurfaceMedium"
                     tools:text="example.wordpress.com" />
             </FrameLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -54,7 +56,7 @@
             android:visibility="gone"
             app:aevImage="@drawable/img_illustration_cloud_off_152dp"
             app:aevTitle="@string/error_browser_no_network"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/sitePreviewWebViewShimmerLayout"
