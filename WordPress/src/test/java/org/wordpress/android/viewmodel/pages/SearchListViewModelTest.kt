@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.pages
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -129,6 +130,7 @@ class SearchListViewModelTest {
                 listOf(),
                 0,
                 null,
+                 mock(),
                 false,
                 ProgressBarUiState.Hidden,
                 false
@@ -143,7 +145,7 @@ class SearchListViewModelTest {
     @Test
     fun `passes page to page view model on item tapped`() {
         val clickedPage = PageItem.PublishedPage(
-                1, "title", Date(), listOf(), 0, null, false, ProgressBarUiState.Hidden,
+                1, "title", Date(), listOf(), 0, null, mock(), false, ProgressBarUiState.Hidden,
                 false
         )
 
