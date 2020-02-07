@@ -423,9 +423,9 @@ public class WPPrefView extends LinearLayout implements
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    SparseBooleanArray checkedItems1 =
+                    SparseBooleanArray userCheckedItems =
                             ((AlertDialog) dialog).getListView().getCheckedItemPositions();
-                    mListItems.setCheckedItems(checkedItems1);
+                    mListItems.setCheckedItems(userCheckedItems);
                     doPrefChanged();
                 })
                 .setMultiChoiceItems(items, checkedItems, null);
