@@ -43,3 +43,36 @@ If the string is for a [`contentDescription`](https://developer.android.com/refe
 <string name="stats_expand_content_description">Expand</string>
 ```
 
+## Use Placeholders Instead of Concatenation
+
+Concatenating strings to include dynamic values splits them into separate translatable items. The completed (joined) sentence may end up not being grammatically correct. 
+
+```xml
+<!-- Don't -->
+<string name="reader_discover_attribution_first_part">Originally posted by</string>
+<string name="reader_discover_attribution_second_part">on</string>
+```
+
+```kotlin
+// Don't
+val label = context.getString(string.reader_discover_attribution_first_part) +
+        " $author " + context.getString(string.reader_discover_attribution_second_part) + " $blog"
+```
+
+Use placeholders instead. They give more context and enables translators to move them where they make sense.
+
+```xml
+<!-- Do -->
+<string name="reader_discover_attribution_author_and_blog">Originally posted by %1$s on %2$s</string>
+```
+
+```kotlin
+// Do 
+val label = String.format(
+        context.getString(string.reader_discover_attribution_author_and_blog),
+        author, blog
+)
+```
+
+Also consider adding information about what the placeholders are in the `name`.
+
