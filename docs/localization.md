@@ -23,3 +23,23 @@ val label = context.getString(R.string.stats_comments_posts_and_pages)
 
 You shouldn't need to touch the `strings.xml` for the other languages. During the release process, the `values/strings.xml` file is uploaded to [GlotPress](https://translate.wordpress.org/projects/apps/android/) for translation. Before the release build is finalized, all the translations are grabbed from GlotPress and saved back to their appropriate `values-[lang_code]/strings.xml` file.
 
+## Use Meaningful IDs
+
+Meaningful IDs help give more context to translators. Whenever possible, the first part of the `id` should succinctly describe where the string is used. 
+
+```xml
+<!-- Do -->
+<string name="stats_comments_posts_and_pages">Posts and pages</string>
+```
+
+```xml
+<!-- Avoid -->
+<string name="comments_posts_and_pages">Posts and pages</string>
+```
+
+If the string is for a [`contentDescription`](https://developer.android.com/reference/android/view/View.html#attr_android:contentDescription), consider adding `_content_description` to the end.
+
+```xml
+<string name="stats_expand_content_description">Expand</string>
+```
+
