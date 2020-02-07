@@ -204,7 +204,7 @@
         <!-- Posts activities -->
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:theme="@style/Calypso.ActionMode.Dark"
+            android:theme="@style/WordPress.Editor.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -250,7 +250,7 @@
         <activity
             android:name=".ui.history.HistoryDetailActivity"
             android:label="@string/history_detail_title"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.Editor.NoActionBar" />
 
         <!-- plans -->
         <activity
