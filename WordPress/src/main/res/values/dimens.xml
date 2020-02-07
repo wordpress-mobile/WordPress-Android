@@ -369,7 +369,7 @@
     <dimen name="one_line_list_item_height">48dp</dimen>
     <dimen name="two_line_list_item_height">72dp</dimen>
     <dimen name="page_list_divider_height">40dp</dimen>
-    <dimen name="page_list_min_row_height">80dp</dimen>
+    <dimen name="page_list_row_min_height">80dp</dimen>
     <dimen name="page_list_featured_image_size">40dp</dimen>
     <dimen name="page_list_menu_button_size">24dp</dimen>
 
