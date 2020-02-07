@@ -636,6 +636,7 @@
     <style name="PostSettingsTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/neutral_70_neutral_20_selector</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
