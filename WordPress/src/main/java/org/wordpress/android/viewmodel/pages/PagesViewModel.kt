@@ -392,8 +392,8 @@ class PagesViewModel
         }
     }
 
-    private fun cancelPendingAutoUpload(pageId: RemoteId, site: SiteModel) {
-        val page = postStore.getPostByRemotePostId(pageId.value, site)
+    private fun cancelPendingAutoUpload(pageId: LocalId) {
+        val page = postStore.getPostByLocalPostId(pageId.value)
         val msgRes = UploadUtils.cancelPendingAutoUpload(page, dispatcher)
         _showSnackbarMessage.postValue(SnackbarMessageHolder(msgRes))
     }
