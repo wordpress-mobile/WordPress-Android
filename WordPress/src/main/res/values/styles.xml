@@ -56,9 +56,6 @@
 
         <item name="colorButtonNormal">@color/light_gray</item>
 
-        <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
-        <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
-
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
@@ -77,7 +74,7 @@
     </style>
 
     <style name="WordPress.Editor.NoActionBar" parent="WordPress.NoActionBar">
-        <item name="actionMenuTextColor">?attr/colorOnSurface</item>
+        <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
     </style>
 
     <style name="NumberPickerTheme" parent="WordPress">
@@ -147,14 +144,6 @@
     <style name="FilteredRecyclerViewFilterTextView.MainToolbar">
         <item name="android:textSize">@null</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
-    </style>
-
-    <style name="DatePicker.WordPress" parent="android:Widget.Material.DatePicker">
-        <item name="android:datePickerMode">spinner</item>
-    </style>
-
-    <style name="TimePicker.WordPress" parent="android:Widget.Material.TimePicker">
-        <item name="android:timePickerMode">spinner</item>
     </style>
 
     <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Primary">

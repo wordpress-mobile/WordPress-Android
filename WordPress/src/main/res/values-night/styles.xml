@@ -29,6 +29,7 @@
 
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
+        <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="listPopupWindowStyle">
             @style/Widget.MaterialComponents.PopupMenu.ListPopupWindow

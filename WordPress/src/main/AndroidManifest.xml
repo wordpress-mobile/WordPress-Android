@@ -204,7 +204,7 @@
         <!-- Posts activities -->
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/WordPress.Editor.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -514,7 +514,7 @@
         <activity
             android:name=".ui.photopicker.PhotoPickerActivity"
             android:label="@string/photo_picker_title"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stockmedia.StockMediaPickerActivity"
             android:label=""
