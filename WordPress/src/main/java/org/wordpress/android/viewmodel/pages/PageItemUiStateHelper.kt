@@ -144,7 +144,11 @@ class PageItemUiStateHelper @Inject constructor(
                 }
             }
 
-            SCHEDULED -> setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH)
+            SCHEDULED -> mutableSetOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH).apply {
+                if (canCancelPendingAutoUpload(pageId, site)) {
+                    add(CANCEL_AUTO_UPLOAD)
+                }
+            }
             TRASHED -> setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY)
         }
     }
