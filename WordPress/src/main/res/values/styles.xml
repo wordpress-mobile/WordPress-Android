@@ -76,6 +76,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="WordPress.Editor.NoActionBar" parent="WordPress.NoActionBar">
+        <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
+    </style>
+
     <style name="NumberPickerTheme" parent="WordPress">
         <item name="colorControlNormal">@color/transparent</item>
         <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
@@ -632,7 +636,6 @@
     <style name="PostSettingsTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_70_neutral_20_selector</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
