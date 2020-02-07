@@ -22,6 +22,9 @@ import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
@@ -96,6 +99,11 @@ class SearchListViewModel
                         remoteId,
                         title,
                         date,
+                        actions = pageItemUiStateHelper.setupPageActions(
+                                PUBLISHED,
+                                LocalId(pageId),
+                                pagesViewModel.site
+                        ),
                         actionsEnabled = areActionsEnabled,
                         progressBarUiState = progressState.first,
                         showOverlay = progressState.second
@@ -104,6 +112,11 @@ class SearchListViewModel
                     remoteId,
                     title,
                     date,
+                    actions = pageItemUiStateHelper.setupPageActions(
+                            DRAFTS,
+                            LocalId(pageId),
+                            pagesViewModel.site
+                    ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressState.first,
                     showOverlay = progressState.second
@@ -112,6 +125,11 @@ class SearchListViewModel
                     remoteId,
                     title,
                     date,
+                    actions = pageItemUiStateHelper.setupPageActions(
+                            TRASHED,
+                            LocalId(pageId),
+                            pagesViewModel.site
+                    ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressState.first,
                     showOverlay = progressState.second
@@ -120,6 +138,11 @@ class SearchListViewModel
                     remoteId,
                     title,
                     date,
+                    actions = pageItemUiStateHelper.setupPageActions(
+                            PUBLISHED,
+                            LocalId(pageId),
+                            pagesViewModel.site
+                    ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressState.first,
                     showOverlay = progressState.second

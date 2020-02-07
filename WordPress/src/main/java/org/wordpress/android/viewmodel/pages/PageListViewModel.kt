@@ -254,6 +254,11 @@ class PageListViewModel @Inject constructor(
                     PublishedPage(
                             it.remoteId, it.title, it.date, labels, pageItemIndent,
                             getFeaturedImageUrl(it.featuredImageId),
+                            pageItemUiStateHelper.setupPageActions(
+                                    listType,
+                                    LocalId(it.pageId),
+                                    pagesViewModel.site
+                            ),
                             actionsEnabled,
                             progressBarUiState,
                             showOverlay
@@ -280,6 +285,11 @@ class PageListViewModel @Inject constructor(
                                 ScheduledPage(
                                         it.remoteId, it.title, it.date, labels,
                                         getFeaturedImageUrl(it.featuredImageId),
+                                        pageItemUiStateHelper.setupPageActions(
+                                                listType,
+                                                LocalId(it.pageId),
+                                                pagesViewModel.site
+                                        ),
                                         actionsEnabled,
                                         progressBarUiState,
                                         showOverlay
@@ -308,6 +318,11 @@ class PageListViewModel @Inject constructor(
                     it.date,
                     labels,
                     getFeaturedImageUrl(it.featuredImageId),
+                    pageItemUiStateHelper.setupPageActions(
+                            listType,
+                            LocalId(it.pageId),
+                            pagesViewModel.site
+                    ),
                     actionsEnabled,
                     progressBarUiState,
                     showOverlay
@@ -327,6 +342,11 @@ class PageListViewModel @Inject constructor(
                     it.title,
                     it.date,
                     getFeaturedImageUrl(it.featuredImageId),
+                    pageItemUiStateHelper.setupPageActions(
+                            listType,
+                            LocalId(it.pageId),
+                            pagesViewModel.site
+                    ),
                     actionsEnabled,
                     progressBarUiState,
                     showOverlay
