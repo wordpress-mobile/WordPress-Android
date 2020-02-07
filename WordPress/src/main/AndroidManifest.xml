@@ -204,7 +204,7 @@
         <!-- Posts activities -->
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:theme="@style/Calypso.ActionMode.Dark"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -240,11 +240,11 @@
             android:label="@string/set_parent" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.posts.PostSettingsTagsActivity"
             android:label="@string/post_settings_tags"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- History -->
         <activity
