@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -14,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.ActivityUtils;
@@ -79,8 +80,7 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         //noinspection InflateParams
         View dialogView = layoutInflater.inflate(R.layout.post_settings_input_dialog, null);
