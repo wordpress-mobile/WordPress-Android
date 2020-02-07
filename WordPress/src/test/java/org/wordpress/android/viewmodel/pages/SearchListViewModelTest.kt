@@ -130,7 +130,7 @@ class SearchListViewModelTest {
                 listOf(),
                 0,
                 null,
-                 mock(),
+                mock(),
                 false,
                 ProgressBarUiState.Hidden,
                 false

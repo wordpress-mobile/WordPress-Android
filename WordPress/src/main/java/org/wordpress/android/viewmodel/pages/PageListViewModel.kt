@@ -248,8 +248,10 @@ class PageListViewModel @Inject constructor(
                     } else {
                         DEFAULT_INDENT
                     }
-                    val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(LocalId(it.pageId),
-                            pagesViewModel.site)
+                    val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(
+                            LocalId(it.pageId),
+                            pagesViewModel.site
+                    )
 
                     PublishedPage(
                             it.remoteId, it.title, it.date, labels, pageItemIndent,
