@@ -248,7 +248,7 @@ class PageListViewModelTest : BaseUnitTest() {
         pages.value = listOf(buildPageModel(0))
 
         // Assert
-        assertThat((result[0].first[0] as PublishedPage).progressBarUiState).isEqualTo(expectedProgressBarUiState)
+        assertThat((result[0].first[0] as Page).progressBarUiState).isEqualTo(expectedProgressBarUiState)
     }
 
     @Test
@@ -287,13 +287,13 @@ class PageListViewModelTest : BaseUnitTest() {
         pages.value = pageModels
 
         // Assert
-        assertThat((result[0].first[0] as PublishedPage).progressBarUiState).isEqualTo(
+        assertThat((result[0].first[0] as Page).progressBarUiState).isEqualTo(
                 ProgressBarUiState.Indeterminate
         )
-        assertThat((result[0].first[0] as PublishedPage).showOverlay).isEqualTo(true)
+        assertThat((result[0].first[0] as Page).showOverlay).isEqualTo(true)
 
-        assertThat((result[0].first[1] as PublishedPage).progressBarUiState).isEqualTo(ProgressBarUiState.Hidden)
-        assertThat((result[0].first[1] as PublishedPage).showOverlay).isEqualTo(false)
+        assertThat((result[0].first[1] as Page).progressBarUiState).isEqualTo(ProgressBarUiState.Hidden)
+        assertThat((result[0].first[1] as Page).showOverlay).isEqualTo(false)
     }
 
     private fun buildPageModel(
