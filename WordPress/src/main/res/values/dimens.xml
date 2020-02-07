@@ -68,6 +68,7 @@
     <dimen name="site_creation_content_margin">@dimen/content_margin_none</dimen>
     <dimen name="post_list_content_margin_standard">@dimen/content_margin_none</dimen>
     <dimen name="post_list_content_margin_compact">@dimen/content_margin_none</dimen>
+    <dimen name="page_list_content_margin">@dimen/content_margin_none</dimen>
 
     <!--
         native reader dimens
