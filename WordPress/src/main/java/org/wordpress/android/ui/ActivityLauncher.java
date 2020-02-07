@@ -702,10 +702,10 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewMeActivity(Context context) {
-        Intent intent = new Intent(context, MeActivity.class);
+    public static void viewMeActivityForResult(Activity activity) {
+        Intent intent = new Intent(activity, MeActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
     }
 
     public static void viewAccountSettings(Context context) {
@@ -714,7 +714,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewAppSettings(Activity activity) {
+    public static void viewAppSettingsForResult(Activity activity) {
         Intent intent = new Intent(activity, AppSettingsActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
         activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
