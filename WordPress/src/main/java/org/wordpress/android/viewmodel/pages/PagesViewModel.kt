@@ -21,11 +21,13 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
@@ -39,6 +41,7 @@ import org.wordpress.android.ui.posts.PostListRemotePreviewState
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -374,10 +377,11 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
-            MOVE_TO_DRAFT -> changePageStatus(page.id, PageStatus.DRAFT)
+            MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
             PUBLISH_NOW -> publishPageNow(page.id)
             DELETE_PERMANENTLY -> deletePage(page)
+            CANCEL_AUTO_UPLOAD -> cancelPendingAutoUpload(RemoteId(page.id), site)
         }
         return true
     }
@@ -386,6 +390,12 @@ class PagesViewModel
         performIfNetworkAvailable {
             _displayDeleteDialog.postValue(page)
         }
+    }
+
+    private fun cancelPendingAutoUpload(pageId :RemoteId, site: SiteModel) {
+        val page = postStore.getPostByRemotePostId(pageId.value, site)
+        val msgRes = UploadUtils.cancelPendingAutoUpload(page, dispatcher)
+        _showSnackbarMessage.postValue(SnackbarMessageHolder(msgRes))
     }
 
     private fun setParent(page: Page) {
