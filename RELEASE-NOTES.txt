@@ -5,9 +5,7 @@
 * Block editor: Fix blank post when sharing media from another app
 * Block editor: Add support for image size options in the gallery block
 * Block editor: Fix issue that sometimes prevented merging paragraph blocks
-
- 
-* Fix retry media upload action in Block Editor
+* Block editor: Fix retry media upload action
 
 14.1
 -----
