@@ -45,7 +45,7 @@ If the string is for a [`contentDescription`](https://developer.android.com/refe
 
 ## Use Placeholders Instead of Concatenation
 
-Concatenating strings to include dynamic values splits them into separate translatable items. The completed (joined) sentence may end up not being grammatically correct. 
+Concatenating strings to include dynamic values splits them into separate translatable items. The completed (joined) sentence may end up not being grammatically correct, especially for RTL languages.
 
 ```xml
 <!-- Don't -->
