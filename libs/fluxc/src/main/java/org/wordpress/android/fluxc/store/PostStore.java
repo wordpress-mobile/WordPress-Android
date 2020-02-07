@@ -250,6 +250,17 @@ public class PostStore extends Store {
         }
     }
 
+    public static class FetchPostStatusResponsePayload extends Payload<PostError> {
+        public PostModel post;
+        public SiteModel site;
+        public String remotePostStatus;
+
+        public FetchPostStatusResponsePayload(PostModel post, SiteModel site) {
+            this.post = post;
+            this.site = site;
+        }
+    }
+
     public static class PostError implements OnChangedError {
         public PostErrorType type;
         public String message;
@@ -313,6 +324,17 @@ public class PostStore extends Store {
         OnRevisionsFetched(PostModel post, RevisionsModel revisionsModel) {
             this.post = post;
             this.revisionsModel = revisionsModel;
+        }
+    }
+
+    public static class OnPostStatusFetched extends OnChanged<PostError> {
+        public PostModel post;
+        public String remotePostStatus;
+
+        OnPostStatusFetched(PostModel post, String remotePostStatus, PostError error) {
+            this.post = post;
+            this.remotePostStatus = remotePostStatus;
+            this.error = error;
         }
     }
 
@@ -599,8 +621,14 @@ public class PostStore extends Store {
             case FETCH_POST:
                 fetchPost((RemotePostPayload) action.getPayload());
                 break;
+            case FETCH_POST_STATUS:
+                fetchPostStatus((RemotePostPayload) action.getPayload());
+                break;
             case FETCHED_POST:
                 handleFetchSinglePostCompleted((FetchPostResponsePayload) action.getPayload());
+                break;
+            case FETCHED_POST_STATUS:
+                handleFetchPostStatusCompleted((FetchPostStatusResponsePayload) action.getPayload());
                 break;
             case PUSH_POST:
                 pushPost((RemotePostPayload) action.getPayload());
@@ -674,6 +702,23 @@ public class PostStore extends Store {
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.fetchPost(payload.post, payload.site);
+        }
+    }
+
+    private void fetchPostStatus(RemotePostPayload payload) {
+        if (payload.post.isLocalDraft()) {
+            // If the post is a local draft, it won't have a remote post status
+            FetchPostStatusResponsePayload responsePayload =
+                    new FetchPostStatusResponsePayload(payload.post, payload.site);
+            responsePayload.error = new PostError(PostErrorType.UNKNOWN_POST);
+            mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(responsePayload));
+            return;
+        }
+        if (payload.site.isUsingWpComRestApi()) {
+            mPostRestClient.fetchPostStatus(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.fetchPostStatus(payload.post, payload.site);
         }
     }
 
@@ -893,6 +938,10 @@ public class PostStore extends Store {
         } else {
             updatePost(payload.post, false);
         }
+    }
+
+    private void handleFetchPostStatusCompleted(FetchPostStatusResponsePayload payload) {
+        emitChange(new OnPostStatusFetched(payload.post, payload.remotePostStatus, payload.error));
     }
 
     private void handlePushPostCompleted(RemotePostPayload payload) {
