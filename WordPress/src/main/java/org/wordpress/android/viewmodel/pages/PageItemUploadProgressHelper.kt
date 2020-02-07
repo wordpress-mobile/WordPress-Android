@@ -7,6 +7,14 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
+import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
+import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
+import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.NothingToUpload
@@ -15,8 +23,13 @@ import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUp
 import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadWaitingForConnection
 import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadingMedia
 import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadingPost
-import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.posts.PostListItemUploadStatus
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import javax.inject.Inject
 
 typealias ShouldShowOverlay = Boolean
@@ -115,6 +128,40 @@ class PageItemUploadProgressHelper @Inject constructor(
             uploadStatus.isEligibleForAutoUpload -> UploadWaitingForConnection(postStatus)
             else -> NothingToUpload
         }
+    }
+
+    fun setupPageActions(listType: PageListType, pageId: LocalId, site: SiteModel): Set<Action> {
+        return when (listType) {
+            PUBLISHED -> {
+                val actions = mutableSetOf<Action>()
+                if (canCancelPendingAutoUpload(pageId, site)) {
+                    actions.add(CANCEL_AUTO_UPLOAD)
+                }
+
+                actions.addAll(listOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH))
+                actions
+            }
+            DRAFTS -> {
+                val actions = mutableSetOf<Action>()
+                if (canCancelPendingAutoUpload(pageId, site)) {
+                    actions.add(CANCEL_AUTO_UPLOAD)
+                }
+                actions.addAll(listOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH))
+                actions
+            }
+            SCHEDULED -> setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH)
+            TRASHED -> setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY)
+        }
+    }
+
+    private fun canCancelPendingAutoUpload(pageId: LocalId, site: SiteModel): Boolean {
+        val post = postStore.getPostByLocalPostId(pageId.value)
+        val uploadUiState = createUploadUiState(
+                uploadStatusTracker.getUploadStatus(post, site),
+                post
+        )
+        return (uploadUiState is UploadWaitingForConnection ||
+                (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload))
     }
 
     private fun shouldShowOverlay(uploadUiState: PostUploadUiState): Boolean {
