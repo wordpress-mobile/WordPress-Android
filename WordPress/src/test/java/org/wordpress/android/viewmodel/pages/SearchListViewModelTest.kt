@@ -38,7 +38,7 @@ class SearchListViewModelTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var pagesViewModel: PagesViewModel
-    @Mock lateinit var progressHelper: PageItemUploadProgressHelper
+    @Mock lateinit var pageItemUiStateHelper: PageItemUiStateHelper
 
     private lateinit var searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>>
     private lateinit var viewModel: SearchListViewModel
@@ -48,10 +48,10 @@ class SearchListViewModelTest {
     @Before
     fun setUp() {
         page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
-        viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE, progressHelper)
+        viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE, pageItemUiStateHelper)
         searchPages = MutableLiveData()
 
-        whenever(progressHelper.getProgressStateForPage(any(), any())).thenReturn(
+        whenever(pageItemUiStateHelper.getProgressStateForPage(any(), any())).thenReturn(
                 Pair(
                         ProgressBarUiState.Hidden,
                         false

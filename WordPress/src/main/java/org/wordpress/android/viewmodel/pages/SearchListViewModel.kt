@@ -30,7 +30,7 @@ class SearchListViewModel
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
-    private val progressHelper: PageItemUploadProgressHelper
+    private val pageItemUiStateHelper: PageItemUiStateHelper
 ) : ViewModel() {
     private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
     val searchResult: LiveData<List<PageItem>> = _searchResult
@@ -88,7 +88,7 @@ class SearchListViewModel
     }
 
     private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
-        val progressState = progressHelper.getProgressStateForPage(LocalId(pageId), pagesViewModel.site)
+        val progressState = pageItemUiStateHelper.getProgressStateForPage(LocalId(pageId), pagesViewModel.site)
 
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->

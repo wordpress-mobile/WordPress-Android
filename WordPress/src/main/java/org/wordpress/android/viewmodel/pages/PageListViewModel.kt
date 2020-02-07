@@ -50,7 +50,7 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
-    private val progressHelper: PageItemUploadProgressHelper
+    private val pageItemUiStateHelper: PageItemUiStateHelper
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Pair<List<PageItem>, Boolean>> = Transformations.map(_pages) {
@@ -156,7 +156,7 @@ class PageListViewModel @Inject constructor(
     }
 
     private val uploadStatusObserver = Observer<List<LocalId>> { ids ->
-        progressHelper.uploadStatusTracker.invalidateUploadStatus(ids.map { localId -> localId.value })
+        pageItemUiStateHelper.uploadStatusTracker.invalidateUploadStatus(ids.map { localId -> localId.value })
     }
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
@@ -248,7 +248,7 @@ class PageListViewModel @Inject constructor(
                     } else {
                         DEFAULT_INDENT
                     }
-                    val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId),
+                    val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(LocalId(it.pageId),
                             pagesViewModel.site)
 
                     PublishedPage(
@@ -273,7 +273,7 @@ class PageListViewModel @Inject constructor(
                                 if (it.hasLocalChanges)
                                     labels.add(R.string.local_changes)
 
-                                val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(
+                                val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(
                                         LocalId(it.pageId),
                                         pagesViewModel.site)
 
@@ -300,7 +300,7 @@ class PageListViewModel @Inject constructor(
             if (it.hasLocalChanges)
                 labels.add(R.string.local_draft)
 
-            val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId),
+            val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(LocalId(it.pageId),
                     pagesViewModel.site)
             DraftPage(
                     it.remoteId,
@@ -320,7 +320,7 @@ class PageListViewModel @Inject constructor(
         actionsEnabled: Boolean
     ): List<PageItem> {
         return pages.map {
-            val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(LocalId(it.pageId),
+            val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(LocalId(it.pageId),
                     pagesViewModel.site)
             TrashedPage(
                     it.remoteId,

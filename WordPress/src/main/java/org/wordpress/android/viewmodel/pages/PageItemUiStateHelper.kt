@@ -17,12 +17,12 @@ import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.NothingToUpload
-import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadFailed
-import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadQueued
-import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadWaitingForConnection
-import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadingMedia
-import org.wordpress.android.viewmodel.pages.PageItemUploadProgressHelper.PostUploadUiState.UploadingPost
+import org.wordpress.android.viewmodel.pages.PageItemUiStateHelper.PostUploadUiState.NothingToUpload
+import org.wordpress.android.viewmodel.pages.PageItemUiStateHelper.PostUploadUiState.UploadFailed
+import org.wordpress.android.viewmodel.pages.PageItemUiStateHelper.PostUploadUiState.UploadQueued
+import org.wordpress.android.viewmodel.pages.PageItemUiStateHelper.PostUploadUiState.UploadWaitingForConnection
+import org.wordpress.android.viewmodel.pages.PageItemUiStateHelper.PostUploadUiState.UploadingMedia
+import org.wordpress.android.viewmodel.pages.PageItemUiStateHelper.PostUploadUiState.UploadingPost
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
@@ -34,7 +34,7 @@ import javax.inject.Inject
 
 typealias ShouldShowOverlay = Boolean
 
-class PageItemUploadProgressHelper @Inject constructor(
+class PageItemUiStateHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val postStore: PostStore,
     val uploadStatusTracker: PostModelUploadStatusTracker

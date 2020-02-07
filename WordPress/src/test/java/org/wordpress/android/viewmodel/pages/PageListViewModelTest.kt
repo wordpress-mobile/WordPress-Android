@@ -34,7 +34,7 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var pagesViewModel: PagesViewModel
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var progressHelper: PageItemUploadProgressHelper
+    @Mock lateinit var pageItemUiStateHelper: PageItemUiStateHelper
 
     private lateinit var viewModel: PageListViewModel
     private val site = SiteModel()
@@ -46,10 +46,10 @@ class PageListViewModelTest : BaseUnitTest() {
                 dispatcher,
                 localeManagerWrapper,
                 Dispatchers.Unconfined,
-                progressHelper
+                pageItemUiStateHelper
         )
 
-        whenever(progressHelper.getProgressStateForPage(any(), any())).thenReturn(Pair(
+        whenever(pageItemUiStateHelper.getProgressStateForPage(any(), any())).thenReturn(Pair(
                 ProgressBarUiState.Hidden, false))
 
         val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
@@ -206,12 +206,12 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `showOverlay is correctly propagated from PageItemUploadProgressHelper`() {
+    fun `showOverlay is correctly propagated from PageItemUploadpageItemUiStateHelper`() {
         // Arrange
         val expectedShowOverlay = true
         val pages = MutableLiveData<List<PageModel>>()
 
-        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(Pair(mock(),
+        whenever(pageItemUiStateHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(Pair(mock(),
                 expectedShowOverlay))
         whenever(pagesViewModel.pages).thenReturn(pages)
 
@@ -227,12 +227,12 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `ProgressBarUiState is correctly propagated from PageItemUploadProgressHelper`() {
+    fun `ProgressBarUiState is correctly propagated from PageItemUploadpageItemUiStateHelper`() {
         // Arrange
         val expectedProgressBarUiState = ProgressBarUiState.Indeterminate
         val pages = MutableLiveData<List<PageModel>>()
 
-        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
+        whenever(pageItemUiStateHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
                 Pair(
                         expectedProgressBarUiState,
                         true
@@ -255,14 +255,14 @@ class PageListViewModelTest : BaseUnitTest() {
     fun `progressState is specific to each page`() {
         // Arrange
         val pages = MutableLiveData<List<PageModel>>()
-        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
+        whenever(pageItemUiStateHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
                 Pair(
                         ProgressBarUiState.Indeterminate,
                         true
                 )
         )
 
-        whenever(progressHelper.getProgressStateForPage(LocalId(1), site)).thenReturn(
+        whenever(pageItemUiStateHelper.getProgressStateForPage(LocalId(1), site)).thenReturn(
                 Pair(
                         ProgressBarUiState.Hidden,
                         false
