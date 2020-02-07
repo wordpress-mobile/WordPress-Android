@@ -2,11 +2,10 @@ package org.wordpress.android.ui.publicize;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.Button;
-import android.widget.FrameLayout;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+
+import com.google.android.material.button.MaterialButton;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
@@ -14,28 +13,21 @@ import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 /**
  * Publicize connect/disconnect/reconnect button
  */
-public class ConnectButton extends FrameLayout {
+public class ConnectButton extends MaterialButton {
     private ConnectAction mConnectAction = ConnectAction.CONNECT;
-    private Button mConnectButton;
 
     public ConnectButton(Context context) {
         super(context);
-        initView(context);
+        updateView();
     }
 
     public ConnectButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView(context);
+        updateView();
     }
 
     public ConnectButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initView(context);
-    }
-
-    private void initView(Context context) {
-        inflate(context, R.layout.publicize_connect_button, this);
-        mConnectButton = findViewById(R.id.text_connect);
         updateView();
     }
 
@@ -57,7 +49,7 @@ public class ConnectButton extends FrameLayout {
             default:
                 return;
         }
-        mConnectButton.setText(captionResId);
+        setText(captionResId);
     }
 
     public ConnectAction getAction() {
@@ -69,11 +61,5 @@ public class ConnectButton extends FrameLayout {
             mConnectAction = newAction;
             updateView();
         }
-    }
-
-    @Override
-    public void setOnClickListener(@Nullable OnClickListener l) {
-        super.setOnClickListener(l);
-        mConnectButton.setOnClickListener(l);
     }
 }
