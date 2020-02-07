@@ -76,3 +76,23 @@ val label = String.format(
 
 Also consider adding information about what the placeholders are in the `name`.
 
+## Pluralization
+
+GlotPress currently does not support pluralization using [Quantity strings](https://developer.android.com/guide/topics/resources/string-resource.html#Plurals). So, right now, you have to support plurals manually by creating separate strings.
+
+```xml
+<string name="media_files_not_uploaded_singular">1 file not uploaded</string>
+<string name="media_files_not_uploaded_plural">%d files uploaded</string>
+```
+
+```kotlin
+val message = if (notUploadedCount == 1) {
+    context.getString(string.media_files_not_uploaded_singular)
+} else {
+    String.format(
+            context.getString(string.media_files_not_uploaded_plural),
+            notUploadedCount
+    )
+}
+```
+
