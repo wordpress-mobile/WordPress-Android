@@ -3,12 +3,6 @@ package org.wordpress.android.ui.pages
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
-import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
-import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
-import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
-import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
