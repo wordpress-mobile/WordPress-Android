@@ -132,23 +132,18 @@ class PageItemUiStateHelper @Inject constructor(
 
     fun setupPageActions(listType: PageListType, pageId: LocalId, site: SiteModel): Set<Action> {
         return when (listType) {
-            PUBLISHED -> {
-                val actions = mutableSetOf<Action>()
+            PUBLISHED -> mutableSetOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH).apply {
                 if (canCancelPendingAutoUpload(pageId, site)) {
-                    actions.add(CANCEL_AUTO_UPLOAD)
+                    add(CANCEL_AUTO_UPLOAD)
                 }
+            }
 
-                actions.addAll(listOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH))
-                actions
-            }
-            DRAFTS -> {
-                val actions = mutableSetOf<Action>()
+            DRAFTS -> mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH).apply {
                 if (canCancelPendingAutoUpload(pageId, site)) {
-                    actions.add(CANCEL_AUTO_UPLOAD)
+                    add(CANCEL_AUTO_UPLOAD)
                 }
-                actions.addAll(listOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH))
-                actions
             }
+
             SCHEDULED -> setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH)
             TRASHED -> setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY)
         }
