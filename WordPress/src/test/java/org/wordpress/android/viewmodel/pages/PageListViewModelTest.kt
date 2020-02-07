@@ -1,6 +1,8 @@
 package org.wordpress.android.viewmodel.pages
 
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -9,16 +11,19 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
+import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.Locale
 
@@ -29,15 +34,29 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var pagesViewModel: PagesViewModel
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var progressHelper: PageItemUploadProgressHelper
+
     private lateinit var viewModel: PageListViewModel
     private val site = SiteModel()
     private val pageListState = MutableLiveData<PageListState>()
     @Before
     fun setUp() {
-        viewModel = PageListViewModel(mediaStore, dispatcher, localeManagerWrapper, Dispatchers.Unconfined)
+        viewModel = PageListViewModel(
+                mediaStore,
+                dispatcher,
+                localeManagerWrapper,
+                Dispatchers.Unconfined,
+                progressHelper
+        )
+
+        whenever(progressHelper.getProgressStateForPage(any(), any())).thenReturn(Pair(
+                ProgressBarUiState.Hidden, false))
+
+        val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
 
         whenever(pagesViewModel.arePageActionsEnabled).thenReturn(false)
         whenever(pagesViewModel.site).thenReturn(site)
+        whenever(pagesViewModel.invalidateUploadStatus).thenReturn(invalidateUploadStatus)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.getDefault())
         site.id = 10
         pageListState.value = PageListState.DONE
@@ -184,6 +203,97 @@ class PageListViewModelTest : BaseUnitTest() {
         assertThat(result).hasSize(1)
         assertThat((result[0].first[0] as PublishedPage).title).isEqualTo(firstPage.title)
         assertThat((result[0].first[1] as PublishedPage).title).isEqualTo(secondPage.title)
+    }
+
+    @Test
+    fun `showOverlay is correctly propagated from PageItemUploadProgressHelper`() {
+        // Arrange
+        val expectedShowOverlay = true
+        val pages = MutableLiveData<List<PageModel>>()
+
+        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(Pair(mock(),
+                expectedShowOverlay))
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        viewModel.pages.observeForever { result.add(it) }
+
+        // Act
+        pages.value = listOf(buildPageModel(0))
+
+        // Assert
+        assertThat((result[0].first[0] as Page).showOverlay).isEqualTo(expectedShowOverlay)
+    }
+
+    @Test
+    fun `ProgressBarUiState is correctly propagated from PageItemUploadProgressHelper`() {
+        // Arrange
+        val expectedProgressBarUiState = ProgressBarUiState.Indeterminate
+        val pages = MutableLiveData<List<PageModel>>()
+
+        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
+                Pair(
+                        expectedProgressBarUiState,
+                        true
+                )
+        )
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        viewModel.pages.observeForever { result.add(it) }
+
+        // Act
+        pages.value = listOf(buildPageModel(0))
+
+        // Assert
+        assertThat((result[0].first[0] as Page).progressBarUiState).isEqualTo(expectedProgressBarUiState)
+    }
+
+    @Test
+    fun `progressState is specific to each page`() {
+        // Arrange
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(progressHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
+                Pair(
+                        ProgressBarUiState.Indeterminate,
+                        true
+                )
+        )
+
+        whenever(progressHelper.getProgressStateForPage(LocalId(1), site)).thenReturn(
+                Pair(
+                        ProgressBarUiState.Hidden,
+                        false
+                )
+        )
+
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+
+        viewModel.pages.observeForever { result.add(it) }
+
+        val firstPage = buildPageModel(0)
+        val secondPage = buildPageModel(1)
+
+        // Act
+        val pageModels = mutableListOf<PageModel>()
+        pageModels += secondPage
+        pageModels += firstPage
+        pages.value = pageModels
+
+        // Assert
+        assertThat((result[0].first[0] as Page).progressBarUiState).isEqualTo(
+                ProgressBarUiState.Indeterminate
+        )
+        assertThat((result[0].first[0] as Page).showOverlay).isEqualTo(true)
+
+        assertThat((result[0].first[1] as Page).progressBarUiState).isEqualTo(ProgressBarUiState.Hidden)
+        assertThat((result[0].first[1] as Page).showOverlay).isEqualTo(false)
     }
 
     private fun buildPageModel(
