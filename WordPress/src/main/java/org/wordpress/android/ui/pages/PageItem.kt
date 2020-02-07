@@ -12,6 +12,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 
 sealed class PageItem(open val type: Type) {
@@ -24,7 +25,9 @@ sealed class PageItem(open val type: Type) {
         open var imageUrl: String?,
         open val actions: Set<Action>,
         open var actionsEnabled: Boolean,
-        open val tapActionEnabled: Boolean
+        open val tapActionEnabled: Boolean,
+        open val progressBarUiState: ProgressBarUiState,
+        open val showOverlay: Boolean
     ) : PageItem(PAGE)
 
     data class PublishedPage(
@@ -34,7 +37,9 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<Int> = emptyList(),
         override var indent: Int = 0,
         override var imageUrl: String? = null,
-        override var actionsEnabled: Boolean = true
+        override var actionsEnabled: Boolean = true,
+        override val progressBarUiState: ProgressBarUiState,
+        override val showOverlay: Boolean
     ) : Page(
             id = id,
             title = title,
@@ -44,7 +49,9 @@ sealed class PageItem(open val type: Type) {
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
-            tapActionEnabled = true
+            tapActionEnabled = true,
+            progressBarUiState = progressBarUiState,
+            showOverlay = showOverlay
     )
 
     data class DraftPage(
@@ -53,7 +60,9 @@ sealed class PageItem(open val type: Type) {
         override val date: Date,
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
-        override var actionsEnabled: Boolean = true
+        override var actionsEnabled: Boolean = true,
+        override val progressBarUiState: ProgressBarUiState,
+        override val showOverlay: Boolean
     ) : Page(
             id = id,
             title = title,
@@ -63,7 +72,9 @@ sealed class PageItem(open val type: Type) {
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
-            tapActionEnabled = true
+            tapActionEnabled = true,
+            progressBarUiState = progressBarUiState,
+            showOverlay = showOverlay
     )
 
     data class ScheduledPage(
@@ -72,7 +83,9 @@ sealed class PageItem(open val type: Type) {
         override val date: Date,
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
-        override var actionsEnabled: Boolean = true
+        override var actionsEnabled: Boolean = true,
+        override val progressBarUiState: ProgressBarUiState,
+        override val showOverlay: Boolean
     ) : Page(
             id = id,
             title = title,
@@ -82,7 +95,9 @@ sealed class PageItem(open val type: Type) {
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
             actionsEnabled = actionsEnabled,
-            tapActionEnabled = true
+            tapActionEnabled = true,
+            progressBarUiState = progressBarUiState,
+            showOverlay = showOverlay
     )
 
     data class TrashedPage(
@@ -90,7 +105,9 @@ sealed class PageItem(open val type: Type) {
         override val title: String,
         override val date: Date,
         override var imageUrl: String? = null,
-        override var actionsEnabled: Boolean = true
+        override var actionsEnabled: Boolean = true,
+        override val progressBarUiState: ProgressBarUiState,
+        override val showOverlay: Boolean
     ) : Page(
             id = id,
             title = title,
@@ -100,7 +117,9 @@ sealed class PageItem(open val type: Type) {
             imageUrl = imageUrl,
             actions = setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY),
             actionsEnabled = actionsEnabled,
-            tapActionEnabled = false
+            tapActionEnabled = false,
+            progressBarUiState = progressBarUiState,
+            showOverlay = showOverlay
     )
 
     data class ParentPage(

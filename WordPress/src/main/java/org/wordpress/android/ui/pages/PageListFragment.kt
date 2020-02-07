@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.pages.PageListViewModel
@@ -26,6 +27,7 @@ import javax.inject.Inject
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var imageManager: ImageManager
+    @Inject internal lateinit var uiHelper: UiHelpers
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
 
@@ -107,7 +109,8 @@ class PageListFragment : Fragment() {
                     { page -> viewModel.onItemTapped(page) },
                     { viewModel.onEmptyListNewPageButtonTapped() },
                     isSitePhotonCapable,
-                    imageManager
+                    imageManager,
+                    uiHelper
             )
             recyclerView.adapter = adapter
         } else {

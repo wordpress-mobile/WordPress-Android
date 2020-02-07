@@ -18,7 +18,7 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.viewmodel.posts.PostListItemType
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.LoadingItem
@@ -204,9 +204,9 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
              * We don't need to use the payload in onBindViewHolder unless we want to. Passing a non-null value
              * suppresses the default ItemAnimator, which is all we need in this case.
              */
-            if (oldItem.data.progressBarState is PostListItemProgressBar.Determinate &&
-                    newItem.data.progressBarState is PostListItemProgressBar.Determinate &&
-                    oldItem.data.progressBarState.progress != newItem.data.progressBarState.progress) {
+            if (oldItem.data.progressBarUiState is ProgressBarUiState.Determinate &&
+                    newItem.data.progressBarUiState is ProgressBarUiState.Determinate &&
+                    oldItem.data.progressBarUiState.progress != newItem.data.progressBarUiState.progress) {
                 return true
             }
         }
