@@ -720,7 +720,7 @@ class PagesViewModel
     fun postUploadStarted(remoteId: RemoteId) {
         launch {
             performIfNetworkAvailableAsync {
-                waitForPageUpdate(remotePageIdForContinuation.value)
+                waitForPageUpdate(remoteId.value)
                 reloadPages()
             }
         }

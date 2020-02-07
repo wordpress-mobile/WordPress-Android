@@ -100,7 +100,7 @@ class PageListEventListener(
                                 RemoteId((event.causeOfChange as UpdatePost).remotePostId)
                         )
                         invalidateUploadStatus.invoke(
-                                listOf(LocalId((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId))
+                                listOf(LocalId((event.causeOfChange as UpdatePost).localPostId))
                         )
                     }
                 }
@@ -197,8 +197,8 @@ class PageListEventListener(
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
             handlePostUploadedStarted: (RemoteId) -> Unit
-        ) {
-            PageListEventListener(
+        ): PageListEventListener {
+            return PageListEventListener(
                     dispatcher = dispatcher,
                     bgDispatcher = bgDispatcher,
                     postStore = postStore,
