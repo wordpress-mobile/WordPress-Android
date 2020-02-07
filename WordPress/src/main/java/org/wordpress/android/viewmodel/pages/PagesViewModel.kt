@@ -377,11 +377,11 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
-            MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
-            MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
-            PUBLISH_NOW -> publishPageNow(page.id)
+            MOVE_TO_DRAFT -> changePageStatus(page.remoteId, DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(page.remoteId, PageStatus.TRASHED)
+            PUBLISH_NOW -> publishPageNow(page.remoteId)
             DELETE_PERMANENTLY -> deletePage(page)
-            CANCEL_AUTO_UPLOAD -> cancelPendingAutoUpload(RemoteId(page.id), site)
+            CANCEL_AUTO_UPLOAD -> cancelPendingAutoUpload(LocalId(page.localId))
         }
         return true
     }
@@ -402,14 +402,14 @@ class PagesViewModel
         performIfNetworkAvailable {
             trackMenuSelectionEvent(SET_PARENT)
 
-            _setPageParent.postValue(pageMap[page.id])
+            _setPageParent.postValue(pageMap[page.remoteId])
         }
     }
 
     private fun previewPage(page: Page) {
         launch(defaultDispatcher) {
             trackMenuSelectionEvent(VIEW_PAGE)
-            val pageModel = pageMap[page.id]
+            val pageModel = pageMap[page.remoteId]
             val post = if (pageModel != null) postStore.getPostByLocalPostId(pageModel.pageId) else null
             _previewPage.postValue(post)
         }
@@ -467,7 +467,7 @@ class PagesViewModel
     }
 
     fun onItemTapped(pageItem: Page) {
-        _editPage.postValue(pageMap[pageItem.id])
+        _editPage.postValue(pageMap[pageItem.remoteId])
     }
 
     fun onNewPageButtonTapped() {

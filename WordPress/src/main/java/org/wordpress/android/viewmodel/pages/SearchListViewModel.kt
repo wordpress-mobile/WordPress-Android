@@ -97,6 +97,7 @@ class SearchListViewModel
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->
                 PublishedPage(
                         remoteId,
+                        pageId,
                         title,
                         date,
                         actions = pageItemUiStateHelper.setupPageActions(
@@ -110,6 +111,7 @@ class SearchListViewModel
                 )
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
                     remoteId,
+                    pageId,
                     title,
                     date,
                     actions = pageItemUiStateHelper.setupPageActions(
@@ -123,6 +125,7 @@ class SearchListViewModel
             )
             PageStatus.TRASHED -> TrashedPage(
                     remoteId,
+                    pageId,
                     title,
                     date,
                     actions = pageItemUiStateHelper.setupPageActions(
@@ -136,6 +139,7 @@ class SearchListViewModel
             )
             PageStatus.SCHEDULED -> ScheduledPage(
                     remoteId,
+                    pageId,
                     title,
                     date,
                     actions = pageItemUiStateHelper.setupPageActions(

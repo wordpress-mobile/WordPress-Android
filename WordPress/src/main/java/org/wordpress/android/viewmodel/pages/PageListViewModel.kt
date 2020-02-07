@@ -139,7 +139,7 @@ class PageListViewModel @Inject constructor(
     }
 
     fun onScrollToPageRequested(remotePageId: Long) {
-        val position = _pages.value?.indexOfFirst { it is Page && it.id == remotePageId } ?: -1
+        val position = _pages.value?.indexOfFirst { it is Page && it.remoteId == remotePageId } ?: -1
         if (position != -1) {
             _scrollToPosition.postValue(position)
         } else {
@@ -254,7 +254,7 @@ class PageListViewModel @Inject constructor(
                     )
 
                     PublishedPage(
-                            it.remoteId, it.title, it.date, labels, pageItemIndent,
+                            it.remoteId, it.pageId, it.title, it.date, labels, pageItemIndent,
                             getFeaturedImageUrl(it.featuredImageId),
                             pageItemUiStateHelper.setupPageActions(
                                     listType,
@@ -285,7 +285,7 @@ class PageListViewModel @Inject constructor(
                                         pagesViewModel.site)
 
                                 ScheduledPage(
-                                        it.remoteId, it.title, it.date, labels,
+                                        it.remoteId, it.pageId, it.title, it.date, labels,
                                         getFeaturedImageUrl(it.featuredImageId),
                                         pageItemUiStateHelper.setupPageActions(
                                                 listType,
@@ -316,6 +316,7 @@ class PageListViewModel @Inject constructor(
                     pagesViewModel.site)
             DraftPage(
                     it.remoteId,
+                    it.pageId,
                     it.title,
                     it.date,
                     labels,
@@ -341,6 +342,7 @@ class PageListViewModel @Inject constructor(
                     pagesViewModel.site)
             TrashedPage(
                     it.remoteId,
+                    it.pageId,
                     it.title,
                     it.date,
                     getFeaturedImageUrl(it.featuredImageId),

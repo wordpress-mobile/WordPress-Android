@@ -411,13 +411,13 @@ class PagesFragment : Fragment() {
     private fun displayDeleteDialog(page: Page) {
         val dialog = BasicFragmentDialog()
         dialog.initialize(
-                page.id.toString(),
+                page.remoteId.toString(),
                 getString(R.string.delete_page),
                 getString(R.string.page_delete_dialog_message, page.title),
                 getString(R.string.delete),
                 getString(R.string.cancel)
         )
-        dialog.show(fragmentManager, page.id.toString())
+        dialog.show(fragmentManager, page.remoteId.toString())
     }
 
     override fun onStart() {

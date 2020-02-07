@@ -11,7 +11,8 @@ import java.util.Date
 
 sealed class PageItem(open val type: Type) {
     abstract class Page(
-        open val id: Long,
+        open val remoteId: Long,
+        open val localId : Int,
         open val title: String,
         open val date: Date,
         open val labels: List<Int>,
@@ -25,7 +26,8 @@ sealed class PageItem(open val type: Type) {
     ) : PageItem(PAGE)
 
     data class PublishedPage(
-        override val id: Long,
+        override val remoteId: Long,
+        override val localId : Int,
         override val title: String,
         override val date: Date,
         override val labels: List<Int> = emptyList(),
@@ -36,7 +38,8 @@ sealed class PageItem(open val type: Type) {
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean
     ) : Page(
-            id = id,
+            remoteId = remoteId,
+            localId = localId,
             title = title,
             date = date,
             labels = labels,
@@ -50,7 +53,8 @@ sealed class PageItem(open val type: Type) {
     )
 
     data class DraftPage(
-        override val id: Long,
+        override val remoteId: Long,
+        override val localId : Int,
         override val title: String,
         override val date: Date,
         override val labels: List<Int> = emptyList(),
@@ -60,7 +64,8 @@ sealed class PageItem(open val type: Type) {
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean
     ) : Page(
-            id = id,
+            remoteId = remoteId,
+            localId = localId,
             title = title,
             date = date,
             labels = labels,
@@ -74,7 +79,8 @@ sealed class PageItem(open val type: Type) {
     )
 
     data class ScheduledPage(
-        override val id: Long,
+        override val remoteId: Long,
+        override val localId : Int,
         override val title: String,
         override val date: Date,
         override val labels: List<Int> = emptyList(),
@@ -84,7 +90,8 @@ sealed class PageItem(open val type: Type) {
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean
     ) : Page(
-            id = id,
+            remoteId = remoteId,
+            localId = localId,
             title = title,
             date = date,
             labels = labels,
@@ -98,7 +105,8 @@ sealed class PageItem(open val type: Type) {
     )
 
     data class TrashedPage(
-        override val id: Long,
+        override val remoteId: Long,
+        override val localId : Int,
         override val title: String,
         override val date: Date,
         override var imageUrl: String? = null,
@@ -107,7 +115,8 @@ sealed class PageItem(open val type: Type) {
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean
     ) : Page(
-            id = id,
+            remoteId = remoteId,
+            localId = localId,
             title = title,
             date = date,
             labels = emptyList(),

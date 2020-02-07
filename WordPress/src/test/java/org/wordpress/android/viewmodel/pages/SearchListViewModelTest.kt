@@ -109,7 +109,7 @@ class SearchListViewModelTest {
         }
         assertThat(searchResult[1]).isInstanceOf(PublishedPage::class.java)
         (searchResult[1] as PublishedPage).apply {
-            assertThat(this.id).isEqualTo(publishedPageRemoteId)
+            assertThat(this.remoteId).isEqualTo(publishedPageRemoteId)
         }
         assertThat(searchResult[2]).isInstanceOf(Divider::class.java)
         (searchResult[2] as Divider).apply {
@@ -117,13 +117,14 @@ class SearchListViewModelTest {
         }
         assertThat(searchResult[3]).isInstanceOf(DraftPage::class.java)
         (searchResult[3] as DraftPage).apply {
-            assertThat(this.id).isEqualTo(draftPageRemoteId)
+            assertThat(this.remoteId).isEqualTo(draftPageRemoteId)
         }
     }
 
     @Test
     fun `passes action to page view model on menu action`() {
         val clickedPage = PageItem.PublishedPage(
+                1,
                 1,
                 "title",
                 Date(),
@@ -145,7 +146,7 @@ class SearchListViewModelTest {
     @Test
     fun `passes page to page view model on item tapped`() {
         val clickedPage = PageItem.PublishedPage(
-                1, "title", Date(), listOf(), 0, null, mock(), false, ProgressBarUiState.Hidden,
+                1, 1, "title", Date(), listOf(), 0, null, mock(), false, ProgressBarUiState.Hidden,
                 false
         )
 

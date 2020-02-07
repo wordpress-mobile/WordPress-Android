@@ -10,7 +10,7 @@ class PageItemDiffUtil(val items: List<PageItem>, val result: List<PageItem>) : 
         val oldItem = items[oldItemPosition]
         val newItem = result[newItemPosition]
         return oldItem.type == newItem.type && when (oldItem) {
-            is Page -> oldItem.id == (newItem as Page).id
+            is Page -> oldItem.remoteId == (newItem as Page).remoteId
             is ParentPage -> oldItem.id == (newItem as ParentPage).id
             else -> oldItem == newItem
         }
