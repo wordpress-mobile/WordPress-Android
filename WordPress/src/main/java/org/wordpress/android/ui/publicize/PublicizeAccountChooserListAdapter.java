@@ -39,9 +39,8 @@ public class PublicizeAccountChooserListAdapter
         mSelectedPosition = 0;
     }
 
-    @NotNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public @NotNull ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.publicize_connection_list_item, parent, false);
 
