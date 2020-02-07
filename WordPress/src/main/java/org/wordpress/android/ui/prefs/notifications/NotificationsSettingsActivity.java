@@ -133,11 +133,8 @@ public class NotificationsSettingsActivity extends AppCompatActivity
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
         float cardElevation = getResources().getDimension(R.dimen.card_elevation);
-        int appBarColor =
-                elevationOverlayProvider
-                        .compositeOverlay(
-                                ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar),
-                                cardElevation);
+        int appBarColor = elevationOverlayProvider
+                .compositeOverlay(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar), cardElevation);
 
         masterSwitchToolBarView.setBackgroundColor(appBarColor);
 

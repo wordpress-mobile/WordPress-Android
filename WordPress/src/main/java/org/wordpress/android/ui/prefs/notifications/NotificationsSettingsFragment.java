@@ -702,7 +702,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 mOnSettingsChangedListener
         );
 
-
         setPreferenceIcon(emailPreference, R.drawable.ic_mail_white_24dp);
         emailPreference.setTitle(R.string.email);
         emailPreference.setDialogTitle(R.string.email);
