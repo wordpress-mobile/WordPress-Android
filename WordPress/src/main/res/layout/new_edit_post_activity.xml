@@ -33,7 +33,6 @@
         android:id="@+id/photo_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_container"
         android:layout_alignParentBottom="true"
         android:visibility="gone"
         tools:context=".ui.photopicker.PhotoPickerFragment"
