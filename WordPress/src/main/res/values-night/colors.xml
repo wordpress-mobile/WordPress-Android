@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Try no to put any colors here, unless absolutely necessary. Use styles instead. -->
+
+    <!--Overloaded Aztec colors. Remove after Aztec is phased out-->
+    <color name="format_bar_background">#282828</color>
+    <color name="format_bar_divider">?android:attr/listDivider</color>
+    <color name="text">@android:color/white</color>
+    <color name="title_color">@color/text</color>
+    <color name="hint_text">@color/material_on_surface_emphasis_medium</color>
+    <color name="bullet">@color/text</color>
+    <color name="quote_background">@color/neutral_60</color>
+    <color name="code_background">@color/neutral_60</color>
+    <color name="quote">@android:color/white</color>
+
+</resources>
