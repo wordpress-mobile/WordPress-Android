@@ -12,7 +12,7 @@ import java.util.Date
 sealed class PageItem(open val type: Type) {
     abstract class Page(
         open val remoteId: Long,
-        open val localId : Int,
+        open val localId: Int,
         open val title: String,
         open val date: Date,
         open val labels: List<Int>,
@@ -27,7 +27,7 @@ sealed class PageItem(open val type: Type) {
 
     data class PublishedPage(
         override val remoteId: Long,
-        override val localId : Int,
+        override val localId: Int,
         override val title: String,
         override val date: Date,
         override val labels: List<Int> = emptyList(),
@@ -54,7 +54,7 @@ sealed class PageItem(open val type: Type) {
 
     data class DraftPage(
         override val remoteId: Long,
-        override val localId : Int,
+        override val localId: Int,
         override val title: String,
         override val date: Date,
         override val labels: List<Int> = emptyList(),
@@ -80,7 +80,7 @@ sealed class PageItem(open val type: Type) {
 
     data class ScheduledPage(
         override val remoteId: Long,
-        override val localId : Int,
+        override val localId: Int,
         override val title: String,
         override val date: Date,
         override val labels: List<Int> = emptyList(),
@@ -106,7 +106,7 @@ sealed class PageItem(open val type: Type) {
 
     data class TrashedPage(
         override val remoteId: Long,
-        override val localId : Int,
+        override val localId: Int,
         override val title: String,
         override val date: Date,
         override var imageUrl: String? = null,
