@@ -155,12 +155,17 @@ class PageItemUiStateHelper @Inject constructor(
 
     private fun canCancelPendingAutoUpload(pageId: LocalId, site: SiteModel): Boolean {
         val post = postStore.getPostByLocalPostId(pageId.value)
-        val uploadUiState = createUploadUiState(
-                uploadStatusTracker.getUploadStatus(post, site),
-                post
-        )
-        return (uploadUiState is UploadWaitingForConnection ||
-                (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload))
+
+        post?.let {
+            val uploadUiState = createUploadUiState(
+                    uploadStatusTracker.getUploadStatus(post, site),
+                    post
+            )
+            return (uploadUiState is UploadWaitingForConnection ||
+                    (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload))
+        }
+
+        return false
     }
 
     private fun shouldShowOverlay(uploadUiState: PostUploadUiState): Boolean {
