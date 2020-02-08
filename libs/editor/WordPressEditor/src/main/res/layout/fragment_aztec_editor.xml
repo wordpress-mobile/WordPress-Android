@@ -2,7 +2,6 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aztec="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/white"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
@@ -12,8 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         aztec:advanced="true"
-        aztec:mediaToolbarAvailable="true">
-    </org.wordpress.aztec.toolbar.AztecToolbar>
+        aztec:mediaToolbarAvailable="true" />
 
     <ScrollView
         android:fillViewport="true"
@@ -44,9 +42,8 @@
                     android:textSize="@dimen/aztec_title_size"
                     android:imeOptions="flagNoExtractUi"
                     android:lineSpacingExtra="@dimen/spacing_extra_title"
-                    android:textColor="@color/grey_dark"
-                    android:textColorHint="@color/hint_text">
-                </org.wordpress.android.editor.EditTextWithKeyBackListener>
+                    android:textColor="@color/title_color"
+                    android:textColorHint="@color/hint_text" />
             </RelativeLayout>
 
             <View
