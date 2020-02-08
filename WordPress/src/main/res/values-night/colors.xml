@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" namespace tools:ignore="UnusedResources">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
     <!--  Try no to put any colors here, unless absolutely necessary. Use styles instead. -->
 
     <!--Overloaded Aztec colors. Remove after Aztec is phased out-->
