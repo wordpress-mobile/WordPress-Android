@@ -30,16 +30,12 @@ class PageParentSearchViewModel
         if (!isStarted) {
             isStarted = true
 
-            /** TODO Implement the method in pageParentView Model
             pageParentViewModel.searchPages.observeForever(searchObserver)
-            */
         }
     }
 
     override fun onCleared() {
-    /** TODO Implement the method in pageParentView Model
         pageParentViewModel.searchPages.removeObserver(searchObserver)
-    */
     }
 
     private val searchObserver = Observer<List<PageItem>> { pageItems ->
