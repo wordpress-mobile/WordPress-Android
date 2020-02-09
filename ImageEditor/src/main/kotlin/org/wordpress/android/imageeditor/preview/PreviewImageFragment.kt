@@ -16,9 +16,6 @@ class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
     private val imageEditor = ImageEditor.instance
 
-    private var wasPaused: Boolean = false
-    private var lowResImageUrl: String? = null
-
     companion object {
         const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
         const val ARG_HIGH_RES_IMAGE_URL = "arg_high_res_image_url"
@@ -30,37 +27,14 @@ class PreviewImageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(layout.fragment_preview_image, container, false)
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        val intent = activity?.intent
-        if (intent != null) {
-            if (intent.hasExtra(ARG_LOW_RES_IMAGE_URL)) {
-                outState.putString(
-                        ARG_LOW_RES_IMAGE_URL,
-                        intent.getStringExtra(ARG_LOW_RES_IMAGE_URL)
-                )
-            }
-            if (intent.hasExtra(ARG_HIGH_RES_IMAGE_URL)) {
-                outState.putString(
-                        ARG_HIGH_RES_IMAGE_URL,
-                        intent.getStringExtra(ARG_HIGH_RES_IMAGE_URL)
-                )
-            }
-        }
-        super.onSaveInstanceState(outState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullIntent = checkNotNull(requireActivity().intent)
-
-        lowResImageUrl = if (savedInstanceState == null) {
-            nonNullIntent.getStringExtra(ARG_LOW_RES_IMAGE_URL)
-        } else {
-            savedInstanceState.getString(ARG_LOW_RES_IMAGE_URL)
-        }
+        val lowResImageUrl = nonNullIntent.getStringExtra(ARG_LOW_RES_IMAGE_URL) as String
 
         initializeViewModels()
+        loadImage(lowResImageUrl)
     }
 
     private fun initializeViewModels() {
@@ -69,22 +43,5 @@ class PreviewImageFragment : Fragment() {
 
     private fun loadImage(@NonNull imageUrl: String) {
         imageEditor.loadUrlIntoImageView(imageUrl, previewImageView, CENTER)
-    }
-
-    override fun onPause() {
-        wasPaused = true
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        if (wasPaused) {
-            wasPaused = false
-        } else {
-            lowResImageUrl?.let {
-                loadImage(it)
-            }
-        }
     }
 }
