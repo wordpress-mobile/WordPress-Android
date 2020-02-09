@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -222,7 +221,6 @@ class PageParentFragment : Fragment() {
     }
 
     private fun hideSearchList(myActionMenuItem: MenuItem) {
-        Log.i(javaClass.simpleName, "***=> hide search list")
         recyclerView.visibility = View.VISIBLE
         frameSearch.visibility = View.GONE
         if (saveButton?.isVisible == true) {
