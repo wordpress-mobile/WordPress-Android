@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView.ScaleType.CENTER
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_preview_image.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.R.layout
@@ -38,7 +38,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun initializeViewModels() {
-        viewModel = ViewModelProviders.of(this).get(PreviewImageViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
     }
 
     private fun loadImage(@NonNull imageUrl: String) {

@@ -36,6 +36,7 @@ android {
 
 ext {
     navComponentVersion = '2.0.0'
+    lifecycleVersion = '2.2.0'
 }
 
 dependencies {
@@ -52,7 +53,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navComponentVersion"
 
     // ViewModel and LiveData
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensionsVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
 
     // uCrop
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
