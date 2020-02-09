@@ -42,6 +42,7 @@ import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
+import org.wordpress.android.viewmodel.pages.PageParentSearchViewModel;
 import org.wordpress.android.viewmodel.pages.PageParentViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.pages.SearchListViewModel;
@@ -275,6 +276,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostSignupInterstitialViewModel.class)
     abstract ViewModel postSignupInterstitialViewModel(PostSignupInterstitialViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PageParentSearchViewModel.class)
+    abstract ViewModel pageParentSearchViewModel(PageParentSearchViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
