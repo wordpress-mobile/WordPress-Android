@@ -13,31 +13,21 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
 import org.wordpress.android.TEST_SCOPE
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.page.PageModel
-import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Empty
-import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class PageParentSearchViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var site: SiteModel
     @Mock lateinit var pageParentViewModel: PageParentViewModel
 
     private lateinit var searchPages: MutableLiveData<List<PageItem>>
     private lateinit var viewModel: PageParentSearchViewModel
 
-    private lateinit var page: PageModel
-
     @Before
     fun setUp() {
-        page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
         viewModel = PageParentSearchViewModel(TEST_SCOPE)
         searchPages = MutableLiveData()
         whenever(pageParentViewModel.searchPages).thenReturn(searchPages)
