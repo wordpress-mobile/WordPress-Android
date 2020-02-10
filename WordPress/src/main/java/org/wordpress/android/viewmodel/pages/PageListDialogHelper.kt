@@ -15,6 +15,7 @@ import java.lang.NullPointerException
 
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 private const val CONFIRM_DELETE_PAGE_DIALOG_TAG = "CONFIRM_DELETE_PAGE_DIALOG_TAG"
+private const val POST_TYPE ="post_type"
 
 class PageListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
@@ -24,7 +25,7 @@ class PageListDialogHelper(
     private var pageIdForDeleteDialog: RemoteId? = null
 
     fun showAutoSaveRevisionDialog(page: PostModel) {
-        analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN)
+        analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "page"))
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_autosave_title),
@@ -67,7 +68,10 @@ class PageListDialogHelper(
                 // open the editor with the restored auto save
                 pageIdForAutosaveRevisionResolutionDialog = null
                 editPage(it, true)
-                analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED)
+                analyticsTracker.track(
+                        UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED,
+                        mapOf(POST_TYPE to "page")
+                )
             } ?: run {
                 throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
             }
@@ -84,7 +88,10 @@ class PageListDialogHelper(
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> pageIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the local page (don't use the auto save version)
                 editPage(it, false)
-                analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED)
+                analyticsTracker.track(
+                        UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED,
+                        mapOf(POST_TYPE to "page")
+                )
             } ?: run {
                 throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
             }
