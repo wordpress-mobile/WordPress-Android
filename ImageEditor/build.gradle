@@ -63,6 +63,13 @@ dependencies {
 
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
+        exclude group: 'com.android.support', module: 'support-compat'
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-core-utils'
+    })
+
     androidTestImplementation "androidx.test.ext:junit:$androidxTestVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 }
