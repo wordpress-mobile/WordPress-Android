@@ -11,6 +11,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.helpers.DialogHolder
+import java.lang.NullPointerException
 
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 private const val CONFIRM_DELETE_PAGE_DIALOG_TAG = "CONFIRM_DELETE_PAGE_DIALOG_TAG"
@@ -59,12 +60,16 @@ class PageListDialogHelper(
             CONFIRM_DELETE_PAGE_DIALOG_TAG -> pageIdForDeleteDialog?.let {
                 pageIdForDeleteDialog = null
                 deletePage(it)
+            } ?: run {
+               throw NullPointerException("pageIdForDeleteDialog shouldn't be null.")
             }
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> pageIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the restored auto save
                 pageIdForAutosaveRevisionResolutionDialog = null
                 editPage(it, true)
                 analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED)
+            } ?: run {
+                throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
             }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
@@ -80,6 +85,8 @@ class PageListDialogHelper(
                 // open the editor with the local page (don't use the auto save version)
                 editPage(it, false)
                 analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED)
+            } ?: run {
+                throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
             }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
