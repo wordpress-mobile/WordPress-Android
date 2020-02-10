@@ -60,8 +60,6 @@ class PageParentFragment : Fragment() {
         } else if (item.itemId == R.id.save_parent) {
             viewModel.onSaveButtonTapped()
             return true
-        } else if (item.itemId == R.id.action_search) {
-            return true
         }
 
         return super.onOptionsItemSelected(item)
