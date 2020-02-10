@@ -1716,6 +1716,7 @@
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
+    <string name="reader_self_hostes_select_filter">Use the filter button to see posts from selected subjects</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>

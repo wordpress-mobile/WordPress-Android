@@ -107,7 +107,9 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.Up
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -225,6 +227,7 @@ public class ReaderPostListFragment extends Fragment
     @Inject QuickStartStore mQuickStartStore;
     @Inject UiHelpers mUiHelpers;
     @Inject ReaderTracker mReaderTracker;
+    @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -404,13 +407,15 @@ public class ReaderPostListFragment extends Fragment
                         mCurrentTag,
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
-                ) || ReaderUtils.isDefaultTag(mCurrentTag)) && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
+                ) || ReaderUtils.isDefaultInMemoryTag(mCurrentTag))
+                    && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                   mViewModel.onSubfilterChanged(subfilterListItem, true);
                 }
             });
 
             mViewModel.getShouldShowSubFilters().observe(this, show -> {
                 mSubFilterComponent.setVisibility(show ? View.VISIBLE : View.GONE);
+                mSettingsButton.setVisibility(mAccountStore.hasAccessToken() ? View.VISIBLE : View.GONE);
             });
 
             mViewModel.getReaderModeInfo().observe(this, readerModeInfo -> {
@@ -461,7 +466,9 @@ public class ReaderPostListFragment extends Fragment
 
             mViewModel.getUpdateTagsAndSites().observe(this, event -> {
                 event.applyIfNotHandled(tasks -> {
-                    ReaderUpdateServiceStarter.startService(getActivity(), tasks);
+                    if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                        ReaderUpdateServiceStarter.startService(getActivity(), tasks);
+                    }
                     return null;
                 });
             });
@@ -484,10 +491,14 @@ public class ReaderPostListFragment extends Fragment
                         mCurrentTag,
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
-                ) || ReaderUtils.isDefaultTag(mCurrentTag))
+                ) || ReaderUtils.isDefaultInMemoryTag(mCurrentTag))
                 && BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel
         );
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
+            mViewModel.onUserChangedUpdate(getContext());
+        }
     }
 
     private void changeReaderMode(ReaderModeInfo readerModeInfo, boolean onlyOnChanges) {
@@ -599,15 +610,10 @@ public class ReaderPostListFragment extends Fragment
         } else if (!ReaderTagTable.tagExists(getCurrentTag())) {
             // current tag no longer exists, revert to default
             AppLog.d(T.READER, "reader post list > current tag no longer valid");
-            ReaderTag tag = ReaderUtils.getDefaultTag();
-            // it's possible the default tag won't exist if the user just changed the app's
-            // language, in which case default to the first tag in the table
-            if (!ReaderTagTable.tagExists(tag)) {
-                tag = ReaderTagTable.getFirstTag();
-            }
+            ReaderTag tag = ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider);
             setCurrentTag(tag);
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-                if (tag.isFollowedSites()) {
+                if (tag.isFollowedSites() || tag.isDefaultInMemoryTag()) {
                     mViewModel.setDefaultSubfilter();
                 }
             }
@@ -747,7 +753,7 @@ public class ReaderPostListFragment extends Fragment
         // refresh posts if user is viewing "Followed Sites"
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED
             && hasCurrentTag()
-            && getCurrentTag().isFollowedSites()) {
+            && (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag())) {
             refreshPosts();
         }
     }
@@ -901,7 +907,8 @@ public class ReaderPostListFragment extends Fragment
                     ReaderTag tag = ReaderUtils.getValidTagForSharedPrefs(
                             getCurrentTag(),
                             BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
-                            mRecyclerView);
+                            mRecyclerView,
+                            ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider));
 
                     return tag;
                 } else {
@@ -1550,14 +1557,22 @@ public class ReaderPostListFragment extends Fragment
             if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
                 title = getString(R.string.reader_empty_search_request_failed);
             } else {
-                title = getString(R.string.reader_empty_posts_request_failed);
+                if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
+                    if (!mAccountStore.hasAccessToken() && mViewModel.getCurrentSubfilterValue() instanceof SiteAll) {
+                        title = getString(R.string.reader_self_hostes_select_filter);
+                    } else {
+                        title = getString(R.string.reader_empty_posts_request_failed);
+                    }
+                } else {
+                    title = getString(R.string.reader_empty_posts_request_failed);
+                }
             }
         } else if (isUpdating() && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
             title = getString(R.string.reader_empty_posts_in_tag_updating);
         } else {
             switch (getPostListType()) {
                 case TAG_FOLLOWED:
-                    if (getCurrentTag().isFollowedSites()) {
+                    if (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag()) {
                         if (ReaderBlogTable.hasFollowedBlogs()) {
                             title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title);
                             description = getString(R.string.reader_empty_followed_blogs_no_recent_posts_description);
@@ -1717,14 +1732,14 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.refreshFilterCriteriaOptions();
 
         if (!ReaderTagTable.tagExists(tag)) {
-            tag = ReaderTagTable.getFirstTag();
+            tag = ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider);
         }
 
         setCurrentTag(tag, BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel);
         mViewModel.changeSubfiltersVisibility(
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
                 && mIsTopLevel
-                && tag.isFollowedSites());
+                && (tag.isFollowedSites() || tag.isDefaultInMemoryTag()));
     }
 
     /*
@@ -2003,7 +2018,7 @@ public class ReaderPostListFragment extends Fragment
         mCurrentTag = tag;
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && manageSubfilter) {
-            if (mCurrentTag.isFollowedSites()) {
+            if (mCurrentTag.isFollowedSites() || mCurrentTag.isDefaultInMemoryTag()) {
                 mViewModel.onSubfilterChanged(mViewModel.getCurrentSubfilterValue(), false);
             } else {
                 changeReaderMode(new ReaderModeInfo(
@@ -2025,7 +2040,8 @@ public class ReaderPostListFragment extends Fragment
         ReaderTag validTag = ReaderUtils.getValidTagForSharedPrefs(
                 tag,
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
-                mRecyclerView
+                mRecyclerView,
+                ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider)
         );
 
         switch (getPostListType()) {
@@ -2102,7 +2118,8 @@ public class ReaderPostListFragment extends Fragment
      * load tags on which the main data will be filtered
      */
     private void loadTags(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
-        new LoadTagsTask(listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        ReaderTag defaultTag = ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider);
+        new LoadTagsTask(listener, defaultTag).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*
@@ -2673,16 +2690,20 @@ public class ReaderPostListFragment extends Fragment
     public static void resetLastUpdateDate() {
         mLastAutoUpdateDt = null;
     }
+
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
+        private ReaderTag mDefaultTag;
 
-        LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
+        LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, ReaderTag defaultTag) {
             mFilterCriteriaLoaderListener = listener;
+            mDefaultTag = defaultTag;
         }
 
         @Override
         protected ReaderTagList doInBackground(Void... voids) {
             ReaderTagList tagList = ReaderTagTable.getDefaultTags();
+
             tagList.addAll(ReaderTagTable.getCustomListTags());
 
             if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE || !mIsTopLevel) {
@@ -2690,6 +2711,12 @@ public class ReaderPostListFragment extends Fragment
             }
 
             tagList.addAll(ReaderTagTable.getBookmarkTags());
+
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
+                if (!ReaderUtils.containsFollowing(tagList)) {
+                    tagList.add(mDefaultTag);
+                }
+            }
 
             return (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel)
                     ? ReaderUtils.getOrderedTagsList(tagList, ReaderUtils.getDefaultTagInfo()) : tagList;

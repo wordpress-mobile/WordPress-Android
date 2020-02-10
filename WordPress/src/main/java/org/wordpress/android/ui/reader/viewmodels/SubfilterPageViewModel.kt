@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState.HiddenEmptyUiState
@@ -13,7 +14,9 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
 
-class SubfilterPageViewModel @Inject constructor() : ViewModel() {
+class SubfilterPageViewModel @Inject constructor(
+    private val accountStore: AccountStore
+) : ViewModel() {
     private val _emptyState = MutableLiveData<BottomSheetEmptyUiState>()
     val emptyState: LiveData<BottomSheetEmptyUiState> = _emptyState
 
@@ -33,7 +36,7 @@ class SubfilterPageViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onSubFiltersChanged(isEmpty: Boolean) {
-        _emptyState.value = if (isEmpty) {
+        _emptyState.value = if (isEmpty && accountStore.hasAccessToken()) {
             VisibleEmptyUiState(
                     title = UiStringRes(
                         if (category == SITES)

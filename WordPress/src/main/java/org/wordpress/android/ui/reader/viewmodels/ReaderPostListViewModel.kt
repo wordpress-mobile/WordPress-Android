@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +12,8 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
+import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.modules.BG_THREAD
@@ -46,7 +49,8 @@ class ReaderPostListViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val subfilterListItemMapper: SubfilterListItemMapper,
-    private val eventBusWrapper: EventBusWrapper
+    private val eventBusWrapper: EventBusWrapper,
+    private val accountStore: AccountStore
 ) : ScopedViewModel(bgDispatcher) {
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
@@ -86,6 +90,9 @@ class ReaderPostListViewModel @Inject constructor(
     private var initialTag: ReaderTag? = null
     private var isStarted = false
     private var isFirstLoad = true
+
+    private var lastKnownAccount: AccountModel? = null
+    private var lastTokenAvailableStatus: Boolean? = null
 
     /**
      * Tag may be null for Blog previews for instance.
@@ -155,20 +162,27 @@ class ReaderPostListViewModel @Inject constructor(
         launch {
             val filterList = ArrayList<SubfilterListItem>()
 
-            // Filtering Discover out
-            val followedBlogs = ReaderBlogTable.getFollowedBlogs().let { blogList ->
-                blogList.filter { blog ->
-                    !(blog.url.startsWith("https://discover.wordpress.com"))
+            if (accountStore.hasAccessToken()) {
+                // Filtering Discover out
+                val followedBlogs = ReaderBlogTable.getFollowedBlogs().let { blogList ->
+                    blogList.filter { blog ->
+                        !(blog.url.startsWith("https://discover.wordpress.com"))
+                    }
                 }
-            }
 
-            for (blog in followedBlogs) {
-                filterList.add(Site(
-                        onClickAction = ::onSubfilterClicked,
-                        blog = blog,
-                        isSelected = (getCurrentSubfilterValue() is Site) &&
-                                (getCurrentSubfilterValue() as Site).blog.isSameAs(blog, false)
-                ))
+                for (blog in followedBlogs) {
+                    filterList.add(
+                            Site(
+                                    onClickAction = ::onSubfilterClicked,
+                                    blog = blog,
+                                    isSelected = (getCurrentSubfilterValue() is Site) &&
+                                            (getCurrentSubfilterValue() as Site).blog.isSameAs(
+                                                    blog,
+                                                    false
+                                            )
+                            )
+                    )
+                }
             }
 
             val tags = ReaderTagTable.getFollowedTags()
@@ -330,6 +344,27 @@ class ReaderPostListViewModel @Inject constructor(
     fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
         loadSubFilters()
+    }
+
+    fun onUserChangedUpdate(context: Context?) {
+        context?.let {
+            val accountChanged = lastKnownAccount == null ||
+                    (accountStore.account != null && accountStore.account != lastKnownAccount) ||
+                    (lastTokenAvailableStatus == null) ||
+                    (lastTokenAvailableStatus != null && lastTokenAvailableStatus != accountStore.hasAccessToken())
+
+            if (accountChanged) {
+                lastKnownAccount = accountStore.account
+                lastTokenAvailableStatus = accountStore.hasAccessToken()
+
+                _updateTagsAndSites.value = Event(EnumSet.of(
+                        UpdateTask.TAGS,
+                        UpdateTask.FOLLOWED_BLOGS
+                ))
+
+                setDefaultSubfilter()
+            }
+        }
     }
 
     override fun onCleared() {
