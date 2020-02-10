@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-12 00:55:12+0000
+Translation-Revision-Date: 2020-01-28 00:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_remove_image">Hapus Gambar</string>
+    <string name="gutenberg_native_move_image_forward">Pindahkan Gambar ke Depan</string>
+    <string name="gutenberg_native_move_image_backward">Pindahkan Gambar ke Belakang</string>
+    <string name="gutenberg_native_gallery_caption_s">Keterangan galeri. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Nilai saat ini %2$s</string>
+    <string name="create_post_page_fab_tooltip">Buat pos atau halaman</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">Ketuk %1$s Buat Pos %2$s untuk membuat pos baru.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Ketuk %1$s Pos Blog %2$s untuk melanjutkan.</string>
+    <string name="content_description_person_building_website">Orang membangun situs web</string>
+    <string name="post_signup_interstitial_not_right_now">Jangan sekarang</string>
+    <string name="post_signup_interstitial_subtitle">Apa pun yang ingin Anda buat atau bagikan, kami akan membantu Anda melakukannya di sini.</string>
+    <string name="post_signup_interstitial_title">Selamat Datang di WordPress</string>
+    <string name="stock_media_picker_list_content_description">Pustaka foto</string>
+    <string name="photo_picker_image_thumbnail_unselected">Tidak ada gambar yang dipilih</string>
+    <string name="photo_picker_image_selected">,Terpilih</string>
+    <string name="photo_picker_image_thumbnail_selected">Gambar terpilih</string>
+    <string name="photo_picker_image_thumbnail_content_description">Miniatur Gambar</string>
+    <string name="my_site_bottom_sheet_add_post">Pos blog</string>
+    <string name="my_site_bottom_sheet_title">Tambahkan baru</string>
+    <string name="post_settings_publish">Publikasikan</string>
+    <string name="dialog_gutenberg_informative_description_v2">Kami membuat perubahan besar untuk penyunting blok dan merasa itu layak dicoba! Kami memungkinkannya untuk pos dan halaman baru tetapi jika Anda ingin mengganti ke penyunting klasik, buka \'Situs Saya\' > \'Pengaturan Situs\'.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Sinkronisasi sekarang</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">Pos ini akan segera disinkronisasi.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">Siap Mensinkronkan?</string>
+    <string name="new_site_creation_unavailable_domain">Domain ini tidak tersedia</string>
+    <string name="login_promo_viewpager_content_description">Perkenalan</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Kami tidak dapat mengakses situs Anda. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
     <string name="login_discovery_error_ssl">Kami tidak dapat mengakses situs Anda karena ada masalah dengan &lt;b>Sertifikat SSL&lt;/b>. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
     <string name="login_discovery_error_http_auth">Kami tidak dapat mengakses situs Anda akrena hal ini membutuhkan &lt;b>Autentikasi HTTP&lt;/b>. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
@@ -142,14 +169,12 @@ Language: id
     <string name="stats_post_views_label">Tampilan</string>
     <string name="stats_post_label">Pos</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Grafik aktivitas pengiriman pos.</string>
     <string name="stats_item_collapsed">Item diciutkan</string>
     <string name="stats_item_expanded">Item dibentangkan</string>
     <string name="stats_collapse_content_description">Ciutkan</string>
     <string name="stats_expand_content_description">Bentangkan</string>
     <string name="stats_graph_updated">Grafik diperbarui.</string>
     <string name="stats_overview_content_description">%1$s %2$s untuk periode: %3$s, diubah dari periode sebelumnya - %4$s</string>
-    <string name="stats_bar_chart_content_description">Grafik penayangan situs.</string>
     <string name="stats_loading_card">Memuat data kartu yang dipilih</string>
     <string name="site_settings_editor">Penyunting</string>
     <string name="description_expand">Bentangkan</string>
@@ -593,7 +618,6 @@ Language: id
     <string name="media_empty_upload_media">Unggah media</string>
     <string name="media_empty_list">Anda tidak memiliki media apa pun</string>
     <string name="reader_avatar_desc">foto profil</string>
-    <string name="reader_blavatar_desc">ikon situs</string>
     <string name="notification_channel_transient_title">Transien</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Masukkan alamat email Anda</string>
@@ -709,7 +733,6 @@ Language: id
     <string name="site_settings_quota_space_unlimited">%1$s dari tidak terbatas</string>
     <string name="preview_count">Pratinjau %d</string>
     <string name="add_count">Tambahkan %d</string>
-    <string name="fab_create_desc">buat</string>
     <string name="fab_add_tag_desc">Buat Tag</string>
     <string name="navigate_up_desc">arahkan ke atas</string>
     <string name="notification_settings_switch_desc">Pemberitahuan</string>

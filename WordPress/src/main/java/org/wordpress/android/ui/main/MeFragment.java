@@ -446,7 +446,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
     }
 
     private void showPhotoPickerForGravatar() {
-        ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.GRAVATAR_IMAGE_PICKER, null, null);
+        ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GRAVATAR_IMAGE_PICKER, null, null);
     }
 
     private void startCropActivity(Uri uri) {
