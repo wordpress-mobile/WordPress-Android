@@ -1,5 +1,7 @@
 package org.wordpress.android.viewmodel.pages
 
+import androidx.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting.PRIVATE
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -153,7 +155,8 @@ class PageItemUiStateHelper @Inject constructor(
         }
     }
 
-    private fun canCancelPendingAutoUpload(pageId: LocalId, site: SiteModel): Boolean {
+    @VisibleForTesting(otherwise = PRIVATE)
+    fun canCancelPendingAutoUpload(pageId: LocalId, site: SiteModel): Boolean {
         val post = postStore.getPostByLocalPostId(pageId.value)
 
         post?.let {
