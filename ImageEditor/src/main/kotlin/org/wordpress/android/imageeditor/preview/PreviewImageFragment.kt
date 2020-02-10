@@ -19,6 +19,7 @@ class PreviewImageFragment : Fragment() {
     companion object {
         const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
         const val ARG_HIGH_RES_IMAGE_URL = "arg_high_res_image_url"
+        const val PREVIEW_IMAGE_REDUCED_SIZE_FACTOR = 0.1
     }
 
     override fun onCreateView(

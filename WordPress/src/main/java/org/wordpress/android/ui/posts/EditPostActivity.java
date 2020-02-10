@@ -189,6 +189,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
@@ -1655,25 +1656,20 @@ public class EditPostActivity extends AppCompatActivity implements
         // We're using a separate cache in WPAndroid and RN's Gutenberg editor so we need to reload the image
         // in the preview screen using WPAndroid's image loader. We create a resized url using Photon service and
         // device's max width to display a smaller image that can load faster and act as a placeholder.
-        boolean isPhotonCapable = mSite != null && SiteUtils.isPhotonCapable(mSite);
+        int displayWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getBaseContext()),
+                DisplayUtils.getDisplayPixelHeight(getBaseContext()));
 
-        if (mSite == null || isPhotonCapable) {
-            int displayWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getBaseContext()),
-                    DisplayUtils.getDisplayPixelHeight(getBaseContext()));
+        int margin = getResources().getDimensionPixelSize(R.dimen.preview_image_view_margin);
+        int maxWidth = displayWidth - (margin * 2);
 
-            int margin = getResources().getDimensionPixelSize(R.dimen.preview_image_view_margin);
-            int maxWidth = displayWidth - (margin * 2);
+        int reducedSizeWidth = (int) (maxWidth * PREVIEW_IMAGE_REDUCED_SIZE_FACTOR);
+        resizedImageUrl = mReaderUtilsWrapper.getResizedImageUrl(
+            mediaUrl,
+            reducedSizeWidth,
+            0,
+            !SiteUtils.isPhotonCapable(mSite)
+        );
 
-            int reducedSizeFactor = getResources().getDimensionPixelSize(R.dimen.preview_image_reduced_size_factor);
-            int reducedSizeWidth = maxWidth * reducedSizeFactor;
-
-            resizedImageUrl = mReaderUtilsWrapper.getResizedImageUrl(
-                    mediaUrl,
-                    reducedSizeWidth,
-                    0,
-                    !isPhotonCapable
-            );
-        }
         ActivityLauncher.openImageEditor(this, resizedImageUrl, mediaUrl);
     }
 
