@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -51,6 +52,8 @@ public class AppPrefs {
         // last selected tag in the reader
         READER_TAG_NAME,
         READER_TAG_TYPE,
+        READER_TAG_WAS_FOLLOWING,
+
         // last selected subfilter in the reader
         READER_SUBFILTER,
 
@@ -306,18 +309,39 @@ public class AppPrefs {
             return null;
         }
         int tagType = getInt(DeletablePrefKey.READER_TAG_TYPE);
-        return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType));
+
+        boolean wasFollowing = false;
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            wasFollowing = getBoolean(DeletablePrefKey.READER_TAG_WAS_FOLLOWING, false);
+        }
+
+        return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType), wasFollowing);
     }
 
     public static void setReaderTag(ReaderTag tag) {
         if (tag != null && !TextUtils.isEmpty(tag.getTagSlug())) {
             setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagSlug());
             setInt(DeletablePrefKey.READER_TAG_TYPE, tag.tagType.toInt());
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                setBoolean(
+                        DeletablePrefKey.READER_TAG_WAS_FOLLOWING,
+                        tag.isFollowedSites() || tag.isDefaultInMemoryTag()
+                );
+            }
         } else {
-            prefs().edit()
-                   .remove(DeletablePrefKey.READER_TAG_NAME.name())
-                   .remove(DeletablePrefKey.READER_TAG_TYPE.name())
-                   .apply();
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                prefs().edit()
+                       .remove(DeletablePrefKey.READER_TAG_NAME.name())
+                       .remove(DeletablePrefKey.READER_TAG_TYPE.name())
+                       .remove(DeletablePrefKey.READER_TAG_WAS_FOLLOWING.name())
+                       .apply();
+            } else {
+                prefs().edit()
+                       .remove(DeletablePrefKey.READER_TAG_NAME.name())
+                       .remove(DeletablePrefKey.READER_TAG_TYPE.name())
+                       .apply();
+            }
         }
     }
 
