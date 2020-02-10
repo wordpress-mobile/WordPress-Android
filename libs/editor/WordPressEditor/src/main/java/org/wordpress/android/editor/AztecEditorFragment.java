@@ -47,6 +47,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -282,6 +283,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mFormattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
         mFormattingToolbar.setExpanded(mIsToolbarExpanded);
+
+        View mediaCollapseButton = mFormattingToolbar.findViewById(R.id.format_bar_button_media_collapsed);
+        View mediaExpandButton = mFormattingToolbar.findViewById(R.id.format_bar_button_media_expanded);
+
+        mediaCollapseButton.setBackgroundTintList(ContextCompat
+                .getColorStateList(mediaExpandButton.getContext(), R.color.media_button_background_tint_selector));
+        mediaExpandButton.setBackgroundTintList(ContextCompat
+                .getColorStateList(mediaExpandButton.getContext(), R.color.media_button_background_tint_selector));
 
         mTitle.setOnFocusChangeListener(
                 new View.OnFocusChangeListener() {
