@@ -1,0 +1,6 @@
+14.1:
+- Editor de blocos: um novo bloco de shortcode permite criar e editar shortcodes, reduzimos o espaço em volta de blocos de texto e melhoramos a estabilidade ao editar posts muito longos.
+- Atualização: a opção para remover um site Jetpack do seletor de sites foi desabilitada.
+- Correção de erros: pesquisar por posts omitia alguns resultados. Agora a pesquisa funciona como esperado.
+
+
