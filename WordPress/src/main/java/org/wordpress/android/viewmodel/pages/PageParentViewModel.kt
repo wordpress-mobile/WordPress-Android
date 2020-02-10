@@ -27,7 +27,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -203,11 +202,7 @@ class PageParentViewModel
                     .filterIsInstance(ParentPage::class.java)
                     .filter { parentPage -> parentPage.id != 0L }
                     .filter { parentPage ->
-                        parentPage.title.toLowerCase(Locale.ROOT).contains(
-                                searchQuery.toLowerCase(
-                                        Locale.ROOT
-                                )
-                        )
+                        parentPage.title.contains(searchQuery, true)
                     }
         }
         return@withContext mutableListOf<PageItem>()
