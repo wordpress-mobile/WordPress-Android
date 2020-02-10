@@ -206,7 +206,7 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `showOverlay is correctly propagated from PageItemUploadpageItemUiStateHelper`() {
+    fun `showOverlay is correctly propagated from PageItemUiStateHelper`() {
         // Arrange
         val expectedShowOverlay = true
         val pages = MutableLiveData<List<PageModel>>()
@@ -227,7 +227,7 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `ProgressBarUiState is correctly propagated from PageItemUploadpageItemUiStateHelper`() {
+    fun `ProgressBarUiState is correctly propagated from PageItemUiStateHelper`() {
         // Arrange
         val expectedProgressBarUiState = ProgressBarUiState.Indeterminate
         val pages = MutableLiveData<List<PageModel>>()
