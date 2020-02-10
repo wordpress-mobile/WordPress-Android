@@ -108,6 +108,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
@@ -1531,7 +1532,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository,
                 this::updateFromEditor,
-                (post) -> {
+                (post, result) -> {
+                    // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
                     if (listener != null) {
                         listener.onPostSave();
                     }
@@ -1717,20 +1719,22 @@ public class EditPostActivity extends AppCompatActivity implements
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
             return true;
-        }, postModel -> {
-            refreshEditorContent();
-            WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
-                      .setAction(getString(R.string.undo), view -> {
-                          AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
-                          RemotePostPayload payload =
-                                  new RemotePostPayload(mEditPostRepository.getPostForUndo(), mSite);
-                          mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                          mEditPostRepository.undo();
-                          refreshEditorContent();
-                      })
-                      .show();
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                refreshEditorContent();
+                WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
+                          .setAction(getString(R.string.undo), view -> {
+                              AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
+                              RemotePostPayload payload =
+                                      new RemotePostPayload(mEditPostRepository.getPostForUndo(), mSite);
+                              mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                              mEditPostRepository.undo();
+                              refreshEditorContent();
+                          })
+                          .show();
 
-            updatePostLoadingAndDialogState(PostLoadingState.NONE);
+                updatePostLoadingAndDialogState(PostLoadingState.NONE);
+            }
             return null;
         });
     }
@@ -1815,9 +1819,11 @@ public class EditPostActivity extends AppCompatActivity implements
             // Hide the progress dialog now
             mEditorFragment.hideSavingProgressDialog();
             return true;
-        }, postModel -> {
-            ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
-            mViewModel.finish(activityFinishState);
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
+                mViewModel.finish(activityFinishState);
+            }
             return null;
         });
     }
@@ -2023,9 +2029,24 @@ public class EditPostActivity extends AppCompatActivity implements
         return content;
     }
 
+    private String migrateToGutenbergEditor(String content) {
+        return "<!-- wp:paragraph --><p>" + content + "</p><!-- /wp:paragraph -->";
+    }
+
     private void fillContentEditorFields() {
         // Needed blog settings needed by the editor
         mEditorFragment.setFeaturedImageSupported(mSite.isFeaturedImageSupported());
+
+        // Special actions - these only make sense for empty posts that are going to be populated now
+        if (TextUtils.isEmpty(mEditPostRepository.getContent())) {
+            String action = getIntent().getAction();
+            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                setPostContentFromShareAction();
+            } else if (NEW_MEDIA_POST.equals(action)) {
+                mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY,
+                        getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
+            }
+        }
 
         // Set post title and content
         if (mEditPostRepository.hasPost()) {
@@ -2050,17 +2071,6 @@ public class EditPostActivity extends AppCompatActivity implements
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
             mEditorFragment.setFeaturedImageId(mEditPostRepository.getFeaturedImageId());
         }
-
-        // Special actions - these only make sense for empty posts that are going to be populated now
-        if (TextUtils.isEmpty(mEditPostRepository.getContent())) {
-            String action = getIntent().getAction();
-            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-                setPostContentFromShareAction();
-            } else if (NEW_MEDIA_POST.equals(action)) {
-                mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY,
-                        getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
-            }
-        }
     }
 
     private void launchCamera() {
@@ -2075,20 +2085,28 @@ public class EditPostActivity extends AppCompatActivity implements
         final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
+            mHasSetPostContent = true;
             mEditPostRepository.updateAsync(postModel -> {
                 if (title != null) {
                     postModel.setTitle(title);
                 }
                 // Create an <a href> element around links
+                String updatedContent = AutolinkUtils.autoCreateLinks(text);
 
-                final String updatedContent = AutolinkUtils.autoCreateLinks(text);
+                // If editor is Gutenberg, add Gutenberg block around content
+                if (mShowGutenbergEditor) {
+                    updatedContent = migrateToGutenbergEditor(updatedContent);
+                }
+
                 // update PostModel
                 postModel.setContent(updatedContent);
                 mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
                 return true;
-            }, postModel -> {
-                mEditorFragment.setTitle(postModel.getTitle());
-                mEditorFragment.setContent(postModel.getContent());
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mEditorFragment.setTitle(postModel.getTitle());
+                    mEditorFragment.setContent(postModel.getContent());
+                }
                 return null;
             });
         }
@@ -2433,7 +2451,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onPerformFetch(String path, Consumer<String> onResult, Consumer<String> onError) {
+    public void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError) {
         if (mSite != null) {
             mReactNativeRequestHandler.performGetRequest(path, mSite, onResult, onError);
         }

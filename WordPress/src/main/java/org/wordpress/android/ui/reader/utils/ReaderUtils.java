@@ -359,33 +359,32 @@ public class ReaderUtils {
         }
     }
 
-    public static ReaderTag getValidTagForSharedPrefs(
-            ReaderTag tag,
+    public static @NonNull ReaderTag getValidTagForSharedPrefs(
+            @NonNull ReaderTag tag,
             boolean isTopLevelReader,
             FilteredRecyclerView recyclerView
     ) {
-        ReaderTag validTag = tag;
+        if (!isTopLevelReader) {
+            return tag;
+        }
 
-        if (isTopLevelReader) {
-            if (tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked()
-                    ||
-                (recyclerView != null && recyclerView.isValidFilter(tag))
-            ) {
-                validTag = tag;
+        boolean isValidFilter = (recyclerView != null && recyclerView.isValidFilter(tag));
+        boolean isSpecialTag = tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked();
+        if (!isSpecialTag && !isValidFilter && isFollowing(tag, isTopLevelReader, recyclerView)) {
+            ReaderTag defaultTag = ReaderUtils.getDefaultTag();
+            // it's possible the default tag won't exist if the user just changed the app's
+            // language, in which case default to the first tag in the table
+            if (ReaderTagTable.tagExists(defaultTag)) {
+                return defaultTag;
             } else {
-                if (isFollowing(tag, isTopLevelReader, recyclerView)) {
-                    validTag = ReaderUtils.getDefaultTag();
-
-                    // it's possible the default tag won't exist if the user just changed the app's
-                    // language, in which case default to the first tag in the table
-                    if (!ReaderTagTable.tagExists(validTag)) {
-                        validTag = ReaderTagTable.getFirstTag();
-                    }
+                ReaderTag firstTag = ReaderTagTable.getFirstTag();
+                if (firstTag != null) {
+                    return firstTag;
                 }
             }
         }
 
-        return validTag;
+        return tag;
     }
 
     public static boolean isDefaultTag(ReaderTag tag) {

@@ -27,11 +27,15 @@ import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.ReaderSubsActivity
+import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
+import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
+import org.wordpress.android.util.EventBusWrapper
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -53,6 +57,7 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var newsTrackerHelper: NewsTrackerHelper
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var subfilterListItemMapper: SubfilterListItemMapper
+    @Mock private lateinit var eventBusWrapper: EventBusWrapper
 
     private lateinit var viewModel: ReaderPostListViewModel
     private val liveData = MutableLiveData<NewsItem>()
@@ -76,7 +81,8 @@ class ReaderPostListViewModelTest {
                 newsTrackerHelper,
                 TEST_DISPATCHER,
                 appPrefsWrapper,
-                subfilterListItemMapper
+                subfilterListItemMapper,
+                eventBusWrapper
         )
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
@@ -176,11 +182,11 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun verifySubfilterVisibility() {
-        viewModel.setSubfiltersVisibility(true)
+    fun verifyChangeSubfiltersVisibility() {
+        viewModel.changeSubfiltersVisibility(true)
         assertThat(viewModel.shouldShowSubFilters.value).isEqualTo(true)
 
-        viewModel.setSubfiltersVisibility(false)
+        viewModel.changeSubfiltersVisibility(false)
         assertThat(viewModel.shouldShowSubFilters.value).isEqualTo(false)
     }
 
@@ -212,6 +218,36 @@ class ReaderPostListViewModelTest {
         viewModel.currentSubFilter.observeForever { item = it }
 
         assertThat(item).isInstanceOf(SiteAll::class.java)
+    }
+
+    @Test
+    fun verifyOnSubfilterPageUpdated() {
+        val data = hashMapOf(SITES to 3, TAGS to 25)
+        viewModel.start(initialTag, false, false)
+
+        for (testStep in data.keys) {
+            viewModel.onSubfilterPageUpdated(testStep, data.getOrDefault(testStep, 0))
+        }
+
+        assertThat(viewModel.filtersMatchCount.value).isEqualTo(data)
+    }
+
+    @Test
+    fun verifyOnBottomSheetActionClickedEmitsFollowedBlogs() {
+        viewModel.onBottomSheetActionClicked(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
+
+        assertThat(viewModel.changeBottomSheetVisibility.value!!.peekContent()).isEqualTo(false)
+        assertThat(viewModel.startSubsActivity.value!!.peekContent())
+                .isEqualTo(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
+    }
+
+    @Test
+    fun verifyOnBottomSheetActionClickedEmitsFollowedTags() {
+        viewModel.onBottomSheetActionClicked(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
+
+        assertThat(viewModel.changeBottomSheetVisibility.value!!.peekContent()).isEqualTo(false)
+        assertThat(viewModel.startSubsActivity.value!!.peekContent())
+                .isEqualTo(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
     }
 
     private fun onClickActionDummy(filter: SubfilterListItem) {

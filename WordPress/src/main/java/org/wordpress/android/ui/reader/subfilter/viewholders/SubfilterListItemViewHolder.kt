@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.getColorResIdFromAttribute
 
 open class SubfilterListItemViewHolder(
     internal val parent: ViewGroup,
@@ -23,9 +24,14 @@ open class SubfilterListItemViewHolder(
         }
         val itemText: TextView? = this.itemView.findViewById(R.id.item_title)
         itemText?.let {
-            if (filter.isSelected) {
-                it.setTextColor(ContextCompat.getColor(parent.context, R.color.primary))
-            }
+            it.setTextColor(ContextCompat.getColor(
+                    parent.context,
+                    if (filter.isSelected) {
+                        R.color.primary
+                    } else {
+                        parent.context.getColorResIdFromAttribute(R.attr.wpColorText)
+                    }
+            ))
         }
 
         this.itemView.setOnClickListener {

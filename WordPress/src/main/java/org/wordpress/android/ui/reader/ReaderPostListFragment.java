@@ -176,6 +176,7 @@ public class ReaderPostListFragment extends Fragment
     private ImageView mSettingsButton;
     private View mSubFiltersListButton;
     private TextView mSubFilterTitle;
+    private View mRemoveFilterButton;
 
     private boolean mIsTopLevel = false;
     private static final String SUBFILTER_BOTTOM_SHEET_TAG = "SUBFILTER_BOTTOM_SHEET_TAG";
@@ -404,7 +405,7 @@ public class ReaderPostListFragment extends Fragment
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
                 ) || ReaderUtils.isDefaultTag(mCurrentTag)) && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
-                  mViewModel.applySubfilter(subfilterListItem, true);
+                  mViewModel.onSubfilterChanged(subfilterListItem, true);
                 }
             });
 
@@ -424,22 +425,43 @@ public class ReaderPostListFragment extends Fragment
                                 )
                         );
                     }
+
+                    if (readerModeInfo.isFiltered()) {
+                        mRemoveFilterButton.setVisibility(View.VISIBLE);
+                    } else {
+                        mRemoveFilterButton.setVisibility(View.GONE);
+                    }
                 }
             });
 
-            mViewModel.isBottomSheetShowing().observe(this, event -> {
+            mViewModel.getChangeBottomSheetVisibility().observe(this, event -> {
                 event.applyIfNotHandled(isShowing -> {
                     FragmentManager fm = getFragmentManager();
                     if (fm != null) {
                         SubfilterBottomSheetFragment bottomSheet =
                                 (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
                         if (isShowing && bottomSheet == null) {
+                            mViewModel.loadSubFilters();
                             bottomSheet = new SubfilterBottomSheetFragment();
                             bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                         } else if (!isShowing && bottomSheet != null) {
                             bottomSheet.dismiss();
                         }
                     }
+                    return null;
+                });
+            });
+
+            mViewModel.getStartSubsActivity().observe(this, event -> {
+                event.applyIfNotHandled(tabIndex -> {
+                    ReaderActivityLauncher.showReaderSubs(requireActivity(), tabIndex);
+                    return null;
+                });
+            });
+
+            mViewModel.getUpdateTagsAndSites().observe(this, event -> {
+                event.applyIfNotHandled(tasks -> {
+                    ReaderUpdateServiceStarter.startService(getActivity(), tasks);
                     return null;
                 });
             });
@@ -966,10 +988,15 @@ public class ReaderPostListFragment extends Fragment
 
             mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
             mSubFiltersListButton.setOnClickListener(v -> {
-                mViewModel.setIsBottomSheetShowing(true);
+                mViewModel.onSubFiltersListButtonClicked();
             });
 
             mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);
+
+            mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
+            mRemoveFilterButton.setOnClickListener(v -> {
+                mViewModel.setDefaultSubfilter();
+            });
         }
 
         return rootView;
@@ -1028,9 +1055,9 @@ public class ReaderPostListFragment extends Fragment
                 showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
                 mRecyclerView.setTabLayoutVisibility(false);
-                mViewModel.setSubfiltersVisibility(false);
+                mViewModel.changeSubfiltersVisibility(false);
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-                    mViewModel.setCollapseToolbar(false);
+                    mViewModel.onSearchMenuCollapse(false);
                 }
 
                 // hide the bottom navigation when search is active
@@ -1067,17 +1094,17 @@ public class ReaderPostListFragment extends Fragment
                             BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                             mRecyclerView)
                     ) {
-                        mViewModel.applySubfilter(mViewModel.getCurrentSubfilterValue(), false);
+                        mViewModel.onSubfilterChanged(mViewModel.getCurrentSubfilterValue(), false);
                     } else {
                         // return to the followed tag that was showing prior to searching
                         resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
                     }
 
                     mRecyclerView.setTabLayoutVisibility(true);
-                    mViewModel.setSubfiltersVisibility(
+                    mViewModel.changeSubfiltersVisibility(
                             ReaderUtils.isFollowing(mCurrentTag, mIsTopLevel, mRecyclerView)
                     );
-                    mViewModel.setCollapseToolbar(true);
+                    mViewModel.onSearchMenuCollapse(true);
                 } else {
                     // return to the followed tag that was showing prior to searching
                     resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
@@ -1694,7 +1721,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         setCurrentTag(tag, BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel);
-        mViewModel.setSubfiltersVisibility(
+        mViewModel.changeSubfiltersVisibility(
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
                 && mIsTopLevel
                 && tag.isFollowedSites());
@@ -1977,7 +2004,7 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && manageSubfilter) {
             if (mCurrentTag.isFollowedSites()) {
-                mViewModel.applySubfilter(mViewModel.getCurrentSubfilterValue(), false);
+                mViewModel.onSubfilterChanged(mViewModel.getCurrentSubfilterValue(), false);
             } else {
                 changeReaderMode(new ReaderModeInfo(
                         tag,
@@ -1986,7 +2013,8 @@ public class ReaderPostListFragment extends Fragment
                         0,
                         false,
                         null,
-                        false),
+                        false,
+                         mRemoveFilterButton.getVisibility() == View.VISIBLE),
                         false
                 );
             }
@@ -2021,10 +2049,12 @@ public class ReaderPostListFragment extends Fragment
         }
 
         getPostAdapter().setCurrentTag(mCurrentTag);
-        mViewModel.setSubfiltersVisibility(BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && ReaderUtils.isFollowing(
+        mViewModel.changeSubfiltersVisibility(
+                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && ReaderUtils.isFollowing(
                 mCurrentTag,
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
-                mRecyclerView));
+                mRecyclerView)
+        );
         hideNewPostsBar();
         showLoadingProgress(false);
         updateCurrentTagIfTime();
