@@ -459,6 +459,9 @@ class PagesViewModel
     }
 
     fun onItemTapped(pageItem: Page) {
+        // TODO We are going to be doing a refactor of the ViewModels related to Pages so that the PostModel is
+        //  available without doing subsequent fetches from the PostStore
+        //  https://github.com/wordpress-mobile/WordPress-Android/issues/11233
         val page = postStore.getPostByRemotePostId(pageItem.id, site)
         // Then check if an autosave revision is available
         if (pageConflictResolver.hasUnhandledAutoSave(page)) {
