@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.modules.UI_SCOPE
@@ -28,7 +29,8 @@ import javax.inject.Named
 class SearchListViewModel
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope
+    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
+    private val progressHelper: PageItemUploadProgressHelper
 ) : ViewModel() {
     private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
     val searchResult: LiveData<List<PageItem>> = _searchResult
@@ -86,12 +88,42 @@ class SearchListViewModel
     }
 
     private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
+        val progressState = progressHelper.getProgressStateForPage(LocalId(pageId), pagesViewModel.site)
+
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->
-                PublishedPage(remoteId, title, date, actionsEnabled = areActionsEnabled)
-            PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(remoteId, title, date, actionsEnabled = areActionsEnabled)
-            PageStatus.TRASHED -> TrashedPage(remoteId, title, date, actionsEnabled = areActionsEnabled)
-            PageStatus.SCHEDULED -> ScheduledPage(remoteId, title, date, actionsEnabled = areActionsEnabled)
+                PublishedPage(
+                        remoteId,
+                        title,
+                        date,
+                        actionsEnabled = areActionsEnabled,
+                        progressBarUiState = progressState.first,
+                        showOverlay = progressState.second
+                )
+            PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
+                    remoteId,
+                    title,
+                    date,
+                    actionsEnabled = areActionsEnabled,
+                    progressBarUiState = progressState.first,
+                    showOverlay = progressState.second
+            )
+            PageStatus.TRASHED -> TrashedPage(
+                    remoteId,
+                    title,
+                    date,
+                    actionsEnabled = areActionsEnabled,
+                    progressBarUiState = progressState.first,
+                    showOverlay = progressState.second
+            )
+            PageStatus.SCHEDULED -> ScheduledPage(
+                    remoteId,
+                    title,
+                    date,
+                    actionsEnabled = areActionsEnabled,
+                    progressBarUiState = progressState.first,
+                    showOverlay = progressState.second
+            )
         }
     }
 }

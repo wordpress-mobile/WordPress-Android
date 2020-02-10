@@ -40,6 +40,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploa
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadWaitingForConnection
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingMedia
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingPost
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
@@ -136,7 +137,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 statuses = statuses,
                 statusesColor = statusesColor,
                 statusesDelimiter = statusesDelimeter,
-                progressBarState = getProgressBarState(
+                progressBarUiState = getProgressBarState(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
                 ),
@@ -186,15 +187,15 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     private fun getProgressBarState(
         uploadUiState: PostUploadUiState,
         performingCriticalAction: Boolean
-    ): PostListItemProgressBar {
+    ): ProgressBarUiState {
         return if (shouldShowProgress(uploadUiState, performingCriticalAction)) {
             if (uploadUiState is UploadingMedia) {
-                PostListItemProgressBar.Determinate(uploadUiState.progress)
+                ProgressBarUiState.Determinate(uploadUiState.progress)
             } else {
-                PostListItemProgressBar.Indeterminate
+                ProgressBarUiState.Indeterminate
             }
         } else {
-            PostListItemProgressBar.Hidden
+            ProgressBarUiState.Hidden
         }
     }
 
