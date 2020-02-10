@@ -460,12 +460,8 @@ public class PostUtils {
     }
 
     public static UiStringText getCustomStringForAutosaveRevisionDialog(PostModel post) {
-        return getCustomStringForAutosaveRevisionDialog(post, false);
-    }
-
-    public static UiStringText getCustomStringForAutosaveRevisionDialog(PostModel post, boolean isPage) {
         Context context = WordPress.getContext();
-        String firstPart = isPage ? context.getString(R.string.dialog_confirm_autosave_body_first_part_for_page)
+        String firstPart = post.isPage() ? context.getString(R.string.dialog_confirm_autosave_body_first_part_for_page)
                 : context.getString(R.string.dialog_confirm_autosave_body_first_part);
 
         String lastModified =
