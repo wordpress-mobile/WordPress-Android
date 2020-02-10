@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedWithUIListener
+import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.ProgressDialogUiState.HiddenProgressDialog
@@ -48,7 +48,7 @@ import kotlin.coroutines.CoroutineContext
 
 interface EditorMediaListener {
     fun appendMediaFiles(mediaFiles: Map<String, MediaFile>)
-    fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedWithUIListener? = null)
+    fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener? = null)
     fun advertiseImageOptimization(listener: () -> Unit)
     fun getImmutablePost(): PostImmutableModel
 }

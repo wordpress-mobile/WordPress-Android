@@ -1525,7 +1525,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository, this::updateFromEditor, null);
     }
 
-    private void updateAndSavePostAsync(final OnPostUpdatedWithUIListener listener) {
+    private void updateAndSavePostAsync(final OnPostUpdatedFromUIListener listener) {
         if (mEditorFragment == null) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
             return;
@@ -1535,7 +1535,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 (post, result) -> {
                     // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
                     if (listener != null) {
-                        listener.onPostUpdatedWithUI();
+                        listener.onPostUpdatedFromUI();
                     }
                     return null;
                 });
@@ -1695,8 +1695,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    public interface OnPostUpdatedWithUIListener {
-        void onPostUpdatedWithUI();
+    public interface OnPostUpdatedFromUIListener {
+        void onPostUpdatedFromUI();
     }
 
     @Override
@@ -2895,7 +2895,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void syncPostObjectWithUiAndSaveIt(@Nullable OnPostUpdatedWithUIListener listener) {
+    public void syncPostObjectWithUiAndSaveIt(@Nullable OnPostUpdatedFromUIListener listener) {
         updateAndSavePostAsync(listener);
     }
 
