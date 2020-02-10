@@ -29,6 +29,8 @@
 
     <dimen name="card_elevation">2dp</dimen>
 
+    <dimen name="popup_over_toolbar_elevation">8dp</dimen>
+
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
     <dimen name="snackbar_height_minimum">48dp</dimen>
