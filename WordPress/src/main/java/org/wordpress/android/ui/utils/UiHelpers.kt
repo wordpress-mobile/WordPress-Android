@@ -29,7 +29,7 @@ class UiHelpers @Inject constructor() {
             when (uiString) {
                 is UiStringRes -> context.getString(uiString.stringRes)
                 is UiStringText -> uiString.text
-                is UiStringResWithParams -> context.getString(uiString.stringRes, uiString.params)
+                is UiStringResWithParams -> context.getString(uiString.stringRes, *uiString.params.toTypedArray())
             }
 
     fun updateVisibility(view: View, visible: Boolean) {
