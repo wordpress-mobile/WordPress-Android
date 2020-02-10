@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostStatusFetched
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostAutoSaved
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostIsDraftInRemote
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -54,9 +55,8 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
         val localPostId = LocalId(remotePostPayload.post.id)
         if (postStatusContinuations.containsKey(localPostId) ||
                 autoSaveContinuations.containsKey(localPostId)) {
-            // TODO: Consider canceling the previous job instead
-            // We are already handling this post
-            return
+            throw IllegalArgumentException("This post is already being processed. Make sure not to start an autoSave " +
+                    "or update draft action while another one is going on.")
         }
         // TODO: What scope should we use for this?
         GlobalScope.launch {
