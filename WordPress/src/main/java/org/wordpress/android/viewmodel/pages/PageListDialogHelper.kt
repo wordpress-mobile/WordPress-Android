@@ -15,7 +15,7 @@ import java.lang.NullPointerException
 
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 private const val CONFIRM_DELETE_PAGE_DIALOG_TAG = "CONFIRM_DELETE_PAGE_DIALOG_TAG"
-private const val POST_TYPE ="post_type"
+private const val POST_TYPE = "post_type"
 
 class PageListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
