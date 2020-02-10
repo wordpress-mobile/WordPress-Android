@@ -198,20 +198,17 @@ class PageParentViewModel
     private suspend fun search(
         searchQuery: String
     ): List<PageItem> = withContext(defaultDispatcher) {
-        val tempPages = _pages.value
-        if (tempPages != null) {
-            if (tempPages.isNotEmpty()) {
-                return@withContext tempPages
-                        .filterIsInstance(ParentPage::class.java)
-                        .filter { it.id != 0L }
-                        .filter {
-                            it.title.toLowerCase(Locale.ROOT).contains(
-                                    searchQuery.toLowerCase(
-                                            Locale.ROOT
-                                    )
-                            )
-                        }
-            }
+        _pages.value?.let {
+            if (it.isNotEmpty()) return@withContext it
+                    .filterIsInstance(ParentPage::class.java)
+                    .filter { parentPage -> parentPage.id != 0L }
+                    .filter { parentPage ->
+                        parentPage.title.toLowerCase(Locale.ROOT).contains(
+                                searchQuery.toLowerCase(
+                                        Locale.ROOT
+                                )
+                        )
+                    }
         }
         return@withContext mutableListOf<PageItem>()
     }
