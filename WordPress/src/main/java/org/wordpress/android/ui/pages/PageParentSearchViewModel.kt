@@ -46,7 +46,6 @@ class PageParentSearchViewModel
         }
     }
 
-
     fun onParentSelected(page: ParentPage) {
         pageParentViewModel.onParentSelected(page)
     }

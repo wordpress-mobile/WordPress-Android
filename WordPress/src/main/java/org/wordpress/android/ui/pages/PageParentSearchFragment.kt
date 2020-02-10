@@ -94,7 +94,7 @@ class PageParentSearchFragment : Fragment() {
         val adapter: PageParentSearchAdapter
         if (recyclerView.adapter == null) {
             adapter = PageParentSearchAdapter(
-                    { page -> viewModel.onParentSelected(page) }, uiScope )
+                    { page -> viewModel.onParentSelected(page) }, uiScope)
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as PageParentSearchAdapter

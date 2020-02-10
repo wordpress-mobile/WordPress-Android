@@ -80,7 +80,6 @@ class PageParentFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.page_parent_menu, menu)

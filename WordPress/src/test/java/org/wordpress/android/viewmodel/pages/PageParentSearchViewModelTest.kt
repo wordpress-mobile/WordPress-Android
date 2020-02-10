@@ -60,7 +60,7 @@ class PageParentSearchViewModelTest {
 
     @Test
     fun `passes page to page view model on parent radio button selected`() {
-        val clickedPage = PageItem.ParentPage(id = 1, title ="title", isSelected = true, type = PageItem.Type.PARENT)
+        val clickedPage = PageItem.ParentPage(id = 1, title = "title", isSelected = true, type = PageItem.Type.PARENT)
 
         viewModel.onParentSelected(clickedPage)
 
