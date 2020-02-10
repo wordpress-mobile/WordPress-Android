@@ -56,6 +56,8 @@ class PagesActivity : AppCompatActivity(),
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is PagesFragment) {
             fragment.onPositiveClickedForBasicDialog(instanceTag)
+        } else {
+            throw IllegalStateException("PagesFragment is required to consume this event.")
         }
     }
 
@@ -63,6 +65,8 @@ class PagesActivity : AppCompatActivity(),
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is PagesFragment) {
             fragment.onNegativeClickedForBasicDialog(instanceTag)
+        } else {
+            throw IllegalStateException("PagesFragment is required to consume this event.")
         }
     }
 }
