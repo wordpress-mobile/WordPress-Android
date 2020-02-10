@@ -184,6 +184,8 @@ class PageParentFragment : Fragment() {
             val site = activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
             val nonNullSite = checkNotNull(site)
             viewModel.start(nonNullSite, pageId)
+        } else {
+            restorePreviousSearch = true
         }
     }
 
