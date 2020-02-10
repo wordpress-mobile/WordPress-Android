@@ -61,7 +61,7 @@ class PageListDialogHelper(
                 pageIdForDeleteDialog = null
                 deletePage(it)
             } ?: run {
-               throw NullPointerException("pageIdForDeleteDialog shouldn't be null.")
+                throw NullPointerException("pageIdForDeleteDialog shouldn't be null.")
             }
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> pageIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the restored auto save
