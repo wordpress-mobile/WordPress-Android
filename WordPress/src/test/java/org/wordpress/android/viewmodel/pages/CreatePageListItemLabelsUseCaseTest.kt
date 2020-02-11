@@ -50,7 +50,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `pending review label shown for posts pending review`() {
+    fun `pending review label shown for pages pending review`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply { setStatus(PENDING.toString()) },
                 mock()
@@ -60,26 +60,26 @@ class CreatePageListItemLabelsUseCaseTest {
 
     //
     @Test
-    fun `local draft label shown for local posts`() {
+    fun `local draft label shown for local pages`() {
         val (labels, _) = useCase.createLabels(PostModel().apply { setIsLocalDraft(true) }, mock())
         assertThat(labels).contains(UiStringRes(R.string.page_local_draft))
     }
 
     @Test
-    fun `locally changed label shown for locally changed posts`() {
+    fun `locally changed label shown for locally changed pages`() {
         val (labels, _) = useCase.createLabels(PostModel().apply { setIsLocallyChanged(true) }, mock())
         assertThat(labels).contains(UiStringRes(R.string.page_local_changes))
     }
 
     @Test
-    fun `unhandled auto-save label shown for posts with existing auto-save`() {
+    fun `unhandled auto-save label shown for pages with existing auto-save`() {
         whenever(pageConflictResolver.hasUnhandledAutoSave(anyOrNull())).thenReturn(true)
         val (labels, _) = useCase.createLabels(PostModel(), mock())
         assertThat(labels).contains(UiStringRes(R.string.local_page_autosave_revision_available))
     }
 
     @Test
-    fun `uploading post label shown when the post is being uploaded`() {
+    fun `uploading page label shown when the page is being uploaded`() {
         val (labels, _) = useCase.createLabels(PostModel(), PostUploadUiState.UploadingPost(false))
         assertThat(labels).contains(UiStringRes(R.string.page_uploading))
     }
@@ -91,13 +91,13 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `uploading media label shown when the post's media is being uploaded`() {
+    fun `uploading media label shown when the page's media is being uploaded`() {
         val (labels, _) = useCase.createLabels(PostModel(), PostUploadUiState.UploadingMedia(0))
         assertThat(labels).contains(UiStringRes(R.string.uploading_media))
     }
 
     @Test
-    fun `queued post label shown when the post was enqueued for upload`() {
+    fun `queued page label shown when the page was enqueued for upload`() {
         val (labels, _) = useCase.createLabels(PostModel(), PostUploadUiState.UploadQueued)
         assertThat(labels).contains(UiStringRes(R.string.page_queued))
     }
@@ -143,7 +143,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `media upload error shown with specific message for pending post eligible for auto-upload`() {
+    fun `media upload error shown with specific message for pending page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
                     setIsLocallyChanged(true)
@@ -159,7 +159,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `media upload error shown with specific message for pending post not eligible for auto-upload`() {
+    fun `media upload error shown with specific message for pending page not eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
                     setIsLocallyChanged(true)
@@ -175,7 +175,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `media upload error shown with specific message for scheduled post eligible for auto-upload`() {
+    fun `media upload error shown with specific message for scheduled page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
                     setIsLocallyChanged(true)
@@ -192,7 +192,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `media upload error shown with specific message for scheduled post not eligible for auto-upload`() {
+    fun `media upload error shown with specific message for scheduled page not eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
                     setIsLocallyChanged(true)
@@ -287,7 +287,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `pending publish post label shown when post eligible for auto-upload`() {
+    fun `pending publish page label shown when page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
                     setIsLocallyChanged(true)
@@ -300,7 +300,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `pending schedule label shown when post eligible for auto-upload`() {
+    fun `pending schedule label shown when page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
                     setIsLocallyChanged(true)
@@ -313,7 +313,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `pending publish private post label shown when post eligible for auto-upload`() {
+    fun `pending publish private page label shown when page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
                     setIsLocallyChanged(true)
@@ -326,7 +326,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `pending submit post label shown when post eligible for auto-upload`() {
+    fun `pending submit page label shown when page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
                     setIsLocallyChanged(true)
@@ -339,7 +339,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `local changes post label shown when draft eligible for auto-upload`() {
+    fun `local changes page label shown when draft eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
                     setIsLocallyChanged(true)
@@ -351,7 +351,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `when a post is locally changed and is local draft only "Local draft" label is displayed`() {
+    fun `when a page is locally changed and is local draft only "Local draft" label is displayed`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
                     setIsLocallyChanged(true)
