@@ -2571,7 +2571,6 @@
 
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
-    <string name="page_status_draft" translatable="false">@string/post_status_draft</string>
     <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
 
     <string name="page_local_draft" translatable="false">@string/local_draft</string>
