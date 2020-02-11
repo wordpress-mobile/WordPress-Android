@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
@@ -17,7 +19,9 @@ import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
@@ -25,9 +29,13 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -37,7 +45,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val newsTrackerHelper: NewsTrackerHelper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val subfilterListItemMapper: SubfilterListItemMapper
+    private val subfilterListItemMapper: SubfilterListItemMapper,
+    private val eventBusWrapper: EventBusWrapper
 ) : ScopedViewModel(bgDispatcher) {
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
@@ -56,14 +65,20 @@ class ReaderPostListViewModel @Inject constructor(
     private val _readerModeInfo = SingleLiveEvent<ReaderModeInfo>()
     val readerModeInfo: LiveData<ReaderModeInfo> = _readerModeInfo
 
-    private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
-    val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
+    private val _changeBottomSheetVisibility = MutableLiveData<Event<Boolean>>()
+    val changeBottomSheetVisibility: LiveData<Event<Boolean>> = _changeBottomSheetVisibility
 
     private val _shouldCollapseToolbar = MutableLiveData<Boolean>()
     val shouldCollapseToolbar: LiveData<Boolean> = _shouldCollapseToolbar
 
     private val _filtersMatchCount = MutableLiveData<HashMap<SubfilterCategory, Int>>()
     val filtersMatchCount: LiveData<HashMap<SubfilterCategory, Int>> = _filtersMatchCount
+
+    private val _startSubsActivity = MutableLiveData<Event<Int>>()
+    val startSubsActivity: LiveData<Event<Int>> = _startSubsActivity
+
+    private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
+    val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
 
     /**
      * First tag for which the card was shown.
@@ -79,6 +94,11 @@ class ReaderPostListViewModel @Inject constructor(
         if (isStarted) {
             return
         }
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            eventBusWrapper.register(this)
+        }
+
         tag?.let {
             onTagChanged(tag)
             newsManager.pull()
@@ -147,7 +167,7 @@ class ReaderPostListViewModel @Inject constructor(
                         onClickAction = ::onSubfilterClicked,
                         blog = blog,
                         isSelected = (getCurrentSubfilterValue() is Site) &&
-                                (getCurrentSubfilterValue() as Site).blog.name == blog.name
+                                (getCurrentSubfilterValue() as Site).blog.isSameAs(blog, false)
                 ))
             }
 
@@ -158,7 +178,7 @@ class ReaderPostListViewModel @Inject constructor(
                         onClickAction = ::onSubfilterClicked,
                         tag = tag,
                         isSelected = (getCurrentSubfilterValue() is Tag) &&
-                                (getCurrentSubfilterValue() as Tag).tag.tagTitle == tag.tagTitle
+                                (getCurrentSubfilterValue() as Tag).tag == tag
                 ))
             }
 
@@ -167,7 +187,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onSubfilterClicked(filter: SubfilterListItem) {
-        _isBottomSheetShowing.postValue(Event(false))
+        _changeBottomSheetVisibility.postValue(Event(false))
 
         _subFilters.postValue(_subFilters.value?.map {
             it.isSelected = it.isSameItem(filter)
@@ -177,7 +197,7 @@ class ReaderPostListViewModel @Inject constructor(
         updateSubfilter(filter)
     }
 
-    fun setSubfiltersVisibility(show: Boolean) = _shouldShowSubFilters.postValue(show)
+    fun changeSubfiltersVisibility(show: Boolean) = _shouldShowSubFilters.postValue(show)
 
     fun getCurrentSubfilterValue(): SubfilterListItem {
         return if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
@@ -212,11 +232,19 @@ class ReaderPostListViewModel @Inject constructor(
                 ))
     }
 
-    fun setIsBottomSheetShowing(showing: Boolean) {
-        _isBottomSheetShowing.value = Event(showing)
+    fun onSubFiltersListButtonClicked() {
+        _updateTagsAndSites.value = Event(EnumSet.of(
+                UpdateTask.TAGS,
+                UpdateTask.FOLLOWED_BLOGS
+        ))
+        _changeBottomSheetVisibility.value = Event(true)
     }
 
-    fun applySubfilter(
+    fun onBottomSheetCancelled() {
+        _changeBottomSheetVisibility.value = Event(false)
+    }
+
+    fun onSubfilterChanged(
         subfilterListItem: SubfilterListItem,
         requestNewerPosts: Boolean
     ) {
@@ -267,11 +295,11 @@ class ReaderPostListViewModel @Inject constructor(
         isFirstLoad = false
     }
 
-    fun setCollapseToolbar(collapse: Boolean) {
+    fun onSearchMenuCollapse(collapse: Boolean) {
         _shouldCollapseToolbar.value = collapse
     }
 
-    fun updateTabTitle(category: SubfilterCategory, count: Int) {
+    fun onSubfilterPageUpdated(category: SubfilterCategory, count: Int) {
         val currentValue = _filtersMatchCount.value
 
         currentValue?.let {
@@ -281,14 +309,34 @@ class ReaderPostListViewModel @Inject constructor(
         _filtersMatchCount.postValue(currentValue)
     }
 
+    fun onBottomSheetActionClicked(selectedTabIndex: Int) {
+        _changeBottomSheetVisibility.postValue(Event(false))
+        _startSubsActivity.postValue(Event(selectedTabIndex))
+    }
+
     private fun updateSubfilter(filter: SubfilterListItem) {
         _currentSubFilter.postValue(filter)
         val json = subfilterListItemMapper.toJson(filter)
         appPrefsWrapper.setReaderSubfilter(json)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
+        AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
+        loadSubFilters()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
+        AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
+        loadSubFilters()
+    }
+
     override fun onCleared() {
         super.onCleared()
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            eventBusWrapper.unregister(this)
+        }
         newsManager.stop()
     }
 }

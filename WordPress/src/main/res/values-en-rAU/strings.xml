@@ -119,14 +119,12 @@ Language: en_AU
     <string name="stats_post_views_label">Views</string>
     <string name="stats_post_label">Post</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Graph of posting activity.</string>
     <string name="stats_item_collapsed">Item collapsed</string>
     <string name="stats_item_expanded">Item expanded</string>
     <string name="stats_collapse_content_description">Collapse</string>
     <string name="stats_expand_content_description">Expand</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
-    <string name="stats_bar_chart_content_description">Graph of site views.</string>
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Expand</string>
@@ -599,7 +597,6 @@ Language: en_AU
     <string name="featured_image_desc">featured image</string>
     <string name="button_discard">Discard</string>
     <string name="reader_avatar_desc">profile picture</string>
-    <string name="reader_blavatar_desc">site icon</string>
     <string name="notification_channel_transient_title">Transient</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
@@ -715,7 +712,6 @@ Language: en_AU
     <string name="site_settings_quota_space_unlimited">%1$s of unlimited</string>
     <string name="preview_count">Preview %d</string>
     <string name="add_count">Add %d</string>
-    <string name="fab_create_desc">create</string>
     <string name="fab_add_tag_desc">Create Tag</string>
     <string name="navigate_up_desc">navigate up</string>
     <string name="notification_settings_switch_desc">Notifications</string>

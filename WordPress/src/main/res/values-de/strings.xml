@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-19 10:22:41+0000
+Translation-Revision-Date: 2020-02-06 00:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s">Videountertitel. %s</string>
+    <string name="gutenberg_native_edit_video">Video bearbeiten</string>
+    <string name="gutenberg_native_edit_media">Medien bearbeiten</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">Zum Auswählen des Layouts zweimal tippen</string>
+    <string name="gutenberg_native_add_a_shortcode">Füge einen Shortcode hinzu…</string>
+    <string name="post_list_author">Beitragsautor</string>
+    <string name="fab_create_desc">Einen Beitrag erstellen</string>
+    <string name="stats_posting_activity_end_description">Du kennst nun alle Statistiken für diesen Zeitraum.\n Tippe erneut, um von vorne zu beginnen.</string>
+    <string name="stats_posting_activity_empty_description">Es gibt keine Statistiken für diesen Zeitraum.</string>
+    <string name="stats_posting_activity_label_content_description">Beitragsaktivität für %1$s</string>
+    <string name="stats_posting_activity_content_description">Tage mit %1$s Aufrufen von %2$s: %2$s %3$s.Tippe für weitere Informationen.</string>
+    <string name="stats_posting_activity_action">Navigiere zu allen Statistiken für diesen Zeitraum</string>
+    <string name="stats_box_type_very_high">sehr hoch</string>
+    <string name="stats_box_type_high">hoch</string>
+    <string name="stats_box_type_medium">mittel</string>
+    <string name="stats_box_type_low">niedrig</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Bild entfernen</string>
     <string name="gutenberg_native_move_image_forward">Bild nach vorne verschieben</string>
     <string name="gutenberg_native_move_image_backward">Bild nach hinten verschieben</string>
@@ -75,8 +93,6 @@ Language: de
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' wird in WordPress für Android noch nicht unterstützt</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block %s. Dieser Block hat ungültigen Inhalt</string>
     <string name="gutenberg_native_s_block_empty">Block %s. Leer</string>
-    <string name="gutenberg_native_s_block">Block %s</string>
-    <string name="gutenberg_native_row_d">Zeile %d.</string>
     <string name="gutenberg_native_reset_block">Block zurücksetzen</string>
     <string name="gutenberg_native_remove_block_at_row_s">Block in Zeile %s entfernen</string>
     <string name="gutenberg_native_remove_annotations">Anmerkungen entfernen</string>
@@ -99,14 +115,11 @@ Language: de
     <string name="gutenberg_native_move_block_down">Block nach unten verschieben</string>
     <string name="gutenberg_native_link_text">Linktext</string>
     <string name="gutenberg_native_link_inserted">Link eingefügt</string>
-    <string name="gutenberg_native_level_s_empty">Ebene %s. Leer.</string>
-    <string name="gutenberg_native_level_1_s_2_s">Ebene %1$s. %2$s</string>
     <string name="gutenberg_native_image_caption_s">Bildunterschrift. %s</string>
     <string name="gutenberg_native_hide_keyboard">Tastatur ausblenden</string>
     <string name="gutenberg_native_here_is_the_panel_content">Hier ist der Bedienfeldinhalt!</string>
     <string name="gutenberg_native_help_icon">Hilfe-Icon</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Das Einfügen von Medien ist fehlgeschlagen.\nFür Optionen bitte hier tippen.</string>
-    <string name="gutenberg_native_empty">Leer</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Zum Rückgängigmachen der letzten Änderung zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Zum Umschalten der Einstellung zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Zum Auswählen eines Bilds zweimal tippen</string>
@@ -248,14 +261,12 @@ Language: de
     <string name="stats_post_views_label">Aufrufe</string>
     <string name="stats_post_label">Beitrag</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Grafik der Beitrags-Aktivität.</string>
     <string name="stats_item_collapsed">Element ist zusammengeklappt</string>
     <string name="stats_item_expanded">Element ist aufgeklappt</string>
     <string name="stats_collapse_content_description">Zuklappen</string>
     <string name="stats_expand_content_description">Aufklappen</string>
     <string name="stats_graph_updated">Diagramm aktualisiert.</string>
     <string name="stats_overview_content_description">%1$s %2$s für die Periode: %3$s, Veränderung gegenüber der Vorperiode - %4$s</string>
-    <string name="stats_bar_chart_content_description">Grafik der Website-Aufrufe.</string>
     <string name="stats_loading_card">Laden der ausgewählten Kartendaten</string>
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Erweitern</string>
@@ -728,7 +739,6 @@ Language: de
     <string name="featured_image_desc">Beitragsbild</string>
     <string name="button_discard">Verwerfen</string>
     <string name="reader_avatar_desc">Profilbild</string>
-    <string name="reader_blavatar_desc">Website-Icon</string>
     <string name="notification_channel_transient_title">Transient</string>
     <string name="support_identity_input_dialog_email_label">E-Mail</string>
     <string name="support_identity_input_dialog_enter_email">Bitte gib deine E-Mail-Adresse ein</string>
@@ -845,7 +855,6 @@ Language: de
     <string name="site_settings_quota_space_unlimited">%1$s von unbegrenzt</string>
     <string name="preview_count">%d in der Vorschau anzeigen</string>
     <string name="add_count">%d hinzufügen</string>
-    <string name="fab_create_desc">erstellen</string>
     <string name="fab_add_tag_desc">Schlagwort erstellen</string>
     <string name="navigate_up_desc">nach oben navigieren</string>
     <string name="notification_settings_switch_desc">Benachrichtigungen</string>

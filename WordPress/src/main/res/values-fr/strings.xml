@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-22 00:54:11+0000
+Translation-Revision-Date: 2020-02-06 00:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s">Sous-titre vidéo. %s</string>
+    <string name="gutenberg_native_edit_video">Modifier la vidéo</string>
+    <string name="gutenberg_native_edit_media">Modifier l’élément multimédia</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">Appuyer deux fois pour sélectionner une disposition</string>
+    <string name="gutenberg_native_add_a_shortcode">Ajouter un code court…</string>
+    <string name="post_list_author">Auteur de l’article</string>
+    <string name="fab_create_desc">Créer un article</string>
+    <string name="stats_posting_activity_end_description">Vous avez entendu toutes les statistiques de cette période.\n Appuyer de nouveau redémarrera depuis le début.</string>
+    <string name="stats_posting_activity_empty_description">Cette période ne contient aucune statistique.</string>
+    <string name="stats_posting_activity_label_content_description">Activité de publication de %1$s</string>
+    <string name="stats_posting_activity_content_description">Les jours avec %1$s vues pour %2$s sont : %2$s %3$s. Appuyez pour en savoir plus.</string>
+    <string name="stats_posting_activity_action">accéder à toutes les statistiques pour cette période</string>
+    <string name="stats_box_type_very_high">très élevé</string>
+    <string name="stats_box_type_high">élevé</string>
+    <string name="stats_box_type_medium">moyen</string>
+    <string name="stats_box_type_low">faible</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%3$s, %2$d %1$s</string>
     <string name="gutenberg_native_remove_image">Retirer l\'image</string>
     <string name="gutenberg_native_move_image_forward">Déplacer l\'image vers l\'avant</string>
     <string name="gutenberg_native_move_image_backward">Déplacer l\'image vers l\'arrière</string>
@@ -169,14 +187,12 @@ Language: fr
     <string name="stats_post_views_label">Vues</string>
     <string name="stats_post_label">Article</string>
     <string name="stats_list_item_description">%1$s : %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Graphique de l\'activité de publication</string>
     <string name="stats_item_collapsed">Élément réduit</string>
     <string name="stats_item_expanded">Élément développé</string>
     <string name="stats_collapse_content_description">Réduire</string>
     <string name="stats_expand_content_description">Développer</string>
     <string name="stats_graph_updated">Graphique mis à jour.</string>
     <string name="stats_overview_content_description">%1$s %2$s pour la période : %3$s, changement par rapport à la période précédente - %4$s</string>
-    <string name="stats_bar_chart_content_description">Graphique des vues du site.</string>
     <string name="stats_loading_card">Chargement des données de la carte sélectionnée</string>
     <string name="site_settings_editor">Éditeur</string>
     <string name="description_expand">Déplier</string>
@@ -649,7 +665,6 @@ Language: fr
     <string name="featured_image_desc">image mise en avant</string>
     <string name="button_discard">Rejeter</string>
     <string name="reader_avatar_desc">photo de profil</string>
-    <string name="reader_blavatar_desc">icône du site</string>
     <string name="notification_channel_transient_title">Transient</string>
     <string name="support_identity_input_dialog_email_label">E-mail</string>
     <string name="support_identity_input_dialog_enter_email">Veuillez saisir votre adresse e-mail</string>
@@ -765,7 +780,6 @@ Language: fr
     <string name="site_settings_quota_space_unlimited">%1$s (illimité)</string>
     <string name="preview_count">Prévisualiser %d</string>
     <string name="add_count">Ajouter %d</string>
-    <string name="fab_create_desc">créer</string>
     <string name="fab_add_tag_desc">Créer une étiquette</string>
     <string name="navigate_up_desc">faire défiler vers le haut</string>
     <string name="notification_settings_switch_desc">Notifications</string>

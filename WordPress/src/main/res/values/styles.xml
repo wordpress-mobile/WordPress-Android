@@ -34,7 +34,10 @@
         <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
         <item name="wpIconColorOnSurface">@color/material_on_surface_emphasis_medium</item>
 
-        <item name="listPopupWindowStyle">@style/Widget.MaterialComponents.PopupMenu.ListPopupWindow</item>
+        <item name="listPopupWindowStyle">
+            @style/Widget.MaterialComponents.PopupMenu.ListPopupWindow
+        </item>
+
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">
             @style/Widget.MaterialComponents.PopupMenu.Overflow
@@ -161,6 +164,10 @@
 
     <style name="WordPress.ActionBar" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:textColorSecondary">?attr/colorOnPrimarySurface</item>
+    </style>
+
+    <style name="WordPress.WebPreview.ActionBar" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:textColorSecondary">?attr/colorOnSurface</item>
     </style>
 
     <style name="WordPress.ActionBar.LightDark" parent="Theme.AppCompat.Light">
@@ -651,7 +658,7 @@
     </style>
 
     <!--Promo Dialog Styles-->
-    <style name="PromoDialogTitle" >
+    <style name="PromoDialogTitle">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -952,6 +959,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:tint">@drawable/web_preview_navbar_selector</item>
+        <item name="android:tintMode">multiply</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:layout_weight">20</item>
     </style>
@@ -1062,14 +1070,32 @@
     </style>
 
     <style name="SubfilterSiteTagItem">
-        <item name="android:layout_height">@dimen/one_line_list_item_height</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/one_line_list_item_height</item>
         <item name="android:paddingStart">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:paddingEnd">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="SiteTagFilteredTitle" parent="MySiteListRowTextView">
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_extra_small</item>
+    </style>
+
+    <style name="SiteTagSelectedFilter" parent="SiteTagFilteredTitle">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
+    </style>
+
+
+    <style name="SiteTagFilteredUrl" parent="SiteTagFilteredTitle">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
+        <item name="android:paddingTop">0dp</item>
     </style>
 
     <style name="SiteTagBottomSheetTitle" parent="SiteTagFilteredTitle">
@@ -1137,4 +1163,15 @@
     <style name="BottomSheetStyleContainer" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <!--Publicize styles -->
+
+    <style name="PublicizeConnectButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
+        <item name="android:gravity">start</item>
+    </style>
+
 </resources>
