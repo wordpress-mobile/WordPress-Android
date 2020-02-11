@@ -108,6 +108,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
@@ -189,6 +190,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
@@ -1528,16 +1530,17 @@ public class EditPostActivity extends AppCompatActivity implements
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository, this::updateFromEditor, null);
     }
 
-    private void updateAndSavePostAsync(final AfterSavePostListener listener) {
+    private void updateAndSavePostAsync(final OnPostUpdatedFromUIListener listener) {
         if (mEditorFragment == null) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
             return;
         }
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository,
                 this::updateFromEditor,
-                (post) -> {
+                (post, result) -> {
+                    // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
                     if (listener != null) {
-                        listener.onPostSave();
+                        listener.onPostUpdatedFromUI();
                     }
                     return null;
                 });
@@ -1655,25 +1658,20 @@ public class EditPostActivity extends AppCompatActivity implements
         // We're using a separate cache in WPAndroid and RN's Gutenberg editor so we need to reload the image
         // in the preview screen using WPAndroid's image loader. We create a resized url using Photon service and
         // device's max width to display a smaller image that can load faster and act as a placeholder.
-        boolean isPhotonCapable = mSite != null && SiteUtils.isPhotonCapable(mSite);
+        int displayWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getBaseContext()),
+                DisplayUtils.getDisplayPixelHeight(getBaseContext()));
 
-        if (mSite == null || isPhotonCapable) {
-            int displayWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getBaseContext()),
-                    DisplayUtils.getDisplayPixelHeight(getBaseContext()));
+        int margin = getResources().getDimensionPixelSize(R.dimen.preview_image_view_margin);
+        int maxWidth = displayWidth - (margin * 2);
 
-            int margin = getResources().getDimensionPixelSize(R.dimen.preview_image_view_margin);
-            int maxWidth = displayWidth - (margin * 2);
+        int reducedSizeWidth = (int) (maxWidth * PREVIEW_IMAGE_REDUCED_SIZE_FACTOR);
+        resizedImageUrl = mReaderUtilsWrapper.getResizedImageUrl(
+            mediaUrl,
+            reducedSizeWidth,
+            0,
+            !SiteUtils.isPhotonCapable(mSite)
+        );
 
-            int reducedSizeFactor = getResources().getDimensionPixelSize(R.dimen.preview_image_reduced_size_factor);
-            int reducedSizeWidth = maxWidth * reducedSizeFactor;
-
-            resizedImageUrl = mReaderUtilsWrapper.getResizedImageUrl(
-                    mediaUrl,
-                    reducedSizeWidth,
-                    0,
-                    !isPhotonCapable
-            );
-        }
         ActivityLauncher.openImageEditor(this, resizedImageUrl, mediaUrl);
     }
 
@@ -1727,8 +1725,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    public interface AfterSavePostListener {
-        void onPostSave();
+    public interface OnPostUpdatedFromUIListener {
+        void onPostUpdatedFromUI();
     }
 
     @Override
@@ -1751,20 +1749,22 @@ public class EditPostActivity extends AppCompatActivity implements
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
             return true;
-        }, postModel -> {
-            refreshEditorContent();
-            WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
-                      .setAction(getString(R.string.undo), view -> {
-                          AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
-                          RemotePostPayload payload =
-                                  new RemotePostPayload(mEditPostRepository.getPostForUndo(), mSite);
-                          mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                          mEditPostRepository.undo();
-                          refreshEditorContent();
-                      })
-                      .show();
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                refreshEditorContent();
+                WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
+                          .setAction(getString(R.string.undo), view -> {
+                              AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
+                              RemotePostPayload payload =
+                                      new RemotePostPayload(mEditPostRepository.getPostForUndo(), mSite);
+                              mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                              mEditPostRepository.undo();
+                              refreshEditorContent();
+                          })
+                          .show();
 
-            updatePostLoadingAndDialogState(PostLoadingState.NONE);
+                updatePostLoadingAndDialogState(PostLoadingState.NONE);
+            }
             return null;
         });
     }
@@ -1849,9 +1849,11 @@ public class EditPostActivity extends AppCompatActivity implements
             // Hide the progress dialog now
             mEditorFragment.hideSavingProgressDialog();
             return true;
-        }, postModel -> {
-            ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
-            mViewModel.finish(activityFinishState);
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
+                mViewModel.finish(activityFinishState);
+            }
             return null;
         });
     }
@@ -2130,9 +2132,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 postModel.setContent(updatedContent);
                 mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
                 return true;
-            }, postModel -> {
-                mEditorFragment.setTitle(postModel.getTitle());
-                mEditorFragment.setContent(postModel.getContent());
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mEditorFragment.setTitle(postModel.getTitle());
+                    mEditorFragment.setContent(postModel.getContent());
+                }
                 return null;
             });
         }
@@ -2921,7 +2925,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void syncPostObjectWithUiAndSaveIt(@Nullable AfterSavePostListener listener) {
+    public void syncPostObjectWithUiAndSaveIt(@Nullable OnPostUpdatedFromUIListener listener) {
         updateAndSavePostAsync(listener);
     }
 

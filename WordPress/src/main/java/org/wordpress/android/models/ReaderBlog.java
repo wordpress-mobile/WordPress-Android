@@ -169,12 +169,16 @@ public class ReaderBlog {
     }
 
     public boolean isSameAs(ReaderBlog blogInfo) {
+        return isSameAs(blogInfo, true);
+    }
+
+    public boolean isSameAs(ReaderBlog blogInfo, boolean compareSubscribers) {
         return blogInfo != null
                && this.blogId == blogInfo.blogId
                && this.feedId == blogInfo.feedId
                && this.isFollowing == blogInfo.isFollowing
                && this.isPrivate == blogInfo.isPrivate
-               && this.numSubscribers == blogInfo.numSubscribers
+               && ((this.numSubscribers == blogInfo.numSubscribers) || !compareSubscribers)
                && this.getName().equals(blogInfo.getName())
                && this.getDescription().equals(blogInfo.getDescription())
                && this.getUrl().equals(blogInfo.getUrl())

@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-23 00:54:10+0000
+Translation-Revision-Date: 2020-02-05 04:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s">視訊標題。%s</string>
+    <string name="gutenberg_native_edit_video">編輯視訊</string>
+    <string name="gutenberg_native_edit_media">編輯媒體</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">按兩下以選擇版面形式</string>
+    <string name="gutenberg_native_add_a_shortcode">新增短代碼…</string>
+    <string name="post_list_author">文章作者</string>
+    <string name="fab_create_desc">建立文章</string>
+    <string name="stats_posting_activity_end_description">你已檢閱此期間的所有統計資料。\n再次點選將會重新開始。</string>
+    <string name="stats_posting_activity_empty_description">此期間沒有任何統計資料。</string>
+    <string name="stats_posting_activity_label_content_description">%1$s 的張貼活動</string>
+    <string name="stats_posting_activity_content_description">%2$s 獲得 %1$s 次瀏覽的日期為：%2$s %3$s。點選以深入瞭解。</string>
+    <string name="stats_posting_activity_action">瀏覽此期間的所有統計資料</string>
+    <string name="stats_box_type_very_high">超高</string>
+    <string name="stats_box_type_high">高</string>
+    <string name="stats_box_type_medium">中</string>
+    <string name="stats_box_type_low">低</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry"> 與 %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s，%2$d %3$s</string>
     <string name="gutenberg_native_remove_image">移除圖片</string>
     <string name="gutenberg_native_move_image_forward">向前移動圖片</string>
     <string name="gutenberg_native_move_image_backward">向後移動圖片</string>
@@ -169,14 +187,12 @@ Language: zh_TW
     <string name="stats_post_views_label">瀏覽次數</string>
     <string name="stats_post_label">文章</string>
     <string name="stats_list_item_description">%1$s：%2$s，%3$s：%4$s</string>
-    <string name="stats_posting_activity_graph">發表活動的圖表。</string>
     <string name="stats_item_collapsed">折疊的項目</string>
     <string name="stats_item_expanded">展開的項目</string>
     <string name="stats_collapse_content_description">折疊</string>
     <string name="stats_expand_content_description">展開</string>
     <string name="stats_graph_updated">已更新圖表。</string>
     <string name="stats_overview_content_description">以下期間的 %1$s %2$s：%3$s，自上個期間變更 - %4$s</string>
-    <string name="stats_bar_chart_content_description">網站點閱數的圖表。</string>
     <string name="stats_loading_card">正在載入選取的卡片資料</string>
     <string name="site_settings_editor">編輯器</string>
     <string name="description_expand">擴大</string>
@@ -625,7 +641,6 @@ Language: zh_TW
     <string name="featured_image_desc">特色圖片</string>
     <string name="button_discard">捨棄</string>
     <string name="reader_avatar_desc">個人檔案圖像</string>
-    <string name="reader_blavatar_desc">網站圖示</string>
     <string name="notification_channel_transient_title">暫時性</string>
     <string name="support_identity_input_dialog_email_label">電子郵件</string>
     <string name="support_identity_input_dialog_enter_email">請輸入你的電子郵件地址</string>
@@ -741,7 +756,6 @@ Language: zh_TW
     <string name="site_settings_quota_space_unlimited">%1$s 的配額空間不受限制</string>
     <string name="preview_count">預覽 %d</string>
     <string name="add_count">新增 %d</string>
-    <string name="fab_create_desc">建立</string>
     <string name="navigate_up_desc">瀏覽</string>
     <string name="notification_settings_switch_desc">通知</string>
     <string name="show_more_desc">顯示更多</string>

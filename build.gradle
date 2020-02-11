@@ -104,7 +104,7 @@ ext {
     targetSdkVersion = 28
 
     daggerVersion = '2.22.1'
-    fluxCVersion = 'c5ea220f70c3a77681d376a17ce5c57e26c1c392'
+    fluxCVersion = '1.6.1.1'
 
     appCompatVersion = '1.0.2'
     constraintLayoutVersion = '1.1.3'
@@ -114,6 +114,8 @@ ext {
     // testing
     jUnitVersion = '4.12'
     androidxTestVersion = '1.1.0'
+    androidxArchCoreVersion = '2.0.0'
+    assertJVersion = '3.11.1'
     espressoVersion = '3.1.0'
 }
 
