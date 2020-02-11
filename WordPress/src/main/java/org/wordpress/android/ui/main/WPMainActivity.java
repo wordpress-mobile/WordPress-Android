@@ -947,7 +947,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 break;
             case RequestCodes.PHOTO_PICKER:
                 Fragment fragment = mBottomNav.getActiveFragment();
-                if (fragment instanceof MeFragment || fragment instanceof MySiteFragment) {
+                if (fragment instanceof MySiteFragment) {
                     fragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;

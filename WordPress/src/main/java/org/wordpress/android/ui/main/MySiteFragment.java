@@ -361,7 +361,7 @@ public class MySiteFragment extends Fragment implements
         mToolbar.inflateMenu(R.menu.my_site_menu);
         mToolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.me_item) {
-                ActivityLauncher.viewMeActivity(getActivity());
+                ActivityLauncher.viewMeActivityForResult(getActivity());
                 return true;
             }
             return false;
