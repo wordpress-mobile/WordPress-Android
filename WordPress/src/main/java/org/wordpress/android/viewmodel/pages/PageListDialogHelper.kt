@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import java.lang.NullPointerException
@@ -43,7 +44,7 @@ class PageListDialogHelper(
                 title = UiStringRes(R.string.delete_page),
                 message = UiStringResWithParams(
                         R.string.page_delete_dialog_message,
-                        listOf(pageTitle)
+                        listOf(UiStringText(pageTitle))
                 ),
                 positiveButton = UiStringRes(R.string.delete),
                 negativeButton = UiStringRes(R.string.cancel)
