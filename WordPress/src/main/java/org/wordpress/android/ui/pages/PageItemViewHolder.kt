@@ -82,7 +82,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 time.text = DateTimeUtils.javaDateToTimeSpan(date, parent.context)
                         .capitalizeWithLocaleWithoutLint(parent.context.currentLocale)
 
-                labels.text = page.labels.map { uiHelper.getTextOfUiString(parent.context,it) }.sorted()
+                labels.text = page.labels.map { uiHelper.getTextOfUiString(parent.context, it) }.sorted()
                         .joinToString(separator = " · ")
                 uiHelper.updateVisibility(labels, page.labels.isNotEmpty())
 

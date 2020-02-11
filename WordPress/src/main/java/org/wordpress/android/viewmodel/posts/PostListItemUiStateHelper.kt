@@ -434,7 +434,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         return PostListItemAction.MoreItem(allItems, onButtonClicked)
     }
 
-   private sealed class PostUploadUiState {
+    private sealed class PostUploadUiState {
         data class UploadingMedia(val progress: Int) : PostUploadUiState()
         data class UploadingPost(val isDraft: Boolean) : PostUploadUiState()
         data class UploadFailed(
