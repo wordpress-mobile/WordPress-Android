@@ -39,7 +39,7 @@ class PageListEventListener(
     private val site: SiteModel,
     private val handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
     private val handlePostUploadedWithoutError: (RemoteId) -> Unit,
-    private val handlePostUploadedStarted: (RemoteId, LocalId) -> Unit,
+    private val handlePostUploadedStarted: (RemoteId) -> Unit,
     private val invalidateUploadStatus: (List<LocalId>) -> Unit
 ) : CoroutineScope {
     init {
@@ -90,7 +90,6 @@ class PageListEventListener(
 
                 is UpdatePost -> {
                     if (event.isError) {
-                        uploadStatusChanged(LocalId((event.causeOfChange as UpdatePost).localPostId))
                         AppLog.e(
                                 T.POSTS,
                                 "Error updating the post with type: ${event.error.type} and" +
@@ -98,7 +97,11 @@ class PageListEventListener(
                         )
                     } else {
                         handlePostUploadedWithoutError.invoke(
-                                RemoteId((event.causeOfChange as UpdatePost).remotePostId))
+                                RemoteId((event.causeOfChange as UpdatePost).remotePostId)
+                        )
+                        invalidateUploadStatus.invoke(
+                                listOf(LocalId((event.causeOfChange as UpdatePost).localPostId))
+                        )
                     }
                 }
             }
@@ -117,10 +120,9 @@ class PageListEventListener(
     @Subscribe(threadMode = BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
+            uploadStatusChanged(LocalId(event.post.id))
             if (!event.isError) {
                 handlePostUploadedWithoutError.invoke(RemoteId(event.post.remotePostId))
-            } else {
-                uploadStatusChanged(LocalId(event.post.id))
             }
         }
     }
@@ -147,7 +149,7 @@ class PageListEventListener(
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
 
-            handlePostUploadedStarted(RemoteId(event.post.remotePostId), LocalId(event.post.id))
+            handlePostUploadedStarted(RemoteId(event.post.remotePostId))
         }
     }
 
@@ -194,7 +196,7 @@ class PageListEventListener(
             handlePostUploadedWithoutError: (RemoteId) -> Unit,
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-            handlePostUploadedStarted: (RemoteId, LocalId) -> Unit
+            handlePostUploadedStarted: (RemoteId) -> Unit
         ): PageListEventListener {
             return PageListEventListener(
                     dispatcher = dispatcher,
