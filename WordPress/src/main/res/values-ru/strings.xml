@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-15 16:10:07+0000
+Translation-Revision-Date: 2020-01-31 09:37:16+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s">Подпись к видео. %s</string>
+    <string name="gutenberg_native_edit_video">Измненить видео</string>
+    <string name="gutenberg_native_edit_media">Изменить мультимедиа</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">Нажмите дважды для выбора макета</string>
+    <string name="gutenberg_native_add_a_shortcode">Добавить шорткод…</string>
+    <string name="post_list_author">Автор записи</string>
+    <string name="fab_create_desc">Создать запись</string>
+    <string name="stats_posting_activity_end_description">Вы прослушали всю статистику за этот период.\n   Повторное нажатие перезапустит сначала.</string>
+    <string name="stats_posting_activity_empty_description">Нет статистики за этот период.</string>
+    <string name="stats_posting_activity_label_content_description">Активность публикаций для %1$s</string>
+    <string name="stats_posting_activity_content_description">Дни с %1$s просмотрами для %2$s были : %2$s %3$s.Нажмите для подробностей.</string>
+    <string name="stats_posting_activity_action">пролистать всю статистику за этот период</string>
+    <string name="stats_box_type_very_high">очень высокий</string>
+    <string name="stats_box_type_high">высокий</string>
+    <string name="stats_box_type_medium">средний</string>
+    <string name="stats_box_type_low">низкий</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Удалить изображение</string>
     <string name="gutenberg_native_move_image_forward">Переместить изображение вперед</string>
     <string name="gutenberg_native_move_image_backward">Переместить изображение назад</string>
@@ -75,8 +93,6 @@ Language: ru
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s пока не поддерживается WordPress для Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Блок %s. Блок имеет неверное содержимое.</string>
     <string name="gutenberg_native_s_block_empty">Блок %s. Пустой</string>
-    <string name="gutenberg_native_s_block">Блок %s</string>
-    <string name="gutenberg_native_row_d">Ряд %d.</string>
     <string name="gutenberg_native_reset_block">Сбросить блок</string>
     <string name="gutenberg_native_remove_block_at_row_s">Убрать блок в ряду %s</string>
     <string name="gutenberg_native_remove_annotations">Удалить аннотации</string>
@@ -99,14 +115,11 @@ Language: ru
     <string name="gutenberg_native_move_block_down">Переместить блок ниже</string>
     <string name="gutenberg_native_link_text">Текст ссылки</string>
     <string name="gutenberg_native_link_inserted">Ссылка вставлена</string>
-    <string name="gutenberg_native_level_s_empty">Уровень %s. Пустой.</string>
-    <string name="gutenberg_native_level_1_s_2_s">Уровень %1$s. %2$s</string>
     <string name="gutenberg_native_image_caption_s">Подпись к изображению. %s</string>
     <string name="gutenberg_native_hide_keyboard">Скрыть клавиатуру</string>
     <string name="gutenberg_native_here_is_the_panel_content">Это содержимое панели!</string>
     <string name="gutenberg_native_help_icon">Значок справки</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Невозможно вставить медиафайл.\nНажмите для выбора вариантов.</string>
-    <string name="gutenberg_native_empty">Ничего нет.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Нажмите дважды для отмены последнего действия</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Нажмите дважды для переключения настройки</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Нажмите дважды для выбора изображения</string>
@@ -248,14 +261,12 @@ Language: ru
     <string name="stats_post_views_label">Просмотры</string>
     <string name="stats_post_label">Запись</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">График активности публикаций.</string>
     <string name="stats_item_collapsed">Элемент свернут</string>
     <string name="stats_item_expanded">Элемент развернут</string>
     <string name="stats_collapse_content_description">Свернуть</string>
     <string name="stats_expand_content_description">Развернуть</string>
     <string name="stats_graph_updated">График обновлен.</string>
     <string name="stats_overview_content_description">%1$s %2$s за период: %3$s, изменений по сравнению с предыдущим периодом - %4$s</string>
-    <string name="stats_bar_chart_content_description">График просмотров сайта.</string>
     <string name="stats_loading_card">Загрузка данных выбранной карты</string>
     <string name="site_settings_editor">Редактор</string>
     <string name="description_expand">Развернуть</string>
@@ -728,7 +739,6 @@ Language: ru
     <string name="featured_image_desc">изображение записи</string>
     <string name="button_discard">Отменить</string>
     <string name="reader_avatar_desc">изображение профиля</string>
-    <string name="reader_blavatar_desc">значок сайта</string>
     <string name="notification_channel_transient_title">Транзиент</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Пожалуйста, введите ваш адрес эл.почты</string>
@@ -845,7 +855,6 @@ Language: ru
     <string name="site_settings_quota_space_unlimited">%1$s / неограничено</string>
     <string name="preview_count">Предпросмотр %d</string>
     <string name="add_count">Добавить %d</string>
-    <string name="fab_create_desc">создать</string>
     <string name="fab_add_tag_desc">Создать метку</string>
     <string name="navigate_up_desc">перейти наверх</string>
     <string name="notification_settings_switch_desc">Уведомления</string>

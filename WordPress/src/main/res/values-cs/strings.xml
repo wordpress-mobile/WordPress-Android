@@ -257,7 +257,6 @@ Language: cs_CZ
     <string name="featured_image_desc">náhledový obrázek</string>
     <string name="button_discard">Zahodit</string>
     <string name="reader_avatar_desc">profilový obrázek</string>
-    <string name="reader_blavatar_desc">ikona stránky</string>
     <string name="notification_channel_transient_title">Přechodný</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Zadejte emailovou adresu</string>
@@ -374,7 +373,6 @@ Language: cs_CZ
     <string name="site_settings_quota_space_unlimited">%1$s z neomezeného množství</string>
     <string name="preview_count">Náhled %d</string>
     <string name="add_count">Přidat %d</string>
-    <string name="fab_create_desc">vytvořit</string>
     <string name="fab_add_tag_desc">vytvořit štítek</string>
     <string name="navigate_up_desc">přejít nahoru</string>
     <string name="notification_settings_switch_desc">Upozornění</string>

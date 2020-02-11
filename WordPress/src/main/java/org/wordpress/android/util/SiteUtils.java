@@ -27,7 +27,7 @@ public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_1 = 100;
-    private static final int GB_ROLLOUT_PERCENTAGE_PHASE_2 = 30;
+    private static final int GB_ROLLOUT_PERCENTAGE_PHASE_2 = 100;
 
     /**
      * Migrate the old app-wide editor preference value to per-site setting. wpcom sites will make a network call
