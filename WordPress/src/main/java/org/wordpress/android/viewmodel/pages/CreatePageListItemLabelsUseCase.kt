@@ -24,7 +24,10 @@ import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.Post
 import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState.UploadingPost
 import javax.inject.Inject
 
-class CreatePageListItemLabelsUseCase @Inject constructor() {
+/**
+ * Most of this code has been copied from PostListItemUIStateHelper.
+ */
+class CreatePageListItemLabelsUseCase @Inject constructor(private val pageConflictResolver: PageConflictResolver) {
     fun createLabels(pagePostModel: PostModel, uploadUiState: PostUploadUiState): List<UiString> {
         return getLabels(
                 PostStatus.fromPost(pagePostModel),
@@ -32,7 +35,7 @@ class CreatePageListItemLabelsUseCase @Inject constructor() {
                 pagePostModel.isLocallyChanged,
                 uploadUiState,
                 false, // TODO use conflict resolver
-                false // TODO use conflict resolver
+                pageConflictResolver.hasUnhandledAutoSave(pagePostModel)
         )
     }
 
