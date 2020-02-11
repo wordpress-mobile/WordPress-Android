@@ -18,7 +18,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -167,7 +166,7 @@ class PagesViewModelTest {
         assertThat(viewModel.arePageActionsEnabled).isTrue()
 
         // Act
-        viewModel.postUploadStarted(RemoteId(page.remotePostId), LocalId(page.id))
+        viewModel.postUploadStarted(RemoteId(page.remotePostId))
 
         // Assert
         assertThat(viewModel.arePageActionsEnabled).isFalse()
@@ -181,7 +180,7 @@ class PagesViewModelTest {
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
 
-        viewModel.postUploadStarted(RemoteId(page.remotePostId), LocalId(page.id))
+        viewModel.postUploadStarted(RemoteId(page.remotePostId))
         assertThat(viewModel.arePageActionsEnabled).isFalse()
 
         // When

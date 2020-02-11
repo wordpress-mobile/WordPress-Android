@@ -717,12 +717,11 @@ class PagesViewModel
         }
     }
 
-    fun postUploadStarted(remotePageIdForContinuation: RemoteId, localPageIdForUploadStatusInvalidation: LocalId) {
+    fun postUploadStarted(remoteId: RemoteId) {
         launch {
             performIfNetworkAvailableAsync {
-                waitForPageUpdate(remotePageIdForContinuation.value)
+                waitForPageUpdate(remoteId.value)
                 reloadPages()
-                handleInvalidateUploadStatus(listOf(localPageIdForUploadStatusInvalidation))
             }
         }
     }
