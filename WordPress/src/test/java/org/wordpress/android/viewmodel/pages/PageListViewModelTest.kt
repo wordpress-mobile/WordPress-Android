@@ -74,6 +74,7 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(createUploadStateUseCase.createUploadUiState(any(), any())).thenReturn(
                 PostUploadUiState.NothingToUpload
         )
+        whenever(createLabelsUseCase.createLabels(any(), any())).thenReturn(Pair(emptyList(), 0))
         site.id = 10
         pageListState.value = PageListState.DONE
     }
