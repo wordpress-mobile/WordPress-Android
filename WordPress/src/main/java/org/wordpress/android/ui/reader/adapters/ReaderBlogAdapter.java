@@ -19,6 +19,7 @@ import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
+import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
@@ -234,7 +235,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         // disable follow button until API call returns
         followButton.setEnabled(false);
 
-        boolean result = ReaderBlogActions.followBlogById(blog.blogId, isAskingToFollow, succeeded -> {
+        final ActionListener listener = succeeded -> {
             followButton.setEnabled(true);
             if (!succeeded) {
                 int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
@@ -243,7 +244,15 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 followButton.setIsFollowed(!isAskingToFollow);
                 blog.isFollowing = !isAskingToFollow;
             }
-        });
+        };
+
+        final boolean result;
+
+        if (blog.feedId != 0) {
+            result = ReaderBlogActions.followFeedById(blog.feedId, isAskingToFollow, listener);
+        } else {
+            result = ReaderBlogActions.followBlogById(blog.blogId, isAskingToFollow, listener);
+        }
 
         if (result) {
             followButton.setIsFollowedAnimated(isAskingToFollow);
