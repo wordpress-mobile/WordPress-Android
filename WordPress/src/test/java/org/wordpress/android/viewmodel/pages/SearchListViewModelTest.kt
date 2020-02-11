@@ -10,14 +10,17 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
 import org.wordpress.android.TEST_SCOPE
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -25,6 +28,7 @@ import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
@@ -39,6 +43,8 @@ class SearchListViewModelTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var pagesViewModel: PagesViewModel
     @Mock lateinit var progressHelper: PageItemUploadProgressHelper
+    @Mock lateinit var createUploadStateUseCase: CreatePageUploadUiStateUseCase
+    @Mock lateinit var postStore: PostStore
 
     private lateinit var searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>>
     private lateinit var viewModel: SearchListViewModel
@@ -48,7 +54,7 @@ class SearchListViewModelTest {
     @Before
     fun setUp() {
         page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
-        viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE, progressHelper)
+        viewModel = SearchListViewModel(createUploadStateUseCase, postStore, resourceProvider, TEST_SCOPE, progressHelper)
         searchPages = MutableLiveData()
 
         whenever(progressHelper.getProgressStateForPage(any(), any())).thenReturn(
@@ -59,6 +65,10 @@ class SearchListViewModelTest {
         )
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         whenever(pagesViewModel.site).thenReturn(site)
+        whenever(postStore.getPostByLocalPostId(ArgumentMatchers.anyInt())).thenReturn(PostModel())
+        whenever(createUploadStateUseCase.createUploadUiState(any(), any())).thenReturn(
+                PostUploadUiState.NothingToUpload
+        )
         viewModel.start(pagesViewModel)
     }
 
