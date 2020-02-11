@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-23 03:54:10+0000
+Translation-Revision-Date: 2020-02-07 00:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s">비디오 캡션. %s</string>
+    <string name="gutenberg_native_edit_video">비디오 편집</string>
+    <string name="gutenberg_native_edit_media">미디어 편집</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">레이아웃을 선택하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_add_a_shortcode">쇼트코드 추가…</string>
+    <string name="post_list_author">작성자</string>
+    <string name="fab_create_desc">게시물 작성</string>
+    <string name="stats_posting_activity_end_description">이 기간의 통계를 모두 들었습니다.\n 다시 누르면 처음부터 다시 시작합니다.</string>
+    <string name="stats_posting_activity_empty_description">이 기간에는 통계가 없습니다.</string>
+    <string name="stats_posting_activity_label_content_description">%1$s 활동 게시</string>
+    <string name="stats_posting_activity_content_description">%2$s 동안 조회수가 %1$s회인 일수: %2$s %3$s. 자세히 보려면 탭하세요.</string>
+    <string name="stats_posting_activity_action">이 기간의 통계 모두 탐색</string>
+    <string name="stats_box_type_very_high">매우 높음</string>
+    <string name="stats_box_type_high">높음</string>
+    <string name="stats_box_type_medium">중간</string>
+    <string name="stats_box_type_low">낮음</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">이미지 삭제</string>
     <string name="gutenberg_native_move_image_forward">이미지를 앞으로 이동</string>
     <string name="gutenberg_native_move_image_backward">이미지를 뒤로 이동</string>
@@ -169,14 +187,12 @@ Language: ko_KR
     <string name="stats_post_views_label">조회수</string>
     <string name="stats_post_label">글</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">게시 활동 그래프.</string>
     <string name="stats_item_collapsed">항목 축소됨</string>
     <string name="stats_item_expanded">항목 확장됨</string>
     <string name="stats_collapse_content_description">축소</string>
     <string name="stats_expand_content_description">확장</string>
     <string name="stats_graph_updated">그래프가 업데이트되었습니다.</string>
     <string name="stats_overview_content_description">%1$s%2$s 다음 기간 동안: %3$s , 이전 기간에서 변경 - %4$s</string>
-    <string name="stats_bar_chart_content_description">사이트 보기 그래프.</string>
     <string name="stats_loading_card">선택한 카드 데이터 로드 중</string>
     <string name="site_settings_editor">편집기</string>
     <string name="description_expand">확장</string>
@@ -649,7 +665,6 @@ Language: ko_KR
     <string name="featured_image_desc">특성 이미지</string>
     <string name="button_discard">취소</string>
     <string name="reader_avatar_desc">프로필 사진</string>
-    <string name="reader_blavatar_desc">사이트 아이콘</string>
     <string name="notification_channel_transient_title">임시</string>
     <string name="support_identity_input_dialog_email_label">이메일</string>
     <string name="support_identity_input_dialog_enter_email">이메일 주소를 입력하세요.</string>
@@ -765,7 +780,6 @@ Language: ko_KR
     <string name="site_settings_quota_space_unlimited">%1$s 무제한</string>
     <string name="preview_count">%d 미리보기</string>
     <string name="add_count">%d 추가</string>
-    <string name="fab_create_desc">작성</string>
     <string name="fab_add_tag_desc">태그 작성</string>
     <string name="navigate_up_desc">위로 탐색</string>
     <string name="notification_settings_switch_desc">알림</string>
