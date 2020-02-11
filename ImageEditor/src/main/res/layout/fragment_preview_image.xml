@@ -6,16 +6,17 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/main_image"
+        android:id="@+id/previewImageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
+        android:layout_marginLeft="@dimen/preview_image_view_margin"
+        android:layout_marginRight="@dimen/preview_image_view_margin"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:srcCompat="@drawable/placeholder_image"
         android:contentDescription="@null" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
