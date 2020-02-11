@@ -189,6 +189,12 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void showReaderSubs(Context context, int selectPosition) {
+        Intent intent = new Intent(context, ReaderSubsActivity.class);
+        intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition);
+        context.startActivity(intent);
+    }
+
     /*
      * play an external video
      */

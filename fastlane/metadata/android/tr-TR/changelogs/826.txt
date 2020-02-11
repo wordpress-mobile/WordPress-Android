@@ -1,0 +1,7 @@
+14.1:
+- Blok Düzenleyici: Kısa kodlar oluşturup düzenlemenizi sağlayan yeni bir Kısa Kod bloğu. Metin tabanlı blokların etrafındaki dolguları azalttık ve çok uzun gönderileri düzenlemek artık daha istikrarlı bir deneyim sunuyor.
+- Güncelleştirmeler: Site seçiciden bir Jetpack sitesini kaldırma seçeneği devre dışı bırakıldı.
+- Hata düzeltmeleri: gönderi aramalarında bazı sonuçlar çıkarıldı. Arama işlevi artık istendiği gibi çalışıyor!
+
+
+
