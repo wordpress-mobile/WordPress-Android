@@ -13,6 +13,7 @@ import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import androidx.core.widget.CompoundButtonCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
@@ -84,6 +85,14 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 labels.text = page.labels.map { uiHelper.getTextOfUiString(parent.context, it) }.sorted()
                         .joinToString(separator = " · ")
+                page.labelsColor?.let { labelsColor ->
+                    labels.setTextColor(
+                            ContextCompat.getColor(
+                                    itemView.context,
+                                    labelsColor
+                            )
+                    )
+                }
                 uiHelper.updateVisibility(labels, page.labels.isNotEmpty())
 
                 itemView.setOnClickListener { onItemTapped(page) }
