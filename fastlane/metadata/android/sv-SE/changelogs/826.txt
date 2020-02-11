@@ -1,0 +1,7 @@
+14.1:
+- Blockredigeraren: ett nytt kordkodsblock låter dig skapa och redigera kortkoder. Vi har minskat utfyllnaden runt textbaserade block. Nu är upplevelsen stabilare när man redigerar  mycket långa inlägg.
+- Uppdateringar: Möjligheten att ta bort Jetpack från webbplatsen har inaktiverats.
+- Felrättningar: Vid sökning efter inlägg saknades vissa resultat. Nu fungerar sökningen som det är tänkt!
+
+
+
