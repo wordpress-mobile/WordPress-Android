@@ -54,7 +54,13 @@ class SearchListViewModelTest {
     @Before
     fun setUp() {
         page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
-        viewModel = SearchListViewModel(createUploadStateUseCase, postStore, resourceProvider, TEST_SCOPE, progressHelper)
+        viewModel = SearchListViewModel(
+                createUploadStateUseCase,
+                postStore,
+                resourceProvider,
+                TEST_SCOPE,
+                progressHelper
+        )
         searchPages = MutableLiveData()
 
         whenever(progressHelper.getProgressStateForPage(any(), any())).thenReturn(
