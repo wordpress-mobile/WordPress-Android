@@ -33,20 +33,20 @@ interface OnAutoSavePostIfNotDraftCallback {
     fun handleAutoSavePostIfNotDraftResult(result: AutoSavePostIfNotDraftResult)
 }
 
-sealed class AutoSavePostIfNotDraftResult {
+sealed class AutoSavePostIfNotDraftResult(open val post: PostModel) {
     // Initial fetch post status request failed
-    data class FetchPostStatusFailed(val post: PostModel, val error: PostError) :
-            AutoSavePostIfNotDraftResult()
+    data class FetchPostStatusFailed(override val post: PostModel, val error: PostError) :
+            AutoSavePostIfNotDraftResult(post)
 
     // Post status is `DRAFT` in remote which means we'll want to update the draft directly
-    data class PostIsDraftInRemote(val post: PostModel) : AutoSavePostIfNotDraftResult()
+    data class PostIsDraftInRemote(override val post: PostModel) : AutoSavePostIfNotDraftResult(post)
 
     // Post status is not `DRAFT` in remote and the post was auto-saved successfully
-    data class PostAutoSaved(val post: PostModel) : AutoSavePostIfNotDraftResult()
+    data class PostAutoSaved(override val post: PostModel) : AutoSavePostIfNotDraftResult(post)
 
     // Post status is not `DRAFT` in remote but the post auto-save failed
-    data class PostAutoSaveFailed(val post: PostModel, val error: PostError) :
-            AutoSavePostIfNotDraftResult()
+    data class PostAutoSaveFailed(override val post: PostModel, val error: PostError) :
+            AutoSavePostIfNotDraftResult(post)
 }
 
 // TODO: Add documentation (add shortcode for the p2 discussion)
@@ -108,7 +108,7 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
 
     private suspend fun autoSavePost(remotePostPayload: RemotePostPayload): AutoSavePostIfNotDraftResult {
         val localPostId = LocalId(remotePostPayload.post.id)
-        val onPostChanged: OnPostChanged =  suspendCancellableCoroutine { cont ->
+        val onPostChanged: OnPostChanged = suspendCancellableCoroutine { cont ->
             autoSaveContinuations[localPostId] = cont
             dispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(remotePostPayload))
         }

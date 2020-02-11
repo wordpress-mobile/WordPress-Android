@@ -35,7 +35,10 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.FetchPostStatusFailed;
+import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostAutoSaveFailed;
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostAutoSaved;
+import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostIsDraftInRemote;
 import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
@@ -189,7 +192,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     }
 
     private enum UploadPostTaskResult {
-        PUSH_POST_DISPATCHED, ERROR, NOTHING_TO_UPLOAD
+        PUSH_POST_DISPATCHED, ERROR, NOTHING_TO_UPLOAD, AUTO_SAVE_OR_UPDATE_DRAFT
     }
 
     private class UploadPostTask extends AsyncTask<PostModel, Boolean, UploadPostTaskResult> {
@@ -287,7 +290,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                 case REMOTE_AUTO_SAVE:
                     AppLog.d(T.POSTS, "PostUploadHandler - REMOTE_AUTO_SAVE. Post: " + mPost.getTitle());
                     mAutoSavePostIfNotDraftUseCase.autoSavePostOrUpdateDraft(payload, PostUploadHandler.this);
-                    break;
+                    return UploadPostTaskResult.AUTO_SAVE_OR_UPDATE_DRAFT;
                 case DO_NOTHING:
                     AppLog.d(T.POSTS, "PostUploadHandler - DO_NOTHING. Post: " + mPost.getTitle());
                     // A single post might be enqueued twice for upload. It might cause some side-effects when the
@@ -607,17 +610,31 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     // TODO: document?
     @Override
     public void handleAutoSavePostIfNotDraftResult(@NotNull AutoSavePostIfNotDraftResult result) {
-        // TODO: handle other cases
-        if (result instanceof AutoSavePostIfNotDraftResult.PostAutoSaved) {
-            mPostUploadNotifier
-                    .incrementUploadedPostCountFromForegroundNotification(((PostAutoSaved) result).getPost());
+        PostModel post = result.getPost();
+        SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
+        if (result instanceof FetchPostStatusFailed) {
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
+            mPostUploadNotifier.updateNotificationErrorForPost(post, site, post.error.message, 0);
             finishUpload();
-        } else if (result instanceof AutoSavePostIfNotDraftResult.PostIsDraftInRemote) {
-            /**
-             * 1. If the post has a status that's not draft in local, remember that
-             * 2. Set the post status to draft and push post
-             * 3. Update the local copy of post with the previous post status
+        } else if (result instanceof PostAutoSaveFailed) {
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
+            mPostUploadNotifier.updateNotificationErrorForPost(post, site, post.error.message, 0);
+            finishUpload();
+        } else if (result instanceof PostAutoSaved) {
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
+            finishUpload();
+        } else if (result instanceof PostIsDraftInRemote) {
+            /*
+             * If the post is a draft in remote, we'll update it directly instead of auto-saving it. Please see
+             * documentation of `AutoSavePostIfNotDraftUseCase` for details.
+             *
+             * We opted not to restore the current status after the post is uploaded to avoid its complexity and to
+             * replicate `UPLOAD_AS_DRAFT`. We may change this in the future.
              */
+            post.setStatus(PostStatus.DRAFT.toString());
+            mDispatcher.dispatch(PostActionBuilder.newPushPostAction(new RemotePostPayload(post, site)));
+        } else {
+            throw new IllegalStateException("All AutoSavePostIfNotDraftResult types must be handled");
         }
     }
 
