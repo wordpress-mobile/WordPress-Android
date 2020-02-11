@@ -105,7 +105,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         FINISHED
     }
 
-    private SignupBottomSheetDialogFragment mSignupSheet;
     private SmartLockHelper mSmartLockHelper;
     private SmartLockHelperState mSmartLockHelperState = SmartLockHelperState.NOT_TRIGGERED;
     private JetpackConnectionSource mJetpackConnectSource;
@@ -372,8 +371,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_BUTTON_TAPPED);
-        mSignupSheet = SignupBottomSheetDialogFragment.newInstance();
-        mSignupSheet.show(getSupportFragmentManager(), SignupBottomSheetDialogFragment.TAG);
+        SignupBottomSheetDialogFragment signupFragment = SignupBottomSheetDialogFragment.newInstance();
+        signupFragment.show(getSupportFragmentManager(), SignupBottomSheetDialogFragment.TAG);
     }
 
     @Override
@@ -805,8 +804,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void dismissSignupSheet() {
-        if (mSignupSheet != null) {
-            mSignupSheet.dismiss();
+        SignupBottomSheetDialogFragment signupFragment =
+                (SignupBottomSheetDialogFragment) getSupportFragmentManager()
+                        .findFragmentByTag(SignupBottomSheetDialogFragment.TAG);
+
+        if (signupFragment != null) {
+            signupFragment.dismiss();
         }
     }
 
