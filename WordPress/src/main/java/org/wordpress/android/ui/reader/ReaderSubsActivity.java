@@ -30,6 +30,7 @@ import com.google.android.material.tabs.TabLayout;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -76,9 +77,9 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     private static final int NUM_TABS = 3;
 
-    private static final int TAB_IDX_FOLLOWED_TAGS = 0;
-    private static final int TAB_IDX_FOLLOWED_BLOGS = 1;
-    private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
+    public static final int TAB_IDX_FOLLOWED_TAGS = 0;
+    public static final int TAB_IDX_FOLLOWED_BLOGS = 1;
+    public static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -488,6 +489,17 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         String pageTitle = AppPrefs.getReaderSubsPageTitle();
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            if (getIntent().hasExtra(ReaderConstants.ARG_SUBS_TAB_POSITION)) {
+                PagerAdapter adapter = getPageAdapter();
+                int tabIndex = getIntent().getIntExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, TAB_IDX_FOLLOWED_TAGS);
+                pageTitle = (String) adapter.getPageTitle(tabIndex);
+
+                if (!TextUtils.isEmpty(pageTitle)) AppPrefs.setReaderSubsPageTitle(pageTitle);
+            }
+        }
+
         if (TextUtils.isEmpty(pageTitle)) {
             return;
         }

@@ -75,8 +75,6 @@ Language: sq_AL
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' nuk mbulohet ende nga WordPress-i për Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bllok %s. Ky bllok ka lëndë të pavlefshme</string>
     <string name="gutenberg_native_s_block_empty">Bllok %s. I zbrazët</string>
-    <string name="gutenberg_native_s_block">Bllok %s</string>
-    <string name="gutenberg_native_row_d">Rreshti %d.</string>
     <string name="gutenberg_native_reset_block">Rikthejeni Bllokun Te Parazgjedhjet</string>
     <string name="gutenberg_native_remove_block_at_row_s">Hiqe bllokun te rreshti %s</string>
     <string name="gutenberg_native_remove_annotations">Hiqi shënimet</string>
@@ -99,14 +97,11 @@ Language: sq_AL
     <string name="gutenberg_native_move_block_down">Shpjere bllokun më poshtë</string>
     <string name="gutenberg_native_link_text">Tekst lidhjeje</string>
     <string name="gutenberg_native_link_inserted">Lidhja u fut</string>
-    <string name="gutenberg_native_level_s_empty">Nivel %s. E zbrazët.</string>
-    <string name="gutenberg_native_level_1_s_2_s">Nivel %1$s. %2$s</string>
     <string name="gutenberg_native_image_caption_s">Titull figure. %s</string>
     <string name="gutenberg_native_hide_keyboard">Fshihe tastierën</string>
     <string name="gutenberg_native_here_is_the_panel_content">Ja lënda e panelit!</string>
     <string name="gutenberg_native_help_icon">Ikonë ndihme</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">S’u arrit të futej media.\nJu lutemi, prekeni për mundësi.</string>
-    <string name="gutenberg_native_empty">E zbrazët</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Që të zhbëhet ndryshimi i fundit, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Që shfaqet/fshihet rregullimi, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Që të përzgjidhni një figurë, prekeni dyfish</string>
@@ -248,14 +243,12 @@ Language: sq_AL
     <string name="stats_post_views_label">Pamje</string>
     <string name="stats_post_label">Postim</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Grafik veprimtarie postimi.</string>
     <string name="stats_item_collapsed">Objekti u tkurr</string>
     <string name="stats_item_expanded">Objekti u zgjerua</string>
     <string name="stats_collapse_content_description">Tkurre</string>
     <string name="stats_expand_content_description">Zgjeroje</string>
     <string name="stats_graph_updated">Grafiku u përditësua.</string>
     <string name="stats_overview_content_description">%1$s %2$s për periudhën: %3$s, ndryshim nga periudha e mëparshme - %4$s</string>
-    <string name="stats_bar_chart_content_description">Grafik parjesh të sajtit.</string>
     <string name="stats_loading_card">Po ngarkohen të dhënat e kartës së përzgjedhur</string>
     <string name="site_settings_editor">Përpunues</string>
     <string name="description_expand">Zgjeroje</string>
@@ -727,7 +720,6 @@ Language: sq_AL
     <string name="featured_image_desc">figurë e zgjedhur</string>
     <string name="button_discard">Hidhe Tej</string>
     <string name="reader_avatar_desc">foto profili</string>
-    <string name="reader_blavatar_desc">ikonë sajti</string>
     <string name="notification_channel_transient_title">Tranzient</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Ju lutemi, jepni adresën tuaj email</string>
@@ -844,7 +836,6 @@ Language: sq_AL
     <string name="site_settings_quota_space_unlimited">%1$s e pakufizuar</string>
     <string name="preview_count">Paraparje %d</string>
     <string name="add_count">Shtoni %d</string>
-    <string name="fab_create_desc">krijoje</string>
     <string name="fab_add_tag_desc">Krijoje Etiketën</string>
     <string name="navigate_up_desc">lëvizni</string>
     <string name="notification_settings_switch_desc">Njoftime</string>

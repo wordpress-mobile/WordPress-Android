@@ -1,12 +1,21 @@
 package org.wordpress.android.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.prefs.AppSettingsFragment.LANGUAGE_CHANGED
+import org.wordpress.android.util.LocaleManager
 
 class MeActivity : AppCompatActivity() {
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.me_activity)
@@ -24,5 +33,20 @@ class MeActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            RequestCodes.APP_SETTINGS -> {
+                if (resultCode == LANGUAGE_CHANGED) {
+                    // Refresh the app
+                    val refresh = Intent(this, this.javaClass)
+                    startActivity(refresh)
+                    setResult(LANGUAGE_CHANGED)
+                    finish()
+                }
+            }
+        }
     }
 }
