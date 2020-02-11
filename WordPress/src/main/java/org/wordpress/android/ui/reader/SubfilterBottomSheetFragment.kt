@@ -44,7 +44,8 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(ReaderPostListViewModel::class.java)
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                .get(ReaderPostListViewModel::class.java)
 
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
@@ -75,7 +76,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
                 val behavior = BottomSheetBehavior.from(it)
                 val metrics = resources.displayMetrics
                 behavior.peekHeight = metrics.heightPixels / 2
-                behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
             }
         }
     }
@@ -87,6 +87,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)
-        viewModel.setIsBottomSheetShowing(false)
+        viewModel.onBottomSheetCancelled()
     }
 }
