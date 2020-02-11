@@ -16,7 +16,6 @@
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
     <dimen name="design_fab_size">56dp</dimen>
-
     <item format="float" name="primary_button_disabled_alpha" type="dimen">0.12</item>
 
     <dimen name="divider_size">1dp</dimen>
@@ -29,6 +28,8 @@
     <dimen name="navbar_elevation">8dp</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
+
+    <dimen name="popup_over_toolbar_elevation">8dp</dimen>
 
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
@@ -175,6 +176,9 @@
     <dimen name="reader_remove_filter_icon_width">32dp</dimen>
     <dimen name="reader_subfilter_end_guideline_margin">58dp</dimen>
 
+    <dimen name="reader_subfilter_title_gone_margin_top">0dp</dimen>
+    <dimen name="reader_subfilter_title_gone_margin_bottom">10dp</dimen>
+
     <item name="reader_photo_title_shadow_offset" format="float" type="dimen">3.0</item>
     <item name="reader_photo_title_shadow_radius" format="float" type="dimen">1.5</item>
 
@@ -312,7 +316,6 @@
     <dimen name="publicize_divider_height">1dp</dimen>
     <dimen name="publicize_default_margin">10dp</dimen>
     <dimen name="publicize_pic_width">40dp</dimen>
-    <dimen name="publicize_name_size">16sp</dimen>
     <dimen name="publicize_name_margin">8dp</dimen>
 
     <!--post settings-->
