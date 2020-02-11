@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import junit.framework.Assert.assertFalse
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -15,13 +17,17 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.pages.PageItem
+import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Divider
+import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
@@ -296,14 +302,95 @@ class PageListViewModelTest : BaseUnitTest() {
         assertThat((result[0].first[1] as Page).showOverlay).isEqualTo(false)
     }
 
+    @Test
+    fun `CANCEL_AUTO_UPLOAD is added to PublishedPage if auto upload is pending`() {
+        // Arrange
+        whenever(pageItemUiStateHelper.canCancelPendingAutoUpload(any(), any())).thenReturn(true)
+        whenever(pageItemUiStateHelper.setupPageActions(any(), any(), any())).thenCallRealMethod()
+
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        viewModel.pages.observeForever { result.add(it) }
+
+        // Act
+        pages.value = listOf(buildPageModel(0))
+
+        // Assert
+        assertTrue((result[0].first[0] as PublishedPage).actions.contains(CANCEL_AUTO_UPLOAD))
+    }
+
+    @Test
+    fun `CANCEL_AUTO_UPLOAD is not added to PublishedPage if auto upload is not pending`() {
+        // Arrange
+        whenever(pageItemUiStateHelper.canCancelPendingAutoUpload(any(), any())).thenReturn(false)
+        whenever(pageItemUiStateHelper.setupPageActions(any(), any(), any())).thenCallRealMethod()
+
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        viewModel.pages.observeForever { result.add(it) }
+
+        // Act
+        pages.value = listOf(buildPageModel(0))
+
+        // Assert
+        assertFalse((result[0].first[0] as PublishedPage).actions.contains(CANCEL_AUTO_UPLOAD))
+    }
+
+    @Test
+    fun `CANCEL_AUTO_UPLOAD is added to DraftPage if auto upload is pending`() {
+        // Arrange
+        whenever(pageItemUiStateHelper.canCancelPendingAutoUpload(any(), any())).thenReturn(true)
+        whenever(pageItemUiStateHelper.setupPageActions(any(), any(), any())).thenCallRealMethod()
+
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(DRAFTS, pagesViewModel)
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        viewModel.pages.observeForever { result.add(it) }
+
+        // Act
+        pages.value = listOf(buildPageModel(0, status = DRAFT))
+
+        // Assert
+        assertTrue((result[0].first[0] as DraftPage).actions.contains(CANCEL_AUTO_UPLOAD))
+    }
+
+    @Test
+    fun `CANCEL_AUTO_UPLOAD is not added to DraftPage if auto upload is not pending`() {
+        // Arrange
+        whenever(pageItemUiStateHelper.canCancelPendingAutoUpload(any(), any())).thenReturn(false)
+        whenever(pageItemUiStateHelper.setupPageActions(any(), any(), any())).thenCallRealMethod()
+
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(DRAFTS, pagesViewModel)
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        viewModel.pages.observeForever { result.add(it) }
+
+        // Act
+        pages.value = listOf(buildPageModel(0, status = DRAFT))
+
+        // Assert
+        assertFalse((result[0].first[0] as DraftPage).actions.contains(CANCEL_AUTO_UPLOAD))
+    }
+
     private fun buildPageModel(
         id: Int,
         date: Date = Date(0),
         parent: PageModel? = null,
-        pageTitle: String? = null
+        pageTitle: String? = null,
+        status: PageStatus = PageStatus.PUBLISHED
     ): PageModel {
         val title = pageTitle ?: if (id < 10) "Title 0$id" else "Title $id"
-        return PageModel(site, id, title, PageStatus.PUBLISHED, date, false, id.toLong(), parent, id.toLong())
+        return PageModel(site, id, title, status, date, false, id.toLong(), parent, id.toLong())
     }
 
     private fun assertDivider(pageItem: PageItem) {
