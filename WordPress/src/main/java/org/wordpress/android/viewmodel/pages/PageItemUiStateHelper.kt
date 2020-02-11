@@ -139,13 +139,11 @@ class PageItemUiStateHelper @Inject constructor(
                     add(CANCEL_AUTO_UPLOAD)
                 }
             }
-
             DRAFTS -> mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH).apply {
                 if (canCancelPendingAutoUpload(pageId, site)) {
                     add(CANCEL_AUTO_UPLOAD)
                 }
             }
-            
             TRASHED -> setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY)
         }
     }
