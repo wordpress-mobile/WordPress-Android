@@ -12,6 +12,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 
@@ -20,7 +21,7 @@ sealed class PageItem(open val type: Type) {
         open val id: Long,
         open val title: String,
         open val date: Date,
-        open val labels: List<Int>,
+        open val labels: List<UiString>,
         open var indent: Int,
         open var imageUrl: String?,
         open val actions: Set<Action>,
@@ -34,7 +35,7 @@ sealed class PageItem(open val type: Type) {
         override val id: Long,
         override val title: String,
         override val date: Date,
-        override val labels: List<Int> = emptyList(),
+        override val labels: List<UiString> = emptyList(),
         override var indent: Int = 0,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
@@ -58,7 +59,7 @@ sealed class PageItem(open val type: Type) {
         override val id: Long,
         override val title: String,
         override val date: Date,
-        override val labels: List<Int> = emptyList(),
+        override val labels: List<UiString> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
@@ -81,7 +82,7 @@ sealed class PageItem(open val type: Type) {
         override val id: Long,
         override val title: String,
         override val date: Date,
-        override val labels: List<Int> = emptyList(),
+        override val labels: List<UiString> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,

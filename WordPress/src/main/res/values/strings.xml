@@ -109,6 +109,8 @@
     <string name="exit">exit</string>
     <string name="ok">OK</string>
     <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
+    <string name="local_draft">Local draft</string>
+    <string name="local_changes">Local changes</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -246,7 +248,6 @@
     <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="untitled">Untitled</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
-    <string name="local_draft">Local draft</string>
     <string name="post_uploading">Uploading post</string>
     <string name="post_uploading_draft">Uploading draft</string>
     <string name="post_queued">Queued post</string>
@@ -1452,12 +1453,11 @@
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
 
-    <!-- Remote Post Changes -->
-    <string name="local_changes">Local changes</string>
-
-    <!-- Remote Post has conflicts with local post -->
+    <!-- Remote Post&Page has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
     <string name="local_post_autosave_revision_available">You\'ve made unsaved changes to this post</string>
+    <string name="local_page_is_conflicted">@string/local_post_is_conflicted</string>
+    <string name="local_page_autosave_revision_available">You\'ve made unsaved changes to this page</string>
 
     <!-- Post Remote Preview -->
     <string name="post_preview_saving_draft">Saving…</string>
@@ -2569,6 +2569,45 @@
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_open_page_error">The selected page is not available</string>
 
+
+    <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
+    <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
+
+    <string name="page_local_draft" translatable="false">@string/local_draft</string>
+    <string name="page_local_changes" translatable="false">@string/local_changes</string>
+    <string name="page_uploading">Uploading page</string>
+    <string name="page_uploading_draft" translatable="false">@string/post_uploading_draft</string>
+    <string name="page_queued">Queued page</string>
+
+    <string name="page_waiting_for_connection_publish">We\'ll publish the page when your device is back online.</string>
+    <string name="page_waiting_for_connection_pending">We\'ll submit your page for review when your device is back online.</string>
+    <string name="page_waiting_for_connection_scheduled">We\'ll schedule your page when your device is back online.</string>
+    <string name="page_waiting_for_connection_private">We\'ll publish your private page when your device is back online.</string>
+    <string name="page_waiting_for_connection_draft">We\'ll save your draft when your device is back online</string>
+
+    <string name="error_media_recover_page_not_published">We couldn\'t upload this media, and didn\'t publish the page.</string>
+    <string name="error_media_recover_page_not_published_private">We couldn\'t upload this media, and didn\'t publish this private page.</string>
+    <string name="error_media_recover_page_not_scheduled">We couldn\'t upload this media, and didn\'t schedule this page.</string>
+    <string name="error_media_recover_page_not_submitted">We couldn\'t upload this media, and didn\'t submit this page for review. </string>
+
+    <string name="error_page_not_published_retrying">We couldn\'t publish this page, but we\'ll try again later.</string>
+    <string name="error_page_not_published_retrying_private">We couldn\'t publish this private page, but we\'ll try again later.</string>
+    <string name="error_page_not_scheduled_retrying">We couldn\'t schedule this page, but we\'ll try again later.</string>
+    <string name="error_page_not_submitted_retrying">We couldn\'t submit this page for review, but we\'ll try again later. </string>
+
+    <string name="error_media_recover_page_not_published_retrying" translatable="false">@string/error_page_not_published_retrying</string>
+    <string name="error_media_recover_page_not_published_retrying_private" translatable="false">@string/error_page_not_published_retrying_private</string>
+    <string name="error_media_recover_page_not_scheduled_retrying" translatable="false">@string/error_page_not_scheduled_retrying</string>
+    <string name="error_media_recover_page_not_submitted_retrying" translatable="false">@string/error_page_not_submitted_retrying</string>
+
+
+    <string name="error_page_not_published">We couldn\'t complete this action, and didn\'t publish this page.</string>
+    <string name="error_page_not_published_private">We couldn\'t complete this action, and didn\'t publish this private page.</string>
+    <string name="error_page_not_scheduled">We couldn\'t complete this action, and didn\'t schedule this page.</string>
+    <string name="error_page_not_submitted">We couldn\'t complete this action, and didn\'t submit this page for review.</string>
+
+    <string name="error_media_recover_page" translatable="false">@string/error_media_recover_post</string>
+    <string name="error_unknown_page_type">Unknown page format</string>
 
     <!-- Posts -->
     <string name="post_list_author">Post author</string>
