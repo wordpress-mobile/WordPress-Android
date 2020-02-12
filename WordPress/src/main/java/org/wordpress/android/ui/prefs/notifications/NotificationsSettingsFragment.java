@@ -137,10 +137,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             PreferenceScreen preferenceScreen =
                     (PreferenceScreen) findPreference(getActivity().getString(R.string.wp_pref_notifications_root));
 
-            PreferenceCategory categorySightsAndSounds =
-                    (PreferenceCategory) preferenceScreen.findPreference(getActivity()
-                            .getString(
-                                    R.string.pref_notification_sights_sounds));
+            PreferenceCategory categorySightsAndSounds = (PreferenceCategory) preferenceScreen
+                    .findPreference(getActivity().getString(R.string.pref_notification_sights_sounds));
             preferenceScreen.removePreference(categorySightsAndSounds);
         }
     }
@@ -729,9 +727,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     private void setPreferenceIcon(NotificationsSettingsDialogPreference preference, @DrawableRes int drawableRes) {
         preference.setIcon(drawableRes);
         preference.getIcon().setTintMode(Mode.SRC_IN);
-        preference.getIcon().setTintList(
-                ContextExtensionsKt
-                        .getColorStateListFromAttribute(preference.getContext(), R.attr.wpColorOnSurfaceMedium));
+        preference.getIcon().setTintList(ContextExtensionsKt
+                .getColorStateListFromAttribute(preference.getContext(), R.attr.wpColorOnSurfaceMedium));
     }
 
     private void addSitesForViewAllSitesScreen(PreferenceScreen preferenceScreen, boolean isFollowed) {

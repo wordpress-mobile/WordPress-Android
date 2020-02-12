@@ -232,8 +232,8 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
             throw IllegalStateException("Unknown view style id: $viewStyleInt")
         } else {
             AppLog.e(
-                    AppLog.T.SETTINGS, "PrefMasterSwitchToolbarView.setViewStyle called from xml " +
-                    "with an unknown viewStyle."
+                    AppLog.T.SETTINGS,
+                    "PrefMasterSwitchToolbarView.setViewStyle called from xml with an unknown viewStyle."
             )
         }
     }
