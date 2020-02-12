@@ -189,6 +189,10 @@ public class AppPrefs {
         // user id last used to login with
         LAST_USED_USER_ID,
 
+        // last user access status in reader
+        LAST_READER_KNOWN_ACCESS_TOKEN_STATUS,
+        LAST_READER_KNOWN_USER_ID,
+
         // used to indicate that user opted out of quick start
         IS_QUICK_START_DISABLED,
 
@@ -420,6 +424,22 @@ public class AppPrefs {
 
     public static void setLastUsedUserId(long userId) {
         setLong(UndeletablePrefKey.LAST_USED_USER_ID, userId);
+    }
+
+    public static boolean getLastReaderKnownAccessTokenStatus() {
+        return getBoolean(UndeletablePrefKey.LAST_READER_KNOWN_ACCESS_TOKEN_STATUS, false);
+    }
+
+    public static void setLastReaderKnownAccessTokenStatus(boolean accessTokenStatus) {
+        setBoolean(UndeletablePrefKey.LAST_READER_KNOWN_ACCESS_TOKEN_STATUS, accessTokenStatus);
+    }
+
+    public static long getLastReaderKnownUserId() {
+        return getLong(UndeletablePrefKey.LAST_READER_KNOWN_USER_ID);
+    }
+
+    public static void setLastReaderKnownUserId(long userId) {
+        setLong(UndeletablePrefKey.LAST_READER_KNOWN_USER_ID, userId);
     }
 
     /**
