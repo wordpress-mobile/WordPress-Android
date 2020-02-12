@@ -2,8 +2,4 @@
 <resources>
     <!-- left/right margin for preview image view -->
     <dimen name="preview_image_view_margin">16dp</dimen>
-
-    <dimen name="loading_view_width">160dp</dimen>
-    <dimen name="loading_view_height">44dp</dimen>
-    <dimen name="loading_view_corner_radius">8dp</dimen>
 </resources>
