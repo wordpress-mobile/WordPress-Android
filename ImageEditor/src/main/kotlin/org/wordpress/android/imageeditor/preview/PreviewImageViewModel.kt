@@ -22,8 +22,20 @@ class PreviewImageViewModel : ViewModel() {
         lowResImageUrl = loResImageUrl
         highResImageUrl = hiResImageUrl
 
-        _loadImageFromData.value = ImageData(lowResImageUrl, highResImageUrl)
+        _loadImageFromData.value = ImageData(
+            uiState = ImageUiState.IMAGE_LOAD_IN_PROGRESS,
+            lowResImageUrl = lowResImageUrl,
+            highResImageUrl = highResImageUrl
+        )
     }
 
-    data class ImageData(val lowResImageUrl: String, val highResImageUrl: String)
+    data class ImageData(val uiState: ImageUiState, val lowResImageUrl: String, val highResImageUrl: String)
+
+    enum class ImageUiState(
+        val progressBarVisible: Boolean = false
+    ) {
+        IMAGE_LOAD_IN_PROGRESS(progressBarVisible = true),
+        IMAGE_LOAD_SUCCESS(progressBarVisible = false),
+        IMAGE_LOAD_FAILED(progressBarVisible = false);
+    }
 }
