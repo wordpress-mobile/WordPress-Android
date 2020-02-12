@@ -317,6 +317,10 @@ public class AppPrefs {
         boolean wasFollowing = false;
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            String wasFallowingString = getString(DeletablePrefKey.READER_TAG_WAS_FOLLOWING);
+
+            if (TextUtils.isEmpty(wasFallowingString)) return null;
+
             wasFollowing = getBoolean(DeletablePrefKey.READER_TAG_WAS_FOLLOWING, false);
         }
 
