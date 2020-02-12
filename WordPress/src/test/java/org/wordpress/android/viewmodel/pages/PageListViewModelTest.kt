@@ -4,8 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -319,7 +317,7 @@ class PageListViewModelTest : BaseUnitTest() {
         pages.value = listOf(buildPageModel(0))
 
         // Assert
-        assertTrue((result[0].first[0] as PublishedPage).actions.contains(CANCEL_AUTO_UPLOAD))
+        assertThat((result[0].first[0] as PublishedPage).actions).contains(CANCEL_AUTO_UPLOAD)
     }
 
     @Test
@@ -339,7 +337,7 @@ class PageListViewModelTest : BaseUnitTest() {
         pages.value = listOf(buildPageModel(0))
 
         // Assert
-        assertFalse((result[0].first[0] as PublishedPage).actions.contains(CANCEL_AUTO_UPLOAD))
+        assertThat((result[0].first[0] as PublishedPage).actions).doesNotContain(CANCEL_AUTO_UPLOAD)
     }
 
     @Test
@@ -359,7 +357,7 @@ class PageListViewModelTest : BaseUnitTest() {
         pages.value = listOf(buildPageModel(0, status = DRAFT))
 
         // Assert
-        assertTrue((result[0].first[0] as DraftPage).actions.contains(CANCEL_AUTO_UPLOAD))
+        assertThat((result[0].first[0] as DraftPage).actions).contains(CANCEL_AUTO_UPLOAD)
     }
 
     @Test
@@ -379,7 +377,7 @@ class PageListViewModelTest : BaseUnitTest() {
         pages.value = listOf(buildPageModel(0, status = DRAFT))
 
         // Assert
-        assertFalse((result[0].first[0] as DraftPage).actions.contains(CANCEL_AUTO_UPLOAD))
+        assertThat((result[0].first[0] as DraftPage).actions).doesNotContain(CANCEL_AUTO_UPLOAD)
     }
 
     private fun buildPageModel(
