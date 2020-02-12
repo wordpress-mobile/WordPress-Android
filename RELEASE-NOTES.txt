@@ -1,5 +1,6 @@
 14.3
 -----
+* Removes sections for post search results
  
 14.2
 -----
