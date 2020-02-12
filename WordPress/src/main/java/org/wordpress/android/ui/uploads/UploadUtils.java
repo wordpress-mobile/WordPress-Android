@@ -101,11 +101,14 @@ public class UploadUtils {
                             return isPage ? new UiStringRes(R.string.error_page_not_published_retrying_private)
                                     : new UiStringRes(R.string.error_post_not_published_retrying_private);
                         case PUBLISHED:
-                            return isPage ? new UiStringRes(R.string.error_page_not_published_retrying) : new UiStringRes(R.string.error_post_not_published_retrying);
+                            return isPage ? new UiStringRes(R.string.error_page_not_published_retrying)
+                                    : new UiStringRes(R.string.error_post_not_published_retrying);
                         case SCHEDULED:
-                            return isPage ? new UiStringRes(R.string.error_page_not_scheduled_retrying) : new UiStringRes(R.string.error_post_not_scheduled_retrying);
+                            return isPage ? new UiStringRes(R.string.error_page_not_scheduled_retrying)
+                                    : new UiStringRes(R.string.error_post_not_scheduled_retrying);
                         case PENDING:
-                            return isPage ? new UiStringRes(R.string.error_page_not_submitted_retrying) : new UiStringRes(R.string.error_post_not_submitted_retrying);
+                            return isPage ? new UiStringRes(R.string.error_page_not_submitted_retrying)
+                                    : new UiStringRes(R.string.error_post_not_submitted_retrying);
                         case UNKNOWN:
                         case DRAFT:
                         case TRASHED:
