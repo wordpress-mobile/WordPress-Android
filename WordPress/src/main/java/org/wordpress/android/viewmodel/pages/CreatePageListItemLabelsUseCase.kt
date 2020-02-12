@@ -32,21 +32,21 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
     private val pageConflictResolver: PageConflictResolver,
     private val labelColorUseCase: ResolvePageListItemsColorUseCase
 ) {
-    fun createLabels(pagePostModel: PostModel, uploadUiState: PostUploadUiState): Pair<List<UiString>, LabelColor> {
+    fun createLabels(postModel: PostModel, uploadUiState: PostUploadUiState): Pair<List<UiString>, LabelColor> {
         val labels = getLabels(
-                PostStatus.fromPost(pagePostModel),
-                pagePostModel.isLocalDraft,
-                pagePostModel.isLocallyChanged,
+                PostStatus.fromPost(postModel),
+                postModel.isLocalDraft,
+                postModel.isLocallyChanged,
                 uploadUiState,
                 false, // TODO use conflict resolver
-                pageConflictResolver.hasUnhandledAutoSave(pagePostModel)
+                pageConflictResolver.hasUnhandledAutoSave(postModel)
         )
-        val labelColor = labelColorUseCase.getLabelsColor(pagePostModel, uploadUiState)
+        val labelColor = labelColorUseCase.getLabelsColor(postModel, uploadUiState)
         return Pair(labels, labelColor)
     }
 
     private fun getLabels(
-        pagePostStatus: PostStatus,
+        postStatus: PostStatus,
         isLocalDraft: Boolean,
         isLocallyChanged: Boolean,
         uploadUiState: PostUploadUiState,
@@ -56,7 +56,7 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
         val labels: MutableList<UiString> = ArrayList()
         when {
             uploadUiState is UploadFailed -> {
-                getErrorLabel(uploadUiState, pagePostStatus)?.let { labels.add(it) }
+                getErrorLabel(uploadUiState, postStatus)?.let { labels.add(it) }
             }
             uploadUiState is UploadingPost -> if (uploadUiState.isDraft) {
                 labels.add(UiStringRes(R.string.page_uploading_draft))
@@ -90,25 +90,25 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
             } else if (isLocallyChanged) {
                 labels.add(UiStringRes(R.string.page_local_changes))
             }
-            if (pagePostStatus == PRIVATE) {
+            if (postStatus == PRIVATE) {
                 labels.add(UiStringRes(R.string.page_status_page_private))
             }
-            if (pagePostStatus == PENDING) {
+            if (postStatus == PENDING) {
                 labels.add(UiStringRes(R.string.page_status_pending_review))
             }
         }
         return labels
     }
 
-    private fun getErrorLabel(uploadUiState: UploadFailed, pagePostStatus: PostStatus): UiString? {
+    private fun getErrorLabel(uploadUiState: UploadFailed, postStatus: PostStatus): UiString? {
         return when {
             uploadUiState.error.mediaError != null -> getMediaUploadErrorLabel(
                     uploadUiState,
-                    pagePostStatus
+                    postStatus
             )
             uploadUiState.error.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
-                    pagePostStatus,
-                    false,
+                    postStatus,
+                    true,
                     uploadUiState.error.postError,
                     uploadUiState.isEligibleForAutoUpload
             )
@@ -126,17 +126,17 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
 
     private fun getMediaUploadErrorLabel(
         uploadUiState: UploadFailed,
-        pagePostStatus: PostStatus
+        postStatus: PostStatus
     ): UiStringRes {
         return when {
-            uploadUiState.isEligibleForAutoUpload -> when (pagePostStatus) {
+            uploadUiState.isEligibleForAutoUpload -> when (postStatus) {
                 PUBLISHED -> UiStringRes(R.string.error_media_recover_page_not_published_retrying)
                 PRIVATE -> UiStringRes(R.string.error_media_recover_page_not_published_retrying_private)
                 SCHEDULED -> UiStringRes(R.string.error_media_recover_page_not_scheduled_retrying)
                 PENDING -> UiStringRes(R.string.error_media_recover_page_not_submitted_retrying)
                 DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_generic_error_retrying)
             }
-            uploadUiState.retryWillPushChanges -> when (pagePostStatus) {
+            uploadUiState.retryWillPushChanges -> when (postStatus) {
                 PUBLISHED -> UiStringRes(R.string.error_media_recover_page_not_published)
                 PRIVATE -> UiStringRes(R.string.error_media_recover_page_not_published_private)
                 SCHEDULED -> UiStringRes(R.string.error_media_recover_page_not_scheduled)
