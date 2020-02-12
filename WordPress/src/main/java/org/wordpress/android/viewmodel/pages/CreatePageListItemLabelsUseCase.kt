@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
-import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
@@ -30,7 +30,8 @@ typealias LabelColor = Int?
  */
 class CreatePageListItemLabelsUseCase @Inject constructor(
     private val pageConflictResolver: PageConflictResolver,
-    private val labelColorUseCase: ResolvePageListItemsColorUseCase
+    private val labelColorUseCase: ResolvePageListItemsColorUseCase,
+    private val uploadUtilsWrapper: UploadUtilsWrapper
 ) {
     fun createLabels(postModel: PostModel, uploadUiState: PostUploadUiState): Pair<List<UiString>, LabelColor> {
         val labels = getLabels(
@@ -106,7 +107,7 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
                     uploadUiState,
                     postStatus
             )
-            uploadUiState.error.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
+            uploadUiState.error.postError != null -> uploadUtilsWrapper.getErrorMessageResIdFromPostError(
                     postStatus,
                     true,
                     uploadUiState.error.postError,

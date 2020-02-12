@@ -1,12 +1,15 @@
 package org.wordpress.android.viewmodel.pages
 
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
@@ -21,8 +24,8 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
-import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState
 
@@ -30,13 +33,15 @@ import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.Post
 class CreatePageListItemLabelsUseCaseTest {
     @Mock private lateinit var pageConflictResolver: PageConflictResolver
     @Mock private lateinit var labelColorUseCase: ResolvePageListItemsColorUseCase
+    @Mock private lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var useCase: CreatePageListItemLabelsUseCase
 
     @Before
     fun setUp() {
         useCase = CreatePageListItemLabelsUseCase(
                 pageConflictResolver,
-                labelColorUseCase
+                labelColorUseCase,
+                uploadUtilsWrapper
         )
     }
 
@@ -58,7 +63,6 @@ class CreatePageListItemLabelsUseCaseTest {
         assertThat(labels).contains(UiStringRes(R.string.page_status_pending_review))
     }
 
-    //
     @Test
     fun `local draft label shown for local pages`() {
         val (labels, _) = useCase.createLabels(PostModel().apply { setIsLocalDraft(true) }, mock())
@@ -113,19 +117,6 @@ class CreatePageListItemLabelsUseCaseTest {
                 )
         )
         assertThat(labels).contains(UiStringRes(R.string.error_media_recover_page))
-    }
-
-    @Test
-    fun `generic error message shown when upload fails from unknown reason`() {
-        val (labels, _) = useCase.createLabels(
-                PostModel(),
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(PostError(PostErrorType.GENERIC_ERROR, "testing error message")),
-                        isEligibleForAutoUpload = false,
-                        retryWillPushChanges = false
-                )
-        )
-        assertThat(labels).contains(UiStringRes(R.string.error_generic_error))
     }
 
     @Test
@@ -240,40 +231,6 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `base upload error shown on GENERIC ERROR and not eligible for auto upload`() {
-        val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(DRAFT.toString())
-                },
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(PostError(GENERIC_ERROR)),
-                        isEligibleForAutoUpload = false,
-                        retryWillPushChanges = false
-                )
-        )
-        assertThat(labels)
-                .containsOnly(UiStringRes(R.string.error_generic_error))
-    }
-
-    @Test
-    fun `retrying upload shown for draft eligible for auto-upload`() {
-        val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(DRAFT.toString())
-                },
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(PostError(GENERIC_ERROR)),
-                        isEligibleForAutoUpload = true,
-                        retryWillPushChanges = true
-                )
-        )
-        assertThat(labels)
-                .containsOnly(UiStringRes(R.string.error_generic_error_retrying))
-    }
-
-    @Test
     fun `multiple info labels are being shown together`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
@@ -361,5 +318,74 @@ class CreatePageListItemLabelsUseCaseTest {
         )
 
         assertThat(labels).containsOnly(UiStringRes(R.string.page_local_draft))
+    }
+
+    @Test
+    fun `UploadUtils getErrorMessageResIdFromPostError invoked when post upload fails`() {
+        whenever(uploadUtilsWrapper
+                .getErrorMessageResIdFromPostError(anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean())
+        ).thenReturn(mock())
+
+        val (_, _) = useCase.createLabels(
+                PostModel(),
+                PostUploadUiState.UploadFailed(
+                        error = UploadError(PostError(PostErrorType.GENERIC_ERROR, "testing error message")),
+                        isEligibleForAutoUpload = false,
+                        retryWillPushChanges = false
+                )
+        )
+        verify(uploadUtilsWrapper).getErrorMessageResIdFromPostError(
+                anyOrNull(),
+                anyBoolean(),
+                anyOrNull(),
+                anyBoolean()
+        )
+    }
+
+    @Test
+    fun `UploadUtils is invoked with isPage set to true when post upload fails`() {
+        whenever(uploadUtilsWrapper
+                .getErrorMessageResIdFromPostError(anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean()))
+                .thenReturn(UiStringRes(0)
+                )
+
+        val (_, _) = useCase.createLabels(
+                PostModel(),
+                PostUploadUiState.UploadFailed(
+                        error = UploadError(PostError(PostErrorType.GENERIC_ERROR, "testing error message")),
+                        isEligibleForAutoUpload = false,
+                        retryWillPushChanges = false
+                )
+        )
+        verify(uploadUtilsWrapper).getErrorMessageResIdFromPostError(
+                postStatus = anyOrNull(),
+                isPage = eq(true),
+                postError = anyOrNull(),
+                isEligibleForAutoUpload = anyBoolean()
+        )
+    }
+
+    @Test
+    fun `IsEligibleForAutoUpload is propagated to uploadUtils`() {
+        val isEligibleForAutoUpload = true
+        whenever(uploadUtilsWrapper
+                .getErrorMessageResIdFromPostError(anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean()))
+                .thenReturn(UiStringRes(0)
+                )
+
+        val (_, _) = useCase.createLabels(
+                PostModel(),
+                PostUploadUiState.UploadFailed(
+                        error = UploadError(PostError(PostErrorType.GENERIC_ERROR, "testing error message")),
+                        isEligibleForAutoUpload = isEligibleForAutoUpload,
+                        retryWillPushChanges = false
+                )
+        )
+        verify(uploadUtilsWrapper).getErrorMessageResIdFromPostError(
+                postStatus = anyOrNull(),
+                isPage = eq(true),
+                postError = anyOrNull(),
+                isEligibleForAutoUpload = eq(isEligibleForAutoUpload)
+        )
     }
 }
