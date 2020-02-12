@@ -24,12 +24,16 @@ import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.Post
 import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState.UploadingPost
 import javax.inject.Inject
 
+typealias LabelColor = Int?
 /**
  * Most of this code has been copied from PostListItemUIStateHelper.
  */
-class CreatePageListItemLabelsUseCase @Inject constructor(private val pageConflictResolver: PageConflictResolver) {
-    fun createLabels(postModel: PostModel, uploadUiState: PostUploadUiState): List<UiString> {
-        return getLabels(
+class CreatePageListItemLabelsUseCase @Inject constructor(
+    private val pageConflictResolver: PageConflictResolver,
+    private val labelColorUseCase: ResolvePageListItemsColorUseCase
+) {
+    fun createLabels(postModel: PostModel, uploadUiState: PostUploadUiState): Pair<List<UiString>, LabelColor> {
+        val labels = getLabels(
                 PostStatus.fromPost(postModel),
                 postModel.isLocalDraft,
                 postModel.isLocallyChanged,
@@ -37,6 +41,8 @@ class CreatePageListItemLabelsUseCase @Inject constructor(private val pageConfli
                 false, // TODO use conflict resolver
                 pageConflictResolver.hasUnhandledAutoSave(postModel)
         )
+        val labelColor = labelColorUseCase.getLabelsColor(postModel, uploadUiState)
+        return Pair(labels, labelColor)
     }
 
     private fun getLabels(

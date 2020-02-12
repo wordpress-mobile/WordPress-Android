@@ -144,6 +144,7 @@ class SearchListViewModelTest {
                 Date(),
                 listOf(),
                 0,
+                0,
                 null,
                 false,
                 ProgressBarUiState.Hidden,
@@ -159,7 +160,7 @@ class SearchListViewModelTest {
     @Test
     fun `passes page to page view model on item tapped`() {
         val clickedPage = PageItem.PublishedPage(
-                1, "title", Date(), listOf(), 0, null, false, ProgressBarUiState.Hidden,
+                1, "title", Date(), listOf(), 0, 0, null, false, ProgressBarUiState.Hidden,
                 false
         )
 

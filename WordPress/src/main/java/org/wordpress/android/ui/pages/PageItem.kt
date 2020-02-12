@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.pages
 
+import androidx.annotation.ColorRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
@@ -22,6 +23,7 @@ sealed class PageItem(open val type: Type) {
         open val title: String,
         open val date: Date,
         open val labels: List<UiString>,
+        @ColorRes open val labelsColor: Int?,
         open var indent: Int,
         open var imageUrl: String?,
         open val actions: Set<Action>,
@@ -36,6 +38,7 @@ sealed class PageItem(open val type: Type) {
         override val title: String,
         override val date: Date,
         override val labels: List<UiString> = emptyList(),
+        override val labelsColor: Int? = null,
         override var indent: Int = 0,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
@@ -46,6 +49,7 @@ sealed class PageItem(open val type: Type) {
             title = title,
             date = date,
             labels = labels,
+            labelsColor = labelsColor,
             indent = indent,
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
@@ -60,6 +64,7 @@ sealed class PageItem(open val type: Type) {
         override val title: String,
         override val date: Date,
         override val labels: List<UiString> = emptyList(),
+        override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
@@ -69,6 +74,7 @@ sealed class PageItem(open val type: Type) {
             title = title,
             date = date,
             labels = labels,
+            labelsColor = labelsColor,
             indent = 0,
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH),
@@ -83,6 +89,7 @@ sealed class PageItem(open val type: Type) {
         override val title: String,
         override val date: Date,
         override val labels: List<UiString> = emptyList(),
+        override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
@@ -92,6 +99,7 @@ sealed class PageItem(open val type: Type) {
             title = title,
             date = date,
             labels = labels,
+            labelsColor = labelsColor,
             indent = 0,
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
@@ -105,6 +113,8 @@ sealed class PageItem(open val type: Type) {
         override val id: Long,
         override val title: String,
         override val date: Date,
+        override val labels: List<UiString> = emptyList(),
+        override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
@@ -113,7 +123,8 @@ sealed class PageItem(open val type: Type) {
             id = id,
             title = title,
             date = date,
-            labels = emptyList(),
+            labels = labels,
+            labelsColor = labelsColor,
             indent = 0,
             imageUrl = imageUrl,
             actions = setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY),

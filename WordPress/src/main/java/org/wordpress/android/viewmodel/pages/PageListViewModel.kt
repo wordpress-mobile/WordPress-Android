@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import androidx.annotation.ColorRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -252,7 +253,8 @@ class PageListViewModel @Inject constructor(
                     val itemUiStateData = createItemUiStateData(it)
 
                     PublishedPage(
-                            it.remoteId, it.title, it.date, itemUiStateData.labels, pageItemIndent,
+                            it.remoteId, it.title, it.date, itemUiStateData.labels, itemUiStateData.labelsColor,
+                            pageItemIndent,
                             getFeaturedImageUrl(it.featuredImageId),
                             actionsEnabled,
                             itemUiStateData.progressBarUiState,
@@ -273,6 +275,7 @@ class PageListViewModel @Inject constructor(
 
                                 ScheduledPage(
                                         it.remoteId, it.title, it.date, itemUiStateData.labels,
+                                        itemUiStateData.labelsColor,
                                         getFeaturedImageUrl(it.featuredImageId),
                                         actionsEnabled,
                                         itemUiStateData.progressBarUiState,
@@ -294,6 +297,7 @@ class PageListViewModel @Inject constructor(
                     it.title,
                     it.date,
                     itemUiStateData.labels,
+                    itemUiStateData.labelsColor,
                     getFeaturedImageUrl(it.featuredImageId),
                     actionsEnabled,
                     itemUiStateData.progressBarUiState,
@@ -312,6 +316,8 @@ class PageListViewModel @Inject constructor(
                     it.remoteId,
                     it.title,
                     it.date,
+                    itemUiStateData.labels,
+                    itemUiStateData.labelsColor,
                     getFeaturedImageUrl(it.featuredImageId),
                     actionsEnabled,
                     itemUiStateData.progressBarUiState,
@@ -364,17 +370,18 @@ class PageListViewModel @Inject constructor(
                 postModel,
                 pagesViewModel.site
         )
-        val labels = createPageListItemLabelsUseCase.createLabels(postModel, uploadUiState)
+        val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(postModel, uploadUiState)
 
         val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(
                 postModel,
                 uploadUiState
         )
-        return ItemUiStateData(labels, progressBarUiState, showOverlay)
+        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay)
     }
 
     private data class ItemUiStateData(
         val labels: List<UiString>,
+        @ColorRes val labelsColor: Int?,
         val progressBarUiState: ProgressBarUiState,
         val showOverlay: Boolean
     )
