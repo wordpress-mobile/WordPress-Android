@@ -83,7 +83,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                         .capitalizeWithLocaleWithoutLint(parent.context.currentLocale)
 
                 labels.text = page.labels.map { uiHelper.getTextOfUiString(parent.context, it) }.sorted()
-                        .joinToString(separator = " · ")
+                                    .joinToString(separator = " · ")
                 uiHelper.updateVisibility(labels, page.labels.isNotEmpty())
 
                 itemView.setOnClickListener { onItemTapped(page) }

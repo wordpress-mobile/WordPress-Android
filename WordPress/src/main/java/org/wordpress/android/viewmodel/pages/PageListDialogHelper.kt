@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import java.lang.NullPointerException
@@ -43,7 +44,7 @@ class PageListDialogHelper(
                 title = UiStringRes(R.string.delete_page),
                 message = UiStringResWithParams(
                         R.string.page_delete_dialog_message,
-                        listOf(pageTitle)
+                        listOf(UiStringText(pageTitle))
                 ),
                 positiveButton = UiStringRes(R.string.delete),
                 negativeButton = UiStringRes(R.string.cancel)
@@ -61,9 +62,7 @@ class PageListDialogHelper(
             CONFIRM_DELETE_PAGE_DIALOG_TAG -> pageIdForDeleteDialog?.let {
                 pageIdForDeleteDialog = null
                 deletePage(it)
-            } ?: run {
-                throw NullPointerException("pageIdForDeleteDialog shouldn't be null.")
-            }
+            } ?: throw NullPointerException("pageIdForDeleteDialog shouldn't be null.")
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> pageIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the restored auto save
                 pageIdForAutosaveRevisionResolutionDialog = null
@@ -72,9 +71,9 @@ class PageListDialogHelper(
                         UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED,
                         mapOf(POST_TYPE to "page")
                 )
-            } ?: run {
-                throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
             }
+                    ?: throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
+
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
     }
@@ -92,9 +91,9 @@ class PageListDialogHelper(
                         UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED,
                         mapOf(POST_TYPE to "page")
                 )
-            } ?: run {
-                throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
             }
+                    ?: throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
+
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
     }
