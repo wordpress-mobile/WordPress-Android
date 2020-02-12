@@ -93,6 +93,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                             )
                     )
                 }
+
                 uiHelper.updateVisibility(labels, page.labels.isNotEmpty())
 
                 itemView.setOnClickListener { onItemTapped(page) }
