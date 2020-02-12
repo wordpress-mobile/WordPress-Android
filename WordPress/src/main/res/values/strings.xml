@@ -2600,7 +2600,14 @@
     <string name="error_media_recover_page_not_scheduled_retrying" translatable="false">@string/error_page_not_scheduled_retrying</string>
     <string name="error_media_recover_page_not_submitted_retrying" translatable="false">@string/error_page_not_submitted_retrying</string>
 
+
+    <string name="error_page_not_published">We couldn\'t complete this action, and didn\'t publish this page.</string>
+    <string name="error_page_not_published_private">We couldn\'t complete this action, and didn\'t publish this private page.</string>
+    <string name="error_page_not_scheduled">We couldn\'t complete this action, and didn\'t schedule this page.</string>
+    <string name="error_page_not_submitted">We couldn\'t complete this action, and didn\'t submit this page for review.</string>
+
     <string name="error_media_recover_page" translatable="false">@string/error_media_recover_post</string>
+    <string name="error_unknown_page_type">Unknown page format</string>
 
     <!-- Posts -->
     <string name="post_list_author">Post author</string>

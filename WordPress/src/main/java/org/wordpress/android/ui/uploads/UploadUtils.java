@@ -85,7 +85,8 @@ public class UploadUtils {
                 return isPage ? new UiStringRes(R.string.error_unknown_page)
                         : new UiStringRes(R.string.error_unknown_post);
             case UNKNOWN_POST_TYPE:
-                return new UiStringRes(R.string.error_unknown_post_type);
+                return isPage ? new UiStringRes(R.string.error_unknown_page_type)
+                        : new UiStringRes(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
                 return isPage ? new UiStringRes(R.string.error_refresh_unauthorized_pages)
                         : new UiStringRes(R.string.error_refresh_unauthorized_posts);
@@ -97,13 +98,14 @@ public class UploadUtils {
                 if (eligibleForAutoUpload) {
                     switch (postStatus) {
                         case PRIVATE:
-                            return new UiStringRes(R.string.error_post_not_published_retrying_private);
+                            return isPage ? new UiStringRes(R.string.error_page_not_published_retrying_private)
+                                    : new UiStringRes(R.string.error_post_not_published_retrying_private);
                         case PUBLISHED:
-                            return new UiStringRes(R.string.error_post_not_published_retrying);
+                            return isPage ? new UiStringRes(R.string.error_page_not_published_retrying) : new UiStringRes(R.string.error_post_not_published_retrying);
                         case SCHEDULED:
-                            return new UiStringRes(R.string.error_post_not_scheduled_retrying);
+                            return isPage ? new UiStringRes(R.string.error_page_not_scheduled_retrying) : new UiStringRes(R.string.error_post_not_scheduled_retrying);
                         case PENDING:
-                            return new UiStringRes(R.string.error_post_not_submitted_retrying);
+                            return isPage ? new UiStringRes(R.string.error_page_not_submitted_retrying) : new UiStringRes(R.string.error_post_not_submitted_retrying);
                         case UNKNOWN:
                         case DRAFT:
                         case TRASHED:
@@ -112,13 +114,17 @@ public class UploadUtils {
                 } else {
                     switch (postStatus) {
                         case PRIVATE:
-                            return new UiStringRes(R.string.error_post_not_published_private);
+                            return isPage ? new UiStringRes(R.string.error_page_not_published_private)
+                                    : new UiStringRes(R.string.error_post_not_published_private);
                         case PUBLISHED:
-                            return new UiStringRes(R.string.error_post_not_published);
+                            return isPage ? new UiStringRes(R.string.error_page_not_published)
+                                    : new UiStringRes(R.string.error_post_not_published);
                         case SCHEDULED:
-                            return new UiStringRes(R.string.error_post_not_scheduled);
+                            return isPage ? new UiStringRes(R.string.error_page_not_scheduled)
+                                    : new UiStringRes(R.string.error_post_not_scheduled);
                         case PENDING:
-                            return new UiStringRes(R.string.error_post_not_submitted);
+                            return isPage ? new UiStringRes(R.string.error_page_not_submitted)
+                                    : new UiStringRes(R.string.error_post_not_submitted);
                         case UNKNOWN:
                         case DRAFT:
                         case TRASHED:

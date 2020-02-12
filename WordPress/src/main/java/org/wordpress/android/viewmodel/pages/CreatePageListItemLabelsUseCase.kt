@@ -102,7 +102,7 @@ class CreatePageListItemLabelsUseCase @Inject constructor(private val pageConfli
             )
             uploadUiState.error.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
                     pagePostStatus,
-                    false,
+                    true,
                     uploadUiState.error.postError,
                     uploadUiState.isEligibleForAutoUpload
             )
