@@ -628,7 +628,17 @@ public class ReaderPostListFragment extends Fragment
         } else if (!ReaderTagTable.tagExists(getCurrentTag())) {
             // current tag no longer exists, revert to default
             AppLog.d(T.READER, "reader post list > current tag no longer valid");
-            ReaderTag tag = ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider);
+            ReaderTag tag;
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                tag = ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider);
+            } else {
+                tag = ReaderUtils.getDefaultTag();
+                // it's possible the default tag won't exist if the user just changed the app's
+                // language, in which case default to the first tag in the table
+                if (!ReaderTagTable.tagExists(tag)) {
+                    tag = ReaderTagTable.getFirstTag();
+                }
+            }
             setCurrentTag(tag);
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
                 if (tag.isFollowedSites() || tag.isDefaultInMemoryTag()) {
@@ -931,11 +941,22 @@ public class ReaderPostListFragment extends Fragment
                 }
 
                 if (hasCurrentTag()) {
+                    ReaderTag defaultTag;
+
+                    if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                        defaultTag = ReaderUtils.getDbOrInMemoryDefaultTag(
+                                requireActivity(),
+                                mTagUpdateClientUtilsProvider
+                        );
+                    } else {
+                        defaultTag = ReaderUtils.getDefaultTag();
+                    }
+
                     ReaderTag tag = ReaderUtils.getValidTagForSharedPrefs(
                             getCurrentTag(),
                             BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                             mRecyclerView,
-                            ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider));
+                            defaultTag);
 
                     return tag;
                 } else {
@@ -1760,7 +1781,14 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.refreshFilterCriteriaOptions();
 
         if (!ReaderTagTable.tagExists(tag)) {
-            tag = ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider);
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                tag = ReaderUtils.getDbOrInMemoryDefaultTag(
+                        requireActivity(),
+                        mTagUpdateClientUtilsProvider
+                );
+            } else {
+                tag = ReaderTagTable.getFirstTag();
+            }
         }
 
         setCurrentTag(tag, BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel);
@@ -2065,12 +2093,26 @@ public class ReaderPostListFragment extends Fragment
 
         mViewModel.onTagChanged(mCurrentTag);
 
-        ReaderTag validTag = ReaderUtils.getValidTagForSharedPrefs(
-                tag,
-                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
-                mRecyclerView,
-                ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider)
-        );
+        ReaderTag validTag;
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            validTag = ReaderUtils.getValidTagForSharedPrefs(
+                    tag,
+                    BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
+                    mRecyclerView,
+                    ReaderUtils.getDbOrInMemoryDefaultTag(
+                            requireActivity(),
+                            mTagUpdateClientUtilsProvider
+                    )
+            );
+        } else {
+            validTag = ReaderUtils.getValidTagForSharedPrefs(
+                    tag,
+                    BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
+                    mRecyclerView,
+                    ReaderUtils.getDefaultTag()
+            );
+        }
 
         switch (getPostListType()) {
             case TAG_FOLLOWED:
@@ -2143,7 +2185,15 @@ public class ReaderPostListFragment extends Fragment
      * load tags on which the main data will be filtered
      */
     private void loadTags(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
-        ReaderTag defaultTag = ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider);
+        ReaderTag defaultTag = null;
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            defaultTag = ReaderUtils.getDbOrInMemoryDefaultTag(
+                    requireActivity(),
+                    mTagUpdateClientUtilsProvider
+            );
+        }
+
         new LoadTagsTask(listener, defaultTag).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
