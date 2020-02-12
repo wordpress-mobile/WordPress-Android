@@ -6,7 +6,8 @@ import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 
-private const val TEST_IMAGE_URL = "https://developer.android.com/images/about/versions/10/android10_black.png"
+private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
+private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
 class PreviewImageViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
@@ -21,7 +22,8 @@ class PreviewImageViewModelTest {
 
     @Test
     fun `image shown on start`() {
-        viewModel.start(TEST_IMAGE_URL)
-        assertThat(viewModel.loadImageFromUrl.value).isEqualTo(TEST_IMAGE_URL)
+        viewModel.start(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL)
+        assertThat(viewModel.loadImageFromData.value?.lowResImageUrl)?.isEqualTo(TEST_LOW_RES_IMAGE_URL)
+        assertThat(viewModel.loadImageFromData.value?.highResImageUrl)?.isEqualTo(TEST_HIGH_RES_IMAGE_URL)
     }
 }

@@ -6,19 +6,24 @@ import androidx.lifecycle.ViewModel
 
 class PreviewImageViewModel : ViewModel() {
     private lateinit var lowResImageUrl: String
+    private lateinit var highResImageUrl: String
 
-    private val _loadImageFromUrl = MutableLiveData<String>()
-    val loadImageFromUrl: LiveData<String> = _loadImageFromUrl
+    private val _loadImageFromData = MutableLiveData<ImageData>()
+    val loadImageFromData: LiveData<ImageData> = _loadImageFromData
 
     private var isStarted = false
 
-    fun start(loResImageUrl: String) {
+    fun start(loResImageUrl: String, hiResImageUrl: String) {
         if (isStarted) {
             return
         }
         isStarted = true
 
         lowResImageUrl = loResImageUrl
-        _loadImageFromUrl.value = lowResImageUrl
+        highResImageUrl = hiResImageUrl
+
+        _loadImageFromData.value = ImageData(lowResImageUrl, highResImageUrl)
     }
+
+    data class ImageData(val lowResImageUrl: String, val highResImageUrl: String)
 }
