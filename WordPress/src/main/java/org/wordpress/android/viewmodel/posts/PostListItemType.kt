@@ -18,7 +18,6 @@ sealed class PostListItemType {
 
     class LoadingItem(val localOrRemoteId: LocalOrRemoteId, val options: LoadingItemOptions) : PostListItemType()
     object EndListIndicatorItem : PostListItemType()
-    data class SectionHeaderItem(val type: PostListType) : PostListItemType()
 }
 
 sealed class LoadingItemOptions(
