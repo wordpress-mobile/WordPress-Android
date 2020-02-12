@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.viewmodels
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -341,38 +340,36 @@ class ReaderPostListViewModel @Inject constructor(
         loadSubFilters()
     }
 
-    fun onUserChangedUpdate(context: Context?) {
-        context?.let {
-            if (lastKnownUserId == null) {
-                lastKnownUserId = appPrefsWrapper.getLastReaderKnownUserId()
-            }
+    fun onUserComesToReader() {
+        if (lastKnownUserId == null) {
+            lastKnownUserId = appPrefsWrapper.getLastReaderKnownUserId()
+        }
 
-            if (lastTokenAvailableStatus == null) {
-                lastTokenAvailableStatus = appPrefsWrapper.getLastReaderKnownAccessTokenStatus()
-            }
+        if (lastTokenAvailableStatus == null) {
+            lastTokenAvailableStatus = appPrefsWrapper.getLastReaderKnownAccessTokenStatus()
+        }
 
-            val userIdChanged = accountStore.hasAccessToken() && accountStore.account != null &&
-                    accountStore.account.userId != lastKnownUserId
-            val accessTokenStatusChanged = accountStore.hasAccessToken() != lastTokenAvailableStatus
+        val userIdChanged = accountStore.hasAccessToken() && accountStore.account != null &&
+                accountStore.account.userId != lastKnownUserId
+        val accessTokenStatusChanged = accountStore.hasAccessToken() != lastTokenAvailableStatus
 
-            if (userIdChanged) {
-                lastKnownUserId = accountStore.account.userId
-                appPrefsWrapper.setLastReaderKnownUserId(accountStore.account.userId)
-            }
+        if (userIdChanged) {
+            lastKnownUserId = accountStore.account.userId
+            appPrefsWrapper.setLastReaderKnownUserId(accountStore.account.userId)
+        }
 
-            if (accessTokenStatusChanged) {
-                lastTokenAvailableStatus = accountStore.hasAccessToken()
-                appPrefsWrapper.setLastReaderKnownAccessTokenStatus(accountStore.hasAccessToken())
-            }
+        if (accessTokenStatusChanged) {
+            lastTokenAvailableStatus = accountStore.hasAccessToken()
+            appPrefsWrapper.setLastReaderKnownAccessTokenStatus(accountStore.hasAccessToken())
+        }
 
-            if (userIdChanged || accessTokenStatusChanged) {
-                _updateTagsAndSites.value = Event(EnumSet.of(
-                        UpdateTask.TAGS,
-                        UpdateTask.FOLLOWED_BLOGS
-                ))
+        if (userIdChanged || accessTokenStatusChanged) {
+            _updateTagsAndSites.value = Event(EnumSet.of(
+                    UpdateTask.TAGS,
+                    UpdateTask.FOLLOWED_BLOGS
+            ))
 
-                setDefaultSubfilter()
-            }
+            setDefaultSubfilter()
         }
     }
 

@@ -507,7 +507,7 @@ public class ReaderPostListFragment extends Fragment
         );
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-            mViewModel.onUserChangedUpdate(getContext());
+            mViewModel.onUserComesToReader();
         }
     }
 
