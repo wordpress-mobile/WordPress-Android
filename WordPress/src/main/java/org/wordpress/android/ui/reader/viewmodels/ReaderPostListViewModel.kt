@@ -12,7 +12,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
-import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
@@ -25,6 +24,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
+import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
@@ -78,8 +78,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val _filtersMatchCount = MutableLiveData<HashMap<SubfilterCategory, Int>>()
     val filtersMatchCount: LiveData<HashMap<SubfilterCategory, Int>> = _filtersMatchCount
 
-    private val _startSubsActivity = MutableLiveData<Event<Int>>()
-    val startSubsActivity: LiveData<Event<Int>> = _startSubsActivity
+    private val _execEmptyViewAction = MutableLiveData<Event<ActionType>>()
+    val execEmptyViewAction: LiveData<Event<ActionType>> = _execEmptyViewAction
 
     private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
     val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
@@ -91,7 +91,7 @@ class ReaderPostListViewModel @Inject constructor(
     private var isStarted = false
     private var isFirstLoad = true
 
-    private var lastKnownAccount: AccountModel? = null
+    private var lastKnownUserId: Long? = null
     private var lastTokenAvailableStatus: Boolean? = null
 
     /**
@@ -171,17 +171,12 @@ class ReaderPostListViewModel @Inject constructor(
                 }
 
                 for (blog in followedBlogs) {
-                    filterList.add(
-                            Site(
-                                    onClickAction = ::onSubfilterClicked,
-                                    blog = blog,
-                                    isSelected = (getCurrentSubfilterValue() is Site) &&
-                                            (getCurrentSubfilterValue() as Site).blog.isSameAs(
-                                                    blog,
-                                                    false
-                                            )
-                            )
-                    )
+                    filterList.add(Site(
+                            onClickAction = ::onSubfilterClicked,
+                            blog = blog,
+                            isSelected = (getCurrentSubfilterValue() is Site) &&
+                                    (getCurrentSubfilterValue() as Site).blog.isSameAs(blog, false)
+                    ))
                 }
             }
 
@@ -323,9 +318,9 @@ class ReaderPostListViewModel @Inject constructor(
         _filtersMatchCount.postValue(currentValue)
     }
 
-    fun onBottomSheetActionClicked(selectedTabIndex: Int) {
+    fun onBottomSheetActionClicked(action: ActionType) {
         _changeBottomSheetVisibility.postValue(Event(false))
-        _startSubsActivity.postValue(Event(selectedTabIndex))
+        _execEmptyViewAction.postValue(Event(action))
     }
 
     private fun updateSubfilter(filter: SubfilterListItem) {
@@ -348,15 +343,29 @@ class ReaderPostListViewModel @Inject constructor(
 
     fun onUserChangedUpdate(context: Context?) {
         context?.let {
-            val accountChanged = lastKnownAccount == null ||
-                    (accountStore.account != null && accountStore.account != lastKnownAccount) ||
-                    (lastTokenAvailableStatus == null) ||
-                    (lastTokenAvailableStatus != null && lastTokenAvailableStatus != accountStore.hasAccessToken())
+            if (lastKnownUserId == null) {
+                lastKnownUserId = appPrefsWrapper.getLastReaderKnownUserId()
+            }
 
-            if (accountChanged) {
-                lastKnownAccount = accountStore.account
+            if (lastTokenAvailableStatus == null) {
+                lastTokenAvailableStatus = appPrefsWrapper.getLastReaderKnownAccessTokenStatus()
+            }
+
+            val userIdChanged = accountStore.hasAccessToken() && accountStore.account != null &&
+                    accountStore.account.userId != lastKnownUserId
+            val accessTokenStatusChanged = accountStore.hasAccessToken() != lastTokenAvailableStatus
+
+            if (userIdChanged) {
+                lastKnownUserId = accountStore.account.userId
+                appPrefsWrapper.setLastReaderKnownUserId(accountStore.account.userId)
+            }
+
+            if (accessTokenStatusChanged) {
                 lastTokenAvailableStatus = accountStore.hasAccessToken()
+                appPrefsWrapper.setLastReaderKnownAccessTokenStatus(accountStore.hasAccessToken())
+            }
 
+            if (userIdChanged || accessTokenStatusChanged) {
                 _updateTagsAndSites.value = Event(EnumSet.of(
                         UpdateTask.TAGS,
                         UpdateTask.FOLLOWED_BLOGS

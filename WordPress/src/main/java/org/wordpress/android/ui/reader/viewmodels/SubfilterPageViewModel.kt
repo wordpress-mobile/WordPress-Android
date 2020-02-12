@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.reader.ReaderSubsActivity
+import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
+import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage
 import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState.HiddenEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState.VisibleEmptyUiState
@@ -36,24 +38,47 @@ class SubfilterPageViewModel @Inject constructor(
     }
 
     fun onSubFiltersChanged(isEmpty: Boolean) {
-        _emptyState.value = if (isEmpty && accountStore.hasAccessToken()) {
+        _emptyState.value = if (isEmpty) {
             VisibleEmptyUiState(
                     title = UiStringRes(
-                        if (category == SITES)
-                            R.string.reader_filter_empty_sites_list
-                        else
-                            R.string.reader_filter_empty_tags_list
+                        if (category == SITES) {
+                            if (accountStore.hasAccessToken()) {
+                                R.string.reader_filter_empty_sites_list
+                            } else {
+                                R.string.reader_filter_self_hosted_empty_sites_list
+                            }
+                        } else {
+                            if (accountStore.hasAccessToken()) {
+                                R.string.reader_filter_empty_tags_list
+                            } else {
+                                R.string.reader_filter_self_hosted_empty_tagss_list
+                            }
+                        }
                     ),
                     buttonText = UiStringRes(
-                        if (category == SITES)
-                            R.string.reader_filter_empty_sites_action
-                        else
-                            R.string.reader_filter_empty_tags_action
+                        if (category == SITES) {
+                            if (accountStore.hasAccessToken()) {
+                                R.string.reader_filter_empty_sites_action
+                            } else {
+                                R.string.reader_filter_self_hosted_empty_sites_tags_action
+                            }
+                        } else {
+                            if (accountStore.hasAccessToken()) {
+                                R.string.reader_filter_empty_tags_action
+                            } else {
+                                R.string.reader_filter_self_hosted_empty_sites_tags_action
+                            }
+                        }
                     ),
-                    actionTabIndex = if (category == SITES)
-                            ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS
-                        else
-                            ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS
+                    action = if (accountStore.hasAccessToken()) {
+                        if (category == SITES) {
+                            OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
+                        } else {
+                            OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
+                        }
+                    } else {
+                        OpenLoginPage
+                    }
             )
         } else {
             HiddenEmptyUiState

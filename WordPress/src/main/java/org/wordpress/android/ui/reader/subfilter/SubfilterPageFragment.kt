@@ -97,7 +97,7 @@ class SubfilterPageFragment : DaggerFragment() {
                         title.setText(uiState.title.stringRes)
                         actionButton.setText(uiState.buttonText.stringRes)
                         actionButton.setOnClickListener {
-                            readerViewModel.onBottomSheetActionClicked(uiState.actionTabIndex)
+                            readerViewModel.onBottomSheetActionClicked(uiState.action)
                         }
                     }
                 }

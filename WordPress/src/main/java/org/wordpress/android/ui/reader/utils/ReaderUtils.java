@@ -384,11 +384,11 @@ public class ReaderUtils {
                 (currentTag.isDiscover() || currentTag.isPostsILike() || currentTag.isBookmarked())) {
                 return false;
             } else if (recyclerView != null && recyclerView.getCurrentFilter() == null) {
-                // we are initializing now: return true to get the subfiltering first init
+                // we are initializing now
                 return currentTag != null
                        && (currentTag.isFollowedSites() || currentTag.tagType == ReaderTagType.FOLLOWED);
             } else if (recyclerView != null && recyclerView.getCurrentFilter() instanceof ReaderTag) {
-                if (recyclerView.isValidFilter(currentTag)) {
+                if (currentTag != null && recyclerView.isValidFilter(currentTag)) {
                     return currentTag.isFollowedSites();
                 } else {
                     return true;

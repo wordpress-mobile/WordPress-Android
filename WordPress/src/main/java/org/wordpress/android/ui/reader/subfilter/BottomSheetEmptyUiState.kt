@@ -8,6 +8,14 @@ sealed class BottomSheetEmptyUiState {
     data class VisibleEmptyUiState(
         val title: UiStringRes,
         val buttonText: UiStringRes,
-        val actionTabIndex: Int
+        val action: ActionType
     ) : BottomSheetEmptyUiState()
+}
+
+sealed class ActionType {
+    data class OpenSubsAtPage(
+        val tabIndex: Int
+    ) : ActionType()
+
+    object OpenLoginPage : ActionType()
 }
