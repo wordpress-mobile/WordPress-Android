@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -85,6 +86,21 @@ class AutoSavePostIfNotDraftUseCaseTest {
         val useCase = createUseCase(onPostStatusFetched, onPostChanged)
         useCase.autoSavePostOrUpdateDraftAndAssertResult(remotePostPayload) { result ->
             assertThat(result).isInstanceOf(AutoSavePostIfNotDraftResult.PostAutoSaveFailed::class.java)
+        }
+    }
+
+    @Test
+    fun `post auto-saved`() {
+        whenever(postStore.getPostByLocalPostId(any())).thenReturn(PostModel())
+        val remotePostPayload = createRemotePostPayload()
+        val onPostStatusFetched = createOnPostStatusFetchedEvent(
+                post = remotePostPayload.post,
+                status = PUBLISH_STATUS
+        )
+        val onPostChanged = createOnPostChangedEvent(remotePostPayload.post)
+        val useCase = createUseCase(onPostStatusFetched, onPostChanged)
+        useCase.autoSavePostOrUpdateDraftAndAssertResult(remotePostPayload) { result ->
+            assertThat(result).isInstanceOf(AutoSavePostIfNotDraftResult.PostAutoSaved::class.java)
         }
     }
 
