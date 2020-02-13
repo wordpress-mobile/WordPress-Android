@@ -9,6 +9,10 @@
         <item name="android:windowBackground">@color/login_background_color</item>
         <item name="actionMenuTextColor">@android:color/white</item>
 
+        <item name="bottomSheetDialogTheme">
+            @style/LoginTheme.BottomSheetDialogStyle
+        </item>
+
         <item name="toolbarStyle">@style/LoginTheme.ToolBar</item>
     </style>
 
@@ -88,5 +92,12 @@
     <style name="LoginTheme.SiteTitle" parent="TextAppearance.MaterialComponents.Subtitle2" />
 
     <style name="LoginTheme.SiteUrl" parent="TextAppearance.MaterialComponents.Body2" />
+
+    <style name="LoginTheme.BottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="android:colorBackground">@color/login_background_color</item>
+        <item name="android:statusBarColor" tools:targetApi="21">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/Widget.Design.BottomSheet.Modal</item>
+    </style>
 
 </resources>

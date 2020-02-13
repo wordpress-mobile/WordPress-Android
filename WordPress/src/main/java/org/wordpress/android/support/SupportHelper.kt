@@ -1,13 +1,13 @@
 package org.wordpress.android.support
 
 import android.content.Context
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -36,13 +36,13 @@ class SupportHelper {
         val (layout, emailEditText, nameEditText) =
                 supportIdentityInputDialogLayout(context, isNameInputHidden, email, name)
 
-        val dialog = AlertDialog.Builder(ContextThemeWrapper(context, R.style.Calypso_Dialog))
+        val dialog = MaterialAlertDialogBuilder(context)
                 .setView(layout)
                 .setPositiveButton(android.R.string.ok, null)
                 .setNegativeButton(android.R.string.cancel, null)
                 .create()
         dialog.setOnShowListener {
-            val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+            val button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             button.setOnClickListener {
                 val newEmail = emailEditText.text.toString()
                 val newName = nameEditText.text.toString()

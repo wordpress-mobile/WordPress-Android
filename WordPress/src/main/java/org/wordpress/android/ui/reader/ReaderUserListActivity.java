@@ -41,7 +41,7 @@ public class ReaderUserListActivity extends AppCompatActivity {
         setContentView(R.layout.reader_activity_userlist);
         setTitle(null);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {

@@ -349,7 +349,6 @@ Language: es_CL
     <string name="featured_image_desc">imagen destacada</string>
     <string name="button_discard">Descartar</string>
     <string name="reader_avatar_desc">imagen de perfil</string>
-    <string name="reader_blavatar_desc">icono del sitio</string>
     <string name="notification_channel_transient_title">Pasajero</string>
     <string name="support_identity_input_dialog_email_label">Correo</string>
     <string name="support_identity_input_dialog_enter_email">Por favor ingresa tu dirección de correo electrónico</string>
@@ -465,7 +464,6 @@ Language: es_CL
     <string name="site_settings_quota_space_unlimited">%1$s de ilimitado</string>
     <string name="preview_count">Previsualizar %d</string>
     <string name="add_count">Agregar %d</string>
-    <string name="fab_create_desc">crear</string>
     <string name="fab_add_tag_desc">Crear Etiqueta</string>
     <string name="navigate_up_desc">navegar hacia arriba</string>
     <string name="notification_settings_switch_desc">Notificaciones</string>

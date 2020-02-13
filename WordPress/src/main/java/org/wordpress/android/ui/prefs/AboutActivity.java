@@ -36,15 +36,14 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setElevation(0);
 
         WPTextView version = findViewById(R.id.about_version);
         version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
 
-        WPTextView tos = findViewById(R.id.about_tos);
+        View tos = findViewById(R.id.about_tos);
         tos.setOnClickListener(this);
 
-        WPTextView pp = findViewById(R.id.about_privacy);
+        View pp = findViewById(R.id.about_privacy);
         pp.setOnClickListener(this);
 
         WPTextView publisher = findViewById(R.id.about_publisher);
@@ -55,7 +54,7 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
                 getString(R.string.copyright_with_year_and_company_params, Calendar.getInstance().get(Calendar.YEAR),
                         getString(R.string.automattic_inc)));
 
-        WPTextView about = findViewById(R.id.about_url);
+        View about = findViewById(R.id.about_url);
         about.setOnClickListener(this);
     }
 

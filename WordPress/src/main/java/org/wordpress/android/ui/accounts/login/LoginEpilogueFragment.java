@@ -15,8 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.card.MaterialCardView;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -42,7 +40,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     private RecyclerView mSitesList;
     private View mBottomShadow;
-    private MaterialCardView mBottomButtonsContainer;
+    private View mBottomButtonsContainer;
     private Button mConnectMore;
 
     private SitePickerAdapter mAdapter;

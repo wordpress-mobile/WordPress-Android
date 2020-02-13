@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.help_activity.*
+import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -50,6 +51,8 @@ class HelpActivity : AppCompatActivity() {
 
         setContentView(R.layout.help_activity)
 
+        setSupportActionBar(toolbar_main)
+
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true)
@@ -57,11 +60,11 @@ class HelpActivity : AppCompatActivity() {
             actionBar.elevation = 0f // remove shadow
         }
 
-        contactUsButton.setOnClickListener { createNewZendeskTicket() }
-        faqButton.setOnClickListener { showZendeskFaq() }
-        myTicketsButton.setOnClickListener { showZendeskTickets() }
+        contact_us_button.setOnClickListener { createNewZendeskTicket() }
+        faq_button.setOnClickListener { showZendeskFaq() }
+        my_tickets_button.setOnClickListener { showZendeskTickets() }
         applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
-        applicationLogButton.setOnClickListener { v ->
+        application_log_button.setOnClickListener { v ->
             startActivity(Intent(v.context, AppLogViewerActivity::class.java))
         }
 
