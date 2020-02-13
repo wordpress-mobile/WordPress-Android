@@ -13,7 +13,6 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -32,8 +31,6 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
         setContentView(R.layout.about_activity);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        getWindow().setNavigationBarColor(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar));
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
