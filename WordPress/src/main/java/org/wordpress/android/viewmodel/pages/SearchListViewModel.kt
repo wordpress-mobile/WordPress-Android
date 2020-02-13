@@ -37,7 +37,7 @@ class SearchListViewModel
     private val postStore: PostStore,
     private val resourceProvider: ResourceProvider,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
-    private val pageItemUiStateHelper: PageItemUiStateHelper
+    private val pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
 ) : ViewModel() {
     private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
     val searchResult: LiveData<List<PageItem>> = _searchResult
@@ -102,7 +102,7 @@ class SearchListViewModel
                 pagesViewModel.site
         )
         // TODO any reason why we don't show labels in search?
-        val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(postModel,
+        val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(postModel,
                 uploadUiState)
 
         return when (status) {

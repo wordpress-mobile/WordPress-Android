@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 typealias ShouldShowOverlay = Boolean
 
-class PageItemUiStateHelper @Inject constructor(
+class PageItemProgressUiStateUseCase @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper
 ) {
     fun getProgressStateForPage(
