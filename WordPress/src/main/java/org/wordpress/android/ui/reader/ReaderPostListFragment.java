@@ -1146,15 +1146,19 @@ public class ReaderPostListFragment extends Fragment
             // clears the last performed query
             mCurrentSearchQuery = null;
 
-            final boolean hasSuggestions =
-                    mSearchSuggestionRecyclerAdapter != null && mSearchSuggestionRecyclerAdapter.getItemCount() > 0;
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                final boolean hasSuggestions =
+                        mSearchSuggestionRecyclerAdapter != null && mSearchSuggestionRecyclerAdapter.getItemCount() > 0;
 
-            if (hasSuggestions) {
-                hideSearchMessage();
-                showSearchSuggestions();
+                if (hasSuggestions) {
+                    hideSearchMessage();
+                    showSearchSuggestions();
+                } else {
+                    showSearchMessage();
+                    hideSearchSuggestions();
+                }
             } else {
                 showSearchMessage();
-                hideSearchSuggestions();
             }
         }
     }
