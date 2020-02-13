@@ -7,10 +7,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
+import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
+import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
 import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState.UploadingPost
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 
 @RunWith(MockitoJUnitRunner::class)
 class CreatePageListItemActionsUseCaseTest {
@@ -19,6 +24,25 @@ class CreatePageListItemActionsUseCaseTest {
     @Before
     fun setUp() {
         useCase = CreatePageListItemActionsUseCase()
+    }
+
+    @Test
+    fun `verify that SCHEDULED & PUBLISHED actions are the same`() {
+        // Arrange
+        val expectedActions = mutableSetOf(
+                VIEW_PAGE,
+                SET_PARENT,
+                MOVE_TO_DRAFT,
+                MOVE_TO_TRASH
+        )
+
+        // Act
+        val scheduledActions = useCase.setupPageActions(SCHEDULED, mock())
+        val publishedActions = useCase.setupPageActions(PUBLISHED, mock())
+
+        // Assert
+        assertThat(scheduledActions).isEqualTo(expectedActions)
+        assertThat(publishedActions).isEqualTo(expectedActions)
     }
 
     @Test
