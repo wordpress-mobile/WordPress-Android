@@ -235,8 +235,17 @@ class PageListViewModelTest : BaseUnitTest() {
         val expectedShowOverlay = true
         val pages = MutableLiveData<List<PageModel>>()
 
-        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(anyOrNull(), anyOrNull())).thenReturn(Pair(mock(),
-                expectedShowOverlay))
+        whenever(
+                pageItemProgressUiStateUseCase.getProgressStateForPage(
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenReturn(
+                Pair(
+                        mock(),
+                        expectedShowOverlay
+                )
+        )
         whenever(pagesViewModel.pages).thenReturn(pages)
 
         viewModel.start(PUBLISHED, pagesViewModel)
