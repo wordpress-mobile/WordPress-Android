@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -31,6 +31,8 @@ import javax.inject.Named
 
 class SearchListViewModel
 @Inject constructor(
+    private val createPageUploadUiStateUseCase: CreatePageUploadUiStateUseCase,
+    private val postStore: PostStore,
     private val resourceProvider: ResourceProvider,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
     private val pageItemUiStateHelper: PageItemUiStateHelper
@@ -91,7 +93,15 @@ class SearchListViewModel
     }
 
     private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
-        val progressState = pageItemUiStateHelper.getProgressStateForPage(LocalId(pageId), pagesViewModel.site)
+        // TODO don't load the post model from db during uistate creation
+        val postModel = postStore.getPostByLocalPostId(this.pageId)
+        val uploadUiState = createPageUploadUiStateUseCase.createUploadUiState(
+                postModel,
+                pagesViewModel.site
+        )
+        // TODO any reason why we don't show labels in search?
+        val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(postModel,
+                uploadUiState)
 
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->
@@ -106,8 +116,8 @@ class SearchListViewModel
                                 pagesViewModel.site
                         ),
                         actionsEnabled = areActionsEnabled,
-                        progressBarUiState = progressState.first,
-                        showOverlay = progressState.second
+                        progressBarUiState = progressBarUiState,
+                        showOverlay = showOverlay
                 )
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
                     remoteId,
@@ -120,8 +130,8 @@ class SearchListViewModel
                             pagesViewModel.site
                     ),
                     actionsEnabled = areActionsEnabled,
-                    progressBarUiState = progressState.first,
-                    showOverlay = progressState.second
+                    progressBarUiState = progressBarUiState,
+                    showOverlay = showOverlay
             )
             PageStatus.TRASHED -> TrashedPage(
                     remoteId,
@@ -134,8 +144,8 @@ class SearchListViewModel
                             pagesViewModel.site
                     ),
                     actionsEnabled = areActionsEnabled,
-                    progressBarUiState = progressState.first,
-                    showOverlay = progressState.second
+                    progressBarUiState = progressBarUiState,
+                    showOverlay = showOverlay
             )
             PageStatus.SCHEDULED -> ScheduledPage(
                     remoteId,
@@ -148,8 +158,8 @@ class SearchListViewModel
                             pagesViewModel.site
                     ),
                     actionsEnabled = areActionsEnabled,
-                    progressBarUiState = progressState.first,
-                    showOverlay = progressState.second
+                    progressBarUiState = progressBarUiState,
+                    showOverlay = showOverlay
             )
         }
     }

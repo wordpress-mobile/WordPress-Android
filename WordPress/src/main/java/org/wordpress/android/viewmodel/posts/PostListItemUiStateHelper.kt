@@ -308,6 +308,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         hasUnhandledConflicts: Boolean,
         hasAutoSave: Boolean
     ): Int? {
+        // TODO consider removing this logic and explicitly list which labels have which color
         val isError = (uploadUiState is UploadFailed && !uploadUiState.isEligibleForAutoUpload) ||
                 hasUnhandledConflicts
         val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||

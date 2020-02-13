@@ -44,10 +44,12 @@ import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPDATE
@@ -75,6 +77,8 @@ private const val SNACKBAR_DELAY = 500L
 private const val SEARCH_COLLAPSE_DELAY = 500L
 private const val PAGE_UPLOAD_TIMEOUT = 5000L
 
+typealias LoadAutoSaveRevision = Boolean
+
 class PagesViewModel
 @Inject constructor(
     private val pageStore: PageStore,
@@ -85,6 +89,8 @@ class PagesViewModel
     private val eventBusWrapper: EventBusWrapper,
     private val previewStateHelper: PreviewStateHelper,
     private val uploadStarter: UploadStarter,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val pageConflictResolver: PageConflictResolver,
     private val pageListEventListenerFactory: PageListEventListener.Factory,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
@@ -94,9 +100,6 @@ class PagesViewModel
 
     private val _listState = MutableLiveData<PageListState>()
     val listState: LiveData<PageListState> = _listState
-
-    private val _displayDeleteDialog = SingleLiveEvent<Page>()
-    val displayDeleteDialog: LiveData<Page> = _displayDeleteDialog
 
     private val _isNewPageButtonVisible = MutableLiveData<Boolean>()
     val isNewPageButtonVisible: LiveData<Boolean> = _isNewPageButtonVisible
@@ -110,8 +113,8 @@ class PagesViewModel
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
 
-    private val _editPage = SingleLiveEvent<PageModel?>()
-    val editPage: LiveData<PageModel?> = _editPage
+    private val _editPage = SingleLiveEvent<Pair<PageModel?, LoadAutoSaveRevision>>()
+    val editPage: LiveData<Pair<PageModel?, LoadAutoSaveRevision>> = _editPage
 
     private val _previewPage = SingleLiveEvent<PostModel?>()
     val previewPage: LiveData<PostModel?> = _previewPage
@@ -147,6 +150,9 @@ class PagesViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
+    private val _dialogAction = SingleLiveEvent<DialogHolder>()
+    val dialogAction: LiveData<DialogHolder> = _dialogAction
+
     private var _site: SiteModel? = null
     val site: SiteModel
         get() = checkNotNull(_site) { "Trying to access unitialized site" }
@@ -164,6 +170,13 @@ class PagesViewModel
     private var currentPageType = PUBLISHED
 
     private lateinit var pageListEventListener: PageListEventListener
+
+    private val pageListDialogHelper: PageListDialogHelper by lazy {
+        PageListDialogHelper(
+                showDialog = { _dialogAction.postValue(it) },
+                analyticsTracker = analyticsTracker
+        )
+    }
 
     data class BrowsePreview(
         val post: PostModel,
@@ -387,7 +400,7 @@ class PagesViewModel
 
     private fun deletePage(page: Page) {
         performIfNetworkAvailable {
-            _displayDeleteDialog.postValue(page)
+            pageListDialogHelper.showDeletePageConfirmationDialog(RemoteId(page.id), page.title)
         }
     }
 
@@ -459,14 +472,17 @@ class PagesViewModel
         }
     }
 
-    fun onDeleteConfirmed(remoteId: Long) {
-        launch(defaultDispatcher) {
-            pageMap[remoteId]?.let { deletePage(it) }
-        }
-    }
-
     fun onItemTapped(pageItem: Page) {
-        _editPage.postValue(pageMap[pageItem.remoteId])
+        // TODO We are going to be doing a refactor of the ViewModels related to Pages so that the PostModel is
+        //  available without doing subsequent fetches from the PostStore
+        //  https://github.com/wordpress-mobile/WordPress-Android/issues/11233
+        val page = postStore.getPostByRemotePostId(pageItem.id, site)
+        // Then check if an autosave revision is available
+        if (pageConflictResolver.hasUnhandledAutoSave(page)) {
+            pageListDialogHelper.showAutoSaveRevisionDialog(page)
+            return
+        }
+        editPage(RemoteId(pageItem.remoteId))
     }
 
     fun onNewPageButtonTapped() {
@@ -691,6 +707,33 @@ class PagesViewModel
                     )
             )
         }
+    }
+
+    // BasicFragmentDialog Events
+
+    fun onPositiveClickedForBasicDialog(instanceTag: String) {
+        pageListDialogHelper.onPositiveClickedForBasicDialog(
+                instanceTag = instanceTag,
+                editPage = this::editPage,
+                deletePage = this::onDeleteConfirmed
+        )
+    }
+
+    fun onNegativeClickedForBasicDialog(instanceTag: String) {
+        pageListDialogHelper.onNegativeClickedForBasicDialog(
+                instanceTag = instanceTag,
+                editPage = this::editPage
+        )
+    }
+
+    private fun onDeleteConfirmed(pageId: RemoteId) {
+        launch(defaultDispatcher) {
+            pageMap[pageId.value]?.let { deletePage(it) }
+        }
+    }
+
+    private fun editPage(pageId: RemoteId, loadAutoSaveRevision: LoadAutoSaveRevision = false) {
+        _editPage.postValue(Pair(pageMap[pageId.value], loadAutoSaveRevision))
     }
 
     private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&

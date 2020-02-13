@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import androidx.annotation.ColorRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -28,6 +30,7 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtils
@@ -39,6 +42,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAF
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -46,7 +50,10 @@ private const val MAX_TOPOLOGICAL_PAGE_COUNT = 100
 private const val DEFAULT_INDENT = 0
 
 class PageListViewModel @Inject constructor(
+    private val createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase,
+    private val createPageUploadUiStateUseCase: CreatePageUploadUiStateUseCase,
     private val mediaStore: MediaStore,
+    private val postStore: PostStore,
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
@@ -87,6 +94,7 @@ class PageListViewModel @Inject constructor(
                 }
             }
         }
+
         val title: Int
             get() = when (this) {
                 PUBLISHED -> R.string.pages_published
@@ -156,7 +164,7 @@ class PageListViewModel @Inject constructor(
     }
 
     private val uploadStatusObserver = Observer<List<LocalId>> { ids ->
-        pageItemUiStateHelper.uploadStatusTracker.invalidateUploadStatus(ids.map { localId -> localId.value })
+        createPageUploadUiStateUseCase.uploadStatusTracker.invalidateUploadStatus(ids.map { localId -> localId.value })
     }
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
@@ -237,24 +245,21 @@ class PageListViewModel @Inject constructor(
         }
         return sortedPages
                 .map {
-                    val labels = mutableListOf<Int>()
-                    if (it.status == PageStatus.PRIVATE)
-                        labels.add(R.string.pages_private)
-                    if (it.hasLocalChanges)
-                        labels.add(R.string.local_changes)
-
                     val pageItemIndent = if (shouldSortTopologically) {
                         getPageItemIndent(it)
                     } else {
                         DEFAULT_INDENT
                     }
-                    val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(
-                            LocalId(it.pageId),
-                            pagesViewModel.site
-                    )
+                    val itemUiStateData = createItemUiStateData(it)
 
                     PublishedPage(
-                            it.remoteId, it.pageId, it.title, it.date, labels, pageItemIndent,
+                            it.remoteId,
+                            it.pageId,
+                            it.title,
+                            it.date,
+                            itemUiStateData.labels,
+                            itemUiStateData.labelsColor,
+                            pageItemIndent,
                             getFeaturedImageUrl(it.featuredImageId),
                             pageItemUiStateHelper.setupPageActions(
                                     listType,
@@ -262,8 +267,8 @@ class PageListViewModel @Inject constructor(
                                     pagesViewModel.site
                             ),
                             actionsEnabled,
-                            progressBarUiState,
-                            showOverlay
+                            itemUiStateData.progressBarUiState,
+                            itemUiStateData.showOverlay
                     )
                 }
     }
@@ -276,16 +281,14 @@ class PageListViewModel @Inject constructor(
                 .map { (date, results) ->
                     listOf(Divider(date)) +
                             results.map {
-                                val labels = mutableListOf<Int>()
-                                if (it.hasLocalChanges)
-                                    labels.add(R.string.local_changes)
-
-                                val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(
-                                        LocalId(it.pageId),
-                                        pagesViewModel.site)
+                                val itemUiStateData = createItemUiStateData(it)
 
                                 ScheduledPage(
-                                        it.remoteId, it.pageId, it.title, it.date, labels,
+                                        it.remoteId, it.pageId,
+                                        it.title,
+                                        it.date,
+                                        itemUiStateData.labels,
+                                        itemUiStateData.labelsColor,
                                         getFeaturedImageUrl(it.featuredImageId),
                                         pageItemUiStateHelper.setupPageActions(
                                                 listType,
@@ -293,8 +296,8 @@ class PageListViewModel @Inject constructor(
                                                 pagesViewModel.site
                                         ),
                                         actionsEnabled,
-                                        progressBarUiState,
-                                        showOverlay
+                                        itemUiStateData.progressBarUiState,
+                                        itemUiStateData.showOverlay
                                 )
                             }
                 }
@@ -306,20 +309,14 @@ class PageListViewModel @Inject constructor(
 
     private fun prepareDraftPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.map {
-            val labels = mutableListOf<Int>()
-            if (it.status == PageStatus.PENDING)
-                labels.add(R.string.pages_pending)
-            if (it.hasLocalChanges)
-                labels.add(R.string.local_draft)
-
-            val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(LocalId(it.pageId),
-                    pagesViewModel.site)
+            val itemUiStateData = createItemUiStateData(it)
             DraftPage(
                     it.remoteId,
                     it.pageId,
                     it.title,
                     it.date,
-                    labels,
+                    itemUiStateData.labels,
+                    itemUiStateData.labelsColor,
                     getFeaturedImageUrl(it.featuredImageId),
                     pageItemUiStateHelper.setupPageActions(
                             listType,
@@ -327,8 +324,8 @@ class PageListViewModel @Inject constructor(
                             pagesViewModel.site
                     ),
                     actionsEnabled,
-                    progressBarUiState,
-                    showOverlay
+                    itemUiStateData.progressBarUiState,
+                    itemUiStateData.showOverlay
             )
         }
     }
@@ -338,13 +335,14 @@ class PageListViewModel @Inject constructor(
         actionsEnabled: Boolean
     ): List<PageItem> {
         return pages.map {
-            val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(LocalId(it.pageId),
-                    pagesViewModel.site)
+            val itemUiStateData = createItemUiStateData(it)
             TrashedPage(
                     it.remoteId,
                     it.pageId,
                     it.title,
                     it.date,
+                    itemUiStateData.labels,
+                    itemUiStateData.labelsColor,
                     getFeaturedImageUrl(it.featuredImageId),
                     pageItemUiStateHelper.setupPageActions(
                             listType,
@@ -352,8 +350,8 @@ class PageListViewModel @Inject constructor(
                             pagesViewModel.site
                     ),
                     actionsEnabled,
-                    progressBarUiState,
-                    showOverlay
+                    itemUiStateData.progressBarUiState,
+                    itemUiStateData.showOverlay
             )
         }
     }
@@ -393,4 +391,28 @@ class PageListViewModel @Inject constructor(
             invalidateFeaturedMedia(*event.mediaList.map { it.mediaId }.toLongArray())
         }
     }
+
+    private fun createItemUiStateData(pageModel: PageModel): ItemUiStateData {
+        // TODO don't load the post model from db during uistate creation as it can have significant performance impact
+        val postModel = postStore.getPostByLocalPostId(pageModel.pageId)
+        // TODO the postmodel is sometimes null, why?
+        val uploadUiState = createPageUploadUiStateUseCase.createUploadUiState(
+                postModel,
+                pagesViewModel.site
+        )
+        val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(postModel, uploadUiState)
+
+        val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(
+                postModel,
+                uploadUiState
+        )
+        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay)
+    }
+
+    private data class ItemUiStateData(
+        val labels: List<UiString>,
+        @ColorRes val labelsColor: Int?,
+        val progressBarUiState: ProgressBarUiState,
+        val showOverlay: Boolean
+    )
 }

@@ -42,8 +42,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.pages.PageItem.Page
-import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PreviewStateHelper
@@ -125,7 +123,7 @@ class PagesFragment : Fragment() {
 
             if (EditPostActivity.checkToRestart(data)) {
                 ActivityLauncher.editPageForResult(data, this@PagesFragment, viewModel.site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0))
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0), false)
 
                 // a restart will happen so, no need to continue here
                 return
@@ -314,9 +312,9 @@ class PagesFragment : Fragment() {
             }
         })
 
-        viewModel.editPage.observe(this, Observer { page ->
+        viewModel.editPage.observe(this, Observer { (page, loadAutoRevision) ->
             page?.let {
-                ActivityLauncher.editPageForResult(this, page)
+                ActivityLauncher.editPageForResult(this, page, loadAutoRevision)
             }
         })
 
@@ -345,10 +343,6 @@ class PagesFragment : Fragment() {
             page?.let { ActivityLauncher.viewPageParentForResult(this, page) }
         })
 
-        viewModel.displayDeleteDialog.observe(this, Observer { page ->
-            page?.let { displayDeleteDialog(page) }
-        })
-
         viewModel.isNewPageButtonVisible.observe(this, Observer { isVisible ->
             isVisible?.let {
                 if (isVisible) {
@@ -366,6 +360,10 @@ class PagesFragment : Fragment() {
                 (pagesPager.adapter as PagesPagerAdapter).scrollToPage(page)
             }
         })
+
+        viewModel.dialogAction.observe(this, Observer {
+            it?.show(activity, activity.supportFragmentManager, uiHelpers)
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -376,10 +374,6 @@ class PagesFragment : Fragment() {
         }
 
         initializeSearchView()
-    }
-
-    fun onPageDeleteConfirmed(remoteId: Long) {
-        viewModel.onDeleteConfirmed(remoteId)
     }
 
     private fun refreshProgressBars(listState: PageListState?) {
@@ -408,16 +402,12 @@ class PagesFragment : Fragment() {
         }
     }
 
-    private fun displayDeleteDialog(page: Page) {
-        val dialog = BasicFragmentDialog()
-        dialog.initialize(
-                page.remoteId.toString(),
-                getString(R.string.delete_page),
-                getString(R.string.page_delete_dialog_message, page.title),
-                getString(R.string.delete),
-                getString(R.string.cancel)
-        )
-        dialog.show(fragmentManager, page.remoteId.toString())
+    fun onPositiveClickedForBasicDialog(instanceTag: String) {
+        viewModel.onPositiveClickedForBasicDialog(instanceTag)
+    }
+
+    fun onNegativeClickedForBasicDialog(instanceTag: String) {
+        viewModel.onNegativeClickedForBasicDialog(instanceTag)
     }
 
     override fun onStart() {

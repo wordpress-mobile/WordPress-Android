@@ -2,21 +2,26 @@ package org.wordpress.android.viewmodel.pages
 
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.MediaStore
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -24,6 +29,7 @@ import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
@@ -35,10 +41,13 @@ private const val HOUR_IN_MILLISECONDS = 3600000L
 
 class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaStore: MediaStore
+    @Mock lateinit var postStore: PostStore
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var pagesViewModel: PagesViewModel
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var pageItemUiStateHelper: PageItemUiStateHelper
+    @Mock lateinit var progressHelper: PageItemUploadProgressHelper
+    @Mock lateinit var createUploadStateUseCase: CreatePageUploadUiStateUseCase
+    @Mock lateinit var createLabelsUseCase: CreatePageListItemLabelsUseCase
 
     private lateinit var viewModel: PageListViewModel
     private val site = SiteModel()
@@ -46,7 +55,10 @@ class PageListViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = PageListViewModel(
+                createLabelsUseCase,
+                createUploadStateUseCase,
                 mediaStore,
+                postStore,
                 dispatcher,
                 localeManagerWrapper,
                 Dispatchers.Unconfined,
@@ -62,6 +74,11 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(pagesViewModel.site).thenReturn(site)
         whenever(pagesViewModel.invalidateUploadStatus).thenReturn(invalidateUploadStatus)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.getDefault())
+        whenever(postStore.getPostByLocalPostId(anyInt())).thenReturn(PostModel())
+        whenever(createUploadStateUseCase.createUploadUiState(any(), any())).thenReturn(
+                PostUploadUiState.NothingToUpload
+        )
+        whenever(createLabelsUseCase.createLabels(any(), any())).thenReturn(Pair(emptyList(), 0))
         site.id = 10
         pageListState.value = PageListState.DONE
     }
@@ -215,7 +232,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val expectedShowOverlay = true
         val pages = MutableLiveData<List<PageModel>>()
 
-        whenever(pageItemUiStateHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(Pair(mock(),
+        whenever(progressHelper.getProgressStateForPage(anyOrNull(), anyOrNull())).thenReturn(Pair(mock(),
                 expectedShowOverlay))
         whenever(pagesViewModel.pages).thenReturn(pages)
 
@@ -236,7 +253,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val expectedProgressBarUiState = ProgressBarUiState.Indeterminate
         val pages = MutableLiveData<List<PageModel>>()
 
-        whenever(pageItemUiStateHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
+        whenever(progressHelper.getProgressStateForPage(anyOrNull(), anyOrNull())).thenReturn(
                 Pair(
                         expectedProgressBarUiState,
                         true
@@ -259,14 +276,17 @@ class PageListViewModelTest : BaseUnitTest() {
     fun `progressState is specific to each page`() {
         // Arrange
         val pages = MutableLiveData<List<PageModel>>()
-        whenever(pageItemUiStateHelper.getProgressStateForPage(LocalId(0), site)).thenReturn(
+        whenever(postStore.getPostByLocalPostId(0)).thenReturn(PostModel().also { it.setId(0) })
+        whenever(postStore.getPostByLocalPostId(1)).thenReturn(PostModel().also { it.setId(1) })
+
+        whenever(progressHelper.getProgressStateForPage(argThat { this.id == 0 }, any())).thenReturn(
                 Pair(
                         ProgressBarUiState.Indeterminate,
                         true
                 )
         )
 
-        whenever(pageItemUiStateHelper.getProgressStateForPage(LocalId(1), site)).thenReturn(
+        whenever(progressHelper.getProgressStateForPage(argThat { this.id == 1 }, any())).thenReturn(
                 Pair(
                         ProgressBarUiState.Hidden,
                         false
