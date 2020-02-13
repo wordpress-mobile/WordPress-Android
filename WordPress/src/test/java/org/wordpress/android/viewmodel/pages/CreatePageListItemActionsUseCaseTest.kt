@@ -24,28 +24,24 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `CANCEL_AUTO_UPLOAD is added to PublishedPage Actions if auto upload is pending`() {
         val actions = useCase.setupPageActions(PUBLISHED, UploadWaitingForConnection(mock()))
-
         assertThat(actions).contains(CANCEL_AUTO_UPLOAD)
     }
 
     @Test
     fun `CANCEL_AUTO_UPLOAD is not added to PublishedPage Actions if auto upload is not pending`() {
         val actions = useCase.setupPageActions(PUBLISHED, UploadingPost(false))
-
         assertThat(actions).doesNotContain(CANCEL_AUTO_UPLOAD)
     }
 
     @Test
     fun `CANCEL_AUTO_UPLOAD is added to DraftPage Actions if auto upload is pending`() {
         val actions = useCase.setupPageActions(DRAFTS, UploadWaitingForConnection(mock()))
-
         assertThat(actions).contains(CANCEL_AUTO_UPLOAD)
     }
 
     @Test
     fun `CANCEL_AUTO_UPLOAD is not added to DraftPage Actions if auto upload is not pending`() {
         val actions = useCase.setupPageActions(DRAFTS, UploadingPost(true))
-
         assertThat(actions).doesNotContain(CANCEL_AUTO_UPLOAD)
     }
 }
