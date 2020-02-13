@@ -43,7 +43,8 @@ class SearchListViewModelTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var pagesViewModel: PagesViewModel
-    @Mock lateinit var progressHelper: PageItemUploadProgressHelper
+    @Mock lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
+    @Mock lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
     @Mock lateinit var createUploadStateUseCase: CreatePageUploadUiStateUseCase
     @Mock lateinit var postStore: PostStore
 
@@ -57,14 +58,15 @@ class SearchListViewModelTest {
         page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
         viewModel = SearchListViewModel(
                 createUploadStateUseCase,
+                pageListItemActionsUseCase,
+                pageItemProgressUiStateUseCase,
                 postStore,
                 resourceProvider,
-                TEST_SCOPE,
-                progressHelper
+                TEST_SCOPE
         )
         searchPages = MutableLiveData()
 
-        whenever(pageItemUiStateHelper.getProgressStateForPage(any(), any())).thenReturn(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any(), any())).thenReturn(
                 Pair(
                         ProgressBarUiState.Hidden,
                         false
@@ -163,7 +165,17 @@ class SearchListViewModelTest {
     @Test
     fun `passes page to page view model on item tapped`() {
         val clickedPage = PageItem.PublishedPage(
-                1, "title", Date(), listOf(), 0, 0, null, mock(), false, ProgressBarUiState.Hidden,
+                1,
+                1,
+                "title",
+                Date(),
+                listOf(),
+                0,
+                0,
+                null,
+                mock(),
+                false,
+                ProgressBarUiState.Hidden,
                 false
         )
 

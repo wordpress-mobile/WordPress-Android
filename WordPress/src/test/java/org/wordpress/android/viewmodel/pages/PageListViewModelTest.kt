@@ -45,7 +45,8 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var pagesViewModel: PagesViewModel
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var progressHelper: PageItemUploadProgressHelper
+    @Mock lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
+    @Mock lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
     @Mock lateinit var createUploadStateUseCase: CreatePageUploadUiStateUseCase
     @Mock lateinit var createLabelsUseCase: CreatePageListItemLabelsUseCase
 
@@ -57,15 +58,16 @@ class PageListViewModelTest : BaseUnitTest() {
         viewModel = PageListViewModel(
                 createLabelsUseCase,
                 createUploadStateUseCase,
+                pageListItemActionsUseCase,
+                pageItemProgressUiStateUseCase,
                 mediaStore,
                 postStore,
                 dispatcher,
                 localeManagerWrapper,
-                Dispatchers.Unconfined,
-                pageItemUiStateHelper
+                Dispatchers.Unconfined
         )
 
-        whenever(pageItemUiStateHelper.getProgressStateForPage(any(), any())).thenReturn(Pair(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any(), any())).thenReturn(Pair(
                 ProgressBarUiState.Hidden, false))
 
         val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
@@ -232,7 +234,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val expectedShowOverlay = true
         val pages = MutableLiveData<List<PageModel>>()
 
-        whenever(progressHelper.getProgressStateForPage(anyOrNull(), anyOrNull())).thenReturn(Pair(mock(),
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(anyOrNull(), anyOrNull())).thenReturn(Pair(mock(),
                 expectedShowOverlay))
         whenever(pagesViewModel.pages).thenReturn(pages)
 
@@ -253,7 +255,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val expectedProgressBarUiState = ProgressBarUiState.Indeterminate
         val pages = MutableLiveData<List<PageModel>>()
 
-        whenever(progressHelper.getProgressStateForPage(anyOrNull(), anyOrNull())).thenReturn(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(anyOrNull(), anyOrNull())).thenReturn(
                 Pair(
                         expectedProgressBarUiState,
                         true
@@ -279,14 +281,14 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(postStore.getPostByLocalPostId(0)).thenReturn(PostModel().also { it.setId(0) })
         whenever(postStore.getPostByLocalPostId(1)).thenReturn(PostModel().also { it.setId(1) })
 
-        whenever(progressHelper.getProgressStateForPage(argThat { this.id == 0 }, any())).thenReturn(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(argThat { this.id == 0 }, any())).thenReturn(
                 Pair(
                         ProgressBarUiState.Indeterminate,
                         true
                 )
         )
 
-        whenever(progressHelper.getProgressStateForPage(argThat { this.id == 1 }, any())).thenReturn(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(argThat { this.id == 1 }, any())).thenReturn(
                 Pair(
                         ProgressBarUiState.Hidden,
                         false
@@ -323,8 +325,7 @@ class PageListViewModelTest : BaseUnitTest() {
     @Test
     fun `CANCEL_AUTO_UPLOAD is added to PublishedPage if auto upload is pending`() {
         // Arrange
-        whenever(pageItemUiStateHelper.canCancelPendingAutoUpload(any(), any())).thenReturn(true)
-        whenever(pageItemUiStateHelper.setupPageActions(any(), any(), any())).thenCallRealMethod()
+        // TODO add mocks here.
 
         val pages = MutableLiveData<List<PageModel>>()
         whenever(pagesViewModel.pages).thenReturn(pages)
@@ -343,8 +344,7 @@ class PageListViewModelTest : BaseUnitTest() {
     @Test
     fun `CANCEL_AUTO_UPLOAD is not added to PublishedPage if auto upload is not pending`() {
         // Arrange
-        whenever(pageItemUiStateHelper.canCancelPendingAutoUpload(any(), any())).thenReturn(false)
-        whenever(pageItemUiStateHelper.setupPageActions(any(), any(), any())).thenCallRealMethod()
+        // TODO add mocks here.
 
         val pages = MutableLiveData<List<PageModel>>()
         whenever(pagesViewModel.pages).thenReturn(pages)
@@ -363,8 +363,7 @@ class PageListViewModelTest : BaseUnitTest() {
     @Test
     fun `CANCEL_AUTO_UPLOAD is added to DraftPage if auto upload is pending`() {
         // Arrange
-        whenever(pageItemUiStateHelper.canCancelPendingAutoUpload(any(), any())).thenReturn(true)
-        whenever(pageItemUiStateHelper.setupPageActions(any(), any(), any())).thenCallRealMethod()
+        // TODO add mocks here.
 
         val pages = MutableLiveData<List<PageModel>>()
         whenever(pagesViewModel.pages).thenReturn(pages)
@@ -383,8 +382,7 @@ class PageListViewModelTest : BaseUnitTest() {
     @Test
     fun `CANCEL_AUTO_UPLOAD is not added to DraftPage if auto upload is not pending`() {
         // Arrange
-        whenever(pageItemUiStateHelper.canCancelPendingAutoUpload(any(), any())).thenReturn(false)
-        whenever(pageItemUiStateHelper.setupPageActions(any(), any(), any())).thenCallRealMethod()
+        // TODO add mocks here.
 
         val pages = MutableLiveData<List<PageModel>>()
         whenever(pagesViewModel.pages).thenReturn(pages)
