@@ -1243,11 +1243,11 @@
     <string name="reader_filter_main_title">Following</string>
     <string name="reader_filter_empty_sites_list">See the newest posts from sites you follow</string>
     <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a tag</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Login to WordPress.com to see the newest posts from sites you follow</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Login to WordPress.com to see the newest posts from tags you follow</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Log in to WordPress.com to see the latest posts from sites you follow</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from tags you follow</string>
     <string name="reader_filter_empty_sites_action">Follow a site</string>
     <string name="reader_filter_empty_tags_action">Add a tag</string>
-    <string name="reader_filter_self_hosted_empty_sites_tags_action">Login to WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1719,7 +1719,7 @@
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
-    <string name="reader_self_hosted_select_filter">Use the filter button to see posts from selected subjects</string>
+    <string name="reader_self_hosted_select_filter">Use the filter button to find posts on specific subjects</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
