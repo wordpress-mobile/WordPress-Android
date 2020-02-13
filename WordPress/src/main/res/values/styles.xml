@@ -81,7 +81,7 @@
 
     <style name="WordPress.NoActionBar.DarkNavbar" parent="WordPress.NoActionBar">
         <item name="android:windowLightNavigationBar">false</item>
-          <item name="android:navigationBarColor">?attr/wpColorAppBar</item>
+        <item name="android:navigationBarColor">?attr/wpColorAppBar</item>
     </style>
 
     <style name="NumberPickerTheme" parent="WordPress">
