@@ -5,12 +5,12 @@
     android:shape="oval">
 
     <stroke
-        android:color="@android:color/white"
+        android:color="?attr/colorSurface"
         android:width="2dp">
     </stroke>
 
     <solid
-        android:color="@color/warning">
+        android:color="@color/neutral_20">
     </solid>
 
 </shape>
