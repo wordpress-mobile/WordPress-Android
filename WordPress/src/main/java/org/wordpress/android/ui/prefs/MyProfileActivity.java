@@ -6,7 +6,7 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.widget.Toolbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -17,8 +17,6 @@ import org.wordpress.android.util.LocaleManager;
 import javax.inject.Inject;
 
 public class MyProfileActivity extends AppCompatActivity {
-    private static final String KEY_MY_PROFILE_FRAGMENT = "my-profile-fragment";
-
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
 
@@ -32,27 +30,16 @@ public class MyProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
+        setContentView(R.layout.my_profile_activity);
+
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.my_profile);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        MyProfileFragment myProfileFragment =
-                (MyProfileFragment) fragmentManager.findFragmentByTag(KEY_MY_PROFILE_FRAGMENT);
-        if (myProfileFragment == null) {
-            myProfileFragment = MyProfileFragment.newInstance();
-
-            fragmentManager.beginTransaction()
-                           .add(android.R.id.content, myProfileFragment, KEY_MY_PROFILE_FRAGMENT)
-                           .commit();
         }
     }
 
