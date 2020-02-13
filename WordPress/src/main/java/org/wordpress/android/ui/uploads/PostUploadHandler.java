@@ -611,16 +611,9 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     @Override
     public void handleAutoSavePostIfNotDraftResult(@NotNull AutoSavePostIfNotDraftResult result) {
         PostModel post = result.getPost();
-        SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
-        if (result instanceof FetchPostStatusFailed) {
-            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
-            mPostUploadNotifier.updateNotificationErrorForPost(post, site, post.error.message, 0);
-            finishUpload();
-        } else if (result instanceof PostAutoSaveFailed) {
-            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
-            mPostUploadNotifier.updateNotificationErrorForPost(post, site, post.error.message, 0);
-            finishUpload();
-        } else if (result instanceof PostAutoSaved) {
+        if (result instanceof FetchPostStatusFailed
+            || result instanceof PostAutoSaveFailed
+            || result instanceof PostAutoSaved) {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
             finishUpload();
         } else if (result instanceof PostIsDraftInRemote) {
@@ -632,6 +625,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
              * replicate `UPLOAD_AS_DRAFT`. We may change this in the future.
              */
             post.setStatus(PostStatus.DRAFT.toString());
+            SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
             mDispatcher.dispatch(PostActionBuilder.newPushPostAction(new RemotePostPayload(post, site)));
         } else {
             throw new IllegalStateException("All AutoSavePostIfNotDraftResult types must be handled");
