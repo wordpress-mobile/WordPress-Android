@@ -230,7 +230,7 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `showOverlay is correctly propagated from PageItemUiStateHelper`() {
+    fun `showOverlay is correctly propagated from PageItemProgressUiStateUseCase`() {
         // Arrange
         val expectedShowOverlay = true
         val pages = MutableLiveData<List<PageModel>>()
@@ -251,7 +251,7 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `ProgressBarUiState is correctly propagated from PageItemUiStateHelper`() {
+    fun `ProgressBarUiState is correctly propagated from PageItemProgressUiStateUseCase`() {
         // Arrange
         val expectedProgressBarUiState = ProgressBarUiState.Indeterminate
         val pages = MutableLiveData<List<PageModel>>()
@@ -324,7 +324,7 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that Menu Actions are added to PublishedPage`() {
+    fun `verify PageListItemActionsUseCase generates correct Menu Actions for PublishedPage`() {
         // Arrange
         val actions = setOf(
                 VIEW_PAGE,
