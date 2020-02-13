@@ -9,6 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
@@ -43,6 +44,18 @@ class CreatePageListItemActionsUseCaseTest {
         // Assert
         assertThat(scheduledActions).isEqualTo(expectedActions)
         assertThat(publishedActions).isEqualTo(expectedActions)
+    }
+
+    @Test
+    fun `Verify DRAFT actions`() {
+        // Arrange
+        val expectedActions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH)
+
+        // Act
+        val draftActions = useCase.setupPageActions(DRAFTS, mock())
+
+        // Assert
+        assertThat(draftActions).isEqualTo(expectedActions)
     }
 
     @Test
