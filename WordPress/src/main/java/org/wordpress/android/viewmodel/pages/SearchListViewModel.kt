@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.PostStore
@@ -113,11 +112,7 @@ class SearchListViewModel
                         pageId,
                         title,
                         date,
-                        actions = pageListItemActionsUseCase.setupPageActions(
-                                PUBLISHED,
-                                LocalId(pageId),
-                                pagesViewModel.site
-                        ),
+                        actions = pageListItemActionsUseCase.setupPageActions(PUBLISHED, uploadUiState),
                         actionsEnabled = areActionsEnabled,
                         progressBarUiState = progressBarUiState,
                         showOverlay = showOverlay
@@ -127,11 +122,7 @@ class SearchListViewModel
                     pageId,
                     title,
                     date,
-                    actions = pageListItemActionsUseCase.setupPageActions(
-                            DRAFTS,
-                            LocalId(pageId),
-                            pagesViewModel.site
-                    ),
+                    actions = pageListItemActionsUseCase.setupPageActions(DRAFTS, uploadUiState),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay
@@ -141,11 +132,7 @@ class SearchListViewModel
                     pageId,
                     title,
                     date,
-                    actions = pageListItemActionsUseCase.setupPageActions(
-                            TRASHED,
-                            LocalId(pageId),
-                            pagesViewModel.site
-                    ),
+                    actions = pageListItemActionsUseCase.setupPageActions(TRASHED, uploadUiState),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay
@@ -155,11 +142,7 @@ class SearchListViewModel
                     pageId,
                     title,
                     date,
-                    actions = pageListItemActionsUseCase.setupPageActions(
-                            SCHEDULED,
-                            LocalId(pageId),
-                            pagesViewModel.site
-                    ),
+                    actions = pageListItemActionsUseCase.setupPageActions(SCHEDULED, uploadUiState),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay

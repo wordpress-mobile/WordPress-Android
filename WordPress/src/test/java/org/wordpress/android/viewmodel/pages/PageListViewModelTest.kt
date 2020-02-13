@@ -334,7 +334,7 @@ class PageListViewModelTest : BaseUnitTest() {
                 CANCEL_AUTO_UPLOAD
         )
 
-        whenever(pageListItemActionsUseCase.setupPageActions(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(actions)
+        whenever(pageListItemActionsUseCase.setupPageActions(anyOrNull(), anyOrNull())).thenReturn(actions)
 
         val pages = MutableLiveData<List<PageModel>>()
         whenever(pagesViewModel.pages).thenReturn(pages)

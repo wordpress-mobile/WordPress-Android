@@ -262,11 +262,7 @@ class PageListViewModel @Inject constructor(
                             itemUiStateData.labelsColor,
                             pageItemIndent,
                             getFeaturedImageUrl(it.featuredImageId),
-                            pageListItemActionsUseCase.setupPageActions(
-                                    listType,
-                                    LocalId(it.pageId),
-                                    pagesViewModel.site
-                            ),
+                            itemUiStateData.actions,
                             actionsEnabled,
                             itemUiStateData.progressBarUiState,
                             itemUiStateData.showOverlay
@@ -291,11 +287,7 @@ class PageListViewModel @Inject constructor(
                                         itemUiStateData.labels,
                                         itemUiStateData.labelsColor,
                                         getFeaturedImageUrl(it.featuredImageId),
-                                        pageListItemActionsUseCase.setupPageActions(
-                                                listType,
-                                                LocalId(it.pageId),
-                                                pagesViewModel.site
-                                        ),
+                                        itemUiStateData.actions,
                                         actionsEnabled,
                                         itemUiStateData.progressBarUiState,
                                         itemUiStateData.showOverlay
@@ -319,11 +311,7 @@ class PageListViewModel @Inject constructor(
                     itemUiStateData.labels,
                     itemUiStateData.labelsColor,
                     getFeaturedImageUrl(it.featuredImageId),
-                    pageListItemActionsUseCase.setupPageActions(
-                            listType,
-                            LocalId(it.pageId),
-                            pagesViewModel.site
-                    ),
+                    itemUiStateData.actions,
                     actionsEnabled,
                     itemUiStateData.progressBarUiState,
                     itemUiStateData.showOverlay
@@ -345,11 +333,7 @@ class PageListViewModel @Inject constructor(
                     itemUiStateData.labels,
                     itemUiStateData.labelsColor,
                     getFeaturedImageUrl(it.featuredImageId),
-                    pageListItemActionsUseCase.setupPageActions(
-                            listType,
-                            LocalId(it.pageId),
-                            pagesViewModel.site
-                    ),
+                    itemUiStateData.actions,
                     actionsEnabled,
                     itemUiStateData.progressBarUiState,
                     itemUiStateData.showOverlay
@@ -407,13 +391,16 @@ class PageListViewModel @Inject constructor(
                 postModel,
                 uploadUiState
         )
-        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay)
+        
+        val actions = pageListItemActionsUseCase.setupPageActions(listType, uploadUiState)
+        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions)
     }
 
     private data class ItemUiStateData(
         val labels: List<UiString>,
         @ColorRes val labelsColor: Int?,
         val progressBarUiState: ProgressBarUiState,
-        val showOverlay: Boolean
+        val showOverlay: Boolean,
+        val actions: Set<Action>
     )
 }
