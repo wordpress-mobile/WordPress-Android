@@ -79,6 +79,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="WordPress.NoActionBar.DarkNavbar" parent="WordPress.NoActionBar">
+        <item name="android:windowLightNavigationBar">false</item>
+          <item name="android:navigationBarColor">?attr/wpColorAppBar</item>
+    </style>
+
     <style name="NumberPickerTheme" parent="WordPress">
         <item name="colorControlNormal">@color/transparent</item>
         <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
@@ -300,8 +305,9 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorSurface</item>
-        <item name="tint">?attr/wpIconColorOnSurface</item>
-        <item name="android:tint">?attr/wpIconColorOnSurface</item>
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:tintMode">src_in</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
@@ -321,7 +327,8 @@
     </style>
 
     <style name="MySiteListRowIcon">
-        <item name="android:tint">?attr/wpIconColorOnSurface</item>
+        <item name="android:tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:tintMode">src_in</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentStart">true</item>
@@ -389,7 +396,8 @@
     <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">
         <item name="android:layout_width">16dp</item>
         <item name="android:layout_height">16dp</item>
-        <item name="android:tint">?attr/wpIconColorOnSurface</item>
+        <item name="android:tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:tintMode">src_in</item>
     </style>
 
     <style name="MySiteListHeader">
@@ -415,7 +423,8 @@
     </style>
 
     <style name="MeListRowIcon">
-        <item name="android:tint">?attr/wpIconColorOnSurface</item>
+        <item name="android:tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:tintMode">src_in</item>
         <item name="android:layout_width">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_gravity">center_vertical</item>
