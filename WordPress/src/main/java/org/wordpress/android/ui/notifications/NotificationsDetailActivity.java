@@ -349,8 +349,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
                     false);
             fragment = CommentDetailFragment.newInstance(note.getId(),
-                    getIntent().getStringExtra(
-                            NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
+                    getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
 
             if (isInstantReply) {
                 ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
