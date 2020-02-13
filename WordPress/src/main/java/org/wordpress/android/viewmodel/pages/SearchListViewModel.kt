@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.PostStore
@@ -100,7 +101,7 @@ class SearchListViewModel
                 pagesViewModel.site
         )
         // TODO any reason why we don't show labels in search?
-        val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(postModel,
+        val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(postModel,
                 uploadUiState)
 
         return when (status) {

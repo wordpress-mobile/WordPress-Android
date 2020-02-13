@@ -402,7 +402,7 @@ class PageListViewModel @Inject constructor(
         )
         val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(postModel, uploadUiState)
 
-        val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(
+        val (progressBarUiState, showOverlay) = pageItemUiStateHelper.getProgressStateForPage(
                 postModel,
                 uploadUiState
         )

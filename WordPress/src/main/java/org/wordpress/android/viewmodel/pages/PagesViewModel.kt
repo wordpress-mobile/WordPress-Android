@@ -400,7 +400,7 @@ class PagesViewModel
 
     private fun deletePage(page: Page) {
         performIfNetworkAvailable {
-            pageListDialogHelper.showDeletePageConfirmationDialog(RemoteId(page.id), page.title)
+            pageListDialogHelper.showDeletePageConfirmationDialog(RemoteId(page.remoteId), page.title)
         }
     }
 
@@ -476,7 +476,7 @@ class PagesViewModel
         // TODO We are going to be doing a refactor of the ViewModels related to Pages so that the PostModel is
         //  available without doing subsequent fetches from the PostStore
         //  https://github.com/wordpress-mobile/WordPress-Android/issues/11233
-        val page = postStore.getPostByRemotePostId(pageItem.id, site)
+        val page = postStore.getPostByRemotePostId(pageItem.remoteId, site)
         // Then check if an autosave revision is available
         if (pageConflictResolver.hasUnhandledAutoSave(page)) {
             pageListDialogHelper.showAutoSaveRevisionDialog(page)
