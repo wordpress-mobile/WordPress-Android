@@ -141,7 +141,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         setContentView(R.layout.reader_activity_post_pager);
 
-        mToolbar = findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();

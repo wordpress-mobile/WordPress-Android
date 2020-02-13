@@ -1,10 +1,22 @@
+14.3
+-----
+ 
+14.2
+-----
+* Block editor: Long-press Inserter icon to show options to add before/after
+* Block editor: Retry displaying image when connectivity restores
+* Block editor: Fix blank post when sharing media from another app
+* Block editor: Add support for image size options in the gallery block
+* Block editor: Fix issue that sometimes prevented merging paragraph blocks
+* Block editor: Fix retry media upload action
+
 14.1
 -----
 * Fixes an issue where searching for posts sometimes doesn't show some results.
 
 * Disable the option to remove a Jetpack site from site picker
 * Block editor: small performance improvements
- 
+
 * Block Editor: Reduced padding around text on Rich Text based blocks.
 * Block Editor: Improved stability on very long posts.
 * Block Editor: New block "Shortcode". You can now create and edit Shortcode blocks in the editor.

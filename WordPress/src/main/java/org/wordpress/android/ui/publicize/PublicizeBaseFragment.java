@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.R;
 
-public class PublicizeBaseFragment extends Fragment {
+class PublicizeBaseFragment extends Fragment {
     private Toolbar getToolbar() {
         if (getActivity() != null) {
             return (Toolbar) getActivity().findViewById(R.id.toolbar);
@@ -26,7 +26,7 @@ public class PublicizeBaseFragment extends Fragment {
             toolbar.setTitle(title);
         }
         if (getActivity() != null) {
-            // important for accessibiility - talkBack
+            // important for accessibility - talkBack
             getActivity().setTitle(title);
         }
     }

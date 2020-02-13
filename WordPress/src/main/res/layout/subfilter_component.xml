@@ -32,7 +32,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/selected_filter_name"
-        style="@style/SiteTagFilteredTitle"
+        style="@style/SiteTagSelectedFilter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"

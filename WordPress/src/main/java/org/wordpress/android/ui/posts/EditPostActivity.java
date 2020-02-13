@@ -109,6 +109,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
@@ -1527,16 +1528,17 @@ public class EditPostActivity extends AppCompatActivity implements
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository, this::updateFromEditor, null);
     }
 
-    private void updateAndSavePostAsync(final AfterSavePostListener listener) {
+    private void updateAndSavePostAsync(final OnPostUpdatedFromUIListener listener) {
         if (mEditorFragment == null) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
             return;
         }
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository,
                 this::updateFromEditor,
-                (post) -> {
+                (post, result) -> {
+                    // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
                     if (listener != null) {
-                        listener.onPostSave();
+                        listener.onPostUpdatedFromUI();
                     }
                     return null;
                 });
@@ -1696,8 +1698,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    public interface AfterSavePostListener {
-        void onPostSave();
+    public interface OnPostUpdatedFromUIListener {
+        void onPostUpdatedFromUI();
     }
 
     @Override
@@ -1720,20 +1722,22 @@ public class EditPostActivity extends AppCompatActivity implements
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
             return true;
-        }, postModel -> {
-            refreshEditorContent();
-            WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
-                      .setAction(getString(R.string.undo), view -> {
-                          AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
-                          RemotePostPayload payload =
-                                  new RemotePostPayload(mEditPostRepository.getPostForUndo(), mSite);
-                          mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                          mEditPostRepository.undo();
-                          refreshEditorContent();
-                      })
-                      .show();
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                refreshEditorContent();
+                WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
+                          .setAction(getString(R.string.undo), view -> {
+                              AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
+                              RemotePostPayload payload =
+                                      new RemotePostPayload(mEditPostRepository.getPostForUndo(), mSite);
+                              mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                              mEditPostRepository.undo();
+                              refreshEditorContent();
+                          })
+                          .show();
 
-            updatePostLoadingAndDialogState(PostLoadingState.NONE);
+                updatePostLoadingAndDialogState(PostLoadingState.NONE);
+            }
             return null;
         });
     }
@@ -1818,9 +1822,11 @@ public class EditPostActivity extends AppCompatActivity implements
             // Hide the progress dialog now
             mEditorFragment.hideSavingProgressDialog();
             return true;
-        }, postModel -> {
-            ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
-            mViewModel.finish(activityFinishState);
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
+                mViewModel.finish(activityFinishState);
+            }
             return null;
         });
     }
@@ -2099,9 +2105,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 postModel.setContent(updatedContent);
                 mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
                 return true;
-            }, postModel -> {
-                mEditorFragment.setTitle(postModel.getTitle());
-                mEditorFragment.setContent(postModel.getContent());
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mEditorFragment.setTitle(postModel.getTitle());
+                    mEditorFragment.setContent(postModel.getContent());
+                }
                 return null;
             });
         }
@@ -2890,7 +2898,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void syncPostObjectWithUiAndSaveIt(@Nullable AfterSavePostListener listener) {
+    public void syncPostObjectWithUiAndSaveIt(@Nullable OnPostUpdatedFromUIListener listener) {
         updateAndSavePostAsync(listener);
     }
 
