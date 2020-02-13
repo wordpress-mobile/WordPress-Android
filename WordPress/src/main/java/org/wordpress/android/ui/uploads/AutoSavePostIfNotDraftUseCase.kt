@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
+import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
@@ -21,7 +22,6 @@ import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.FetchPostSt
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostAutoSaveFailed
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostAutoSaved
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostIsDraftInRemote
-import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.Continuation
@@ -130,7 +130,7 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
         }
     }
 
-    @Subscribe(threadMode = BACKGROUND)
+    @Subscribe(threadMode = MAIN, priority = 9)
     @Suppress("unused")
     fun onPostChanged(event: OnPostChanged) {
         if (event.causeOfChange is RemoteAutoSavePost) {
