@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -89,7 +90,7 @@ public class ReaderWebView extends WebView {
     @SuppressLint("NewApi")
     private void init(Context context) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
-
+        setBackgroundColor(Color.TRANSPARENT);
         if (!isInEditMode()) {
             mToken = mAccountStore.getAccessToken();
 
@@ -259,8 +260,8 @@ public class ReaderWebView extends WebView {
                     conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
                     conn.setRequestProperty("Connection", "Keep-Alive");
                     return new WebResourceResponse(conn.getContentType(),
-                                                   conn.getContentEncoding(),
-                                                   conn.getInputStream());
+                            conn.getContentEncoding(),
+                            conn.getInputStream());
                 } catch (IOException e) {
                     AppLog.e(AppLog.T.READER, e);
                 }

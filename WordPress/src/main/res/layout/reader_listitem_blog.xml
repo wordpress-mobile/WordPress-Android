@@ -4,6 +4,7 @@
     list item which shows a recommended or followed blog - see ReaderBlogAdapter
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -19,9 +20,10 @@
         android:id="@+id/image_blog"
         android:layout_width="@dimen/avatar_sz_medium"
         android:layout_height="@dimen/avatar_sz_medium"
-        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_weight="0"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
 
     <LinearLayout
         android:id="@+id/layout_content"
@@ -46,6 +48,7 @@
             android:id="@+id/text_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="1"
@@ -58,6 +61,7 @@
             android:id="@+id/text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="2"
@@ -66,5 +70,12 @@
             tools:text="text_description" />
 
     </LinearLayout>
+
+    <org.wordpress.android.ui.reader.views.ReaderFollowButton
+        android:id="@+id/follow_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_medium"
+        app:wpShowFollowButtonCaption="false" />
 
 </LinearLayout>

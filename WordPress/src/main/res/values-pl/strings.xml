@@ -51,8 +51,6 @@ Language: pl
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s\' nie jest jeszcze wspierane na WordPressie dla Androida</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Ten blok ma nieprawidłową zawartość</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Puste</string>
-    <string name="gutenberg_native_s_block">%s blok</string>
-    <string name="gutenberg_native_row_d">Wiersz %d.</string>
     <string name="gutenberg_native_reset_block">Resetuj blok</string>
     <string name="gutenberg_native_remove_block_at_row_s">Usuń blok we wierszu %s</string>
     <string name="gutenberg_native_remove_annotations">Usuń przypis</string>
@@ -75,14 +73,11 @@ Language: pl
     <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
     <string name="gutenberg_native_link_text">Tekst odnośnika</string>
     <string name="gutenberg_native_link_inserted">Wstawiono odnośnik</string>
-    <string name="gutenberg_native_level_s_empty">Poziom %s. Puste.</string>
-    <string name="gutenberg_native_level_1_s_2_s">Poziom %1$s. %2$s</string>
     <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ukryj klawiaturę</string>
     <string name="gutenberg_native_here_is_the_panel_content">Tutaj jest zawartość panelu!</string>
     <string name="gutenberg_native_help_icon">Ikona pomocy</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Nie można było osadzić plików mediów.\nStuknij aby wejść w opcje.</string>
-    <string name="gutenberg_native_empty">Puste</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Stuknij dwukrotnie aby cofnąć zmiany</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Stuknij dwukrotnie aby zmienić ustawienie</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Stuknij dwukrotnie aby wybrać obrazek</string>
@@ -224,14 +219,12 @@ Language: pl
     <string name="stats_post_views_label">Wyświetleń</string>
     <string name="stats_post_label">Wpis</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Wykresy aktywności publikowania wpisów.</string>
     <string name="stats_item_collapsed">Element zwinięto</string>
     <string name="stats_item_expanded">Element rozwinięto</string>
     <string name="stats_collapse_content_description">Zwiń</string>
     <string name="stats_expand_content_description">Rozwiń</string>
     <string name="stats_graph_updated">Wykres uaktualniony.</string>
     <string name="stats_overview_content_description">%1$s %2$s dla okresu: %3$s, zmiana względem poprzedniego okresu - %4$s</string>
-    <string name="stats_bar_chart_content_description">Wykresy wyświetleń witryny.</string>
     <string name="stats_loading_card">Wczytywanie wybranych danych</string>
     <string name="site_settings_editor">Edytor</string>
     <string name="description_expand">Rozwiń</string>
@@ -704,7 +697,6 @@ Language: pl
     <string name="featured_image_desc">obrazek wyróżniający</string>
     <string name="button_discard">Odrzuć</string>
     <string name="reader_avatar_desc">zdjęcie profilowe</string>
-    <string name="reader_blavatar_desc">ikona witryny</string>
     <string name="notification_channel_transient_title">Krótkotrwały</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Proszę wprowadzić swój adres email</string>
@@ -821,7 +813,6 @@ Language: pl
     <string name="site_settings_quota_space_unlimited">%1$s z bez limitu</string>
     <string name="preview_count">Podgląd %d</string>
     <string name="add_count">Dodaj %d</string>
-    <string name="fab_create_desc">utwórz</string>
     <string name="fab_add_tag_desc">Utwórz tag</string>
     <string name="navigate_up_desc">nawiguj w górę</string>
     <string name="notification_settings_switch_desc">Powiadomienia</string>

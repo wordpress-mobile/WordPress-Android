@@ -3,13 +3,13 @@ package org.wordpress.android.ui.publicize;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 public class PublicizeDetailFragment extends PublicizeBaseFragment
         implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
-    public static final String FACEBOOK_SHARING_CHANGE_BLOG_POST =
+    private static final String FACEBOOK_SHARING_CHANGE_BLOG_POST =
             "https://en.blog.wordpress.com/2018/07/23/sharing-options-from-wordpress-com-to-facebook-are-changing/";
     private SiteModel mSite;
     private String mServiceId;
@@ -34,8 +34,8 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
     private ConnectButton mConnectBtn;
     private RecyclerView mRecycler;
-    private View mConnectionsCardView;
-    private ViewGroup mServiceCardView;
+    private View mConnectionsContainer;
+    private ViewGroup mServiceContainer;
 
     @Inject AccountStore mAccountStore;
 
@@ -72,7 +72,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putString(PublicizeConstants.ARG_SERVICE_ID, mServiceId);
@@ -82,10 +82,10 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_detail_fragment, container, false);
 
-        mConnectionsCardView = rootView.findViewById(R.id.card_view_connections);
-        mServiceCardView = (ViewGroup) rootView.findViewById(R.id.card_view_service);
-        mConnectBtn = (ConnectButton) mServiceCardView.findViewById(R.id.button_connect);
-        mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mConnectionsContainer = rootView.findViewById(R.id.connections_container);
+        mServiceContainer = rootView.findViewById(R.id.service_container);
+        mConnectBtn = mServiceContainer.findViewById(R.id.button_connect);
+        mRecycler = rootView.findViewById(R.id.recycler_view);
 
         return rootView;
     }
@@ -112,18 +112,18 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
         // disable the ability to add another G+ connection
         if (isGooglePlus()) {
-            mServiceCardView.setVisibility(View.GONE);
+            mServiceContainer.setVisibility(View.GONE);
         } else {
             String serviceLabel = String.format(getString(R.string.connection_service_label), mService.getLabel());
-            TextView txtService = (TextView) mServiceCardView.findViewById(R.id.text_service);
+            TextView txtService = mServiceContainer.findViewById(R.id.text_service);
             txtService.setText(serviceLabel);
 
             String description = String.format(getString(R.string.connection_service_description), mService.getLabel());
-            TextView txtDescription = (TextView) mServiceCardView.findViewById(R.id.text_description);
+            TextView txtDescription = mServiceContainer.findViewById(R.id.text_description);
             txtDescription.setText(description);
 
             // Hide the Learn More button by default as at the moment it is only used for the Facebook warning below.
-            TextView learnMoreButton = (TextView) mServiceCardView.findViewById(R.id.learn_more_button);
+            TextView learnMoreButton = mServiceContainer.findViewById(R.id.learn_more_button);
             learnMoreButton.setVisibility(View.GONE);
 
             if (isFacebook()) {
@@ -151,17 +151,13 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
     private void showFacebookWarning() {
         String noticeText = getString(R.string.connection_service_facebook_notice);
-        TextView txtNotice = (TextView) mServiceCardView.findViewById(R.id.text_description_notice);
+        TextView txtNotice = mServiceContainer.findViewById(R.id.text_description_notice);
         txtNotice.setText(noticeText);
         txtNotice.setVisibility(View.VISIBLE);
 
-        TextView learnMoreButton = (TextView) mServiceCardView.findViewById(R.id.learn_more_button);
-        learnMoreButton.setOnClickListener(new OnClickListener() {
-            @Override public void onClick(View v) {
-                WPWebViewActivity.openURL(getActivity(),
-                        FACEBOOK_SHARING_CHANGE_BLOG_POST);
-            }
-        });
+        TextView learnMoreButton = mServiceContainer.findViewById(R.id.learn_more_button);
+        learnMoreButton.setOnClickListener(v -> WPWebViewActivity.openURL(getActivity(),
+                FACEBOOK_SHARING_CHANGE_BLOG_POST));
         learnMoreButton.setVisibility(View.VISIBLE);
     }
 
@@ -182,7 +178,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
             return;
         }
 
-        mConnectionsCardView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mConnectionsContainer.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
 
         if (hasOnPublicizeActionListener()) {
             if (isEmpty) {
@@ -190,12 +186,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
             } else {
                 mConnectBtn.setAction(ConnectAction.CONNECT_ANOTHER_ACCOUNT);
             }
-            mConnectBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getOnPublicizeActionListener().onRequestConnect(mService);
-                }
-            });
+            mConnectBtn.setOnClickListener(v -> getOnPublicizeActionListener().onRequestConnect(mService));
         }
     }
 }
