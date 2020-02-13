@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-18 13:21:59+0000
+Translation-Revision-Date: 2020-02-06 00:54:10+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s">Video yazısı. %s</string>
+    <string name="gutenberg_native_edit_video">Videoyu düzenle</string>
+    <string name="gutenberg_native_edit_media">Ortamı düzenle</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">Düzeni seçmek için çift dokunun</string>
+    <string name="gutenberg_native_add_a_shortcode">Kısa kod ekle…</string>
+    <string name="post_list_author">Gönderi Yazarı</string>
+    <string name="fab_create_desc">Gönderi oluştur</string>
+    <string name="stats_posting_activity_end_description">Bu döneme ait tüm istatistikleri öğrendiniz.\n Tekrar dokunduğunuzda en baştan başlanır.</string>
+    <string name="stats_posting_activity_empty_description">Bu döneme ait istatistik yok.</string>
+    <string name="stats_posting_activity_label_content_description">%1$s için Gönderi Etkinliği</string>
+    <string name="stats_posting_activity_content_description">%1$s görüntülemenin (%2$s için) gerçekleştiği gün sayısı: %2$s %3$s.Daha fazlası için dokunun.</string>
+    <string name="stats_posting_activity_action">bu döneme ait tüm istatistiklere git</string>
+    <string name="stats_box_type_very_high">çok yüksek</string>
+    <string name="stats_box_type_high">yüksek</string>
+    <string name="stats_box_type_medium">orta</string>
+    <string name="stats_box_type_low">düşük</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  ve %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Görseli kaldır</string>
     <string name="gutenberg_native_move_image_forward">Görseli öne taşı</string>
     <string name="gutenberg_native_move_image_backward">Görseli geriye taşı</string>
@@ -75,8 +93,6 @@ Language: tr
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\"%s\" henüz Android için WordPress\'te desteklenmiyor</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s bloğu. Bu blok geçersiz içerik barındırıyor</string>
     <string name="gutenberg_native_s_block_empty">%s bloğu. Boş</string>
-    <string name="gutenberg_native_s_block">%s bloğu</string>
-    <string name="gutenberg_native_row_d">\"%d. satır</string>
     <string name="gutenberg_native_reset_block">Bloğu sıfırla</string>
     <string name="gutenberg_native_remove_block_at_row_s">%s. satırdaki bloğu kaldır</string>
     <string name="gutenberg_native_remove_annotations">Ek açıklamaları kaldır</string>
@@ -99,14 +115,11 @@ Language: tr
     <string name="gutenberg_native_move_block_down">Bloğu aşağı taşı</string>
     <string name="gutenberg_native_link_text">Metin bağlantısı ver</string>
     <string name="gutenberg_native_link_inserted">Bağlantı eklendi</string>
-    <string name="gutenberg_native_level_s_empty">Seviye %s. Boş.</string>
-    <string name="gutenberg_native_level_1_s_2_s">Seviye %1$s. %2$s</string>
     <string name="gutenberg_native_image_caption_s">Görsel yazısı. %s</string>
     <string name="gutenberg_native_hide_keyboard">Klavyeyi gizle</string>
     <string name="gutenberg_native_here_is_the_panel_content">İşte panel içeriği!</string>
     <string name="gutenberg_native_help_icon">Yardım simgesi</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Medya eklenemedi.\nLütfen seçenekler için dokunun.</string>
-    <string name="gutenberg_native_empty">Boş</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Son değişikliği geri almak için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Ayarı değiştirmek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Bir görsel seçmek için çift dokunun</string>
@@ -248,14 +261,12 @@ Language: tr
     <string name="stats_post_views_label">Görüntülemeler</string>
     <string name="stats_post_label">Gönder</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Gönderi paylaşma etkinliğinin grafiği.</string>
     <string name="stats_item_collapsed">Öğe daraltıldı</string>
     <string name="stats_item_expanded">Öğe genişletildi</string>
     <string name="stats_collapse_content_description">Gizle</string>
     <string name="stats_expand_content_description">Genişletmek</string>
     <string name="stats_graph_updated">Grafik güncellendi.</string>
     <string name="stats_overview_content_description">Şu dönem için %1$s %2$s: %3$s, önceki dönemden değişiklik - %4$s</string>
-    <string name="stats_bar_chart_content_description">Site görüntülemelerinin grafiği.</string>
     <string name="stats_loading_card">Seçilen kart verileri yükleniyor</string>
     <string name="site_settings_editor">Düzenleyici</string>
     <string name="description_expand">Genişlet</string>
@@ -728,7 +739,6 @@ Language: tr
     <string name="featured_image_desc">öne çıkan görsel</string>
     <string name="button_discard">Gözardı et</string>
     <string name="reader_avatar_desc">profil fotoğrafı</string>
-    <string name="reader_blavatar_desc">site simgesi</string>
     <string name="notification_channel_transient_title">Geçici</string>
     <string name="support_identity_input_dialog_email_label">E-posta</string>
     <string name="support_identity_input_dialog_enter_email">Lütfen e-posta adresinizi girin</string>
@@ -845,7 +855,6 @@ Language: tr
     <string name="site_settings_quota_space_unlimited">%1$s / sınırsız</string>
     <string name="preview_count">Önizleme %d</string>
     <string name="add_count">Ekle %d</string>
-    <string name="fab_create_desc">oluşturun</string>
     <string name="fab_add_tag_desc">Etiket oluşturun</string>
     <string name="navigate_up_desc">yukarı gidin</string>
     <string name="notification_settings_switch_desc">Bildirimler</string>

@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -15,13 +17,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.ui.reader.ReaderEvents
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
+import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState.HiddenEmptyUiState
+import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState.VisibleEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType
@@ -29,19 +27,22 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
 import org.wordpress.android.ui.reader.subfilter.adapters.SubfilterListAdapter
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
+import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.widgets.WPTextView
 import java.lang.ref.WeakReference
-import java.util.EnumSet
 import javax.inject.Inject
 
 class SubfilterPageFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: ReaderPostListViewModel
     @Inject lateinit var uiHelpers: UiHelpers
+
+    private lateinit var readerViewModel: ReaderPostListViewModel
+    private lateinit var viewModel: SubfilterPageViewModel
     private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyStateContainer: LinearLayout
+    private lateinit var title: WPTextView
+    private lateinit var actionButton: Button
 
     companion object {
         const val CATEGORY_KEY = "category_key"
@@ -64,64 +65,50 @@ class SubfilterPageFragment : DaggerFragment() {
 
         val category = arguments?.getSerializable(CATEGORY_KEY) as SubfilterCategory
 
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SubfilterPageViewModel::class.java)
+        viewModel.start(category)
+
         recyclerView = view.findViewById(R.id.content_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter = SubfilterListAdapter(uiHelpers)
 
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(ReaderPostListViewModel::class.java)
+        emptyStateContainer = view.findViewById(R.id.empty_state_container)
+        title = emptyStateContainer.findViewById(R.id.title)
+        actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
-        viewModel.subFilters.observe(this, Observer {
+        readerViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                .get(ReaderPostListViewModel::class.java)
+
+        readerViewModel.subFilters.observe(this, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
                 val items = it?.filter { it.type == category.type } ?: listOf()
+                viewModel.onSubFiltersChanged(items.isEmpty())
                 adapter.update(items)
-                viewModel.updateTabTitle(category, items.size)
+                readerViewModel.onSubfilterPageUpdated(category, items.size)
             }
         })
-        performUpdate()
-        viewModel.loadSubFilters()
+
+        viewModel.emptyState.observe(this, Observer { uiState ->
+            if (isAdded) {
+                when (uiState) {
+                    HiddenEmptyUiState -> emptyStateContainer.visibility = View.GONE
+                    is VisibleEmptyUiState -> {
+                        emptyStateContainer.visibility = View.VISIBLE
+                        title.setText(uiState.title.stringRes)
+                        actionButton.setText(uiState.buttonText.stringRes)
+                        actionButton.setOnClickListener {
+                            readerViewModel.onBottomSheetActionClicked(uiState.actionTabIndex)
+                        }
+                    }
+                }
+            }
+        })
     }
 
     fun setNestedScrollBehavior(enable: Boolean) {
         if (!isAdded) return
 
         recyclerView.isNestedScrollingEnabled = enable
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
-        AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
-        viewModel.loadSubFilters()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
-        AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
-        viewModel.loadSubFilters()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        EventBus.getDefault().unregister(this)
-        super.onStop()
-    }
-
-    private fun performUpdate() {
-        performUpdate(EnumSet.of(
-                UpdateTask.TAGS,
-                UpdateTask.FOLLOWED_BLOGS
-        ))
-    }
-
-    private fun performUpdate(tasks: EnumSet<UpdateTask>) {
-        if (!NetworkUtils.isNetworkAvailable(activity)) {
-            return
-        }
-
-        ReaderUpdateServiceStarter.startService(activity, tasks)
     }
 }
 

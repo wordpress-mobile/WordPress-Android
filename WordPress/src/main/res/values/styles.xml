@@ -191,25 +191,6 @@
         <item name="android:background">@color/primary_50</item>
     </style>
 
-    <style name="Toolbar.Primary" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/primary</item>
-        <item name="android:theme">@style/Toolbar.Theme</item>
-    </style>
-
-    <style name="Toolbar.Secondary" parent="@style/Toolbar.Primary">
-        <item name="android:background">@color/primary_40</item>
-        <item name="contentInsetStart">@dimen/toolbar_content_offset</item>
-    </style>
-
-    <style name="Toolbar.Subtitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-    </style>
-
-    <style name="Toolbar.Theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:listDivider">@null</item>
-    </style>
-
     <style name="ActionButton.CloseMode.WordPress" parent="android:Widget.Material.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
     </style>
@@ -595,9 +576,6 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="SwitchBlueLight">
-        <item name="colorControlActivated">@color/primary_30</item>
-    </style>
 
     <style name="SwitchBlueMedium">
         <item name="colorControlActivated">@color/primary_40</item>
@@ -1038,18 +1016,6 @@
         <item name="colorControlHighlight">@android:color/transparent</item>
     </style>
 
-    <!-- DialogPreference custom title style -->
-    <style name="DialogPreference" />
-
-    <style name="DialogPreference.CustomTitle">
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textSize">@dimen/text_sz_larger</item>
-        <item name="android:gravity">start|center_vertical</item>
-    </style>
-
     <!-- Main actions styles -->
     <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
         <item name="android:layout_height">@dimen/main_bottom_sheet_list_row_icon_size</item>
@@ -1070,14 +1036,32 @@
     </style>
 
     <style name="SubfilterSiteTagItem">
-        <item name="android:layout_height">@dimen/one_line_list_item_height</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/one_line_list_item_height</item>
         <item name="android:paddingStart">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:paddingEnd">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="SiteTagFilteredTitle" parent="MySiteListRowTextView">
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_extra_small</item>
+    </style>
+
+    <style name="SiteTagSelectedFilter" parent="SiteTagFilteredTitle">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
+    </style>
+
+
+    <style name="SiteTagFilteredUrl" parent="SiteTagFilteredTitle">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
+        <item name="android:paddingTop">0dp</item>
     </style>
 
     <style name="SiteTagBottomSheetTitle" parent="SiteTagFilteredTitle">

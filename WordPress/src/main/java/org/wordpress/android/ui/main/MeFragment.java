@@ -166,7 +166,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         rootView.findViewById(R.id.row_app_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewAppSettings(getActivity());
+                ActivityLauncher.viewAppSettingsForResult(getActivity());
             }
         });
 
@@ -446,7 +446,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
     }
 
     private void showPhotoPickerForGravatar() {
-        ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.GRAVATAR_IMAGE_PICKER, null, null);
+        ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GRAVATAR_IMAGE_PICKER, null, null);
     }
 
     private void startCropActivity(Uri uri) {
