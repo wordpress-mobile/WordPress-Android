@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftUseCase
 import org.wordpress.android.ui.uploads.OnAutoSavePostIfNotDraftCallback
+import java.lang.IllegalArgumentException
 import java.lang.reflect.Constructor
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -44,6 +45,19 @@ class AutoSavePostIfNotDraftUseCaseTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock lateinit var postStore: PostStore
+
+    @Test(expected = IllegalArgumentException::class)
+    fun `local draft throws IllegalArgumentException`() {
+        val useCase = AutoSavePostIfNotDraftUseCase(mock(), postStore, TEST_DISPATCHER)
+        val post = PostModel()
+        post.setIsLocalDraft(true)
+        useCase.autoSavePostOrUpdateDraft(
+                RemotePostPayload(post, SiteModel()),
+                object : OnAutoSavePostIfNotDraftCallback {
+                    override fun handleAutoSavePostIfNotDraftResult(result: AutoSavePostIfNotDraftResult) {
+                    }
+                })
+    }
 
     @Test
     fun `error while fetching post status will result in FetchPostStatusFailed`() {
