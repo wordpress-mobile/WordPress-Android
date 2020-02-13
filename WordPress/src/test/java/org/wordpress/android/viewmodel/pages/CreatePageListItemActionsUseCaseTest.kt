@@ -30,7 +30,7 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `verify that SCHEDULED & PUBLISHED actions are the same`() {
         // Arrange
-        val expectedActions = mutableSetOf(
+        val expectedActions = setOf(
                 VIEW_PAGE,
                 SET_PARENT,
                 MOVE_TO_DRAFT,
