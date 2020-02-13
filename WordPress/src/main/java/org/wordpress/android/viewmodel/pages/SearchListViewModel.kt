@@ -25,6 +25,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import java.util.SortedMap
 import javax.inject.Inject
@@ -155,7 +156,7 @@ class SearchListViewModel
                     title,
                     date,
                     actions = pageListItemActionsUseCase.setupPageActions(
-                            PUBLISHED,
+                            SCHEDULED,
                             LocalId(pageId),
                             pagesViewModel.site
                     ),
