@@ -5,7 +5,7 @@
 
     <stroke
         android:width="2dp"
-        android:color="?attr/colorOnPrimarySurface" />
+        android:color="?attr/colorSurface" />
 
     <solid android:color="?attr/colorPrimary" />
 

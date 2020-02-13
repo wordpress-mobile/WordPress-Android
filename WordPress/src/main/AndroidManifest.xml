@@ -281,7 +281,7 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.WPWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
         <activity
             android:name=".ui.JetpackConnectionWebViewActivity"
             android:theme="@style/Calypso.NoActionBar"
@@ -390,7 +390,7 @@
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:excludeFromRecents="true"
             android:label="@string/reader_title_deeplink"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <data
@@ -450,7 +450,7 @@
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
-            android:theme="@style/CalypsoTheme"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.AppLogViewerActivity"
@@ -458,7 +458,7 @@
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.reader.ReaderUserListActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
             android:label="@string/reader_title_subs"

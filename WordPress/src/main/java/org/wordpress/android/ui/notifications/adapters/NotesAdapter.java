@@ -298,11 +298,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         int gridicon = mNoticonUtils.noticonToGridicon(note.getNoticonCharacter());
         mImageManager.load(noteViewHolder.mNoteIcon, gridicon);
         if (commentStatus == CommentStatus.UNAPPROVED) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning_stroke_white);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning_stroke_surface);
         } else if (isUnread) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_stroke_notification_unread);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_stroke_surface);
         } else {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_20_stroke_white);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_20_stroke_surface);
         }
 
         if (isUnread) {

@@ -23,9 +23,15 @@ open class SubfilterListItemViewHolder(
         }
         val itemText: TextView? = this.itemView.findViewById(R.id.item_title)
         itemText?.let {
-            if (filter.isSelected) {
-                it.setTextColor(parent.context.getColorFromAttribute(R.attr.colorPrimary))
-            }
+            it.setTextColor(
+                    parent.context.getColorFromAttribute(
+                            if (filter.isSelected) {
+                                R.attr.colorPrimary
+                            } else {
+                                R.attr.colorOnSurface
+                            }
+                    )
+            )
         }
 
         this.itemView.setOnClickListener {
