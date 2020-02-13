@@ -62,6 +62,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     private View mCustomEmptyView;
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
+    private RecyclerView mSearchSuggestionsRecyclerView;
 
     private List<FilterCriteria> mFilterCriteriaOptions;
     private FilterCriteria mCurrentFilter;
@@ -194,6 +195,8 @@ public class FilteredRecyclerView extends RelativeLayout {
             params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                                   | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
         }
+
+        mSearchSuggestionsRecyclerView = findViewById(R.id.suggestions_recycler_view);
 
         mEmptyView = findViewById(R.id.empty_view);
 
@@ -494,6 +497,18 @@ public class FilteredRecyclerView extends RelativeLayout {
     * */
     public void refreshFilterCriteriaOptions() {
         setup(true);
+    }
+
+    public void showSearchSuggestions() {
+        mSearchSuggestionsRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideSearchSuggestions() {
+        mSearchSuggestionsRecyclerView.setVisibility(View.GONE);
+    }
+
+    public void setSearchSuggestionAdapter(RecyclerView.Adapter searchSuggestionAdapter) {
+        mSearchSuggestionsRecyclerView.setAdapter(searchSuggestionAdapter);
     }
 
     /*
