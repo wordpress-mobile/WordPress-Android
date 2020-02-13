@@ -33,6 +33,7 @@ import javax.inject.Named
 class SearchListViewModel
 @Inject constructor(
     private val createPageUploadUiStateUseCase: CreatePageUploadUiStateUseCase,
+    private val pageListItemActionsUseCase: CreatePageListItemActionsUseCase,
     private val postStore: PostStore,
     private val resourceProvider: ResourceProvider,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
@@ -111,7 +112,7 @@ class SearchListViewModel
                         pageId,
                         title,
                         date,
-                        actions = pageItemUiStateHelper.setupPageActions(
+                        actions = pageListItemActionsUseCase.setupPageActions(
                                 PUBLISHED,
                                 LocalId(pageId),
                                 pagesViewModel.site
@@ -125,7 +126,7 @@ class SearchListViewModel
                     pageId,
                     title,
                     date,
-                    actions = pageItemUiStateHelper.setupPageActions(
+                    actions = pageListItemActionsUseCase.setupPageActions(
                             DRAFTS,
                             LocalId(pageId),
                             pagesViewModel.site
@@ -139,7 +140,7 @@ class SearchListViewModel
                     pageId,
                     title,
                     date,
-                    actions = pageItemUiStateHelper.setupPageActions(
+                    actions = pageListItemActionsUseCase.setupPageActions(
                             TRASHED,
                             LocalId(pageId),
                             pagesViewModel.site
@@ -153,7 +154,7 @@ class SearchListViewModel
                     pageId,
                     title,
                     date,
-                    actions = pageItemUiStateHelper.setupPageActions(
+                    actions = pageListItemActionsUseCase.setupPageActions(
                             PUBLISHED,
                             LocalId(pageId),
                             pagesViewModel.site

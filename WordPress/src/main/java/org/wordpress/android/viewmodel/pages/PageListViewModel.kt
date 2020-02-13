@@ -52,6 +52,7 @@ private const val DEFAULT_INDENT = 0
 class PageListViewModel @Inject constructor(
     private val createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase,
     private val createPageUploadUiStateUseCase: CreatePageUploadUiStateUseCase,
+    private val pageListItemActionsUseCase: CreatePageListItemActionsUseCase,
     private val mediaStore: MediaStore,
     private val postStore: PostStore,
     private val dispatcher: Dispatcher,
@@ -261,7 +262,7 @@ class PageListViewModel @Inject constructor(
                             itemUiStateData.labelsColor,
                             pageItemIndent,
                             getFeaturedImageUrl(it.featuredImageId),
-                            pageItemUiStateHelper.setupPageActions(
+                            pageListItemActionsUseCase.setupPageActions(
                                     listType,
                                     LocalId(it.pageId),
                                     pagesViewModel.site
@@ -290,7 +291,7 @@ class PageListViewModel @Inject constructor(
                                         itemUiStateData.labels,
                                         itemUiStateData.labelsColor,
                                         getFeaturedImageUrl(it.featuredImageId),
-                                        pageItemUiStateHelper.setupPageActions(
+                                        pageListItemActionsUseCase.setupPageActions(
                                                 listType,
                                                 LocalId(it.pageId),
                                                 pagesViewModel.site
@@ -318,7 +319,7 @@ class PageListViewModel @Inject constructor(
                     itemUiStateData.labels,
                     itemUiStateData.labelsColor,
                     getFeaturedImageUrl(it.featuredImageId),
-                    pageItemUiStateHelper.setupPageActions(
+                    pageListItemActionsUseCase.setupPageActions(
                             listType,
                             LocalId(it.pageId),
                             pagesViewModel.site
@@ -344,7 +345,7 @@ class PageListViewModel @Inject constructor(
                     itemUiStateData.labels,
                     itemUiStateData.labelsColor,
                     getFeaturedImageUrl(it.featuredImageId),
-                    pageItemUiStateHelper.setupPageActions(
+                    pageListItemActionsUseCase.setupPageActions(
                             listType,
                             LocalId(it.pageId),
                             pagesViewModel.site
