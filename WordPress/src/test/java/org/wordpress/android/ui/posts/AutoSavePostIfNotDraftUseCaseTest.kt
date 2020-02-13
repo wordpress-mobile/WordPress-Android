@@ -33,8 +33,8 @@ import java.util.concurrent.TimeUnit
 
 private const val FETCH_POST_STATUS_ERROR_MESSAGE = "FETCH_POST_STATUS_ERROR_MESSAGE"
 private const val AUTO_SAVE_POST_ERROR_MESSAGE = "AUTO_SAVE_POST_ERROR_MESSAGE"
-private const val DRAFT_STATUS = "DRAFT"
-private const val PUBLISH_STATUS = "PUBLISH"
+private const val DRAFT_STATUS = "draft"
+private const val PUBLISH_STATUS = "publish"
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -49,12 +49,25 @@ class AutoSavePostIfNotDraftUseCaseTest {
         val remotePostPayload = createRemotePostPayload()
         val onPostStatusFetched = createOnPostStatusFetchedEvent(
                 post = remotePostPayload.post,
-                status = DRAFT_STATUS,
+                status = PUBLISH_STATUS,
                 error = PostError(UNKNOWN_POST, FETCH_POST_STATUS_ERROR_MESSAGE)
         )
         val useCase = createUseCase(onPostStatusFetched)
         useCase.autoSavePostOrUpdateDraftAndAssertResult(remotePostPayload) { result ->
             assertThat(result).isInstanceOf(AutoSavePostIfNotDraftResult.FetchPostStatusFailed::class.java)
+        }
+    }
+
+    @Test
+    fun `post is draft in remote`() {
+        val remotePostPayload = createRemotePostPayload()
+        val onPostStatusFetched = createOnPostStatusFetchedEvent(
+                post = remotePostPayload.post,
+                status = DRAFT_STATUS
+        )
+        val useCase = createUseCase(onPostStatusFetched)
+        useCase.autoSavePostOrUpdateDraftAndAssertResult(remotePostPayload) { result ->
+            assertThat(result).isInstanceOf(AutoSavePostIfNotDraftResult.PostIsDraftInRemote::class.java)
         }
     }
 
