@@ -44,14 +44,12 @@ Language: ku_TR
     <string name="stats_post_views_label">Dîtin</string>
     <string name="stats_post_label">Şandî</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Grafîka çalakiya parvekirina şandiyê.</string>
     <string name="stats_item_collapsed">Hêman hate tengkirin</string>
     <string name="stats_item_expanded">Hêman hate firehkirin</string>
     <string name="stats_collapse_content_description">Veşêre</string>
     <string name="stats_expand_content_description">Fireh bike</string>
     <string name="stats_graph_updated">Grafîk hate hildemandin</string>
     <string name="stats_overview_content_description">%1$s %2$s bo dewra %3$s, ji dewra berê hate guhertin - %4$s</string>
-    <string name="stats_bar_chart_content_description">Grafîka dîtinên malperê. </string>
     <string name="stats_loading_card">Daneya karta bijartî tê barkirin</string>
     <string name="site_settings_editor">Sererastker</string>
     <string name="description_expand">Fireh bike</string>
@@ -523,7 +521,6 @@ Language: ku_TR
     <string name="featured_image_desc">taybetiyên wêneyê</string>
     <string name="button_discard">Biavêje</string>
     <string name="reader_avatar_desc">wêneyê profîlê</string>
-    <string name="reader_blavatar_desc">nîşaneka malperê</string>
     <string name="notification_channel_transient_title">Demkî</string>
     <string name="support_identity_input_dialog_email_label">Epeyam</string>
     <string name="support_identity_input_dialog_enter_email">Ji kerema xwe navnîşan xwe ya epeyamê têxîne</string>
@@ -639,7 +636,6 @@ Language: ku_TR
     <string name="site_settings_quota_space_unlimited">Ji %1$s bêsînor</string>
     <string name="preview_count">%d pêşdîtin</string>
     <string name="add_count">%d Tevlî Bike</string>
-    <string name="fab_create_desc">biafirîne</string>
     <string name="fab_add_tag_desc">Etîketek Biafirîne</string>
     <string name="navigate_up_desc">here jor</string>
     <string name="notification_settings_switch_desc">Danezan</string>

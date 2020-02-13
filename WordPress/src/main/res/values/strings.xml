@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name" translatable="false">WordPress</string>
@@ -885,7 +885,7 @@
     <string name="stats_item_collapsed">Item collapsed</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">&#160; &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
 
     <string name="stats_box_type_low">low</string>
     <string name="stats_box_type_medium">medium</string>
@@ -1241,6 +1241,10 @@
     <string name="reader_filter_sites_title">Sites</string>
     <string name="reader_filter_tags_title">Tags</string>
     <string name="reader_filter_main_title">Following</string>
+    <string name="reader_filter_empty_sites_list">See the newest posts from sites you follow</string>
+    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a tag</string>
+    <string name="reader_filter_empty_sites_action">Follow a site</string>
+    <string name="reader_filter_empty_tags_action">Add a tag</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
