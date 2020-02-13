@@ -191,25 +191,6 @@
         <item name="android:background">@color/primary_50</item>
     </style>
 
-    <style name="Toolbar.Primary" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/primary</item>
-        <item name="android:theme">@style/Toolbar.Theme</item>
-    </style>
-
-    <style name="Toolbar.Secondary" parent="@style/Toolbar.Primary">
-        <item name="android:background">@color/primary_40</item>
-        <item name="contentInsetStart">@dimen/toolbar_content_offset</item>
-    </style>
-
-    <style name="Toolbar.Subtitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-    </style>
-
-    <style name="Toolbar.Theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:listDivider">@null</item>
-    </style>
-
     <style name="ActionButton.CloseMode.WordPress" parent="android:Widget.Material.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
     </style>
@@ -595,9 +576,6 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="SwitchBlueLight">
-        <item name="colorControlActivated">@color/primary_30</item>
-    </style>
 
     <style name="SwitchBlueMedium">
         <item name="colorControlActivated">@color/primary_40</item>
@@ -1036,18 +1014,6 @@
 
     <style name="LoginEpilogueSitesList">
         <item name="colorControlHighlight">@android:color/transparent</item>
-    </style>
-
-    <!-- DialogPreference custom title style -->
-    <style name="DialogPreference" />
-
-    <style name="DialogPreference.CustomTitle">
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textSize">@dimen/text_sz_larger</item>
-        <item name="android:gravity">start|center_vertical</item>
     </style>
 
     <!-- Main actions styles -->

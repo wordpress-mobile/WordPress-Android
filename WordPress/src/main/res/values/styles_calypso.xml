@@ -75,11 +75,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Calypso.NoActionBar.Preferences" parent="Calypso.SiteSettingsTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <style name="Calypso.PopupMenu" parent="@android:style/Widget.Holo.Light.PopupMenu">
         <item name="android:textAppearance">@style/Calypso.TextAppearance</item>
     </style>
