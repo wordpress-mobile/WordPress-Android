@@ -74,7 +74,7 @@ class PageItemUiStateHelper @Inject constructor(
         return uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
                 uploadUiState is UploadQueued
     }
-   // TODO MERGE CONFLICT
+    // TODO MERGE CONFLICT
     fun setupPageActions(listType: PageListType, pageId: LocalId, site: SiteModel): Set<Action> {
         return when (listType) {
             SCHEDULED, PUBLISHED -> mutableSetOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH).apply {
