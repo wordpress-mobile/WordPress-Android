@@ -291,7 +291,7 @@ dependencies {
     lintChecks 'org.wordpress:lint:1.0.1'
 
     // Sentry
-    implementation 'io.sentry:sentry-android:1.7.16'
+    implementation 'io.sentry:sentry-android-core:2.0.0-rc04'
     implementation 'org.slf4j:slf4j-nop:1.7.25'
 
     // Debug
