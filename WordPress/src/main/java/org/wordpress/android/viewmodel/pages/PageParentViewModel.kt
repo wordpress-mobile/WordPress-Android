@@ -47,6 +47,10 @@ class PageParentViewModel
     val currentParent: ParentPage
         get() = _currentParent
 
+    private lateinit var _initialParent: ParentPage
+    val initialParent: ParentPage
+        get() = _initialParent
+
     private val _isSaveButtonVisible = MutableLiveData<Boolean>()
     val isSaveButtonVisible: LiveData<Boolean> = _isSaveButtonVisible
 
@@ -114,6 +118,8 @@ class PageParentViewModel
         _currentParent = parents.firstOrNull { it is ParentPage && it.isSelected } as? ParentPage
                 ?: parents.first() as ParentPage
 
+        _initialParent = _currentParent
+
         _pages.postValue(parents)
     }
 
@@ -121,8 +127,7 @@ class PageParentViewModel
         _currentParent.isSelected = false
         _currentParent = page
         _currentParent.isSelected = true
-
-        _isSaveButtonVisible.postValue(true)
+        setSaveButton()
     }
 
     fun onSaveButtonTapped() {
@@ -158,12 +163,14 @@ class PageParentViewModel
                 clearSearch()
             }
             _isSearchExpanded.value = true
+            _isSaveButtonVisible.postValue(false)
         }
     }
 
     fun onSearchCollapsed() {
         _isSearchExpanded.value = false
         clearSearch()
+        setSaveButton()
 
         launch {
             delay(SEARCH_COLLAPSE_DELAY)
@@ -173,8 +180,6 @@ class PageParentViewModel
     private fun clearSearch() {
         _lastSearchQuery = ""
         _searchPages.postValue(null)
-        _isSaveButtonVisible.postOnUi(false)
-        _currentParent.isSelected = false
     }
 
     fun onSearch(searchQuery: String, delay: Long = SEARCH_DELAY) {
@@ -190,6 +195,7 @@ class PageParentViewModel
                 }
             }
         } else {
+            _isSaveButtonVisible.postValue(false)
             clearSearch()
         }
     }
@@ -208,10 +214,11 @@ class PageParentViewModel
         return@withContext mutableListOf<PageItem>()
     }
 
-    private fun <T> MutableLiveData<T>.postOnUi(value: T) {
-        val liveData = this
-        launch {
-            liveData.value = value
+    private fun setSaveButton() {
+        if (_currentParent == _initialParent) {
+            _isSaveButtonVisible.postValue(false)
+        } else {
+            _isSaveButtonVisible.postValue(true)
         }
     }
 }

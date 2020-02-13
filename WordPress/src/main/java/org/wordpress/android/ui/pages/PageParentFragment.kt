@@ -174,14 +174,18 @@ class PageParentFragment : Fragment() {
                 .commit()
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, pageId: Long, isFirstStart: Boolean) {
+    private fun initializeViewModels(
+        activity: FragmentActivity,
+        pageId: Long,
+        isFirstStart: Boolean
+    ) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory)
                 .get(PageParentViewModel::class.java)
 
         setupObservers()
 
         if (isFirstStart) {
-            val site = activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+            val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
             val nonNullSite = checkNotNull(site)
             viewModel.start(nonNullSite, pageId)
         } else {
@@ -222,11 +226,12 @@ class PageParentFragment : Fragment() {
     private fun hideSearchList(myActionMenuItem: MenuItem) {
         recyclerView.visibility = View.VISIBLE
         frameSearch.visibility = View.GONE
-        if (saveButton?.isVisible == true) {
-            saveButton?.isVisible = false
-        }
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
+        }
+        /**Force the recyclerview to redraw if selection has changed while in search mode*/
+        if (viewModel.currentParent != viewModel.initialParent) {
+            recyclerView.adapter?.notifyDataSetChanged()
         }
     }
 
