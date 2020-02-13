@@ -26,23 +26,16 @@
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="JetpackFaqButton">
+    <style name="JetpackFaqButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
-        <item name="android:background">@android:color/transparent</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Body2</item>
-        <item name="android:textColor">@color/primary_40</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <style name="JetpackTermsAndConditionsButton">
         <item name="android:autoLink">all</item>
         <item name="android:linksClickable">false</item>
         <item name="android:selectAllOnFocus">false</item>
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
     <style name="BlueMediumProgressBar" parent="Widget.AppCompat.ProgressBar">

@@ -137,14 +137,14 @@
         <activity
             android:name=".ui.accounts.HelpActivity"
             android:label="@string/help_screen_title"
-            android:theme="@style/CalypsoTheme.NoActionBarShadow" />
+            android:theme="@style/WordPress.NoActionBar" />
         <!-- empty title -->
 
         <!-- Preferences activities -->
         <activity
             android:name=".ui.prefs.AboutActivity"
             android:label="@string/about_the_app"
-            android:theme="@style/WordPress.TransparentToolbarTheme" />
+            android:theme="@style/WordPress.NoActionBar.DarkNavbar" />
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|screenSize"
@@ -166,16 +166,16 @@
             android:name=".ui.prefs.AccountSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/account_settings"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.prefs.AppSettingsActivity"
             android:configChanges="locale|orientation|screenSize"
             android:label="@string/me_btn_app_settings"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Calypso.NoActionBar.Preferences"
+            android:theme="@style/WordPress.NoActionBar"
             android:label="@string/notif_settings_screen_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -390,7 +390,7 @@
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:excludeFromRecents="true"
             android:label="@string/reader_title_deeplink"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <data
@@ -450,7 +450,7 @@
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
-            android:theme="@style/CalypsoTheme"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.AppLogViewerActivity"
@@ -458,7 +458,7 @@
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.reader.ReaderUserListActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
             android:label="@string/reader_title_subs"
@@ -565,7 +565,7 @@
         <activity
             android:name=".ui.prefs.MyProfileActivity"
             android:label="@string/my_profile"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Lib activities-->
         <activity

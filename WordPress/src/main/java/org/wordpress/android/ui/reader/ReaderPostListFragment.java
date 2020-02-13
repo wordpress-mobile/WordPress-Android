@@ -40,6 +40,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -1806,7 +1807,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void showBookmarksSavedLocallyDialog() {
-        mBookmarksSavedLocallyDialog = new AlertDialog.Builder(getActivity())
+        mBookmarksSavedLocallyDialog = new MaterialAlertDialogBuilder(getActivity())
                 .setTitle(getString(R.string.reader_save_posts_locally_dialog_title))
                 .setMessage(getString(R.string.reader_save_posts_locally_dialog_message))
                 .setPositiveButton(R.string.dialog_button_ok, new OnClickListener() {

@@ -66,16 +66,7 @@
         <item name="android:dividerHeight">@dimen/site_settings_divider_height</item>
     </style>
 
-    <style name="CalypsoTheme.NoActionBarShadow" parent="CalypsoTheme">
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
     <style name="Calypso.NoActionBar" parent="CalypsoTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Calypso.NoActionBar.Preferences" parent="Calypso.SiteSettingsTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
