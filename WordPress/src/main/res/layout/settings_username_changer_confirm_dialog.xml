@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/settings_username_changer_confirm_dialog_padding"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
-    <TextView
+    android:orientation="vertical"
+    android:padding="@dimen/settings_username_changer_confirm_dialog_padding">
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/content"
-        tools:text="You are about to change your username. Retype it to confirm your changes."
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <EditText
-        tools:text="johndoe876"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBody2"
+        tools:text="You are about to change your username. Retype it to confirm your changes." />
+
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/username_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text" />
+        android:inputType="text"
+        tools:text="johndoe876" />
 </LinearLayout>

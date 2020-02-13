@@ -222,10 +222,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mContext = this;
         long startDate = SystemClock.elapsedRealtime();
 
-        CrashLoggingUtils.startCrashLogging(getContext());
-
         // This call needs be made before accessing any methods in android.webkit package
         setWebViewDataDirectorySuffixOnAndroidP();
+
+        CrashLoggingUtils.startCrashLogging(getContext());
 
         initWellSql();
 

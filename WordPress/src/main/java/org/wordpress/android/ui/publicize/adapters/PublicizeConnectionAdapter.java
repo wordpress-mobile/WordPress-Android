@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
@@ -88,6 +89,7 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
         return mConnections.get(position).connectionId;
     }
 
+    @NotNull
     @Override
     public ConnectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view =
@@ -114,23 +116,18 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
             case OK:
             case MUST_DISCONNECT:
                 btnConnect.setAction(PublicizeConstants.ConnectAction.DISCONNECT);
-                btnConnect.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mActionListener != null) {
-                            mActionListener.onRequestDisconnect(connection);
-                        }
+                btnConnect.setOnClickListener(v -> {
+                    if (mActionListener != null) {
+                        mActionListener.onRequestDisconnect(connection);
                     }
                 });
                 break;
             case BROKEN:
             default:
                 btnConnect.setAction(ConnectAction.RECONNECT);
-                btnConnect.setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View view) {
-                        if (mActionListener != null) {
-                            mActionListener.onRequestReconnect(mService, connection);
-                        }
+                btnConnect.setOnClickListener(view -> {
+                    if (mActionListener != null) {
+                        mActionListener.onRequestReconnect(mService, connection);
                     }
                 });
         }
