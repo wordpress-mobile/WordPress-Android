@@ -49,8 +49,19 @@ sealed class AutoSavePostIfNotDraftResult(open val post: PostModel) {
             AutoSavePostIfNotDraftResult(post)
 }
 
-// TODO: Add documentation (add shortcode for the p2 discussion)
-// TODO: Add unit tests
+/**
+ * This is a use case that auto-saves a post if it's not a DRAFT in remote and returns various results depending
+ * on the remote post status and whether network requests were successful.
+ *
+ * The reason auto-save is tied to post status is that the `/autosave` REST endpoint will override the changes to
+ * a `DRAFT` directly rather than auto-saving it. While doing so, it'll also disable comments for the post due to
+ * a bug. Both the fact that the endpoint does something we are not expecting and the bug that results from it is
+ * avoided by only calling the `/autosave` endpoint for posts that are not in DRAFT status. We update DRAFTs directly
+ * just as the endpoint would have, but that makes the logic more clear on the client side while avoiding the
+ * comments getting disabled bug.
+ *
+ * See p3hLNG-15Z-p2 for more info.
+ */
 class AutoSavePostIfNotDraftUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,

@@ -607,13 +607,16 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
         }
     }
 
-    // TODO: document?
     @Override
     public void handleAutoSavePostIfNotDraftResult(@NotNull AutoSavePostIfNotDraftResult result) {
         PostModel post = result.getPost();
         if (result instanceof FetchPostStatusFailed
             || result instanceof PostAutoSaveFailed
             || result instanceof PostAutoSaved) {
+            /*
+             * If we fail to check the status of the post or auto-save fails, we deliberately don't show an error
+             * notification since it's not a user initiated action. We'll retry the action later on.
+             */
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
             finishUpload();
         } else if (result instanceof PostIsDraftInRemote) {
