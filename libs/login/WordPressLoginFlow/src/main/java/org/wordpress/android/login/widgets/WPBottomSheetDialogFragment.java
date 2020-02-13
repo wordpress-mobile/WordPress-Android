@@ -16,7 +16,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import org.wordpress.android.login.R;
 
 public class WPBottomSheetDialogFragment extends BottomSheetDialogFragment {
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
