@@ -287,7 +287,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, mediaUri, ScaleType.CENTER, null,
                 new RequestListener<Drawable>() {
                     @Override
-                    public void onResourceReady(@NotNull Drawable resource) {
+                    public void onResourceReady(@NotNull Drawable resource, boolean isFirstResource) {
                         if (isAdded()) {
                             // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
                             // for it to be correctly resized upon loading
@@ -305,7 +305,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                     }
 
                     @Override
-                    public void onLoadFailed(@Nullable Exception e) {
+                    public void onLoadFailed(@Nullable Exception e, boolean isFirstResource) {
                         if (isAdded()) {
                             if (e != null) {
                                 AppLog.e(T.MEDIA, e);

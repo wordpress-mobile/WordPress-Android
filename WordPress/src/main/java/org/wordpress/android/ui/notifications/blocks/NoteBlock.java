@@ -163,7 +163,7 @@ public class NoteBlock {
                             StringUtils.notNullStr(getNoteMediaItem().getUrl()), ScaleType.CENTER, null,
                             new ImageManager.RequestListener<Drawable>() {
                                 @Override
-                                public void onLoadFailed(@Nullable Exception e) {
+                                public void onLoadFailed(@Nullable Exception e, boolean isFirstResource) {
                                     if (e != null) {
                                         AppLog.e(T.NOTIFS, e);
                                     }
@@ -171,7 +171,7 @@ public class NoteBlock {
                                 }
 
                                 @Override
-                                public void onResourceReady(@Nullable Drawable resource) {
+                                public void onResourceReady(@Nullable Drawable resource, boolean isFirstResource) {
                                     if (!mHasAnimatedBadge && view.getContext() != null && resource != null) {
                                         mHasAnimatedBadge = true;
                                         Animation pop = AnimationUtils.loadAnimation(view.getContext(), R.anim.pop);
