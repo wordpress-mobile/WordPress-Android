@@ -23,7 +23,7 @@ class UploadMediaUseCase @Inject constructor(
         mediaModels.let { queuedMediaModels ->
             // before starting the service, we need to update the posts' contents so we are sure the service
             // can retrieve it from there on
-            editorMediaListener.syncPostObjectWithUiAndSaveIt(EditPostActivity.AfterSavePostListener {
+            editorMediaListener.syncPostObjectWithUiAndSaveIt(EditPostActivity.OnPostUpdatedFromUIListener {
                 uploadServiceFacade.uploadMediaFromEditor(ArrayList(queuedMediaModels))
             })
         }

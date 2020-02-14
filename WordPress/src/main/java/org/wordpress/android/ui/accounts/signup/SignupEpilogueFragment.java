@@ -598,13 +598,13 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR_WITHOUT_BACKGROUND,
                     newAvatarUploaded ? injectFilePath : avatarUrl, new RequestListener<Drawable>() {
                         @Override
-                        public void onLoadFailed(@Nullable Exception e) {
+                        public void onLoadFailed(@Nullable Exception e, boolean isFirstResource) {
                             AppLog.e(T.NUX, "Uploading image to Gravatar succeeded, but setting image view failed");
                             showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar_view));
                         }
 
                         @Override
-                        public void onResourceReady(@NotNull Drawable resource) {
+                        public void onResourceReady(@NotNull Drawable resource, boolean isFirstResource) {
                             if (newAvatarUploaded && resource instanceof BitmapDrawable) {
                                 Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
                                 // create a copy since the original bitmap may by automatically recycled

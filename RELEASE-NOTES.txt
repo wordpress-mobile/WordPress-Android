@@ -2,6 +2,7 @@
 -----
 * Added search to set page parent screen
 
+ 
 14.2
 -----
 * Block editor: Long-press Inserter icon to show options to add before/after
