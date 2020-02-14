@@ -9,8 +9,8 @@ class ImageEditor private constructor(
 
 ) {
     interface RequestListener<T> {
-        fun onLoadFailed(e: Exception?)
-        fun onResourceReady(resource: T)
+        fun onLoadFailed(e: Exception?, isFirstResource: Boolean)
+        fun onResourceReady(resource: T, isFirstResource: Boolean)
     }
 
     fun loadImageWithResultListener(

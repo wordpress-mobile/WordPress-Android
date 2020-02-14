@@ -67,11 +67,13 @@ class PreviewImageFragment : Fragment() {
             CENTER,
             imageData.lowResImageUrl,
             object : RequestListener<Drawable> {
-                override fun onResourceReady(resource: Drawable) {
-                    viewModel.onImageLoadSuccess() // TODO: Fix progress bar hiding on low res image load
+                override fun onResourceReady(resource: Drawable, isFirstResource: Boolean) {
+                    if (!isFirstResource) {
+                        viewModel.onImageLoadSuccess()
+                    }
                 }
 
-                override fun onLoadFailed(e: Exception?) {
+                override fun onLoadFailed(e: Exception?, isFirstResource: Boolean) {
                     viewModel.onImageLoadFailed()
                 }
             }
