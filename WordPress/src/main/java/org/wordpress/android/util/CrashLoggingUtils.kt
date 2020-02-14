@@ -7,6 +7,7 @@ import io.sentry.core.Breadcrumb
 import io.sentry.core.Sentry
 import io.sentry.core.SentryOptions.BeforeSendCallback
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.R
 
 class CrashLoggingUtils {
     fun shouldEnableCrashLogging(context: Context): Boolean {
