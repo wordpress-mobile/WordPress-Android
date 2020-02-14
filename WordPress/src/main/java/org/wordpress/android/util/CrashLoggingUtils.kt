@@ -2,14 +2,23 @@ package org.wordpress.android.util
 
 import android.content.Context
 import android.preference.PreferenceManager
+import android.util.Base64
 import io.sentry.android.core.SentryAndroid
 import io.sentry.core.Breadcrumb
 import io.sentry.core.Sentry
 import io.sentry.core.SentryOptions.BeforeSendCallback
+import org.json.JSONObject
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.util.encryption.EncryptionUtils
+import org.wordpress.android.util.encryption.LogEncryptionTestingActions
+import org.wordpress.android.util.encryption.LogsFileProvider
 
 class CrashLoggingUtils {
+
+    private val logEncryptionActions = LogEncryptionTestingActions()
+    private val logsFileProvider = LogsFileProvider()
+
     fun shouldEnableCrashLogging(context: Context): Boolean {
         if (PackageUtils.isDebugBuild()) {
             return false
@@ -24,7 +33,14 @@ class CrashLoggingUtils {
         SentryAndroid.init(context.applicationContext) {
             it.dsn = BuildConfig.SENTRY_DSN
             it.beforeSend = BeforeSendCallback { event, hint ->
-                // Todo: Update event with additional info (extras)
+                val logsUUID = logsFileProvider.generateLogsUUID()
+                val decodedPublicKey = Base64.decode(BuildConfig.ENCRYPTION_PUBLIC_KEY, Base64.DEFAULT)
+                val encryptedLogsJson = EncryptionUtils.generateJSONEncryptedLogs(
+                        decodedPublicKey,
+                        AppLog.toHtmlList(context)
+                )
+                logEncryptionActions.sendEncryptedLogsFile(JSONObject(encryptedLogsJson), logsUUID)
+                event.setExtra("LogsID", logsUUID)
                 return@BeforeSendCallback event
             }
         }
