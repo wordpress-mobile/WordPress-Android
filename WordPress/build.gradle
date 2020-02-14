@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-207"
+            versionName "alpha-208"
         }
-        versionCode 825
+        versionCode 828
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -84,9 +84,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "14.1"
+                versionName "14.2-rc-1"
             }
-            versionCode 826
+            versionCode 827
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
@@ -133,6 +133,11 @@ android {
     packagingOptions {
         // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
         exclude 'META-INF/proguard/androidx-annotations.pro'
+
+        // Exclude React Native's JSC and Hermes debug binaries
+        exclude '**/libjscexecutor.so'
+        exclude '**/libhermes-inspector.so'
+        exclude '**/libhermes-executor-debug.so'
     }
 
     bundle {
