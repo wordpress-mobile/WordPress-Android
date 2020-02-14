@@ -3,7 +3,7 @@ package org.wordpress.android.imageeditor.preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInitialContentUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadInProgressContentUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadFailedContentUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadSuccessContentUiState
 
@@ -26,7 +26,7 @@ class PreviewImageViewModel : ViewModel() {
             lowResImageUrl = loResImageUrl,
             highResImageUrl = hiResImageUrl
         )
-        updateUiState(ImageInitialContentUiState)
+        updateUiState(ImageLoadInProgressContentUiState)
     }
 
     private fun updateUiState(uiState: ImageUiState) {
@@ -50,7 +50,7 @@ class PreviewImageViewModel : ViewModel() {
     sealed class ImageUiState(
         val progressBarVisible: Boolean = false
     ) {
-        object ImageInitialContentUiState : ImageUiState(progressBarVisible = true)
+        object ImageLoadInProgressContentUiState : ImageUiState(progressBarVisible = true)
         object ImageLoadSuccessContentUiState : ImageUiState(progressBarVisible = false)
         object ImageLoadFailedContentUiState : ImageUiState(progressBarVisible = false)
     }
