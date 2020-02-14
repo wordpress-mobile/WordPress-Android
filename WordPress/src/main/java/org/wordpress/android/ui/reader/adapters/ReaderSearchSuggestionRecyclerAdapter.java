@@ -150,16 +150,4 @@ public class ReaderSearchSuggestionRecyclerAdapter extends RecyclerView.Adapter<
             mDeleteImageView = itemView.findViewById(R.id.image_delete);
         }
     }
-
-    public interface OnSuggestionClickListener {
-        void onSuggestionClicked(String query);
-    }
-
-    public interface OnSuggestionDeleteClickListener {
-        void onDeleteClicked(String query);
-    }
-
-    public interface OnSuggestionClearClickListener {
-        void onClearClicked();
-    }
 }

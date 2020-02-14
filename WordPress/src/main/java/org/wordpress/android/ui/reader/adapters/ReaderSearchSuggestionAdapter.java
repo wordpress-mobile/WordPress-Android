@@ -168,12 +168,4 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     public void setOnSuggestionClearClickListener(OnSuggestionClearClickListener onSuggestionClearClickListener) {
         mOnSuggestionClearClickListener = onSuggestionClearClickListener;
     }
-
-    public interface OnSuggestionDeleteClickListener {
-        void onDeleteClicked(String query);
-    }
-
-    public interface OnSuggestionClearClickListener {
-        void onClearClicked();
-    }
 }
