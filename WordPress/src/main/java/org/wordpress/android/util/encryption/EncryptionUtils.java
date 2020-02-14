@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.util.encryption;
 
 import android.util.Base64;
 
