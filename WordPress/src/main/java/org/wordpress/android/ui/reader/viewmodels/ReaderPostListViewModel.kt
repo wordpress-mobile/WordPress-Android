@@ -204,14 +204,14 @@ class ReaderPostListViewModel @Inject constructor(
         if (show) {
             if (getCurrentSubfilterValue().isTrackedItem &&
                         !readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
-                AppLog.d(T.READER,"TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
+                AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
                 readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
             } else if (!getCurrentSubfilterValue().isTrackedItem &&
                     readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
                 AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
                 readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
             }
-        } else if (readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)){
+        } else if (readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
             AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
