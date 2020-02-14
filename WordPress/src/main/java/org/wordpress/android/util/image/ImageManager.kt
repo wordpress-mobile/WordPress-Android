@@ -37,8 +37,22 @@ import javax.inject.Singleton
 @Singleton
 class ImageManager @Inject constructor(private val placeholderManager: ImagePlaceholderManager) {
     interface RequestListener<T> {
-        fun onLoadFailed(e: Exception?)
-        fun onResourceReady(resource: T)
+        /**
+         * Called when an exception occurs during a load
+         *
+         * @param e The maybe {@code null} exception containing information about why the request failed.
+         * @param isFirstResource {@code true} if this exception is for the first resource to load.
+         */
+        fun onLoadFailed(e: Exception?, isFirstResource: Boolean)
+        /**
+         * Called when a load completes successfully
+         *
+         * @param resource The resource that was loaded for the target.
+         * @param isFirstResource {@code true} if this is the first resource to be loaded
+         *     into the target. For example when loading a thumbnail and a full-sized image, this will be
+         *     {@code true} for the first image to load and {@code false} for the second.
+         */
+        fun onResourceReady(resource: T, isFirstResource: Boolean)
     }
 
     /**
@@ -340,7 +354,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                     target: Target<T>?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    requestListener.onLoadFailed(e)
+                    requestListener.onLoadFailed(e, isFirstResource)
                     return false
                 }
 
@@ -352,11 +366,11 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                     isFirstResource: Boolean
                 ): Boolean {
                     if (resource != null) {
-                        requestListener.onResourceReady(resource)
+                        requestListener.onResourceReady(resource, isFirstResource)
                     } else {
                         // according to the Glide's JavaDoc, this shouldn't happen
                         AppLog.e(AppLog.T.UTILS, "Resource in ImageManager.onResourceReady is null.")
-                        requestListener.onLoadFailed(null)
+                        requestListener.onLoadFailed(null, isFirstResource)
                     }
                     return false
                 }

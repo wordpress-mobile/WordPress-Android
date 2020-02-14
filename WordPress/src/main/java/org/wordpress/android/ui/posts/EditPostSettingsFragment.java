@@ -998,10 +998,10 @@ public class EditPostSettingsFragment extends Fragment {
                 mImageManager.loadWithResultListener(mFeaturedImageView, ImageType.IMAGE,
                         currentFeaturedImageState.getMediaUri(), ScaleType.FIT_CENTER,
                         null, new RequestListener<Drawable>() {
-                            @Override public void onLoadFailed(@org.jetbrains.annotations.Nullable Exception e) {
+                            @Override public void onLoadFailed(@Nullable Exception e, boolean isFirstResource) {
                             }
 
-                            @Override public void onResourceReady(Drawable resource) {
+                            @Override public void onResourceReady(Drawable resource, boolean isFirstResource) {
                                 if (currentFeaturedImageState.getUiState() == FeaturedImageState.REMOTE_IMAGE_LOADING) {
                                     updateFeaturedImageViews(FeaturedImageState.REMOTE_IMAGE_SET);
                                 }
