@@ -3,9 +3,9 @@ package org.wordpress.android.imageeditor.preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadInProgressContentUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadFailedContentUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadSuccessContentUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadInProgressUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadFailedUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadSuccessUiState
 
 class PreviewImageViewModel : ViewModel() {
     private val _loadImageFromData = MutableLiveData<ImageData>()
@@ -26,7 +26,7 @@ class PreviewImageViewModel : ViewModel() {
             lowResImageUrl = loResImageUrl,
             highResImageUrl = hiResImageUrl
         )
-        updateUiState(ImageLoadInProgressContentUiState)
+        updateUiState(ImageLoadInProgressUiState)
     }
 
     private fun updateUiState(uiState: ImageUiState) {
@@ -34,14 +34,14 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     fun onImageLoadSuccess() {
-        if (uiState.value !is ImageLoadSuccessContentUiState) {
-            updateUiState(ImageLoadSuccessContentUiState)
+        if (uiState.value !is ImageLoadSuccessUiState) {
+            updateUiState(ImageLoadSuccessUiState)
         }
     }
 
     fun onImageLoadFailed() {
-        if (uiState.value !is ImageLoadFailedContentUiState) {
-            updateUiState(ImageLoadFailedContentUiState)
+        if (uiState.value !is ImageLoadFailedUiState) {
+            updateUiState(ImageLoadFailedUiState)
         }
     }
 
@@ -50,8 +50,8 @@ class PreviewImageViewModel : ViewModel() {
     sealed class ImageUiState(
         val progressBarVisible: Boolean = false
     ) {
-        object ImageLoadInProgressContentUiState : ImageUiState(progressBarVisible = true)
-        object ImageLoadSuccessContentUiState : ImageUiState(progressBarVisible = false)
-        object ImageLoadFailedContentUiState : ImageUiState(progressBarVisible = false)
+        object ImageLoadInProgressUiState : ImageUiState(progressBarVisible = true)
+        object ImageLoadSuccessUiState : ImageUiState(progressBarVisible = false)
+        object ImageLoadFailedUiState : ImageUiState(progressBarVisible = false)
     }
 }
