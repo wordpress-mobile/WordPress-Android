@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 @MainThread
 class ReaderTracker @Inject constructor(private val dateProvider: DateProvider) {
-    // TODO: evaluate during IA extensions to use something like Dispatchers.Main.Immediate in the fun(s)
+    // TODO: evaluate to use something like Dispatchers.Main.Immediate in the fun(s)
     // to sync the access to trackers; so to remove the @MainThread and make the
     // usage of this class more transparent to its users
     private val trackers = mutableMapOf<ReaderTrackerType, ReaderTrackerInfo>()
@@ -43,6 +43,12 @@ class ReaderTracker @Inject constructor(private val dateProvider: DateProvider) 
                 trackers[type] = ReaderTrackerInfo(accumulatedTime = accumulatedTime)
             } ?: AppLog.e(T.READER, "ReaderTracker > stop found a null startDate")
         }
+    }
+
+    fun isRunning(type: ReaderTrackerType): Boolean {
+        return trackers[type]?.let { trackerInto ->
+            trackerInto.startDate != null
+        } ?: false
     }
 
     fun getAnalyticsData(): Map<String, Any> {
