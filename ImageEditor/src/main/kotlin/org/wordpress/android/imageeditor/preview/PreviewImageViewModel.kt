@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInitialContentUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadFailedContentUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadSuccessContentUiState
 
 class PreviewImageViewModel : ViewModel() {
     private val _loadImageFromData = MutableLiveData<ImageData>()
@@ -29,6 +31,18 @@ class PreviewImageViewModel : ViewModel() {
 
     private fun updateUiState(uiState: ImageUiState) {
         _uiState.value = uiState
+    }
+
+    fun onImageLoadSuccess() {
+        if (uiState.value !is ImageLoadSuccessContentUiState) {
+            updateUiState(ImageLoadSuccessContentUiState)
+        }
+    }
+
+    fun onImageLoadFailed() {
+        if (uiState.value !is ImageLoadFailedContentUiState) {
+            updateUiState(ImageLoadFailedContentUiState)
+        }
     }
 
     data class ImageData(val lowResImageUrl: String, val highResImageUrl: String)
