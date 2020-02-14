@@ -5,9 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class PreviewImageViewModel : ViewModel() {
-    private lateinit var lowResImageUrl: String
-    private lateinit var highResImageUrl: String
-
     private val _loadImageFromData = MutableLiveData<ImageData>()
     val loadImageFromData: LiveData<ImageData> = _loadImageFromData
 
@@ -19,13 +16,10 @@ class PreviewImageViewModel : ViewModel() {
         }
         isStarted = true
 
-        lowResImageUrl = loResImageUrl
-        highResImageUrl = hiResImageUrl
-
         _loadImageFromData.value = ImageData(
             uiState = ImageUiState.IMAGE_LOAD_IN_PROGRESS,
-            lowResImageUrl = lowResImageUrl,
-            highResImageUrl = highResImageUrl
+            lowResImageUrl = loResImageUrl,
+            highResImageUrl = hiResImageUrl
         )
     }
 
