@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.pages
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -71,8 +72,9 @@ class SearchListViewModelTest {
         )
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         whenever(pagesViewModel.site).thenReturn(site)
+        whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
         whenever(postStore.getPostByLocalPostId(ArgumentMatchers.anyInt())).thenReturn(PostModel())
-        whenever(createUploadStateUseCase.createUploadUiState(any(), any())).thenReturn(
+        whenever(createUploadStateUseCase.createUploadUiState(any(), any(), any())).thenReturn(
                 PostUploadUiState.NothingToUpload
         )
         viewModel.start(pagesViewModel)
