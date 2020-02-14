@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.libsodium.jni.NaCl;
-import org.libsodium.jni.Sodium;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +58,7 @@ public class EncryptionUtilsTest {
     public void setup() {
         mPublicKey = new byte[BOX_PUBLIC_KEY_BYTES];
         mSecretKey = new byte[BOX_SECRET_KEY_BYTES];
-        Sodium.crypto_box_keypair(mPublicKey, mSecretKey);
+        NaCl.sodium().crypto_box_keypair(mPublicKey, mSecretKey);
     }
 
     @Test
@@ -92,7 +91,7 @@ public class EncryptionUtilsTest {
         assertNotNull(header);
 
         final byte[] state = new byte[EncryptionUtils.STATEBYTES];
-        final int initPullReturnCode = Sodium.crypto_secretstream_xchacha20poly1305_init_pull(
+        final int initPullReturnCode = NaCl.sodium().crypto_secretstream_xchacha20poly1305_init_pull(
                 state,
                 header,
                 dataSpecificKey);
@@ -131,7 +130,7 @@ public class EncryptionUtilsTest {
             final byte[] decryptedKey = new byte[EncryptionUtils.KEYBYTES];
             final String encryptedKeyBase64 = encryptionDataJson.getString("encryptedKey");
             final byte[] encryptedKey = Base64.decode(encryptedKeyBase64, BASE64_DECODE_FLAGS);
-            final int returnCode = Sodium.crypto_box_seal_open(
+            final int returnCode = NaCl.sodium().crypto_box_seal_open(
                     decryptedKey,
                     encryptedKey,
                     EncryptionUtils.KEYBYTES + EncryptionUtils.BOX_SEALBYTES,
@@ -182,7 +181,7 @@ public class EncryptionUtilsTest {
         final byte[] additionalData = new byte[0]; // opting not to use this value
         final int additionalDataLength = 0;
         final int[] decryptedLineLengthOutput = new int[0]; // opting not to get this value
-        final int returnCode = Sodium.crypto_secretstream_xchacha20poly1305_pull(
+        final int returnCode = NaCl.sodium().crypto_secretstream_xchacha20poly1305_pull(
                 state,
                 decryptedLine,
                 decryptedLineLengthOutput,
