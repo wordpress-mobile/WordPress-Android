@@ -15,7 +15,6 @@ import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState
 import org.wordpress.android.imageeditor.utils.UiHelpers
 
 class PreviewImageFragment : Fragment() {
@@ -53,6 +52,11 @@ class PreviewImageFragment : Fragment() {
         viewModel.loadImageFromData.observe(this, Observer {
             loadImage(it)
         })
+        viewModel.uiState.observe(this, Observer { uiState ->
+            uiState?.let {
+                UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
+            }
+        })
     }
 
     private fun loadImage(imageData: ImageData) {
@@ -62,18 +66,10 @@ class PreviewImageFragment : Fragment() {
             CENTER,
             imageData.lowResImageUrl,
             object : RequestListener<Drawable> {
-                override fun onResourceReady(resource: Drawable) {
-                    updateViews(ImageUiState.ImageLoadSuccessContentUiState) // TODO: Fix progress bar hiding on low res image load
-                }
+                override fun onResourceReady(resource: Drawable) { }
 
-                override fun onLoadFailed(e: Exception?) {
-                    updateViews(ImageUiState.ImageLoadFailedContentUiState)
-                }
+                override fun onLoadFailed(e: Exception?) { }
             }
         )
-    }
-
-    private fun updateViews(state: ImageUiState) {
-        UiHelpers.updateVisibility(progressBar, state.progressBarVisible)
     }
 }

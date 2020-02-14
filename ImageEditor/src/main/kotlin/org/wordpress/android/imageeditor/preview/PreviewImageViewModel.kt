@@ -9,6 +9,9 @@ class PreviewImageViewModel : ViewModel() {
     private val _loadImageFromData = MutableLiveData<ImageData>()
     val loadImageFromData: LiveData<ImageData> = _loadImageFromData
 
+    private val _uiState: MutableLiveData<ImageUiState> = MutableLiveData()
+    val uiState: LiveData<ImageUiState> = _uiState
+
     private var isStarted = false
 
     fun start(loResImageUrl: String, hiResImageUrl: String) {
@@ -18,13 +21,17 @@ class PreviewImageViewModel : ViewModel() {
         isStarted = true
 
         _loadImageFromData.value = ImageData(
-            uiState = ImageInitialContentUiState,
             lowResImageUrl = loResImageUrl,
             highResImageUrl = hiResImageUrl
         )
+        updateUiState(ImageInitialContentUiState)
     }
 
-    data class ImageData(val uiState: ImageUiState, val lowResImageUrl: String, val highResImageUrl: String)
+    private fun updateUiState(uiState: ImageUiState) {
+        _uiState.value = uiState
+    }
+
+    data class ImageData(val lowResImageUrl: String, val highResImageUrl: String)
 
     sealed class ImageUiState(
         val progressBarVisible: Boolean = false
