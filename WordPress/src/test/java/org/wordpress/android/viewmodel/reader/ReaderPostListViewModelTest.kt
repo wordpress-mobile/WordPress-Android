@@ -34,6 +34,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.util.EventBusWrapper
 
@@ -58,6 +59,7 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var subfilterListItemMapper: SubfilterListItemMapper
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
+    @Mock private lateinit var readerTracker: ReaderTracker
 
     private lateinit var viewModel: ReaderPostListViewModel
     private val liveData = MutableLiveData<NewsItem>()
@@ -82,7 +84,8 @@ class ReaderPostListViewModelTest {
                 TEST_DISPATCHER,
                 appPrefsWrapper,
                 subfilterListItemMapper,
-                eventBusWrapper
+                eventBusWrapper,
+                readerTracker
         )
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
