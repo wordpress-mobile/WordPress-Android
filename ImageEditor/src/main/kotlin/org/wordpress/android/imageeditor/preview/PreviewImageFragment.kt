@@ -15,6 +15,7 @@ import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInitialContentUiState
 import org.wordpress.android.imageeditor.utils.UiHelpers
 
 class PreviewImageFragment : Fragment() {
@@ -45,15 +46,15 @@ class PreviewImageFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
         setupObservers()
-        viewModel.start(lowResImageUrl, highResImageUrl)
+        viewModel.onCreateView(lowResImageUrl, highResImageUrl)
     }
 
     private fun setupObservers() {
-        viewModel.loadImageFromData.observe(this, Observer {
-            loadImage(it)
-        })
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
+                if (uiState is ImageInitialContentUiState) {
+                    loadImage(uiState.imageData)
+                }
                 UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
             }
         })
