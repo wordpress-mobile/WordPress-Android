@@ -7,7 +7,6 @@ import javax.inject.Inject
 
 class PageConflictResolver @Inject constructor() {
     private var postIdForFetchingRemoteVersionOfConflictedPost: LocalId? = null
-    private var postIdForConflictResolutionDialog: LocalId? = null
 
     fun hasUnhandledAutoSave(post: PostModel): Boolean {
         return PostUtils.hasAutoSave(post)
