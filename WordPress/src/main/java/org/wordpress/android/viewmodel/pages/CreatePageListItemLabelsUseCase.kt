@@ -39,7 +39,7 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
                 postModel.isLocalDraft,
                 postModel.isLocallyChanged,
                 uploadUiState,
-                false, // TODO use conflict resolver
+                pageConflictResolver.doesPostHaveUnhandledConflict(postModel),
                 pageConflictResolver.hasUnhandledAutoSave(postModel)
         )
         val labelColor = labelColorUseCase.getLabelsColor(postModel, uploadUiState)
