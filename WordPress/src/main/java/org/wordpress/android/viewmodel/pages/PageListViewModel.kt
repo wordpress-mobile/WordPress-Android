@@ -165,7 +165,7 @@ class PageListViewModel @Inject constructor(
     }
 
     private val uploadStatusObserver = Observer<List<LocalId>> { ids ->
-        createPageUploadUiStateUseCase.uploadStatusTracker.invalidateUploadStatus(ids.map { localId -> localId.value })
+        pagesViewModel.uploadStatusTracker.invalidateUploadStatus(ids.map { localId -> localId.value })
     }
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
@@ -383,7 +383,8 @@ class PageListViewModel @Inject constructor(
         // TODO the postmodel is sometimes null, why?
         val uploadUiState = createPageUploadUiStateUseCase.createUploadUiState(
                 postModel,
-                pagesViewModel.site
+                pagesViewModel.site,
+                pagesViewModel.uploadStatusTracker
         )
         val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(postModel, uploadUiState)
 

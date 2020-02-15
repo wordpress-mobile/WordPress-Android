@@ -64,6 +64,7 @@ class PagesViewModelTest {
                 networkUtils = networkUtils,
                 previewStateHelper = mock(),
                 analyticsTracker = mock(),
+                uploadStatusTracker = mock(),
                 pageConflictResolver = mock(),
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,

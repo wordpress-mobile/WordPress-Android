@@ -74,8 +74,9 @@ class SearchListViewModelTest {
         )
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         whenever(pagesViewModel.site).thenReturn(site)
+        whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
         whenever(postStore.getPostByLocalPostId(ArgumentMatchers.anyInt())).thenReturn(PostModel())
-        whenever(createUploadStateUseCase.createUploadUiState(any(), any())).thenReturn(
+        whenever(createUploadStateUseCase.createUploadUiState(any(), any(), any())).thenReturn(
                 PostUploadUiState.NothingToUpload
         )
         viewModel.start(pagesViewModel)

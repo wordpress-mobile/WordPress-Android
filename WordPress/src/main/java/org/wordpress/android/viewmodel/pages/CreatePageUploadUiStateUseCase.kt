@@ -14,13 +14,14 @@ import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.Post
 import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState.UploadingPost
 import javax.inject.Inject
 
-class CreatePageUploadUiStateUseCase @Inject constructor(val uploadStatusTracker: PostModelUploadStatusTracker) {
+class CreatePageUploadUiStateUseCase @Inject constructor() {
     /**
      * Copied from PostListItemUiStateHelper since the behavior is similar for the Page List UI State.
      */
     fun createUploadUiState(
         post: PostModel,
-        site: SiteModel
+        site: SiteModel,
+        uploadStatusTracker: PostModelUploadStatusTracker
     ): PostUploadUiState {
         val postStatus = PostStatus.fromPost(post)
         val uploadStatus = uploadStatusTracker.getUploadStatus(post, site)
