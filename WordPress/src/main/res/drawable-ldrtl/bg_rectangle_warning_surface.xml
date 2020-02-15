@@ -5,7 +5,7 @@
             <solid android:color="?attr/wpColorWarningLight" />
             <padding
                 android:bottom="1dp"
-                android:right="4dp" />
+                android:right="@dimen/notification_comment_frame_bg_border_width" />
         </shape>
     </item>
     <item>

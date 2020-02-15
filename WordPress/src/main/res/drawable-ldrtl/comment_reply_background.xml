@@ -12,7 +12,7 @@
     <item android:drawable="?android:attr/listDivider" />
     <item
         android:bottom="@dimen/divider_size"
-        android:right="@dimen/margin_small">
+        android:right="@dimen/notification_comment_frame_bg_border_width">
         <shape android:shape="rectangle">
             <solid android:color="?attr/colorSurface" />
         </shape>
