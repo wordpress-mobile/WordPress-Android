@@ -428,7 +428,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
         Drawable drawable =
-                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp, R.color.primary_40);
+                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
+                        ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         holder.mPostContainer.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -175,14 +175,12 @@ Language: nl
     <string name="stats_post_views_label">Weergaven</string>
     <string name="stats_post_label">Bericht</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Grafiek van berichtactiviteiten.</string>
     <string name="stats_item_collapsed">Item ingeklapt</string>
     <string name="stats_item_expanded">Item uitgevouwen</string>
     <string name="stats_collapse_content_description">Inklappen</string>
     <string name="stats_expand_content_description">Uitklappen</string>
     <string name="stats_graph_updated">Grafiek bijgewerkt.</string>
     <string name="stats_overview_content_description">%1$s %2$s voor periode: %3$s, wijziging ten opzichte van vorige periode - %4$s</string>
-    <string name="stats_bar_chart_content_description">Grafiek van siteweergaven</string>
     <string name="stats_loading_card">Geselecteerde kaartgegevens aan het laden</string>
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Uitklappen</string>
@@ -572,7 +570,6 @@ Language: nl
     <string name="featured_image_desc">aanbevolen afbeelding</string>
     <string name="button_discard">Verwijderen</string>
     <string name="reader_avatar_desc">profielafbeelding</string>
-    <string name="reader_blavatar_desc">favicon</string>
     <string name="notification_channel_transient_title">Transient</string>
     <string name="support_identity_input_dialog_email_label">E-mail</string>
     <string name="support_identity_input_dialog_enter_email">Voer je e-mailadres in</string>
@@ -688,7 +685,6 @@ Language: nl
     <string name="site_settings_quota_space_unlimited">%1$s van onbeperkt</string>
     <string name="preview_count">Voorbeeld van %d bekijken</string>
     <string name="add_count">%d toevoegen</string>
-    <string name="fab_create_desc">aanmaken</string>
     <string name="fab_add_tag_desc">Tag aanmaken</string>
     <string name="navigate_up_desc">omhoog navigeren</string>
     <string name="notification_settings_switch_desc">Meldingen</string>

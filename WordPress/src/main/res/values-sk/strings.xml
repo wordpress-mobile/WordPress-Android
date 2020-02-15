@@ -235,7 +235,6 @@ Language: sk
     <string name="featured_image_desc">hlavný obrázok</string>
     <string name="button_discard">Odstrániť</string>
     <string name="reader_avatar_desc">profilová fotka</string>
-    <string name="reader_blavatar_desc">ikona stránky</string>
     <string name="notification_channel_transient_title">Prechodný</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Vložte, prosím, Vašu emailovú adresu</string>
@@ -352,7 +351,6 @@ Language: sk
     <string name="site_settings_quota_space_unlimited">%1$s z neobmedzeného</string>
     <string name="preview_count">Ukážka %d</string>
     <string name="add_count">Pridať %d</string>
-    <string name="fab_create_desc">vytvoriť</string>
     <string name="fab_add_tag_desc">Vytvoriť značku</string>
     <string name="navigate_up_desc">navigovať hore</string>
     <string name="notification_settings_switch_desc">Notifikácie</string>

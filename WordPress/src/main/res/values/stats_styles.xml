@@ -23,12 +23,14 @@
 
     <style name="JetpackFaqButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="JetpackTermsAndConditionsButton" parent="TextAppearance.MaterialComponents.Body2">
+    <style name="JetpackTermsAndConditionsButton">
         <item name="android:autoLink">all</item>
         <item name="android:linksClickable">false</item>
         <item name="android:selectAllOnFocus">false</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
     <!-- Stats Refresh -->
