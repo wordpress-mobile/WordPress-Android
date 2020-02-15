@@ -36,6 +36,7 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostInfoType
 import org.wordpress.android.ui.posts.PostListRemotePreviewState
+import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadStarter
@@ -89,6 +90,7 @@ class PagesViewModel
     private val uploadStarter: UploadStarter,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val pageConflictResolver: PageConflictResolver,
+    val uploadStatusTracker: PostModelUploadStatusTracker,
     private val pageListEventListenerFactory: PageListEventListener.Factory,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher

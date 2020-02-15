@@ -94,7 +94,8 @@ class SearchListViewModel
         val postModel = postStore.getPostByLocalPostId(this.pageId)
         val uploadUiState = createPageUploadUiStateUseCase.createUploadUiState(
                 postModel,
-                pagesViewModel.site
+                pagesViewModel.site,
+                pagesViewModel.uploadStatusTracker
         )
         // TODO any reason why we don't show labels in search?
         val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(postModel,
