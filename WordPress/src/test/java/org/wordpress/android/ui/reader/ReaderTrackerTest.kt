@@ -64,7 +64,6 @@ class ReaderTrackerTest {
         whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 4))
         tracker.stop(SUBFILTERED_LIST)
 
-
         val expected = mapOf(
                 "time_in_main_reader" to Int.MAX_VALUE - 1,
                 "time_in_reader_filtered_list" to Int.MAX_VALUE - 2,
@@ -166,7 +165,6 @@ class ReaderTrackerTest {
 
         assertThat(tracker.isRunning(MAIN_READER)).isEqualTo(false)
     }
-
 
     @Test
     fun `tracker is running after start`() {
