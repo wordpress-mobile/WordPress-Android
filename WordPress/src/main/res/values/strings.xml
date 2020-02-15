@@ -348,6 +348,7 @@
     <!-- post version sync conflict dialog -->
     <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
     <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
+    <string name="dialog_confirm_load_remote_page_body">This page has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
     <string name="dialog_confirm_load_remote_post_body_2">Local\nSaved on %s\n\nWeb\nSaved on %s\n</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Discard Local</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Discard Web</string>

@@ -447,7 +447,7 @@ public class PostUtils {
 
     public static String getConflictedPostCustomStringForDialog(PostModel post) {
         Context context = WordPress.getContext();
-        String firstPart = context.getString(R.string.dialog_confirm_load_remote_post_body);
+        String firstPart = context.getString(R.string.dialog_confirm_load_remote_page_body);
         String lastModified =
                 TextUtils.isEmpty(post.getDateLocallyChanged()) ? post.getLastModified() : post.getDateLocallyChanged();
         String secondPart =
