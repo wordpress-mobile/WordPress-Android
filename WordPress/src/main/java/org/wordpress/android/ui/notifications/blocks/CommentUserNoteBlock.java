@@ -28,9 +28,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     private static final String DOUBLE_EMPTY_LINE = "\n\t\n\t";
     private CommentStatus mCommentStatus = CommentStatus.APPROVED;
     private int mNormalBackgroundColor;
-    private int mNormalTextColor;
-    private int mAgoTextColor;
-    private int mUnapprovedTextColor;
     private int mIndentedLeftPadding;
 
     private boolean mStatusChanged;
@@ -145,12 +142,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             }
 
             noteBlockHolder.mDividerView.setVisibility(View.INVISIBLE);
-
-            noteBlockHolder.mAgoTextView.setTextColor(mUnapprovedTextColor);
-            noteBlockHolder.mBulletTextView.setTextColor(mUnapprovedTextColor);
-            noteBlockHolder.mSiteTextView.setTextColor(mUnapprovedTextColor);
-            noteBlockHolder.mNameTextView.setTextColor(mUnapprovedTextColor);
-            noteBlockHolder.mCommentTextView.setTextColor(mUnapprovedTextColor);
         } else {
             if (hasCommentNestingLevel()) {
                 paddingStart = mIndentedLeftPadding;
@@ -160,12 +151,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 view.setBackgroundColor(mNormalBackgroundColor);
                 noteBlockHolder.mDividerView.setVisibility(View.VISIBLE);
             }
-
-            noteBlockHolder.mAgoTextView.setTextColor(mAgoTextColor);
-            noteBlockHolder.mBulletTextView.setTextColor(mAgoTextColor);
-            noteBlockHolder.mSiteTextView.setTextColor(mAgoTextColor);
-            noteBlockHolder.mNameTextView.setTextColor(mNormalTextColor);
-            noteBlockHolder.mCommentTextView.setTextColor(mNormalTextColor);
         }
         ViewCompat.setPaddingRelative(view, paddingStart, paddingTop, paddingEnd, paddingBottom);
 
@@ -255,11 +240,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             return;
         }
 
-
-        mNormalTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface);
         mNormalBackgroundColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorSurface);
-        mAgoTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorOnSurfaceMedium);
-        mUnapprovedTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorWarningDark);
         // Double margin_extra_large for increased indent in comment replies
         mIndentedLeftPadding = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large) * 2;
     }
