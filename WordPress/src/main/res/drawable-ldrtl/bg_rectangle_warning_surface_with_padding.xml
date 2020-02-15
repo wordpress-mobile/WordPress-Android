@@ -8,7 +8,7 @@
     <item
         android:right="@dimen/margin_extra_large">
         <shape android:shape="rectangle">
-            <solid android:color="?attr/wpColorWarningDark" />
+            <solid android:color="?attr/wpColorWarningLight" />
             <padding
                 android:bottom="1dp"
                 android:right="20dp" />
