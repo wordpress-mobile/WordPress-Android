@@ -28,7 +28,7 @@ class ResolvePageListItemsColorUseCase @Inject constructor(
                 post.isLocalDraft,
                 post.isLocallyChanged,
                 uploadUiState,
-                false, // TODO use conflict resolver
+                pageConflictResolver.doesPostHaveUnhandledConflict(post),
                 pageConflictResolver.hasUnhandledAutoSave(post)
         )
     }
