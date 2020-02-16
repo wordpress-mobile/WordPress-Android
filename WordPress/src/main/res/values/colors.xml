@@ -15,7 +15,6 @@
     <color name="status_bar">@color/primary</color>
     <color name="status_bar_action_mode">@color/neutral</color>
 
-
     <!-- Stats -->
 
     <color name="stats_activity_very_low">@color/gray_0</color>
