@@ -250,7 +250,7 @@
         <activity
             android:name=".ui.history.HistoryDetailActivity"
             android:label="@string/history_detail_title"
-            android:theme="@style/WordPress.Editor.NoActionBar" />
+            android:theme="@style/CalypsoTheme" />
 
         <!-- plans -->
         <activity
