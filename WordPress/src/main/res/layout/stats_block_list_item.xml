@@ -68,6 +68,7 @@
             android:contentDescription="@null"
             android:importantForAccessibility="no"
             android:scaleType="fitCenter"
+            android:tintMode="src_in"
             android:src="@drawable/ic_share_white_24dp" />
 
         <ImageView

@@ -44,7 +44,7 @@ open class BlockListItemViewHolder(
     ) {
         when {
             item.icon != null -> {
-                this.imageTintList = this.context.getColorStateListFromAttribute(R.attr.colorOnSurface)
+                this.imageTintList = this.context.getColorStateListFromAttribute(R.attr.wpColorOnSurfaceMedium)
                 this.visibility = View.VISIBLE
                 imageManager.load(this, item.icon)
             }

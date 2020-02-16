@@ -109,7 +109,7 @@
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:drawablePadding">8dp</item>
-        <item name="android:drawableStart">@drawable/bg_rectangle_primary_60_16dp</item>
+        <item name="android:drawableStart">@drawable/bg_stats_visitors_legend</item>
     </style>
 
     <style name="StatsList">

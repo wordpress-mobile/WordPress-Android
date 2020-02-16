@@ -71,7 +71,7 @@
         android:id="@+id/very_low_box"
         style="@style/StatsActivityBox"
         android:layout_marginStart="8dp"
-        android:background="@color/neutral_10"
+        android:background="@color/stats_activity_very_low"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fewer_posts_label"
@@ -107,7 +107,7 @@
     <View
         android:id="@+id/very_high_box"
         style="@style/StatsActivityBox"
-        android:background="@color/neutral_70"
+        android:background="@color/stats_activity_very_high"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/high_box"
