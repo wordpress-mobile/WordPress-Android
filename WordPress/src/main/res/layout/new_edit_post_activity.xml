@@ -22,12 +22,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/photo_fragment_container"
-        android:layout_below="@+id/toolbar_container"
         android:layout_marginBottom="@dimen/format_bar_height"
         android:background="@color/black_translucent_40"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <FrameLayout
         android:id="@+id/photo_fragment_container"
@@ -36,6 +35,6 @@
         android:layout_alignParentBottom="true"
         android:visibility="gone"
         tools:context=".ui.photopicker.PhotoPickerFragment"
-        tools:visibility="visible" />
+        tools:visibility="visible"/>
 
 </RelativeLayout>
