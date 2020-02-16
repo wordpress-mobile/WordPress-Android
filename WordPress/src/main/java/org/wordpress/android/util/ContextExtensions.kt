@@ -22,7 +22,7 @@ fun Context.getColorResIdFromAttribute(@AttrRes attribute: Int) =
 fun Context.getColorFromAttribute(@AttrRes attribute: Int) =
         TypedValue().let {
             theme.resolveAttribute(attribute, it, true)
-            ContextCompat.getColor(this, it.resourceId)
+            it.data
         }
 
 fun Context.getColorStateListFromAttribute(@AttrRes attribute: Int): ColorStateList =
