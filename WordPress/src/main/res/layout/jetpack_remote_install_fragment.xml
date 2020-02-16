@@ -23,6 +23,7 @@
                 android:id="@+id/jetpack_install_icon"
                 android:layout_width="@dimen/jetpack_remote_install_icon_size"
                 android:layout_height="@dimen/jetpack_remote_install_icon_size"
+                android:background="@drawable/bg_oval_white_24dp"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:contentDescription="@string/content_description_people_looking_charts"
                 android:src="@drawable/ic_plans_white_24dp"
