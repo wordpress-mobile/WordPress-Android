@@ -1,40 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:accessibilityLiveRegion="assertive"
     tools:ignore="UnusedAttribute">
 
-    <ImageView
-        android:layout_centerVertical="true"
-        android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:importantForAccessibility="no"
-        tools:srcCompat="@drawable/ic_user_grey_24dp"
-        tools:tint="@color/login_input_icon_color"/>
-
-    <org.wordpress.android.util.widgets.WPTextInputLayout
-        android:layout_centerVertical="true"
-        app:theme="@style/LoginTheme.EditText"
-        app:passwordToggleDrawable="@drawable/selector_password_visibility"
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout"
+        style="@style/LoginTheme.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/icon"
+        android:layout_centerVertical="true"
         android:importantForAccessibility="no">
 
         <com.google.android.material.textfield.TextInputEditText
-            app:theme="@style/LoginTheme.EditText"
-            style="@style/TextAppearance.AppCompat.Body1"
             android:id="@+id/input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/textinputlayout_correction_margin_right"
-            android:paddingEnd="@dimen/textinputlayout_correction_padding_right"
-            tools:hint="@string/email_address"/>
-    </org.wordpress.android.util.widgets.WPTextInputLayout>
+            android:drawablePadding="10dp"
+            tools:hint="@string/email_address" />
+    </com.google.android.material.textfield.TextInputLayout>
 </RelativeLayout>
