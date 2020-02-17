@@ -16,8 +16,7 @@
         android:id="@+id/title"
         style="@style/SiteTagBottomSheetTitle"
         android:layout_width="match_parent"
-        android:text="@string/reader_filter_main_title"
-        tools:text="Following"/>
+        android:text="@string/reader_filter_main_title"/>
 
     <LinearLayout
         android:layout_width="match_parent"

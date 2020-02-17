@@ -1088,6 +1088,7 @@
     </style>
 
     <style name="SiteTagFilteredTitle" parent="MySiteListRowTextView">
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
