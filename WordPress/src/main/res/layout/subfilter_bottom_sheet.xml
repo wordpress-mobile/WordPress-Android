@@ -8,7 +8,7 @@
     android:animateLayoutChanges="true"
     android:contentDescription="@string/reader_bottom_sheet_content_description">
 
-    <include layout="@layout/subfilter_handle"
+    <include layout="@layout/bottom_sheet_handle_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_filter_bottom_sheet_handle_height"/>
 

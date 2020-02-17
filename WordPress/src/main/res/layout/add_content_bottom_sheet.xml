@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/subfilter_handle"
+        layout="@layout/bottom_sheet_handle_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_filter_bottom_sheet_handle_height" />
 
