@@ -15,7 +15,7 @@ import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInitialContentUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 import org.wordpress.android.imageeditor.utils.UiHelpers
 
 class PreviewImageFragment : Fragment() {
@@ -52,7 +52,7 @@ class PreviewImageFragment : Fragment() {
     private fun setupObservers() {
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
-                if (uiState is ImageInitialContentUiState) {
+                if (uiState is ImageDataStartLoadingUiState) {
                     loadImage(uiState.imageData)
                 }
                 UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
@@ -68,11 +68,11 @@ class PreviewImageFragment : Fragment() {
             imageData.lowResImageUrl,
             object : RequestListener<Drawable> {
                 override fun onResourceReady(resource: Drawable, model: Any?) {
-                    viewModel.onImageLoadSuccess(imageData, model)
+                    viewModel.onImageLoadSuccess(model)
                 }
 
                 override fun onLoadFailed(e: Exception?, model: Any?) {
-                    viewModel.onImageLoadFailed(imageData, model)
+                    viewModel.onImageLoadFailed(model)
                 }
             }
         )

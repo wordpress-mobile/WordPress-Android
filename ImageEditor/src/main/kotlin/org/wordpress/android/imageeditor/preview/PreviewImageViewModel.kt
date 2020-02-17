@@ -3,9 +3,9 @@ package org.wordpress.android.imageeditor.preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInitialContentUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadFailedUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadSuccessUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 
 class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<ImageUiState> = MutableLiveData()
@@ -13,7 +13,7 @@ class PreviewImageViewModel : ViewModel() {
 
     fun onCreateView(loResImageUrl: String, hiResImageUrl: String) {
         updateUiState(
-            ImageInitialContentUiState(
+            ImageDataStartLoadingUiState(
                 ImageData(
                     lowResImageUrl = loResImageUrl,
                     highResImageUrl = hiResImageUrl
@@ -22,15 +22,29 @@ class PreviewImageViewModel : ViewModel() {
         )
     }
 
-    fun onImageLoadSuccess(imageData: ImageData, model: Any?) {
-        if (uiState.value !is ImageLoadSuccessUiState) {
-            updateUiState(ImageLoadSuccessUiState)
+    fun onImageLoadSuccess(model: Any?) {
+        model?.let {
+            val state = uiState.value
+            if (state is ImageDataStartLoadingUiState) {
+                val lowResImageUrl = state.imageData.lowResImageUrl
+                if (it == lowResImageUrl) {
+                    updateUiState(ImageInLowResLoadSuccessUiState)
+                }
+            }
+            // TODO: Update state for high res image
         }
     }
 
-    fun onImageLoadFailed(imageData: ImageData, model: Any?) {
-        if (uiState.value !is ImageLoadFailedUiState) {
-            updateUiState(ImageLoadFailedUiState)
+    fun onImageLoadFailed(model: Any?) {
+        model?.let {
+            val state = uiState.value
+            if (state is ImageDataStartLoadingUiState) {
+                val lowResImageUrl = state.imageData.lowResImageUrl
+                if (it == lowResImageUrl) {
+                    updateUiState(ImageInLowResLoadFailedUiState)
+                }
+            }
+            // TODO: Update state for high res image
         }
     }
 
@@ -43,8 +57,10 @@ class PreviewImageViewModel : ViewModel() {
     sealed class ImageUiState(
         val progressBarVisible: Boolean = false
     ) {
-        data class ImageInitialContentUiState(val imageData: ImageData) : ImageUiState(progressBarVisible = true)
-        object ImageLoadSuccessUiState : ImageUiState(progressBarVisible = false)
-        object ImageLoadFailedUiState : ImageUiState(progressBarVisible = false)
+        data class ImageDataStartLoadingUiState(val imageData: ImageData) : ImageUiState(progressBarVisible = true)
+        // Continue displaying progress bar on low res image load
+        object ImageInLowResLoadSuccessUiState : ImageUiState(progressBarVisible = true)
+        object ImageInLowResLoadFailedUiState : ImageUiState(progressBarVisible = false)
+        // TODO: Add states for high res image
     }
 }

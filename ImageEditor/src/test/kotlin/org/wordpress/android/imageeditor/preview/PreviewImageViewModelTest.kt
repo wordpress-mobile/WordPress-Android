@@ -5,9 +5,9 @@ import org.junit.Before
 import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInitialContentUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadFailedUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageLoadSuccessUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
@@ -24,32 +24,44 @@ class PreviewImageViewModelTest {
     }
 
     @Test
-    fun `progress bar shown on start`() {
+    fun `data loading started on view create`() {
+        initViewModel()
+        assertThat(viewModel.uiState.value).isInstanceOf(ImageDataStartLoadingUiState::class.java)
+    }
+
+    @Test
+    fun `progress bar shown on view create`() {
         initViewModel()
         assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(true)
     }
 
     @Test
-    fun `initial content shown on start`() {
+    fun `progress bar shown on low res image load success`() {
         initViewModel()
-        assertThat(viewModel.uiState.value).isInstanceOf(ImageInitialContentUiState::class.java)
+        viewModel.onImageLoadSuccess(TEST_LOW_RES_IMAGE_URL)
+        assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(true)
     }
 
     @Test
-    fun `success ui displayed on image load success`() {
+    fun `progress bar hidden on low res image load failed`() {
         initViewModel()
-        viewModel.onImageLoadSuccess()
-        assertThat(viewModel.uiState.value).isInstanceOf(ImageLoadSuccessUiState::class.java)
+        viewModel.onImageLoadFailed(TEST_LOW_RES_IMAGE_URL)
+        assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(false)
     }
 
     @Test
-    fun `failure ui displayed on image load failed`() {
+    fun `low res image success ui shown on low res image load success`() {
         initViewModel()
-        viewModel.onImageLoadFailed()
-        assertThat(viewModel.uiState.value).isInstanceOf(ImageLoadFailedUiState::class.java)
+        viewModel.onImageLoadSuccess(TEST_LOW_RES_IMAGE_URL)
+        assertThat(viewModel.uiState.value).isInstanceOf(ImageInLowResLoadSuccessUiState::class.java)
     }
 
-    private fun initViewModel() {
-        viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL)
+    @Test
+    fun `low res image failed ui shown on low res image load failed`() {
+        initViewModel()
+        viewModel.onImageLoadFailed(TEST_LOW_RES_IMAGE_URL)
+        assertThat(viewModel.uiState.value).isInstanceOf(ImageInLowResLoadFailedUiState::class.java)
     }
+
+    private fun initViewModel() = viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL)
 }
