@@ -630,7 +630,7 @@ public class ReaderPostListFragment extends Fragment
             AppLog.d(T.READER, "reader post list > current tag no longer valid");
             ReaderTag tag;
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                tag = ReaderUtils.getDbOrInMemoryDefaultTag(requireActivity(), mTagUpdateClientUtilsProvider);
+                tag = ReaderUtils.getDefaultTagFromDbOrCreateInMemory(requireActivity(), mTagUpdateClientUtilsProvider);
             } else {
                 tag = ReaderUtils.getDefaultTag();
                 // it's possible the default tag won't exist if the user just changed the app's
@@ -944,7 +944,7 @@ public class ReaderPostListFragment extends Fragment
                     ReaderTag defaultTag;
 
                     if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                        defaultTag = ReaderUtils.getDbOrInMemoryDefaultTag(
+                        defaultTag = ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
                                 requireActivity(),
                                 mTagUpdateClientUtilsProvider
                         );
@@ -1782,7 +1782,7 @@ public class ReaderPostListFragment extends Fragment
 
         if (!ReaderTagTable.tagExists(tag)) {
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                tag = ReaderUtils.getDbOrInMemoryDefaultTag(
+                tag = ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
                         requireActivity(),
                         mTagUpdateClientUtilsProvider
                 );
@@ -2100,7 +2100,7 @@ public class ReaderPostListFragment extends Fragment
                     tag,
                     BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                     mRecyclerView,
-                    ReaderUtils.getDbOrInMemoryDefaultTag(
+                    ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
                             requireActivity(),
                             mTagUpdateClientUtilsProvider
                     )
@@ -2188,7 +2188,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderTag defaultTag = null;
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            defaultTag = ReaderUtils.getDbOrInMemoryDefaultTag(
+            defaultTag = ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
                     requireActivity(),
                     mTagUpdateClientUtilsProvider
             );

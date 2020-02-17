@@ -247,7 +247,7 @@ public class ReaderUtils {
         return defaultTag;
     }
 
-    public static @NonNull ReaderTag getDbOrInMemoryDefaultTag(
+    public static @NonNull ReaderTag getDefaultTagFromDbOrCreateInMemory(
             @NonNull Context context,
             TagUpdateClientUtilsProvider clientUtilsProvider
     ) {
