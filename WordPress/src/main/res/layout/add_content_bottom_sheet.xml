@@ -5,6 +5,11 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical">
 
+    <include
+        layout="@layout/subfilter_handle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/reader_filter_bottom_sheet_handle_height" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/content_recycler_view"
         android:layout_height="wrap_content"
@@ -12,6 +17,5 @@
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"
         android:scrollbars="vertical"
-        android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_extra_large"/>
 </LinearLayout>
