@@ -63,13 +63,6 @@ public class WPLoginInputRow extends RelativeLayout {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.wpLoginInputRow, 0, 0);
 
             try {
-                if (a.hasValue(R.styleable.wpLoginInputRow_wpIconDrawable)) {
-                    int iconResId = a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawable,
-                            R.drawable.ic_user_grey_24dp);
-
-                    mTextInputLayout.setStartIconDrawable(iconResId);
-                }
-
                 if (a.hasValue(R.styleable.wpLoginInputRow_android_inputType)) {
                     mEditText.setInputType(a.getInteger(R.styleable.wpLoginInputRow_android_inputType, 0));
                 }
