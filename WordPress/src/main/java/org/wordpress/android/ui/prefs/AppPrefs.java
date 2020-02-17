@@ -317,8 +317,13 @@ public class AppPrefs {
         boolean wasFollowing = false;
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            // The intention here is to check if the `DeletablePrefKey.READER_TAG_WAS_FOLLOWING` key
+            // was present at all in the Shared Prefs.
+            // We could have it not set for example in cases where user is upgrading from
+            // a previous version of the app. In those cases we do not have enough information as of the saved
+            // tag was a Following tag or not, so (as with empty `DeletablePrefKey.READER_TAG_NAME`)
+            // let's do not use this piece of information.
             String wasFallowingString = getString(DeletablePrefKey.READER_TAG_WAS_FOLLOWING);
-
             if (TextUtils.isEmpty(wasFallowingString)) return null;
 
             wasFollowing = getBoolean(DeletablePrefKey.READER_TAG_WAS_FOLLOWING, false);
