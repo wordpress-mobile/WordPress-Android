@@ -19,7 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import org.jetbrains.annotations.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableMedia;
@@ -171,8 +173,8 @@ public class NoteBlock {
                                 }
 
                                 @Override
-                                public void onResourceReady(@Nullable Drawable resource, @Nullable Object model) {
-                                    if (!mHasAnimatedBadge && view.getContext() != null && resource != null) {
+                                public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
+                                    if (!mHasAnimatedBadge && view.getContext() != null) {
                                         mHasAnimatedBadge = true;
                                         Animation pop = AnimationUtils.loadAnimation(view.getContext(), R.anim.pop);
                                         noteBlockHolder.getImageView().startAnimation(pop);

@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
@@ -120,7 +121,7 @@ public class ReaderPhotoView extends RelativeLayout {
                     }
 
                     @Override
-                    public void onResourceReady(Drawable resource, @Nullable Object model) {
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                         handleResponse();
                     }
                 });

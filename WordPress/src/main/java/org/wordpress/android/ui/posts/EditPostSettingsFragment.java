@@ -1001,7 +1001,7 @@ public class EditPostSettingsFragment extends Fragment {
                             @Override public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                             }
 
-                            @Override public void onResourceReady(Drawable resource, @Nullable Object model) {
+                            @Override public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                                 if (currentFeaturedImageState.getUiState() == FeaturedImageState.REMOTE_IMAGE_LOADING) {
                                     updateFeaturedImageViews(FeaturedImageState.REMOTE_IMAGE_SET);
                                 }
