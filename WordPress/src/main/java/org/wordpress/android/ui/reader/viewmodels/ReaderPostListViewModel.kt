@@ -77,8 +77,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val _filtersMatchCount = MutableLiveData<HashMap<SubfilterCategory, Int>>()
     val filtersMatchCount: LiveData<HashMap<SubfilterCategory, Int>> = _filtersMatchCount
 
-    private val _execEmptyViewAction = MutableLiveData<Event<ActionType>>()
-    val execEmptyViewAction: LiveData<Event<ActionType>> = _execEmptyViewAction
+    private val _bottomSheetEmptyViewAction = MutableLiveData<Event<ActionType>>()
+    val bottomSheetEmptyViewAction: LiveData<Event<ActionType>> = _bottomSheetEmptyViewAction
 
     private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
     val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
@@ -319,7 +319,7 @@ class ReaderPostListViewModel @Inject constructor(
 
     fun onBottomSheetActionClicked(action: ActionType) {
         _changeBottomSheetVisibility.postValue(Event(false))
-        _execEmptyViewAction.postValue(Event(action))
+        _bottomSheetEmptyViewAction.postValue(Event(action))
     }
 
     private fun updateSubfilter(filter: SubfilterListItem) {

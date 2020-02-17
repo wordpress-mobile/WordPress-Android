@@ -463,7 +463,7 @@ public class ReaderPostListFragment extends Fragment
                 });
             });
 
-            mViewModel.getExecEmptyViewAction().observe(this, event -> {
+            mViewModel.getBottomSheetEmptyViewAction().observe(this, event -> {
                 event.applyIfNotHandled(action -> {
                     if (action instanceof OpenSubsAtPage) {
                         ReaderActivityLauncher.showReaderSubs(
