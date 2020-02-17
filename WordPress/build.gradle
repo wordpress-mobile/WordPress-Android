@@ -109,6 +109,7 @@ android {
             // but we don't obfuscate the bytecode.
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+            multiDexKeepProguard file('multidex-config.pro')
         }
 
         debug {
