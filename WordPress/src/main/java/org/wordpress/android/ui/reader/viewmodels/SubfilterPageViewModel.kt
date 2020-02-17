@@ -8,9 +8,9 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage
-import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState
-import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState.HiddenEmptyUiState
-import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState.VisibleEmptyUiState
+import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState
+import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.HiddenEmptyUiState
+import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.VisibleEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -19,8 +19,8 @@ import javax.inject.Inject
 class SubfilterPageViewModel @Inject constructor(
     private val accountStore: AccountStore
 ) : ViewModel() {
-    private val _emptyState = MutableLiveData<BottomSheetEmptyUiState>()
-    val emptyState: LiveData<BottomSheetEmptyUiState> = _emptyState
+    private val _emptyState = MutableLiveData<SubfilterBottomSheetEmptyUiState>()
+    val emptyState: LiveData<SubfilterBottomSheetEmptyUiState> = _emptyState
 
     private var isStarted = false
     private lateinit var category: SubfilterCategory

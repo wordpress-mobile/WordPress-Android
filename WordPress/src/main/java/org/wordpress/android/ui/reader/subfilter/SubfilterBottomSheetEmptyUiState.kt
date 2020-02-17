@@ -2,14 +2,14 @@ package org.wordpress.android.ui.reader.subfilter
 
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
-sealed class BottomSheetEmptyUiState {
-    object HiddenEmptyUiState : BottomSheetEmptyUiState()
+sealed class SubfilterBottomSheetEmptyUiState {
+    object HiddenEmptyUiState : SubfilterBottomSheetEmptyUiState()
 
     data class VisibleEmptyUiState(
         val title: UiStringRes,
         val buttonText: UiStringRes,
         val action: ActionType
-    ) : BottomSheetEmptyUiState()
+    ) : SubfilterBottomSheetEmptyUiState()
 }
 
 sealed class ActionType {
