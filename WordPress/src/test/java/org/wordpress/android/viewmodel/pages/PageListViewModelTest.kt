@@ -22,11 +22,6 @@ import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.pages.PageItem
-import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
-import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
-import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
@@ -334,15 +329,9 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify PageListItemActionsUseCase generates correct Menu Actions for PublishedPage`() {
+    fun `verify PageListItemActionsUseCase passes the Menu Actions to PublishedPage`() {
         // Arrange
-        val actions = setOf(
-                VIEW_PAGE,
-                SET_PARENT,
-                MOVE_TO_DRAFT,
-                MOVE_TO_TRASH,
-                CANCEL_AUTO_UPLOAD
-        )
+        val actions = setOf(mock<PageItem.Action>())
 
         whenever(pageListItemActionsUseCase.setupPageActions(anyOrNull(), anyOrNull())).thenReturn(actions)
 
