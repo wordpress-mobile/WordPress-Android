@@ -92,7 +92,7 @@ class PageListDialogHelper(
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_PAGE_DIALOG_TAG -> pageIdForConflictResolutionDialog?.let {
                 pageIdForConflictResolutionDialog = null
                 updateConflictedPostWithRemoteVersion(it)
-            }?: throw NullPointerException("pageIdForConflictResolutionDialog shouldn't be null.")
+            } ?: throw NullPointerException("pageIdForConflictResolutionDialog shouldn't be null.")
 
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
@@ -116,7 +116,7 @@ class PageListDialogHelper(
                     ?: throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_PAGE_DIALOG_TAG -> pageIdForConflictResolutionDialog?.let {
                 updateConflictedPostWithLocalVersion(it)
-            }?: throw NullPointerException("pageIdForConflictResolutionDialog shouldn't be null.")
+            } ?: throw NullPointerException("pageIdForConflictResolutionDialog shouldn't be null.")
 
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
