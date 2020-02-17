@@ -364,6 +364,10 @@ class PagesFragment : Fragment() {
         viewModel.dialogAction.observe(this, Observer {
             it?.show(activity, activity.supportFragmentManager, uiHelpers)
         })
+
+        viewModel.toastMessage.observe(this, Observer {
+            it?.show(activity)
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
