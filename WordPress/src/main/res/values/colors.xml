@@ -27,6 +27,7 @@
     <color name="stats_bar_chart_top">@color/blue_30</color>
     <color name="stats_bar_chart_accent_top">@color/pink_30</color>
     <color name="stats_bar_chart_accent_bottom">@color/pink_60</color>
+    <color name="stats_bar_chart_gridline">@color/neutral_5</color>
     <color name="stats_map_activity_low">@color/accent_5</color>
     <color name="stats_map_activity_high">@color/accent</color>
     <color name="stats_map_activity_empty">@color/neutral_5</color>

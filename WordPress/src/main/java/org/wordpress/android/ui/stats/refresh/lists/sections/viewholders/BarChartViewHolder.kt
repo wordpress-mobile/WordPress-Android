@@ -108,7 +108,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         )
         val lightGreyColor = ContextCompat.getColor(
                 context,
-                R.color.neutral_5
+                R.color.stats_bar_chart_gridline
         )
         axisLeft.apply {
             valueFormatter = LargeValueFormatter()
