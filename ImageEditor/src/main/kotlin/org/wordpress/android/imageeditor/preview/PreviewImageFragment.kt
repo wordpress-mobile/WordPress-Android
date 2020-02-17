@@ -67,14 +67,12 @@ class PreviewImageFragment : Fragment() {
             CENTER,
             imageData.lowResImageUrl,
             object : RequestListener<Drawable> {
-                override fun onResourceReady(resource: Drawable, isFirstResource: Boolean) {
-                    if (!isFirstResource) {
-                        viewModel.onImageLoadSuccess()
-                    }
+                override fun onResourceReady(resource: Drawable, model: Any?) {
+                    viewModel.onImageLoadSuccess(imageData, model)
                 }
 
-                override fun onLoadFailed(e: Exception?, isFirstResource: Boolean) {
-                    viewModel.onImageLoadFailed()
+                override fun onLoadFailed(e: Exception?, model: Any?) {
+                    viewModel.onImageLoadFailed(imageData, model)
                 }
             }
         )

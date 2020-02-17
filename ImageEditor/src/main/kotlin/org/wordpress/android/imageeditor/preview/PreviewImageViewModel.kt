@@ -22,13 +22,13 @@ class PreviewImageViewModel : ViewModel() {
         )
     }
 
-    fun onImageLoadSuccess() {
+    fun onImageLoadSuccess(imageData: ImageData, model: Any?) {
         if (uiState.value !is ImageLoadSuccessUiState) {
             updateUiState(ImageLoadSuccessUiState)
         }
     }
 
-    fun onImageLoadFailed() {
+    fun onImageLoadFailed(imageData: ImageData, model: Any?) {
         if (uiState.value !is ImageLoadFailedUiState) {
             updateUiState(ImageLoadFailedUiState)
         }

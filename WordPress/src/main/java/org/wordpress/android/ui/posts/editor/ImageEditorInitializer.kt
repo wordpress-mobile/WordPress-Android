@@ -17,12 +17,12 @@ class ImageEditorInitializer {
                     scaleType,
                     thumbUrl,
                     object : RequestListener<Drawable> {
-                        override fun onLoadFailed(e: Exception?, isFirstResource: Boolean) {
-                            requestListener.onLoadFailed(e, isFirstResource)
+                        override fun onLoadFailed(e: Exception?, model: Any?) {
+                            requestListener.onLoadFailed(e, model)
                         }
 
-                        override fun onResourceReady(resource: Drawable, isFirstResource: Boolean) {
-                            requestListener.onResourceReady(resource, isFirstResource)
+                        override fun onResourceReady(resource: Drawable, model: Any?) {
+                            requestListener.onResourceReady(resource, model)
                         }
                     }
                 )

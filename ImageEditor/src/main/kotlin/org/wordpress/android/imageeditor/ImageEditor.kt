@@ -9,8 +9,20 @@ class ImageEditor private constructor(
 
 ) {
     interface RequestListener<T> {
-        fun onLoadFailed(e: Exception?, isFirstResource: Boolean)
-        fun onResourceReady(resource: T, isFirstResource: Boolean)
+        /**
+         * Called when an exception occurs during an image load
+         *
+         * @param e The maybe {@code null} exception containing information about why the request failed.
+         * @param model The model we were trying to load when the exception occurred.
+         */
+        fun onLoadFailed(e: Exception?, model: Any?)
+        /**
+         * Called when a load completes successfully
+         *
+         * @param resource The resource that was loaded for the target.
+         * @param model The specific model that was used to load the image.
+         */
+        fun onResourceReady(resource: T, model: Any?)
     }
 
     fun loadImageWithResultListener(
