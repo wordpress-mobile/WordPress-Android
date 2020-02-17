@@ -41,7 +41,6 @@ class CrashLoggingUtils {
         }
 
         @JvmStatic fun stopCrashLogging() {
-            Sentry.clearBreadcrumbs()
             Sentry.close()
         }
 
