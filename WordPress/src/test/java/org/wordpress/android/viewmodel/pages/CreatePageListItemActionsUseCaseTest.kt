@@ -54,7 +54,24 @@ class CreatePageListItemActionsUseCaseTest {
     }
 
     @Test
-    fun `verify that SCHEDULED & PUBLISHED actions are the same`() {
+    fun `verify PUBLISHED actions`() {
+        // Arrange
+        val expectedActions = setOf(
+                VIEW_PAGE,
+                SET_PARENT,
+                MOVE_TO_DRAFT,
+                MOVE_TO_TRASH
+        )
+
+        // Act
+        val publishedActions = useCase.setupPageActions(PUBLISHED, mock())
+
+        // Assert
+        assertThat(publishedActions).isEqualTo(expectedActions)
+    }
+
+    @Test
+    fun `verify SCHEDULED actions`() {
         // Arrange
         val expectedActions = setOf(
                 VIEW_PAGE,
@@ -65,11 +82,9 @@ class CreatePageListItemActionsUseCaseTest {
 
         // Act
         val scheduledActions = useCase.setupPageActions(SCHEDULED, mock())
-        val publishedActions = useCase.setupPageActions(PUBLISHED, mock())
 
         // Assert
         assertThat(scheduledActions).isEqualTo(expectedActions)
-        assertThat(publishedActions).isEqualTo(expectedActions)
     }
 
     @Test
