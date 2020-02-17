@@ -358,21 +358,6 @@ public class ReaderUtils {
         return orderedTagList;
     }
 
-    public static boolean containsFollowing(ReaderTagList tagList) {
-        if (tagList == null) return false;
-
-        boolean containsFollowing = false;
-
-        for (ReaderTag tag : tagList) {
-            if (tag.isFollowedSites() || tag.isDefaultInMemoryTag()) {
-                containsFollowing = true;
-                break;
-            }
-        }
-
-        return containsFollowing;
-    }
-
     public static boolean isFollowing(
             ReaderTag currentTag,
             boolean isTopLevelReader,

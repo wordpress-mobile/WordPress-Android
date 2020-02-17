@@ -2796,7 +2796,7 @@ public class ReaderPostListFragment extends Fragment
             tagList.addAll(ReaderTagTable.getBookmarkTags());
 
             if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-                if (!ReaderUtils.containsFollowing(tagList)) {
+                if (!tagList.containsFollowingTag()) {
                     tagList.add(mDefaultTag);
                 }
             }
