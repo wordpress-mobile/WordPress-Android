@@ -485,6 +485,13 @@ class PagesViewModel
         //  available without doing subsequent fetches from the PostStore
         //  https://github.com/wordpress-mobile/WordPress-Android/issues/11233
         val page = postStore.getPostByRemotePostId(pageItem.id, site)
+
+        // first of all, check whether this post is in Conflicted state with a more recent remote version
+        if (pageConflictResolver.doesPageHaveUnhandledConflict(page)) {
+            pageListDialogHelper.showConflictedPageResolutionDialog(page)
+            return
+        }
+
         // Then check if an autosave revision is available
         if (pageConflictResolver.hasUnhandledAutoSave(page)) {
             pageListDialogHelper.showAutoSaveRevisionDialog(page)

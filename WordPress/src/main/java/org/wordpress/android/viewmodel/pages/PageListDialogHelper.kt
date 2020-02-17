@@ -56,7 +56,7 @@ class PageListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
-    fun showConflictedPostResolutionDialog(post: PostModel) {
+    fun showConflictedPageResolutionDialog(post: PostModel) {
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_PAGE_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
