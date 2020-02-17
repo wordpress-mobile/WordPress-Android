@@ -108,7 +108,7 @@ public class ReaderPhotoView extends RelativeLayout {
                 .loadWithResultListener(mImageView, ImageType.IMAGE, mHiResImageUrl, ScaleType.CENTER, mLoResImageUrl,
                 new RequestListener<Drawable>() {
                     @Override
-                    public void onLoadFailed(@Nullable Exception e, boolean isFirstResource) {
+                    public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                         if (e != null) {
                             AppLog.e(AppLog.T.READER, e);
                         }
@@ -120,7 +120,7 @@ public class ReaderPhotoView extends RelativeLayout {
                     }
 
                     @Override
-                    public void onResourceReady(Drawable resource, boolean isFirstResource) {
+                    public void onResourceReady(Drawable resource, @Nullable Object model) {
                         handleResponse();
                     }
                 });
