@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -287,7 +286,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, mediaUri, ScaleType.CENTER, null,
                 new RequestListener<Drawable>() {
                     @Override
-                    public void onResourceReady(@NotNull Drawable resource, boolean isFirstResource) {
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                         if (isAdded()) {
                             // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
                             // for it to be correctly resized upon loading
@@ -305,7 +304,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                     }
 
                     @Override
-                    public void onLoadFailed(@Nullable Exception e, boolean isFirstResource) {
+                    public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                         if (isAdded()) {
                             if (e != null) {
                                 AppLog.e(T.MEDIA, e);
