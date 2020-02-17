@@ -246,7 +246,7 @@ class ReaderPostListViewModelTest {
         viewModel.onBottomSheetActionClicked(action)
 
         assertThat(viewModel.changeBottomSheetVisibility.value!!.peekContent()).isEqualTo(false)
-        assertThat(viewModel.execEmptyViewAction.value!!.peekContent())
+        assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
                 .isEqualTo(action)
     }
 
@@ -256,7 +256,7 @@ class ReaderPostListViewModelTest {
         viewModel.onBottomSheetActionClicked(action)
 
         assertThat(viewModel.changeBottomSheetVisibility.value!!.peekContent()).isEqualTo(false)
-        assertThat(viewModel.execEmptyViewAction.value!!.peekContent())
+        assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
                 .isEqualTo(action)
     }
 
@@ -266,7 +266,7 @@ class ReaderPostListViewModelTest {
         viewModel.onBottomSheetActionClicked(action)
 
         assertThat(viewModel.changeBottomSheetVisibility.value!!.peekContent()).isEqualTo(false)
-        assertThat(viewModel.execEmptyViewAction.value!!.peekContent())
+        assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
                 .isEqualTo(action)
     }
 

@@ -10,13 +10,14 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage
-import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState
-import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState.HiddenEmptyUiState
-import org.wordpress.android.ui.reader.subfilter.BottomSheetEmptyUiState.VisibleEmptyUiState
+import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState
+import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.HiddenEmptyUiState
+import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.VisibleEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
@@ -90,21 +91,21 @@ class SubfilterPageViewModelTest {
         fun getExpectedForCategory(
             accountStore: AccountStore,
             category: SubfilterCategory
-        ): BottomSheetEmptyUiState {
+        ): SubfilterBottomSheetEmptyUiState {
             return when (category) {
                 SITES -> {
                     VisibleEmptyUiState(
                             title = UiStringRes(
                                     if (accountStore.hasAccessToken())
-                                        R.string.reader_filter_empty_sites_list
+                                        string.reader_filter_empty_sites_list
                                     else
-                                        R.string.reader_filter_self_hosted_empty_sites_list
+                                        string.reader_filter_self_hosted_empty_sites_list
                             ),
                             buttonText = UiStringRes(
                                     if (accountStore.hasAccessToken())
-                                        R.string.reader_filter_empty_sites_action
+                                        string.reader_filter_empty_sites_action
                                     else
-                                        R.string.reader_filter_self_hosted_empty_sites_tags_action
+                                        string.reader_filter_self_hosted_empty_sites_tags_action
                             ),
                             action = if (accountStore.hasAccessToken())
                                 OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
