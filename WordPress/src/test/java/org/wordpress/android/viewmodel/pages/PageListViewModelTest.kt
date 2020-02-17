@@ -70,12 +70,13 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(pagesViewModel.site).thenReturn(site)
         whenever(pagesViewModel.invalidateUploadStatus).thenReturn(invalidateUploadStatus)
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
+        whenever(pagesViewModel.pageConflictResolver).thenReturn(mock())
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.getDefault())
         whenever(postStore.getPostByLocalPostId(anyInt())).thenReturn(PostModel())
         whenever(createUploadStateUseCase.createUploadUiState(any(), any(), any())).thenReturn(
                 PostUploadUiState.NothingToUpload
         )
-        whenever(createLabelsUseCase.createLabels(any(), any())).thenReturn(Pair(emptyList(), 0))
+        whenever(createLabelsUseCase.createLabels(any(), any(), any())).thenReturn(Pair(emptyList(), 0))
         site.id = 10
         pageListState.value = PageListState.DONE
     }
