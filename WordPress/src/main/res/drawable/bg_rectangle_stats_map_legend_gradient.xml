@@ -4,8 +4,8 @@
 
     <gradient
         android:angle="0"
-        android:endColor="@color/accent"
-        android:startColor="@color/accent_5"
+        android:endColor="@color/stats_map_activity_high"
+        android:startColor="@color/stats_map_activity_low"
         android:type="linear"/>
 
     <corners

@@ -36,13 +36,13 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val colorLow = Integer.toHexString(
                     ContextCompat.getColor(
                             itemView.context,
-                            R.color.accent_5
+                            R.color.stats_map_activity_low
                     ) and 0xffffff
             )
             val colorHigh = Integer.toHexString(
                     ContextCompat.getColor(
                             itemView.context,
-                            R.color.accent
+                            R.color.stats_map_activity_high
                     ) and 0xffffff
             )
             val backgroundColor = Integer.toHexString(
@@ -51,7 +51,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val emptyColor = Integer.toHexString(
                     ContextCompat.getColor(
                             itemView.context,
-                            R.color.neutral_5
+                            R.color.stats_map_activity_empty
                     ) and 0xffffff
             )
             val htmlPage = ("<html>" +

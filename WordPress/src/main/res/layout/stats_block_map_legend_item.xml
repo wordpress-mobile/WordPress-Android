@@ -20,7 +20,7 @@
         android:layout_width="@dimen/stats_map_legend_width"
         android:layout_height="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_medium"
-        android:background="@drawable/bg_rectangle_gradient_accent_5_accent" />
+        android:background="@drawable/bg_rectangle_stats_map_legend_gradient" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/end_legend"
