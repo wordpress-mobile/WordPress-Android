@@ -2,68 +2,82 @@ package org.wordpress.android.viewmodel.pages
 
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
-import javax.inject.Inject
 
-class PageConflictResolver @Inject constructor() {
-    private var originalPostCopyForConflictUndo: PostModel? = null
-    private var postIdForFetchingRemoteVersionOfConflictedPost: LocalId? = null
+class PageConflictResolver(
+    private val dispatcher: Dispatcher,
+    private val site: SiteModel,
+    private val getPageByLocalPostId: (Int) -> PostModel?,
+    private val invalidateList: () -> Unit,
+    private val showSnackbar: (SnackbarMessageHolder) -> Unit,
+    private val showToast: (ToastMessageHolder) -> Unit
+) {
+    private var originalPageCopyForConflictUndo: PostModel? = null
+    private var pageIdForFetchingRemoteVersionOfConflictedPage: LocalId? = null
 
     fun hasUnhandledAutoSave(post: PostModel): Boolean {
         return PostUtils.hasAutoSave(post)
     }
 
-    fun doesPostHaveUnhandledConflict(post: PostModel): Boolean {
+    fun doesPageHaveUnhandledConflict(page: PostModel): Boolean {
         // If we are fetching the remote version of a conflicted post, it means it's already being handled
-        val isFetchingConflictedPost = postIdForFetchingRemoteVersionOfConflictedPost != null &&
-                postIdForFetchingRemoteVersionOfConflictedPost == LocalId(post.id)
-        return !isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post)
+        val isFetchingConflictedPage = pageIdForFetchingRemoteVersionOfConflictedPage != null &&
+                pageIdForFetchingRemoteVersionOfConflictedPage == LocalId(page.id)
+        return !isFetchingConflictedPage && PostUtils.isPostInConflictWithRemote(page)
     }
 
-    fun updateConflictedPostWithRemoteVersion(localPostId: Int) {
+    fun updateConflictedPageWithRemoteVersion(pageId: LocalId) {
         // TODO ensure that this function is being ran from a network check block.
 
-        val post = getPostByLocalPostId.invoke(localPostId)
-        if (post != null) {
-            originalPostCopyForConflictUndo = post.clone()
-            dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
+        val page = getPageByLocalPostId.invoke(pageId.value)
+        if (page != null) {
+            originalPageCopyForConflictUndo = page.clone()
+            dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(page, site)))
             showToast.invoke(ToastMessageHolder(string.toast_conflict_updating_post, SHORT))
         }
     }
 
-    fun updateConflictedPostWithLocalVersion(postId: LocalId) {
+    fun updateConflictedPageWithLocalVersion(pageId: LocalId) {
         // TODO ensure that this function is being ran from a network check block.
 
-
-        // Keep a reference to which post is being updated with the local version so we can avoid showing the conflicted
+        // Keep a reference to which page is being updated with the local version so we can avoid showing the conflicted
         // label during the undo snackBar.
-        postIdForFetchingRemoteVersionOfConflictedPost = postId
+        pageIdForFetchingRemoteVersionOfConflictedPage = pageId
         invalidateList.invoke()
 
-        val post = getPostByLocalPostId.invoke(postId) ?: return
+        val page = getPageByLocalPostId.invoke(pageId.value) ?: return
 
-        // and now show a snackBar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
+        // and now show a snackBar, acting as if the page was pushed, but effectively push it after the snackbar is gone
         var isUndoed = false
         val undoAction = {
             isUndoed = true
 
-            // Remove the reference for the post being updated and re-show the conflicted label on undo
-            postIdForFetchingRemoteVersionOfConflictedPost = null
+            // Remove the reference for the page being updated and re-show the conflicted label on undo
+            pageIdForFetchingRemoteVersionOfConflictedPage = null
             invalidateList.invoke()
         }
 
         val onDismissAction = {
             if (!isUndoed) {
-                postIdForFetchingRemoteVersionOfConflictedPost = null
-                PostUtils.trackSavePostAnalytics(post, site)
-                dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
+                pageIdForFetchingRemoteVersionOfConflictedPage = null
+                PostUtils.trackSavePostAnalytics(page, site)
+                dispatcher.dispatch(
+                        PostActionBuilder.newPushPostAction(
+                                RemotePostPayload(
+                                        page,
+                                        site
+                                )
+                        )
+                )
             }
         }
         val snackBarHolder = SnackbarMessageHolder(
@@ -73,9 +87,9 @@ class PageConflictResolver @Inject constructor() {
         showSnackbar.invoke(snackBarHolder)
     }
 
-    fun onPostSuccessfullyUpdated() {
-        originalPostCopyForConflictUndo?.id?.let {
-            val updatedPost = getPostByLocalPostId.invoke(it)
+    fun onPageSuccessfullyUpdated() {
+        originalPageCopyForConflictUndo?.id?.let {
+            val updatedPost = getPageByLocalPostId.invoke(it)
             // Conflicted post has been successfully updated with its remote version
             if (!PostUtils.isPostInConflictWithRemote(updatedPost)) {
                 conflictedPostUpdatedWithRemoteVersion()
@@ -86,12 +100,16 @@ class PageConflictResolver @Inject constructor() {
     private fun conflictedPostUpdatedWithRemoteVersion() {
         val undoAction = {
             // here replace the post with whatever we had before, again
-            if (originalPostCopyForConflictUndo != null) {
-                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
+            if (originalPageCopyForConflictUndo != null) {
+                dispatcher.dispatch(
+                        PostActionBuilder.newUpdatePostAction(
+                                originalPageCopyForConflictUndo
+                        )
+                )
             }
         }
         val onDismissAction = {
-            originalPostCopyForConflictUndo = null
+            originalPageCopyForConflictUndo = null
         }
         val snackBarHolder = SnackbarMessageHolder(
                 R.string.snackbar_conflict_local_version_discarded,
