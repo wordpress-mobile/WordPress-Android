@@ -39,6 +39,7 @@ class PageListEventListener(
     private val site: SiteModel,
     private val handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
     private val handlePostUploadedWithoutError: (RemoteId) -> Unit,
+    private val handlePostUpdatedWithoutError: () -> Unit,
     private val handlePostUploadedStarted: (RemoteId) -> Unit,
     private val invalidateUploadStatus: (List<LocalId>) -> Unit
 ) : CoroutineScope {
@@ -96,9 +97,7 @@ class PageListEventListener(
                                         " message: ${event.error.message}"
                         )
                     } else {
-                        handlePostUploadedWithoutError.invoke(
-                                RemoteId((event.causeOfChange as UpdatePost).remotePostId)
-                        )
+                        handlePostUpdatedWithoutError.invoke()
                         invalidateUploadStatus.invoke(
                                 listOf(LocalId((event.causeOfChange as UpdatePost).localPostId))
                         )
@@ -194,6 +193,7 @@ class PageListEventListener(
             eventBusWrapper: EventBusWrapper,
             site: SiteModel,
             handlePostUploadedWithoutError: (RemoteId) -> Unit,
+            handlePostUpdatedWithoutError: () -> Unit,
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
             handlePostUploadedStarted: (RemoteId) -> Unit
@@ -205,6 +205,7 @@ class PageListEventListener(
                     eventBusWrapper = eventBusWrapper,
                     site = site,
                     handlePostUploadedWithoutError = handlePostUploadedWithoutError,
+                    handlePostUpdatedWithoutError = handlePostUpdatedWithoutError,
                     invalidateUploadStatus = invalidateUploadStatus,
                     handleRemoteAutoSave = handleRemoteAutoSave,
                     handlePostUploadedStarted = handlePostUploadedStarted
