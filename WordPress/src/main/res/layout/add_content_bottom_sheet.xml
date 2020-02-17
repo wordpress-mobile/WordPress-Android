@@ -8,7 +8,7 @@
     <include
         layout="@layout/bottom_sheet_handle_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_filter_bottom_sheet_handle_height" />
+        android:layout_height="@dimen/bottom_sheet_handle_view_height" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/content_recycler_view"
