@@ -1169,7 +1169,7 @@
         <item name="bottomSheetStyle">@style/BottomSheetStyleContainer</item>
     </style>
 
-    <style name="BottomSheetStyleContainer" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@android:color/transparent</item>
+    <style name="BottomSheetStyleContainer" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet_handle_container</item>
     </style>
 </resources>
