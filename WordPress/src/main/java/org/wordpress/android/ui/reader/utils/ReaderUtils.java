@@ -358,31 +358,44 @@ public class ReaderUtils {
         return orderedTagList;
     }
 
-    public static boolean isFollowing(
-            ReaderTag currentTag,
+    public static boolean isTagManagedInFollowingTab(
+            ReaderTag tag,
             boolean isTopLevelReader,
             FilteredRecyclerView recyclerView
     ) {
         if (isTopLevelReader) {
-            if (currentTag != null
-                &&
-                (currentTag.isDiscover() || currentTag.isPostsILike() || currentTag.isBookmarked())) {
+            if (ReaderUtils.isDefaultInMemoryTag(tag)) {
+                return true;
+            }
+
+            boolean isSpecialTag = tag != null
+                                   &&
+                                   (tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked());
+
+            boolean tabsInitializingNow = recyclerView != null && recyclerView.getCurrentFilter() == null;
+
+            boolean tagIsFollowedSitesOrAFollowedTag = tag != null
+                                                       && (
+                                                               tag.isFollowedSites()
+                                                               || tag.tagType == ReaderTagType.FOLLOWED
+                                                       );
+
+            if (isSpecialTag) {
                 return false;
-            } else if (recyclerView != null && recyclerView.getCurrentFilter() == null) {
-                // we are initializing now
-                return currentTag != null
-                       && (currentTag.isFollowedSites() || currentTag.tagType == ReaderTagType.FOLLOWED);
+            } else if (tabsInitializingNow) {
+                return tagIsFollowedSitesOrAFollowedTag;
             } else if (recyclerView != null && recyclerView.getCurrentFilter() instanceof ReaderTag) {
-                if (currentTag != null && recyclerView.isValidFilter(currentTag)) {
-                    return currentTag.isFollowedSites();
+                if (recyclerView.isValidFilter(tag)) {
+                    return tag.isFollowedSites();
                 } else {
+                    // If we reach here it means we are setting a followed tag or site in the Following tab
                     return true;
                 }
             } else {
                 return false;
             }
         } else {
-            return currentTag != null && currentTag.isFollowedSites();
+            return tag != null && tag.isFollowedSites();
         }
     }
 
@@ -398,7 +411,7 @@ public class ReaderUtils {
 
         boolean isValidFilter = (recyclerView != null && recyclerView.isValidFilter(tag));
         boolean isSpecialTag = tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked();
-        if (!isSpecialTag && !isValidFilter && isFollowing(tag, isTopLevelReader, recyclerView)) {
+        if (!isSpecialTag && !isValidFilter && isTagManagedInFollowingTab(tag, isTopLevelReader, recyclerView)) {
             return defaultTag;
         }
 

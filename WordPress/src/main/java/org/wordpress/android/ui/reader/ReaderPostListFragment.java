@@ -409,7 +409,7 @@ public class ReaderPostListFragment extends Fragment
                                                          .get(WPMainActivityViewModel.class);
 
             mViewModel.getCurrentSubFilter().observe(this, subfilterListItem -> {
-                if (isCurrentTagTheFollowingTag()
+                if (isCurrentTagManagedInFollowingTab()
                     && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                     mViewModel.onSubfilterChanged(subfilterListItem, true);
                     if (!mAccountStore.hasAccessToken() && mViewModel.getCurrentSubfilterValue() instanceof SiteAll) {
@@ -501,7 +501,7 @@ public class ReaderPostListFragment extends Fragment
 
         mViewModel.start(
                 mCurrentTag,
-                isCurrentTagTheFollowingTag()
+                isCurrentTagManagedInFollowingTab()
                 && BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel
         );
@@ -604,7 +604,7 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel
             && !mAccountStore.hasAccessToken() && mViewModel.getCurrentSubfilterValue() instanceof SiteAll
-            && isCurrentTagTheFollowingTag()
+            && isCurrentTagManagedInFollowingTab()
         ) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
             showEmptyView();
@@ -1144,7 +1144,7 @@ public class ReaderPostListFragment extends Fragment
 
 
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-                    if (isCurrentTagTheFollowingTag()) {
+                    if (isCurrentTagManagedInFollowingTab()) {
                         mViewModel.onSubfilterChanged(mViewModel.getCurrentSubfilterValue(), false);
                     } else {
                         // return to the followed tag that was showing prior to searching
@@ -1152,7 +1152,7 @@ public class ReaderPostListFragment extends Fragment
                     }
 
                     mRecyclerView.setTabLayoutVisibility(true);
-                    mViewModel.changeSubfiltersVisibility(isCurrentTagTheFollowingTag());
+                    mViewModel.changeSubfiltersVisibility(isCurrentTagManagedInFollowingTab());
                     mViewModel.onSearchMenuCollapse(true);
                 } else {
                     // return to the followed tag that was showing prior to searching
@@ -1564,7 +1564,7 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             totalMargin += getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
-            if (isCurrentTagTheFollowingTag()) {
+            if (isCurrentTagManagedInFollowingTab()) {
                 totalMargin += mSubFilterComponent.getHeight();
             }
         }
@@ -1588,7 +1588,7 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel
             && !mAccountStore.hasAccessToken() && mViewModel.getCurrentSubfilterValue() instanceof SiteAll
-            && isCurrentTagTheFollowingTag()
+            && isCurrentTagManagedInFollowingTab()
         ) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
             return;
@@ -2136,7 +2136,7 @@ public class ReaderPostListFragment extends Fragment
 
         getPostAdapter().setCurrentTag(mCurrentTag);
         mViewModel.changeSubfiltersVisibility(
-                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && isCurrentTagTheFollowingTag()
+                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel && isCurrentTagManagedInFollowingTab()
         );
         hideNewPostsBar();
         showLoadingProgress(false);
@@ -2766,12 +2766,12 @@ public class ReaderPostListFragment extends Fragment
         mLastAutoUpdateDt = null;
     }
 
-    private boolean isCurrentTagTheFollowingTag() {
-        return ReaderUtils.isFollowing(
+    private boolean isCurrentTagManagedInFollowingTab() {
+        return ReaderUtils.isTagManagedInFollowingTab(
                 mCurrentTag,
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                 mRecyclerView
-        ) || ReaderUtils.isDefaultInMemoryTag(mCurrentTag);
+        );
     }
 
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
