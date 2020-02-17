@@ -49,6 +49,7 @@ import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
+import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPDATE
@@ -89,7 +90,6 @@ class PagesViewModel
     private val previewStateHelper: PreviewStateHelper,
     private val uploadStarter: UploadStarter,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val pageConflictResolver: PageConflictResolver,
     val uploadStatusTracker: PostModelUploadStatusTracker,
     private val pageListEventListenerFactory: PageListEventListener.Factory,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
@@ -150,6 +150,9 @@ class PagesViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
+    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
+    val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
+
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogAction: LiveData<DialogHolder> = _dialogAction
 
@@ -178,6 +181,17 @@ class PagesViewModel
         )
     }
 
+    val pageConflictResolver: PageConflictResolver by lazy {
+        PageConflictResolver(
+                dispatcher = dispatcher,
+                site = site,
+                getPageByLocalPostId = postStore::getPostByLocalPostId,
+                invalidateList = this::invalidatePages,
+                showSnackbar = { _showSnackbarMessage.postValue(it) },
+                showToast = { _toastMessage.postValue(it) }
+        )
+    }
+
     data class BrowsePreview(
         val post: PostModel,
         val previewType: RemotePreviewType
@@ -198,6 +212,7 @@ class PagesViewModel
                 eventBusWrapper = eventBusWrapper,
                 site = site,
                 handlePostUploadedWithoutError = this::handlePostUploadedWithoutError,
+                handlePostUpdatedWithoutError = pageConflictResolver::onPageSuccessfullyUpdated,
                 invalidateUploadStatus = this::handleInvalidateUploadStatus,
                 handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
                 handlePostUploadedStarted = this::postUploadStarted
@@ -708,14 +723,16 @@ class PagesViewModel
         pageListDialogHelper.onPositiveClickedForBasicDialog(
                 instanceTag = instanceTag,
                 editPage = this::editPage,
-                deletePage = this::onDeleteConfirmed
+                deletePage = this::onDeleteConfirmed,
+                updateConflictedPostWithRemoteVersion = pageConflictResolver::updateConflictedPageWithRemoteVersion
         )
     }
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         pageListDialogHelper.onNegativeClickedForBasicDialog(
                 instanceTag = instanceTag,
-                editPage = this::editPage
+                editPage = this::editPage,
+                updateConflictedPostWithLocalVersion = pageConflictResolver::updateConflictedPageWithLocalVersion
         )
     }
 

@@ -19,16 +19,18 @@ const val ERROR_COLOR = R.color.error
 const val PROGRESS_INFO_COLOR = R.color.neutral_50
 const val STATE_INFO_COLOR = R.color.warning_dark
 
-class ResolvePageListItemsColorUseCase @Inject constructor(
-    private val pageConflictResolver: PageConflictResolver
-) {
-    @ColorRes fun getLabelsColor(post: PostModel, uploadUiState: PostUploadUiState): Int? {
+class ResolvePageListItemsColorUseCase @Inject constructor() {
+    @ColorRes fun getLabelsColor(
+        post: PostModel,
+        uploadUiState: PostUploadUiState,
+        pageConflictResolver: PageConflictResolver
+    ): Int? {
         return getLabelColor(
                 fromPost(post),
                 post.isLocalDraft,
                 post.isLocallyChanged,
                 uploadUiState,
-                pageConflictResolver.doesPostHaveUnhandledConflict(post),
+                pageConflictResolver.doesPageHaveUnhandledConflict(post),
                 pageConflictResolver.hasUnhandledAutoSave(post)
         )
     }
