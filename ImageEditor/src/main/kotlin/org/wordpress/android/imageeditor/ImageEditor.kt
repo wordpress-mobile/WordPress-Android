@@ -13,16 +13,16 @@ class ImageEditor private constructor(
          * Called when an exception occurs during an image load
          *
          * @param e The maybe {@code null} exception containing information about why the request failed.
-         * @param model The model we were trying to load when the exception occurred.
+         * @param url The url of the image we were trying to load when the exception occurred.
          */
-        fun onLoadFailed(e: Exception?, model: Any?)
+        fun onLoadFailed(e: Exception?, url: String)
         /**
          * Called when a load completes successfully
          *
          * @param resource The resource that was loaded for the target.
-         * @param model The specific model that was used to load the image.
+         * @param url The specific url that was used to load the image.
          */
-        fun onResourceReady(resource: T, model: Any?)
+        fun onResourceReady(resource: T, url: String)
     }
 
     fun loadImageWithResultListener(

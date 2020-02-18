@@ -22,30 +22,26 @@ class PreviewImageViewModel : ViewModel() {
         )
     }
 
-    fun onImageLoadSuccess(model: Any?) {
-        model?.let {
-            val state = uiState.value
-            if (state is ImageDataStartLoadingUiState) {
-                val lowResImageUrl = state.imageData.lowResImageUrl
-                if (it == lowResImageUrl) {
-                    updateUiState(ImageInLowResLoadSuccessUiState)
-                }
+    fun onImageLoadSuccess(url: String) {
+        val state = uiState.value
+        if (state is ImageDataStartLoadingUiState) {
+            val lowResImageUrl = state.imageData.lowResImageUrl
+            if (url == lowResImageUrl) {
+                updateUiState(ImageInLowResLoadSuccessUiState)
             }
-            // TODO: Update state for high res image
         }
+        // TODO: Update state for high res image
     }
 
-    fun onImageLoadFailed(model: Any?) {
-        model?.let {
-            val state = uiState.value
-            if (state is ImageDataStartLoadingUiState) {
-                val lowResImageUrl = state.imageData.lowResImageUrl
-                if (it == lowResImageUrl) {
-                    updateUiState(ImageInLowResLoadFailedUiState)
-                }
+    fun onImageLoadFailed(url: String) {
+        val state = uiState.value
+        if (state is ImageDataStartLoadingUiState) {
+            val lowResImageUrl = state.imageData.lowResImageUrl
+            if (url == lowResImageUrl) {
+                updateUiState(ImageInLowResLoadFailedUiState)
             }
-            // TODO: Update state for high res image
         }
+        // TODO: Update state for high res image
     }
 
     private fun updateUiState(uiState: ImageUiState) {
