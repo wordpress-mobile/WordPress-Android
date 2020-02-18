@@ -115,7 +115,7 @@ class PagesViewModelTest {
         viewModel.start(site)
 
         val query = "query"
-        val drafts = listOf(PageModel(site, 1, "title", DRAFT, Date(), false, 1, null, 0))
+        val drafts = listOf(PageModel(PostModel(), site, 1, "title", DRAFT, Date(), false, 1, null, 0))
         val expectedResult = sortedMapOf(DRAFTS to drafts)
         whenever(pageStore.search(site, query)).thenReturn(drafts)
 
@@ -223,7 +223,7 @@ class PagesViewModelTest {
     }
 
     private suspend fun setUpPageStoreWithASinglePage(): PageModel {
-        val pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null, 0)
+        val pageModel = PageModel(PostModel(), site, 1, "title", DRAFT, Date(), false, 1, null, 0)
 
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf(pageModel))
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(

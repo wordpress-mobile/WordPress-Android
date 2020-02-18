@@ -378,18 +378,15 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun createItemUiStateData(pageModel: PageModel): ItemUiStateData {
-        // TODO don't load the post model from db during uistate creation as it can have significant performance impact
-        val postModel = postStore.getPostByLocalPostId(pageModel.pageId)
-        // TODO the postmodel is sometimes null, why?
         val uploadUiState = createPageUploadUiStateUseCase.createUploadUiState(
-                postModel,
+                pageModel.post,
                 pagesViewModel.site,
                 pagesViewModel.uploadStatusTracker
         )
-        val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(postModel, uploadUiState)
+        val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(pageModel.post, uploadUiState)
 
         val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(
-                postModel,
+                pageModel.post,
                 uploadUiState
         )
         val actions = pageListItemActionsUseCase.setupPageActions(listType, uploadUiState)

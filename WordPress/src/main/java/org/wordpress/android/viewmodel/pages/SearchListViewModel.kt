@@ -95,15 +95,13 @@ class SearchListViewModel
     }
 
     private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
-        // TODO don't load the post model from db during uistate creation
-        val postModel = postStore.getPostByLocalPostId(this.pageId)
         val uploadUiState = createPageUploadUiStateUseCase.createUploadUiState(
-                postModel,
+                this.post,
                 pagesViewModel.site,
                 pagesViewModel.uploadStatusTracker
         )
         // TODO any reason why we don't show labels in search?
-        val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(postModel,
+        val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(this.post,
                 uploadUiState)
 
         return when (status) {

@@ -11,7 +11,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
@@ -55,7 +54,7 @@ class SearchListViewModelTest {
 
     @Before
     fun setUp() {
-        page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
+        page = PageModel(PostModel(), site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
         viewModel = SearchListViewModel(
                 createUploadStateUseCase,
                 pageListItemActionsUseCase,
@@ -75,7 +74,6 @@ class SearchListViewModelTest {
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         whenever(pagesViewModel.site).thenReturn(site)
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
-        whenever(postStore.getPostByLocalPostId(ArgumentMatchers.anyInt())).thenReturn(PostModel())
         whenever(createUploadStateUseCase.createUploadUiState(any(), any(), any())).thenReturn(
                 PostUploadUiState.NothingToUpload
         )
