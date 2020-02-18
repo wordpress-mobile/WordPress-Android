@@ -52,12 +52,13 @@ private const val DEFAULT_INDENT = 0
 class PageListViewModel @Inject constructor(
     private val createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase,
     private val createPageUploadUiStateUseCase: CreatePageUploadUiStateUseCase,
+    private val pageListItemActionsUseCase: CreatePageListItemActionsUseCase,
+    private val pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase,
     private val mediaStore: MediaStore,
     private val postStore: PostStore,
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
-    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
-    private val progressHelper: PageItemUploadProgressHelper
+    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Pair<List<PageItem>, Boolean>> = Transformations.map(_pages) {
@@ -147,7 +148,7 @@ class PageListViewModel @Inject constructor(
     }
 
     fun onScrollToPageRequested(remotePageId: Long) {
-        val position = _pages.value?.indexOfFirst { it is Page && it.id == remotePageId } ?: -1
+        val position = _pages.value?.indexOfFirst { it is Page && it.remoteId == remotePageId } ?: -1
         if (position != -1) {
             _scrollToPosition.postValue(position)
         } else {
@@ -253,9 +254,15 @@ class PageListViewModel @Inject constructor(
                     val itemUiStateData = createItemUiStateData(it)
 
                     PublishedPage(
-                            it.remoteId, it.title, it.date, itemUiStateData.labels, itemUiStateData.labelsColor,
+                            it.remoteId,
+                            it.pageId,
+                            it.title,
+                            it.date,
+                            itemUiStateData.labels,
+                            itemUiStateData.labelsColor,
                             pageItemIndent,
                             getFeaturedImageUrl(it.featuredImageId),
+                            itemUiStateData.actions,
                             actionsEnabled,
                             itemUiStateData.progressBarUiState,
                             itemUiStateData.showOverlay
@@ -274,9 +281,13 @@ class PageListViewModel @Inject constructor(
                                 val itemUiStateData = createItemUiStateData(it)
 
                                 ScheduledPage(
-                                        it.remoteId, it.title, it.date, itemUiStateData.labels,
+                                        it.remoteId, it.pageId,
+                                        it.title,
+                                        it.date,
+                                        itemUiStateData.labels,
                                         itemUiStateData.labelsColor,
                                         getFeaturedImageUrl(it.featuredImageId),
+                                        itemUiStateData.actions,
                                         actionsEnabled,
                                         itemUiStateData.progressBarUiState,
                                         itemUiStateData.showOverlay
@@ -294,11 +305,13 @@ class PageListViewModel @Inject constructor(
             val itemUiStateData = createItemUiStateData(it)
             DraftPage(
                     it.remoteId,
+                    it.pageId,
                     it.title,
                     it.date,
                     itemUiStateData.labels,
                     itemUiStateData.labelsColor,
                     getFeaturedImageUrl(it.featuredImageId),
+                    itemUiStateData.actions,
                     actionsEnabled,
                     itemUiStateData.progressBarUiState,
                     itemUiStateData.showOverlay
@@ -314,11 +327,13 @@ class PageListViewModel @Inject constructor(
             val itemUiStateData = createItemUiStateData(it)
             TrashedPage(
                     it.remoteId,
+                    it.pageId,
                     it.title,
                     it.date,
                     itemUiStateData.labels,
                     itemUiStateData.labelsColor,
                     getFeaturedImageUrl(it.featuredImageId),
+                    itemUiStateData.actions,
                     actionsEnabled,
                     itemUiStateData.progressBarUiState,
                     itemUiStateData.showOverlay
@@ -373,17 +388,19 @@ class PageListViewModel @Inject constructor(
         )
         val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(postModel, uploadUiState)
 
-        val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(
+        val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(
                 postModel,
                 uploadUiState
         )
-        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay)
+        val actions = pageListItemActionsUseCase.setupPageActions(listType, uploadUiState)
+        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions)
     }
 
     private data class ItemUiStateData(
         val labels: List<UiString>,
         @ColorRes val labelsColor: Int?,
         val progressBarUiState: ProgressBarUiState,
-        val showOverlay: Boolean
+        val showOverlay: Boolean,
+        val actions: Set<Action>
     )
 }

@@ -22,6 +22,10 @@ import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
@@ -29,10 +33,11 @@ import javax.inject.Named
 class SearchListViewModel
 @Inject constructor(
     private val createPageUploadUiStateUseCase: CreatePageUploadUiStateUseCase,
+    private val pageListItemActionsUseCase: CreatePageListItemActionsUseCase,
+    private val pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase,
     private val postStore: PostStore,
     private val resourceProvider: ResourceProvider,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
-    private val progressHelper: PageItemUploadProgressHelper
+    @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) : ViewModel() {
     private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
     val searchResult: LiveData<List<PageItem>> = _searchResult
@@ -98,39 +103,47 @@ class SearchListViewModel
                 pagesViewModel.uploadStatusTracker
         )
         // TODO any reason why we don't show labels in search?
-        val (progressBarUiState, showOverlay) = progressHelper.getProgressStateForPage(postModel,
+        val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(postModel,
                 uploadUiState)
 
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->
                 PublishedPage(
                         remoteId,
+                        pageId,
                         title,
                         date,
+                        actions = pageListItemActionsUseCase.setupPageActions(PUBLISHED, uploadUiState),
                         actionsEnabled = areActionsEnabled,
                         progressBarUiState = progressBarUiState,
                         showOverlay = showOverlay
                 )
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
                     remoteId,
+                    pageId,
                     title,
                     date,
+                    actions = pageListItemActionsUseCase.setupPageActions(DRAFTS, uploadUiState),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay
             )
             PageStatus.TRASHED -> TrashedPage(
                     remoteId,
+                    pageId,
                     title,
                     date,
+                    actions = pageListItemActionsUseCase.setupPageActions(TRASHED, uploadUiState),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay
             )
             PageStatus.SCHEDULED -> ScheduledPage(
                     remoteId,
+                    pageId,
                     title,
                     date,
+                    actions = pageListItemActionsUseCase.setupPageActions(SCHEDULED, uploadUiState),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay
