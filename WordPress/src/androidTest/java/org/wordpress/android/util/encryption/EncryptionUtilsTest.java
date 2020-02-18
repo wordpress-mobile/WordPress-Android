@@ -15,10 +15,14 @@ import org.libsodium.jni.NaCl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class EncryptionUtilsTest {
@@ -74,6 +78,29 @@ public class EncryptionUtilsTest {
     @Test
     public void testCharacterSampleEncryptionResultIsValid() {
         testEncryption(TEST_CHAR_SAMPLE);
+    }
+
+    @Test
+    public void testUUIDAreDifferent() {
+        String source1 = "v1" + "android" + System.currentTimeMillis();
+        String uuid1 = UUID.nameUUIDFromBytes(source1.getBytes()).toString();
+
+        String source2 = "v1" + "android" + System.currentTimeMillis();
+        String uuid2 = UUID.nameUUIDFromBytes(source2.getBytes()).toString();
+
+        assertFalse(uuid1.equals(uuid2));
+    }
+
+    @Test
+    public void testUUIDAreEquals() {
+        long sameTime = System.currentTimeMillis();
+        String source1 = "v1" + "android" + sameTime;
+        String uuid1 = UUID.nameUUIDFromBytes(source1.getBytes()).toString();
+
+        String source2 = "v1" + "android" + sameTime;
+        String uuid2 = UUID.nameUUIDFromBytes(source2.getBytes()).toString();
+
+        assertTrue(uuid1.equals(uuid2));
     }
 
     /**
