@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
@@ -15,6 +16,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.news.NewsManager
 import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
@@ -45,6 +47,7 @@ class ReaderPostListViewModel @Inject constructor(
     private val newsManager: NewsManager,
     private val newsTracker: NewsTracker,
     private val newsTrackerHelper: NewsTrackerHelper,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val subfilterListItemMapper: SubfilterListItemMapper,
@@ -173,8 +176,7 @@ class ReaderPostListViewModel @Inject constructor(
                     filterList.add(Site(
                             onClickAction = ::onSubfilterClicked,
                             blog = blog,
-                            isSelected = (getCurrentSubfilterValue() is Site) &&
-                                    (getCurrentSubfilterValue() as Site).blog.isSameAs(blog, false)
+                            isSelected = false
                     ))
                 }
             }
@@ -185,23 +187,18 @@ class ReaderPostListViewModel @Inject constructor(
                 filterList.add(Tag(
                         onClickAction = ::onSubfilterClicked,
                         tag = tag,
-                        isSelected = (getCurrentSubfilterValue() is Tag) &&
-                                (getCurrentSubfilterValue() as Tag).tag == tag
+                        isSelected = false
                 ))
             }
 
-            _subFilters.postValue(filterList)
+            withContext(mainDispatcher) {
+                _subFilters.value = filterList
+            }
         }
     }
 
     private fun onSubfilterClicked(filter: SubfilterListItem) {
         _changeBottomSheetVisibility.postValue(Event(false))
-
-        _subFilters.postValue(_subFilters.value?.map {
-            it.isSelected = it.isSameItem(filter)
-            it
-        })
-
         updateSubfilter(filter)
     }
 
@@ -323,7 +320,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun updateSubfilter(filter: SubfilterListItem) {
-        _currentSubFilter.postValue(filter)
+        _currentSubFilter.value = filter
         val json = subfilterListItemMapper.toJson(filter)
         appPrefsWrapper.setReaderSubfilter(json)
     }

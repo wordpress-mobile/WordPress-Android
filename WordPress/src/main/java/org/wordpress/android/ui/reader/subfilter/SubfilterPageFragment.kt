@@ -25,6 +25,8 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.adapters.SubfilterListAdapter
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel
@@ -81,7 +83,17 @@ class SubfilterPageFragment : DaggerFragment() {
 
         readerViewModel.subFilters.observe(this, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
-                val items = it?.filter { it.type == category.type } ?: listOf()
+                var items = it?.filter { it.type == category.type } ?: listOf()
+
+                val currentFilter = readerViewModel.getCurrentSubfilterValue()
+
+                if (items.isNotEmpty() && (currentFilter is Site || currentFilter is Tag)) {
+                    items = items.map {
+                        it.isSelected = it.isSameItem(currentFilter)
+                        it
+                    }
+                }
+
                 viewModel.onSubFiltersChanged(items.isEmpty())
                 adapter.update(items)
                 readerViewModel.onSubfilterPageUpdated(category, items.size)
