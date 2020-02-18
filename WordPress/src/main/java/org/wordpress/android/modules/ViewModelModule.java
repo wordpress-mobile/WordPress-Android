@@ -11,6 +11,7 @@ import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
+import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
@@ -42,6 +43,7 @@ import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
+import org.wordpress.android.viewmodel.pages.PageParentSearchViewModel;
 import org.wordpress.android.viewmodel.pages.PageParentViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.pages.SearchListViewModel;
@@ -95,6 +97,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderPostListViewModel.class)
     abstract ViewModel readerPostListViewModel(ReaderPostListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SubfilterPageViewModel.class)
+    abstract ViewModel subfilterPageViewModel(SubfilterPageViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -275,6 +282,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostSignupInterstitialViewModel.class)
     abstract ViewModel postSignupInterstitialViewModel(PostSignupInterstitialViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PageParentSearchViewModel.class)
+    abstract ViewModel pageParentSearchViewModel(PageParentSearchViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

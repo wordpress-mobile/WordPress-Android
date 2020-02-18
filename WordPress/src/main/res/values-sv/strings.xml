@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-17 08:13:06+0000
+Translation-Revision-Date: 2020-01-31 13:46:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s">Beskrivning för video. %s</string>
+    <string name="gutenberg_native_edit_video">Redigera video</string>
+    <string name="gutenberg_native_edit_media">Redigera media</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">Dubbeltryck för att välja layout</string>
+    <string name="gutenberg_native_add_a_shortcode">Lägg till kortkod …</string>
+    <string name="post_list_author">Inläggsförfattare</string>
+    <string name="fab_create_desc">Skapa ett inlägg</string>
+    <string name="stats_posting_activity_end_description">Du har hört alla statistik för denna period.\nOm du trycker en gång till startar det om från början.</string>
+    <string name="stats_posting_activity_empty_description">Det finns ingen statistik för perioden.</string>
+    <string name="stats_posting_activity_label_content_description">Publiceringsaktivitet för %1$s</string>
+    <string name="stats_posting_activity_content_description">Dagarna med %1$s visningar för %2$s är: %2$s %3$s.Tryck för mer.</string>
+    <string name="stats_posting_activity_action">navigera bland all statistik för denna period</string>
+    <string name="stats_box_type_very_high">mycket högt</string>
+    <string name="stats_box_type_high">högt</string>
+    <string name="stats_box_type_medium">mellan</string>
+    <string name="stats_box_type_low">lågt</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_remove_image">Ta bort bild</string>
+    <string name="gutenberg_native_move_image_forward">Flytta bilden framåt</string>
+    <string name="gutenberg_native_move_image_backward">Flytta bilden bakåt</string>
+    <string name="gutenberg_native_gallery_caption_s">Bildtext för galleri. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Aktuellt värde är %2$s</string>
+    <string name="create_post_page_fab_tooltip">Skapa ett inlägg eller en sida</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">Tryck på %1$sskapa inlägg%2$s för att lägga till ett nytt inlägg.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Tryck på %1$s blogginlägg %2$s för att fortsätta.</string>
+    <string name="content_description_person_building_website">Person som bygger en webbplats</string>
+    <string name="post_signup_interstitial_not_right_now">Inte just nu</string>
+    <string name="post_signup_interstitial_subtitle">Oavsett vad du vill skapa eller dela kommer vi att hjälpa dig här.</string>
+    <string name="post_signup_interstitial_title">Välkommen till WordPress</string>
+    <string name="stock_media_picker_list_content_description">Fotobibliotek</string>
+    <string name="photo_picker_image_thumbnail_unselected">Bilden är inte längre markerad</string>
+    <string name="photo_picker_image_selected">, markerad</string>
+    <string name="photo_picker_image_thumbnail_selected">Bilden är markerad</string>
+    <string name="photo_picker_image_thumbnail_content_description">Miniatyrbild</string>
+    <string name="my_site_bottom_sheet_add_post">Blogginlägg</string>
+    <string name="my_site_bottom_sheet_title">Lägg till</string>
+    <string name="post_settings_publish">Publicera</string>
+    <string name="dialog_gutenberg_informative_description_v2">Vi har gjort stora förbättringar i blockredigeraren, ta och prova den!\n\nDen är aktiverad för nya inlägg och nya sidor. Om du vill ändra till den klassiska redigeraren kan du göra detta under ”Min webbplats” > ”Inställningar”.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Synkronisera nu</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">Inlägget kommer att synkroniseras direkt.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">Är du klar att synkronisera?</string>
+    <string name="new_site_creation_unavailable_domain">Denna domän är inte tillgänglig</string>
+    <string name="login_promo_viewpager_content_description">Inledning</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Vi kunde inte nå din webbplats. För att lösa detta behöver du kontakta ditt webbhotell.</string>
     <string name="login_discovery_error_ssl">Vi kunde inte nå din webbplats på grund av ett problem med &lt;b>SSL-certifikatet&lt;/b>. För att lösa detta behöver du kontakta ditt webbhotell.</string>
     <string name="login_discovery_error_http_auth">Vi kunde inte nå din webbplats eftersom den kräver &lt;b>HTTP-autentisering&lt;/b>. För att lösa detta behöver du kontakta ditt webbhotell.</string>
@@ -14,8 +59,7 @@ Language: sv_SE
     <string name="enter_site_credentials_instead">Logga in med dina inloggningsuppgifter</string>
     <string name="enter_credentials_for_site">Logga in med dina inloggningsuppgifter för webbplatsen %1$s</string>
     <string name="send_verification_email">Skicka verifieringsmeddelande via e-post</string>
-    <string name="my_site_bottom_sheet_add_page">Skapa ny sida</string>
-    <string name="my_site_bottom_sheet_add_post">Skapa nytt inlägg</string>
+    <string name="my_site_bottom_sheet_add_page">Webbplatssida</string>
     <string name="reader_following_display_name">Följer</string>
     <string name="posts_cannot_be_started">Det går inte att öppna inläggen just nu. Försök igen senare</string>
     <string name="suffix_1_000">%s tusen</string>
@@ -33,7 +77,6 @@ Language: sv_SE
     <string name="site_cannot_be_loaded">Vi lyckas inte hämta uppgifterna för din webbplats just nu. Försök igen senare.</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress mediabibliotek</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Vi arbetar hårt med att lägga till fler och fler blocktyper för varje utgåva. Under tiden kan du även redigera detta inlägg på webben.</string>
-    <string name="gutenberg_native_unsupported">Stöds ej</string>
     <string name="gutenberg_native_ungroup">Lös upp grupp</string>
     <string name="gutenberg_native_translate">Översätt</string>
     <string name="gutenberg_native_title">Rubrik:</string>
@@ -50,10 +93,7 @@ Language: sv_SE
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">Blocktypen ”%s” stöds ännu inte i WordPress för Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block av typen %s. Detta block har ogiltigt innehåll</string>
     <string name="gutenberg_native_s_block_empty">Block av typen %s. Tomt</string>
-    <string name="gutenberg_native_s_block">Block av typen %s</string>
-    <string name="gutenberg_native_row_d">Rad %d.</string>
     <string name="gutenberg_native_reset_block">Återställ block</string>
-    <string name="gutenberg_native_reset">ÅTERSTÄLL</string>
     <string name="gutenberg_native_remove_block_at_row_s">Ta bort block från rad %s</string>
     <string name="gutenberg_native_remove_annotations">Ta bort bildtexter/förklaringar</string>
     <string name="gutenberg_native_problem_opening_the_video">Svårigheter att öppna videoklippet</string>
@@ -75,14 +115,11 @@ Language: sv_SE
     <string name="gutenberg_native_move_block_down">Flytta block nedåt</string>
     <string name="gutenberg_native_link_text">Länktext</string>
     <string name="gutenberg_native_link_inserted">Länk infogad</string>
-    <string name="gutenberg_native_level_s_empty">Nivå %s. Tomt.</string>
-    <string name="gutenberg_native_level_1_s_2_s">Nivå %1$s. %2$s</string>
     <string name="gutenberg_native_image_caption_s">Bildtext. %s</string>
     <string name="gutenberg_native_hide_keyboard">Dölj tangentbordet</string>
     <string name="gutenberg_native_here_is_the_panel_content">Här är panelen innehåll!</string>
     <string name="gutenberg_native_help_icon">Hjälpikon</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Kunde inte lägga in mediafil.\nTryck för att visa alternativ.</string>
-    <string name="gutenberg_native_empty">Tomt</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Dubbeltryck för att ångra senaste ändring</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Dubbeltryck för att växla inställningens värde</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Dubbeltryck för att välja en bild</string>
@@ -224,20 +261,16 @@ Language: sv_SE
     <string name="stats_post_views_label">Visningar</string>
     <string name="stats_post_label">Inlägg</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Diagram över publiceringar.</string>
     <string name="stats_item_collapsed">Objektet minimerat</string>
     <string name="stats_item_expanded">Objektet expanderat</string>
     <string name="stats_collapse_content_description">Minimera</string>
     <string name="stats_expand_content_description">Expandera</string>
     <string name="stats_graph_updated">Diagrammet har uppdaterats.</string>
     <string name="stats_overview_content_description">%1$s %2$s för perioden: %3$s, ändring mot föregående period – %4$s</string>
-    <string name="stats_bar_chart_content_description">Diagram över webbplatsvisningar.</string>
     <string name="stats_loading_card">Laddar in vald kortinformation</string>
     <string name="site_settings_editor">Redigerare</string>
     <string name="description_expand">Expandera</string>
     <string name="description_collapse">Minimera</string>
-    <string name="editor_retry_failed_uploads">Försök ladda upp igen</string>
-    <string name="editor_toast_failed_uploads">Uppladdningen av vissa mediafiler misslyckades. Det går inte att spara eller publicera ditt inlägg i detta läge.</string>
     <string name="my_site_verify_your_email_without_email">Bekräfta din e-postadress – instruktioner har skickats till din adress</string>
     <string name="my_site_verify_your_email">Bekräfta din e-postadress – instruktioner har skickats till %s</string>
     <string name="link_dialog_button_cancel">Avbryt</string>
@@ -706,7 +739,6 @@ Language: sv_SE
     <string name="featured_image_desc">utvald bild</string>
     <string name="button_discard">Kasta</string>
     <string name="reader_avatar_desc">Profilbild</string>
-    <string name="reader_blavatar_desc">webblatsikon</string>
     <string name="notification_channel_transient_title">Tillfälligt</string>
     <string name="support_identity_input_dialog_email_label">E-post</string>
     <string name="support_identity_input_dialog_enter_email">Ange din e-postadress</string>
@@ -727,7 +759,7 @@ Language: sv_SE
     <string name="activity_log_rewind_started_snackbar_message">Din webbplats håller på att återställas\nBackar till %1$s %2$s</string>
     <string name="activity_log_button">Åtgärdsknapp för akitivitetslogg</string>
     <string name="plugin_auto_managed">Automatiskt hanterad</string>
-    <string name="reader_save_posts_locally_dialog_message">Spara detta inlägg och läs det senare, närhelst det passar dig. Det kommer endast att vara tillgängligt på denna enhet – sparade inlägg synkroniseras inte till dina andra enheter. (Än så länge, men vi jobbar på det!)</string>
+    <string name="reader_save_posts_locally_dialog_message">Spara detta inlägg och läs det senare, närhelst det passar dig. Det kommer endast att vara tillgängligt på denna enhet – sparade inlägg synkroniseras inte till dina andra enheter.</string>
     <string name="reader_save_posts_locally_dialog_title">Spara inlägg till senare</string>
     <string name="reader_empty_search_request_failed">Kan inte genomföra sökningen</string>
     <string name="reader_empty_search_title">Inga resultat hittades</string>
@@ -752,7 +784,6 @@ Language: sv_SE
     <string name="reader_add_bookmark">Lägg till i sparade inlägg</string>
     <string name="reader_save_for_later_title">Sparade inlägg</string>
     <string name="removed">Borttaget</string>
-    <string name="tabbar_accessibility_label_write">Nytt inlägg. Skriv ett nytt inlägg.</string>
     <string name="my_site_icon_content_description">Byt webbplatsikon</string>
     <string name="my_site_icon_dialog_cancel_button">Avbryt</string>
     <string name="my_site_icon_dialog_remove_button">Ta bort</string>
@@ -783,7 +814,6 @@ Language: sv_SE
     <string name="preference_privacy_settings">Integritetsinställningar</string>
     <string name="preference_collect_information">Samla in information</string>
     <string name="post_submitted">Inlägget har skickats</string>
-    <string name="write_post">Skriv inlägg</string>
     <string name="login_email_button_signup">Har du inget konto? %1$sRegistrera dig%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funktionen för tillägg kräver att webbplatsen har gott anseende.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funktionen för tillägg kräver att domänens abonnemang är kopplat till denna användare.</string>
@@ -825,7 +855,6 @@ Language: sv_SE
     <string name="site_settings_quota_space_unlimited">%1$s av obegränsat</string>
     <string name="preview_count">Förhandsgranska %d</string>
     <string name="add_count">Lägg till %d</string>
-    <string name="fab_create_desc">skapa</string>
     <string name="fab_add_tag_desc">Skapa etikett</string>
     <string name="navigate_up_desc">uppåt</string>
     <string name="notification_settings_switch_desc">Aviseringar</string>
@@ -1338,7 +1367,6 @@ Language: sv_SE
     <string name="sharing">Delning</string>
     <string name="tabbar_accessibility_label_notifications">Aviseringar. Hantera dina aviseringar.</string>
     <string name="tabbar_accessibility_label_reader">Läsare. Följ innehåll från andra webbplatser.</string>
-    <string name="tabbar_accessibility_label_me">Jag. Se och redigera din profil.</string>
     <string name="tabbar_accessibility_label_my_site">Min webbplats. Se och hantera din webbplats, inklusive statistik.</string>
     <string name="my_site_btn_sharing">Delning</string>
     <string name="button_not_now">Inte just nu.</string>

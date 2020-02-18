@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-12 00:55:12+0000
+Translation-Revision-Date: 2020-02-08 00:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s">视频说明。%s</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">双击以选择布局</string>
+    <string name="gutenberg_native_add_a_shortcode">添加短代码…</string>
+    <string name="post_list_author">文章作者</string>
+    <string name="stats_posting_activity_end_description">您已获得这段时间的所有统计数据。\n再次点击将从头开始。</string>
+    <string name="stats_posting_activity_empty_description">此段时间无统计数据。</string>
+    <string name="stats_posting_activity_label_content_description">为 %1$s 发布活动</string>
+    <string name="stats_posting_activity_content_description">%2$s 具有 %1$s 查看次数的天数为：%2$s %3$s。点击以查看更多。</string>
+    <string name="stats_posting_activity_action">浏览此段时间得所有统计数据</string>
+    <string name="stats_box_type_very_high">非常高</string>
+    <string name="stats_box_type_high">高</string>
+    <string name="stats_box_type_medium">中</string>
+    <string name="stats_box_type_low">低</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">和 %1$d %2$s</string>
+    <string name="gutenberg_native_remove_image">删除图片</string>
+    <string name="gutenberg_native_move_image_forward">向前移动图片</string>
+    <string name="gutenberg_native_move_image_backward">向后移动图片</string>
+    <string name="gutenberg_native_gallery_caption_s">图库说明。%s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s。当前值为 %2$s</string>
+    <string name="create_post_page_fab_tooltip">创建文章或页面</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">轻点%1$s添加文章%2$s，撰写一篇新文章。</string>
+    <string name="quick_start_dialog_create_new_post_message_short">轻点%1$s博客文章%2$s以继续。</string>
+    <string name="content_description_person_building_website">网站构建者</string>
+    <string name="post_signup_interstitial_not_right_now">现在不行</string>
+    <string name="post_signup_interstitial_subtitle">无论您想创建或分享什么，我们随时为您提供帮助。</string>
+    <string name="post_signup_interstitial_title">欢迎使用 WordPress</string>
+    <string name="stock_media_picker_list_content_description">照片库</string>
+    <string name="photo_picker_image_thumbnail_unselected">未选的图片</string>
+    <string name="photo_picker_image_selected">，已选</string>
+    <string name="photo_picker_image_thumbnail_selected">已选的图片</string>
+    <string name="photo_picker_image_thumbnail_content_description">图片缩略图</string>
+    <string name="my_site_bottom_sheet_add_post">博客文章</string>
+    <string name="my_site_bottom_sheet_title">新增</string>
+    <string name="post_settings_publish">发布</string>
+    <string name="dialog_gutenberg_informative_description_v2">我们对区块编辑器进行了重大改进，绝对值得一试！我们已为新文章和页面启用该编辑器，但是，如果您想改用经典编辑器，请转到“我的站点”>“站点设置”。</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">立即同步</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">此文章将立即同步。</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">准备好同步了？</string>
+    <string name="new_site_creation_unavailable_domain">此域不可用</string>
+    <string name="login_promo_viewpager_content_description">简介</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">我们无法访问您的站点。您需要联系您的主机来解决这个问题。</string>
     <string name="login_discovery_error_ssl">由于 &lt;b>SSL 证书&lt;/b>的问题，我们无法访问您的站点。您需要联系您的主机来解决这个问题。</string>
     <string name="login_discovery_error_http_auth">由于需要 &lt;b>HTTP 验证&lt;/b>，我们无法访问您的站点。您需要联系您的主机来解决这个问题。</string>
@@ -14,8 +55,6 @@ Language: zh_CN
     <string name="enter_site_credentials_instead">使用站点凭据登录</string>
     <string name="enter_credentials_for_site">使用 %1$s 站点凭据登录</string>
     <string name="send_verification_email">发送验证电子邮件</string>
-    <string name="my_site_bottom_sheet_add_page">创建新页面</string>
-    <string name="my_site_bottom_sheet_add_post">创建新文章</string>
     <string name="reader_following_display_name">关注中</string>
     <string name="posts_cannot_be_started">我们现在无法打开文章。请稍后重试</string>
     <string name="suffix_1_000">%sk</string>
@@ -136,18 +175,14 @@ Language: zh_CN
     <string name="post_settings_add_to_calendar">添加到日历</string>
     <string name="post_settings_notification">通知</string>
     <string name="post_settings_time_and_date">时间和日期</string>
-    <string name="stats_posting_activity_graph">博文发布情况图表。</string>
     <string name="stats_item_collapsed">收起条目</string>
     <string name="stats_item_expanded">展开条目</string>
     <string name="stats_collapse_content_description">收起</string>
     <string name="stats_graph_updated">图表已更新。</string>
     <string name="stats_overview_content_description">%1$s%2$s 针对以下时段：%3$s，与上个时段相比的变化 - %4$s</string>
-    <string name="stats_bar_chart_content_description">站点浏览量图表。</string>
     <string name="stats_loading_card">正在加载选定的卡片数据</string>
     <string name="description_expand">展开</string>
     <string name="description_collapse">折叠</string>
-    <string name="editor_retry_failed_uploads">重试上传</string>
-    <string name="editor_toast_failed_uploads">部分媒体上传失败。您无法保存或发布\n此状态下的文章。</string>
     <string name="my_site_verify_your_email_without_email">请验证您的电子邮件地址（说明已发送至您的电子邮件地址）</string>
     <string name="my_site_verify_your_email">请验证您的电子邮件地址（说明已发送至 %s）</string>
     <string name="link_dialog_button_cancel">取消</string>
@@ -557,7 +592,6 @@ Language: zh_CN
     <string name="featured_image_desc">特色图片</string>
     <string name="button_discard">放弃</string>
     <string name="reader_avatar_desc">个人资料照片</string>
-    <string name="reader_blavatar_desc">站点图标</string>
     <string name="notification_channel_transient_title">暂时</string>
     <string name="support_identity_input_dialog_email_label">电子邮件</string>
     <string name="support_identity_input_dialog_enter_email">请输入您的电子邮件地址</string>
@@ -578,7 +612,6 @@ Language: zh_CN
     <string name="activity_log_rewind_started_snackbar_message">正在恢复您的站点\n正在还原至 %1$s %2$s</string>
     <string name="activity_log_button">活动日志操作按钮</string>
     <string name="plugin_auto_managed">已自动托管</string>
-    <string name="reader_save_posts_locally_dialog_message">保存此文章，方便您随时回来阅读。但您只能在此设备上阅读该文章，也就是说已保存的文章不会同步到其他设备（但我们正在努力改进）。</string>
     <string name="reader_save_posts_locally_dialog_title">保存文章供稍后查看</string>
     <string name="reader_empty_search_request_failed">无法执行搜索</string>
     <string name="reader_empty_search_title">未找到结果</string>
@@ -603,7 +636,6 @@ Language: zh_CN
     <string name="reader_add_bookmark">添加到已保存的文章</string>
     <string name="reader_save_for_later_title">已保存的文章</string>
     <string name="removed">已删除</string>
-    <string name="tabbar_accessibility_label_write">新文章。撰写新文章。</string>
     <string name="my_site_icon_content_description">更改站点图标</string>
     <string name="my_site_icon_dialog_cancel_button">取消</string>
     <string name="my_site_icon_dialog_remove_button">删除</string>
@@ -634,7 +666,6 @@ Language: zh_CN
     <string name="preference_privacy_settings">隐私设置</string>
     <string name="preference_collect_information">收集信息</string>
     <string name="post_submitted">文章已提交</string>
-    <string name="write_post">写文章</string>
     <string name="login_email_button_signup">还没有帐户？%1$s注册%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">使用插件功能需要站点具有良好的信誉。</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">使用插件功能需要具有与该用户关联的主域订阅。</string>
@@ -676,7 +707,6 @@ Language: zh_CN
     <string name="site_settings_quota_space_unlimited">%1$s/无限</string>
     <string name="preview_count">预览 %d</string>
     <string name="add_count">添加 %d</string>
-    <string name="fab_create_desc">创建</string>
     <string name="fab_add_tag_desc">创建标签</string>
     <string name="navigate_up_desc">向上导航</string>
     <string name="notification_settings_switch_desc">通知</string>
@@ -1178,7 +1208,6 @@ Language: zh_CN
     <string name="sharing">分享</string>
     <string name="tabbar_accessibility_label_notifications">通知。管理您的通知。</string>
     <string name="tabbar_accessibility_label_reader">阅读器。查看其他站点的内容。</string>
-    <string name="tabbar_accessibility_label_me">本人。查看自己的个人资料并更改。</string>
     <string name="tabbar_accessibility_label_my_site">我的站点。查看并管理自己的站点，包括统计信息。</string>
     <string name="my_site_btn_sharing">分享</string>
     <string name="button_not_now">现在不行</string>

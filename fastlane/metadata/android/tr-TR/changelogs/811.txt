@@ -1,3 +1,0 @@
-13.9:
-• Blok düzenleyici eklemeleri: Önceden Biçimli blok desteğinin yanı sıra, Ortam Kütüphanenizdeki dosyaları kullanarak görsel galerileri oluşturmanız için yeni bir Galeri bloku eklendi.
-• Blok düzenleyici geliştirmeleri: Liste ve Video bloklarındaki ayarlar için destek eklendi.
