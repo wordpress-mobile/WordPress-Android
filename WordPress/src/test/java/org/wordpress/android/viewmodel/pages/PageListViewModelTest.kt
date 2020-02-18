@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
@@ -73,7 +72,6 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(pagesViewModel.invalidateUploadStatus).thenReturn(invalidateUploadStatus)
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.getDefault())
-        whenever(postStore.getPostByLocalPostId(anyInt())).thenReturn(PostModel())
         whenever(createUploadStateUseCase.createUploadUiState(any(), any(), any())).thenReturn(
                 PostUploadUiState.NothingToUpload
         )
@@ -284,8 +282,6 @@ class PageListViewModelTest : BaseUnitTest() {
     fun `progressState is specific to each page`() {
         // Arrange
         val pages = MutableLiveData<List<PageModel>>()
-        whenever(postStore.getPostByLocalPostId(0)).thenReturn(PostModel().also { it.setId(0) })
-        whenever(postStore.getPostByLocalPostId(1)).thenReturn(PostModel().also { it.setId(1) })
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(argThat { this.id == 0 }, any())).thenReturn(
                 Pair(
@@ -357,7 +353,8 @@ class PageListViewModelTest : BaseUnitTest() {
         status: PageStatus = PageStatus.PUBLISHED
     ): PageModel {
         val title = pageTitle ?: if (id < 10) "Title 0$id" else "Title $id"
-        return PageModel(site, id, title, status, date, false, id.toLong(), parent, id.toLong())
+        return PageModel(PostModel().apply { this.setId(id) }, site, id, title, status, date, false, id.toLong(),
+                parent, id.toLong())
     }
 
     private fun assertDivider(pageItem: PageItem) {
