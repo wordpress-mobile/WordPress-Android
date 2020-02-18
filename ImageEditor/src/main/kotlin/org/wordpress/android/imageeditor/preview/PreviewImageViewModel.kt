@@ -14,10 +14,7 @@ class PreviewImageViewModel : ViewModel() {
     fun onCreateView(loResImageUrl: String, hiResImageUrl: String) {
         updateUiState(
             ImageDataStartLoadingUiState(
-                ImageData(
-                    lowResImageUrl = loResImageUrl,
-                    highResImageUrl = hiResImageUrl
-                )
+                ImageData(loResImageUrl, hiResImageUrl)
             )
         )
     }
