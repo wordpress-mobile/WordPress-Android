@@ -87,6 +87,7 @@ class ReaderPostListViewModelTest {
                 newsTracker,
                 newsTrackerHelper,
                 TEST_DISPATCHER,
+                TEST_DISPATCHER,
                 appPrefsWrapper,
                 subfilterListItemMapper,
                 eventBusWrapper,
