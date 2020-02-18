@@ -3,9 +3,11 @@ package org.wordpress.android.imageeditor.preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadFailedUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 
 class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<ImageUiState> = MutableLiveData()
@@ -20,25 +22,34 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     fun onImageLoadSuccess(url: String) {
-        val state = uiState.value
-        if (state is ImageDataStartLoadingUiState) {
-            val lowResImageUrl = state.imageData.lowResImageUrl
-            if (url == lowResImageUrl) {
-                updateUiState(ImageInLowResLoadSuccessUiState)
+        val newState = when (val currentState = uiState.value) {
+            is ImageDataStartLoadingUiState -> {
+                if (url == currentState.imageData.lowResImageUrl) {
+                    ImageInLowResLoadSuccessUiState
+                } else {
+                    ImageInHighResLoadSuccessUiState
+                }
             }
+            else -> ImageInHighResLoadSuccessUiState
         }
-        // TODO: Update state for high res image
+
+        updateUiState(newState)
     }
 
     fun onImageLoadFailed(url: String) {
-        val state = uiState.value
-        if (state is ImageDataStartLoadingUiState) {
-            val lowResImageUrl = state.imageData.lowResImageUrl
-            if (url == lowResImageUrl) {
-                updateUiState(ImageInLowResLoadFailedUiState)
+        val newState = when (val currentState = uiState.value) {
+            is ImageDataStartLoadingUiState -> {
+                val lowResImageUrl = currentState.imageData.lowResImageUrl
+                if (url == lowResImageUrl) {
+                    ImageInLowResLoadFailedUiState
+                } else {
+                    ImageInHighResLoadFailedUiState
+                }
             }
+            else -> ImageInHighResLoadFailedUiState
         }
-        // TODO: Update state for high res image
+
+        updateUiState(newState)
     }
 
     private fun updateUiState(uiState: ImageUiState) {
@@ -51,9 +62,10 @@ class PreviewImageViewModel : ViewModel() {
         val progressBarVisible: Boolean = false
     ) {
         data class ImageDataStartLoadingUiState(val imageData: ImageData) : ImageUiState(progressBarVisible = true)
-        // Continue displaying progress bar on low res image load
+        // Continue displaying progress bar on low res image load success
         object ImageInLowResLoadSuccessUiState : ImageUiState(progressBarVisible = true)
         object ImageInLowResLoadFailedUiState : ImageUiState(progressBarVisible = false)
-        // TODO: Add states for high res image
+        object ImageInHighResLoadSuccessUiState : ImageUiState(progressBarVisible = false)
+        object ImageInHighResLoadFailedUiState : ImageUiState(progressBarVisible = false)
     }
 }
