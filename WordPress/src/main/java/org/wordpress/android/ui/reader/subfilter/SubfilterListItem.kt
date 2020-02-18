@@ -23,7 +23,7 @@ sealed class SubfilterListItem(val type: ItemType) {
         return if (type == otherItem.type) {
             when (type) {
                 SECTION_TITLE -> label == otherItem.label
-                SITE -> (this as Site).blog.isSameAs((otherItem as Site).blog, false)
+                SITE -> (this as Site).blog.isSameBlogAs((otherItem as Site).blog)
                 TAG -> (this as Tag).tag == (otherItem as Tag).tag
                 SITE_ALL,
                 DIVIDER -> true

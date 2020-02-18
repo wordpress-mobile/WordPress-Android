@@ -169,20 +169,28 @@ public class ReaderBlog {
     }
 
     public boolean isSameAs(ReaderBlog blogInfo) {
-        return isSameAs(blogInfo, true);
-    }
-
-    public boolean isSameAs(ReaderBlog blogInfo, boolean compareSubscribers) {
         return blogInfo != null
                && this.blogId == blogInfo.blogId
                && this.feedId == blogInfo.feedId
                && this.isFollowing == blogInfo.isFollowing
                && this.isPrivate == blogInfo.isPrivate
-               && ((this.numSubscribers == blogInfo.numSubscribers) || !compareSubscribers)
+               && this.numSubscribers == blogInfo.numSubscribers
                && this.getName().equals(blogInfo.getName())
                && this.getDescription().equals(blogInfo.getDescription())
                && this.getUrl().equals(blogInfo.getUrl())
                && this.getFeedUrl().equals(blogInfo.getFeedUrl())
                && this.getImageUrl().equals(blogInfo.getImageUrl());
+    }
+
+    public boolean isSameBlogAs(ReaderBlog blogInfo) {
+        boolean areBothValidFeeds = this.blogId == this.feedId
+                                    && blogInfo.blogId == blogInfo.feedId
+                                    && this.hasFeedUrl()
+                                    && blogInfo.hasFeedUrl();
+
+        return blogInfo != null
+               && this.blogId == blogInfo.blogId
+               && this.getUrl().equals(blogInfo.getUrl())
+               && (!areBothValidFeeds || this.getFeedUrl().equals(blogInfo.getFeedUrl()));
     }
 }
