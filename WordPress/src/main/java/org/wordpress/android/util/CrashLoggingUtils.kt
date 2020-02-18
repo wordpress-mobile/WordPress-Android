@@ -33,14 +33,13 @@ class CrashLoggingUtils {
         SentryAndroid.init(context.applicationContext) {
             it.dsn = BuildConfig.SENTRY_DSN
             it.beforeSend = BeforeSendCallback { event, hint ->
-                val logsUUID = logsFileProvider.generateLogsUUID()
                 val decodedPublicKey = Base64.decode(BuildConfig.ENCRYPTION_PUBLIC_KEY, Base64.DEFAULT)
-                val encryptedLogsJson = EncryptionUtils.generateJSONEncryptedLogs(
+                val encryptedLogsSerialized = EncryptionUtils.generateJSONEncryptedLogs(
                         decodedPublicKey,
-                        AppLog.toHtmlList(context)
+                        logsFileProvider.getMostRecentLogs(context)
                 )
-                logEncryptionActions.sendEncryptedLogsFile(JSONObject(encryptedLogsJson), logsUUID)
-                event.setExtra("LogsID", logsUUID)
+                logEncryptionActions.sendEncryptedLogsFile(JSONObject(encryptedLogsSerialized))
+                event.setExtra("LogsID", logsFileProvider.generateLogsUUID())
                 return@BeforeSendCallback event
             }
         }
