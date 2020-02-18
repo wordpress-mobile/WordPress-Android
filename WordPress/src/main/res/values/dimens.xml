@@ -319,8 +319,6 @@
     <dimen name="publicize_name_margin">8dp</dimen>
 
     <!--post settings-->
-    <dimen name="post_settings_input_dialog_edit_text_side_margin">20dp</dimen>
-    <dimen name="post_settings_input_dialog_hint_side_margin">24dp</dimen>
     <dimen name="tags_list_row_height">40dp</dimen>
     <dimen name="post_settings_retry_image_size">60dp</dimen>
 
