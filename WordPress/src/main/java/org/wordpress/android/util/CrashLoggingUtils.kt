@@ -38,8 +38,9 @@ class CrashLoggingUtils {
                         decodedPublicKey,
                         logsFileProvider.getMostRecentLogs(context)
                 )
-                logEncryptionActions.sendEncryptedLogsFile(JSONObject(encryptedLogsSerialized))
-                event.setExtra("LogsID", logsFileProvider.generateLogsUUID())
+                val encryptedLogsJson = JSONObject(encryptedLogsSerialized)
+                logEncryptionActions.sendEncryptedLogsFile(encryptedLogsJson)
+                event.setExtra("LogsID", EncryptionUtils.getLogsUUID(encryptedLogsJson))
                 return@BeforeSendCallback event
             }
         }

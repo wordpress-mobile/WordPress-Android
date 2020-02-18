@@ -2,12 +2,14 @@ package org.wordpress.android.util.encryption;
 
 import android.util.Base64;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.libsodium.jni.NaCl;
 
 import java.util.List;
+import java.util.UUID;
 
 public class EncryptionUtils {
     static final int ABYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_abytes();
@@ -19,20 +21,29 @@ public class EncryptionUtils {
     private static final int HEADERBYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_headerbytes();
     private static final int BASE64_FLAGS = Base64.DEFAULT;
     private static final String KEYED_WITH = "v1";
+    private static final String ANDROID_PLATFORM = "android";
     private static final byte[] STATE = new byte[STATEBYTES];
+    private static final String FIELD_KEYED_WITH = "keyedWith";
+    private static final String FIELD_LOGS_ID = "logsId";
+    private static final String FIELD_ENCRYPTED_KEY = "encryptedKey";
+    private static final String FIELD_HEADER = "header";
+    private static final String FIELD_MESSAGES = "messages";
+
 
     /**
      * This method is in charge of encrypting logs using the symmetric cypher
      * XCHACHA20 and the cryptographic message authentication code (MAC) POLY1305.
      * For more information about the encryption process you can find it here
      * https://libsodium.gitbook.io/doc/secret-key_cryptography/secretstream.
-     * @param publicKey       The public key used to encrypt the encryption key or shared key.
-     * @param logMessages     The list of messages we want to encrypt.
-     * @return a JSON String containing following structure:
      *
+     * @param publicKey   The decoded public key used to encrypt the encryption key or shared key.
+     * @param logMessages The list of messages we want to encrypt.
+     * @return a JSON String containing the following structure:
+     * <p>
      * ```
      * {
      * "keyedWith": "v1",
+     * "logsId": "<unique_identifier>",            // The UUID corresponding to this bunch of logs
      * "encryptedKey": "<base_64_encrypted_key>",  // The encrypted AES key, base-64 encoded
      * "header": "<base_64_encoded_header>",       // The xchacha20poly1305 stream header, base-64 encoded
      * "messages": [<base_64_encrypted_msgs>]      // the encrypted log messages, base-64 encoded
@@ -43,16 +54,21 @@ public class EncryptionUtils {
                                                    final List<String> logMessages) throws JSONException {
         // Schema version
         JSONObject encryptionDataJson = new JSONObject();
-        encryptionDataJson.put("keyedWith", KEYED_WITH);
+        encryptionDataJson.put(FIELD_KEYED_WITH, KEYED_WITH);
+
+        // Generate Logs UUID
+        String source = KEYED_WITH + ANDROID_PLATFORM + System.currentTimeMillis();
+        byte[] bytes = source.getBytes();
+        encryptionDataJson.put(FIELD_LOGS_ID, UUID.nameUUIDFromBytes(bytes));
 
         // Encryption key
         final byte[] secretKey = createEncryptionKey();
         final byte[] encryptedSecretKey = encryptEncryptionKey(publicKey, secretKey);
-        encryptionDataJson.put("encryptedKey", encodeToBase64(encryptedSecretKey));
+        encryptionDataJson.put(FIELD_ENCRYPTED_KEY, encodeToBase64(encryptedSecretKey));
 
         // Header
         final byte[] encryptedHeader = createEncryptedHeader(secretKey);
-        encryptionDataJson.put("header", encodeToBase64(encryptedHeader));
+        encryptionDataJson.put(FIELD_HEADER, encodeToBase64(encryptedHeader));
 
         // Log messages
         JSONArray encryptedAndEncodedMessagesJson = new JSONArray();
@@ -64,9 +80,20 @@ public class EncryptionUtils {
         // Final tag
         final byte[] encryptedDataBase64 = encryptMessage("", TAG_FINAL);
         encryptedAndEncodedMessagesJson.put(encodeToBase64(encryptedDataBase64));
-        encryptionDataJson.put("messages", encryptedAndEncodedMessagesJson);
+        encryptionDataJson.put(FIELD_MESSAGES, encryptedAndEncodedMessagesJson);
 
         return encryptionDataJson.toString();
+    }
+
+    /**
+     * This method retrieves the value of the field "logsId".
+     *
+     * @param encryptedLogsJson The encrypted logs as JSONObject.
+     * @return a String with the value for "logsId" field.
+     */
+    public static String getLogsUUID(@NotNull JSONObject encryptedLogsJson) {
+        String logsUUID = encryptedLogsJson.optString(FIELD_LOGS_ID);
+        return logsUUID == null ? "" : logsUUID;
     }
 
     private static byte[] createEncryptionKey() {
