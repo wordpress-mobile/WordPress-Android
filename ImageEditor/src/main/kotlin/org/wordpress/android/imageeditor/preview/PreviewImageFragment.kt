@@ -51,12 +51,10 @@ class PreviewImageFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.uiState.observe(this, Observer { uiState ->
-            uiState?.let {
-                if (uiState is ImageDataStartLoadingUiState) {
-                    loadImage(uiState.imageData)
-                }
-                UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
+            if (uiState is ImageDataStartLoadingUiState) {
+                loadImage(uiState.imageData)
             }
+            UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
         })
     }
 
