@@ -1,3 +1,0 @@
-13.9:
-- Adiciones al editor de bloques: Añadido un nuevo bloque de galería para crear galerías de imágenes usando archivos de tu biblioteca de medios, junto con compatibilidad para el bloque preformateado.
-- Mejoras en el editor de bloques: Añadida compatibilidad para los ajustes de los bloques de lista y vídeo.

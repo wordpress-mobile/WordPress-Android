@@ -259,7 +259,7 @@ public class PostUtils {
             return null;
         }
 
-        String s = HtmlUtils.fastStripHtml(description);
+        String s = HtmlUtils.fastStripHtml(removeWPGallery(description));
         if (s.length() < MAX_EXCERPT_LEN) {
             return trimEx(s);
         }
@@ -285,6 +285,15 @@ public class PostUtils {
             return null;
         }
         return trimEx(result.toString()) + "...";
+    }
+
+    /**
+     * Removes the wp-gallery tag and its internals from the given string.
+     *
+     * See https://github.com/wordpress-mobile/WordPress-Android/issues/11063
+     */
+    public static String removeWPGallery(String str) {
+        return str.replaceAll("(?s)<!--\\swp:gallery?(.*?)wp:gallery\\s-->", "");
     }
 
     public static String getFormattedDate(PostModel post) {

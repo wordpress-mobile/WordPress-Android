@@ -65,6 +65,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel;
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent;
@@ -698,8 +699,10 @@ public class EditPostSettingsFragment extends Fragment {
             editPostRepository.updateAsync(postModel -> {
                 postModel.setExcerpt(excerpt);
                 return true;
-            }, postModel -> {
-                mExcerptTextView.setText(excerpt);
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mExcerptTextView.setText(excerpt);
+                }
                 return null;
             });
         }
@@ -711,8 +714,10 @@ public class EditPostSettingsFragment extends Fragment {
             editPostRepository.updateAsync(postModel -> {
                 postModel.setSlug(slug);
                 return true;
-            }, postModel -> {
-                mSlugTextView.setText(slug);
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mSlugTextView.setText(slug);
+                }
                 return null;
             });
         }
@@ -724,8 +729,10 @@ public class EditPostSettingsFragment extends Fragment {
             editPostRepository.updateAsync(postModel -> {
                 postModel.setPassword(password);
                 return true;
-            }, postModel -> {
-                mPasswordTextView.setText(password);
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mPasswordTextView.setText(password);
+                }
                 return null;
             });
         }
@@ -740,8 +747,10 @@ public class EditPostSettingsFragment extends Fragment {
             editPostRepository.updateAsync(postModel -> {
                 postModel.setCategoryIdList(categoryList);
                 return true;
-            }, postModel -> {
-                updateCategoriesTextView(postModel);
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    updateCategoriesTextView(postModel);
+                }
                 return null;
             });
         }
@@ -753,9 +762,11 @@ public class EditPostSettingsFragment extends Fragment {
             editPostRepository.updateAsync(postModel -> {
                 postModel.setStatus(postStatus.toString());
                 return true;
-            }, postModel -> {
-                updatePostStatusRelatedViews(postModel);
-                updateSaveButton();
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    updatePostStatusRelatedViews(postModel);
+                    updateSaveButton();
+                }
                 return null;
             });
         }
@@ -767,8 +778,10 @@ public class EditPostSettingsFragment extends Fragment {
             editPostRepository.updateAsync(postModel -> {
                 postModel.setPostFormat(postFormat);
                 return true;
-            }, postModel -> {
-                updatePostFormatTextView(postModel);
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    updatePostFormatTextView(postModel);
+                }
                 return null;
             });
         }
@@ -804,8 +817,10 @@ public class EditPostSettingsFragment extends Fragment {
                 postModel.setTagNameList(new ArrayList<>());
             }
             return true;
-        }, postModel -> {
-            updateTagsTextView(postModel);
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                updateTagsTextView(postModel);
+            }
             return null;
         });
     }
@@ -950,8 +965,10 @@ public class EditPostSettingsFragment extends Fragment {
         postRepository.updateAsync(postModel -> {
             postModel.setFeaturedImageId(featuredImageId);
             return true;
-        }, postModel -> {
-            updateFeaturedImageView(postModel);
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                updateFeaturedImageView(postModel);
+            }
             return null;
         });
     }
@@ -981,10 +998,10 @@ public class EditPostSettingsFragment extends Fragment {
                 mImageManager.loadWithResultListener(mFeaturedImageView, ImageType.IMAGE,
                         currentFeaturedImageState.getMediaUri(), ScaleType.FIT_CENTER,
                         null, new RequestListener<Drawable>() {
-                            @Override public void onLoadFailed(@org.jetbrains.annotations.Nullable Exception e) {
+                            @Override public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                             }
 
-                            @Override public void onResourceReady(Drawable resource) {
+                            @Override public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                                 if (currentFeaturedImageState.getUiState() == FeaturedImageState.REMOTE_IMAGE_LOADING) {
                                     updateFeaturedImageViews(FeaturedImageState.REMOTE_IMAGE_SET);
                                 }
@@ -1127,11 +1144,13 @@ public class EditPostSettingsFragment extends Fragment {
             mPostLocation = new PostLocation(place.getLatLng().latitude, place.getLatLng().longitude);
             postModel.setLocation(mPostLocation);
             return true;
-        }, postModel -> {
-            if (place == null) {
-                mLocationTextView.setText("");
-            } else {
-                mLocationTextView.setText(place.getAddress());
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                if (place == null) {
+                    mLocationTextView.setText("");
+                } else {
+                    mLocationTextView.setText(place.getAddress());
+                }
             }
             return null;
         });

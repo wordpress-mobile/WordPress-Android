@@ -24,6 +24,11 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: WPMainActivityViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.LoginTheme_BottomSheetDialogStyle)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,14 +40,14 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.create_actions_recycler_view)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.content_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter = AddContentAdapter(requireActivity())
 
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(WPMainActivityViewModel::class.java)
 
         viewModel.mainActions.observe(this, Observer {
-            (dialog.create_actions_recycler_view.adapter as? AddContentAdapter)?.update(it ?: listOf())
+            (dialog.content_recycler_view.adapter as? AddContentAdapter)?.update(it ?: listOf())
         })
 
         dialog.setOnShowListener { dialogInterface ->

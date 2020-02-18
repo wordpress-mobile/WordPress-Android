@@ -66,11 +66,6 @@
                 android:importantForAccessibility="no"
                 />
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
         <org.wordpress.android.widgets.WPTextView
@@ -85,6 +80,13 @@
             android:gravity="center"
             android:text="@string/empty_list_default"
             android:visibility="gone"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/suggestions_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <ProgressBar
             android:id="@+id/progress_loading"
