@@ -1,7 +1,10 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.content.Intent
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -23,6 +26,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.test
@@ -213,6 +217,24 @@ class PagesViewModelTest {
         // Then
         // invoked twice - once in start() and once in onPullToRefresh()
         verify(uploadStarter, times(2)).queueUploadFromSite(site)
+    }
+
+    @Test
+    fun `postUploadAction invoked on edit post activity result`() = test {
+        // Given
+        val localPageId = 999
+        val intent = mock<Intent>()
+        val postModel = PostModel().apply { setStatus(PostStatus.PUBLISHED.toString()) }
+        val siteModel = SiteModel()
+        whenever(pageStore.getPageByLocalId(eq(localPageId), anyOrNull()))
+                .thenReturn(PageModel(postModel, siteModel, null))
+
+        setUpPageStoreWithEmptyPages()
+        viewModel.start(site)
+        // When
+        viewModel.onPageEditFinished(localPageId, intent)
+        // Then
+        assertThat(viewModel.postUploadAction.value).isEqualTo(Triple(postModel, siteModel, intent))
     }
 
     private suspend fun setUpPageStoreWithEmptyPages() {

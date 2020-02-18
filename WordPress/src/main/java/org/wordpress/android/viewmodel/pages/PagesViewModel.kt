@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -136,6 +137,9 @@ class PagesViewModel
     private val _invalidateUploadStatus = MutableLiveData<List<LocalId>>()
     val invalidateUploadStatus: LiveData<List<LocalId>> = _invalidateUploadStatus
 
+    private val _postUploadAction = SingleLiveEvent<Triple<PostModel, SiteModel, Intent>>()
+    val postUploadAction: LiveData<Triple<PostModel, SiteModel, Intent>> = _postUploadAction
+
     private var isInitialized = false
     private var scrollToPageId: Long? = null
 
@@ -250,9 +254,14 @@ class PagesViewModel
         pageMap = pageMap
     }
 
-    fun onPageEditFinished() {
+    fun onPageEditFinished(localPageId: Int, data: Intent) {
         launch {
             refreshPages() // show local changes immediately
+            withContext(defaultDispatcher) {
+                pageStore.getPageByLocalId(pageId = localPageId, site = site)?.let {
+                    _postUploadAction.postValue(Triple(it.post, it.site, data))
+                }
+            }
         }
     }
 
