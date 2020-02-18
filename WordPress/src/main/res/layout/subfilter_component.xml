@@ -12,17 +12,18 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/reader_btn_select_filter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/filter_list_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@null"
-        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
         android:src="@drawable/ic_filter_list_white_24dp"
@@ -53,12 +54,12 @@
         android:layout_width="@dimen/reader_remove_filter_icon_width"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@null"
+        android:contentDescription="@string/reader_btn_remove_filter"
         android:src="@drawable/ic_cross_small_white_24dp"
         android:tint="@color/neutral_70"
         android:paddingTop="@dimen/margin_extra_small"
-        android:paddingEnd="@dimen/margin_small"
-        android:paddingStart="@dimen/margin_small"
+        android:paddingEnd="@dimen/margin_large"
+        android:paddingStart="@dimen/margin_large"
         app:layout_constraintStart_toEndOf="@+id/selected_filter_name"
         app:layout_constraintEnd_toStartOf="@+id/guideline"/>
 
@@ -76,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@null"
+        android:contentDescription="@string/reader_menu_tags"
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
         android:src="@drawable/ic_cog_white_24dp"
