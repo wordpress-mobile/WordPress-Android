@@ -94,7 +94,7 @@ class ReaderPostListViewModelTest {
                 subfilterListItemMapper,
                 eventBusWrapper,
                 accountStore,
-		readerTracker
+                readerTracker
         )
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
