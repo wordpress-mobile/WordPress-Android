@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/SubfilterSiteTagItem"
-    android:layout_width="match_parent"
-    android:focusable="true">
+    android:layout_width="match_parent">
 
     <TextView
         android:id="@+id/item_title"
