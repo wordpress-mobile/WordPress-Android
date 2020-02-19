@@ -55,6 +55,7 @@ public class ReaderUpdateLogic {
     private Context mContext;
 
     @Inject AccountStore mAccountStore;
+    @Inject TagUpdateClientUtilsProvider mClientUtilsProvider;
 
     public ReaderUpdateLogic(Context context, WordPress app, ServiceCompletionListener listener) {
         mCompletionListener = listener;
@@ -114,7 +115,8 @@ public class ReaderUpdateLogic {
         AppLog.d(AppLog.T.READER, "reader service > updating tags");
         HashMap<String, String> params = new HashMap<>();
         params.put("locale", mLanguage);
-        WordPress.getRestClientUtilsV1_2().get("read/menu", params, null, listener, errorListener);
+        mClientUtilsProvider.getRestClientForTagUpdate()
+                            .get("read/menu", params, null, listener, errorListener);
     }
 
     private boolean displayNameUpdateWasNeeded(ReaderTagList serverTopics) {
