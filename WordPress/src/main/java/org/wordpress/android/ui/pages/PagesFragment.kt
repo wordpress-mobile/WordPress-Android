@@ -88,8 +88,8 @@ class PagesFragment : Fragment() {
     @Inject lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
     @Inject lateinit var previewStateHelper: PreviewStateHelper
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
-    @Inject internal lateinit var uploadActionUseCase: UploadActionUseCase
-    @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Inject lateinit var uploadActionUseCase: UploadActionUseCase
+    @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private var quickStartEvent: QuickStartEvent? = null
     private var progressDialog: ProgressDialog? = null
 
@@ -132,9 +132,9 @@ class PagesFragment : Fragment() {
                 return
             }
 
-            val localPageId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, -1)
-            if (localPageId != -1) {
-                viewModel.onPageEditFinished(localPageId, data)
+            val remotePageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1L)
+            if (remotePageId != -1L) {
+                viewModel.onPageEditFinished(remotePageId, data)
             }
         } else if (requestCode == RequestCodes.PAGE_PARENT && resultCode == Activity.RESULT_OK && data != null) {
             val parentId = data.getLongExtra(EXTRA_PAGE_PARENT_ID_KEY, -1)
