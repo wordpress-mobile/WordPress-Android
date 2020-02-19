@@ -13,7 +13,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.util.AppLog
 
 class LogEncryptionTestingActions {
-
     /**
      * Sends a POST request with the encrypted logs and useful fields
      * for the server to decrypt them.
@@ -43,11 +42,9 @@ class JsonStringRequest(
     listener: Listener<String>,
     errorListener: ErrorListener
 ) : JsonRequest<String>(method, url, requestBody?.toString(), listener, errorListener) {
-
     override fun parseNetworkResponse(response: NetworkResponse?): Response<String> {
         response?.data ?: return Response.error(VolleyError("The response is null"))
 
         return Response.success<String>(String(response.data), HttpHeaderParser.parseCacheHeaders(response))
     }
-
 }

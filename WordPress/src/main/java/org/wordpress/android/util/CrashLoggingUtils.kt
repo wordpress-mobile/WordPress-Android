@@ -15,7 +15,6 @@ import org.wordpress.android.util.encryption.LogEncryptionTestingActions
 import org.wordpress.android.util.encryption.LogsFileProvider
 
 class CrashLoggingUtils {
-
     private val logEncryptionActions = LogEncryptionTestingActions()
     private val logsFileProvider = LogsFileProvider()
 
