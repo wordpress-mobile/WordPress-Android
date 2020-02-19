@@ -11,7 +11,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
@@ -43,7 +42,8 @@ class SearchListViewModelTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var pagesViewModel: PagesViewModel
-    @Mock lateinit var progressHelper: PageItemUploadProgressHelper
+    @Mock lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
+    @Mock lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
     @Mock lateinit var createUploadStateUseCase: CreatePageUploadUiStateUseCase
     @Mock lateinit var postStore: PostStore
 
@@ -54,17 +54,18 @@ class SearchListViewModelTest {
 
     @Before
     fun setUp() {
-        page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
+        page = PageModel(PostModel(), site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
         viewModel = SearchListViewModel(
                 createUploadStateUseCase,
+                pageListItemActionsUseCase,
+                pageItemProgressUiStateUseCase,
                 postStore,
                 resourceProvider,
-                TEST_SCOPE,
-                progressHelper
+                TEST_SCOPE
         )
         searchPages = MutableLiveData()
 
-        whenever(progressHelper.getProgressStateForPage(any(), any())).thenReturn(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any(), any())).thenReturn(
                 Pair(
                         ProgressBarUiState.Hidden,
                         false
@@ -73,7 +74,6 @@ class SearchListViewModelTest {
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         whenever(pagesViewModel.site).thenReturn(site)
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
-        whenever(postStore.getPostByLocalPostId(ArgumentMatchers.anyInt())).thenReturn(PostModel())
         whenever(createUploadStateUseCase.createUploadUiState(any(), any(), any())).thenReturn(
                 PostUploadUiState.NothingToUpload
         )
@@ -126,7 +126,7 @@ class SearchListViewModelTest {
         }
         assertThat(searchResult[1]).isInstanceOf(PublishedPage::class.java)
         (searchResult[1] as PublishedPage).apply {
-            assertThat(this.id).isEqualTo(publishedPageRemoteId)
+            assertThat(this.remoteId).isEqualTo(publishedPageRemoteId)
         }
         assertThat(searchResult[2]).isInstanceOf(Divider::class.java)
         (searchResult[2] as Divider).apply {
@@ -134,7 +134,7 @@ class SearchListViewModelTest {
         }
         assertThat(searchResult[3]).isInstanceOf(DraftPage::class.java)
         (searchResult[3] as DraftPage).apply {
-            assertThat(this.id).isEqualTo(draftPageRemoteId)
+            assertThat(this.remoteId).isEqualTo(draftPageRemoteId)
         }
     }
 
@@ -142,12 +142,14 @@ class SearchListViewModelTest {
     fun `passes action to page view model on menu action`() {
         val clickedPage = PageItem.PublishedPage(
                 1,
+                1,
                 "title",
                 Date(),
                 listOf(),
                 0,
                 0,
                 null,
+                mock(),
                 false,
                 ProgressBarUiState.Hidden,
                 false
@@ -162,7 +164,17 @@ class SearchListViewModelTest {
     @Test
     fun `passes page to page view model on item tapped`() {
         val clickedPage = PageItem.PublishedPage(
-                1, "title", Date(), listOf(), 0, 0, null, false, ProgressBarUiState.Hidden,
+                1,
+                1,
+                "title",
+                Date(),
+                listOf(),
+                0,
+                0,
+                null,
+                mock(),
+                false,
+                ProgressBarUiState.Hidden,
                 false
         )
 

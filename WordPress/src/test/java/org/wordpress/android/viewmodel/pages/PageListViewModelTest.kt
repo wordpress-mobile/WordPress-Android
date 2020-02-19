@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
@@ -41,7 +40,8 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var pagesViewModel: PagesViewModel
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var progressHelper: PageItemUploadProgressHelper
+    @Mock lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
+    @Mock lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
     @Mock lateinit var createUploadStateUseCase: CreatePageUploadUiStateUseCase
     @Mock lateinit var createLabelsUseCase: CreatePageListItemLabelsUseCase
 
@@ -53,15 +53,16 @@ class PageListViewModelTest : BaseUnitTest() {
         viewModel = PageListViewModel(
                 createLabelsUseCase,
                 createUploadStateUseCase,
+                pageListItemActionsUseCase,
+                pageItemProgressUiStateUseCase,
                 mediaStore,
                 postStore,
                 dispatcher,
                 localeManagerWrapper,
-                Dispatchers.Unconfined,
-                progressHelper
+                Dispatchers.Unconfined
         )
 
-        whenever(progressHelper.getProgressStateForPage(any(), any())).thenReturn(Pair(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any(), any())).thenReturn(Pair(
                 ProgressBarUiState.Hidden, false))
 
         val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
@@ -72,7 +73,6 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
         whenever(pagesViewModel.pageConflictResolver).thenReturn(mock())
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.getDefault())
-        whenever(postStore.getPostByLocalPostId(anyInt())).thenReturn(PostModel())
         whenever(createUploadStateUseCase.createUploadUiState(any(), any(), any())).thenReturn(
                 PostUploadUiState.NothingToUpload
         )
@@ -225,13 +225,22 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `showOverlay is correctly propagated from PageItemUploadProgressHelper`() {
+    fun `showOverlay is correctly propagated from PageItemProgressUiStateUseCase`() {
         // Arrange
         val expectedShowOverlay = true
         val pages = MutableLiveData<List<PageModel>>()
 
-        whenever(progressHelper.getProgressStateForPage(anyOrNull(), anyOrNull())).thenReturn(Pair(mock(),
-                expectedShowOverlay))
+        whenever(
+                pageItemProgressUiStateUseCase.getProgressStateForPage(
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenReturn(
+                Pair(
+                        mock(),
+                        expectedShowOverlay
+                )
+        )
         whenever(pagesViewModel.pages).thenReturn(pages)
 
         viewModel.start(PUBLISHED, pagesViewModel)
@@ -246,12 +255,12 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `ProgressBarUiState is correctly propagated from PageItemUploadProgressHelper`() {
+    fun `ProgressBarUiState is correctly propagated from PageItemProgressUiStateUseCase`() {
         // Arrange
         val expectedProgressBarUiState = ProgressBarUiState.Indeterminate
         val pages = MutableLiveData<List<PageModel>>()
 
-        whenever(progressHelper.getProgressStateForPage(anyOrNull(), anyOrNull())).thenReturn(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(anyOrNull(), anyOrNull())).thenReturn(
                 Pair(
                         expectedProgressBarUiState,
                         true
@@ -274,17 +283,15 @@ class PageListViewModelTest : BaseUnitTest() {
     fun `progressState is specific to each page`() {
         // Arrange
         val pages = MutableLiveData<List<PageModel>>()
-        whenever(postStore.getPostByLocalPostId(0)).thenReturn(PostModel().also { it.setId(0) })
-        whenever(postStore.getPostByLocalPostId(1)).thenReturn(PostModel().also { it.setId(1) })
 
-        whenever(progressHelper.getProgressStateForPage(argThat { this.id == 0 }, any())).thenReturn(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(argThat { this.id == 0 }, any())).thenReturn(
                 Pair(
                         ProgressBarUiState.Indeterminate,
                         true
                 )
         )
 
-        whenever(progressHelper.getProgressStateForPage(argThat { this.id == 1 }, any())).thenReturn(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(argThat { this.id == 1 }, any())).thenReturn(
                 Pair(
                         ProgressBarUiState.Hidden,
                         false
@@ -318,14 +325,37 @@ class PageListViewModelTest : BaseUnitTest() {
         assertThat((result[0].first[1] as Page).showOverlay).isEqualTo(false)
     }
 
+    @Test
+    fun `verify PageListItemActionsUseCase passes the Menu Actions to PublishedPage`() {
+        // Arrange
+        val actions = setOf(mock<PageItem.Action>())
+
+        whenever(pageListItemActionsUseCase.setupPageActions(anyOrNull(), anyOrNull())).thenReturn(actions)
+
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        viewModel.pages.observeForever { result.add(it) }
+
+        // Act
+        pages.value = listOf(buildPageModel(0))
+
+        // Assert
+        assertThat((result[0].first[0] as PublishedPage).actions).isEqualTo(actions)
+    }
+
     private fun buildPageModel(
         id: Int,
         date: Date = Date(0),
         parent: PageModel? = null,
-        pageTitle: String? = null
+        pageTitle: String? = null,
+        status: PageStatus = PageStatus.PUBLISHED
     ): PageModel {
         val title = pageTitle ?: if (id < 10) "Title 0$id" else "Title $id"
-        return PageModel(site, id, title, PageStatus.PUBLISHED, date, false, id.toLong(), parent, id.toLong())
+        return PageModel(PostModel().apply { this.setId(id) }, site, id, title, status, date, false, id.toLong(),
+                parent, id.toLong())
     }
 
     private fun assertDivider(pageItem: PageItem) {

@@ -13,6 +13,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -75,6 +76,7 @@ import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
 import org.wordpress.android.models.FilterCriteria;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
@@ -99,6 +101,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
@@ -106,6 +109,7 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.Up
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -157,6 +161,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostAdapter mPostAdapter;
     private ReaderSiteSearchAdapter mSiteSearchAdapter;
     private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
+    private ReaderSearchSuggestionRecyclerAdapter mSearchSuggestionRecyclerAdapter;
 
     private FilteredRecyclerView mRecyclerView;
     private boolean mFirstLoad = true;
@@ -174,6 +179,7 @@ public class ReaderPostListFragment extends Fragment
     private ImageView mSettingsButton;
     private View mSubFiltersListButton;
     private TextView mSubFilterTitle;
+    private View mRemoveFilterButton;
 
     private boolean mIsTopLevel = false;
     private static final String SUBFILTER_BOTTOM_SHEET_TAG = "SUBFILTER_BOTTOM_SHEET_TAG";
@@ -397,12 +403,12 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
             mViewModel.getCurrentSubFilter().observe(this, subfilterListItem -> {
-                if (ReaderUtils.isFollowing(
+                if ((ReaderUtils.isFollowing(
                         mCurrentTag,
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
-                ) || ReaderUtils.isDefaultTag(mCurrentTag)) {
-                  mViewModel.applySubfilter(subfilterListItem, true);
+                ) || ReaderUtils.isDefaultTag(mCurrentTag)) && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
+                  mViewModel.onSubfilterChanged(subfilterListItem, true);
                 }
             });
 
@@ -422,22 +428,43 @@ public class ReaderPostListFragment extends Fragment
                                 )
                         );
                     }
+
+                    if (readerModeInfo.isFiltered()) {
+                        mRemoveFilterButton.setVisibility(View.VISIBLE);
+                    } else {
+                        mRemoveFilterButton.setVisibility(View.GONE);
+                    }
                 }
             });
 
-            mViewModel.isBottomSheetShowing().observe(this, event -> {
+            mViewModel.getChangeBottomSheetVisibility().observe(this, event -> {
                 event.applyIfNotHandled(isShowing -> {
                     FragmentManager fm = getFragmentManager();
                     if (fm != null) {
                         SubfilterBottomSheetFragment bottomSheet =
                                 (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
                         if (isShowing && bottomSheet == null) {
+                            mViewModel.loadSubFilters();
                             bottomSheet = new SubfilterBottomSheetFragment();
                             bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                         } else if (!isShowing && bottomSheet != null) {
                             bottomSheet.dismiss();
                         }
                     }
+                    return null;
+                });
+            });
+
+            mViewModel.getStartSubsActivity().observe(this, event -> {
+                event.applyIfNotHandled(tabIndex -> {
+                    ReaderActivityLauncher.showReaderSubs(requireActivity(), tabIndex);
+                    return null;
+                });
+            });
+
+            mViewModel.getUpdateTagsAndSites().observe(this, event -> {
+                event.applyIfNotHandled(tasks -> {
+                    ReaderUpdateServiceStarter.startService(getActivity(), tasks);
                     return null;
                 });
             });
@@ -521,10 +548,19 @@ public class ReaderPostListFragment extends Fragment
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
 
+            Site currentSite;
+
             if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                 resumeFollowedTag();
+            } else if ((currentSite = getSiteIfBlogPreview()) != null) {
+                resumeFollowedSite(currentSite);
             } else {
                 refreshPosts();
+            }
+
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
+                // Remove sticky event if not consumed
+                EventBus.getDefault().removeStickyEvent(ReaderEvents.TagAdded.class);
             }
 
             // if the user tapped a site to show site preview, it's possible they also changed the follow
@@ -583,6 +619,38 @@ public class ReaderPostListFragment extends Fragment
             // posts in the current tag if it's time
             refreshPosts();
             updateCurrentTagIfTime();
+        }
+    }
+
+    @Nullable
+    private Site getSiteIfBlogPreview() {
+        Site currentSite = null;
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
+            && mIsTopLevel
+            && getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+            currentSite = mViewModel.getCurrentSubfilterValue() instanceof Site ? (Site) (mViewModel
+                    .getCurrentSubfilterValue()) : null;
+        }
+
+        return currentSite;
+    }
+
+    private void resumeFollowedSite(Site currentSite) {
+        ReaderBlog blog = currentSite.getBlog();
+        boolean isSiteStillAvailable = false;
+
+        if (blog != null) {
+            if ((blog.hasFeedUrl() && ReaderBlogTable.isFollowedFeed(blog.feedId))
+                || ReaderBlogTable.isFollowedBlog(blog.blogId)) {
+                isSiteStillAvailable = true;
+            }
+        }
+
+        if (isSiteStillAvailable) {
+            refreshPosts();
+        } else {
+            mViewModel.setDefaultSubfilter();
         }
     }
 
@@ -923,10 +991,15 @@ public class ReaderPostListFragment extends Fragment
 
             mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
             mSubFiltersListButton.setOnClickListener(v -> {
-                mViewModel.setIsBottomSheetShowing(true);
+                mViewModel.onSubFiltersListButtonClicked();
             });
 
             mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);
+
+            mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
+            mRemoveFilterButton.setOnClickListener(v -> {
+                mViewModel.setDefaultSubfilter();
+            });
         }
 
         return rootView;
@@ -982,12 +1055,13 @@ public class ReaderPostListFragment extends Fragment
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
                 }
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
-                showSearchMessage();
+                populateSearchSuggestions(null);
+                showSearchMessageOrSuggestions();
                 mSettingsMenuItem.setVisible(false);
                 mRecyclerView.setTabLayoutVisibility(false);
-                mViewModel.setSubfiltersVisibility(false);
+                mViewModel.changeSubfiltersVisibility(false);
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
-                    mViewModel.setCollapseToolbar(false);
+                    mViewModel.onSearchMenuCollapse(false);
                 }
 
                 // hide the bottom navigation when search is active
@@ -1006,8 +1080,9 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 hideSearchMessage();
+                hideSearchSuggestions();
                 hideSearchTabs();
-                resetSearchSuggestionAdapter();
+                resetSearchSuggestions();
                 if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE || !mIsTopLevel) {
                     mSettingsMenuItem.setVisible(true);
                 }
@@ -1024,17 +1099,17 @@ public class ReaderPostListFragment extends Fragment
                             BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                             mRecyclerView)
                     ) {
-                        mViewModel.applySubfilter(mViewModel.getCurrentSubfilterValue(), false);
+                        mViewModel.onSubfilterChanged(mViewModel.getCurrentSubfilterValue(), false);
                     } else {
                         // return to the followed tag that was showing prior to searching
                         resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
                     }
 
                     mRecyclerView.setTabLayoutVisibility(true);
-                    mViewModel.setSubfiltersVisibility(
+                    mViewModel.changeSubfiltersVisibility(
                             ReaderUtils.isFollowing(mCurrentTag, mIsTopLevel, mRecyclerView)
                     );
-                    mViewModel.setCollapseToolbar(true);
+                    mViewModel.onSearchMenuCollapse(true);
                 } else {
                     // return to the followed tag that was showing prior to searching
                     resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
@@ -1053,16 +1128,54 @@ public class ReaderPostListFragment extends Fragment
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    if (TextUtils.isEmpty(newText)) {
-                        showSearchMessage();
-                        hideSearchTabs();
-                    } else {
-                        populateSearchSuggestionAdapter(newText);
-                    }
+                    populateSearchSuggestions(newText);
+                    showSearchMessageOrSuggestions();
                     return true;
                     }
                 }
         );
+    }
+
+    private void showSearchMessageOrSuggestions() {
+        boolean hasQuery = !isSearchViewEmpty();
+        boolean hasPerformedSearch = !TextUtils.isEmpty(mCurrentSearchQuery);
+        boolean isSearching = getPostListType() == ReaderPostListType.SEARCH_RESULTS;
+
+        // prevents suggestions from being shown after the search view has been collapsed
+        if (!isSearching) {
+            return;
+        }
+
+        // prevents suggestions from being shown above search results after configuration changes
+        if (mWasPaused && hasPerformedSearch) {
+            return;
+        }
+
+        if (!hasQuery || !hasPerformedSearch) {
+            // clear posts and sites so only the suggestions or the empty view are visible
+            getPostAdapter().clear();
+            getSiteSearchAdapter().clear();
+
+            hideSearchTabs();
+
+            // clears the last performed query
+            mCurrentSearchQuery = null;
+
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                final boolean hasSuggestions =
+                        mSearchSuggestionRecyclerAdapter != null && mSearchSuggestionRecyclerAdapter.getItemCount() > 0;
+
+                if (hasSuggestions) {
+                    hideSearchMessage();
+                    showSearchSuggestions();
+                } else {
+                    showSearchMessage();
+                    hideSearchSuggestions();
+                }
+            } else {
+                showSearchMessage();
+            }
+        }
     }
 
     /*
@@ -1099,6 +1212,7 @@ public class ReaderPostListFragment extends Fragment
 
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
+        hideSearchSuggestions();
 
         // remember this query for future suggestions
         String trimQuery = query.trim();
@@ -1165,16 +1279,20 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        // clear posts and sites so only the empty view is visible
-        getPostAdapter().clear();
-        getSiteSearchAdapter().clear();
-
         setEmptyTitleDescriptionAndButton(false);
         showEmptyView();
     }
 
     private void hideSearchMessage() {
         hideEmptyView();
+    }
+
+    private void showSearchSuggestions() {
+        mRecyclerView.showSearchSuggestions();
+    }
+
+    private void hideSearchSuggestions() {
+        mRecyclerView.hideSearchSuggestions();
     }
 
     /*
@@ -1275,6 +1393,16 @@ public class ReaderPostListFragment extends Fragment
         return isSearchTabsShowing() ? mSearchTabs.getSelectedTabPosition() : -1;
     }
 
+    private void populateSearchSuggestions(String query) {
+        populateSearchSuggestionAdapter(query);
+        populateSearchSuggestionRecyclerAdapter(null); // always passing null as there's no need to filter
+    }
+
+    private void resetSearchSuggestions() {
+        resetSearchSuggestionAdapter();
+        resetSearchSuggestionRecyclerAdapter();
+    }
+
     /*
      * create and assign the suggestion adapter for the search view
      */
@@ -1291,12 +1419,13 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public boolean onSuggestionClick(int position) {
                 String query = mSearchSuggestionAdapter.getSuggestion(position);
-                if (!TextUtils.isEmpty(query)) {
-                    mSearchView.setQuery(query, true);
-                }
+                onSearchSuggestionClicked(query);
                 return true;
             }
         });
+
+        mSearchSuggestionAdapter.setOnSuggestionDeleteClickListener(this::onSearchSuggestionDeleteClicked);
+        mSearchSuggestionAdapter.setOnSuggestionClearClickListener(this::onSearchSuggestionClearClicked);
     }
 
     private void populateSearchSuggestionAdapter(String query) {
@@ -1309,6 +1438,65 @@ public class ReaderPostListFragment extends Fragment
     private void resetSearchSuggestionAdapter() {
         mSearchView.setSuggestionsAdapter(null);
         mSearchSuggestionAdapter = null;
+    }
+
+    private void createSearchSuggestionRecyclerAdapter() {
+        mSearchSuggestionRecyclerAdapter = new ReaderSearchSuggestionRecyclerAdapter();
+        mRecyclerView.setSearchSuggestionAdapter(mSearchSuggestionRecyclerAdapter);
+
+        mSearchSuggestionRecyclerAdapter.setOnSuggestionClickListener(this::onSearchSuggestionClicked);
+        mSearchSuggestionRecyclerAdapter.setOnSuggestionDeleteClickListener(this::onSearchSuggestionDeleteClicked);
+        mSearchSuggestionRecyclerAdapter.setOnSuggestionClearClickListener(this::onSearchSuggestionClearClicked);
+    }
+
+    private void populateSearchSuggestionRecyclerAdapter(String query) {
+        if (mSearchSuggestionRecyclerAdapter == null) {
+            createSearchSuggestionRecyclerAdapter();
+        }
+        mSearchSuggestionRecyclerAdapter.setQuery(query);
+    }
+
+    private void resetSearchSuggestionRecyclerAdapter() {
+        mRecyclerView.setSearchSuggestionAdapter(null);
+        mSearchSuggestionRecyclerAdapter = null;
+    }
+
+    private void onSearchSuggestionClicked(String query) {
+        if (!TextUtils.isEmpty(query)) {
+            mSearchView.setQuery(query, true);
+        }
+    }
+
+    private void onSearchSuggestionDeleteClicked(String query) {
+        ReaderSearchTable.deleteQueryString(query);
+
+        mSearchSuggestionAdapter.reload();
+        mSearchSuggestionRecyclerAdapter.reload();
+
+        showSearchMessageOrSuggestions();
+    }
+
+    private void onSearchSuggestionClearClicked() {
+        showClearSearchSuggestionsConfirmationDialog(getContext());
+    }
+
+    private void showClearSearchSuggestionsConfirmationDialog(final Context context) {
+        new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Calypso_Dialog_Alert))
+                .setMessage(R.string.dlg_confirm_clear_search_history)
+                .setCancelable(true)
+                .setNegativeButton(R.string.no, null)
+                .setPositiveButton(R.string.yes, (dialog, id) -> clearSearchSuggestions())
+                .create()
+                .show();
+    }
+
+    private void clearSearchSuggestions() {
+        ReaderSearchTable.deleteAllQueries();
+
+        mSearchSuggestionAdapter.swapCursor(null);
+        mSearchSuggestionRecyclerAdapter.swapCursor(null);
+
+        showSearchMessageOrSuggestions();
     }
 
     /*
@@ -1651,7 +1839,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         setCurrentTag(tag, BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel);
-        mViewModel.setSubfiltersVisibility(
+        mViewModel.changeSubfiltersVisibility(
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
                 && mIsTopLevel
                 && tag.isFollowedSites());
@@ -1934,7 +2122,7 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && manageSubfilter) {
             if (mCurrentTag.isFollowedSites()) {
-                mViewModel.applySubfilter(mViewModel.getCurrentSubfilterValue(), false);
+                mViewModel.onSubfilterChanged(mViewModel.getCurrentSubfilterValue(), false);
             } else {
                 changeReaderMode(new ReaderModeInfo(
                         tag,
@@ -1943,7 +2131,8 @@ public class ReaderPostListFragment extends Fragment
                         0,
                         false,
                         null,
-                        false),
+                        false,
+                         mRemoveFilterButton.getVisibility() == View.VISIBLE),
                         false
                 );
             }
@@ -1978,10 +2167,12 @@ public class ReaderPostListFragment extends Fragment
         }
 
         getPostAdapter().setCurrentTag(mCurrentTag);
-        mViewModel.setSubfiltersVisibility(BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && ReaderUtils.isFollowing(
+        mViewModel.changeSubfiltersVisibility(
+                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && ReaderUtils.isFollowing(
                 mCurrentTag,
                 BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
-                mRecyclerView));
+                mRecyclerView)
+        );
         hideNewPostsBar();
         showLoadingProgress(false);
         updateCurrentTagIfTime();

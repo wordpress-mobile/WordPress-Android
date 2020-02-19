@@ -20,6 +20,7 @@
     <org.wordpress.android.util.widgets.WPTextInputLayout
         android:layout_centerVertical="true"
         app:theme="@style/LoginTheme.EditText"
+        app:passwordToggleDrawable="@drawable/selector_password_visibility"
         android:id="@+id/input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

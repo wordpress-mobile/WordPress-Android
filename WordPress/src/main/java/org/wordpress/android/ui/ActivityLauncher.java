@@ -128,7 +128,23 @@ public class ActivityLauncher {
                                                 @NonNull MediaBrowserType browserType,
                                                 @Nullable SiteModel site,
                                                 @Nullable Integer localPostId) {
-        Intent intent = new Intent(activity, PhotoPickerActivity.class);
+        Intent intent = createShowPhotoPickerIntent(activity, browserType, site, localPostId);
+        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
+    }
+
+    public static void showPhotoPickerForResult(Fragment fragment,
+                                                @NonNull MediaBrowserType browserType,
+                                                @Nullable SiteModel site,
+                                                @Nullable Integer localPostId) {
+        Intent intent = createShowPhotoPickerIntent(fragment.getContext(), browserType, site, localPostId);
+        fragment.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
+    }
+
+    private static Intent createShowPhotoPickerIntent(Context context,
+                                                      @NonNull MediaBrowserType browserType,
+                                                      @Nullable SiteModel site,
+                                                      @Nullable Integer localPostId) {
+        Intent intent = new Intent(context, PhotoPickerActivity.class);
         intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
@@ -136,7 +152,7 @@ public class ActivityLauncher {
         if (localPostId != null) {
             intent.putExtra(PhotoPickerActivity.LOCAL_POST_ID, localPostId.intValue());
         }
-        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
+        return intent;
     }
 
     public static void showStockMediaPickerForResult(Activity activity,
@@ -688,10 +704,10 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewMeActivity(Context context) {
-        Intent intent = new Intent(context, MeActivity.class);
+    public static void viewMeActivityForResult(Activity activity) {
+        Intent intent = new Intent(activity, MeActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
     }
 
     public static void viewAccountSettings(Context context) {
@@ -700,7 +716,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewAppSettings(Activity activity) {
+    public static void viewAppSettingsForResult(Activity activity) {
         Intent intent = new Intent(activity, AppSettingsActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
         activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);

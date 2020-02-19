@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
@@ -40,6 +41,7 @@ import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -404,32 +406,39 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
-            MOVE_TO_DRAFT -> changePageStatus(page.id, PageStatus.DRAFT)
-            MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
-            PUBLISH_NOW -> publishPageNow(page.id)
+            MOVE_TO_DRAFT -> changePageStatus(page.remoteId, PageStatus.DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(page.remoteId, PageStatus.TRASHED)
+            PUBLISH_NOW -> publishPageNow(page.remoteId)
             DELETE_PERMANENTLY -> deletePage(page)
+            CANCEL_AUTO_UPLOAD -> cancelPendingAutoUpload(LocalId(page.localId))
         }
         return true
     }
 
     private fun deletePage(page: Page) {
         performIfNetworkAvailable {
-            pageListDialogHelper.showDeletePageConfirmationDialog(RemoteId(page.id), page.title)
+            pageListDialogHelper.showDeletePageConfirmationDialog(RemoteId(page.remoteId), page.title)
         }
+    }
+
+    private fun cancelPendingAutoUpload(pageId: LocalId) {
+        val page = postStore.getPostByLocalPostId(pageId.value)
+        val msgRes = UploadUtils.cancelPendingAutoUpload(page, dispatcher)
+        _showSnackbarMessage.postValue(SnackbarMessageHolder(msgRes))
     }
 
     private fun setParent(page: Page) {
         performIfNetworkAvailable {
             trackMenuSelectionEvent(SET_PARENT)
 
-            _setPageParent.postValue(pageMap[page.id])
+            _setPageParent.postValue(pageMap[page.remoteId])
         }
     }
 
     private fun previewPage(page: Page) {
         launch(defaultDispatcher) {
             trackMenuSelectionEvent(VIEW_PAGE)
-            val pageModel = pageMap[page.id]
+            val pageModel = pageMap[page.remoteId]
             val post = if (pageModel != null) postStore.getPostByLocalPostId(pageModel.pageId) else null
             _previewPage.postValue(post)
         }
@@ -481,10 +490,7 @@ class PagesViewModel
     }
 
     fun onItemTapped(pageItem: Page) {
-        // TODO We are going to be doing a refactor of the ViewModels related to Pages so that the PostModel is
-        //  available without doing subsequent fetches from the PostStore
-        //  https://github.com/wordpress-mobile/WordPress-Android/issues/11233
-        val page = postStore.getPostByRemotePostId(pageItem.id, site)
+        val page = pageMap[pageItem.remoteId]!!.post
 
         // first of all, check whether this post is in Conflicted state with a more recent remote version
         if (pageConflictResolver.doesPageHaveUnhandledConflict(page)) {
@@ -497,7 +503,7 @@ class PagesViewModel
             pageListDialogHelper.showAutoSaveRevisionDialog(page)
             return
         }
-        editPage(RemoteId(pageItem.id))
+        editPage(RemoteId(pageItem.remoteId))
     }
 
     fun onNewPageButtonTapped() {

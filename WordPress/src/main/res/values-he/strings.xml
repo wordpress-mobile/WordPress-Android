@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-12 00:55:12+0000
+Translation-Revision-Date: 2020-02-10 00:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s">כיתוב לווידאו. %s</string>
+    <string name="gutenberg_native_edit_video">לערוך וידאו</string>
+    <string name="gutenberg_native_edit_media">לערוך מדיה</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">יש להקיש פעמיים כדי לבחור פריסה</string>
+    <string name="gutenberg_native_add_a_shortcode">להוסיף שורטקוד…</string>
+    <string name="post_list_author">המחבר של הפוסט</string>
+    <string name="fab_create_desc">יצירת פוסט</string>
+    <string name="stats_posting_activity_end_description">הצגת את כל הנתונים הסטטיסטיים עבור התקופה הזאת.\n הקשה נוספת תתחיל את התהליך מהתחלה.</string>
+    <string name="stats_posting_activity_empty_description">לא קיימים נתונים סטטיסטיים עבור התקופה הזאת.</string>
+    <string name="stats_posting_activity_label_content_description">מפרסם את הפעילות עבור %1$s</string>
+    <string name="stats_posting_activity_content_description">הימים עם נתונים %1$s עבור %2$s הם: %2$s %3$s. יש להקיש כדי להציג תוכן נוסף.</string>
+    <string name="stats_posting_activity_action">לנווט בין כל הנתונים הסטטיסטיים לתקופה זאת</string>
+    <string name="stats_box_type_very_high">גבוהים מאוד</string>
+    <string name="stats_box_type_high">גבוהים</string>
+    <string name="stats_box_type_medium">בינוניים</string>
+    <string name="stats_box_type_low">נמוכים</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  ו-%1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_remove_image">להסיר את תמונת הרקע</string>
+    <string name="gutenberg_native_move_image_forward">להעביר את התמונה קדימה</string>
+    <string name="gutenberg_native_move_image_backward">להעביר את התמונה אחורה</string>
+    <string name="gutenberg_native_gallery_caption_s">כיתוב לגלריה. %s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. הערך הנוכחי הוא %2$s</string>
+    <string name="create_post_page_fab_tooltip">ליצור פוסט או עמוד</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">יש להקיש על %1$s הוספת פוסט %2$s כדי ליצור פוסט חדש.</string>
+    <string name="quick_start_dialog_create_new_post_message_short">יש להקיש על %1$s פוסטים בבלוג %2$s כדי להמשיך.</string>
+    <string name="content_description_person_building_website">אדם שבונה אתר אינטרנט</string>
+    <string name="post_signup_interstitial_not_right_now">לא כרגע</string>
+    <string name="post_signup_interstitial_subtitle">לא משנה מה ברצונך ליצור או לשתף, אנחנו נעזור לך לעשות זאת כאן.</string>
+    <string name="post_signup_interstitial_title">ברוכים הבאים ל-WordPress</string>
+    <string name="stock_media_picker_list_content_description">ספריית תמונות</string>
+    <string name="photo_picker_image_thumbnail_unselected">הבחירה בתמונה בוטלה</string>
+    <string name="photo_picker_image_selected">, נבחרה</string>
+    <string name="photo_picker_image_thumbnail_selected">התמונה נבחרה</string>
+    <string name="photo_picker_image_thumbnail_content_description">תמונה ממוזערת של תמונה</string>
+    <string name="my_site_bottom_sheet_add_post">פוסט בבלוג</string>
+    <string name="my_site_bottom_sheet_title">להוסיף חדש</string>
+    <string name="post_settings_publish">פרסום</string>
+    <string name="dialog_gutenberg_informative_description_v2">שיפרנו באופן משמעותי את עורך הבלוקים ואנחנו חושבים שכדאי לנסות אותו! הפעלנו אותו בפוסטים ובעמודים חדשים אבל אם ברצונך לחזור לעורך הקלאסי, יש לעבור אל \'האתר שלי\' > \'הגדרות אתר\'.</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">לסנכרן עכשיו</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">הפוסט הנוכחי יסונכרן באופן מיידי.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">הכול מוכן לסנכרון?</string>
+    <string name="new_site_creation_unavailable_domain">הדומיין לא זמין</string>
+    <string name="login_promo_viewpager_content_description">הקדמה</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">לא הייתה לנו אפשרות לגשת לאתר שלך. עליך ליצור קשר עם חברת האחסון שלך כדי לפתור את הבעיה.</string>
     <string name="login_discovery_error_ssl">לא הייתה לנו אפשרות לגשת לאתר שלך עקב בעיה &lt;b>בתעודת SSL&lt;/b>. עליך ליצור קשר עם חברת האחסון שלך כדי לפתור את הבעיה.</string>
     <string name="login_discovery_error_http_auth">לא הייתה לנו אפשרות לגשת לאתר שלך מכיוון שהוא דורש &lt;b>אימות HTTP&lt;/b>. עליך ליצור קשר עם חברת האחסון שלך כדי לפתור את הבעיה.</string>
@@ -14,8 +59,6 @@ Language: he_IL
     <string name="enter_site_credentials_instead">יש להתחבר עם פרטי הכניסה של האתר</string>
     <string name="enter_credentials_for_site">יש להתחבר עם פרטי הכניסה שלך לאתר %1$s</string>
     <string name="send_verification_email">לשלוח את הודעת האימייל לאישור</string>
-    <string name="my_site_bottom_sheet_add_page">ליצור עמוד חדש</string>
-    <string name="my_site_bottom_sheet_add_post">ליצור פוסט חדש</string>
     <string name="reader_following_display_name">מעקב</string>
     <string name="posts_cannot_be_started">אין לנו אפשרות לפתוח את הפוסטים כרגע. יש לנסות שוב מאוחר יותר</string>
     <string name="suffix_1_000">%sk</string>
@@ -144,20 +187,16 @@ Language: he_IL
     <string name="stats_post_views_label">צפיות</string>
     <string name="stats_post_label">פוסט</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">גרף של פעילות הפרסום.</string>
     <string name="stats_item_collapsed">הפריט צומצם</string>
     <string name="stats_item_expanded">הפריט הורחב</string>
     <string name="stats_collapse_content_description">לצמצם</string>
     <string name="stats_expand_content_description">להרחיב</string>
     <string name="stats_graph_updated">הגרף עודכן.</string>
     <string name="stats_overview_content_description">%1$s %2$s לתקופה: %3$s, שינוי מהתקופה הקודמת - %4$s</string>
-    <string name="stats_bar_chart_content_description">גרף של הצפיות באתר.</string>
     <string name="stats_loading_card">טוען את נתוני הכרטיס שנבחרו</string>
     <string name="site_settings_editor">עורך</string>
     <string name="description_expand">להרחיב</string>
     <string name="description_collapse">למזער</string>
-    <string name="editor_retry_failed_uploads">לנסות שוב את ההעלאה</string>
-    <string name="editor_toast_failed_uploads">מספר העלאות מדיה נכשלו. לא ניתן לשמור או לפרסם\n הפוסט שלך במצב זה.</string>
     <string name="my_site_verify_your_email_without_email">עליך לאמת את כתובת האימייל שלך - ההוראות נשלחו לכתובת האימייל שלך</string>
     <string name="my_site_verify_your_email">יש לאמת את כתובת האימייל שלך - ההוראות נשלחו לכתובת %s</string>
     <string name="link_dialog_button_cancel">ביטול</string>
@@ -623,7 +662,6 @@ Language: he_IL
     <string name="featured_image_desc">תמונה מרכזית</string>
     <string name="button_discard">ביטול</string>
     <string name="reader_avatar_desc">תמונת פרופיל</string>
-    <string name="reader_blavatar_desc">סמל אתר</string>
     <string name="notification_channel_transient_title">זמני</string>
     <string name="support_identity_input_dialog_email_label">אימייל</string>
     <string name="support_identity_input_dialog_enter_email">יש להזין את כתובת האימייל שלך</string>
@@ -644,7 +682,6 @@ Language: he_IL
     <string name="activity_log_rewind_started_snackbar_message">אנחנו משחזרים את האתר שלך כעת\nמשחזר לתאריך %1$s %2$s</string>
     <string name="activity_log_button">כפתור לפעולות ביומן הפעילות</string>
     <string name="plugin_auto_managed">ניהול אוטומטי</string>
-    <string name="reader_save_posts_locally_dialog_message">באפשרותך לשמור את הפוסט הנוכחי ולקרוא אותו במועד מאוחר יותר כרצונך. הפוסט יהיה זמין במכשיר זה בלבד - פוסטים שנשמרו לא מסתנכרנים בין מכשירים. (עדיין! אנחנו עובדים על זה).</string>
     <string name="reader_save_posts_locally_dialog_title">שמירת פוסטים למועד מאוחר יותר</string>
     <string name="reader_empty_search_request_failed">אין אפשרות לבצע את החיפוש</string>
     <string name="reader_empty_search_title">לא נמצאו תוצאות</string>
@@ -669,7 +706,6 @@ Language: he_IL
     <string name="reader_add_bookmark">הוספה לפוסטים שנשמרו</string>
     <string name="reader_save_for_later_title">פוסטים שנשמרו</string>
     <string name="removed">נמחק</string>
-    <string name="tabbar_accessibility_label_write">פוסט חדש. כתיבת פוסט חדש.</string>
     <string name="my_site_icon_content_description">שינוי סמל אתר</string>
     <string name="my_site_icon_dialog_cancel_button">ביטול</string>
     <string name="my_site_icon_dialog_remove_button">מחיקה</string>
@@ -700,7 +736,6 @@ Language: he_IL
     <string name="preference_privacy_settings">הגדרות פרטיות</string>
     <string name="preference_collect_information">איסוף מידע</string>
     <string name="post_submitted">הפוסט נשלח</string>
-    <string name="write_post">כתיבת פוסט</string>
     <string name="login_email_button_signup">אין לך חשבון עדיין? %1$sהרשמה%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">כדי להוסיף את התוסף, האתר חייב להיות יציב.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">כדי להוסיף את התוסף, הרישום לעדכונים בדומיין חייב להיות משויך למשתמש זה.</string>
@@ -742,7 +777,6 @@ Language: he_IL
     <string name="site_settings_quota_space_unlimited">%1$s ללא הגבלה</string>
     <string name="preview_count">תצוגה מקדימה של %d</string>
     <string name="add_count">הוספה של %d</string>
-    <string name="fab_create_desc">יצירה</string>
     <string name="fab_add_tag_desc">יצירת תגית</string>
     <string name="navigate_up_desc">ניווט למעלה</string>
     <string name="notification_settings_switch_desc">הודעות</string>
@@ -1254,7 +1288,6 @@ Language: he_IL
     <string name="sharing">שיתוף</string>
     <string name="tabbar_accessibility_label_notifications">הודעות. ניהול התראות.</string>
     <string name="tabbar_accessibility_label_reader">Reader. מעקב אחר תוכן מאתרים אחרים.</string>
-    <string name="tabbar_accessibility_label_me">אני. הצגת הפרופיל שלך והוספת שינויים.</string>
     <string name="tabbar_accessibility_label_my_site">האתר שלי. הצגת האתר שלך וניהולו, כולל נתונים סטטיסטיים.</string>
     <string name="my_site_btn_sharing">שיתוף</string>
     <string name="button_not_now">לא עכשיו</string>
