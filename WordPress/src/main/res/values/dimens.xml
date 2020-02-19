@@ -170,7 +170,6 @@
     <dimen name="reader_simple_post_image_width">72dp</dimen>
 
     <dimen name="reader_filter_bottom_sheet_handle_height">15dp</dimen>
-    <dimen name="reader_remove_filter_icon_width">48dp</dimen>
     <dimen name="reader_subfilter_end_guideline_margin">58dp</dimen>
 
     <dimen name="reader_subfilter_title_gone_margin_top">0dp</dimen>

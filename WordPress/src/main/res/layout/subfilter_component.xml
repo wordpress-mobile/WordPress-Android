@@ -51,7 +51,7 @@
 
     <ImageView
         android:id="@+id/remove_filter_button"
-        android:layout_width="@dimen/reader_remove_filter_icon_width"
+        android:layout_width="@dimen/min_touch_target_sz"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/reader_btn_remove_filter_content_description"
