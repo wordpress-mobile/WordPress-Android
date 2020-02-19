@@ -131,10 +131,10 @@ class PagesFragment : Fragment() {
                 // a restart will happen so, no need to continue here
                 return
             }
-
-            val remotePageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1L)
-            if (remotePageId != -1L) {
-                viewModel.onPageEditFinished(remotePageId, data)
+            // we need to work with local ids, since local drafts don't have remote ids
+            val localPageId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, -1)
+            if (localPageId != -1) {
+                viewModel.onPageEditFinished(localPageId, data)
             }
         } else if (requestCode == RequestCodes.PAGE_PARENT && resultCode == Activity.RESULT_OK && data != null) {
             val parentId = data.getLongExtra(EXTRA_PAGE_PARENT_ID_KEY, -1)

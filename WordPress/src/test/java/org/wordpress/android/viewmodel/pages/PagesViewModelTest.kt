@@ -3,6 +3,8 @@ package org.wordpress.android.viewmodel.pages
 import android.content.Intent
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -221,9 +223,12 @@ class PagesViewModelTest {
         // Given
         val intent = mock<Intent>()
         val pageModel = setUpPageStoreWithASinglePage()
+        whenever(pageStore.getPageByLocalId(eq(pageModel.pageId), anyOrNull()))
+                .thenReturn(pageModel)
+
         viewModel.start(site)
         // When
-        viewModel.onPageEditFinished(pageModel.remoteId, intent)
+        viewModel.onPageEditFinished(pageModel.pageId, intent)
         // Then
         assertThat(viewModel.postUploadAction.value).isEqualTo(Triple(pageModel.post, pageModel.site, intent))
     }

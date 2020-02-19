@@ -254,11 +254,13 @@ class PagesViewModel
         pageMap = pageMap
     }
 
-    fun onPageEditFinished(remotePageId: Long, data: Intent) {
+    fun onPageEditFinished(localPageId: Int, data: Intent) {
         launch {
             refreshPages() // show local changes immediately
-            pageMap[remotePageId]?.let {
-                _postUploadAction.postValue(Triple(it.post, it.site, data))
+            withContext(defaultDispatcher) {
+                pageStore.getPageByLocalId(pageId = localPageId, site = site)?.let {
+                    _postUploadAction.postValue(Triple(it.post, it.site, data))
+                }
             }
         }
     }
