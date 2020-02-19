@@ -201,17 +201,18 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun changeSubfiltersVisibility(show: Boolean) {
+        val isCurrentSubfilterTracked = getCurrentSubfilterValue().isTrackedItem
+        val isSubfilterListTrackerRunning = readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)
+
         if (show) {
-            if (getCurrentSubfilterValue().isTrackedItem &&
-                        !readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
+            if (isCurrentSubfilterTracked && !isSubfilterListTrackerRunning) {
                 AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
                 readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
-            } else if (!getCurrentSubfilterValue().isTrackedItem &&
-                    readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
+            } else if (!isCurrentSubfilterTracked && isSubfilterListTrackerRunning) {
                 AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
                 readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
             }
-        } else if (readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
+        } else if (isSubfilterListTrackerRunning) {
             AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
@@ -268,11 +269,13 @@ class ReaderPostListViewModel @Inject constructor(
         subfilterListItem: SubfilterListItem,
         requestNewerPosts: Boolean
     ) {
-        if (subfilterListItem.isTrackedItem &&
-                            !readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
+        val isSubfilterItemTracked = subfilterListItem.isTrackedItem
+        val isSubfilterListTrackerRunning = readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)
+
+        if (isSubfilterItemTracked && !isSubfilterListTrackerRunning) {
             AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
             readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
-        } else if (!subfilterListItem.isTrackedItem && readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
+        } else if (!isSubfilterItemTracked && isSubfilterListTrackerRunning) {
             AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
