@@ -1653,7 +1653,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override public void onImagePreviewRequested(String mediaUrl) {
 //        MediaPreviewActivity.showPreview(this, null, mediaUrl);
         // TODO: Temporarily open image editor at this point
-        String resizedImageUrl = StringUtils.notNullStr(mediaUrl);
+        String imageUrl = StringUtils.notNullStr(mediaUrl);
 
         // We're using a separate cache in WPAndroid and RN's Gutenberg editor so we need to reload the image
         // in the preview screen using WPAndroid's image loader. We create a resized url using Photon service and
@@ -1665,14 +1665,14 @@ public class EditPostActivity extends AppCompatActivity implements
         int maxWidth = displayWidth - (margin * 2);
 
         int reducedSizeWidth = (int) (maxWidth * PREVIEW_IMAGE_REDUCED_SIZE_FACTOR);
-        resizedImageUrl = mReaderUtilsWrapper.getResizedImageUrl(
+        String resizedImageUrl = mReaderUtilsWrapper.getResizedImageUrl(
             mediaUrl,
             reducedSizeWidth,
             0,
             !SiteUtils.isPhotonCapable(mSite)
         );
 
-        ActivityLauncher.openImageEditor(this, resizedImageUrl, mediaUrl);
+        ActivityLauncher.openImageEditor(this, resizedImageUrl, imageUrl);
     }
 
     @Override public void onMediaEditorRequested(String mediaUrl) {
