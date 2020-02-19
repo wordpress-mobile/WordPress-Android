@@ -35,9 +35,9 @@ class ReaderTracker @Inject constructor(private val dateProvider: DateProvider) 
     }
 
     fun stop(type: ReaderTrackerType) {
-        trackers[type]?.let { trackerInto ->
-            trackerInto.startDate?.let { startDate ->
-                val accumulatedTime = trackerInto.accumulatedTime +
+        trackers[type]?.let { trackerInfo ->
+            trackerInfo.startDate?.let { startDate ->
+                val accumulatedTime = trackerInfo.accumulatedTime +
                         DateTimeUtils.secondsBetween(dateProvider.getCurrentDate(), startDate)
                 // let reset the startDate to null
                 trackers[type] = ReaderTrackerInfo(accumulatedTime = accumulatedTime)
@@ -46,9 +46,7 @@ class ReaderTracker @Inject constructor(private val dateProvider: DateProvider) 
     }
 
     fun isRunning(type: ReaderTrackerType): Boolean {
-        return trackers[type]?.let { trackerInto ->
-            trackerInto.startDate != null
-        } ?: false
+        return trackers[type]?.startDate != null
     }
 
     fun getAnalyticsData(): Map<String, Any> {
