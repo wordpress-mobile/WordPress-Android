@@ -182,7 +182,7 @@ public class ReaderBlog {
                && this.getImageUrl().equals(blogInfo.getImageUrl());
     }
 
-    public boolean isSameBlogAs(ReaderBlog blogInfo) {
+    public boolean isSameBlogOrFeedAs(ReaderBlog blogInfo) {
         boolean areBothValidFeeds = this.blogId == this.feedId
                                     && blogInfo.blogId == blogInfo.feedId
                                     && this.hasFeedUrl()
