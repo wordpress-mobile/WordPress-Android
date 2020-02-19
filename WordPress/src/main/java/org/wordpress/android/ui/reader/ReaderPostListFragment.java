@@ -1145,7 +1145,7 @@ public class ReaderPostListFragment extends Fragment
 
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
                     if (isCurrentTagManagedInFollowingTab()) {
-                        mViewModel.manageSubfilter();
+                        mViewModel.onSubfilterReselected();
                     } else {
                         // return to the followed tag that was showing prior to searching
                         resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
@@ -2188,7 +2188,7 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && manageSubfilter) {
             if (mCurrentTag.isFollowedSites() || mCurrentTag.isDefaultInMemoryTag()) {
-                mViewModel.manageSubfilter();
+                mViewModel.onSubfilterReselected();
             } else {
                 changeReaderMode(new ReaderModeInfo(
                         tag,
