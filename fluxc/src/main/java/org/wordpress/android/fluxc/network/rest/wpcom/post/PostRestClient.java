@@ -282,7 +282,7 @@ public class PostRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(PostRemoteAutoSaveModel response) {
                         RemoteAutoSavePostPayload payload =
-                                new RemoteAutoSavePostPayload(post.getId(), response, site);
+                                new RemoteAutoSavePostPayload(post.getId(), post.getRemotePostId(), response, site);
                         mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(payload));
                     }
                 },
@@ -292,7 +292,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         // Possible non-generic errors: 404 unknown_post (invalid post ID)
                         PostError postError = new PostError(error.apiError, error.message);
                         RemoteAutoSavePostPayload payload =
-                                new RemoteAutoSavePostPayload(post.getId(), postError);
+                                new RemoteAutoSavePostPayload(post.getId(), post.getRemotePostId(), postError);
                         mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(payload));
                     }
                 }
