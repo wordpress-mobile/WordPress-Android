@@ -606,7 +606,7 @@ public class ReaderPostListFragment extends Fragment
             showEmptyView();
         }
 
-        mViewModel.onFragmentResume(mIsTopLevel, ReaderUtils.isFollowing(getCurrentTag(), mIsTopLevel, mRecyclerView));
+        mViewModel.onFragmentResume(mIsTopLevel, isCurrentTagManagedInFollowingTab());
     }
 
     /*
