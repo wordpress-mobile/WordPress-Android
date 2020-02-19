@@ -15,12 +15,9 @@ import org.libsodium.jni.NaCl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -81,26 +78,10 @@ public class EncryptionUtilsTest {
     }
 
     @Test
-    public void testUUIDAreDifferent() {
-        String source1 = "v1" + "android" + System.currentTimeMillis();
-        String uuid1 = UUID.nameUUIDFromBytes(source1.getBytes()).toString();
+    public void testLogsUuidResultIsExpected() {
+        String uuid1 = EncryptionUtils.generateLogsUUID("v1", "android", 1234L).toString();
 
-        String source2 = "v1" + "android" + System.currentTimeMillis();
-        String uuid2 = UUID.nameUUIDFromBytes(source2.getBytes()).toString();
-
-        assertFalse(uuid1.equals(uuid2));
-    }
-
-    @Test
-    public void testUUIDAreEquals() {
-        long sameTime = System.currentTimeMillis();
-        String source1 = "v1" + "android" + sameTime;
-        String uuid1 = UUID.nameUUIDFromBytes(source1.getBytes()).toString();
-
-        String source2 = "v1" + "android" + sameTime;
-        String uuid2 = UUID.nameUUIDFromBytes(source2.getBytes()).toString();
-
-        assertTrue(uuid1.equals(uuid2));
+        assertTrue(uuid1.equals("72b43e4d-25b3-3f9c-a3f1-c4c8b498a988"));
     }
 
     /**
@@ -110,6 +91,9 @@ public class EncryptionUtilsTest {
     private void testEncryption(final List<String> testString) {
         final JSONObject encryptionDataJson = getEncryptionDataJson(mPublicKey, testString);
         assertNotNull(encryptionDataJson);
+
+        final String logsUUID = EncryptionUtils.getLogsUUID(encryptionDataJson);
+        assertNotNull(logsUUID);
 
         final byte[] dataSpecificKey = getDataSpecificKey(encryptionDataJson);
         assertNotNull(dataSpecificKey);

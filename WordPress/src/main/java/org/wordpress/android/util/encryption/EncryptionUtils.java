@@ -56,10 +56,9 @@ public class EncryptionUtils {
         JSONObject encryptionDataJson = new JSONObject();
         encryptionDataJson.put(FIELD_KEYED_WITH, KEYED_WITH);
 
-        // Generate Logs UUID
-        String source = KEYED_WITH + ANDROID_PLATFORM + System.currentTimeMillis();
-        byte[] bytes = source.getBytes();
-        encryptionDataJson.put(FIELD_LOGS_ID, UUID.nameUUIDFromBytes(bytes));
+        // Logs UUID
+        UUID logsUUID = generateLogsUUID(KEYED_WITH, ANDROID_PLATFORM, System.currentTimeMillis());
+        encryptionDataJson.put(FIELD_LOGS_ID, logsUUID.toString());
 
         // Encryption key
         final byte[] secretKey = createEncryptionKey();
@@ -83,6 +82,13 @@ public class EncryptionUtils {
         encryptionDataJson.put(FIELD_MESSAGES, encryptedAndEncodedMessagesJson);
 
         return encryptionDataJson.toString();
+    }
+
+    static UUID generateLogsUUID(String version, String platform, long currentTimeMillis) {
+        String source = version + platform + currentTimeMillis;
+        byte[] bytes = source.getBytes();
+        // Using UUIDv3 to take more control over the UUID generation
+        return UUID.nameUUIDFromBytes(bytes);
     }
 
     /**
