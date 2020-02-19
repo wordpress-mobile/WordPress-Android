@@ -203,7 +203,7 @@ class PagesViewModel
                 postStore = postStore,
                 eventBusWrapper = eventBusWrapper,
                 site = site,
-                handlePostUploadedWithoutError = this::handlePostUploadedWithoutError,
+                handlePageUpdated = this::handlePageUpdated,
                 invalidateUploadStatus = this::handleInvalidateUploadStatus,
                 handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
                 handlePostUploadedStarted = this::postUploadStarted
@@ -248,10 +248,6 @@ class PagesViewModel
 
     private suspend fun refreshPages() {
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
-    }
-
-    private fun invalidatePages() {
-        pageMap = pageMap
     }
 
     fun onPageEditFinished(localPageId: Int, data: Intent) {
@@ -750,7 +746,7 @@ class PagesViewModel
     private fun hasRemoteAutoSavePreviewError() = _previewState.value != null &&
             _previewState.value == PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
 
-    fun handlePostUploadedWithoutError(remotePostId: RemoteId) {
+    fun handlePageUpdated(remotePostId: RemoteId) {
         var id = 0L
         if (!pageUpdateContinuations.contains(id)) {
             id = remotePostId.value
@@ -772,8 +768,8 @@ class PagesViewModel
 
     private fun handleInvalidateUploadStatus(ids: List<LocalId>) {
         launch {
-            _invalidateUploadStatus.postValue(ids)
-            invalidatePages()
+            _invalidateUploadStatus.value = ids
+            refreshPages()
         }
     }
 
@@ -781,7 +777,6 @@ class PagesViewModel
         launch {
             performIfNetworkAvailableAsync {
                 waitForPageUpdate(remoteId.value)
-                reloadPages()
             }
         }
     }
