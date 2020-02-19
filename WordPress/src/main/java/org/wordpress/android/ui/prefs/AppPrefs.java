@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -51,6 +52,8 @@ public class AppPrefs {
         // last selected tag in the reader
         READER_TAG_NAME,
         READER_TAG_TYPE,
+        READER_TAG_WAS_FOLLOWING,
+
         // last selected subfilter in the reader
         READER_SUBFILTER,
 
@@ -186,6 +189,10 @@ public class AppPrefs {
         // user id last used to login with
         LAST_USED_USER_ID,
 
+        // last user access status in reader
+        LAST_READER_KNOWN_ACCESS_TOKEN_STATUS,
+        LAST_READER_KNOWN_USER_ID,
+
         // used to indicate that user opted out of quick start
         IS_QUICK_START_DISABLED,
 
@@ -306,18 +313,48 @@ public class AppPrefs {
             return null;
         }
         int tagType = getInt(DeletablePrefKey.READER_TAG_TYPE);
-        return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType));
+
+        boolean wasFollowing = false;
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            // The intention here is to check if the `DeletablePrefKey.READER_TAG_WAS_FOLLOWING` key
+            // was present at all in the Shared Prefs.
+            // We could have it not set for example in cases where user is upgrading from
+            // a previous version of the app. In those cases we do not have enough information as of the saved
+            // tag was a Following tag or not, so (as with empty `DeletablePrefKey.READER_TAG_NAME`)
+            // let's do not use this piece of information.
+            String wasFallowingString = getString(DeletablePrefKey.READER_TAG_WAS_FOLLOWING);
+            if (TextUtils.isEmpty(wasFallowingString)) return null;
+
+            wasFollowing = getBoolean(DeletablePrefKey.READER_TAG_WAS_FOLLOWING, false);
+        }
+
+        return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType), wasFollowing);
     }
 
     public static void setReaderTag(ReaderTag tag) {
         if (tag != null && !TextUtils.isEmpty(tag.getTagSlug())) {
             setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagSlug());
             setInt(DeletablePrefKey.READER_TAG_TYPE, tag.tagType.toInt());
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                setBoolean(
+                        DeletablePrefKey.READER_TAG_WAS_FOLLOWING,
+                        tag.isFollowedSites() || tag.isDefaultInMemoryTag()
+                );
+            }
         } else {
-            prefs().edit()
-                   .remove(DeletablePrefKey.READER_TAG_NAME.name())
-                   .remove(DeletablePrefKey.READER_TAG_TYPE.name())
-                   .apply();
+            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                prefs().edit()
+                       .remove(DeletablePrefKey.READER_TAG_NAME.name())
+                       .remove(DeletablePrefKey.READER_TAG_TYPE.name())
+                       .remove(DeletablePrefKey.READER_TAG_WAS_FOLLOWING.name())
+                       .apply();
+            } else {
+                prefs().edit()
+                       .remove(DeletablePrefKey.READER_TAG_NAME.name())
+                       .remove(DeletablePrefKey.READER_TAG_TYPE.name())
+                       .apply();
+            }
         }
     }
 
@@ -396,6 +433,22 @@ public class AppPrefs {
 
     public static void setLastUsedUserId(long userId) {
         setLong(UndeletablePrefKey.LAST_USED_USER_ID, userId);
+    }
+
+    public static boolean getLastReaderKnownAccessTokenStatus() {
+        return getBoolean(UndeletablePrefKey.LAST_READER_KNOWN_ACCESS_TOKEN_STATUS, false);
+    }
+
+    public static void setLastReaderKnownAccessTokenStatus(boolean accessTokenStatus) {
+        setBoolean(UndeletablePrefKey.LAST_READER_KNOWN_ACCESS_TOKEN_STATUS, accessTokenStatus);
+    }
+
+    public static long getLastReaderKnownUserId() {
+        return getLong(UndeletablePrefKey.LAST_READER_KNOWN_USER_ID);
+    }
+
+    public static void setLastReaderKnownUserId(long userId) {
+        setLong(UndeletablePrefKey.LAST_READER_KNOWN_USER_ID, userId);
     }
 
     /**
