@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 public class EncryptionUtilsTest {
     private static final int BOX_PUBLIC_KEY_BYTES = NaCl.sodium().crypto_box_publickeybytes();
     private static final int BOX_SECRET_KEY_BYTES = NaCl.sodium().crypto_box_secretkeybytes();
-    private static final int BASE64_DECODE_FLAGS = Base64.DEFAULT;
+    private static final int BASE64_DECODE_FLAGS = Base64.NO_WRAP;
     // test data
     private static final List<String> TEST_EMPTY_STRING = new ArrayList<>();
     private static final List<String> TEST_LOG_STRING = Arrays.asList("WordPress - 13.5 - Version code: 789\n",

@@ -19,7 +19,7 @@ public class EncryptionUtils {
     static final short TAG_FINAL = (short) NaCl.sodium().crypto_secretstream_xchacha20poly1305_tag_final();
     static final short TAG_MESSAGE = (short) NaCl.sodium().crypto_secretstream_xchacha20poly1305_tag_message();
     private static final int HEADERBYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_headerbytes();
-    private static final int BASE64_FLAGS = Base64.DEFAULT;
+    private static final int BASE64_FLAGS = Base64.NO_WRAP;
     private static final String KEYED_WITH = "v1";
     private static final String ANDROID_PLATFORM = "android";
     private static final byte[] STATE = new byte[STATEBYTES];
