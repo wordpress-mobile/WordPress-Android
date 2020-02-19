@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        android:importantForAccessibility="yes">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/title"
