@@ -402,7 +402,7 @@ public class ReaderPostListFragment extends Fragment
                         BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel,
                         mRecyclerView
                 ) || ReaderUtils.isDefaultTag(mCurrentTag)) && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
-                    mViewModel.onSubfilterChanged(subfilterListItem);
+                    mViewModel.onSubfilterSelected(subfilterListItem);
                 }
             });
 

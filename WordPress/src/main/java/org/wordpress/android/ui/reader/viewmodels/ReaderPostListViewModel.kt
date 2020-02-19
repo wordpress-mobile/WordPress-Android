@@ -327,7 +327,7 @@ class ReaderPostListViewModel @Inject constructor(
         isFirstLoad = false
     }
 
-    fun onSubfilterChanged(subfilterListItem: SubfilterListItem) {
+    fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
         changeSubfilter(subfilterListItem, true)
     }
 
