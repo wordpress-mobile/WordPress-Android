@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@drawable/bg_bottom_sheet_handle_container">
+    android:background="@drawable/bg_bottom_sheet_handle_container"
+    android:contentDescription="@string/reader_bottom_sheet_content_description">
 
     <include layout="@layout/subfilter_handle"
         android:layout_width="match_parent"
