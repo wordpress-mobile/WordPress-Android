@@ -11,11 +11,11 @@ import org.json.JSONObject
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.util.encryption.EncryptionUtils
-import org.wordpress.android.util.encryption.LogEncryptionTestingActions
+import org.wordpress.android.util.encryption.LogsEncryptionActions
 import org.wordpress.android.util.encryption.LogsFileProvider
 
 class CrashLoggingUtils {
-    private val logEncryptionActions = LogEncryptionTestingActions()
+    private val logEncryptionActions = LogsEncryptionActions()
     private val logsFileProvider = LogsFileProvider()
 
     fun shouldEnableCrashLogging(context: Context): Boolean {

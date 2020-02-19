@@ -12,7 +12,7 @@ import org.json.JSONObject
 import org.wordpress.android.WordPress
 import org.wordpress.android.util.AppLog
 
-class LogEncryptionTestingActions {
+class LogsEncryptionActions {
     /**
      * Sends a POST request with the encrypted logs and useful fields
      * for the server to decrypt them.
@@ -22,7 +22,7 @@ class LogEncryptionTestingActions {
                 Request.Method.POST,
                 ENCRYPTION_LOGS_SERVER_URL,
                 encryptedLogsJson,
-                Listener { AppLog.i(AppLog.T.API, "Encrypted logs response successfully received by Wordpress API") },
+                Listener { AppLog.i(AppLog.T.API, "Encrypted logs response successfully received from Wordpress API") },
                 ErrorListener { AppLog.e(AppLog.T.API, "An error occurred when sending logs. " + it.message) }
         )
         WordPress.sRequestQueue.add(jsonRequest)
@@ -34,6 +34,8 @@ private const val ENCRYPTION_LOGS_SERVER_URL = "https://log-encryption-testing.h
 
 /**
  * This class represents a Request which response is a String.
+ * We need it because at the moment the testing endpoint returns
+ * a String with the decrypted logs.
  */
 class JsonStringRequest(
     method: Int,
