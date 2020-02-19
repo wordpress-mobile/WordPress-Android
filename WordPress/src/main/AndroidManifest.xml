@@ -60,6 +60,9 @@
         android:supportsRtl="true"
         tools:ignore="UnusedAttribute">
 
+        <!-- Force manual initialization for Sentry to provide DSN programmatically-->
+        <meta-data android:name="io.sentry.auto-init" android:value="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/com_google_android_geo_api_key"/>
