@@ -411,8 +411,8 @@ public class ReaderPostListFragment extends Fragment
                 if (isCurrentTagManagedInFollowingTab()
                     && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                     mViewModel.onSubfilterSelected(subfilterListItem);
-                    if (!mAccountStore.hasAccessToken() && mViewModel.getCurrentSubfilterValue() instanceof SiteAll) {
-                        setEmptyTitleAndDescriptionForSelfHostedCta();
+                    if (shouldShowEmptyViewForSelfHostedCta()) {
+                        setEmptyTitleDescriptionAndButton(false);
                         showEmptyView();
                     }
                 }
@@ -594,11 +594,8 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
-        if (mIsTopLevel
-            && !mAccountStore.hasAccessToken() && mViewModel.getCurrentSubfilterValue() instanceof SiteAll
-            && isCurrentTagManagedInFollowingTab()
-        ) {
-            setEmptyTitleAndDescriptionForSelfHostedCta();
+        if (shouldShowEmptyViewForSelfHostedCta()) {
+            setEmptyTitleDescriptionAndButton(false);
             showEmptyView();
         }
 
@@ -1656,7 +1653,8 @@ public class ReaderPostListFragment extends Fragment
         if (mIsTopLevel) {
             totalMargin += getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
             if (isCurrentTagManagedInFollowingTab()) {
-                totalMargin += mSubFilterComponent.getHeight();
+                totalMargin += getActivity().getResources()
+                                            .getDimensionPixelSize(R.dimen.reader_subfilter_component_height);
             }
         }
 
@@ -1677,15 +1675,10 @@ public class ReaderPostListFragment extends Fragment
         String description = null;
         ActionableEmptyViewButtonType button = null;
 
-        if (mIsTopLevel
-            && !mAccountStore.hasAccessToken() && mViewModel.getCurrentSubfilterValue() instanceof SiteAll
-            && isCurrentTagManagedInFollowingTab()
-        ) {
+        if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
             return;
-        }
-
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getCurrentTag().isBookmarked()) {
+        } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getCurrentTag().isBookmarked()) {
             setEmptyTitleAndDescriptionForBookmarksList();
             return;
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -1775,6 +1768,12 @@ public class ReaderPostListFragment extends Fragment
                 setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType.FOLLOWED);
             }
         });
+    }
+
+    private boolean shouldShowEmptyViewForSelfHostedCta() {
+        return mIsTopLevel
+               && !mAccountStore.hasAccessToken() && mViewModel.getCurrentSubfilterValue() instanceof SiteAll
+               && isCurrentTagManagedInFollowingTab();
     }
 
     private void setEmptyTitleAndDescriptionForSelfHostedCta() {
