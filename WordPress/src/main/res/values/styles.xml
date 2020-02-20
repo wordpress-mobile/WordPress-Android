@@ -310,6 +310,7 @@
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:background">@android:color/white</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:minHeight">@dimen/main_bottom_sheet_list_row_min_height</item>
     </style>
 
     <style name="MySiteListRowIcon">
@@ -1057,7 +1058,7 @@
         <item name="android:textSize">@dimen/text_sz_larger</item>
         <item name="android:gravity">start|center_vertical</item>
     </style>
-    
+
     <!-- Main actions styles -->
     <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
         <item name="android:layout_height">@dimen/main_bottom_sheet_list_row_icon_size</item>
@@ -1066,7 +1067,7 @@
     <style name="MainBottomSheetRowTextView" parent="MySiteListRowTextView">
         <item name="android:layout_gravity">center_vertical</item>
     </style>
-    
+
     <!-- Reader styles -->
     <style name="SubfilterSectionItem">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
@@ -1113,6 +1114,7 @@
         <item name="android:paddingStart">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:paddingEnd">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:paddingTop">0dp</item>
     </style>
 
     <style name="SubfilterDividerItem">
