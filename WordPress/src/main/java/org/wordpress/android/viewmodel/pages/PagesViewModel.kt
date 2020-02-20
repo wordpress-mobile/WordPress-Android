@@ -139,6 +139,9 @@ class PagesViewModel
     private val _postUploadAction = SingleLiveEvent<Triple<PostModel, SiteModel, Intent>>()
     val postUploadAction: LiveData<Triple<PostModel, SiteModel, Intent>> = _postUploadAction
 
+    private val _uploadFinishedAction = SingleLiveEvent<Pair<PageModel, Boolean>>()
+    val uploadFinishedAction: LiveData<Pair<PageModel, Boolean>> = _uploadFinishedAction
+
     private val _publishAction = SingleLiveEvent<PageModel>()
     val publishAction = _publishAction
 
@@ -208,7 +211,8 @@ class PagesViewModel
                 handlePageUpdated = this::handlePageUpdated,
                 invalidateUploadStatus = this::handleInvalidateUploadStatus,
                 handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
-                handlePostUploadedStarted = this::postUploadStarted
+                handlePostUploadedStarted = this::postUploadStarted,
+                handlePostUploadFinished = this::postUploadedFinished
         )
     }
 
@@ -745,7 +749,7 @@ class PagesViewModel
     private fun hasRemoteAutoSavePreviewError() = _previewState.value != null &&
             _previewState.value == PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
 
-    fun handlePageUpdated(remotePostId: RemoteId) {
+    private fun handlePageUpdated(remotePostId: RemoteId) {
         var id = 0L
         if (!pageUpdateContinuations.contains(id)) {
             id = remotePostId.value
@@ -772,11 +776,17 @@ class PagesViewModel
         }
     }
 
-    fun postUploadStarted(remoteId: RemoteId) {
+    private fun postUploadStarted(remoteId: RemoteId) {
         launch {
             performIfNetworkAvailableAsync {
                 waitForPageUpdate(remoteId.value)
             }
+        }
+    }
+
+    private fun postUploadedFinished(remoteId: RemoteId, isError: Boolean) {
+        pageMap[remoteId.value]?.let {
+            _uploadFinishedAction.postValue(Pair(it, isError))
         }
     }
 

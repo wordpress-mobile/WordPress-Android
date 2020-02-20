@@ -394,6 +394,19 @@ class PagesFragment : Fragment() {
                 UploadUtils.publishPost(activity, it.post, it.site, dispatcher)
             }
         })
+
+        viewModel.uploadFinishedAction.observe(this, Observer {
+            it?.let { (page, isError) ->
+                uploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                        activity,
+                        activity.findViewById(R.id.coordinator),
+                        isError,
+                        page.post,
+                        null,
+                        page.site
+                )
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
