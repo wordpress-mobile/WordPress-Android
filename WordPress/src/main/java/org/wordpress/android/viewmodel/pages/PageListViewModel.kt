@@ -55,7 +55,6 @@ class PageListViewModel @Inject constructor(
     private val pageListItemActionsUseCase: CreatePageListItemActionsUseCase,
     private val pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase,
     private val mediaStore: MediaStore,
-    private val postStore: PostStore,
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher

@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -32,10 +31,10 @@ import javax.inject.Named
 
 class SearchListViewModel
 @Inject constructor(
+    private val createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase,
     private val createPageUploadUiStateUseCase: CreatePageUploadUiStateUseCase,
     private val pageListItemActionsUseCase: CreatePageListItemActionsUseCase,
     private val pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase,
-    private val postStore: PostStore,
     private val resourceProvider: ResourceProvider,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) : ViewModel() {

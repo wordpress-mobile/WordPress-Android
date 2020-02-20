@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
-import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -45,7 +44,6 @@ class SearchListViewModelTest {
     @Mock lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
     @Mock lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
     @Mock lateinit var createUploadStateUseCase: CreatePageUploadUiStateUseCase
-    @Mock lateinit var postStore: PostStore
 
     private lateinit var searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>>
     private lateinit var viewModel: SearchListViewModel
@@ -59,7 +57,6 @@ class SearchListViewModelTest {
                 createUploadStateUseCase,
                 pageListItemActionsUseCase,
                 pageItemProgressUiStateUseCase,
-                postStore,
                 resourceProvider,
                 TEST_SCOPE
         )
