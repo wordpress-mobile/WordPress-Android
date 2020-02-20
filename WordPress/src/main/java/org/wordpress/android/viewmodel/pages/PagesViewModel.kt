@@ -749,7 +749,7 @@ class PagesViewModel
     private fun hasRemoteAutoSavePreviewError() = _previewState.value != null &&
             _previewState.value == PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
 
-    private fun handlePageUpdated(remotePostId: RemoteId) {
+    fun handlePageUpdated(remotePostId: RemoteId) {
         var id = 0L
         if (!pageUpdateContinuations.contains(id)) {
             id = remotePostId.value
@@ -776,7 +776,7 @@ class PagesViewModel
         }
     }
 
-    private fun postUploadStarted(remoteId: RemoteId) {
+    fun postUploadStarted(remoteId: RemoteId) {
         launch {
             performIfNetworkAvailableAsync {
                 waitForPageUpdate(remoteId.value)
