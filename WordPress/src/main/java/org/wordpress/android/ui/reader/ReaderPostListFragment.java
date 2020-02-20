@@ -113,8 +113,6 @@ import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvi
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
-import org.wordpress.android.ui.reader.tracker.ReaderTracker;
-import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
@@ -232,7 +230,6 @@ public class ReaderPostListFragment extends Fragment
     @Inject ImageManager mImageManager;
     @Inject QuickStartStore mQuickStartStore;
     @Inject UiHelpers mUiHelpers;
-    @Inject ReaderTracker mReaderTracker;
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
 
     private enum ActionableEmptyViewButtonType {
@@ -414,7 +411,7 @@ public class ReaderPostListFragment extends Fragment
             mViewModel.getCurrentSubFilter().observe(this, subfilterListItem -> {
                 if (isCurrentTagManagedInFollowingTab()
                     && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
-                    mViewModel.onSubfilterChanged(subfilterListItem, true);
+                    mViewModel.onSubfilterSelected(subfilterListItem);
                     if (!mAccountStore.hasAccessToken() && mViewModel.getCurrentSubfilterValue() instanceof SiteAll) {
                         setEmptyTitleAndDescriptionForSelfHostedCta();
                         showEmptyView();
@@ -546,23 +543,19 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = " + mIsTopLevel + "]");
-        mReaderTracker.stop(
-                mIsTopLevel ? ReaderTrackerType.MAIN_READER : ReaderTrackerType.FILTERED_LIST
-        );
+
         if (mBookmarksSavedLocallyDialog != null) {
             mBookmarksSavedLocallyDialog.dismiss();
         }
         mWasPaused = true;
+
+        mViewModel.onFragmentPause(mIsTopLevel);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count [mIsTopLevel = " + mIsTopLevel + "]");
-        mReaderTracker.start(
-                mIsTopLevel ? ReaderTrackerType.MAIN_READER : ReaderTrackerType.FILTERED_LIST
-        );
+
         checkPostAdapter();
 
         if (mWasPaused) {
@@ -612,6 +605,8 @@ public class ReaderPostListFragment extends Fragment
             setEmptyTitleAndDescriptionForSelfHostedCta();
             showEmptyView();
         }
+
+        mViewModel.onFragmentResume(mIsTopLevel, isCurrentTagManagedInFollowingTab());
     }
 
     /*
@@ -1150,7 +1145,7 @@ public class ReaderPostListFragment extends Fragment
 
                 if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && mIsTopLevel) {
                     if (isCurrentTagManagedInFollowingTab()) {
-                        mViewModel.onSubfilterChanged(mViewModel.getCurrentSubfilterValue(), false);
+                        mViewModel.onSubfilterReselected();
                     } else {
                         // return to the followed tag that was showing prior to searching
                         resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
@@ -2193,7 +2188,7 @@ public class ReaderPostListFragment extends Fragment
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && manageSubfilter) {
             if (mCurrentTag.isFollowedSites() || mCurrentTag.isDefaultInMemoryTag()) {
-                mViewModel.onSubfilterChanged(mViewModel.getCurrentSubfilterValue(), false);
+                mViewModel.onSubfilterReselected();
             } else {
                 changeReaderMode(new ReaderModeInfo(
                         tag,
