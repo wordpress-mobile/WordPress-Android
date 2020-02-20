@@ -233,6 +233,21 @@ class PagesViewModelTest {
         assertThat(viewModel.postUploadAction.value).isEqualTo(Triple(pageModel.post, pageModel.site, intent))
     }
 
+    @Test
+    fun `scrollToPage is invoked on edit post activity result`() = test {
+        // Given
+        val intent = mock<Intent>()
+        val pageModel = setUpPageStoreWithASinglePage()
+        whenever(pageStore.getPageByLocalId(eq(pageModel.pageId), anyOrNull()))
+                .thenReturn(pageModel)
+
+        viewModel.start(site)
+        // When
+        viewModel.onPageEditFinished(pageModel.pageId, intent)
+        // Then
+        assertThat(viewModel.scrollToPage.value).isEqualTo(pageModel)
+    }
+
     private suspend fun setUpPageStoreWithEmptyPages() {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(
