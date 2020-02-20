@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.fluxc.store.AccountStore
@@ -360,7 +359,7 @@ class ReaderPostListViewModel @Inject constructor(
                 if (isTopLevelFragment) ReaderTrackerType.MAIN_READER else ReaderTrackerType.FILTERED_LIST
         )
 
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE && isTopLevelFragment) {
+        if (isTopLevelFragment) {
             if (isFollowingTag && getCurrentSubfilterValue().isTrackedItem) {
                 AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
                 readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
@@ -377,8 +376,7 @@ class ReaderPostListViewModel @Inject constructor(
                 if (isTopLevelFragment) ReaderTrackerType.MAIN_READER else ReaderTrackerType.FILTERED_LIST
         )
 
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE &&
-                isTopLevelFragment && readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
+        if (isTopLevelFragment && readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
             AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
