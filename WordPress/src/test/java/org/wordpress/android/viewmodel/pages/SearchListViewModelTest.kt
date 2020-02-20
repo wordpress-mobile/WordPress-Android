@@ -73,7 +73,6 @@ class SearchListViewModelTest {
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         whenever(pagesViewModel.site).thenReturn(site)
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
-        whenever(pagesViewModel.arePageActionsEnabled).thenReturn(true)
         whenever(createPageListItemLabelsUseCase.createLabels(any(), any())).thenReturn(
                 Pair(
                         mock(), 0
