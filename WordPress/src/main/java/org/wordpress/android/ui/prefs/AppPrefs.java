@@ -6,7 +6,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
