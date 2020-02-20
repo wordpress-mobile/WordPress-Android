@@ -73,7 +73,7 @@ class UploadUtilsWrapper @Inject constructor(
         site: SiteModel,
         uploadAction: UploadAction,
         publishPostListener: OnClickListener?
-    ) = UploadUtils.handleEditPostResultSnackbars(
+    ) = UploadUtils.handleEditPostModelResultSnackbars(
             activity,
             dispatcher,
             snackbarAttachView,
