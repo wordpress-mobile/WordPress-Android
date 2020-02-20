@@ -190,7 +190,7 @@ class PagesViewModelTest {
         assertThat(viewModel.arePageActionsEnabled).isFalse()
 
         // When
-        viewModel.handlePostUploadedWithoutError(RemoteId(page.remotePostId))
+        viewModel.handlePageUpdated(RemoteId(page.remotePostId))
 
         // Then
         assertThat(viewModel.arePageActionsEnabled).isTrue()

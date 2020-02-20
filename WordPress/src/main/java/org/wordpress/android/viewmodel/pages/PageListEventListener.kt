@@ -38,7 +38,7 @@ class PageListEventListener(
     private val eventBusWrapper: EventBusWrapper,
     private val site: SiteModel,
     private val handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-    private val handlePostUploadedWithoutError: (RemoteId) -> Unit,
+    private val handlePageUpdated: (RemoteId) -> Unit,
     private val handlePostUploadedStarted: (RemoteId) -> Unit,
     private val invalidateUploadStatus: (List<LocalId>) -> Unit
 ) : CoroutineScope {
@@ -86,6 +86,7 @@ class PageListEventListener(
                             LocalId((event.causeOfChange as RemoteAutoSavePost).localPostId),
                             event.isError
                     )
+                    handlePageUpdated.invoke(RemoteId((event.causeOfChange as RemoteAutoSavePost).remotePostId))
                 }
 
                 is UpdatePost -> {
@@ -95,14 +96,9 @@ class PageListEventListener(
                                 "Error updating the post with type: ${event.error.type} and" +
                                         " message: ${event.error.message}"
                         )
-                    } else {
-                        handlePostUploadedWithoutError.invoke(
-                                RemoteId((event.causeOfChange as UpdatePost).remotePostId)
-                        )
-                        invalidateUploadStatus.invoke(
-                                listOf(LocalId((event.causeOfChange as UpdatePost).localPostId))
-                        )
                     }
+                    uploadStatusChanged(LocalId((event.causeOfChange as UpdatePost).localPostId))
+                    handlePageUpdated.invoke(RemoteId((event.causeOfChange as UpdatePost).remotePostId))
                 }
             }
         }
@@ -111,7 +107,7 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
-        if (!event.isError && event.mediaList != null) {
+        if (event.mediaList != null) {
             uploadStatusChanged(*event.mediaList.map { LocalId(it.localPostId) }.toTypedArray())
         }
     }
@@ -121,23 +117,15 @@ class PageListEventListener(
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
-            if (!event.isError) {
-                handlePostUploadedWithoutError.invoke(RemoteId(event.post.remotePostId))
-            }
         }
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onMediaUploaded(event: OnMediaUploaded) {
-        if (event.isError || event.canceled) {
-            return
+        if (event.media != null && event.media.localPostId != 0 && site.id == event.media.localSiteId) {
+            uploadStatusChanged(LocalId(event.media.localPostId))
         }
-        if (event.media == null || event.media.localPostId == 0 || site.id != event.media.localSiteId) {
-            // Not interested in media not attached to posts or not belonging to the current site
-            return
-        }
-        uploadStatusChanged(LocalId(event.media.localPostId))
     }
 
     /**
@@ -148,7 +136,6 @@ class PageListEventListener(
     fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
-
             handlePostUploadedStarted(RemoteId(event.post.remotePostId))
         }
     }
@@ -193,7 +180,7 @@ class PageListEventListener(
             postStore: PostStore,
             eventBusWrapper: EventBusWrapper,
             site: SiteModel,
-            handlePostUploadedWithoutError: (RemoteId) -> Unit,
+            handlePageUpdated: (RemoteId) -> Unit,
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
             handlePostUploadedStarted: (RemoteId) -> Unit
@@ -204,7 +191,7 @@ class PageListEventListener(
                     postStore = postStore,
                     eventBusWrapper = eventBusWrapper,
                     site = site,
-                    handlePostUploadedWithoutError = handlePostUploadedWithoutError,
+                    handlePageUpdated = handlePageUpdated,
                     invalidateUploadStatus = invalidateUploadStatus,
                     handleRemoteAutoSave = handleRemoteAutoSave,
                     handlePostUploadedStarted = handlePostUploadedStarted
