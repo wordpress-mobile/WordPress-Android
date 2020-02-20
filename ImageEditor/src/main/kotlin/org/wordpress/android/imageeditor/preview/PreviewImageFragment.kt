@@ -59,7 +59,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun loadImage(imageData: ImageData) {
-        ImageEditor.instance.loadImageWithResultListener(
+        ImageEditor.instance.loadIntoImageViewWithResultListener(
             imageData.highResImageUrl,
             previewImageView,
             CENTER,
