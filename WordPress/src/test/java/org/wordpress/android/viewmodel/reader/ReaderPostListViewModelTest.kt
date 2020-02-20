@@ -39,6 +39,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.util.EventBusWrapper
 import java.util.EnumSet
@@ -65,6 +66,7 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var subfilterListItemMapper: SubfilterListItemMapper
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
     @Mock private lateinit var accountStore: AccountStore
+    @Mock private lateinit var readerTracker: ReaderTracker
 
     private lateinit var viewModel: ReaderPostListViewModel
     private val liveData = MutableLiveData<NewsItem>()
@@ -91,7 +93,8 @@ class ReaderPostListViewModelTest {
                 appPrefsWrapper,
                 subfilterListItemMapper,
                 eventBusWrapper,
-                accountStore
+                accountStore,
+                readerTracker
         )
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
@@ -169,7 +172,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `view model propagates CardShown to to NewsTracker`() {
+    fun `view model propagates CardShown to NewsTracker`() {
         whenever(newsTrackerHelper.shouldTrackNewsCardShown(any())).thenReturn(true)
         viewModel.onNewsCardShown(item, initialTag)
         verify(newsTracker).trackNewsCardShown(argThat { this == READER }, any())
@@ -185,7 +188,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `view model propagates ExtendedInfoRequested to to NewsTracker`() {
+    fun `view model propagates ExtendedInfoRequested to NewsTracker`() {
         viewModel.onNewsCardExtendedInfoRequested(item)
         verify(newsTracker).trackNewsCardExtendedInfoRequested(argThat { this == READER }, any())
     }

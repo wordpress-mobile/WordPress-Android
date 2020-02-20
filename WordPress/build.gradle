@@ -107,7 +107,6 @@ android {
             // but we don't obfuscate the bytecode.
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
-            multiDexKeepProguard file('multidex-config.pro')
         }
 
         debug {
@@ -290,7 +289,7 @@ dependencies {
     lintChecks 'org.wordpress:lint:1.0.1'
 
     // Sentry
-    implementation 'io.sentry:sentry-android-core:2.0.0-rc04'
+    implementation 'io.sentry:sentry-android:1.7.16'
     implementation 'org.slf4j:slf4j-nop:1.7.25'
 
     // Debug

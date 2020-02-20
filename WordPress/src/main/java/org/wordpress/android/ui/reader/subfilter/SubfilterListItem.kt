@@ -12,7 +12,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
-sealed class SubfilterListItem(val type: ItemType) {
+sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = false) {
     open var isSelected: Boolean = false
     open val onClickAction: ((filter: SubfilterListItem) -> Unit)? = null
     open val label: UiString? = null
@@ -60,7 +60,7 @@ sealed class SubfilterListItem(val type: ItemType) {
         override var isSelected: Boolean = false,
         override val onClickAction: (filter: SubfilterListItem) -> Unit,
         val blog: ReaderBlog
-    ) : SubfilterListItem(SITE) {
+    ) : SubfilterListItem(SITE, true) {
         override val label: UiString = if (blog.name.isNotEmpty()) {
             UiStringText(blog.name)
         } else {
@@ -72,7 +72,7 @@ sealed class SubfilterListItem(val type: ItemType) {
         override var isSelected: Boolean = false,
         override val onClickAction: (filter: SubfilterListItem) -> Unit,
         val tag: ReaderTag
-    ) : SubfilterListItem(TAG) {
+    ) : SubfilterListItem(TAG, true) {
         override val label: UiString = UiStringText(tag.tagTitle)
     }
 }
