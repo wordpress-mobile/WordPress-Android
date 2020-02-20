@@ -48,6 +48,9 @@ import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.uploads.UploadActionUseCase
+import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtils
@@ -85,6 +88,8 @@ class PagesFragment : Fragment() {
     @Inject lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
     @Inject lateinit var previewStateHelper: PreviewStateHelper
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
+    @Inject lateinit var uploadActionUseCase: UploadActionUseCase
+    @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private var quickStartEvent: QuickStartEvent? = null
     private var progressDialog: ProgressDialog? = null
 
@@ -119,8 +124,6 @@ class PagesFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
-            val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
-
             if (EditPostActivity.checkToRestart(data)) {
                 ActivityLauncher.editPageForResult(data, this@PagesFragment, viewModel.site,
                         data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0), false)
@@ -128,9 +131,10 @@ class PagesFragment : Fragment() {
                 // a restart will happen so, no need to continue here
                 return
             }
-
-            if (pageId != -1L) {
-                viewModel.onPageEditFinished()
+            // we need to work with local ids, since local drafts don't have remote ids
+            val localPageId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, -1)
+            if (localPageId != -1) {
+                viewModel.onPageEditFinished(localPageId, data)
             }
         } else if (requestCode == RequestCodes.PAGE_PARENT && resultCode == Activity.RESULT_OK && data != null) {
             val parentId = data.getLongExtra(EXTRA_PAGE_PARENT_ID_KEY, -1)
@@ -363,6 +367,26 @@ class PagesFragment : Fragment() {
 
         viewModel.dialogAction.observe(this, Observer {
             it?.show(activity, activity.supportFragmentManager, uiHelpers)
+        })
+
+        viewModel.postUploadAction.observe(this, Observer {
+            it?.let { (post, site, data) ->
+                uploadUtilsWrapper.handleEditPostResultSnackbars(
+                        activity,
+                        activity.findViewById(R.id.coordinator),
+                        data,
+                        post,
+                        site,
+                        uploadActionUseCase.getUploadAction(post),
+                        View.OnClickListener {
+                            UploadUtils.publishPost(
+                                    activity,
+                                    post,
+                                    site,
+                                    dispatcher
+                            ) }
+                )
+            }
         })
 
         viewModel.toastMessage.observe(this, Observer {

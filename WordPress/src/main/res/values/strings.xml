@@ -1508,6 +1508,7 @@
     <string name="error_publish_empty_page">Can\'t publish an empty page</string>
     <string name="error_save_empty_draft">Can\'t save an empty draft</string>
     <string name="error_publish_no_network">Device is offline. Post saved locally.</string>
+    <string name="error_publish_page_no_network">Device is offline. Page saved locally.</string>
     <string name="error_upload_post_param">There was an error uploading this post: %s.</string>
     <string name="error_upload_page_param">There was an error uploading this page: %s.</string>
     <string name="error_upload_post_media_param">There was an error uploading the media in this post: %s.</string>

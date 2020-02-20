@@ -157,15 +157,15 @@ public class UploadUtils {
         return uploadError != null && uploadError.mediaError != null;
     }
 
-    public static void handleEditPostResultSnackbars(@NonNull final Activity activity,
-                                                     @NonNull final Dispatcher dispatcher,
-                                                     @NonNull View snackbarAttachView,
-                                                     @NonNull Intent data,
-                                                     @NonNull final PostModel post,
-                                                     @NonNull final SiteModel site,
-                                                     @NonNull final UploadAction uploadAction,
-                                                     SnackbarSequencer sequencer,
-                                                     View.OnClickListener publishPostListener) {
+    public static void handleEditPostModelResultSnackbars(@NonNull final Activity activity,
+                                                          @NonNull final Dispatcher dispatcher,
+                                                          @NonNull View snackbarAttachView,
+                                                          @NonNull Intent data,
+                                                          @NonNull final PostModel post,
+                                                          @NonNull final SiteModel site,
+                                                          @NonNull final UploadAction uploadAction,
+                                                          SnackbarSequencer sequencer,
+                                                          View.OnClickListener publishPostListener) {
         boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
             // if there are no changes, we don't need to do anything
@@ -177,7 +177,7 @@ public class UploadUtils {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
             // And tell the user about it
-            showSnackbar(snackbarAttachView, getDeviceOfflinePostNotUploadedMessage(post, uploadAction),
+            showSnackbar(snackbarAttachView, getDeviceOfflinePostModelNotUploadedMessage(post, uploadAction),
                     R.string.cancel,
                     v -> {
                         int msgRes = cancelPendingAutoUpload(post, dispatcher);
@@ -545,23 +545,28 @@ public class UploadUtils {
     }
 
     @StringRes
-    private static int getDeviceOfflinePostNotUploadedMessage(@NonNull final PostModel post,
-                                                              @NonNull final UploadAction uploadAction) {
+    private static int getDeviceOfflinePostModelNotUploadedMessage(@NonNull final PostModel post,
+                                                                   @NonNull final UploadAction uploadAction) {
         if (uploadAction != UploadAction.UPLOAD) {
-            return R.string.error_publish_no_network;
+            return post.isPage() ? R.string.error_publish_page_no_network : R.string.error_publish_no_network;
         } else {
             switch (PostStatus.fromPost(post)) {
                 case PUBLISHED:
                 case UNKNOWN:
-                    return R.string.post_waiting_for_connection_publish;
+                    return post.isPage() ? R.string.page_waiting_for_connection_publish
+                            : R.string.post_waiting_for_connection_publish;
                 case DRAFT:
-                    return R.string.post_waiting_for_connection_draft;
+                    return post.isPage() ? R.string.page_waiting_for_connection_draft
+                            : R.string.post_waiting_for_connection_draft;
                 case PRIVATE:
-                    return R.string.post_waiting_for_connection_private;
+                    return post.isPage() ? R.string.page_waiting_for_connection_private
+                            : R.string.post_waiting_for_connection_private;
                 case PENDING:
-                    return R.string.post_waiting_for_connection_pending;
+                    return post.isPage() ? R.string.page_waiting_for_connection_pending
+                            : R.string.post_waiting_for_connection_pending;
                 case SCHEDULED:
-                    return R.string.post_waiting_for_connection_scheduled;
+                    return post.isPage() ? R.string.page_waiting_for_connection_scheduled
+                            : R.string.post_waiting_for_connection_scheduled;
                 case TRASHED:
                     throw new IllegalArgumentException("Trashing posts should be handled in a different code path.");
             }
