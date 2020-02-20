@@ -173,10 +173,6 @@ public class FilteredRecyclerView extends RelativeLayout {
 
                 mUseTabsForFiltering = a.getBoolean(
                         R.styleable.FilteredRecyclerView_wpUseTabsForFiltering, false);
-
-                // TODO: once the feature flag is removed delete this row and use the
-                // app:wpUseTabsForFiltering="true|false" in reader_fragment_post_cards.xml
-                if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) mUseTabsForFiltering = false;
             } finally {
                 a.recycle();
             }

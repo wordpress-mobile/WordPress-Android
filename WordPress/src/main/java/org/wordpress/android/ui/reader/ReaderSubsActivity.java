@@ -490,14 +490,12 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         String pageTitle = AppPrefs.getReaderSubsPageTitle();
 
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            if (getIntent().hasExtra(ReaderConstants.ARG_SUBS_TAB_POSITION)) {
-                PagerAdapter adapter = getPageAdapter();
-                int tabIndex = getIntent().getIntExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, TAB_IDX_FOLLOWED_TAGS);
-                pageTitle = (String) adapter.getPageTitle(tabIndex);
+        if (getIntent().hasExtra(ReaderConstants.ARG_SUBS_TAB_POSITION)) {
+            PagerAdapter adapter = getPageAdapter();
+            int tabIndex = getIntent().getIntExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, TAB_IDX_FOLLOWED_TAGS);
+            pageTitle = (String) adapter.getPageTitle(tabIndex);
 
-                if (!TextUtils.isEmpty(pageTitle)) AppPrefs.setReaderSubsPageTitle(pageTitle);
-            }
+            if (!TextUtils.isEmpty(pageTitle)) AppPrefs.setReaderSubsPageTitle(pageTitle);
         }
 
         if (TextUtils.isEmpty(pageTitle)) {

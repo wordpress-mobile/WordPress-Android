@@ -316,18 +316,16 @@ public class AppPrefs {
 
         boolean wasFollowing = false;
 
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            // The intention here is to check if the `DeletablePrefKey.READER_TAG_WAS_FOLLOWING` key
-            // was present at all in the Shared Prefs.
-            // We could have it not set for example in cases where user is upgrading from
-            // a previous version of the app. In those cases we do not have enough information as of the saved
-            // tag was a Following tag or not, so (as with empty `DeletablePrefKey.READER_TAG_NAME`)
-            // let's do not use this piece of information.
-            String wasFallowingString = getString(DeletablePrefKey.READER_TAG_WAS_FOLLOWING);
-            if (TextUtils.isEmpty(wasFallowingString)) return null;
+        // The intention here is to check if the `DeletablePrefKey.READER_TAG_WAS_FOLLOWING` key
+        // was present at all in the Shared Prefs.
+        // We could have it not set for example in cases where user is upgrading from
+        // a previous version of the app. In those cases we do not have enough information as of the saved
+        // tag was a Following tag or not, so (as with empty `DeletablePrefKey.READER_TAG_NAME`)
+        // let's do not use this piece of information.
+        String wasFallowingString = getString(DeletablePrefKey.READER_TAG_WAS_FOLLOWING);
+        if (TextUtils.isEmpty(wasFallowingString)) return null;
 
-            wasFollowing = getBoolean(DeletablePrefKey.READER_TAG_WAS_FOLLOWING, false);
-        }
+        wasFollowing = getBoolean(DeletablePrefKey.READER_TAG_WAS_FOLLOWING, false);
 
         return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType), wasFollowing);
     }
@@ -336,25 +334,16 @@ public class AppPrefs {
         if (tag != null && !TextUtils.isEmpty(tag.getTagSlug())) {
             setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagSlug());
             setInt(DeletablePrefKey.READER_TAG_TYPE, tag.tagType.toInt());
-            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                setBoolean(
-                        DeletablePrefKey.READER_TAG_WAS_FOLLOWING,
-                        tag.isFollowedSites() || tag.isDefaultInMemoryTag()
-                );
-            }
+            setBoolean(
+                    DeletablePrefKey.READER_TAG_WAS_FOLLOWING,
+                    tag.isFollowedSites() || tag.isDefaultInMemoryTag()
+            );
         } else {
-            if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                prefs().edit()
-                       .remove(DeletablePrefKey.READER_TAG_NAME.name())
-                       .remove(DeletablePrefKey.READER_TAG_TYPE.name())
-                       .remove(DeletablePrefKey.READER_TAG_WAS_FOLLOWING.name())
-                       .apply();
-            } else {
-                prefs().edit()
-                       .remove(DeletablePrefKey.READER_TAG_NAME.name())
-                       .remove(DeletablePrefKey.READER_TAG_TYPE.name())
-                       .apply();
-            }
+            prefs().edit()
+                   .remove(DeletablePrefKey.READER_TAG_NAME.name())
+                   .remove(DeletablePrefKey.READER_TAG_TYPE.name())
+                   .remove(DeletablePrefKey.READER_TAG_WAS_FOLLOWING.name())
+                   .apply();
         }
     }
 

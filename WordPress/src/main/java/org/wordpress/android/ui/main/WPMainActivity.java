@@ -452,22 +452,20 @@ public class WPMainActivity extends AppCompatActivity implements
             });
         });
 
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            mViewModel.getStartLoginFlow().observe(this, event -> {
-                event.applyIfNotHandled(startLoginFlow -> {
-                    if (mBottomNav != null) {
-                        mBottomNav.postDelayed(new Runnable() {
-                            @Override public void run() {
-                                mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
-                            }
-                        }, 500);
-                        ActivityLauncher.viewMeActivityForResult(this);
-                    }
+        mViewModel.getStartLoginFlow().observe(this, event -> {
+            event.applyIfNotHandled(startLoginFlow -> {
+                if (mBottomNav != null) {
+                    mBottomNav.postDelayed(new Runnable() {
+                        @Override public void run() {
+                            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                        }
+                    }, 500);
+                    ActivityLauncher.viewMeActivityForResult(this);
+                }
 
-                    return null;
-                });
+                return null;
             });
-        }
+        });
 
         mViewModel.start(mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
     }

@@ -104,9 +104,7 @@ class ReaderPostListViewModel @Inject constructor(
             return
         }
 
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            eventBusWrapper.register(this)
-        }
+        eventBusWrapper.register(this)
 
         tag?.let {
             onTagChanged(tag)
@@ -205,18 +203,12 @@ class ReaderPostListViewModel @Inject constructor(
     fun changeSubfiltersVisibility(show: Boolean) = _shouldShowSubFilters.postValue(show)
 
     fun getCurrentSubfilterValue(): SubfilterListItem {
-        return if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            _currentSubFilter.value ?: SiteAll(
+        return _currentSubFilter.value ?: appPrefsWrapper.getReaderSubfilter().let {
+            subfilterListItemMapper.fromJson(
+                    json = it,
                     onClickAction = ::onSubfilterClicked,
-                    isSelected = true)
-        } else {
-            _currentSubFilter.value ?: appPrefsWrapper.getReaderSubfilter().let {
-                subfilterListItemMapper.fromJson(
-                        json = it,
-                        onClickAction = ::onSubfilterClicked,
-                        isSelected = true
-                )
-            }
+                    isSelected = true
+            )
         }
     }
 
@@ -372,9 +364,7 @@ class ReaderPostListViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            eventBusWrapper.unregister(this)
-        }
+        eventBusWrapper.unregister(this)
         newsManager.stop()
     }
 }
