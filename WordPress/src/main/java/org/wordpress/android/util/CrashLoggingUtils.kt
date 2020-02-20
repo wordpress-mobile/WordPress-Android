@@ -1,16 +1,14 @@
 package org.wordpress.android.util
 
-import android.content.Context
 import android.preference.PreferenceManager
-import io.sentry.android.core.SentryAndroid
-import io.sentry.core.Breadcrumb
-import io.sentry.core.Sentry
-import io.sentry.core.SentryOptions.BeforeSendCallback
+import io.sentry.Sentry
+import io.sentry.android.AndroidSentryClientFactory
+import io.sentry.event.BreadcrumbBuilder
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 
 class CrashLoggingUtils {
-    fun shouldEnableCrashLogging(context: Context): Boolean {
+    fun shouldEnableCrashLogging(context: android.content.Context): Boolean {
         if (PackageUtils.isDebugBuild()) {
             return false
         }
@@ -20,15 +18,9 @@ class CrashLoggingUtils {
         return !hasUserOptedOut
     }
 
-    fun enableCrashLogging(context: Context) {
-        SentryAndroid.init(context.applicationContext) {
-            it.dsn = BuildConfig.SENTRY_DSN
-            it.beforeSend = BeforeSendCallback { event, hint ->
-                // Todo: Update event with additional info (extras)
-                return@BeforeSendCallback event
-            }
-        }
-        Sentry.setTag("version", BuildConfig.VERSION_NAME)
+    fun enableCrashLogging(context: android.content.Context) {
+        Sentry.init(BuildConfig.SENTRY_DSN, AndroidSentryClientFactory(context))
+        Sentry.getContext().addTag("version", BuildConfig.VERSION_NAME)
     }
 
     companion object {
@@ -41,6 +33,7 @@ class CrashLoggingUtils {
         }
 
         @JvmStatic fun stopCrashLogging() {
+            Sentry.clearContext()
             Sentry.close()
         }
 
@@ -49,11 +42,13 @@ class CrashLoggingUtils {
                 return
             }
 
-            Sentry.addBreadcrumb(Breadcrumb(message))
+            Sentry.getContext().recordBreadcrumb(
+                    BreadcrumbBuilder().setMessage(message).build()
+            )
         }
 
         @JvmStatic fun log(exception: Throwable) {
-            Sentry.captureException(exception)
+            Sentry.capture(exception)
         }
 
         @JvmStatic fun logException(tr: Throwable, tag: AppLog.T) {
