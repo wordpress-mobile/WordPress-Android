@@ -66,7 +66,6 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAF
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
-import java.util.Date
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
@@ -139,6 +138,9 @@ class PagesViewModel
 
     private val _postUploadAction = SingleLiveEvent<Triple<PostModel, SiteModel, Intent>>()
     val postUploadAction: LiveData<Triple<PostModel, SiteModel, Intent>> = _postUploadAction
+
+    private val _publishAction = SingleLiveEvent<PageModel>()
+    val publishAction = _publishAction
 
     private var isInitialized = false
     private var scrollToPageId: Long? = null
@@ -467,10 +469,7 @@ class PagesViewModel
     }
 
     private fun publishPageNow(remoteId: Long) {
-        performIfNetworkAvailable {
-            pageMap[remoteId]?.date = Date()
-            changePageStatus(remoteId, PageStatus.PUBLISHED)
-        }
+        _publishAction.value = pageMap[remoteId]
     }
 
     fun onImagesChanged() {

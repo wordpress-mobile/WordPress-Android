@@ -388,6 +388,12 @@ class PagesFragment : Fragment() {
                 )
             }
         })
+
+        viewModel.publishAction.observe(this, Observer {
+            it?.let {
+                UploadUtils.publishPost(activity, it.post, it.site, dispatcher)
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
