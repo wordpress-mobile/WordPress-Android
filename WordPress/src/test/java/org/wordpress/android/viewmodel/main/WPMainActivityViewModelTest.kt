@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -56,6 +57,28 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
+    fun `fab tooltip disabled when tapped`() {
+        viewModel.onTooltipTapped()
+        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
+        assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `fab tooltip disabled when bottom sheet opened`() {
+        whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
+        viewModel.setIsBottomSheetShowing(true)
+        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
+        assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `fab tooltip disabled when fab long pressed`() {
+        viewModel.onFabLongPressed()
+        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
+        assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
+    }
+
+    @Test
     fun `bottom sheet action is new post when new post is tapped`() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull
@@ -69,5 +92,12 @@ class WPMainActivityViewModelTest {
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_PAGE)
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_PAGE)
+    }
+
+    @Test
+    fun `when user taps to open the login page from the bottom sheet empty view cta the correct action is triggered`() {
+        viewModel.onOpenLoginPage()
+
+        assertThat(viewModel.startLoginFlow.value!!.peekContent()).isEqualTo(true)
     }
 }

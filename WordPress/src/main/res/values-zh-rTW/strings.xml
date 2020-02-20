@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-12 00:55:12+0000
+Translation-Revision-Date: 2020-02-05 04:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s">視訊標題。%s</string>
+    <string name="gutenberg_native_edit_video">編輯視訊</string>
+    <string name="gutenberg_native_edit_media">編輯媒體</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">按兩下以選擇版面形式</string>
+    <string name="gutenberg_native_add_a_shortcode">新增短代碼…</string>
+    <string name="post_list_author">文章作者</string>
+    <string name="fab_create_desc">建立文章</string>
+    <string name="stats_posting_activity_end_description">你已檢閱此期間的所有統計資料。\n再次點選將會重新開始。</string>
+    <string name="stats_posting_activity_empty_description">此期間沒有任何統計資料。</string>
+    <string name="stats_posting_activity_label_content_description">%1$s 的張貼活動</string>
+    <string name="stats_posting_activity_content_description">%2$s 獲得 %1$s 次瀏覽的日期為：%2$s %3$s。點選以深入瞭解。</string>
+    <string name="stats_posting_activity_action">瀏覽此期間的所有統計資料</string>
+    <string name="stats_box_type_very_high">超高</string>
+    <string name="stats_box_type_high">高</string>
+    <string name="stats_box_type_medium">中</string>
+    <string name="stats_box_type_low">低</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry"> 與 %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s，%2$d %3$s</string>
+    <string name="gutenberg_native_remove_image">移除圖片</string>
+    <string name="gutenberg_native_move_image_forward">向前移動圖片</string>
+    <string name="gutenberg_native_move_image_backward">向後移動圖片</string>
+    <string name="gutenberg_native_gallery_caption_s">圖庫標題。%s</string>
+    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s。目前的值是 %2$s</string>
+    <string name="create_post_page_fab_tooltip">建立文章或頁面</string>
+    <string name="quick_start_dialog_create_new_post_message_short_posts">點選%1$s「新增文章」%2$s以建立新文章</string>
+    <string name="quick_start_dialog_create_new_post_message_short">點選%1$s「網誌文章」%2$s以繼續操作。</string>
+    <string name="content_description_person_building_website">網站架設人員</string>
+    <string name="post_signup_interstitial_not_right_now">現在不用</string>
+    <string name="post_signup_interstitial_subtitle">無論你要建立或共享，我們都會為你提供協助。</string>
+    <string name="post_signup_interstitial_title">歡迎來到 WordPress</string>
+    <string name="stock_media_picker_list_content_description">圖庫</string>
+    <string name="photo_picker_image_thumbnail_unselected">取消選取的圖片</string>
+    <string name="photo_picker_image_selected">，已選取</string>
+    <string name="photo_picker_image_thumbnail_selected">已選取的圖片</string>
+    <string name="photo_picker_image_thumbnail_content_description">縮圖</string>
+    <string name="my_site_bottom_sheet_add_post">網誌文章</string>
+    <string name="my_site_bottom_sheet_title">新增</string>
+    <string name="post_settings_publish">發佈</string>
+    <string name="dialog_gutenberg_informative_description_v2">我們大幅改進了區塊編輯器，值得你一試！我們為新文章和頁面啟用了這項功能，但如果你希望變更為傳統編輯器，請前往「我的網站」>「網站設定」進行變更。</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">立即同步</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">此文章會立即同步。</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">準備好要同步了嗎？</string>
+    <string name="new_site_creation_unavailable_domain">此網域不可使用</string>
+    <string name="login_promo_viewpager_content_description">簡介</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
     <string name="login_discovery_error_ssl">由於 &lt;b>SSL 憑證&lt;/b>發生問題，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
     <string name="login_discovery_error_http_auth">由於你的網站須進行 &lt;b>HTTP 驗證&lt;/b>，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
@@ -14,8 +59,6 @@ Language: zh_TW
     <string name="enter_site_credentials_instead">請使用網站憑證登入</string>
     <string name="enter_credentials_for_site">請使用 %1$s 網站憑證登入</string>
     <string name="send_verification_email">傳送驗證電子郵件</string>
-    <string name="my_site_bottom_sheet_add_page">建立新頁面</string>
-    <string name="my_site_bottom_sheet_add_post">建立新文章</string>
     <string name="reader_following_display_name">關注中</string>
     <string name="posts_cannot_be_started">目前無法開啟文章。請稍後再試一次</string>
     <string name="suffix_1_000">%sk</string>
@@ -144,20 +187,16 @@ Language: zh_TW
     <string name="stats_post_views_label">瀏覽次數</string>
     <string name="stats_post_label">文章</string>
     <string name="stats_list_item_description">%1$s：%2$s，%3$s：%4$s</string>
-    <string name="stats_posting_activity_graph">發表活動的圖表。</string>
     <string name="stats_item_collapsed">折疊的項目</string>
     <string name="stats_item_expanded">展開的項目</string>
     <string name="stats_collapse_content_description">折疊</string>
     <string name="stats_expand_content_description">展開</string>
     <string name="stats_graph_updated">已更新圖表。</string>
     <string name="stats_overview_content_description">以下期間的 %1$s %2$s：%3$s，自上個期間變更 - %4$s</string>
-    <string name="stats_bar_chart_content_description">網站點閱數的圖表。</string>
     <string name="stats_loading_card">正在載入選取的卡片資料</string>
     <string name="site_settings_editor">編輯器</string>
     <string name="description_expand">擴大</string>
     <string name="description_collapse">折疊</string>
-    <string name="editor_retry_failed_uploads">重新嘗試上傳</string>
-    <string name="editor_toast_failed_uploads">部分媒體上傳失敗。在此狀態中，你無法儲存或發表\n自己的文章。</string>
     <string name="my_site_verify_your_email_without_email">驗證你的電子郵件地址 - 已將說明傳送至你的電子郵件地址</string>
     <string name="my_site_verify_your_email">驗證你的電子郵件地址 - 已將說明傳送至 %s</string>
     <string name="link_dialog_button_cancel">取消</string>
@@ -602,7 +641,6 @@ Language: zh_TW
     <string name="featured_image_desc">特色圖片</string>
     <string name="button_discard">捨棄</string>
     <string name="reader_avatar_desc">個人檔案圖像</string>
-    <string name="reader_blavatar_desc">網站圖示</string>
     <string name="notification_channel_transient_title">暫時性</string>
     <string name="support_identity_input_dialog_email_label">電子郵件</string>
     <string name="support_identity_input_dialog_enter_email">請輸入你的電子郵件地址</string>
@@ -623,7 +661,6 @@ Language: zh_TW
     <string name="activity_log_rewind_started_snackbar_message">正在還原網站\n正在還原至 %1$s %2$s</string>
     <string name="activity_log_button">活動記錄動作按鈕</string>
     <string name="plugin_auto_managed">自動管理</string>
-    <string name="reader_save_posts_locally_dialog_message">儲存這篇文章，即可隨時返回閱讀。儲存的文章不會同步至其他裝置，因此你只能在這部裝置上存取文章。(不過，我們正努力提供此功能！)</string>
     <string name="reader_save_posts_locally_dialog_title">儲存文章以供稍後使用</string>
     <string name="reader_empty_search_request_failed">無法執行搜尋</string>
     <string name="reader_empty_search_title">找不到結果</string>
@@ -648,7 +685,6 @@ Language: zh_TW
     <string name="reader_add_bookmark">加入已儲存文章</string>
     <string name="reader_save_for_later_title">已儲存文章</string>
     <string name="removed">已移除</string>
-    <string name="tabbar_accessibility_label_write">新文章。撰寫新文章。</string>
     <string name="my_site_icon_content_description">變更網站圖示</string>
     <string name="my_site_icon_dialog_cancel_button">取消</string>
     <string name="my_site_icon_dialog_remove_button">移除</string>
@@ -679,7 +715,6 @@ Language: zh_TW
     <string name="preference_privacy_settings">隱私權設定</string>
     <string name="preference_collect_information">收集資訊</string>
     <string name="post_submitted">文章已提交。</string>
-    <string name="write_post">撰寫文章</string>
     <string name="login_email_button_signup">還沒有帳號？%1$s註冊%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">外掛功能需要該網站具有良好聲譽。</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">外掛功能需要主要網域訂閱與此名使用者相關聯。</string>
@@ -721,7 +756,6 @@ Language: zh_TW
     <string name="site_settings_quota_space_unlimited">%1$s 的配額空間不受限制</string>
     <string name="preview_count">預覽 %d</string>
     <string name="add_count">新增 %d</string>
-    <string name="fab_create_desc">建立</string>
     <string name="navigate_up_desc">瀏覽</string>
     <string name="notification_settings_switch_desc">通知</string>
     <string name="show_more_desc">顯示更多</string>
@@ -1227,7 +1261,6 @@ Language: zh_TW
     <string name="sharing">分享</string>
     <string name="tabbar_accessibility_label_notifications">通知。管理你的通知。</string>
     <string name="tabbar_accessibility_label_reader">讀取器。關注其他網站的內容。</string>
-    <string name="tabbar_accessibility_label_me">我。檢視你的個人檔案並進行變更。</string>
     <string name="tabbar_accessibility_label_my_site">我的網站。檢視和管理你的網站，包括統計資料。</string>
     <string name="my_site_btn_sharing">分享</string>
     <string name="button_not_now">現在不要</string>

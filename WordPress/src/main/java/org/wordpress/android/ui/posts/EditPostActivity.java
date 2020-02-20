@@ -108,6 +108,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
@@ -679,37 +680,12 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void reattachUploadingMediaForAztec() {
-        if (mEditorFragment instanceof AztecEditorFragment && mEditorMediaUploadListener != null) {
-            // UploadService.getPendingMediaForPost will be populated only when the user exits the editor
-            // But if the user doesn't exit the editor and sends the app to the background, a reattachment
-            // for the media within this Post is needed as soon as the app comes back to foreground,
-            // so we get the list of progressing media for this Post from the UploadService
-            Set<MediaModel> uploadingMediaInPost = mEditPostRepository.getPendingMediaForPost();
-            List<MediaModel> allUploadingMediaInPost = new ArrayList<>(uploadingMediaInPost);
-            // add them to the array only if they are not in there yet
-            for (MediaModel media1 : mEditPostRepository.getPendingOrInProgressMediaUploadsForPost()) {
-                boolean found = false;
-                for (MediaModel media2 : uploadingMediaInPost) {
-                    if (media1.getId() == media2.getId()) {
-                        // if it exists, just break the loop and check for the next one
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) {
-                    // we haven't found it before, so let's add it to the list.
-                    allUploadingMediaInPost.add(media1);
-                }
-            }
-
-            // now do proper re-attachment of upload progress on each media item
-            for (MediaModel media : allUploadingMediaInPost) {
-                if (media != null) {
-                    mEditorMediaUploadListener.onMediaUploadReattached(String.valueOf(media.getId()),
-                            UploadService.getUploadProgressForMedia(media));
-                }
-            }
+        if (mEditorMediaUploadListener != null) {
+            mEditorMedia.reattachUploadingMediaForAztec(
+                    mEditPostRepository,
+                    mEditorFragment instanceof AztecEditorFragment,
+                    mEditorMediaUploadListener
+            );
         }
     }
 
@@ -979,7 +955,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (historyMenuItem != null) {
-            boolean hasHistory = !mIsNewPost && (mSite.isWPCom() || mSite.isJetpackConnected());
+            boolean hasHistory = !mIsNewPost && mSite.isUsingWpComRestApi();
             historyMenuItem.setVisible(showMenuItems && hasHistory);
         }
 
@@ -1549,16 +1525,17 @@ public class EditPostActivity extends AppCompatActivity implements
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository, this::updateFromEditor, null);
     }
 
-    private void updateAndSavePostAsync(final AfterSavePostListener listener) {
+    private void updateAndSavePostAsync(final OnPostUpdatedFromUIListener listener) {
         if (mEditorFragment == null) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
             return;
         }
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository,
                 this::updateFromEditor,
-                (post) -> {
+                (post, result) -> {
+                    // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
                     if (listener != null) {
-                        listener.onPostSave();
+                        listener.onPostUpdatedFromUI();
                     }
                     return null;
                 });
@@ -1718,8 +1695,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    public interface AfterSavePostListener {
-        void onPostSave();
+    public interface OnPostUpdatedFromUIListener {
+        void onPostUpdatedFromUI();
     }
 
     @Override
@@ -1742,20 +1719,22 @@ public class EditPostActivity extends AppCompatActivity implements
             postModel.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
             postModel.setContent(Objects.requireNonNull(mRevision.getPostContent()));
             return true;
-        }, postModel -> {
-            refreshEditorContent();
-            WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
-                      .setAction(getString(R.string.undo), view -> {
-                          AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
-                          RemotePostPayload payload =
-                                  new RemotePostPayload(mEditPostRepository.getPostForUndo(), mSite);
-                          mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                          mEditPostRepository.undo();
-                          refreshEditorContent();
-                      })
-                      .show();
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                refreshEditorContent();
+                WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
+                          .setAction(getString(R.string.undo), view -> {
+                              AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
+                              RemotePostPayload payload =
+                                      new RemotePostPayload(mEditPostRepository.getPostForUndo(), mSite);
+                              mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                              mEditPostRepository.undo();
+                              refreshEditorContent();
+                          })
+                          .show();
 
-            updatePostLoadingAndDialogState(PostLoadingState.NONE);
+                updatePostLoadingAndDialogState(PostLoadingState.NONE);
+            }
             return null;
         });
     }
@@ -1840,9 +1819,11 @@ public class EditPostActivity extends AppCompatActivity implements
             // Hide the progress dialog now
             mEditorFragment.hideSavingProgressDialog();
             return true;
-        }, postModel -> {
-            ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
-            mViewModel.finish(activityFinishState);
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
+                mViewModel.finish(activityFinishState);
+            }
             return null;
         });
     }
@@ -2048,9 +2029,24 @@ public class EditPostActivity extends AppCompatActivity implements
         return content;
     }
 
+    private String migrateToGutenbergEditor(String content) {
+        return "<!-- wp:paragraph --><p>" + content + "</p><!-- /wp:paragraph -->";
+    }
+
     private void fillContentEditorFields() {
         // Needed blog settings needed by the editor
         mEditorFragment.setFeaturedImageSupported(mSite.isFeaturedImageSupported());
+
+        // Special actions - these only make sense for empty posts that are going to be populated now
+        if (TextUtils.isEmpty(mEditPostRepository.getContent())) {
+            String action = getIntent().getAction();
+            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                setPostContentFromShareAction();
+            } else if (NEW_MEDIA_POST.equals(action)) {
+                mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY,
+                        getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
+            }
+        }
 
         // Set post title and content
         if (mEditPostRepository.hasPost()) {
@@ -2075,17 +2071,6 @@ public class EditPostActivity extends AppCompatActivity implements
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
             mEditorFragment.setFeaturedImageId(mEditPostRepository.getFeaturedImageId());
         }
-
-        // Special actions - these only make sense for empty posts that are going to be populated now
-        if (TextUtils.isEmpty(mEditPostRepository.getContent())) {
-            String action = getIntent().getAction();
-            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-                setPostContentFromShareAction();
-            } else if (NEW_MEDIA_POST.equals(action)) {
-                mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY,
-                        getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
-            }
-        }
     }
 
     private void launchCamera() {
@@ -2100,20 +2085,28 @@ public class EditPostActivity extends AppCompatActivity implements
         final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
+            mHasSetPostContent = true;
             mEditPostRepository.updateAsync(postModel -> {
                 if (title != null) {
                     postModel.setTitle(title);
                 }
                 // Create an <a href> element around links
+                String updatedContent = AutolinkUtils.autoCreateLinks(text);
 
-                final String updatedContent = AutolinkUtils.autoCreateLinks(text);
+                // If editor is Gutenberg, add Gutenberg block around content
+                if (mShowGutenbergEditor) {
+                    updatedContent = migrateToGutenbergEditor(updatedContent);
+                }
+
                 // update PostModel
                 postModel.setContent(updatedContent);
                 mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
                 return true;
-            }, postModel -> {
-                mEditorFragment.setTitle(postModel.getTitle());
-                mEditorFragment.setContent(postModel.getContent());
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mEditorFragment.setTitle(postModel.getTitle());
+                    mEditorFragment.setContent(postModel.getContent());
+                }
                 return null;
             });
         }
@@ -2458,7 +2451,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onPerformFetch(String path, Consumer<String> onResult, Consumer<String> onError) {
+    public void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError) {
         if (mSite != null) {
             mReactNativeRequestHandler.performGetRequest(path, mSite, onResult, onError);
         }
@@ -2902,7 +2895,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void syncPostObjectWithUiAndSaveIt(@Nullable AfterSavePostListener listener) {
+    public void syncPostObjectWithUiAndSaveIt(@Nullable OnPostUpdatedFromUIListener listener) {
         updateAndSavePostAsync(listener);
     }
 

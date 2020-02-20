@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name" translatable="false">WordPress</string>
@@ -370,7 +370,7 @@
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="dialog_gutenberg_informative_description_post">You\’re now using the block editor for new posts \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
     <string name="dialog_gutenberg_informative_description_page">You\’re now using the block editor for new pages \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_v2">We made big improvements to the block editor and think it\'s worth a try! We enabled it for new posts and pages but if you\'d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_v2">We made big improvements to the block editor and think it\'s worth a try! We enabled it for new posts and pages but if you\'d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -877,15 +877,27 @@
 
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
-    <string name="stats_bar_chart_content_description">Graph of site views.</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_expand_content_description">Expand</string>
     <string name="stats_collapse_content_description">Collapse</string>
     <string name="stats_item_expanded">Item expanded</string>
     <string name="stats_item_collapsed">Item collapsed</string>
-    <string name="stats_posting_activity_graph">Graph of posting activity.</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+
+    <string name="stats_box_type_low">low</string>
+    <string name="stats_box_type_medium">medium</string>
+    <string name="stats_box_type_high">high</string>
+    <string name="stats_box_type_very_high">very high</string>
+
+    <string name="stats_posting_activity_action">navigate all stats for this period</string>
+    <string name="stats_posting_activity_content_description">The days with %1$s views for %2$s are : %2$s %3$s.Tap for more.</string>
+    <string name="stats_posting_activity_label_content_description">Posting Activity for %1$s</string>
+    <string name="stats_posting_activity_empty_description">There are no stats in this period.</string>
+    <string name="stats_posting_activity_end_description">You have heard all stats for this period.
+        Tapping again will restart from the beginning.</string>
 
     <string name="stats_manage_your_stats">Manage Your Stats</string>
     <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
@@ -1225,9 +1237,17 @@
 
     <!-- reader -->
     <string name="reader">Reader</string>
-    <string name="reader_filter_all_sites">All sites</string>
+    <string name="reader_filter_cta">Filter</string>
     <string name="reader_filter_sites_title">Sites</string>
     <string name="reader_filter_tags_title">Tags</string>
+    <string name="reader_filter_main_title">Following</string>
+    <string name="reader_filter_empty_sites_list">See the newest posts from sites you follow</string>
+    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a tag</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Log in to WordPress.com to see the latest posts from sites you follow</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from tags you follow</string>
+    <string name="reader_filter_empty_sites_action">Follow a site</string>
+    <string name="reader_filter_empty_tags_action">Add a tag</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1590,7 +1610,7 @@
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
-    <string name="reader_title_subs">Tags &amp; Sites</string>
+    <string name="reader_title_subs">Manage Tags &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
 
@@ -1615,6 +1635,12 @@
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
+
+    <!-- accessibility content desciptions -->
+    <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
+    <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Selected</string>
+    <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
 
     <string name="reader_followed_blog_notifications">Enable notifications for %1$s%2$s%3$s?</string>
     <string name="reader_followed_blog_notifications_action">Enable</string>
@@ -1699,6 +1725,7 @@
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
+    <string name="reader_self_hosted_select_filter">Use the filter button to find posts on specific subjects</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
@@ -2639,6 +2666,7 @@
     <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->
     <string name="gutenberg_native_1_s_current_value_is_2_s" tools:ignore="UnusedResources">%1$s. Current value is %2$s</string>
     <string name="gutenberg_native_add_a_description" tools:ignore="UnusedResources">Add a description</string>
+    <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">Add a shortcode…</string>
     <string name="gutenberg_native_add_annotation" tools:ignore="UnusedResources">Add annotation</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
@@ -2666,10 +2694,12 @@
     <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">Double tap to select</string>
     <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">Double tap to select a video</string>
     <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources">Double tap to select an image</string>
+    <string name="gutenberg_native_double_tap_to_select_layout" tools:ignore="UnusedResources">Double tap to select layout</string>
     <!-- translators: accessibility text (hint for switches) -->
     <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources">Double tap to toggle setting</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Double tap to undo last change</string>
-    <string name="gutenberg_native_empty" tools:ignore="UnusedResources">Empty</string>
+    <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">Edit media</string>
+    <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
     <!-- translators: accessibility text. %s: gallery caption. -->
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">Gallery caption. %s</string>
@@ -2678,10 +2708,6 @@
     <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Hide keyboard</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
-    <!-- translators: accessibility text. 1: heading level. 2: heading content. -->
-    <string name="gutenberg_native_level_1_s_2_s" tools:ignore="UnusedResources">Level %1$s. %2$s</string>
-    <!-- translators: accessibility text. %s: heading level. -->
-    <string name="gutenberg_native_level_s_empty" tools:ignore="UnusedResources">Level %s. Empty.</string>
     <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">Link inserted</string>
     <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">Link text</string>
     <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">Move block down</string>
@@ -2713,9 +2739,6 @@
     <string name="gutenberg_native_remove_block_at_row_s" tools:ignore="UnusedResources">Remove block at row %s</string>
     <string name="gutenberg_native_remove_image" tools:ignore="UnusedResources">Remove Image</string>
     <string name="gutenberg_native_reset_block" tools:ignore="UnusedResources">Reset Block</string>
-    <string name="gutenberg_native_row_d" tools:ignore="UnusedResources">Row %d.</string>
-    <!-- translators: accessibility text. %s: block name. -->
-    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s Block</string>
     <!-- translators: accessibility text for the media block empty state. %s: media type -->
     <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">%s block. Empty</string>
     <!-- translators: accessibility text for blocks with invalid content. %d: localized block title -->
@@ -2736,6 +2759,8 @@
     <string name="gutenberg_native_title" tools:ignore="UnusedResources">Title:</string>
     <string name="gutenberg_native_translate" tools:ignore="UnusedResources">Translate</string>
     <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Ungroup</string>
+    <!-- translators: accessibility text. %s: video caption. -->
+    <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">Video caption. %s</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m" tools:ignore="UnusedResources">We are working hard to add more blocks with each release. In the meantime, you can also edit this post on the web.</string>
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress Media Library</string>
     <!--/Autogenerated:Gutenberg Native-->

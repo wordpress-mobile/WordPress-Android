@@ -1,74 +1,141 @@
 <ar>
-13.9:
-• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
-• Block editor enhancements: Added support for settings in the List and Video blocks.
+14.1:
+- محرر المكون: يتيح لك مكون الكود القصير الجديد إنشاء أكواد قصيرة وتعديلها، وقد قمنا بتقليل الحشو حول المكونات النصية، وأصبح تحرير المقالات الطويلة جدًا الآن بمنزلة تجربة أكثر استقرارًا.
+- التحديثات: تم تعطيل خيار إزالة موقع Jetpack من منتقي المواقع.
+- إصلاحات الأخطاء: حذفت عمليات البحث عن المقالات بعض النتائج. يجري الآن البحث بالشكل المطلوب!
+
+
+
 </ar>
 <de-DE>
-13.9:
-• Neu im Block-Editor: Neuer Galerie-Block zur Erstellung von Bildgalerien mit Dateien aus deiner Mediathek sowie Unterstützung des vorformatierten Blocks hinzugefügt.
-• Verbesserungen am Block-Editor: Unterstützung für Einstellungen in den Listen- und Video-Blöcken hinzugefügt.
+14.1:
+- Block-Editor: Mit dem neuen Shortcode-Block kannst du Shortcodes erstellen und bearbeiten, wir haben die Abstände um textbasierte Blöcke verringert und sehr lange Beiträge lassen sich nun stabiler bearbeiten.
+- Updates: Die Option zum Entfernen einer Jetpack-Website aus der Website-Auswahl wurde deaktiviert.
+- Fehlerkorrekturen: In Beitragssuchen fehlten manche Ergebnisse. Jetzt funktioniert die Suche wie beabsichtigt!
+
+
+
 </de-DE>
 <en-US>
-13.9:
-• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
-• Block editor enhancements: Added support for settings in the List and Video blocks.
+14.1:
+- Block Editor: a new Shortcode block lets you create and edit shortcodes, we’ve reduced the padding around text-based blocks, and editing very long posts is now a more stable experience.
+- Updates: The option to remove a Jetpack site from the site picker has been disabled.
+- Bug fixes: searches for posts omitted some results. Now searching works as intended!
+
+
+
 </en-US>
 <es-ES>
-13.9:
-- Adiciones al editor de bloques: Añadido un nuevo bloque de galería para crear galerías de imágenes usando archivos de tu biblioteca de medios, junto con compatibilidad para el bloque preformateado.
-- Mejoras en el editor de bloques: Añadida compatibilidad para los ajustes de los bloques de lista y vídeo.
+14.1:
+- Editor de bloques: un nuevo bloque de shortcode te permite crear y editar shortcodes, hemos reducido el relleno alrededor de los bloques basados en texto y, ahora, la edición de entradas muy largas es una experiencia más estable.
+- Actualizaciones: Ha sido desactivada la opción de eliminar un sitio Jetpack del selector de sitios.
+- Correcciones de fallos: las búsquedas de entradas omitían algunos resultados. ¡Ahora la búsqueda funciona como debe!
+
+
 </es-ES>
+<fr-CA>
+14.1 :
+- Éditeur de blocs : un nouveau bloc de code court vous permet de créer et de modifier des codes courts, le remplissage autour des blocs textuels a été réduit et la modification d'articles très longs est désormais plus stable.
+- Mises à jour : l’option pour supprimer un site Jetpack du sélecteur de sites a été désactivée.
+- Résolution de bugs : les recherches d’articles omettaient certains résultats. La recherche fonctionne désormais correctement.
+
+
+
+</fr-CA>
+<fr-FR>
+14.1 :
+- Éditeur de blocs : un nouveau bloc de code court vous permet de créer et de modifier des codes courts, le remplissage autour des blocs textuels a été réduit et la modification d'articles très longs est désormais plus stable.
+- Mises à jour : l’option pour supprimer un site Jetpack du sélecteur de sites a été désactivée.
+- Résolution de bugs : les recherches d’articles omettaient certains résultats. La recherche fonctionne désormais correctement.
+
+
+
+</fr-FR>
 <iw-IL>
-13.9:
-• תוספות לעורך הבלוקים: הוספנו בלוק גלריה חדש ליצירת גלריית תמונות באמצעות קבצים מספריית המדיה שלך ותמיכה בבלוק Preformatted.
-• שיפורים בעורך הבלוקים: הוספנו תמיכה להגדרות בבלוק הרשימה ובבלוק הווידאו.
+14.1:
+- עורך הבלוקים: בלוק השורטקוד החדש מאפשר לך ליצור ולערוך פריטי שורטקוד, צמצמנו את המרווחים מסביב לבלוקים שמבוססים על טקסט והעריכה של פוסטים מאוד ארוכים יציבה יותר כעת.
+- עדכונים: האפשרות להסיר אתר של Jetpack מבורר האתרים הושבתה.
+- תיקוני באגים: בחיפושים של פוסטים הושמטו כמה תוצאות. כעת החיפוש עובד כשורה!
+
+
+
 </iw-IL>
-<id>
-13.9:
-• Tambahan pada penyunting blok: Menambahkan blok Galeri yang baru untuk membuat galeri gambar menggunakan file dari Pustaka Media Anda, bersama dengan dukungan untuk blok Yang diformat sebelumnya.
-• Peningkatan pada penyunting blok: Menambahkan dukungan untuk pengaturan di blok Daftar dan Video.
-</id>
 <it-IT>
-13.9:
-• Aggiunte all'editor dei blocchi: aggiunto un nuovo blocco Galleria per creare gallerie di immagini usando file dalla libreria multimediale, insieme al supporto per il blocco Preformattato.
-• Miglioramenti all'editor dei blocchi: aggiunto supporto per le impostazioni nei blocchi Elenco e Video.
+14.1:
+- Editor a blocchi: un nuovo blocco Shortcode ti consente di creare e modificare shortcode, abbiamo ridotto il padding intorno ai blocchi basati sul testo e la modifica di articoli molto lunghi è ora un'esperienza più duratura.
+- Aggiornamenti: è stata disabilitata l'opzione per rimuovere un sito Jetpack dal selezionatore di siti.
+- Correzioni di bug: la ricerca per articoli ometteva alcuni risultati. Ora funziona come previsto!
+
+
+
 </it-IT>
 <ja-JP>
-13.9:
-•Block editor additions:Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
-•Block editor enhancements:Added support for settings in the List and Video blocks.
+14.1:
+- ブロックエディター :新しいショートコードブロックで、ショートコードの作成や編集ができます。テキストベースのブロック周囲にあるパディングが削減され、長文の投稿の編集では安定性が向上しました。
+- 更新 :サイトピッカーから Jetpack サイトを削除するオプションが無効になりました。
+- バグ修正 :投稿の検索で一部の結果が除外されていました。意図したとおりの検索が可能になりました。
+
+
+
 </ja-JP>
 <ko-KR>
-13.9:
-• 블록 편집기 추가 기능: 미디어 라이브러리의 파일을 사용하여 이미지 갤러리를 만들 수 있는 새로운 갤러리 블록이 사전 서식 지정된 블록 지원과 함께 추가되었습니다.
-• 블록 편집기의 향상된 기능: 목록 및 비디오 블록의 설정에 대한 지원이 추가되었습니다.
+14.1:
+- 블록 편집기: 새로운 쇼트코드를 사용하여 쇼트코드를 만들고 편집할 수 있습니다. 텍스트 기반 블록 주변의 여백을 줄였으며, 이제 긴 글을 더 안정적인 환경에서 편집할 수 있습니다.
+- 업데이트: 사이트 선택기에서 젯팩 사이트를 제거하는 옵션이 비활성화되었습니다.
+- 버그 수정: 게시물 검색에서 일부 결과가 생략되었습니다. 이제 검색이 원래대로 작동합니다!
+
+
+
 </ko-KR>
-<nl-NL>
-13.9:
-• Aanvullingen op de blokeditor: We hebben een nieuw Galerijblok toegevoegd om afbeeldinggalerijen te maken met bestanden uit je Mediabibliotheek, en ondersteuning voor het Vooraf ingesteld-blok.
-• Verbeteringen aan de blokeditor: Toegevoegde ondersteuning voor instellingen in de Lijst- en videoblokken.
-</nl-NL>
+<pt-BR>
+14.1:
+- Editor de blocos: um novo bloco de shortcode permite criar e editar shortcodes, reduzimos o espaço em volta de blocos de texto e melhoramos a estabilidade ao editar posts muito longos.
+- Atualização: a opção para remover um site Jetpack do seletor de sites foi desabilitada.
+- Correção de erros: pesquisar por posts omitia alguns resultados. Agora a pesquisa funciona como esperado.
+
+
+</pt-BR>
 <ru-RU>
-13.9:
-• Улучшения редактора блоков: добавлен блок галереи для создания галерей из файлов медиатеки, а также поддержка блока преформатированного текста. Возможность настройки блоков списков и видео.
+14.1:
+- Редактор блоков: новый блок шорткодов позволяет создавать и редактировать шорткоды, мы также уменьшили отступы вокруг текстовых блоков. Редактирование очень длинных записей стало более стабильным.
+- Возможность удаления сайта с Jetpack из списка сайтов была отключена.
+- Исправлен поиск, теперь некоторые результаты поиска более не будут пропущены.
+
+
 </ru-RU>
 <sv-SE>
-13.9:
-• Nyheter i blockredigeraren: Nytt galleri-block för bildgallerier med filer från mediabiblioteket, och även stöd för ett förformaterat block.
-• Förbättringar i blockredigeraren: Nu finns det stöd för inställningar i list- och videoblock.
+14.1:
+- Blockredigeraren: ett nytt kordkodsblock låter dig skapa och redigera kortkoder. Vi har minskat utfyllnaden runt textbaserade block. Nu är upplevelsen stabilare när man redigerar  mycket långa inlägg.
+- Uppdateringar: Möjligheten att ta bort Jetpack från webbplatsen har inaktiverats.
+- Felrättningar: Vid sökning efter inlägg saknades vissa resultat. Nu fungerar sökningen som det är tänkt!
+
+
+
 </sv-SE>
 <tr-TR>
-13.9:
-• Blok düzenleyici eklemeleri: Önceden Biçimli blok desteğinin yanı sıra, Ortam Kütüphanenizdeki dosyaları kullanarak görsel galerileri oluşturmanız için yeni bir Galeri bloku eklendi.
-• Blok düzenleyici geliştirmeleri: Liste ve Video bloklarındaki ayarlar için destek eklendi.
+14.1:
+- Blok Düzenleyici: Kısa kodlar oluşturup düzenlemenizi sağlayan yeni bir Kısa Kod bloğu. Metin tabanlı blokların etrafındaki dolguları azalttık ve çok uzun gönderileri düzenlemek artık daha istikrarlı bir deneyim sunuyor.
+- Güncelleştirmeler: Site seçiciden bir Jetpack sitesini kaldırma seçeneği devre dışı bırakıldı.
+- Hata düzeltmeleri: gönderi aramalarında bazı sonuçlar çıkarıldı. Arama işlevi artık istendiği gibi çalışıyor!
+
+
+
 </tr-TR>
 <zh-CN>
-13.9：
-•区块编辑器添加内容：添加了一个新的“图库”区块，用于使用媒体库中的文件创建图片库，并支持“预格式化”区块。
-•区块编辑器增强功能：添加了对“列表”和“视频”区块中设置的支持。
+14.1：
+- 区块编辑器：新的短代码区块允许您创建和编辑短代码，我们减少了基于文本的区块周围的填充，可以更稳定地编辑非常长的文章。
+- 更新：从站点选择器中删除 Jetpack 站点的选项已被禁用。
+– 错误修复：搜索文章时忽略了一些结果。现在可以按搜索预期工作！
+
+
+
 </zh-CN>
 <zh-TW>
-13.9：
-•區塊編輯器新增功能：已新增「圖庫」區塊，讓你可用媒體庫內的檔案建立圖庫，並取得「未格式化」區塊的支援。
-•區塊編輯器增強功能：已新增「清單」和「視訊」區塊內的設定支援。
+14.1：
+- 區塊編輯器：全新短代碼區塊可讓你建立和編輯短代碼，我們已縮短文字區塊周圍的邊框間距，你現在能夠更穩定地編輯內容很長的文章。
+- 更新：從網站選擇器移除 Jetpack 網站的選項已停用。
+- 錯誤修正：過去搜尋文章時會省略部分結果。現在搜尋功能已可正常運作！
+
+
+
 </zh-TW>
