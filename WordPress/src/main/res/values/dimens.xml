@@ -200,7 +200,6 @@
     <dimen name="reader_follow_button_extra_padding">32dp</dimen>
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
-    <dimen name="empty_list_title_text_size">24sp</dimen>
     <dimen name="empty_list_title_side_margin">32dp</dimen>
     <dimen name="empty_list_title_bottom_margin">8dp</dimen>
 
@@ -322,8 +321,6 @@
     <dimen name="publicize_name_margin">8dp</dimen>
 
     <!--post settings-->
-    <dimen name="post_settings_input_dialog_edit_text_side_margin">20dp</dimen>
-    <dimen name="post_settings_input_dialog_hint_side_margin">24dp</dimen>
     <dimen name="tags_list_row_height">40dp</dimen>
     <dimen name="post_settings_retry_image_size">60dp</dimen>
 

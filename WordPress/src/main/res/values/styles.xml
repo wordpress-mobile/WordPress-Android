@@ -59,9 +59,6 @@
 
         <item name="colorButtonNormal">@color/light_gray</item>
 
-        <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
-        <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
-
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
@@ -77,6 +74,10 @@
     <style name="WordPress.NoActionBar" parent="WordPress">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="WordPress.Editor.NoActionBar" parent="WordPress.NoActionBar">
+        <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
     </style>
 
     <style name="WordPress.NoActionBar.DarkNavbar" parent="WordPress.NoActionBar">
@@ -158,14 +159,6 @@
     <style name="FilteredRecyclerViewFilterTextView.MainToolbar">
         <item name="android:textSize">@null</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
-    </style>
-
-    <style name="DatePicker.WordPress" parent="android:Widget.Material.DatePicker">
-        <item name="android:datePickerMode">spinner</item>
-    </style>
-
-    <style name="TimePicker.WordPress" parent="android:Widget.Material.TimePicker">
-        <item name="android:timePickerMode">spinner</item>
     </style>
 
     <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Primary">
@@ -266,15 +259,14 @@
     </style>
 
     <style name="WordPress.EmptyList">
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginEnd">16dp</item>
     </style>
 
     <style name="WordPress.EmptyList.Title" parent="WordPress.EmptyList">
-        <item name="android:textSize">@dimen/empty_list_title_text_size</item>
-        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-light</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
     </style>
 
     <!--My Site Styles-->
@@ -578,12 +570,6 @@
     </style>
 
     <!--Post Settings Styles-->
-    <style name="PostSettingsCardView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
-    </style>
-
     <style name="PostSettingsCardViewInnerLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -593,9 +579,8 @@
     <style name="PostSettingsSectionHeader">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/primary_50</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
@@ -613,21 +598,18 @@
     <style name="PostSettingsTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_70_neutral_20_selector</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
     <style name="PostSettingsSubtitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_50_neutral_20_selector</item>
-        <item name="android:textColorHint">?attr/wpColorTextSubtle</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
     </style>
 
     <style name="PostSettingsDivider">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:layout_height">@dimen/divider_size</item>
         <item name="android:background">?android:listDivider</item>
     </style>
 

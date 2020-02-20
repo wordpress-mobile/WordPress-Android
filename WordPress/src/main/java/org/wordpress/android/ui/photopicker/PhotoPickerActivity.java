@@ -100,7 +100,7 @@ public class PhotoPickerActivity extends AppCompatActivity
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.photo_picker_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
