@@ -67,7 +67,6 @@ android {
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
-        buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -94,7 +93,6 @@ android {
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions

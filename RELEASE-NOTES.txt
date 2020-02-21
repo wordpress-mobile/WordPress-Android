@@ -1,7 +1,7 @@
 14.3
 -----
 * Added search to set page parent screen
-
+* Reader Information Architecture: added tab filtering; added bottom sheet to filter and navigate the followed sites/tags posts.
  
 14.2
 -----

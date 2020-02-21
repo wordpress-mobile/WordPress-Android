@@ -17,7 +17,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -80,10 +79,10 @@ class ReaderPostListViewModelTest {
                 onClickAction = ::onClickActionDummy
         )
         val json = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":4}"
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            whenever(appPrefsWrapper.getReaderSubfilter()).thenReturn(json)
-            whenever(subfilterListItemMapper.fromJson(any(), any(), any())).thenReturn(tag)
-        }
+
+        whenever(appPrefsWrapper.getReaderSubfilter()).thenReturn(json)
+        whenever(subfilterListItemMapper.fromJson(any(), any(), any())).thenReturn(tag)
+
         viewModel = ReaderPostListViewModel(
                 newsManager,
                 newsTracker,
@@ -204,11 +203,7 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun `view model returns default filter on start`() {
-        if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(SiteAll::class.java)
-        } else {
-            assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(Tag::class.java)
-        }
+        assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(Tag::class.java)
     }
 
     @Test
