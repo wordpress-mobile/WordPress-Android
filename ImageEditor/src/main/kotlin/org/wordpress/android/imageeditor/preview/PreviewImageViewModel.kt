@@ -27,7 +27,7 @@ class PreviewImageViewModel : ViewModel() {
         )
     }
 
-    fun onImageLoadSuccess(url: String) {
+    fun onLoadIntoImageViewSuccess(url: String) {
         val newState = when (val currentState = uiState.value) {
             is ImageDataStartLoadingUiState -> {
                 if (url == currentState.imageData.lowResImageUrl) {
@@ -45,7 +45,7 @@ class PreviewImageViewModel : ViewModel() {
         updateUiState(newState)
     }
 
-    fun onImageLoadFailed(url: String) {
+    fun onLoadIntoImageViewFailed(url: String) {
         val newState = when (val currentState = uiState.value) {
             is ImageDataStartLoadingUiState -> {
                 val lowResImageUrl = currentState.imageData.lowResImageUrl

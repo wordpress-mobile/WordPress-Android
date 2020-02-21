@@ -44,71 +44,71 @@ class PreviewImageViewModelTest {
     @Test
     fun `progress bar shown on low res image load success`() {
         initViewModel()
-        viewModel.onImageLoadSuccess(TEST_LOW_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL)
         assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(true)
     }
 
     @Test
     fun `progress bar shown on low res image load failed`() {
         initViewModel()
-        viewModel.onImageLoadFailed(TEST_LOW_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewFailed(TEST_LOW_RES_IMAGE_URL)
         assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(true)
     }
 
     @Test
     fun `low res image success ui shown on low res image load success`() {
         initViewModel()
-        viewModel.onImageLoadSuccess(TEST_LOW_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL)
         assertThat(viewModel.uiState.value).isInstanceOf(ImageInLowResLoadSuccessUiState::class.java)
     }
 
     @Test
     fun `low res image failed ui shown on low res image load failed`() {
         initViewModel()
-        viewModel.onImageLoadFailed(TEST_LOW_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewFailed(TEST_LOW_RES_IMAGE_URL)
         assertThat(viewModel.uiState.value).isInstanceOf(ImageInLowResLoadFailedUiState::class.java)
     }
 
     @Test
     fun `progress bar hidden on high res image load success`() {
         initViewModel()
-        viewModel.onImageLoadSuccess(TEST_HIGH_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL)
         assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(false)
     }
 
     @Test
     fun `progress bar hidden on high res image load failed`() {
         initViewModel()
-        viewModel.onImageLoadFailed(TEST_HIGH_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
         assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(false)
     }
 
     @Test
     fun `high res image success ui shown on high res image load success`() {
         initViewModel()
-        viewModel.onImageLoadSuccess(TEST_HIGH_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL)
         assertThat(viewModel.uiState.value).isInstanceOf(ImageInHighResLoadSuccessUiState::class.java)
     }
 
     @Test
     fun `high res image failed ui shown on high res image load failed`() {
         initViewModel()
-        viewModel.onImageLoadFailed(TEST_HIGH_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
         assertThat(viewModel.uiState.value).isInstanceOf(ImageInHighResLoadFailedUiState::class.java)
     }
 
     @Test
     fun `high res image success ui shown when low res image loads after high res image`() {
         initViewModel()
-        viewModel.onImageLoadSuccess(TEST_HIGH_RES_IMAGE_URL)
-        viewModel.onImageLoadSuccess(TEST_LOW_RES_IMAGE_URL) // low res image loaded after high res image
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL) // low res image loaded after high res image
         assertThat(viewModel.uiState.value).isInstanceOf(ImageInHighResLoadSuccessUiState::class.java)
     }
 
     @Test
     fun `high res image file loading started when high res image shown`() {
         initViewModel()
-        viewModel.onImageLoadSuccess(TEST_HIGH_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL)
         assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
     }
 
