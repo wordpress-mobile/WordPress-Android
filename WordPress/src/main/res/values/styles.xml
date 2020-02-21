@@ -310,7 +310,6 @@
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:background">@android:color/white</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
-        <item name="android:minHeight">@dimen/main_bottom_sheet_list_row_min_height</item>
     </style>
 
     <style name="MySiteListRowIcon">
@@ -1060,6 +1059,10 @@
     </style>
 
     <!-- Main actions styles -->
+    <style name="MainBottomSheetRowLayout" parent="MySiteListRowLayout">
+        <item name="android:minHeight">@dimen/main_bottom_sheet_list_row_min_height</item>
+    </style>
+
     <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
         <item name="android:layout_height">@dimen/main_bottom_sheet_list_row_icon_size</item>
     </style>
