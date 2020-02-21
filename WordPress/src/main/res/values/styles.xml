@@ -1095,7 +1095,7 @@
         <item name="android:textAlignment">viewStart</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingTop">@dimen/margin_extra_small</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_extra_small</item>
     </style>
 
