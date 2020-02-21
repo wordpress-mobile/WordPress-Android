@@ -15,8 +15,10 @@ import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 import org.wordpress.android.imageeditor.utils.UiHelpers
+import java.io.File
 
 class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
@@ -52,25 +54,46 @@ class PreviewImageFragment : Fragment() {
     private fun setupObservers() {
         viewModel.uiState.observe(this, Observer { uiState ->
             if (uiState is ImageDataStartLoadingUiState) {
-                loadImage(uiState.imageData)
+                loadIntoImageView(uiState.imageData)
             }
             UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
         })
+
+        viewModel.loadIntoFile.observe(this, Observer { fileState ->
+            if (fileState is ImageStartLoadingToFileState) {
+                loadIntoFile(fileState.imageUrl)
+            }
+        })
     }
 
-    private fun loadImage(imageData: ImageData) {
-        ImageEditor.instance.loadImageWithResultListener(
+    private fun loadIntoImageView(imageData: ImageData) {
+        ImageEditor.instance.loadIntoImageViewWithResultListener(
             imageData.highResImageUrl,
             previewImageView,
             CENTER,
             imageData.lowResImageUrl,
             object : RequestListener<Drawable> {
                 override fun onResourceReady(resource: Drawable, url: String) {
-                    viewModel.onImageLoadSuccess(url)
+                    viewModel.onLoadIntoImageViewSuccess(url)
                 }
 
                 override fun onLoadFailed(e: Exception?, url: String) {
-                    viewModel.onImageLoadFailed(url)
+                    viewModel.onLoadIntoImageViewFailed(url)
+                }
+            }
+        )
+    }
+
+    private fun loadIntoFile(url: String) {
+        ImageEditor.instance.loadIntoFileWithResultListener(
+            url,
+            object : RequestListener<File> {
+                override fun onResourceReady(resource: File, url: String) {
+                    viewModel.onLoadIntoFileSuccess(resource.path)
+                }
+
+                override fun onLoadFailed(e: Exception?, url: String) {
+                    viewModel.onLoadIntoFileFailed()
                 }
             }
         )

@@ -3,6 +3,10 @@ package org.wordpress.android.imageeditor.preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
@@ -13,6 +17,9 @@ class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<ImageUiState> = MutableLiveData()
     val uiState: LiveData<ImageUiState> = _uiState
 
+    private val _loadIntoFile: MutableLiveData<ImageLoadToFileState> = MutableLiveData(ImageLoadToFileIdleState)
+    val loadIntoFile: LiveData<ImageLoadToFileState> = _loadIntoFile
+
     fun onCreateView(loResImageUrl: String, hiResImageUrl: String) {
         updateUiState(
             ImageDataStartLoadingUiState(
@@ -21,8 +28,9 @@ class PreviewImageViewModel : ViewModel() {
         )
     }
 
-    fun onImageLoadSuccess(url: String) {
-        val newState = when (val currentState = uiState.value) {
+    fun onLoadIntoImageViewSuccess(url: String) {
+        val currentState = uiState.value
+        val newState = when (currentState) {
             is ImageDataStartLoadingUiState -> {
                 if (url == currentState.imageData.lowResImageUrl) {
                     ImageInLowResLoadSuccessUiState
@@ -33,10 +41,13 @@ class PreviewImageViewModel : ViewModel() {
             else -> ImageInHighResLoadSuccessUiState
         }
 
+        if (newState == ImageInHighResLoadSuccessUiState && currentState != ImageInHighResLoadSuccessUiState) {
+            updateLoadIntoFileState(ImageStartLoadingToFileState(url))
+        }
         updateUiState(newState)
     }
 
-    fun onImageLoadFailed(url: String) {
+    fun onLoadIntoImageViewFailed(url: String) {
         val newState = when (val currentState = uiState.value) {
             is ImageDataStartLoadingUiState -> {
                 val lowResImageUrl = currentState.imageData.lowResImageUrl
@@ -52,8 +63,21 @@ class PreviewImageViewModel : ViewModel() {
         updateUiState(newState)
     }
 
+    fun onLoadIntoFileSuccess(filePath: String) {
+        updateLoadIntoFileState(ImageLoadToFileSuccessState(filePath))
+    }
+
+    fun onLoadIntoFileFailed() {
+        // TODO: Do we need to display any error message to the user?
+        updateLoadIntoFileState(ImageLoadToFileFailedState)
+    }
+
     private fun updateUiState(uiState: ImageUiState) {
         _uiState.value = uiState
+    }
+
+    private fun updateLoadIntoFileState(fileState: ImageLoadToFileState) {
+        _loadIntoFile.value = fileState
     }
 
     data class ImageData(val lowResImageUrl: String, val highResImageUrl: String)
@@ -64,8 +88,15 @@ class PreviewImageViewModel : ViewModel() {
         data class ImageDataStartLoadingUiState(val imageData: ImageData) : ImageUiState(progressBarVisible = true)
         // Continue displaying progress bar on low res image load success
         object ImageInLowResLoadSuccessUiState : ImageUiState(progressBarVisible = true)
-        object ImageInLowResLoadFailedUiState : ImageUiState(progressBarVisible = false)
+        object ImageInLowResLoadFailedUiState : ImageUiState(progressBarVisible = true)
         object ImageInHighResLoadSuccessUiState : ImageUiState(progressBarVisible = false)
         object ImageInHighResLoadFailedUiState : ImageUiState(progressBarVisible = false)
+    }
+
+    sealed class ImageLoadToFileState {
+        object ImageLoadToFileIdleState : ImageLoadToFileState()
+        data class ImageStartLoadingToFileState(val imageUrl: String) : ImageLoadToFileState()
+        data class ImageLoadToFileSuccessState(val filePath: String) : ImageLoadToFileState()
+        object ImageLoadToFileFailedState : ImageLoadToFileState()
     }
 }

@@ -3,10 +3,13 @@ package org.wordpress.android.imageeditor
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import java.io.File
 
 class ImageEditor private constructor(
-    private val loadImageWithResultListener: ((String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit)
-
+    private val loadIntoImageViewWithResultListener: (
+        (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
+    ),
+    private val loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit)
 ) {
     interface RequestListener<T> {
         /**
@@ -16,6 +19,7 @@ class ImageEditor private constructor(
          * @param url The url of the image we were trying to load when the exception occurred.
          */
         fun onLoadFailed(e: Exception?, url: String)
+
         /**
          * Called when a load completes successfully
          *
@@ -25,14 +29,21 @@ class ImageEditor private constructor(
         fun onResourceReady(resource: T, url: String)
     }
 
-    fun loadImageWithResultListener(
+    fun loadIntoImageViewWithResultListener(
         imageUrl: String,
         imageView: ImageView,
         scaleType: ScaleType,
         thumbUrl: String,
         listener: RequestListener<Drawable>
     ) {
-        loadImageWithResultListener.invoke(imageUrl, imageView, scaleType, thumbUrl, listener)
+        loadIntoImageViewWithResultListener.invoke(imageUrl, imageView, scaleType, thumbUrl, listener)
+    }
+
+    fun loadIntoFileWithResultListener(
+        imageUrl: String,
+        listener: RequestListener<File>
+    ) {
+        loadIntoFileWithResultListener.invoke(imageUrl, listener)
     }
 
     companion object {
@@ -41,9 +52,15 @@ class ImageEditor private constructor(
         val instance: ImageEditor get() = INSTANCE
 
         fun init(
-            loadImageWithResultListener: ((String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit)
+            loadIntoImageViewWithResultListener: (
+                (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
+            ),
+            loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit)
         ) {
-            INSTANCE = ImageEditor(loadImageWithResultListener)
+            INSTANCE = ImageEditor(
+                loadIntoImageViewWithResultListener,
+                loadIntoFileWithResultListener
+            )
         }
     }
 }
