@@ -2673,6 +2673,10 @@ public class EditPostActivity extends AppCompatActivity implements
         mPostEditorAnalyticsSession.start(unsupportedBlocksList);
     }
 
+    @Override public void onGutenbergDidLogSessionTemplateEvent(String template) {
+        mPostEditorAnalyticsSession.applyTemplate(template);
+    }
+
     @Override
     public void onHtmlModeToggledInToolbar() {
         toggleHtmlModeOnMenu();
