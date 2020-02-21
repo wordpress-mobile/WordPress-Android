@@ -13,6 +13,9 @@ class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<ImageUiState> = MutableLiveData()
     val uiState: LiveData<ImageUiState> = _uiState
 
+    private val _loadIntoFile: MutableLiveData<String> = MutableLiveData()
+    val loadIntoFile: LiveData<String> = _loadIntoFile
+
     fun onCreateView(loResImageUrl: String, hiResImageUrl: String) {
         updateUiState(
             ImageDataStartLoadingUiState(
@@ -33,6 +36,9 @@ class PreviewImageViewModel : ViewModel() {
             else -> ImageInHighResLoadSuccessUiState
         }
 
+        if (newState == ImageInHighResLoadSuccessUiState) {
+            updateUrlToLoadIntoFile(url)
+        }
         updateUiState(newState)
     }
 
@@ -54,6 +60,10 @@ class PreviewImageViewModel : ViewModel() {
 
     private fun updateUiState(uiState: ImageUiState) {
         _uiState.value = uiState
+    }
+
+    private fun updateUrlToLoadIntoFile(url: String) {
+        _loadIntoFile.value = url
     }
 
     data class ImageData(val lowResImageUrl: String, val highResImageUrl: String)
