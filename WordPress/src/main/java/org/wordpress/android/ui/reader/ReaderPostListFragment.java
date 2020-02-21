@@ -2878,7 +2878,7 @@ public class ReaderPostListFragment extends Fragment
 
         @Override
         protected void onPostExecute(ReaderTagList tagList) {
-            if (mFilterCriteriaLoaderListener != null) {
+            if (mFilterCriteriaLoaderListener != null && isAdded()) {
                 //noinspection unchecked
                 mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
             }
