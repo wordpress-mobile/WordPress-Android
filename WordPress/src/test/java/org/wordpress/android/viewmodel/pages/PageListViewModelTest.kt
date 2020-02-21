@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -36,7 +35,6 @@ private const val HOUR_IN_MILLISECONDS = 3600000L
 
 class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaStore: MediaStore
-    @Mock lateinit var postStore: PostStore
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var pagesViewModel: PagesViewModel
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
@@ -56,7 +54,6 @@ class PageListViewModelTest : BaseUnitTest() {
                 pageListItemActionsUseCase,
                 pageItemProgressUiStateUseCase,
                 mediaStore,
-                postStore,
                 dispatcher,
                 localeManagerWrapper,
                 Dispatchers.Unconfined

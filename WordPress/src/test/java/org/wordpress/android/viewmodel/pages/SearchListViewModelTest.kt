@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
-import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -42,10 +41,10 @@ class SearchListViewModelTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var pagesViewModel: PagesViewModel
+    @Mock lateinit var createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase
     @Mock lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
     @Mock lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
     @Mock lateinit var createUploadStateUseCase: CreatePageUploadUiStateUseCase
-    @Mock lateinit var postStore: PostStore
 
     private lateinit var searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>>
     private lateinit var viewModel: SearchListViewModel
@@ -56,10 +55,10 @@ class SearchListViewModelTest {
     fun setUp() {
         page = PageModel(PostModel(), site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
         viewModel = SearchListViewModel(
+                createPageListItemLabelsUseCase,
                 createUploadStateUseCase,
                 pageListItemActionsUseCase,
                 pageItemProgressUiStateUseCase,
-                postStore,
                 resourceProvider,
                 TEST_SCOPE
         )
@@ -74,6 +73,11 @@ class SearchListViewModelTest {
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         whenever(pagesViewModel.site).thenReturn(site)
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
+        whenever(createPageListItemLabelsUseCase.createLabels(any(), any())).thenReturn(
+                Pair(
+                        mock(), 0
+                )
+        )
         whenever(createUploadStateUseCase.createUploadUiState(any(), any(), any())).thenReturn(
                 PostUploadUiState.NothingToUpload
         )
