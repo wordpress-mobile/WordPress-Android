@@ -26,6 +26,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_POST_TYPE = "post_type";
     private static final String KEY_OUTCOME = "outcome";
     private static final String KEY_SESSION_ID = "session_id";
+    private static final String KEY_TEMPLATE = "template";
 
     private String mSessionId = UUID.randomUUID().toString();
     private String mPostType;
@@ -35,6 +36,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private Editor mCurrentEditor;
     private boolean mHasUnsupportedBlocks = false;
     private Outcome mOutcome = null;
+    private String mTemplate;
     private boolean mHWAccOff = false;
 
     enum Editor {
@@ -113,6 +115,10 @@ public class PostEditorAnalyticsSession implements Serializable {
         mOutcome = newOutcome;
     }
 
+    public void applyTemplate(String template) {
+        mTemplate = template;
+    }
+
     public void end() {
         // don't try to send an "end" event if the session wasn't started in the first place
         if (mStarted) {
@@ -138,6 +144,7 @@ public class PostEditorAnalyticsSession implements Serializable {
         properties.put(KEY_SESSION_ID, mSessionId);
         properties.put(KEY_HAS_UNSUPPORTED_BLOCKS, mHasUnsupportedBlocks ? "1" : "0");
         properties.put(AnalyticsUtils.EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY, mHWAccOff ? "1" : "0");
+        properties.put(KEY_TEMPLATE, mTemplate);
 
         return properties;
     }
