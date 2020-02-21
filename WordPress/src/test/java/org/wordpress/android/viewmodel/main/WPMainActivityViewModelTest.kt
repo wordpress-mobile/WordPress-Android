@@ -93,4 +93,11 @@ class WPMainActivityViewModelTest {
         action.onClickAction?.invoke(CREATE_NEW_PAGE)
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_PAGE)
     }
+
+    @Test
+    fun `when user taps to open the login page from the bottom sheet empty view cta the correct action is triggered`() {
+        viewModel.onOpenLoginPage()
+
+        assertThat(viewModel.startLoginFlow.value!!.peekContent()).isEqualTo(true)
+    }
 }
