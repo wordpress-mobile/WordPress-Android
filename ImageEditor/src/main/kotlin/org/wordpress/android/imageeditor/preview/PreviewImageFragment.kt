@@ -3,7 +3,6 @@ package org.wordpress.android.imageeditor.preview
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,7 @@ import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
@@ -59,8 +59,10 @@ class PreviewImageFragment : Fragment() {
             UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
         })
 
-        viewModel.loadIntoFile.observe(this, Observer { url ->
-            loadIntoFile(url)
+        viewModel.loadIntoFile.observe(this, Observer { fileState ->
+            if (fileState is ImageStartLoadingToFileState) {
+                loadIntoFile(fileState.imageUrl)
+            }
         })
     }
 
@@ -87,11 +89,12 @@ class PreviewImageFragment : Fragment() {
             url,
             object : RequestListener<File> {
                 override fun onResourceReady(resource: File, url: String) {
-                    // TODO: image file path obtained here, pass it to uCrop
-                    Log.d("PreviewImageFragment", "file path " + resource.path)
+                    viewModel.onLoadIntoFileSuccess(resource.path)
                 }
 
-                override fun onLoadFailed(e: Exception?, url: String) { }
+                override fun onLoadFailed(e: Exception?, url: String) {
+                    viewModel.onLoadIntoFileFailed()
+                }
             }
         )
     }
