@@ -49,7 +49,6 @@ import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.uploads.UploadActionUseCase
-import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
@@ -379,11 +378,10 @@ class PagesFragment : Fragment() {
                         site,
                         uploadActionUseCase.getUploadAction(post),
                         View.OnClickListener {
-                            UploadUtils.publishPost(
+                            uploadUtilsWrapper.publishPost(
                                     activity,
                                     post,
-                                    site,
-                                    dispatcher
+                                    site
                             ) }
                 )
             }
@@ -391,7 +389,7 @@ class PagesFragment : Fragment() {
 
         viewModel.publishAction.observe(this, Observer {
             it?.let {
-                UploadUtils.publishPost(activity, it.post, it.site, dispatcher)
+                uploadUtilsWrapper.publishPost(activity, it.post, it.site)
             }
         })
 
