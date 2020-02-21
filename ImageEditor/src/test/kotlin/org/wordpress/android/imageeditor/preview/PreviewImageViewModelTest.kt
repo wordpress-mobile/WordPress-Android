@@ -6,6 +6,7 @@ import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
@@ -125,7 +126,7 @@ class PreviewImageViewModelTest {
         initViewModel()
         viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL)
         viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
-        assertThat(viewModel.loadIntoFile.value).isNull()
+        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageLoadToFileIdleState)
     }
 
     @Test

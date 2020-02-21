@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadFailedUiState
@@ -16,7 +17,7 @@ class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<ImageUiState> = MutableLiveData()
     val uiState: LiveData<ImageUiState> = _uiState
 
-    private val _loadIntoFile: MutableLiveData<ImageLoadToFileState> = MutableLiveData()
+    private val _loadIntoFile: MutableLiveData<ImageLoadToFileState> = MutableLiveData(ImageLoadToFileIdleState)
     val loadIntoFile: LiveData<ImageLoadToFileState> = _loadIntoFile
 
     fun onCreateView(loResImageUrl: String, hiResImageUrl: String) {
@@ -93,6 +94,7 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     sealed class ImageLoadToFileState {
+        object ImageLoadToFileIdleState : ImageLoadToFileState()
         data class ImageStartLoadingToFileState(val imageUrl: String) : ImageLoadToFileState()
         data class ImageLoadToFileSuccessState(val filePath: String) : ImageLoadToFileState()
         object ImageLoadToFileFailedState : ImageLoadToFileState()
