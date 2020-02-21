@@ -613,7 +613,6 @@ class PagesViewModel
                     PageAction(remoteId, UPLOAD) {
                         val updatedPage = updatePageStatus(page, status)
                         pageStore.updatePageInDb(updatedPage)
-
                         _scrollToPage.postOnUi(updatedPage)
                         refreshPages()
                         pageStore.uploadPageToServer(updatedPage)
@@ -623,7 +622,6 @@ class PagesViewModel
                     PageAction(remoteId, UPDATE) {
                         val updatedPage = updatePageStatus(page, status)
                         pageStore.updatePageInDb(updatedPage)
-                        
                         _scrollToPage.postOnUi(updatedPage)
                         refreshPages()
                     }
