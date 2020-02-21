@@ -640,7 +640,6 @@ class PagesViewModel
                 action.onSuccess = {
                     launch(defaultDispatcher) {
                         delay(ACTION_DELAY)
-                        reloadPages()
 
                         val message = prepareStatusChangeSnackbar(status, action.undo)
                         showSnackbar(message)
