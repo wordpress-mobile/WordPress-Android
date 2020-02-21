@@ -148,7 +148,7 @@ class PageListViewModel @Inject constructor(
         pagesViewModel.onNewPageButtonTapped()
     }
 
-     fun onScrollToPageRequested(localPageId: Int) {
+    fun onScrollToPageRequested(localPageId: Int) {
         val position = _pages.value?.indexOfFirst { it is Page && it.localId == localPageId } ?: -1
         if (position != -1) {
             _scrollToPosition.postValue(position)
