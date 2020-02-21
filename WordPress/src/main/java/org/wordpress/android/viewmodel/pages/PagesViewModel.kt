@@ -252,13 +252,13 @@ class PagesViewModel
 
     fun onPageEditFinished(localPageId: Int, data: Intent) {
         launch {
-            refreshPages() // show local changes immediately
             withContext(defaultDispatcher) {
                 pageStore.getPageByLocalId(pageId = localPageId, site = site)?.let {
                     _scrollToPage.postOnUi(it)
                     _postUploadAction.postValue(Triple(it.post, it.site, data))
                 }
             }
+            refreshPages() // show local changes immediately
         }
     }
 
@@ -614,18 +614,18 @@ class PagesViewModel
                         val updatedPage = updatePageStatus(page, status)
                         pageStore.updatePageInDb(updatedPage)
 
+                        _scrollToPage.postOnUi(updatedPage)
                         refreshPages()
                         pageStore.uploadPageToServer(updatedPage)
-                        _scrollToPage.postOnUi(updatedPage)
                     }
                 } else {
                     // Local pages are trashed locally
                     PageAction(remoteId, UPDATE) {
                         val updatedPage = updatePageStatus(page, status)
                         pageStore.updatePageInDb(updatedPage)
-
-                        refreshPages()
+                        
                         _scrollToPage.postOnUi(updatedPage)
+                        refreshPages()
                     }
                 }
 
