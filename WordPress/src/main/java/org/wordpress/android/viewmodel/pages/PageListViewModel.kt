@@ -156,6 +156,7 @@ class PageListViewModel @Inject constructor(
         val position = _pages.value?.indexOfFirst { it is Page && it.localId == localPageId } ?: -1
         if (position != -1) {
             _scrollToPosition.postValue(position)
+            pageToScrollTo = null
         } else {
             AppLog.e(AppLog.T.PAGES, "Attempt to scroll to a missing page with ID $localPageId")
         }
@@ -217,7 +218,6 @@ class PageListViewModel @Inject constructor(
 
         pageToScrollTo?.let {
             onScrollToPageRequested(it.value)
-            pageToScrollTo = null
         }
     }
 
