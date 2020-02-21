@@ -49,6 +49,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveList
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
@@ -361,6 +362,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnMediaEditorListener() {
                     @Override public void onMediaEditorClicked(String mediaUrl) {
                         // Show Media Editor
+                    }
+                },
+                new OnLogGutenbergUserEventListener() {
+                    @Override public void onGutenbergDidLogSessionTemplateEvent(String template) {
+                        mEditorFragmentListener.onGutenbergDidLogSessionTemplateEvent(template);
                     }
                 });
 
