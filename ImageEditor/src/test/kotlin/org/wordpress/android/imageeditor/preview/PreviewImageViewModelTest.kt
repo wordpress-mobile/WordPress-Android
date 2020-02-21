@@ -5,6 +5,9 @@ import org.junit.Before
 import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
@@ -13,6 +16,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
+private const val TEST_FILE_PATH = "/file/path"
 class PreviewImageViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
@@ -97,8 +101,36 @@ class PreviewImageViewModelTest {
     fun `high res image success ui shown when low res image loads after high res image`() {
         initViewModel()
         viewModel.onImageLoadSuccess(TEST_HIGH_RES_IMAGE_URL)
-        viewModel.onImageLoadSuccess(TEST_LOW_RES_IMAGE_URL)
+        viewModel.onImageLoadSuccess(TEST_LOW_RES_IMAGE_URL) // low res image loaded after high res image
         assertThat(viewModel.uiState.value).isInstanceOf(ImageInHighResLoadSuccessUiState::class.java)
+    }
+
+    @Test
+    fun `high res image file loading started when high res image shown`() {
+        initViewModel()
+        viewModel.onImageLoadSuccess(TEST_HIGH_RES_IMAGE_URL)
+        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
+    }
+
+    @Test
+    fun `load image to file success state triggered for the loaded image file on image load to file success`() {
+        initViewModel()
+        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
+        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageLoadToFileSuccessState(TEST_FILE_PATH))
+    }
+
+    @Test
+    fun `load image to file success state triggered on image load to file success`() {
+        initViewModel()
+        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
+        assertThat(viewModel.loadIntoFile.value).isInstanceOf(ImageLoadToFileSuccessState::class.java)
+    }
+
+    @Test
+    fun `load image to file failed state triggered on image load to file failure`() {
+        initViewModel()
+        viewModel.onLoadIntoFileFailed()
+        assertThat(viewModel.loadIntoFile.value).isInstanceOf(ImageLoadToFileFailedState::class.java)
     }
 
     private fun initViewModel() = viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL)
