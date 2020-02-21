@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
@@ -121,6 +120,6 @@ class PageListFragment : Fragment() {
     }
 
     fun scrollToPage(localPageId: Int) {
-        viewModel.setPageToScrollTo(LocalId(localPageId))
+        viewModel.onScrollToPageRequested(localPageId)
     }
 }
