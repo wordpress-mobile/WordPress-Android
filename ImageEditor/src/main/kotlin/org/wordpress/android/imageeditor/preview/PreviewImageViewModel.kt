@@ -74,7 +74,7 @@ class PreviewImageViewModel : ViewModel() {
         data class ImageDataStartLoadingUiState(val imageData: ImageData) : ImageUiState(progressBarVisible = true)
         // Continue displaying progress bar on low res image load success
         object ImageInLowResLoadSuccessUiState : ImageUiState(progressBarVisible = true)
-        object ImageInLowResLoadFailedUiState : ImageUiState(progressBarVisible = false)
+        object ImageInLowResLoadFailedUiState : ImageUiState(progressBarVisible = true)
         object ImageInHighResLoadSuccessUiState : ImageUiState(progressBarVisible = false)
         object ImageInHighResLoadFailedUiState : ImageUiState(progressBarVisible = false)
     }
