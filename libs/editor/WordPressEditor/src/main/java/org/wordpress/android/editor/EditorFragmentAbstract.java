@@ -196,6 +196,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onHtmlModeToggledInToolbar();
         void onAddStockMediaClicked(boolean allowMultipleSelection);
         void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError);
+        void onGutenbergDidLogSessionTemplateEvent(String properties);
     }
 
     /**
