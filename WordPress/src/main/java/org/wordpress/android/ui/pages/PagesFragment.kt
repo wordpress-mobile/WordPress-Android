@@ -492,6 +492,6 @@ class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : Fragmen
 
     fun scrollToPage(page: PageModel) {
         val listFragment = listFragments[PageListType.fromPageStatus(page.status)]?.get()
-        listFragment?.scrollToPage(page.remoteId)
+        listFragment?.scrollToPage(page.pageId)
     }
 }
