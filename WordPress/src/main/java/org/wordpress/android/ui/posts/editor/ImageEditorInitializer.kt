@@ -23,7 +23,7 @@ class ImageEditorInitializer {
         private fun loadIntoImageViewWithResultListener(
             imageManager: ImageManager
         ): (String, ImageView, ScaleType, String, ImageEditor.RequestListener<Drawable>) -> Unit =
-                { imageUrl, imageView, scaleType, thumbUrl, requestListener ->
+                { imageUrl, imageView, scaleType, thumbUrl, listener ->
                     imageManager.loadWithResultListener(
                         imageView,
                         IMAGE,
@@ -31,48 +31,37 @@ class ImageEditorInitializer {
                         scaleType,
                         thumbUrl,
                         object : RequestListener<Drawable> {
-                            override fun onLoadFailed(e: Exception?, model: Any?) {
-                                if (model != null && model is String) {
-                                    requestListener.onLoadFailed(e, model)
-                                } else {
-                                    throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
-                                }
-                            }
-
-                            override fun onResourceReady(resource: Drawable, model: Any?) {
-                                if (model != null && model is String) {
-                                    requestListener.onResourceReady(resource, model)
-                                } else {
-                                    throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
-                                }
-                            }
+                            override fun onLoadFailed(e: Exception?, model: Any?) = onLoadFailed(model, listener, e)
+                            override fun onResourceReady(resource: Drawable, model: Any?) =
+                                onResourceReady(model, listener, resource)
                         }
                     )
                 }
 
-        private fun loadIntoFileWithResultListener(
-            imageManager: ImageManager
-        ): (String, ImageEditor.RequestListener<File>) -> Unit = { imageUrl, requestListener ->
+        private fun loadIntoFileWithResultListener(imageManager: ImageManager):
+                (String, ImageEditor.RequestListener<File>) -> Unit = { imageUrl, listener ->
             imageManager.loadIntoFileWithResultListener(
                 imageUrl,
                 object : RequestListener<File> {
-                    override fun onLoadFailed(e: Exception?, model: Any?) {
-                        if (model != null && model is String) {
-                            requestListener.onLoadFailed(e, model)
-                        } else {
-                            throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
-                        }
-                    }
-
-                    override fun onResourceReady(resource: File, model: Any?) {
-                        if (model != null && model is String) {
-                            requestListener.onResourceReady(resource, model)
-                        } else {
-                            throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
-                        }
-                    }
+                    override fun onLoadFailed(e: Exception?, model: Any?) = onLoadFailed(model, listener, e)
+                    override fun onResourceReady(resource: File, model: Any?) =
+                        onResourceReady(model, listener, resource)
                 }
             )
         }
+
+        private fun <T : Any> onResourceReady(model: Any?, listener: ImageEditor.RequestListener<T>, resource: T) =
+            if (model != null && model is String) {
+                listener.onResourceReady(resource, model)
+            } else {
+                throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
+            }
+
+        private fun <T : Any> onLoadFailed(model: Any?, listener: ImageEditor.RequestListener<T>, e: Exception?) =
+            if (model != null && model is String) {
+                listener.onLoadFailed(e, model)
+            } else {
+                throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
+            }
     }
 }
