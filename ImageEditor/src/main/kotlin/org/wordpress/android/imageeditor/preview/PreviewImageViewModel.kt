@@ -28,7 +28,8 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     fun onLoadIntoImageViewSuccess(url: String) {
-        val newState = when (val currentState = uiState.value) {
+        val currentState = uiState.value
+        val newState = when (currentState) {
             is ImageDataStartLoadingUiState -> {
                 if (url == currentState.imageData.lowResImageUrl) {
                     ImageInLowResLoadSuccessUiState
@@ -39,7 +40,7 @@ class PreviewImageViewModel : ViewModel() {
             else -> ImageInHighResLoadSuccessUiState
         }
 
-        if (newState == ImageInHighResLoadSuccessUiState) {
+        if (newState == ImageInHighResLoadSuccessUiState && currentState != ImageInHighResLoadSuccessUiState) {
             updateLoadIntoFileState(ImageStartLoadingToFileState(url))
         }
         updateUiState(newState)
@@ -66,6 +67,7 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     fun onLoadIntoFileFailed() {
+        // TODO: Do we need to display any error message to the user?
         updateLoadIntoFileState(ImageLoadToFileFailedState)
     }
 

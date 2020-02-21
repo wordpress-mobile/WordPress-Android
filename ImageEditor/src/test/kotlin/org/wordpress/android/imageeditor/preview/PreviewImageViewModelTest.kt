@@ -113,7 +113,31 @@ class PreviewImageViewModelTest {
     }
 
     @Test
-    fun `load image to file success state triggered for the loaded image file on image load to file success`() {
+    fun `high res image file loading started when low res image shown after high res image`() {
+        initViewModel()
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL)
+        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
+    }
+
+    @Test
+    fun `high res image file loading not started when low res image shown but high res image show failed`() {
+        initViewModel()
+        viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
+        assertThat(viewModel.loadIntoFile.value).isNull()
+    }
+
+    @Test
+    fun `high res image file loading started when low res image show failed but high res image shown`() {
+        initViewModel()
+        viewModel.onLoadIntoImageViewFailed(TEST_LOW_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL)
+        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
+    }
+
+    @Test
+    fun `load image to file success state triggered for the loaded image file on image loaded`() {
         initViewModel()
         viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
         assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageLoadToFileSuccessState(TEST_FILE_PATH))
