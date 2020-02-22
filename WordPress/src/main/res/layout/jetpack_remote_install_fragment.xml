@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,51 +16,50 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/jetpack_remote_install_container_padding"
-            android:paddingStart="@dimen/jetpack_remote_install_container_padding">
+            android:paddingStart="@dimen/jetpack_remote_install_container_padding"
+            android:paddingEnd="@dimen/jetpack_remote_install_container_padding">
 
             <ImageView
                 android:id="@+id/jetpack_install_icon"
                 android:layout_width="@dimen/jetpack_remote_install_icon_size"
                 android:layout_height="@dimen/jetpack_remote_install_icon_size"
+                android:background="@drawable/bg_oval_white_24dp"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:contentDescription="@string/content_description_people_looking_charts"
                 android:src="@drawable/ic_plans_white_24dp"
-                tools:tint="@color/jetpack_green_50"/>
+                tools:tint="@color/jetpack_green" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/jetpack_install_title"
                 style="@style/JetpackInstallTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="@dimen/jetpack_text_width"
                 android:text="@string/install_jetpack"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+                android:textAlignment="center" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/jetpack_install_message"
                 style="@style/JetpackInstallMessageText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="@dimen/jetpack_text_width"
                 android:text="@string/install_jetpack_message"
-                android:textAlignment="center"/>
+                android:textAlignment="center" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/jetpack_install_button"
+                style="@style/JetpackConnectionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_extra_large"
-                android:text="@string/install_jetpack_continue"
-                android:theme="@style/JetpackConnectionButton"/>
+                android:text="@string/install_jetpack_continue" />
 
             <ProgressBar
                 android:id="@+id/jetpack_install_progress"
-                style="@style/BlueMediumProgressBar"
-                android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginBottom="@dimen/margin_extra_large"
                 android:visibility="gone"
                 tools:visibility="visible" />
         </LinearLayout>

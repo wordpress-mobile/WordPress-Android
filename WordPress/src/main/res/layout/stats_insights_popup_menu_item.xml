@@ -11,15 +11,16 @@
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@null"
         android:layout_marginEnd="@dimen/margin_extra_large"
+        android:contentDescription="@null"
+        android:tint="?attr/colorOnSurface"
         tools:src="@drawable/ic_arrow_up_grey_dark_24dp" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?textAppearanceSmallPopupMenu"
+        android:textAppearance="?attr/textAppearanceSmallPopupMenu"
         tools:text="@string/stats_menu_remove" />
 
 </LinearLayout>

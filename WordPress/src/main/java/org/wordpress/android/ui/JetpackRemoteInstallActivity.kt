@@ -3,7 +3,7 @@ package org.wordpress.android.ui
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED
 import org.wordpress.android.ui.JetpackConnectionUtils.trackWithSource
@@ -15,7 +15,7 @@ class JetpackRemoteInstallActivity : AppCompatActivity() {
 
         setContentView(R.layout.jetpack_remote_install_activity)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(toolbar_main)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)

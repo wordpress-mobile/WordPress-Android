@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/insightsManagementScrollView"
@@ -12,74 +11,69 @@
         style="@style/StatsInsightManagementList"
         android:clipChildren="false">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/insightsManagementSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/stats_insights_management_margin"
-            android:paddingBottom="@dimen/stats_insights_management_margin"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/stats_insights_management_margin"
             android:text="@string/stats_insights_management_title"
-            android:textColor="@color/grey_darken_20"
-            android:textSize="@dimen/text_sz_large"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/addedInsights"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
-            android:translationZ="1dp"
             android:scrollbars="none"
+            android:translationZ="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/insightsManagementSubtitle"
-            tools:listitem="@layout/insights_management_list_item"/>
+            tools:listitem="@layout/insights_management_list_item" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/addedInsightsInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey_darken_20"
-            android:textSize="@dimen/text_sz_medium"
-            android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_marginEnd="@dimen/margin_extra_large"
             android:paddingBottom="@dimen/margin_extra_extra_medium_large"
+            android:text="@string/stats_insights_management_drag_and_drop_hint"
+            android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addedInsights"
-            android:text="@string/stats_insights_management_drag_and_drop_hint"/>
+            app:layout_constraintTop_toBottomOf="@id/addedInsights" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/addInsightsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:text="@string/stats_insights_add_insights_header"
-            android:textColor="@color/grey_darken_20"
-            android:textSize="@dimen/text_sz_medium"
-            android:textStyle="bold"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addedInsightsInfo"/>
+            app:layout_constraintTop_toBottomOf="@id/addedInsightsInfo" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/removedInsights"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:nestedScrollingEnabled="false"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
+            android:nestedScrollingEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/addInsightsHeader"
-            tools:listitem="@layout/insights_management_list_item"
-            />
+            tools:listitem="@layout/insights_management_list_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

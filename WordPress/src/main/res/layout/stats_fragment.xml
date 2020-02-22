@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
@@ -21,7 +20,7 @@
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/statsPager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
@@ -32,30 +31,25 @@
             android:animateLayoutChanges="true"
             android:fitsSystemWindows="true">
 
-            <androidx.appcompat.widget.Toolbar
+            <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:title="@string/stats"/>
+                app:theme="@style/WordPress.ActionBar"
+                app:title="@string/stats" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="start"
-                android:background="@color/primary"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@android:color/white"
                 app:tabMode="scrollable"
                 app:tabPaddingEnd="16dp"
-                app:tabPaddingStart="16dp"
-                app:tabSelectedTextColor="@android:color/white"
-                app:tabTextColor="@android:color/white"
-                app:theme="@style/Base.Widget.Design.TabLayout"/>
+                app:tabPaddingStart="16dp" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

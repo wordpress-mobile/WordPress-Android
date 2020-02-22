@@ -52,7 +52,6 @@
     <dimen name="alert_dialog_max_width">300dp</dimen>
 
     <dimen name="default_cardview_radius">2dp</dimen>
-    <dimen name="default_cardview_elevation">2dp</dimen>
 
     <!-- bottom navigation bar -->
     <dimen name="bottom_nav_bar_icon_size">24dp</dimen>
