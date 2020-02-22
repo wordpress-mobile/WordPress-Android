@@ -32,4 +32,10 @@ allprojects {
             configFile file("${project.rootDir}/config/checkstyle.xml")
         }
     }
+
+    // Suppress false Javadoc lint errors preventing Bintray release
+    // See https://stackoverflow.com/questions/34828426/disable-javadoc-check-for-bintray-upload
+    tasks.withType(Javadoc) {
+        options.addBooleanOption('Xdoclint:none', true)
+    }
 }
