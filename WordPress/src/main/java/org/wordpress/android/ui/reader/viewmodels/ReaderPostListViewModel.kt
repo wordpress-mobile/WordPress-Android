@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.fluxc.store.AccountStore
@@ -32,6 +31,8 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -52,7 +53,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val subfilterListItemMapper: SubfilterListItemMapper,
     private val eventBusWrapper: EventBusWrapper,
-    private val accountStore: AccountStore
+    private val accountStore: AccountStore,
+    private val readerTracker: ReaderTracker
 ) : ScopedViewModel(bgDispatcher) {
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
@@ -104,16 +106,14 @@ class ReaderPostListViewModel @Inject constructor(
             return
         }
 
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            eventBusWrapper.register(this)
-        }
+        eventBusWrapper.register(this)
 
         tag?.let {
             onTagChanged(tag)
             newsManager.pull()
 
             updateSubfilter(getCurrentSubfilterValue())
-            _shouldShowSubFilters.value = shouldShowSubfilter
+            changeSubfiltersVisibility(shouldShowSubfilter)
         }
 
         _shouldCollapseToolbar.value = collapseToolbar
@@ -202,21 +202,33 @@ class ReaderPostListViewModel @Inject constructor(
         updateSubfilter(filter)
     }
 
-    fun changeSubfiltersVisibility(show: Boolean) = _shouldShowSubFilters.postValue(show)
+    fun changeSubfiltersVisibility(show: Boolean) {
+        val isCurrentSubfilterTracked = getCurrentSubfilterValue().isTrackedItem
+        val isSubfilterListTrackerRunning = readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)
+
+        if (show) {
+            if (isCurrentSubfilterTracked && !isSubfilterListTrackerRunning) {
+                AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
+                readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
+            } else if (!isCurrentSubfilterTracked && isSubfilterListTrackerRunning) {
+                AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
+                readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
+            }
+        } else if (isSubfilterListTrackerRunning) {
+            AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
+            readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
+        }
+
+        _shouldShowSubFilters.postValue(show)
+    }
 
     fun getCurrentSubfilterValue(): SubfilterListItem {
-        return if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            _currentSubFilter.value ?: SiteAll(
+        return _currentSubFilter.value ?: appPrefsWrapper.getReaderSubfilter().let {
+            subfilterListItemMapper.fromJson(
+                    json = it,
                     onClickAction = ::onSubfilterClicked,
-                    isSelected = true)
-        } else {
-            _currentSubFilter.value ?: appPrefsWrapper.getReaderSubfilter().let {
-                subfilterListItemMapper.fromJson(
-                        json = it,
-                        onClickAction = ::onSubfilterClicked,
-                        isSelected = true
-                )
-            }
+                    isSelected = true
+            )
         }
     }
 
@@ -249,10 +261,21 @@ class ReaderPostListViewModel @Inject constructor(
         _changeBottomSheetVisibility.value = Event(false)
     }
 
-    fun onSubfilterChanged(
+    private fun changeSubfilter(
         subfilterListItem: SubfilterListItem,
         requestNewerPosts: Boolean
     ) {
+        val isSubfilterItemTracked = subfilterListItem.isTrackedItem
+        val isSubfilterListTrackerRunning = readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)
+
+        if (isSubfilterItemTracked && !isSubfilterListTrackerRunning) {
+            AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
+            readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
+        } else if (!isSubfilterItemTracked && isSubfilterListTrackerRunning) {
+            AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
+            readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
+        }
+
         when (subfilterListItem.type) {
             SubfilterListItem.ItemType.SECTION_TITLE,
             SubfilterListItem.ItemType.DIVIDER -> {
@@ -300,6 +323,14 @@ class ReaderPostListViewModel @Inject constructor(
         isFirstLoad = false
     }
 
+    fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
+        changeSubfilter(subfilterListItem, true)
+    }
+
+    fun onSubfilterReselected() {
+        changeSubfilter(getCurrentSubfilterValue(), false)
+    }
+
     fun onSearchMenuCollapse(collapse: Boolean) {
         _shouldCollapseToolbar.value = collapse
     }
@@ -317,6 +348,38 @@ class ReaderPostListViewModel @Inject constructor(
     fun onBottomSheetActionClicked(action: ActionType) {
         _changeBottomSheetVisibility.postValue(Event(false))
         _bottomSheetEmptyViewAction.postValue(Event(action))
+    }
+
+    fun onFragmentResume(isTopLevelFragment: Boolean, isFollowingTag: Boolean) {
+        AppLog.d(
+                T.READER,
+                "TRACK READER ReaderPostListFragment > START Count [mIsTopLevel = $isTopLevelFragment]"
+        )
+        readerTracker.start(
+                if (isTopLevelFragment) ReaderTrackerType.MAIN_READER else ReaderTrackerType.FILTERED_LIST
+        )
+
+        if (isTopLevelFragment) {
+            if (isFollowingTag && getCurrentSubfilterValue().isTrackedItem) {
+                AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
+                readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
+            }
+        }
+    }
+
+    fun onFragmentPause(isTopLevelFragment: Boolean) {
+        AppLog.d(
+                T.READER,
+                "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = $isTopLevelFragment]"
+        )
+        readerTracker.stop(
+                if (isTopLevelFragment) ReaderTrackerType.MAIN_READER else ReaderTrackerType.FILTERED_LIST
+        )
+
+        if (isTopLevelFragment && readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
+            AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
+            readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
+        }
     }
 
     private fun updateSubfilter(filter: SubfilterListItem) {
@@ -372,9 +435,7 @@ class ReaderPostListViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            eventBusWrapper.unregister(this)
-        }
+        eventBusWrapper.unregister(this)
         newsManager.stop()
     }
 }

@@ -17,7 +17,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -39,6 +38,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.util.EventBusWrapper
 import java.util.EnumSet
@@ -65,6 +65,7 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var subfilterListItemMapper: SubfilterListItemMapper
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
     @Mock private lateinit var accountStore: AccountStore
+    @Mock private lateinit var readerTracker: ReaderTracker
 
     private lateinit var viewModel: ReaderPostListViewModel
     private val liveData = MutableLiveData<NewsItem>()
@@ -78,10 +79,10 @@ class ReaderPostListViewModelTest {
                 onClickAction = ::onClickActionDummy
         )
         val json = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":4}"
-        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            whenever(appPrefsWrapper.getReaderSubfilter()).thenReturn(json)
-            whenever(subfilterListItemMapper.fromJson(any(), any(), any())).thenReturn(tag)
-        }
+
+        whenever(appPrefsWrapper.getReaderSubfilter()).thenReturn(json)
+        whenever(subfilterListItemMapper.fromJson(any(), any(), any())).thenReturn(tag)
+
         viewModel = ReaderPostListViewModel(
                 newsManager,
                 newsTracker,
@@ -91,7 +92,8 @@ class ReaderPostListViewModelTest {
                 appPrefsWrapper,
                 subfilterListItemMapper,
                 eventBusWrapper,
-                accountStore
+                accountStore,
+                readerTracker
         )
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
@@ -169,7 +171,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `view model propagates CardShown to to NewsTracker`() {
+    fun `view model propagates CardShown to NewsTracker`() {
         whenever(newsTrackerHelper.shouldTrackNewsCardShown(any())).thenReturn(true)
         viewModel.onNewsCardShown(item, initialTag)
         verify(newsTracker).trackNewsCardShown(argThat { this == READER }, any())
@@ -185,7 +187,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `view model propagates ExtendedInfoRequested to to NewsTracker`() {
+    fun `view model propagates ExtendedInfoRequested to NewsTracker`() {
         viewModel.onNewsCardExtendedInfoRequested(item)
         verify(newsTracker).trackNewsCardExtendedInfoRequested(argThat { this == READER }, any())
     }
@@ -201,11 +203,7 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun `view model returns default filter on start`() {
-        if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-            assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(SiteAll::class.java)
-        } else {
-            assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(Tag::class.java)
-        }
+        assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(Tag::class.java)
     }
 
     @Test
