@@ -242,7 +242,7 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(status = POST_STATE_TRASHED)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_RESTORE)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE_PERMANENTLY)
         assertThat(state.actions).hasSize(2)
     }
@@ -724,7 +724,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `show only delete and move to draft buttons on trashed posts`() {
         val state = createPostListItemUiState(post = createPostModel(POST_STATE_TRASHED))
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_RESTORE)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE_PERMANENTLY)
         assertThat(state.actions).hasSize(2)
     }
