@@ -284,6 +284,7 @@
     <string name="button_discard">Discard</string>
     <string name="button_retry">Retry</string>
     <string name="button_move_to_draft">Move to Draft</string>
+    <string name="button_restore">Restore</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>

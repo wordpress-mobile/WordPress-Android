@@ -30,7 +30,8 @@ enum class PostListButtonType constructor(
             R.drawable.ic_trash_white_24dp,
             R.attr.wpColorTextSubtle
     ),
-    BUTTON_CANCEL_PENDING_AUTO_UPLOAD(14, R.string.cancel, R.drawable.ic_undo_white_24dp, R.attr.wpColorWarningDark);
+    BUTTON_CANCEL_PENDING_AUTO_UPLOAD(14, R.string.cancel, R.drawable.ic_undo_white_24dp, R.attr.wpColorWarningDark),
+    BUTTON_RESTORE(15, R.string.button_restore, R.drawable.ic_refresh_white_24dp, R.attr.wpColorTextSubtle);
 
     companion object {
         fun fromInt(value: Int): PostListButtonType? = values().firstOrNull { it.value == value }

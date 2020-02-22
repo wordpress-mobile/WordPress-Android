@@ -45,9 +45,9 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AU
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
-import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_RESTORE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
@@ -388,7 +388,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         when {
             isLocalDraft -> buttonTypes.add(BUTTON_DELETE)
             postStatus == TRASHED -> {
-                buttonTypes.add(BUTTON_MOVE_TO_DRAFT)
+                buttonTypes.add(BUTTON_RESTORE)
                 buttonTypes.add(BUTTON_DELETE_PERMANENTLY)
             }
             postStatus != TRASHED -> buttonTypes.add(BUTTON_TRASH)

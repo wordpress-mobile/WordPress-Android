@@ -40,6 +40,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_MORE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_RESTORE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
@@ -74,6 +75,9 @@ class PostActionHandler(
         when (buttonType) {
             BUTTON_EDIT -> editPostButtonAction(site, post)
             BUTTON_RETRY -> triggerPostListAction.invoke(RetryUpload(post))
+            BUTTON_RESTORE -> {
+                restorePost(post)
+            }
             BUTTON_MOVE_TO_DRAFT -> {
                 moveTrashedPostToDraft(post)
             }
