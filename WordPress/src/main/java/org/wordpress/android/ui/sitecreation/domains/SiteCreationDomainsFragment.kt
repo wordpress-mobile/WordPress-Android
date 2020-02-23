@@ -2,7 +2,6 @@ package org.wordpress.android.ui.sitecreation.domains
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -22,8 +21,6 @@ import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
-
-private const val KEY_LIST_STATE = "list_state"
 
 class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     private lateinit var nonNullActivity: FragmentActivity
@@ -87,16 +84,8 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         (nonNullActivity.application as WordPress).component().inject(this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable(KEY_LIST_STATE, linearLayoutManager.onSaveInstanceState())
-    }
-
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
-            linearLayoutManager.onRestoreInstanceState(it)
-        }
         // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
         // is called when the system sets the restored value to the EditText which results in an unnecessary request
         searchInputWithHeader.onTextChanged = { viewModel.updateQuery(it) }

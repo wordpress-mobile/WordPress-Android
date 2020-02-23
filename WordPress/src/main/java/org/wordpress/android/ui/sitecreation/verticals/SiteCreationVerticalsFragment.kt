@@ -2,7 +2,6 @@ package org.wordpress.android.ui.sitecreation.verticals
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.annotation.LayoutRes
@@ -27,8 +26,6 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsView
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 import kotlin.properties.Delegates
-
-private const val KEY_LIST_STATE = "list_state"
 
 class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
     private lateinit var nonNullActivity: FragmentActivity
@@ -99,16 +96,8 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable(KEY_LIST_STATE, linearLayoutManager.onSaveInstanceState())
-    }
-
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
-            linearLayoutManager.onRestoreInstanceState(it)
-        }
         // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
         // is called when the system sets the restored value to the EditText which results in an unnecessary request
         searchInputWithHeader.onTextChanged = { viewModel.updateQuery(it) }
