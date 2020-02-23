@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/one_line_list_item_height"
+    android:layout_height="@dimen/reader_subfilter_component_height"
+    android:background="@android:color/white"
     android:elevation="@dimen/appbar_elevation">
 
     <View
@@ -11,17 +12,18 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/reader_btn_select_filter_content_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/filter_list_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@null"
-        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"
         android:src="@drawable/ic_filter_list_white_24dp"
@@ -49,17 +51,17 @@
 
     <ImageView
         android:id="@+id/remove_filter_button"
-        android:layout_width="@dimen/reader_remove_filter_icon_width"
+        android:layout_width="@dimen/min_touch_target_sz"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@null"
-        android:paddingStart="@dimen/margin_small"
-        android:paddingTop="@dimen/margin_extra_small"
-        android:paddingEnd="@dimen/margin_small"
+        android:contentDescription="@string/reader_btn_remove_filter_content_description"
         android:src="@drawable/ic_cross_small_white_24dp"
         android:tint="@color/neutral_70"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toEndOf="@+id/selected_filter_name" />
+        android:paddingTop="@dimen/margin_extra_small"
+        android:paddingEnd="@dimen/margin_large"
+        android:paddingStart="@dimen/margin_large"
+        app:layout_constraintStart_toEndOf="@+id/selected_filter_name"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"/>
 
     <View
         android:id="@+id/view"
@@ -75,9 +77,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@null"
-        android:paddingStart="@dimen/margin_extra_large"
+        android:contentDescription="@string/reader_menu_tags"
         android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
         android:src="@drawable/ic_cog_white_24dp"
         android:tint="?attr/wpIconColorOnSurface"
         app:layout_constraintEnd_toEndOf="parent" />

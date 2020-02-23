@@ -38,8 +38,20 @@ import javax.inject.Singleton
 @Singleton
 class ImageManager @Inject constructor(private val placeholderManager: ImagePlaceholderManager) {
     interface RequestListener<T> {
-        fun onLoadFailed(e: Exception?)
-        fun onResourceReady(resource: T)
+        /**
+         * Called when an exception occurs during a load
+         *
+         * @param e The maybe {@code null} exception containing information about why the request failed.
+         * @param model The model we were trying to load when the exception occurred.
+         */
+        fun onLoadFailed(e: Exception?, model: Any?)
+        /**
+         * Called when a load completes successfully
+         *
+         * @param resource The resource that was loaded for the target.
+         * @param model The specific model that was used to load the image.
+         */
+        fun onResourceReady(resource: T, model: Any?)
     }
 
     /**
@@ -341,7 +353,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                     target: Target<T>?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    requestListener.onLoadFailed(e)
+                    requestListener.onLoadFailed(e, model)
                     return false
                 }
 
@@ -353,11 +365,11 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                     isFirstResource: Boolean
                 ): Boolean {
                     if (resource != null) {
-                        requestListener.onResourceReady(resource)
+                        requestListener.onResourceReady(resource, model)
                     } else {
                         // according to the Glide's JavaDoc, this shouldn't happen
                         AppLog.e(AppLog.T.UTILS, "Resource in ImageManager.onResourceReady is null.")
-                        requestListener.onLoadFailed(null)
+                        requestListener.onLoadFailed(null, model)
                     }
                     return false
                 }

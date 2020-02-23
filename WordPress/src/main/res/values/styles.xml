@@ -971,7 +971,22 @@
         <item name="colorControlHighlight">@android:color/transparent</item>
     </style>
 
+    <!-- DialogPreference custom title style -->
+    <style name="DialogPreference"/>
+    <style name="DialogPreference.CustomTitle">
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
+        <item name="android:gravity">start|center_vertical</item>
+    </style>
+
     <!-- Main actions styles -->
+    <style name="MainBottomSheetRowLayout" parent="MySiteListRowLayout">
+        <item name="android:minHeight">@dimen/main_bottom_sheet_list_row_min_height</item>
+    </style>
+
     <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
         <item name="android:layout_height">@dimen/main_bottom_sheet_list_row_icon_size</item>
     </style>
@@ -1000,10 +1015,11 @@
     </style>
 
     <style name="SiteTagFilteredTitle" parent="MySiteListRowTextView">
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
-        <item name="android:paddingBottom">@dimen/margin_extra_small</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
     <style name="SiteTagSelectedFilter" parent="SiteTagFilteredTitle">
@@ -1017,6 +1033,7 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">@dimen/reader_subfilter_url_margin_bottom</item>
     </style>
 
     <style name="SiteTagBottomSheetTitle" parent="SiteTagFilteredTitle">
@@ -1024,6 +1041,8 @@
         <item name="android:paddingStart">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:paddingEnd">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
     <style name="SubfilterDividerItem">
@@ -1074,8 +1093,8 @@
         <item name="bottomSheetStyle">@style/BottomSheetStyleContainer</item>
     </style>
 
-    <style name="BottomSheetStyleContainer" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@android:color/transparent</item>
+    <style name="BottomSheetStyleContainer" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet_handle_container</item>
     </style>
 
     <!--Publicize styles -->

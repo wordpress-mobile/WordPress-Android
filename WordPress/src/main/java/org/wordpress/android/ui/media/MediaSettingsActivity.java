@@ -759,7 +759,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, imageUrl, ScaleType.CENTER, null,
                 new RequestListener<Drawable>() {
                     @Override
-                    public void onResourceReady(@NotNull Drawable resource) {
+                    public void onResourceReady(@NotNull Drawable resource, @Nullable Object model) {
                         if (!isFinishing()) {
                             showProgress(false);
 
@@ -770,7 +770,7 @@ public class MediaSettingsActivity extends AppCompatActivity
                     }
 
                     @Override
-                    public void onLoadFailed(@Nullable Exception e) {
+                    public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                         if (!isFinishing()) {
                             if (e != null) {
                                 AppLog.e(T.MEDIA, e);
