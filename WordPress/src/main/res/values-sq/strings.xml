@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-21 18:34:41+0000
+Translation-Revision-Date: 2020-02-15 18:35:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_template_preview">Paraparje Gjedheje</string>
+    <string name="gutenberg_native_replace_current_block">Zëvendëso Bllokun e Tanishëm</string>
+    <string name="gutenberg_native_add_to_end">Shtoje Në Fund</string>
+    <string name="gutenberg_native_add_to_beginning">Shtoje Në Fillim</string>
+    <string name="gutenberg_native_add_block_before">Shtoje Përpara Bllokut</string>
+    <string name="gutenberg_native_add_block_after">Shtoje Pas Bllokut</string>
+    <string name="reader_filter_empty_tags_action">Shtoni një etiketë</string>
+    <string name="reader_filter_empty_sites_action">Ndiqni një sajt</string>
+    <string name="reader_filter_empty_tags_list">Mund të ndiqni postime lidhur me një subjekt të caktuar, duke dhënë një etiketë</string>
+    <string name="reader_filter_empty_sites_list">Shihni postimet më të reja prej sajtesh që ndiqni</string>
+    <string name="reader_filter_main_title">Në ndjekje</string>
+    <string name="reader_filter_cta">Filtër</string>
+    <string name="gutenberg_native_video_caption_s">Legjendë videoje. %s</string>
+    <string name="gutenberg_native_edit_video">Përpunoni videon</string>
+    <string name="gutenberg_native_edit_media">Përpunoni media</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">Prekeni dy herë që të përzgjidhet skemë</string>
+    <string name="gutenberg_native_add_a_shortcode">Shtoni kod të shkurtër…</string>
+    <string name="post_list_author">Autor postimi</string>
+    <string name="fab_create_desc">Krijoni një postim</string>
+    <string name="stats_posting_activity_end_description">Keni dëgjuar krejt statistika për këtë periudhë.\n        Prekja sërish do të shkaktojë rinisje nga e para.</string>
+    <string name="stats_posting_activity_empty_description">S’ka statistika në këtë periudhë.</string>
+    <string name="stats_posting_activity_label_content_description">Veprimtari Postimi për %1$s</string>
+    <string name="stats_posting_activity_content_description">Ditët me %1$s parje për %2$s janë : %2$s %3$s.Prekeni për më tepër.</string>
+    <string name="stats_posting_activity_action">kaloni nëpër krejt statistikat për këtë periudhë</string>
+    <string name="stats_box_type_very_high">shumë i lartë</string>
+    <string name="stats_box_type_high">i lartë</string>
+    <string name="stats_box_type_medium">mesatar</string>
+    <string name="stats_box_type_low">i ulët</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Hiqe Figurën</string>
     <string name="gutenberg_native_move_image_forward">Lëvize Figurën Përpara</string>
     <string name="gutenberg_native_move_image_backward">Lëvize Figurën Mbrapsht</string>
@@ -50,7 +80,6 @@ Language: sq_AL
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_all_sites">Krejt sajtet</string>
     <string name="reader_filter_sites_title">Sajte</string>
     <string name="reader_filter_tags_title">Etiketa</string>
     <string name="reader_save_for_later_display_name">U ruajt</string>
