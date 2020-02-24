@@ -47,10 +47,10 @@ sealed class SiteCreationSegmentViewHolder(internal val parent: ViewGroup, @Layo
                     ScaleType.CENTER,
                     null,
                     object : RequestListener<Drawable> {
-                        override fun onLoadFailed(e: Exception?) {
+                        override fun onLoadFailed(e: Exception?, model: Any?) {
                         }
 
-                        override fun onResourceReady(resource: Drawable) {
+                        override fun onResourceReady(resource: Drawable, model: Any?) {
                             // At the moment, we should not use colors that come from server to style our icons,
                             // since they interfere with themes. We should uncomment this when ability to request icon
                             // colors based on current app theme will be implemented.

@@ -36,7 +36,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -453,7 +452,6 @@ public class PhotoPickerFragment extends Fragment {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
-            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.neutral_60);
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.photo_picker_action_mode, menu);
             hideBottomBar();
@@ -479,7 +477,6 @@ public class PhotoPickerFragment extends Fragment {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.status_bar);
             mActionMode = null;
             showBottomBar();
             getAdapter().clearSelection();

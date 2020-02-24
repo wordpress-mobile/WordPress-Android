@@ -22,6 +22,7 @@
         <item name="wpColorError">@color/error_50</item>
         <item name="wpColorSuccess">@color/green_30</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
+         <item name="wpColorWarningLight">@color/yellow_20</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorPrimary</item>
@@ -29,6 +30,7 @@
 
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
+        <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="listPopupWindowStyle">
             @style/Widget.MaterialComponents.PopupMenu.ListPopupWindow
