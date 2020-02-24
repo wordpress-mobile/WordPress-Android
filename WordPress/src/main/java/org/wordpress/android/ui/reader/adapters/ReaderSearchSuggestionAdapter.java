@@ -10,10 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.cursoradapter.widget.CursorAdapter;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.wordpress.android.R;
@@ -31,6 +29,9 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     private final Object[] mClearAllRow;
     private final int mClearAllBgColor;
     private final int mSuggestionBgColor;
+
+    private OnSuggestionDeleteClickListener mOnSuggestionDeleteClickListener;
+    private OnSuggestionClearClickListener mOnSuggestionClearClickListener;
 
     public ReaderSearchSuggestionAdapter(Context context) {
         super(context, null, false);
@@ -80,7 +81,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     /*
      * forces setFilter() to always repopulate by skipping the isCurrentFilter() check
      */
-    private synchronized void reload() {
+    public synchronized void reload() {
         String newFilter = mCurrentFilter;
         mCurrentFilter = null;
         setFilter(newFilter);
@@ -137,7 +138,11 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         long id = cursor.getLong(cursor.getColumnIndex(ReaderSearchTable.COL_ID));
         if (id == CLEAR_ALL_ROW_ID) {
             view.setBackgroundColor(mClearAllBgColor);
-            view.setOnClickListener(v -> confirmClearSavedSearches(v.getContext()));
+            view.setOnClickListener(v -> {
+                if (mOnSuggestionClearClickListener != null) {
+                    mOnSuggestionClearClickListener.onClearClicked();
+                }
+            });
             holder.mImgDelete.setVisibility(View.GONE);
         } else {
             view.setBackgroundColor(mSuggestionBgColor);
@@ -156,24 +161,18 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         long id = cursor.getLong(cursor.getColumnIndex(ReaderSearchTable.COL_ID));
         if (id != CLEAR_ALL_ROW_ID) {
             holder.mImgDelete.setOnClickListener(v -> {
-                ReaderSearchTable.deleteQueryString(query);
-                reload();
+                if (mOnSuggestionDeleteClickListener != null) {
+                    mOnSuggestionDeleteClickListener.onDeleteClicked(query);
+                }
             });
         }
     }
 
-    private void confirmClearSavedSearches(Context context) {
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(context);
-        builder.setMessage(R.string.dlg_confirm_clear_search_history)
-               .setCancelable(true)
-               .setNegativeButton(R.string.no, null)
-               .setPositiveButton(R.string.yes, (dialog, id) -> clearSavedSearches());
-        AlertDialog alert = builder.create();
-        alert.show();
+    public void setOnSuggestionDeleteClickListener(OnSuggestionDeleteClickListener onSuggestionDeleteClickListener) {
+        mOnSuggestionDeleteClickListener = onSuggestionDeleteClickListener;
     }
 
-    private synchronized void clearSavedSearches() {
-        ReaderSearchTable.deleteAllQueries();
-        swapCursor(null);
+    public void setOnSuggestionClearClickListener(OnSuggestionClearClickListener onSuggestionClearClickListener) {
+        mOnSuggestionClearClickListener = onSuggestionClearClickListener;
     }
 }

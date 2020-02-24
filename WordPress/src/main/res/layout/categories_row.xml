@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/categoryRow"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/category_row_height"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/category_row_height"
     android:clickable="false"
     android:orientation="horizontal">
 
@@ -14,6 +15,5 @@
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:gravity="center_vertical"
-        android:orientation="vertical"
         tools:text="Pony Category" />
 </org.wordpress.android.widgets.CheckedLinearLayout>

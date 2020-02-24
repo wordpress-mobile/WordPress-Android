@@ -288,7 +288,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
             mImageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR_WITHOUT_BACKGROUND,
                     newAvatarUploaded ? injectFilePath : avatarUrl, new RequestListener<Drawable>() {
                         @Override
-                        public void onLoadFailed(@Nullable Exception e) {
+                        public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                             final String appLogMessage = "onLoadFailed while loading Gravatar image!";
                             if (e == null) {
                                 AppLog.e(T.MAIN, appLogMessage + " e == null");
@@ -304,7 +304,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
                         }
 
                         @Override
-                        public void onResourceReady(@NotNull Drawable resource) {
+                        public void onResourceReady(@NotNull Drawable resource, @Nullable Object model) {
                             if (newAvatarUploaded && resource instanceof BitmapDrawable) {
                                 Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
                                 // create a copy since the original bitmap may by automatically recycled

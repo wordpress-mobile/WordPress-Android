@@ -2,21 +2,15 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@android:color/white" />
-        </shape>
-    </item>
-    <item
-        android:right="@dimen/margin_extra_large">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/warning" />
+            <solid android:color="?attr/wpColorWarningLight" />
             <padding
                 android:bottom="1dp"
-                android:right="20dp" />
+                android:right="@dimen/notification_comment_frame_bg_border_width" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/warning_0" />
+            <solid android:color="?attr/colorSurface" />
         </shape>
     </item>
 </layer-list>

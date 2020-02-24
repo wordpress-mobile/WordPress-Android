@@ -3,44 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/margin_extra_medium_large"
+    android:paddingTop="@dimen/margin_extra_medium_large"
+    android:paddingEnd="@dimen/margin_extra_medium_large">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/categoryTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/category_name"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:text="@string/category_name"
-            android:textAppearance="?attr/textAppearanceSubtitle1" />
+        android:orientation="vertical">
 
         <!-- Category name -->
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/category_name"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/category_name_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/categoryTitle"
-            android:inputType="text"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            tools:text="Pony" />
+            android:hint="@string/category_name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/category_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                tools:text="Pony" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!--  Parent category -->
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/parentDescLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/category_name"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/margin_large"
             android:labelFor="@+id/parent_category"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
             android:text="@string/category_parent"
             android:textAppearance="?attr/textAppearanceSubtitle1" />
 
@@ -48,11 +43,7 @@
             android:id="@+id/parent_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/parentDescLabel"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
             tools:listitem="@layout/wp_simple_list_item_1" />
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

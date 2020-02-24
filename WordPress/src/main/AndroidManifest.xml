@@ -264,21 +264,21 @@
         <activity
             android:name=".ui.stats.refresh.StatsActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.StatsViewAllActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity"
             android:label="@string/stats_manage_insights"
             android:launchMode="singleTop"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.lists.detail.StatsDetailActivity"
             android:label="@string/stats"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.WPWebViewActivity"
             android:theme="@style/WordPress.NoActionBar"/>
@@ -288,8 +288,8 @@
             android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
-            android:theme="@style/Calypso.NoActionBar" />
-        <activity android:name=".ui.JetpackConnectionResultActivity" android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity android:name=".ui.JetpackConnectionResultActivity" android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -526,7 +526,7 @@
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!--People Management-->
         <activity

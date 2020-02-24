@@ -1,59 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/insightsManagementItemButton"
+        android:id="@+id/insights_management_item_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:paddingBottom="12dp"
-        android:paddingEnd="16dp"
         android:paddingStart="16dp"
         android:paddingTop="12dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_add_circle"/>
+        tools:src="@drawable/ic_add_circle" />
 
-    <TextView
-        android:id="@+id/itemTitle"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/item_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="14dp"
-        android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_sz_large"
+        android:layout_marginBottom="14dp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/dragAndDropItemButton"
-        app:layout_constraintStart_toEndOf="@+id/insightsManagementItemButton"
+        app:layout_constraintEnd_toStartOf="@+id/drag_and_drop_item_button"
+        app:layout_constraintStart_toEndOf="@+id/insights_management_item_button"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Latest post" />
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/dragAndDropItemButton"
+        android:id="@+id/drag_and_drop_item_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:alpha="@dimen/material_emphasis_medium"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:paddingTop="12dp"
+        android:paddingEnd="16dp"
         android:paddingBottom="12dp"
-        android:src="@drawable/ic_material_drag_handle_24dp"
+        android:src="@drawable/ic_material_drag_handle_white_24dp"
+        android:tint="?attr/colorOnSurface"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/neutral_0"
+        android:layout_height="@dimen/divider_size"
         android:layout_marginStart="16dp"
+        android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
