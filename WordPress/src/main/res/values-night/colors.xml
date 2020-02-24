@@ -18,4 +18,8 @@
     <color name="stats_map_activity_high">@color/pink_30</color>
     <color name="stats_map_activity_empty">@color/gray_80</color>
 
+    <!-- Post History -->
+
+    <color name="post_history_underlying_background">@color/gray_90</color>
+
 </resources>
