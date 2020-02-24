@@ -1243,8 +1243,11 @@
     <string name="reader_filter_main_title">Following</string>
     <string name="reader_filter_empty_sites_list">See the newest posts from sites you follow</string>
     <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a tag</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Log in to WordPress.com to see the latest posts from sites you follow</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from tags you follow</string>
     <string name="reader_filter_empty_sites_action">Follow a site</string>
     <string name="reader_filter_empty_tags_action">Add a tag</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1607,7 +1610,7 @@
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
-    <string name="reader_title_subs">Tags &amp; Sites</string>
+    <string name="reader_title_subs">Manage Tags &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
 
@@ -1632,6 +1635,12 @@
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
+
+    <!-- accessibility content desciptions -->
+    <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
+    <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Selected</string>
+    <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
 
     <string name="reader_followed_blog_notifications">Enable notifications for %1$s%2$s%3$s?</string>
     <string name="reader_followed_blog_notifications_action">Enable</string>
@@ -1716,6 +1725,7 @@
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
+    <string name="reader_self_hosted_select_filter">Use the filter button to find posts on specific subjects</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>

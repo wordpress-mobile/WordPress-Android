@@ -70,4 +70,11 @@
     <style name="LoginTheme.Footnote" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textColor">@color/login_footnote_text_color</item>
     </style>
+
+    <style name="LoginTheme.BottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="android:colorBackground">@color/login_background_color</item>
+        <item name="android:statusBarColor" tools:targetApi="21">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/Widget.Design.BottomSheet.Modal</item>
+    </style>
 </resources>

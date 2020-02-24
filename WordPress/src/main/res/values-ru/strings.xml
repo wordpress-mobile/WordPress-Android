@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-31 09:37:16+0000
+Translation-Revision-Date: 2020-02-14 23:15:01+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_template_preview">Предварительный просмотр шаблона</string>
+    <string name="gutenberg_native_replace_current_block">Заменить текущий блок</string>
+    <string name="gutenberg_native_add_to_end">Добавить в конце</string>
+    <string name="gutenberg_native_add_to_beginning">Добавить в начале</string>
+    <string name="gutenberg_native_add_block_before">Добавить блок перед</string>
+    <string name="gutenberg_native_add_block_after">Добавить блок после</string>
+    <string name="reader_filter_empty_tags_action">Добавить метку</string>
+    <string name="reader_filter_empty_sites_action">Подписаться на сайт</string>
+    <string name="reader_filter_empty_tags_list">Вы можете подписаться на определенную тему добавив метку</string>
+    <string name="reader_filter_empty_sites_list">Читайте свежие записи с сайтов, на которые вы подписаны</string>
+    <string name="reader_filter_main_title">Подписки</string>
+    <string name="reader_filter_cta">Фильтр</string>
     <string name="gutenberg_native_video_caption_s">Подпись к видео. %s</string>
     <string name="gutenberg_native_edit_video">Измненить видео</string>
     <string name="gutenberg_native_edit_media">Изменить мультимедиа</string>
@@ -68,7 +80,6 @@ Language: ru
     <string name="suffix_1_000_000_000_000_000">%sП</string>
     <string name="suffix_1_000_000_000_000">%sТ</string>
     <string name="suffix_1_000_000_000_000_000_000">%sЭ</string>
-    <string name="reader_filter_all_sites">Все сайты</string>
     <string name="reader_filter_sites_title">Сайты</string>
     <string name="reader_filter_tags_title">Метки</string>
     <string name="reader_save_for_later_display_name">Сохранено</string>
