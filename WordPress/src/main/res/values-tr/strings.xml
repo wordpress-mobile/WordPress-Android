@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-06 00:54:10+0000
+Translation-Revision-Date: 2020-02-18 22:59:16+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_template_preview">Şablon ön izlemesi</string>
+    <string name="gutenberg_native_replace_current_block">Mevcut bloğu değiştir</string>
+    <string name="gutenberg_native_add_to_end">Sona ekle</string>
+    <string name="gutenberg_native_add_to_beginning">Başa ekle</string>
+    <string name="gutenberg_native_add_block_before">Blok öncesine ekle</string>
+    <string name="gutenberg_native_add_block_after">Blok sonrasına ekle</string>
+    <string name="reader_filter_empty_tags_action">Bir etiket ekle</string>
+    <string name="reader_filter_empty_sites_action">Bir siteyi takip et</string>
+    <string name="reader_filter_empty_tags_list">Bir etiket ekleyerek belirli bir konudaki yayınları takip edebilirsiniz</string>
+    <string name="reader_filter_empty_sites_list">Takip ettiğiniz sitelerdeki en yeni yazıları görün</string>
+    <string name="reader_filter_main_title">Takip edilen</string>
+    <string name="reader_filter_cta">Filtrele</string>
     <string name="gutenberg_native_video_caption_s">Video yazısı. %s</string>
     <string name="gutenberg_native_edit_video">Videoyu düzenle</string>
     <string name="gutenberg_native_edit_media">Ortamı düzenle</string>
@@ -68,7 +80,6 @@ Language: tr
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_all_sites">Tüm siteler</string>
     <string name="reader_filter_sites_title">Siteler</string>
     <string name="reader_filter_tags_title">Etiketler</string>
     <string name="reader_save_for_later_display_name">Kaydedildi</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-07 00:54:09+0000
+Translation-Revision-Date: 2020-02-15 00:54:56+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
@@ -59,6 +59,7 @@ Language: ko_KR
     <string name="enter_site_credentials_instead">사이트 자격 증명으로 로그인</string>
     <string name="enter_credentials_for_site">%1$s 사이트 자격 증명으로 로그인</string>
     <string name="send_verification_email">인증 이메일 보내기</string>
+    <string name="my_site_bottom_sheet_add_page">사이트 페이지</string>
     <string name="reader_following_display_name">팔로우 중</string>
     <string name="posts_cannot_be_started">지금 이 글을 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="suffix_1_000">%sk</string>
@@ -67,13 +68,85 @@ Language: ko_KR
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_all_sites">모든 사이트</string>
     <string name="reader_filter_sites_title">사이트</string>
     <string name="reader_filter_tags_title">태그</string>
     <string name="reader_save_for_later_display_name">저장됨</string>
     <string name="reader_discover_display_name">검색</string>
     <string name="reader_my_likes_display_name">좋아요</string>
     <string name="site_cannot_be_loaded">사이트의 데이터를 현재 로드할 수 없습니다. 나중에 다시 시도해 주세요.</string>
+    <string name="gutenberg_native_wordpress_media_library">워드프레스 미디어 라이브러리</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">당사는 각 릴리스에 더 많은 블록을 추가하기 위해 노력하고 있습니다. 그 사이에 웹에서 이 글을 편집할 수도 있습니다.</string>
+    <string name="gutenberg_native_ungroup">그룹 해제</string>
+    <string name="gutenberg_native_translate">번역</string>
+    <string name="gutenberg_native_title">제목:</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard">키보드를 숨기려면 탭</string>
+    <string name="gutenberg_native_tap_here_to_show_help">도움말을 보려면 여기를 탭</string>
+    <string name="gutenberg_native_take_a_video">비디오 촬영</string>
+    <string name="gutenberg_native_take_a_photo_or_video">사진 찍기 또는 비디오 촬영</string>
+    <string name="gutenberg_native_take_a_photo">사진 촬영</string>
+    <string name="gutenberg_native_start_writing">글쓰기 시작…</string>
+    <string name="gutenberg_native_size">크기</string>
+    <string name="gutenberg_native_sidebar_title_plugin">사이드바 제목 플러그인</string>
+    <string name="gutenberg_native_show_section">섹션 표시</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\'은(는) iOS용 워드프레스에서 아직 지원되지 않습니다.</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\'은(는) Android용 워드프레스에서 아직 지원되지 않습니다.</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 블록. 이 블록에는 잘못된 내용이 있습니다.</string>
+    <string name="gutenberg_native_s_block_empty">%s 블록. 비어 있음</string>
+    <string name="gutenberg_native_reset_block">블록 리셋</string>
+    <string name="gutenberg_native_remove_block_at_row_s">%s 행에서 블록 제거</string>
+    <string name="gutenberg_native_remove_annotations">주석 제거</string>
+    <string name="gutenberg_native_problem_opening_the_video">비디오 열기 문제</string>
+    <string name="gutenberg_native_problem_displaying_block">블록 표시 문제</string>
+    <string name="gutenberg_native_post_title_s">글 제목. %s</string>
+    <string name="gutenberg_native_post_title_empty">글 제목. 비어 있음</string>
+    <string name="gutenberg_native_paste_url">URL 붙여 넣기</string>
+    <string name="gutenberg_native_page_break_block_s">페이지 바꾸기 블록. %s</string>
+    <string name="gutenberg_native_open_settings">설정 열기</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">이 요청을 처리할 수 있는 애플리케이션이 없습니다. 웹 브라우저를 설치하세요.</string>
+    <string name="gutenberg_native_navigate_up">위로 탐색</string>
+    <string name="gutenberg_native_my_pre_publish_panel">내 사전 발행 패널</string>
+    <string name="gutenberg_native_my_post_status_info">내 글 상태 정보</string>
+    <string name="gutenberg_native_my_post_publish_panel">내 글 발행 패널</string>
+    <string name="gutenberg_native_my_document_setting_panel">내 문서 설정 패널</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">블록을 위로(%1$s 행에서 %2$s 행으로) 이동</string>
+    <string name="gutenberg_native_move_block_up">블록을 위로 이동</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">블록을 아래로(%1$s 행에서 %2$s 행으로) 이동</string>
+    <string name="gutenberg_native_move_block_down">블록을 아래로 이동</string>
+    <string name="gutenberg_native_link_text">링크 텍스트</string>
+    <string name="gutenberg_native_link_inserted">링크 삽입됨</string>
+    <string name="gutenberg_native_image_caption_s">이미지 캡션. %s</string>
+    <string name="gutenberg_native_hide_keyboard">키보드 숨기기</string>
+    <string name="gutenberg_native_here_is_the_panel_content">패널 콘텐츠입니다!</string>
+    <string name="gutenberg_native_help_icon">도움말 아이콘</string>
+    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">미디어를 삽입하지 못했습니다.\n옵션을 보려면 누르세요.</string>
+    <string name="gutenberg_native_double_tap_to_undo_last_change">마지막 변경을 취소하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_to_toggle_setting">설정을 전환하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image">이미지를 선택하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_to_select_a_video">비디오를 선택하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_to_select">선택하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_to_remove_the_block">블록을 제거하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_to_redo_last_change">마지막 변경을 다시 실행하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up">블록을 위로 이동하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down">블록을 아래로 이동하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_to_edit_this_value">이 값을 편집하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">슬라이더를 사용하여 값을 변경하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block">블록을 추가하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">편집하려면 두 번 탭하고 길게 누르세요.</string>
+    <string name="gutenberg_native_current_value_is_s">현재 값은 %s입니다.</string>
+    <string name="gutenberg_native_content">콘텐츠…</string>
+    <string name="gutenberg_native_clear_all_settings">모든 설정 지우기</string>
+    <string name="gutenberg_native_choose_from_device">기기에서 선택</string>
+    <string name="gutenberg_native_annotations_sidebar">주석 사이드바</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">알 수 없는 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="gutenberg_native_alt_text">대체 텍스트</string>
+    <string name="gutenberg_native_add_video">비디오 추가</string>
+    <string name="gutenberg_native_add_url">URL 추가</string>
+    <string name="gutenberg_native_add_link_text">링크 텍스트 추가</string>
+    <string name="gutenberg_native_add_image_or_video">이미지 또는 비디오 추가</string>
+    <string name="gutenberg_native_add_image">이미지 추가</string>
+    <string name="gutenberg_native_add_block_here">블록을 여기에 추가</string>
+    <string name="gutenberg_native_add_annotation">주석 추가</string>
+    <string name="gutenberg_native_add_a_description">설명 추가</string>
     <string name="reader_empty_saved_posts_content_description">“글을 목록에 저장하려면 글 저장 버튼을 탭합니다.”</string>
     <string name="reader_acessibility_list_loaded">\"목록에 %1$d개 항목이 로드되었습니다. \"</string>
     <string name="notifications_tab_dialog_switch_desc">알림</string>
@@ -685,6 +758,7 @@ Language: ko_KR
     <string name="activity_log_rewind_started_snackbar_message">사이트 복원 중\n%s %s(으)로 되돌리는 중</string>
     <string name="activity_log_button">활동 로그 작업 버튼</string>
     <string name="plugin_auto_managed">자동 관리</string>
+    <string name="reader_save_posts_locally_dialog_message">이 글을 저장하고 원할 때마다 돌아와서 다시 읽으세요. 글은 이 기기에서만 읽을 수 있습니다. 저장된 글은 다른 기기와 동기화되지 않습니다.</string>
     <string name="reader_save_posts_locally_dialog_title">나중에 보기 위해 글 저장</string>
     <string name="reader_empty_search_request_failed">검색을 수행할 수 없음</string>
     <string name="reader_empty_search_title">일치하는 결과 없음</string>
