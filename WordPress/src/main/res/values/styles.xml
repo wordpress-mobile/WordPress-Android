@@ -971,17 +971,6 @@
         <item name="colorControlHighlight">@android:color/transparent</item>
     </style>
 
-    <!-- DialogPreference custom title style -->
-    <style name="DialogPreference"/>
-    <style name="DialogPreference.CustomTitle">
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textSize">@dimen/text_sz_larger</item>
-        <item name="android:gravity">start|center_vertical</item>
-    </style>
-
     <!-- Main actions styles -->
     <style name="MainBottomSheetRowLayout" parent="MySiteListRowLayout">
         <item name="android:minHeight">@dimen/main_bottom_sheet_list_row_min_height</item>
