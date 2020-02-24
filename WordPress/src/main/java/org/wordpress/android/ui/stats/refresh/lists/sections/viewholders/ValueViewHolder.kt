@@ -11,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEGATIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
+import org.wordpress.android.util.getColorResIdFromAttribute
 
 class ValueViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
@@ -25,9 +26,9 @@ class ValueViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         unit.setText(item.unit)
         val hasChange = item.change != null
         val color = when (item.state) {
-            POSITIVE -> R.color.success_50
-            NEGATIVE -> R.color.error_50
-            NEUTRAL -> R.color.gray_50
+            POSITIVE -> change.context.getColorResIdFromAttribute(R.attr.wpColorSuccess)
+            NEGATIVE -> change.context.getColorResIdFromAttribute(R.attr.wpColorError)
+            NEUTRAL -> change.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
         }
         change.setTextColor(ContextCompat.getColor(change.context, color))
         change.visibility = if (hasChange) View.VISIBLE else View.GONE

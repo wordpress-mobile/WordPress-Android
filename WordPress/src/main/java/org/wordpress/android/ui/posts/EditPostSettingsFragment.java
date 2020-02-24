@@ -24,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -275,8 +274,6 @@ public class EditPostSettingsFragment extends Fragment {
         mFeaturedImageButton = rootView.findViewById(R.id.post_add_featured_image_button);
         mFeaturedImageRetryOverlay = rootView.findViewById(R.id.post_featured_image_retry_overlay);
         mFeaturedImageProgressOverlay = rootView.findViewById(R.id.post_featured_image_progress_overlay);
-
-        final CardView featuredImageCardView = rootView.findViewById(R.id.post_featured_image_card_view);
 
         OnClickListener showContextMenuListener = new View.OnClickListener() {
             @Override
@@ -998,10 +995,10 @@ public class EditPostSettingsFragment extends Fragment {
                 mImageManager.loadWithResultListener(mFeaturedImageView, ImageType.IMAGE,
                         currentFeaturedImageState.getMediaUri(), ScaleType.FIT_CENTER,
                         null, new RequestListener<Drawable>() {
-                            @Override public void onLoadFailed(@org.jetbrains.annotations.Nullable Exception e) {
+                            @Override public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                             }
 
-                            @Override public void onResourceReady(Drawable resource) {
+                            @Override public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                                 if (currentFeaturedImageState.getUiState() == FeaturedImageState.REMOTE_IMAGE_LOADING) {
                                     updateFeaturedImageViews(FeaturedImageState.REMOTE_IMAGE_SET);
                                 }

@@ -9,7 +9,7 @@
     android:paddingEnd="@dimen/margin_extra_large"
     android:layout_marginBottom="@dimen/margin_extra_large">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         style="@style/LoginTheme.TextLabel"
         android:id="@+id/label"
         android:layout_width="match_parent"

@@ -29,8 +29,8 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
         iconContainer.setIconOrAvatar(item, imageManager)
         text.setTextOrHide(item.textResource, item.text)
         val textColor = when (item.textStyle) {
-            TextStyle.NORMAL -> text.context.getColorResIdFromAttribute(R.attr.wpColorText)
-            LIGHT -> text.context.getColorResIdFromAttribute(R.attr.wpColorTextSubtle)
+            TextStyle.NORMAL -> text.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+            LIGHT -> text.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
         }
         text.setTextColor(ContextCompat.getColor(text.context, textColor))
         value.setTextOrHide(item.valueResource, item.value)
