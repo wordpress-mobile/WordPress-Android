@@ -102,7 +102,6 @@
             android:importantForAccessibility="no"
             android:maxLines="2"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/wpColorOnSurfaceMedium"
             android:visibility="gone"
             tools:text="What an amazing post!"
             tools:visibility="visible" />
