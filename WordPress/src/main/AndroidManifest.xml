@@ -732,7 +732,7 @@
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidgetConfigureActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
@@ -740,7 +740,7 @@
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidgetConfigureActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
@@ -748,7 +748,7 @@
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidgetConfigureActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
@@ -756,7 +756,7 @@
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
