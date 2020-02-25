@@ -161,14 +161,13 @@
 
     <!-- Stats Widget -->
 
-    <style name="StatsWidgetConfigureTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/grey_900</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+    <style name="StatsWidgetConfigureTitle">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
-    <style name="StatsWidgetConfigureValue" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_500</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+    <style name="StatsWidgetConfigureValue">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <style name="StatsWidgetSiteIcon">
