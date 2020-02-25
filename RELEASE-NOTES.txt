@@ -1,9 +1,9 @@
 14.4
 -----
+* Removes sections from post search results
  
 14.3
 -----
-* Removes sections for post search results
 * Added search to set page parent screen
 * Block editor: Add support for changing image sizes in Image blocks
 * Block editor: Add support for upload options in Gallery block
