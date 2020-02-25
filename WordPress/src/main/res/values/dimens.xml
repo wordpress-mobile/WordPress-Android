@@ -219,6 +219,7 @@
     <dimen name="notifications_text_indent_sz">22dp</dimen>
     <dimen name="notifications_note_icon_margin_start">28dp</dimen>
     <dimen name="notifications_note_icon_margin_top">30dp</dimen>
+    <dimen name="notifications_note_icon_padding">2dp</dimen>
     <dimen name="notification_comment_padded_frame_bg_offset">14dp</dimen>  <!-- results in 6dp border -->
     <dimen name="notification_comment_frame_bg_border_width">6dp</dimen>
     <dimen name="notification_icon_bg_border_width">1dp</dimen>

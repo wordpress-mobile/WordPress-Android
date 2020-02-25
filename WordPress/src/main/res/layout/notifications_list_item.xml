@@ -52,7 +52,7 @@
                 android:background="@drawable/bg_oval_primary_stroke_surface"
                 android:gravity="center"
                 android:importantForAccessibility="no"
-                android:padding="2dp" />
+                android:padding="@dimen/notifications_note_icon_padding" />
 
         </FrameLayout>
 
