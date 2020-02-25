@@ -221,8 +221,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         if (previousTimeGroup != null && previousTimeGroup == timeGroup) {
             noteViewHolder.mHeaderText.setVisibility(View.GONE);
+            noteViewHolder.mHeaderDivider.setVisibility(View.GONE);
         } else {
             noteViewHolder.mHeaderText.setVisibility(View.VISIBLE);
+            noteViewHolder.mHeaderDivider.setVisibility(View.VISIBLE);
 
             if (timeGroup == Note.NoteTimeGroup.GROUP_TODAY) {
                 noteViewHolder.mHeaderText.setText(R.string.stats_timeframe_today);
@@ -358,6 +360,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     class NoteViewHolder extends RecyclerView.ViewHolder {
         private final View mContentView;
         private final TextView mHeaderText;
+        private final View mHeaderDivider;
         private final TextView mTxtSubject;
         private final TextView mTxtSubjectNoticon;
         private final TextView mTxtDetail;
@@ -368,6 +371,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             super(view);
             mContentView = view.findViewById(R.id.note_content_container);
             mHeaderText = view.findViewById(R.id.header_text);
+            mHeaderDivider = view.findViewById(R.id.header_divider);
             mTxtSubject = view.findViewById(R.id.note_subject);
             mTxtSubjectNoticon = view.findViewById(R.id.note_subject_noticon);
             mTxtDetail = view.findViewById(R.id.note_detail);

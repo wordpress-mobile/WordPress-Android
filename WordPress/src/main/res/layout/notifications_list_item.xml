@@ -17,6 +17,13 @@
         tools:text="Today"
         tools:visibility="visible" />
 
+    <View
+        android:id="@+id/header_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_below="@+id/header_text"
+        android:background="?android:attr/listDivider" />
+
     <RelativeLayout
         android:id="@+id/note_content_container"
         android:layout_width="match_parent"
