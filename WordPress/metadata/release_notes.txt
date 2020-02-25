@@ -1,2 +1,8 @@
-• Block editor additions: Added a new Gallery block for creating image galleries using files from your Media Library, along with support for the Preformatted block.
-• Block editor enhancements: Added support for settings in the List and Video blocks.
+Lots of updates to the block editor:
+
+* Added a long-press icon for adding blocks before/after.
+* App will try to display images when coming back online after a disconnection.
+* Resolved issue with blank editor when trying to create a post with images or links from another app.
+* Added image size options to the Gallery block.
+* Fixed a bug that prevented paragraph blocks from merging.
+

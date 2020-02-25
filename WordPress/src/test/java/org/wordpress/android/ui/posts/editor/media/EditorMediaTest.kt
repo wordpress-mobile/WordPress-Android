@@ -345,6 +345,28 @@ class EditorMediaTest : BaseUnitTest() {
         verify(retryFailedMediaUploadUseCase).retryFailedMediaAsync(anyOrNull(), eq(expectedIds))
     }
 
+    @Test
+    fun `reattachUploadingMedia is called for Aztec editor`() {
+        // Arrange
+        val reattachUploadingMediaUseCase = mock<ReattachUploadingMediaUseCase>()
+        // Act
+        createEditorMedia(reattachUploadingMediaUseCase = reattachUploadingMediaUseCase)
+                .reattachUploadingMediaForAztec(mock(), true, mock())
+        // Assert
+        verify(reattachUploadingMediaUseCase).reattachUploadingMediaForAztec(anyOrNull(), anyOrNull())
+    }
+
+    @Test
+    fun `reattachUploadingMedia is NOT called for other editors`() {
+        // Arrange
+        val reattachUploadingMediaUseCase = mock<ReattachUploadingMediaUseCase>()
+        // Act
+        createEditorMedia(reattachUploadingMediaUseCase = reattachUploadingMediaUseCase)
+                .reattachUploadingMediaForAztec(mock(), false, mock())
+        // Assert
+        verify(reattachUploadingMediaUseCase, never()).reattachUploadingMediaForAztec(anyOrNull(), anyOrNull())
+    }
+
     private companion object Fixtures {
         private val VIDEO_URI = mock<Uri>()
         private val IMAGE_URI = mock<Uri>()
@@ -362,7 +384,9 @@ class EditorMediaTest : BaseUnitTest() {
             retryFailedMediaUploadUseCase: RetryFailedMediaUploadUseCase = mock(),
             siteModel: SiteModel = mock(),
             editorMediaListener: EditorMediaListener = mock(),
-            cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase = mock()
+            removeMediaUseCase: RemoveMediaUseCase = mock(),
+            cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase = mock(),
+            reattachUploadingMediaUseCase: ReattachUploadingMediaUseCase = mock()
         ): EditorMedia {
             val editorMedia = EditorMedia(
                     updateMediaModelUseCase,
@@ -374,6 +398,8 @@ class EditorMediaTest : BaseUnitTest() {
                     addExistingMediaToPostUseCase,
                     retryFailedMediaUploadUseCase,
                     cleanUpMediaToPostAssociationUseCase,
+                    removeMediaUseCase,
+                    reattachUploadingMediaUseCase,
                     TEST_DISPATCHER
             )
             editorMedia.start(siteModel, editorMediaListener)

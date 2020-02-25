@@ -188,7 +188,8 @@ sealed class BlockListItem(val type: Type) {
         val overlappingEntries: List<Bar>? = null,
         val selectedItem: String? = null,
         val onBarSelected: ((period: String?) -> Unit)? = null,
-        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null
+        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null,
+        val entryContentDescriptions: List<String>
     ) : BlockListItem(BAR_CHART) {
         data class Bar(val label: String, val id: String, val value: Int)
 
@@ -228,7 +229,13 @@ sealed class BlockListItem(val type: Type) {
     data class LoadingItem(val loadMore: () -> Unit, val isLoading: Boolean = false) : BlockListItem(LOADING_ITEM)
 
     data class ActivityItem(val blocks: List<Block>) : BlockListItem(ACTIVITY_ITEM) {
-        data class Block(val label: String, val boxes: List<Box>)
+        data class Block(
+            val label: String,
+            val boxes: List<Box>,
+            val contentDescription: String,
+            val activityContentDescriptions: List<String>
+        )
+
         enum class Box {
             INVISIBLE, VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH
         }

@@ -1,5 +1,0 @@
-13.8:
-*Miglioramenti all'editor dei blocchi: blocco Spazio vuoto aggiunto per la creazione di spazio bianco tra i contenuti.
-*Ricerca dell'articolo del blog modificata per includere gli articoli presenti in tutte le categorie.
-*Molti miglioramenti sotto controllo nell'intera app, 26 arresti univoci e correzioni di bug in tutti.
-

@@ -21,7 +21,7 @@ class SubFilterDiffCallback(
         return if (oldItem.type == newItem.type) {
             when (oldItem.type) {
                 SECTION_TITLE -> oldItem.label == newItem.label
-                SITE -> (oldItem as Site).blog.isSameAs((newItem as Site).blog)
+                SITE -> (oldItem as Site).blog.isSameBlogOrFeedAs((newItem as Site).blog)
                 TAG -> (oldItem as Tag).tag == (newItem as Tag).tag
                 SITE_ALL,
                 DIVIDER -> true

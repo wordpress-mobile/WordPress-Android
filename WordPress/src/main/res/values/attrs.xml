@@ -150,6 +150,22 @@
     </declare-styleable>
 
     <!--
+    WPTooltipView
+    -->
+    <declare-styleable name="WPTooltipView">
+        <!-- Position of the Tooltip -->
+        <attr name="wpTooltipPosition">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+            <enum name="above" value="2"/>
+            <enum name="below" value="3"/>
+        </attr>
+        <attr name="wpTooltipMessage" format="reference"/>
+        <attr name="wpArrowHorizontalOffsetFromEnd" format="dimension"/>
+        <attr name="wpArrowHorizontalOffsetFromStart" format="dimension"/>
+    </declare-styleable>
+
+    <!--
         Actionable Empty View
     -->
     <declare-styleable name="ActionableEmptyView">

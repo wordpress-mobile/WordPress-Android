@@ -1,6 +1,46 @@
-14.0
+14.4
 -----
  
+14.3
+-----
+* Added search to set page parent screen
+* Block editor: Add support for changing image sizes in Image blocks
+* Block editor: Add support for upload options in Gallery block
+* Block editor: Added the Button block
+* Block editor: Added the Group block
+* Block editor: Add scroll support inside block picker and block settings
+* Block editor: Fix issue preventing correct placeholder image from displaying during image upload
+* Block editor: Fix issue where adding emojis to the post title added strong HTML elements to the title of the post
+* Block editor: We’ve introduced a new toolbar that floats above the block you’re editing, which makes navigating your blocks easier — especially complex ones.
+* Reader Information Architecture: added tab filtering; added bottom sheet to filter and navigate the followed sites/tags posts.
+ 
+14.2
+-----
+* Block editor: Long-press Inserter icon to show options to add before/after
+* Block editor: Retry displaying image when connectivity restores
+* Block editor: Fix blank post when sharing media from another app
+* Block editor: Add support for image size options in the gallery block
+* Block editor: Fix issue that sometimes prevented merging paragraph blocks
+* Block editor: Fix retry media upload action
+
+14.1
+-----
+* Fixes an issue where searching for posts sometimes doesn't show some results.
+
+* Disable the option to remove a Jetpack site from site picker
+* Block editor: small performance improvements
+
+* Block Editor: Reduced padding around text on Rich Text based blocks.
+* Block Editor: Improved stability on very long posts.
+* Block Editor: New block "Shortcode". You can now create and edit Shortcode blocks in the editor.
+
+14.0
+-----
+* Block Editor: Fix displaying placeholder for images
+* Block Editor: Fix crash on undo
+* Block Editor: Fix styling on navigation UI
+* Information Architecture revised: moved the access to the Me screen to an option menu into My Site; added Floating Action Button in My Site to allow the creation of a new Blog post or Site page.
+
 13.9
 -----
 * Block Editor: New block "Gallery". You can now create image galleries using WordPress Media library.

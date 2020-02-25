@@ -1,12 +1,18 @@
 package org.wordpress.android.ui.posts
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostLocation
@@ -14,19 +20,25 @@ import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.test
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import java.util.TimeZone
 
 @RunWith(MockitoJUnitRunner::class)
 class EditPostRepositoryTest {
+    @Rule
+    @JvmField val rule = InstantTaskExecutorRule()
+
     @Mock lateinit var localeManager: LocaleManagerWrapper
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var postUtils: PostUtilsWrapper
     private lateinit var editPostRepository: EditPostRepository
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
-        editPostRepository = EditPostRepository(localeManager, postStore, postUtils)
+        editPostRepository = EditPostRepository(localeManager, postStore, postUtils, TEST_DISPATCHER, TEST_DISPATCHER)
     }
 
     @Test
@@ -414,9 +426,9 @@ class EditPostRepositoryTest {
 
         assertThat(editPostRepository.getPost()).isEqualTo(firstPost)
 
-        editPostRepository.saveSnapshot()
+        editPostRepository.savePostSnapshotWhenEditorOpened()
 
-        assertThat(editPostRepository.hasSnapshot()).isTrue()
+        assertThat(editPostRepository.hasPostSnapshotWhenEditorOpened()).isTrue()
     }
 
     @Test
@@ -427,18 +439,19 @@ class EditPostRepositoryTest {
         val secondPost = PostModel()
         val secondPostId = 2
         secondPost.setId(secondPostId)
+        whenever(postUtils.postHasEdits(firstPost, secondPost)).thenReturn(true)
 
         editPostRepository.set { firstPost }
 
         assertThat(editPostRepository.getPost()).isEqualTo(firstPost)
 
-        editPostRepository.saveSnapshot()
+        editPostRepository.savePostSnapshotWhenEditorOpened()
 
-        assertThat(editPostRepository.isSnapshotDifferent()).isFalse()
+        assertThat(editPostRepository.postWasChangedInCurrentSession()).isFalse()
 
         editPostRepository.set { secondPost }
 
-        assertThat(editPostRepository.isSnapshotDifferent()).isTrue()
+        assertThat(editPostRepository.postWasChangedInCurrentSession()).isTrue()
     }
 
     @Test
@@ -452,13 +465,13 @@ class EditPostRepositoryTest {
 
         editPostRepository.set { firstPost }
 
-        editPostRepository.saveSnapshot()
+        editPostRepository.savePostSnapshotWhenEditorOpened()
 
         editPostRepository.set { secondPost }
 
         assertThat(editPostRepository.status).isEqualTo(PENDING)
 
-        editPostRepository.updateStatusFromSnapshot(secondPost)
+        editPostRepository.updateStatusFromPostSnapshotWhenEditorOpened()
 
         assertThat(editPostRepository.status).isEqualTo(PUBLISHED)
     }
@@ -484,5 +497,29 @@ class EditPostRepositoryTest {
         editPostRepository.loadPostByRemotePostId(remoteId, site)
 
         assertThat(editPostRepository.getPost()).isEqualTo(post)
+    }
+
+    @Test
+    fun `updateAsync returns Updated when action returns true`() = test {
+        editPostRepository.set { mock() }
+        val action = { _: PostModel -> true }
+        var completed: UpdatePostResult? = null
+        val onCompleted = { _: PostImmutableModel, result: UpdatePostResult -> completed = result }
+
+        editPostRepository.updateAsync(action, onCompleted)
+
+        assertThat(completed).isEqualTo(UpdatePostResult.Updated)
+    }
+
+    @Test
+    fun `updateAsync returns NoChanges when action returns false`() = test {
+        editPostRepository.set { mock() }
+        val action = { _: PostModel -> false }
+        var completed: UpdatePostResult? = null
+        val onCompleted = { _: PostImmutableModel, result: UpdatePostResult -> completed = result }
+
+        editPostRepository.updateAsync(action, onCompleted)
+
+        assertThat(completed).isEqualTo(UpdatePostResult.NoChanges)
     }
 }

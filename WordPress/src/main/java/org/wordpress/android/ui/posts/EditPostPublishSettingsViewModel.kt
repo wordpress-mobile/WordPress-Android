@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.Schedul
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.TEN_MINUTES
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.WHEN_PUBLISHED
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -67,16 +69,16 @@ class EditPostPublishSettingsViewModel
         val startCalendar = postRepository?.let { getCurrentPublishDateAsCalendar(it) }
                 ?: localeManagerWrapper.getCurrentCalendar()
         updateDateAndTimeFromCalendar(startCalendar)
-        onPostStatusChanged(postRepository)
+        onPostStatusChanged(postRepository?.getPost())
     }
 
-    fun onPostStatusChanged(postRepository: EditPostRepository?) {
-        canPublishImmediately = postRepository?.let {
+    fun onPostStatusChanged(postModel: PostImmutableModel?) {
+        canPublishImmediately = postModel?.let {
             PostUtils.shouldPublishImmediatelyOptionBeAvailable(
                     it.status
             )
         } ?: false
-        updateUiModel(postRepository = postRepository)
+        updateUiModel(postModel = postModel)
     }
 
     fun publishNow() {
@@ -100,9 +102,9 @@ class EditPostPublishSettingsViewModel
         _onDatePicked.postValue(Event(Unit))
     }
 
-    fun onShowDialog(postRepository: EditPostRepository) {
-        if (areNotificationsEnabled(postRepository)) {
-            val currentPeriod = postSchedulingNotificationStore.getSchedulingReminderPeriod(postRepository.id)
+    fun onShowDialog(postModel: PostImmutableModel) {
+        if (areNotificationsEnabled(postModel)) {
+            val currentPeriod = postSchedulingNotificationStore.getSchedulingReminderPeriod(postModel.id)
             _onShowNotificationDialog.postValue(Event(currentPeriod))
         } else {
             _onToast.postValue(Event(resourceProvider.getString(R.string.post_notification_error)))
@@ -110,7 +112,7 @@ class EditPostPublishSettingsViewModel
     }
 
     fun updatePost(updatedDate: Calendar, postRepository: EditPostRepository?) {
-        postRepository?.update { postModel ->
+        postRepository?.updateAsync({ postModel ->
             val dateCreated = DateTimeUtils.iso8601FromDate(updatedDate.time)
             postModel.setDateCreated(dateCreated)
             val initialPostStatus = postRepository.status
@@ -134,22 +136,25 @@ class EditPostPublishSettingsViewModel
                 _onToast.postValue(Event(resourceProvider.getString(R.string.editor_post_converted_back_to_draft)))
             }
             postModel.setStatus(finalPostStatus.toString())
-            _onPostStatusChanged.value = finalPostStatus
+            _onPostStatusChanged.postValue(finalPostStatus)
             val scheduledTime = postSchedulingNotificationStore.getSchedulingReminderPeriod(postRepository.id)
             updateNotifications(postRepository, scheduledTime)
-            updateUiModel(postRepository = postRepository)
             true
-        }
+        }, onCompleted = { postModel, result ->
+            if (result == UpdatePostResult.Updated) {
+                updateUiModel(postModel = postModel)
+            }
+        })
     }
 
-    fun updateUiModel(postRepository: EditPostRepository?) {
-        if (postRepository != null) {
-            val notificationTime = postSchedulingNotificationStore.getSchedulingReminderPeriod(postRepository.id)
-            val publishDateLabel = postSettingsUtils.getPublishDateLabel(postRepository)
+    fun updateUiModel(postModel: PostImmutableModel?) {
+        if (postModel != null) {
+            val notificationTime = postSchedulingNotificationStore.getSchedulingReminderPeriod(postModel.id)
+            val publishDateLabel = postSettingsUtils.getPublishDateLabel(postModel)
             val now = localeManagerWrapper.getCurrentCalendar().timeInMillis - 10000
-            val dateCreated = (DateTimeUtils.dateFromIso8601(postRepository.dateCreated)
+            val dateCreated = (DateTimeUtils.dateFromIso8601(postModel.dateCreated)
                     ?: localeManagerWrapper.getCurrentCalendar().time).time
-            val enableNotification = areNotificationsEnabled(postRepository)
+            val enableNotification = areNotificationsEnabled(postModel)
             val showNotification = dateCreated > now
             val notificationLabel = if (enableNotification && showNotification) {
                 notificationTime.toLabel()
@@ -173,7 +178,7 @@ class EditPostPublishSettingsViewModel
 
     fun scheduleNotification(postRepository: EditPostRepository, notificationTime: Period) {
         updateNotifications(postRepository, notificationTime)
-        updateUiModel(postRepository)
+        updateUiModel(postRepository.getPost())
     }
 
     fun onAddToCalendar(postRepository: EditPostRepository) {
@@ -229,9 +234,9 @@ class EditPostPublishSettingsViewModel
         }
     }
 
-    private fun areNotificationsEnabled(postRepository: EditPostRepository): Boolean {
+    private fun areNotificationsEnabled(postModel: PostImmutableModel): Boolean {
         val futureTime = localeManagerWrapper.getCurrentCalendar().timeInMillis + 6000
-        val dateCreated = (DateTimeUtils.dateFromIso8601(postRepository.dateCreated)
+        val dateCreated = (DateTimeUtils.dateFromIso8601(postModel.dateCreated)
                 ?: localeManagerWrapper.getCurrentCalendar().time).time
         return dateCreated > futureTime
     }

@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-12 00:55:12+0000
+Translation-Revision-Date: 2020-02-22 10:15:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_template_preview">Anteprima del modello</string>
+    <string name="gutenberg_native_replace_current_block">Sostituisci blocco attuale</string>
+    <string name="gutenberg_native_add_to_end">Aggiungi alla fine</string>
+    <string name="gutenberg_native_add_to_beginning">Aggiungi all\'inizio</string>
+    <string name="gutenberg_native_add_block_before">Aggiungi blocco prima</string>
+    <string name="gutenberg_native_add_block_after">Aggiungi blocco dopo</string>
+    <string name="reader_filter_empty_tags_action">Aggiungi un tag</string>
+    <string name="reader_filter_empty_sites_action">Segui un sito</string>
+    <string name="reader_filter_empty_tags_list">Puoi seguire gli articoli su uno specifico argomento aggiungendo un tag</string>
+    <string name="reader_filter_empty_sites_list">Vedi gli articoli più recenti dei siti che segui</string>
+    <string name="reader_filter_main_title">Stai seguendo</string>
+    <string name="reader_filter_cta">Filtro</string>
+    <string name="gutenberg_native_video_caption_s">Didascalia del video. %s</string>
+    <string name="gutenberg_native_edit_video">Modifica video</string>
+    <string name="gutenberg_native_edit_media">Modifica elemento multimediale</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">Tocca due volte per selezionare il layout</string>
+    <string name="gutenberg_native_add_a_shortcode">Aggiungi uno shortcode…</string>
+    <string name="post_list_author">Autore articolo</string>
+    <string name="fab_create_desc">Crea un articolo</string>
+    <string name="stats_posting_activity_end_description">Hai esaminato tutte le statistiche per questo periodo.\n Toccando nuovamente ripartirai dall\'inizio.</string>
+    <string name="stats_posting_activity_empty_description">Non sono presenti statistiche in questo periodo.</string>
+    <string name="stats_posting_activity_label_content_description">Attività di pubblicazione per %1$s</string>
+    <string name="stats_posting_activity_content_description">I giorni con %1$s visualizzazioni per %2$s sono: %2$s %3$s.Tocca per ulteriori informazioni.</string>
+    <string name="stats_posting_activity_action">naviga in tutte le statistiche per questo periodo</string>
+    <string name="stats_box_type_very_high">molto alta</string>
+    <string name="stats_box_type_high">alta</string>
+    <string name="stats_box_type_medium">media</string>
+    <string name="stats_box_type_low">bassa</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%3$s, %2$d %1$s</string>
+    <string name="gutenberg_native_move_image_forward">Sposta avanti l\'immagine</string>
+    <string name="gutenberg_native_move_image_backward">Sposta indietro l\'immagine</string>
+    <string name="create_post_page_fab_tooltip">Crea un articolo o una pagina</string>
+    <string name="post_signup_interstitial_not_right_now">Non adesso</string>
+    <string name="post_signup_interstitial_title">Benvenuto in WordPress</string>
+    <string name="photo_picker_image_thumbnail_selected">Immagine selezionata</string>
+    <string name="photo_picker_image_thumbnail_content_description">Miniatura immagine</string>
+    <string name="post_settings_publish">Pubblica</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Sincronizza ora</string>
+    <string name="dialog_confirm_scheduled_post_sync_message">Questo articolo verrà sincronizzato immediatamente.</string>
+    <string name="dialog_confirm_scheduled_post_sync_title">Pronto per la sincronizzazione?</string>
+    <string name="new_site_creation_unavailable_domain">Questo dominio non è disponibile</string>
+    <string name="login_promo_viewpager_content_description">Introduzione</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Non siamo stati in grado di accedere al tuo sito. Dovrai contattare il tuo fornitore di hosting per risolvere questo problema.</string>
     <string name="login_discovery_error_ssl">Non siamo stati in grado di accedere al tuo sito perché abbiamo riscontrato un problema con il &lt;b>certificato SSL&lt;/b>. Dovrai contattare il tuo fornitore di hosting per risolvere questo problema.</string>
     <string name="login_discovery_error_http_auth">Non siamo stati in grado di accedere al tuo sito perché viene richiesta l\'&lt;b>autenticazione HTTP&lt;/b>. Dovrai contattare il tuo fornitore di hosting per risolvere questo problema.</string>
@@ -14,8 +58,6 @@ Language: it
     <string name="enter_site_credentials_instead">Accedi con le credenziali del sito</string>
     <string name="enter_credentials_for_site">Accedi con le credenziali del sito %1$s</string>
     <string name="send_verification_email">Invia e-mail di verifica</string>
-    <string name="my_site_bottom_sheet_add_page">Crea una nuova pagina</string>
-    <string name="my_site_bottom_sheet_add_post">Crea un nuovo articolo</string>
     <string name="reader_following_display_name">Stai seguendo</string>
     <string name="posts_cannot_be_started">Non siamo in grado di aprire gli articoli in questo momento. Riprova più tardi.</string>
     <string name="suffix_1_000">%sk</string>
@@ -24,7 +66,6 @@ Language: it
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_all_sites">Tutti i siti</string>
     <string name="reader_filter_sites_title">Siti</string>
     <string name="reader_filter_tags_title">Tag</string>
     <string name="reader_save_for_later_display_name">Salvataggio completato</string>
@@ -33,23 +74,22 @@ Language: it
     <string name="site_cannot_be_loaded">Non siamo in grado di caricare i dati per il tuo sito in questo momento. Riprova più tardi.</string>
     <string name="gutenberg_native_wordpress_media_library">Libreria multimediale WordPress</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Stiamo lavorando duramente per aggiungere altri blocchi ad ogni rilascio. Nel frattempo, puoi anche modificare questo articolo sul web.</string>
-    <string name="gutenberg_native_unsupported">Non supportato</string>
     <string name="gutenberg_native_ungroup">Non raggruppare</string>
+    <string name="gutenberg_native_translate">Traduci</string>
+    <string name="gutenberg_native_title">Titolo:</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard">Tocca per nascondere la tastiera</string>
     <string name="gutenberg_native_tap_here_to_show_help">Tocca qui per mostrare la guida</string>
     <string name="gutenberg_native_take_a_video">Fai un video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fai un video o scatta una foto</string>
+    <string name="gutenberg_native_take_a_photo">Scatta una foto</string>
     <string name="gutenberg_native_start_writing">Inizia a scrivere…</string>
     <string name="gutenberg_native_size">Dimensione</string>
     <string name="gutenberg_native_sidebar_title_plugin">Plugin del titolo sulla barra laterale</string>
     <string name="gutenberg_native_show_section">Mostra sezione</string>
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\' non è ancora supportato su WordPress per iOS</string>
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' non è ancora supportato su WordPress per Android</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">Blocco %s. Questo blocco ha contenuti non validi</string>
     <string name="gutenberg_native_s_block_empty">Blocco %s. Vuoto</string>
-    <string name="gutenberg_native_s_block">\"Blocco %s</string>
-    <string name="gutenberg_native_row_d">Riga %d.</string>
-    <string name="gutenberg_native_reset_block">Ripristina blocco</string>
-    <string name="gutenberg_native_reset">Ripristina</string>
+    <string name="gutenberg_native_reset_block">Reimposta blocco</string>
     <string name="gutenberg_native_remove_block_at_row_s">Rimuovi blocco alla riga %s</string>
     <string name="gutenberg_native_remove_annotations">Rimuovi annotazioni</string>
     <string name="gutenberg_native_problem_opening_the_video">Problema durante l\'apertura del video</string>
@@ -57,8 +97,7 @@ Language: it
     <string name="gutenberg_native_post_title_s">Titolo dell\'articolo. %s</string>
     <string name="gutenberg_native_post_title_empty">Titolo dell\'articolo. Vuoto</string>
     <string name="gutenberg_native_paste_url">Incolla URL</string>
-    <string name="gutenberg_native_page_break_block_s">Blocco Interruzione di pagina. %s</string>
-    <string name="gutenberg_native_open_settings">Apri impostazioni</string>
+    <string name="gutenberg_native_open_settings">Apri le impostazioni</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Nessuna applicazione può gestire questa richiesta. Installa un browser web.</string>
     <string name="gutenberg_native_navigate_up">Naviga su</string>
     <string name="gutenberg_native_my_pre_publish_panel">Il mio pannello di prepubblicazione</string>
@@ -66,18 +105,16 @@ Language: it
     <string name="gutenberg_native_my_post_publish_panel">Il mio pannello di pubblicazione dell\'articolo</string>
     <string name="gutenberg_native_my_document_setting_panel">Il mio pannello di impostazioni dei documenti</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Sposta blocco su dalla riga %1$s alla riga %2$s</string>
-    <string name="gutenberg_native_move_block_up">Sposta blocco su</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Sposta blocco giù dalla riga %1$s alla riga %2$s</string>
-    <string name="gutenberg_native_move_block_down">Sposta blocco giù</string>
+    <string name="gutenberg_native_move_block_up">Sposta il blocco verso l\'alto</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Sposta il blocco in basso dalla riga %1$s alla riga %2$s</string>
+    <string name="gutenberg_native_move_block_down">Sposta il blocco verso il basso</string>
     <string name="gutenberg_native_link_text">Testo del link</string>
-    <string name="gutenberg_native_level_s_empty">Livello %s. Vuoto.</string>
-    <string name="gutenberg_native_level_1_s_2_s">Livello %1$s. %2$s</string>
-    <string name="gutenberg_native_image_caption_s">Didascalia immagine. %s</string>
+    <string name="gutenberg_native_link_inserted">Link inserito</string>
+    <string name="gutenberg_native_image_caption_s">Didascalia dell\'immagine. %s</string>
     <string name="gutenberg_native_hide_keyboard">Nascondi tastiera</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Ecco il pannello dei contenuti.</string>
+    <string name="gutenberg_native_here_is_the_panel_content">Ecco il pannello dei contenuti!</string>
     <string name="gutenberg_native_help_icon">Icona della guida</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Inserimento file multimediali non riuscito.\nTocca per ulteriori opzioni.</string>
-    <string name="gutenberg_native_empty">Vuoto</string>
+    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Inserimento media non riuscito.\nTocca per ulteriori opzioni.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Tocca due volte per annullare l\'ultima modifica</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Tocca due volte per attivare/disattivare l\'impostazione</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Tocca due volte per selezionare un\'immagine</string>
@@ -85,8 +122,8 @@ Language: it
     <string name="gutenberg_native_double_tap_to_select">Tocca due volte per selezionare</string>
     <string name="gutenberg_native_double_tap_to_remove_the_block">Tocca due volte per rimuovere il blocco</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Tocca due volte per ripetere l\'ultima modifica</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_up">Tocca due volte per spostare il blocco su</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_down">Tocca due volte per spostare il blocco giù</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up">Tocca due volte per spostare il blocco in alto</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down">Tocca due volte per spostare il blocco in basso</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Tocca due volte per modificare questo valore</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Tocca due volte per modificare il valore usando lo slider</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Tocca due volte per aggiungere un blocco</string>
@@ -219,20 +256,16 @@ Language: it
     <string name="stats_post_views_label">Visualizzazioni</string>
     <string name="stats_post_label">Articolo</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Grafico dell\'attività di pubblicazione.</string>
     <string name="stats_item_collapsed">Elemento compresso</string>
     <string name="stats_item_expanded">Elemento espanso</string>
     <string name="stats_collapse_content_description">Comprimi</string>
     <string name="stats_expand_content_description">Espandi</string>
     <string name="stats_graph_updated">Grafico aggiornato.</string>
     <string name="stats_overview_content_description">%1$s %2$s per il periodo: %3$s, cambiamento rispetto al periodo precedente - %4$s</string>
-    <string name="stats_bar_chart_content_description">Grafico delle visualizzazioni del sito.</string>
     <string name="stats_loading_card">Caricamento dei dati della carta selezionata.</string>
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Espandi</string>
     <string name="description_collapse">Comprimi</string>
-    <string name="editor_retry_failed_uploads">Riprova caricamento</string>
-    <string name="editor_toast_failed_uploads">Alcuni caricamenti di file multimediali non sono riusciti. Non puoi salvare o pubblicare\n l\'articolo in questo stato.</string>
     <string name="my_site_verify_your_email_without_email">Verifica il tuo indirizzo e-mail. Le istruzioni sono state inviate per e-mail</string>
     <string name="my_site_verify_your_email">Verifica il tuo indirizzo e-mail. Le istruzioni sono state inviate a %s</string>
     <string name="link_dialog_button_cancel">Annulla</string>
@@ -701,7 +734,6 @@ Language: it
     <string name="featured_image_desc">Immagine in evidenza</string>
     <string name="button_discard">Scarta</string>
     <string name="reader_avatar_desc">immagine del profilo</string>
-    <string name="reader_blavatar_desc">icona del sito</string>
     <string name="notification_channel_transient_title">Transient</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Per favore inserisci il tuo indirizzo email</string>
@@ -722,7 +754,6 @@ Language: it
     <string name="activity_log_rewind_started_snackbar_message">Il tuo sito è in fase di ripristino\nRitorno al %1$s %2$s</string>
     <string name="activity_log_button">Pulsante di azione Registro applicazione</string>
     <string name="plugin_auto_managed">Auto-gestito</string>
-    <string name="reader_save_posts_locally_dialog_message">Salva questo articolo e torna a leggerlo quando vorrai. Sarà disponibile solo su questo dispositivo: gli articoli salvati non vengono sincronizzati con gli altri dispositivi. (Ma ce ne stiamo occupando!)</string>
     <string name="reader_save_posts_locally_dialog_title">Salva articoli per dopo</string>
     <string name="reader_empty_search_request_failed">Impossibile eseguire la ricerca</string>
     <string name="reader_empty_search_title">Nessun risultato trovato</string>
@@ -747,7 +778,6 @@ Language: it
     <string name="reader_add_bookmark">Aggiungi ad articoli salvati</string>
     <string name="reader_save_for_later_title">Articoli salvati</string>
     <string name="removed">Rimozione completata</string>
-    <string name="tabbar_accessibility_label_write">Nuovo articolo. Scrivi un nuovo articolo.</string>
     <string name="my_site_icon_content_description">Cambia l\'icona del sito</string>
     <string name="my_site_icon_dialog_cancel_button">Annulla</string>
     <string name="my_site_icon_dialog_remove_button">Rimuovi</string>
@@ -778,7 +808,6 @@ Language: it
     <string name="preference_privacy_settings">Impostazioni della privacy</string>
     <string name="preference_collect_information">Raccogli informazioni</string>
     <string name="post_submitted">Articolo inviato</string>
-    <string name="write_post">Scrivi articolo</string>
     <string name="login_email_button_signup">Non hai un account? %1$sRegistrati%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">La funzionalità di plugin richiede che il sito sia in regola.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">La funzionalità di plugin richiede che l\'abbonamento di dominio principale sia associato a questo utente.</string>
@@ -820,7 +849,6 @@ Language: it
     <string name="site_settings_quota_space_unlimited">%1$s di illimitato</string>
     <string name="preview_count">Anteprima di %d</string>
     <string name="add_count">Aggiungi %d</string>
-    <string name="fab_create_desc">crea</string>
     <string name="fab_add_tag_desc">Crea tag</string>
     <string name="navigate_up_desc">naviga su</string>
     <string name="notification_settings_switch_desc">Notifiche</string>
@@ -1332,7 +1360,6 @@ Language: it
     <string name="sharing">Condivisione</string>
     <string name="tabbar_accessibility_label_notifications">Notifiche. Gestisci le tue notifiche.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Segui i contenuti dagli altri siti.</string>
-    <string name="tabbar_accessibility_label_me">Me. Visualizza il tuo profilo e apporta modifiche.</string>
     <string name="tabbar_accessibility_label_my_site">Il mio sito. Visualizza il tuo sito e gestiscilo insieme alle statistiche.</string>
     <string name="my_site_btn_sharing">Condivisione</string>
     <string name="button_not_now">Non ora</string>
