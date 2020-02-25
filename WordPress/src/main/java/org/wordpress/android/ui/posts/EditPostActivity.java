@@ -2673,8 +2673,12 @@ public class EditPostActivity extends AppCompatActivity implements
         mPostEditorAnalyticsSession.start(unsupportedBlocksList);
     }
 
-    @Override public void onGutenbergDidLogSessionTemplateEvent(String template) {
+    @Override public void onGutenbergEditorSessionTemplateApplyTracked(String template) {
         mPostEditorAnalyticsSession.applyTemplate(template);
+    }
+
+    @Override public void onGutenbergEditorSessionTemplatePreviewTracked(String template) {
+        mPostEditorAnalyticsSession.previewTemplate(template);
     }
 
     @Override
