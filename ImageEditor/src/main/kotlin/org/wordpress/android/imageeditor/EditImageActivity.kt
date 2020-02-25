@@ -6,8 +6,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI.navigateUp
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import androidx.navigation.ui.navigateUp
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
 
@@ -47,7 +47,15 @@ class EditImageActivity : AppCompatActivity(), UCropFragmentCallback {
 
     override fun onSupportNavigateUp(): Boolean {
         // Allows NavigationUI to support proper up navigation
-        return (navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp())
+        return if (navController.currentDestination?.id == R.id.ucrop_dest) {
+            // Using popUpToInclusive for popping the start destination of the graph off the back stack
+            // in a multi-module project doesn't seem to be working. Explicitly invoking back action as a workaround.
+            // Related issue: https://issuetracker.google.com/issues/147312109
+            onBackPressed()
+            true
+        } else {
+            navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        }
     }
 
     override fun onCropFinish(result: UCropResult?) { }
