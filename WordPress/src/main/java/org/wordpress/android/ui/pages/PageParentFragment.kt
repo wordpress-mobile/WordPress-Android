@@ -8,15 +8,20 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.pages_list_fragment.*
+import kotlinx.android.synthetic.main.page_parent_fragment.*
+import kotlinx.android.synthetic.main.pages_list_fragment.recyclerView
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -37,8 +42,10 @@ class PageParentFragment : Fragment() {
 
     private var linearLayoutManager: LinearLayoutManager? = null
     private var saveButton: MenuItem? = null
+    private lateinit var searchAction: MenuItem
 
     private var pageId: Long? = null
+    private var restorePreviousSearch = false
 
     companion object {
         fun newInstance(): PageParentFragment {
@@ -54,6 +61,7 @@ class PageParentFragment : Fragment() {
             viewModel.onSaveButtonTapped()
             return true
         }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -76,10 +84,63 @@ class PageParentFragment : Fragment() {
 
         saveButton = menu.findItem(R.id.save_parent)
         viewModel.isSaveButtonVisible.value?.let { saveButton?.isVisible = it }
+        searchAction = checkNotNull(menu.findItem(R.id.action_search)) {
+            "Menu does not contain mandatory search item"
+        }
+
+        initializeSearchView()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.pages_list_fragment, container, false)
+    private fun initializeSearchView() {
+        searchAction.setOnActionExpandListener(object : OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                viewModel.onSearchExpanded(restorePreviousSearch)
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                viewModel.onSearchCollapsed()
+                return true
+            }
+        })
+
+        val searchView = searchAction.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.onSearch(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (restorePreviousSearch) {
+                    restorePreviousSearch = false
+                    searchView.setQuery(viewModel.lastSearchQuery, false)
+                } else {
+                    viewModel.onSearch(newText)
+                }
+                return true
+            }
+        })
+
+        val searchEditFrame = searchAction?.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
+        (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
+                .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
+
+        viewModel.isSearchExpanded.observe(this, Observer {
+            if (it == true) {
+                showSearchList(searchAction)
+            } else {
+                hideSearchList(searchAction)
+            }
+        })
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.page_parent_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -92,11 +153,11 @@ class PageParentFragment : Fragment() {
 
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
-        initializeViews(savedInstanceState)
-        initializeViewModels(nonNullPageId, savedInstanceState == null)
+        initializeViews(nonNullActivity, savedInstanceState)
+        initializeViewModels(nonNullActivity, nonNullPageId, savedInstanceState == null)
     }
 
-    private fun initializeViews(savedInstanceState: Bundle?) {
+    private fun initializeViews(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
@@ -105,17 +166,30 @@ class PageParentFragment : Fragment() {
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
+
+        val searchFragment = PageParentSearchFragment.newInstance()
+        activity.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.frameSearch, searchFragment)
+                .commit()
     }
 
-    private fun initializeViewModels(pageId: Long, isFirstStart: Boolean) {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PageParentViewModel::class.java)
+    private fun initializeViewModels(
+        activity: FragmentActivity,
+        pageId: Long,
+        isFirstStart: Boolean
+    ) {
+        viewModel = ViewModelProviders.of(activity, viewModelFactory)
+                .get(PageParentViewModel::class.java)
 
         setupObservers()
 
         if (isFirstStart) {
-            val site = activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+            val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
             val nonNullSite = checkNotNull(site)
             viewModel.start(nonNullSite, pageId)
+        } else {
+            restorePreviousSearch = true
         }
     }
 
@@ -147,5 +221,25 @@ class PageParentFragment : Fragment() {
             adapter = recyclerView.adapter as PageParentAdapter
         }
         adapter.update(pages)
+    }
+
+    private fun hideSearchList(myActionMenuItem: MenuItem) {
+        recyclerView.visibility = View.VISIBLE
+        frameSearch.visibility = View.GONE
+        if (myActionMenuItem.isActionViewExpanded) {
+            myActionMenuItem.collapseActionView()
+        }
+        /**Force the recyclerview to redraw if selection has changed while in search mode*/
+        if (viewModel.currentParent != viewModel.initialParent) {
+            recyclerView.adapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun showSearchList(myActionMenuItem: MenuItem) {
+        frameSearch.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
+        if (!myActionMenuItem.isActionViewExpanded) {
+            myActionMenuItem.expandActionView()
+        }
     }
 }

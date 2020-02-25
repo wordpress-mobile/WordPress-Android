@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-19 14:20:23+0000
+Translation-Revision-Date: 2020-02-17 19:46:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="gutenberg_native_template_preview">Forhåndsvisning av mal</string>
+    <string name="gutenberg_native_replace_current_block">Erstatt nåværende blokk</string>
+    <string name="gutenberg_native_add_to_end">Legg til på slutten</string>
+    <string name="gutenberg_native_add_to_beginning">Legg til i begynnelsen</string>
+    <string name="gutenberg_native_add_block_before">Legg til blokk foran</string>
+    <string name="gutenberg_native_add_block_after">Legg til blokk etter</string>
+    <string name="reader_filter_empty_tags_action">Legg til et stikkord</string>
+    <string name="reader_filter_empty_sites_action">Følg et nettsted</string>
+    <string name="reader_filter_main_title">Følger</string>
+    <string name="reader_filter_cta">Filter</string>
+    <string name="gutenberg_native_edit_video">Rediger video</string>
+    <string name="gutenberg_native_edit_media">Rediger media</string>
+    <string name="gutenberg_native_add_a_shortcode">Legg til en kortkode…</string>
+    <string name="post_list_author">Innleggsforfatter</string>
+    <string name="fab_create_desc">Lag et innlegg</string>
+    <string name="stats_box_type_very_high">veldig høy</string>
+    <string name="stats_box_type_high">høy</string>
+    <string name="stats_box_type_medium">middels</string>
+    <string name="stats_box_type_low">lav</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  og %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Fjern bilde</string>
     <string name="gutenberg_native_move_image_forward">Flytt bilde forover</string>
     <string name="gutenberg_native_move_image_backward">Flytt bilde bakover</string>
@@ -43,7 +64,6 @@ Language: nb_NO
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_all_sites">Alle nettsteder</string>
     <string name="reader_filter_sites_title">Nettsteder</string>
     <string name="reader_filter_tags_title">Stikkord</string>
     <string name="reader_save_for_later_display_name">Lagret</string>

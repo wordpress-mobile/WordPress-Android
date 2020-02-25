@@ -1,7 +1,0 @@
-14.1:
-- Editor a blocchi: un nuovo blocco Shortcode ti consente di creare e modificare shortcode, abbiamo ridotto il padding intorno ai blocchi basati sul testo e la modifica di articoli molto lunghi è ora un'esperienza più duratura.
-- Aggiornamenti: è stata disabilitata l'opzione per rimuovere un sito Jetpack dal selezionatore di siti.
-- Correzioni di bug: la ricerca per articoli ometteva alcuni risultati. Ora funziona come previsto!
-
-
-
