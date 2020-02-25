@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -9,6 +8,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
@@ -25,7 +25,7 @@ class StatsWidgetColorSelectionDialogFragment : AppCompatDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(StatsColorSelectionViewModel::class.java)
-        val alertDialogBuilder = AlertDialog.Builder(activity)
+        val alertDialogBuilder = MaterialAlertDialogBuilder(activity)
         val view = activity!!.layoutInflater.inflate(R.layout.stats_color_selector, null) as RadioGroup
         view.setOnCheckedChangeListener { _, checkedId ->
             checkedId.toColor()?.let { viewModel.selectColor(it) }
