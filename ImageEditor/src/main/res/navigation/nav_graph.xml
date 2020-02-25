@@ -7,7 +7,6 @@
     <fragment
         android:id="@+id/preview_dest"
         android:name="org.wordpress.android.imageeditor.preview.PreviewImageFragment"
-        android:label="@string/preview"
         tools:layout="@layout/fragment_preview_image">
     </fragment>
     <fragment
