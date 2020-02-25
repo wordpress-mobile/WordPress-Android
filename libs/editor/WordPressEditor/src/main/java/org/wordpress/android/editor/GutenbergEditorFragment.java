@@ -365,8 +365,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
                 new OnLogGutenbergUserEventListener() {
-                    @Override public void onGutenbergDidLogSessionTemplateEvent(String template) {
-                        mEditorFragmentListener.onGutenbergDidLogSessionTemplateEvent(template);
+                    @Override public void onEditorSessionTemplateApply(String template) {
+                        mEditorFragmentListener.onGutenbergEditorSessionTemplateApplyTracked(template);
+                    }
+
+                    @Override public void onEditorSessionTemplatePreview(String template) {
+                        mEditorFragmentListener.onGutenbergEditorSessionTemplatePreviewTracked(template);
+
                     }
                 });
 
