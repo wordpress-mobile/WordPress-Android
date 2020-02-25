@@ -10,13 +10,16 @@ import android.widget.ImageView.ScaleType.CENTER
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_preview_image.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
+import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
+import org.wordpress.android.imageeditor.utils.UCropUtil
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
@@ -103,5 +106,14 @@ class PreviewImageFragment : Fragment() {
         )
     }
 
-    private fun startUCrop(inputFilePath: String) { }
+    private fun startUCrop(inputFilePath: String) {
+        findNavController().navigate(
+            R.id.action_previewFragment_to_ucropFragment,
+            UCropUtil.getUCropOptionsBundle(
+                File(inputFilePath),
+                // TODO: output file location
+                File(requireContext().cacheDir, UCropUtil.IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME)
+            )
+        )
+    }
 }

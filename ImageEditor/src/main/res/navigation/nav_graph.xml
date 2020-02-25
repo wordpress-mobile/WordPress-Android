@@ -8,6 +8,11 @@
         android:id="@+id/preview_dest"
         android:name="org.wordpress.android.imageeditor.preview.PreviewImageFragment"
         tools:layout="@layout/fragment_preview_image">
+        <action
+            android:id="@+id/action_previewFragment_to_ucropFragment"
+            app:destination="@id/ucrop_dest"
+            app:popUpTo="@id/preview_dest"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/ucrop_dest"
