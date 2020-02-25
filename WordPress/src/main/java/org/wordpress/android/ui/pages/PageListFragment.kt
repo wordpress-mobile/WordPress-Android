@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
@@ -96,7 +97,12 @@ class PageListFragment : Fragment() {
 
         viewModel.scrollToPosition.observe(this, Observer { position ->
             position?.let {
-                recyclerView.smoothScrollToPosition(position)
+                val smoothScroller = object : LinearSmoothScroller(context) {
+                    override fun getVerticalSnapPreference(): Int {
+                        return SNAP_TO_START
+                    }
+                }.apply { targetPosition = position }
+                recyclerView.layoutManager?.startSmoothScroll(smoothScroller)
             }
         })
     }
