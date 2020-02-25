@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,10 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_large"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingBottom="@dimen/margin_large"
+        android:padding="@dimen/margin_extra_large"
+        android:includeFontPadding="false"
         android:textAppearance="?attr/textAppearanceSubtitle2"
         android:textColor="?attr/wpColorOnSurfaceMedium"
         android:visibility="gone"
@@ -29,10 +26,7 @@
         android:clickable="true"
         android:focusable="true"
         android:minHeight="?attr/listPreferredItemHeight"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_medium"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingBottom="@dimen/margin_medium">
+        android:padding="@dimen/margin_extra_large">
 
         <FrameLayout
             android:id="@+id/note_avatar_container"
@@ -53,12 +47,12 @@
                 android:id="@+id/note_icon"
                 android:layout_width="@dimen/note_icon_sz"
                 android:layout_height="@dimen/note_icon_sz"
-                android:layout_marginStart="@dimen/notifications_note_icon_margin"
-                android:layout_marginTop="@dimen/notifications_note_icon_margin"
+                android:layout_marginStart="@dimen/notifications_note_icon_margin_start"
+                android:layout_marginTop="@dimen/notifications_note_icon_margin_top"
                 android:background="@drawable/bg_oval_primary_stroke_surface"
                 android:gravity="center"
                 android:importantForAccessibility="no"
-                android:padding="4dp" />
+                android:padding="2dp" />
 
         </FrameLayout>
 
@@ -100,7 +94,7 @@
             android:ellipsize="end"
             android:importantForAccessibility="no"
             android:maxLines="2"
-            android:textAppearance="?attr/textAppearanceBody1"
+            android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/wpColorOnSurfaceMedium"
             android:visibility="gone"
             tools:text="What an amazing post!"

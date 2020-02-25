@@ -4,7 +4,7 @@
     android:shape="oval">
 
     <stroke
-        android:width="2dp"
+        android:width="@dimen/notification_icon_bg_border_width"
         android:color="?attr/colorSurface" />
 
     <solid android:color="?attr/wpColorWarningDark" />

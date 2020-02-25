@@ -6,7 +6,7 @@
 
     <stroke
         android:color="?attr/colorSurface"
-        android:width="2dp">
+        android:width="@dimen/notification_icon_bg_border_width">
     </stroke>
 
     <solid
