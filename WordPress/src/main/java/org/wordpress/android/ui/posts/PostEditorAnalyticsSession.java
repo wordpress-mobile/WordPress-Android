@@ -153,7 +153,10 @@ public class PostEditorAnalyticsSession implements Serializable {
         properties.put(KEY_SESSION_ID, mSessionId);
         properties.put(KEY_HAS_UNSUPPORTED_BLOCKS, mHasUnsupportedBlocks ? "1" : "0");
         properties.put(AnalyticsUtils.EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY, mHWAccOff ? "1" : "0");
-        properties.put(KEY_TEMPLATE, mTemplate);
+
+        if (mTemplate != null) {
+            properties.put(KEY_TEMPLATE, mTemplate);
+        }
 
         return properties;
     }
