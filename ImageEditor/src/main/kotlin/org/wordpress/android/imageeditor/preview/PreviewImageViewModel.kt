@@ -17,8 +17,11 @@ class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<ImageUiState> = MutableLiveData()
     val uiState: LiveData<ImageUiState> = _uiState
 
-    private val _loadIntoFile: MutableLiveData<ImageLoadToFileState> = MutableLiveData(ImageLoadToFileIdleState)
+    private val _loadIntoFile = MutableLiveData<ImageLoadToFileState>(ImageLoadToFileIdleState)
     val loadIntoFile: LiveData<ImageLoadToFileState> = _loadIntoFile
+
+    private val _startUCrop = MutableLiveData<String>()
+    val startUCrop: LiveData<String> = _startUCrop
 
     fun onCreateView(loResImageUrl: String, hiResImageUrl: String) {
         updateUiState(
@@ -41,7 +44,10 @@ class PreviewImageViewModel : ViewModel() {
             else -> ImageInHighResLoadSuccessUiState
         }
 
-        if (newState == ImageInHighResLoadSuccessUiState && currentState != ImageInHighResLoadSuccessUiState) {
+        if (newState == ImageInHighResLoadSuccessUiState &&
+                currentState != ImageInHighResLoadSuccessUiState &&
+                loadIntoFile.value !is ImageLoadToFileSuccessState
+        ) {
             updateLoadIntoFileState(ImageStartLoadingToFileState(url))
         }
         updateUiState(newState)
@@ -65,6 +71,7 @@ class PreviewImageViewModel : ViewModel() {
 
     fun onLoadIntoFileSuccess(filePath: String) {
         updateLoadIntoFileState(ImageLoadToFileSuccessState(filePath))
+        _startUCrop.value = filePath
     }
 
     fun onLoadIntoFileFailed() {

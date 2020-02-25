@@ -64,6 +64,10 @@ class PreviewImageFragment : Fragment() {
                 loadIntoFile(fileState.imageUrl)
             }
         })
+
+        viewModel.startUCrop.observe(this, Observer { filePath ->
+            startUCrop(filePath)
+        })
     }
 
     private fun loadIntoImageView(imageData: ImageData) {
@@ -98,4 +102,6 @@ class PreviewImageFragment : Fragment() {
             }
         )
     }
+
+    private fun startUCrop(inputFilePath: String) { }
 }
