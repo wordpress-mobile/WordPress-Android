@@ -43,7 +43,6 @@
     <dimen name="alert_dialog_max_width">300dp</dimen>
 
     <dimen name="default_cardview_radius">2dp</dimen>
-    <dimen name="default_cardview_elevation">2dp</dimen>
 
     <!-- bottom navigation bar -->
     <dimen name="bottom_nav_bar_icon_size">24dp</dimen>
@@ -435,7 +434,6 @@
     <dimen name="stats_list_card_last_spacing">8dp</dimen>
     <dimen name="stats_list_item_left_margin">56dp</dimen>
     <dimen name="stats_activity_spacing">1dp</dimen>
-    <dimen name="stats_insights_management_margin">24dp</dimen>
     <dimen name="stats_insights_menu_item_width">231dp</dimen>
     <dimen name="stats_insights_button_container_height">52dp</dimen>
     <dimen name="stats_widget_list_item_height">40dp</dimen>
