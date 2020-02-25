@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Before
 import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertNull
 import org.junit.Rule
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
@@ -156,6 +157,20 @@ class PreviewImageViewModelTest {
         initViewModel()
         viewModel.onLoadIntoFileFailed()
         assertThat(viewModel.loadIntoFile.value).isInstanceOf(ImageLoadToFileFailedState::class.java)
+    }
+
+    @Test
+    fun `uCrop started with image file path on image load to file success`() {
+        initViewModel()
+        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
+        assertThat(viewModel.startUCrop.value).isEqualTo(TEST_FILE_PATH)
+    }
+
+    @Test
+    fun `uCrop not started on image load to file failure`() {
+        initViewModel()
+        viewModel.onLoadIntoFileFailed()
+        assertNull(viewModel.startUCrop.value)
     }
 
     private fun initViewModel() = viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL)
