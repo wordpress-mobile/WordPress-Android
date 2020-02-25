@@ -732,33 +732,37 @@
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidgetConfigureActivity"
+            android:label="@string/stats_widget_views_title"
             android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidgetConfigureActivity"
+            android:label="@string/stats_widget_all_time_title"
             android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidgetConfigureActivity"
+            android:label="@string/stats_insights_today_stats"
             android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureActivity"
+            android:label="@string/stats_widget_minified_name"
             android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
         <receiver
