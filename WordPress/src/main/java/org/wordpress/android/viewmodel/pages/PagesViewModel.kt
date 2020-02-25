@@ -66,7 +66,6 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAF
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
-import java.util.Date
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
@@ -140,6 +139,12 @@ class PagesViewModel
     private val _postUploadAction = SingleLiveEvent<Triple<PostModel, SiteModel, Intent>>()
     val postUploadAction: LiveData<Triple<PostModel, SiteModel, Intent>> = _postUploadAction
 
+    private val _uploadFinishedAction = SingleLiveEvent<Pair<PageModel, Boolean>>()
+    val uploadFinishedAction: LiveData<Pair<PageModel, Boolean>> = _uploadFinishedAction
+
+    private val _publishAction = SingleLiveEvent<PageModel>()
+    val publishAction = _publishAction
+
     private var isInitialized = false
     private var scrollToPageId: Long? = null
 
@@ -206,7 +211,8 @@ class PagesViewModel
                 handlePageUpdated = this::handlePageUpdated,
                 invalidateUploadStatus = this::handleInvalidateUploadStatus,
                 handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
-                handlePostUploadedStarted = this::postUploadStarted
+                handlePostUploadedStarted = this::postUploadStarted,
+                handlePostUploadFinished = this::postUploadedFinished
         )
     }
 
@@ -468,10 +474,7 @@ class PagesViewModel
     }
 
     private fun publishPageNow(remoteId: Long) {
-        performIfNetworkAvailable {
-            pageMap[remoteId]?.date = Date()
-            changePageStatus(remoteId, PageStatus.PUBLISHED)
-        }
+        _publishAction.value = pageMap[remoteId]
     }
 
     fun onImagesChanged() {
@@ -778,6 +781,12 @@ class PagesViewModel
             performIfNetworkAvailableAsync {
                 waitForPageUpdate(remoteId.value)
             }
+        }
+    }
+
+    private fun postUploadedFinished(remoteId: RemoteId, isError: Boolean) {
+        pageMap[remoteId.value]?.let {
+            _uploadFinishedAction.postValue(Pair(it, isError))
         }
     }
 

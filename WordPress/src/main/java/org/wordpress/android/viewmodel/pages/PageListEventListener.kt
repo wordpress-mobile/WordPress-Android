@@ -40,6 +40,7 @@ class PageListEventListener(
     private val handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
     private val handlePageUpdated: (RemoteId) -> Unit,
     private val handlePostUploadedStarted: (RemoteId) -> Unit,
+    private val handlePostUploadFinished: (RemoteId, Boolean) -> Unit,
     private val invalidateUploadStatus: (List<LocalId>) -> Unit
 ) : CoroutineScope {
     init {
@@ -117,6 +118,7 @@ class PageListEventListener(
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
+            handlePostUploadFinished(RemoteId(event.post.remotePostId), event.isError)
         }
     }
 
@@ -183,7 +185,8 @@ class PageListEventListener(
             handlePageUpdated: (RemoteId) -> Unit,
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-            handlePostUploadedStarted: (RemoteId) -> Unit
+            handlePostUploadedStarted: (RemoteId) -> Unit,
+            handlePostUploadFinished: (RemoteId, Boolean) -> Unit
         ): PageListEventListener {
             return PageListEventListener(
                     dispatcher = dispatcher,
@@ -194,7 +197,8 @@ class PageListEventListener(
                     handlePageUpdated = handlePageUpdated,
                     invalidateUploadStatus = invalidateUploadStatus,
                     handleRemoteAutoSave = handleRemoteAutoSave,
-                    handlePostUploadedStarted = handlePostUploadedStarted
+                    handlePostUploadedStarted = handlePostUploadedStarted,
+                    handlePostUploadFinished = handlePostUploadFinished
             )
         }
     }

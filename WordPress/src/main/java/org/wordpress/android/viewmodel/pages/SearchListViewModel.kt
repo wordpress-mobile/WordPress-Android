@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -32,10 +31,10 @@ import javax.inject.Named
 
 class SearchListViewModel
 @Inject constructor(
+    private val createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase,
     private val createPageUploadUiStateUseCase: CreatePageUploadUiStateUseCase,
     private val pageListItemActionsUseCase: CreatePageListItemActionsUseCase,
     private val pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase,
-    private val postStore: PostStore,
     private val resourceProvider: ResourceProvider,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) : ViewModel() {
@@ -100,9 +99,9 @@ class SearchListViewModel
                 pagesViewModel.site,
                 pagesViewModel.uploadStatusTracker
         )
-        // TODO any reason why we don't show labels in search?
         val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(this.post,
                 uploadUiState)
+        val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(this.post, uploadUiState)
 
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->
@@ -111,6 +110,8 @@ class SearchListViewModel
                         pageId,
                         title,
                         date,
+                        labels,
+                        labelColor,
                         actions = pageListItemActionsUseCase.setupPageActions(PUBLISHED, uploadUiState),
                         actionsEnabled = areActionsEnabled,
                         progressBarUiState = progressBarUiState,
@@ -121,6 +122,8 @@ class SearchListViewModel
                     pageId,
                     title,
                     date,
+                    labels,
+                    labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(DRAFTS, uploadUiState),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
@@ -131,6 +134,8 @@ class SearchListViewModel
                     pageId,
                     title,
                     date,
+                    labels,
+                    labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(TRASHED, uploadUiState),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
@@ -141,6 +146,8 @@ class SearchListViewModel
                     pageId,
                     title,
                     date,
+                    labels,
+                    labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(SCHEDULED, uploadUiState),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,

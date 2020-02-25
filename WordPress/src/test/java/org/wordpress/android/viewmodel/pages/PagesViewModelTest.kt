@@ -29,6 +29,8 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.test
+import org.wordpress.android.ui.pages.PageItem
+import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
@@ -231,6 +233,20 @@ class PagesViewModelTest {
         viewModel.onPageEditFinished(pageModel.pageId, intent)
         // Then
         assertThat(viewModel.postUploadAction.value).isEqualTo(Triple(pageModel.post, pageModel.site, intent))
+    }
+
+    @Test
+    fun `publish now menu action updates publishAction live data`() = test {
+        // Given
+        val pageModel = setUpPageStoreWithASinglePage()
+        val page: PageItem.Page = mock()
+        whenever(page.remoteId).thenReturn(pageModel.remoteId)
+        viewModel.start(site)
+        // When
+        viewModel.onMenuAction(PUBLISH_NOW, page)
+
+        // Then
+        assertThat(viewModel.publishAction.value).isEqualTo(pageModel)
     }
 
     @Test
