@@ -10,4 +10,8 @@
         android:label="@string/preview"
         tools:layout="@layout/fragment_preview_image">
     </fragment>
+    <fragment
+        android:id="@+id/ucrop_dest"
+        android:name="com.yalantis.ucrop.UCropFragment">
+    </fragment>
 </navigation>
