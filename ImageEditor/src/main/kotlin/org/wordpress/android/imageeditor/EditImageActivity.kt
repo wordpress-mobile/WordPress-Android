@@ -47,7 +47,7 @@ class EditImageActivity : AppCompatActivity(), UCropFragmentCallback {
 
     override fun onSupportNavigateUp(): Boolean {
         // Allows NavigationUI to support proper up navigation
-        return if (navController.currentDestination?.id == R.id.ucrop_dest) {
+        return if (navController.currentDestination?.id == R.id.crop_dest) {
             // Using popUpToInclusive for popping the start destination of the graph off the back stack
             // in a multi-module project doesn't seem to be working. Explicitly invoking back action as a workaround.
             // Related issue: https://issuetracker.google.com/issues/147312109

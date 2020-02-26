@@ -9,8 +9,8 @@ import com.yalantis.ucrop.model.AspectRatio
 import com.yalantis.ucrop.view.CropImageView
 import java.io.File
 
-object UCropUtil {
-    private val uCropOptions
+object CropUtil {
+    private val cropOptions
         get() = Options().also {
             it.setShowCropGrid(true)
             it.setFreeStyleCropEnabled(true)
@@ -26,11 +26,11 @@ object UCropUtil {
             )
         }
 
-    fun getUCropOptionsBundleWithFilesInfo(filesInfo: Pair<File, File>) = Bundle().also {
+    fun getCropInfoBundleWithFilesInfo(filesInfo: Pair<File, File>) = Bundle().also {
         val inputFile = filesInfo.first
         val outputFile = filesInfo.second
         it.putParcelable(EXTRA_INPUT_URI, Uri.fromFile(inputFile))
         it.putParcelable(EXTRA_OUTPUT_URI, Uri.fromFile(outputFile))
-        it.putAll(uCropOptions.optionBundle)
+        it.putAll(cropOptions.optionBundle)
     }
 }

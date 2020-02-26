@@ -163,17 +163,17 @@ class PreviewImageViewModelTest {
     }
 
     @Test
-    fun `uCrop started with image file path on image load to file success`() {
+    fun `crop view started with image file path on image load to file success`() {
         initViewModel()
         viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
-        assertThat(requireNotNull(viewModel.startUCrop.value).first).isEqualTo(File(TEST_FILE_PATH))
+        assertThat(requireNotNull(viewModel.startCrop.value).first).isEqualTo(File(TEST_FILE_PATH))
     }
 
     @Test
-    fun `uCrop not started on image load to file failure`() {
+    fun `crop view not started on image load to file failure`() {
         initViewModel()
         viewModel.onLoadIntoFileFailed()
-        assertNull(viewModel.startUCrop.value)
+        assertNull(viewModel.startCrop.value)
     }
 
     private fun initViewModel() = viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, cacheDir)

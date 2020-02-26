@@ -19,7 +19,7 @@ import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
-import org.wordpress.android.imageeditor.utils.UCropUtil
+import org.wordpress.android.imageeditor.utils.CropUtil
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
@@ -68,8 +68,8 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        viewModel.startUCrop.observe(this, Observer { filesInfo ->
-            startUCrop(filesInfo)
+        viewModel.startCrop.observe(this, Observer { filesInfo ->
+            startCrop(filesInfo)
         })
     }
 
@@ -106,10 +106,10 @@ class PreviewImageFragment : Fragment() {
         )
     }
 
-    private fun startUCrop(filesInfo: Pair<File, File>) {
+    private fun startCrop(filesInfo: Pair<File, File>) {
         findNavController().navigate(
-            R.id.action_previewFragment_to_ucropFragment,
-            UCropUtil.getUCropOptionsBundleWithFilesInfo(filesInfo)
+            R.id.action_previewFragment_to_cropFragment,
+            CropUtil.getCropInfoBundleWithFilesInfo(filesInfo)
         )
     }
 }
