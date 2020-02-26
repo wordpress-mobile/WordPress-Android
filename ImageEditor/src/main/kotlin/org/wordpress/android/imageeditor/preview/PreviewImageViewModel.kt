@@ -21,8 +21,8 @@ class PreviewImageViewModel : ViewModel() {
     private val _loadIntoFile = MutableLiveData<ImageLoadToFileState>(ImageLoadToFileIdleState)
     val loadIntoFile: LiveData<ImageLoadToFileState> = _loadIntoFile
 
-    private val _startCrop = MutableLiveData<Pair<File, File>>()
-    val startCrop: LiveData<Pair<File, File>> = _startCrop
+    private val _navigateToCropScreenWithFilesInfo = MutableLiveData<Pair<File, File>>()
+    val navigateToCropScreenWithFilesInfo: LiveData<Pair<File, File>> = _navigateToCropScreenWithFilesInfo
 
     private lateinit var cacheDir: File
 
@@ -75,7 +75,10 @@ class PreviewImageViewModel : ViewModel() {
 
     fun onLoadIntoFileSuccess(inputFilePath: String) {
         updateLoadIntoFileState(ImageLoadToFileSuccessState(inputFilePath))
-        _startCrop.value = Pair(File(inputFilePath), File(cacheDir, IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME))
+        _navigateToCropScreenWithFilesInfo.value = Pair(
+            File(inputFilePath),
+            File(cacheDir, IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME)
+        )
     }
 
     fun onLoadIntoFileFailed() {

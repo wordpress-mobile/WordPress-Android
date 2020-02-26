@@ -163,17 +163,20 @@ class PreviewImageViewModelTest {
     }
 
     @Test
-    fun `crop view started with image file path on image load to file success`() {
+    fun `navigated to crop screen with input, output files info on image load to file success`() {
         initViewModel()
         viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
-        assertThat(requireNotNull(viewModel.startCrop.value).first).isEqualTo(File(TEST_FILE_PATH))
+        assertThat(requireNotNull(viewModel.navigateToCropScreenWithFilesInfo.value).first)
+                .isEqualTo(File(TEST_FILE_PATH))
+        assertThat(requireNotNull(viewModel.navigateToCropScreenWithFilesInfo.value).second)
+                .isEqualTo(File(cacheDir, PreviewImageViewModel.IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME))
     }
 
     @Test
-    fun `crop view not started on image load to file failure`() {
+    fun `not navigated to crop screen on image load to file failure`() {
         initViewModel()
         viewModel.onLoadIntoFileFailed()
-        assertNull(viewModel.startCrop.value)
+        assertNull(viewModel.navigateToCropScreenWithFilesInfo.value)
     }
 
     private fun initViewModel() = viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, cacheDir)

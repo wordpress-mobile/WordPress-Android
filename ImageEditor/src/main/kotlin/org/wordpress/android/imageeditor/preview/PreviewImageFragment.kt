@@ -68,8 +68,8 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        viewModel.startCrop.observe(this, Observer { filesInfo ->
-            startCrop(filesInfo)
+        viewModel.navigateToCropScreenWithFilesInfo.observe(this, Observer { filesInfo ->
+            navigateToCropScreenWithFilesInfo(filesInfo)
         })
     }
 
@@ -106,7 +106,7 @@ class PreviewImageFragment : Fragment() {
         )
     }
 
-    private fun startCrop(filesInfo: Pair<File, File>) {
+    private fun navigateToCropScreenWithFilesInfo(filesInfo: Pair<File, File>) {
         findNavController().navigate(
             R.id.action_previewFragment_to_cropFragment,
             CropUtil.getCropInfoBundleWithFilesInfo(filesInfo)
