@@ -116,14 +116,14 @@ public class PostEditorAnalyticsSession implements Serializable {
     }
 
     public void previewTemplate(String template) {
-        final Map<String, Object> properties = new HashMap<>();
+        final Map<String, Object> properties = getCommonProperties();
         properties.put(KEY_TEMPLATE, template);
         AnalyticsTracker.track(Stat.EDITOR_SESSION_TEMPLATE_PREVIEW, properties);
     }
 
     public void applyTemplate(String template) {
         mTemplate = template;
-        final Map<String, Object> properties = new HashMap<>();
+        final Map<String, Object> properties = getCommonProperties();
         properties.put(KEY_TEMPLATE, template);
         AnalyticsTracker.track(Stat.EDITOR_SESSION_TEMPLATE_APPLY, properties);
     }
