@@ -189,10 +189,11 @@ public class SiteUtils {
 
     public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {
         if (site == null) {
-            return false;
+            return true;
         }
         if (TextUtils.isEmpty(site.getMobileEditor())) {
-            return AppPrefs.isGutenbergDefaultForNewPosts();
+            // Default to block editor when mobile editor setting is empty
+            return true;
         } else {
             return site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
         }
