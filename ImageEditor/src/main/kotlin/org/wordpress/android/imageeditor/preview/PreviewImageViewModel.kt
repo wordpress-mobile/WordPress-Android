@@ -12,15 +12,23 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
+import java.io.File
 
 class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<ImageUiState> = MutableLiveData()
     val uiState: LiveData<ImageUiState> = _uiState
 
-    private val _loadIntoFile: MutableLiveData<ImageLoadToFileState> = MutableLiveData(ImageLoadToFileIdleState)
+    private val _loadIntoFile = MutableLiveData<ImageLoadToFileState>(ImageLoadToFileIdleState)
     val loadIntoFile: LiveData<ImageLoadToFileState> = _loadIntoFile
 
-    fun onCreateView(loResImageUrl: String, hiResImageUrl: String) {
+    private val _navigateToCropScreenWithFilesInfo = MutableLiveData<Pair<File, File>>()
+    val navigateToCropScreenWithFilesInfo: LiveData<Pair<File, File>> = _navigateToCropScreenWithFilesInfo
+
+    private lateinit var cacheDir: File
+
+    fun onCreateView(loResImageUrl: String, hiResImageUrl: String, cacheDir: File) {
+        this.cacheDir = cacheDir
+
         updateUiState(
             ImageDataStartLoadingUiState(
                 ImageData(loResImageUrl, hiResImageUrl)
@@ -41,7 +49,9 @@ class PreviewImageViewModel : ViewModel() {
             else -> ImageInHighResLoadSuccessUiState
         }
 
-        if (newState == ImageInHighResLoadSuccessUiState && currentState != ImageInHighResLoadSuccessUiState) {
+        val highResImageJustLoadedIntoView = newState != currentState && newState == ImageInHighResLoadSuccessUiState
+        val imageNotLoadedIntoFile = loadIntoFile.value !is ImageLoadToFileSuccessState
+        if (highResImageJustLoadedIntoView && imageNotLoadedIntoFile) {
             updateLoadIntoFileState(ImageStartLoadingToFileState(url))
         }
         updateUiState(newState)
@@ -63,8 +73,12 @@ class PreviewImageViewModel : ViewModel() {
         updateUiState(newState)
     }
 
-    fun onLoadIntoFileSuccess(filePath: String) {
-        updateLoadIntoFileState(ImageLoadToFileSuccessState(filePath))
+    fun onLoadIntoFileSuccess(inputFilePath: String) {
+        updateLoadIntoFileState(ImageLoadToFileSuccessState(inputFilePath))
+        _navigateToCropScreenWithFilesInfo.value = Pair(
+            File(inputFilePath),
+            File(cacheDir, IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME)
+        )
     }
 
     fun onLoadIntoFileFailed() {
@@ -98,5 +112,9 @@ class PreviewImageViewModel : ViewModel() {
         data class ImageStartLoadingToFileState(val imageUrl: String) : ImageLoadToFileState()
         data class ImageLoadToFileSuccessState(val filePath: String) : ImageLoadToFileState()
         object ImageLoadToFileFailedState : ImageLoadToFileState()
+    }
+
+    companion object {
+        const val IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME = "image_editor_output_image.jpg"
     }
 }

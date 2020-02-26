@@ -10,13 +10,16 @@ import android.widget.ImageView.ScaleType.CENTER
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_preview_image.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
+import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
+import org.wordpress.android.imageeditor.utils.CropUtil
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
@@ -48,7 +51,7 @@ class PreviewImageFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
         setupObservers()
-        viewModel.onCreateView(lowResImageUrl, highResImageUrl)
+        viewModel.onCreateView(lowResImageUrl, highResImageUrl, requireContext().cacheDir)
     }
 
     private fun setupObservers() {
@@ -63,6 +66,10 @@ class PreviewImageFragment : Fragment() {
             if (fileState is ImageStartLoadingToFileState) {
                 loadIntoFile(fileState.imageUrl)
             }
+        })
+
+        viewModel.navigateToCropScreenWithFilesInfo.observe(this, Observer { filesInfo ->
+            navigateToCropScreenWithFilesInfo(filesInfo)
         })
     }
 
@@ -96,6 +103,13 @@ class PreviewImageFragment : Fragment() {
                     viewModel.onLoadIntoFileFailed()
                 }
             }
+        )
+    }
+
+    private fun navigateToCropScreenWithFilesInfo(filesInfo: Pair<File, File>) {
+        findNavController().navigate(
+            R.id.action_previewFragment_to_cropFragment,
+            CropUtil.getCropInfoBundleWithFilesInfo(filesInfo)
         )
     }
 }

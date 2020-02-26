@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Before
 import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertNull
 import org.junit.Rule
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
@@ -14,16 +15,19 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
+import java.io.File
 
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
 private const val TEST_FILE_PATH = "/file/path"
+
 class PreviewImageViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
     // Class under test
     private lateinit var viewModel: PreviewImageViewModel
+    private val cacheDir = File("/cache/dir")
 
     @Before
     fun setUp() {
@@ -158,5 +162,22 @@ class PreviewImageViewModelTest {
         assertThat(viewModel.loadIntoFile.value).isInstanceOf(ImageLoadToFileFailedState::class.java)
     }
 
-    private fun initViewModel() = viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL)
+    @Test
+    fun `navigated to crop screen with input, output files info on image load to file success`() {
+        initViewModel()
+        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
+        assertThat(requireNotNull(viewModel.navigateToCropScreenWithFilesInfo.value).first)
+                .isEqualTo(File(TEST_FILE_PATH))
+        assertThat(requireNotNull(viewModel.navigateToCropScreenWithFilesInfo.value).second)
+                .isEqualTo(File(cacheDir, PreviewImageViewModel.IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME))
+    }
+
+    @Test
+    fun `not navigated to crop screen on image load to file failure`() {
+        initViewModel()
+        viewModel.onLoadIntoFileFailed()
+        assertNull(viewModel.navigateToCropScreenWithFilesInfo.value)
+    }
+
+    private fun initViewModel() = viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, cacheDir)
 }
