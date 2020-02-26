@@ -10,8 +10,6 @@ import com.yalantis.ucrop.view.CropImageView
 import java.io.File
 
 object UCropUtil {
-    const val IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME = "image_editor_output_image.jpg"
-
     private val uCropOptions
         get() = Options().also {
             it.setShowCropGrid(true)

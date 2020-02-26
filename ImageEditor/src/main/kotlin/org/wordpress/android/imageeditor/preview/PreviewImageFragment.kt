@@ -16,6 +16,7 @@ import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.R.layout
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.Companion.IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
@@ -111,8 +112,7 @@ class PreviewImageFragment : Fragment() {
             R.id.action_previewFragment_to_ucropFragment,
             UCropUtil.getUCropOptionsBundle(
                 File(inputFilePath),
-                // TODO: output file location
-                File(requireContext().cacheDir, UCropUtil.IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME)
+                File(requireContext().cacheDir, IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME)
             )
         )
     }

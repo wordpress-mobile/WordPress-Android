@@ -105,4 +105,8 @@ class PreviewImageViewModel : ViewModel() {
         data class ImageLoadToFileSuccessState(val filePath: String) : ImageLoadToFileState()
         object ImageLoadToFileFailedState : ImageLoadToFileState()
     }
+
+    companion object {
+        const val IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME = "image_editor_output_image.jpg"
+    }
 }
