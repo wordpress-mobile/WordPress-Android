@@ -1,5 +1,7 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
+
 import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.wordpress.android.R;
@@ -19,12 +21,16 @@ public class WPSwipeToRefreshHelper {
      */
     public static SwipeToRefreshHelper buildSwipeToRefreshHelper(CustomSwipeRefreshLayout swipeRefreshLayout,
                                                                  RefreshListener listener) {
-        ElevationOverlayProvider elevationOverlayProvider =
-                new ElevationOverlayProvider(swipeRefreshLayout.getContext());
+        Context context = swipeRefreshLayout.getContext();
 
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(context);
         int appbarElevation = swipeRefreshLayout.getResources().getDimensionPixelOffset(R.dimen.appbar_elevation);
         int backgroundColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation);
 
-        return new SwipeToRefreshHelper(swipeRefreshLayout, listener, backgroundColor, R.color.accent);
+        int primaryProgressColor = ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary);
+        int secondaryProgressColor = ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorSecondary);
+
+        return new SwipeToRefreshHelper(swipeRefreshLayout, listener, backgroundColor, primaryProgressColor,
+                secondaryProgressColor);
     }
 }
