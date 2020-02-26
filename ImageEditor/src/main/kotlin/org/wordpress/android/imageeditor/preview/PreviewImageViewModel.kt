@@ -44,10 +44,9 @@ class PreviewImageViewModel : ViewModel() {
             else -> ImageInHighResLoadSuccessUiState
         }
 
-        if (newState == ImageInHighResLoadSuccessUiState &&
-                currentState != ImageInHighResLoadSuccessUiState &&
-                loadIntoFile.value !is ImageLoadToFileSuccessState
-        ) {
+        val highResImageJustLoadedIntoView = newState != currentState && newState == ImageInHighResLoadSuccessUiState
+        val imageNotLoadedIntoFile = loadIntoFile.value !is ImageLoadToFileSuccessState
+        if (highResImageJustLoadedIntoView && imageNotLoadedIntoFile) {
             updateLoadIntoFileState(ImageStartLoadingToFileState(url))
         }
         updateUiState(newState)
