@@ -16,7 +16,6 @@ import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.R.layout
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.Companion.IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
@@ -52,7 +51,7 @@ class PreviewImageFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
         setupObservers()
-        viewModel.onCreateView(lowResImageUrl, highResImageUrl)
+        viewModel.onCreateView(lowResImageUrl, highResImageUrl, requireContext().cacheDir)
     }
 
     private fun setupObservers() {
@@ -69,8 +68,8 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        viewModel.startUCrop.observe(this, Observer { filePath ->
-            startUCrop(filePath)
+        viewModel.startUCrop.observe(this, Observer { filesInfo ->
+            startUCrop(filesInfo)
         })
     }
 
@@ -107,13 +106,10 @@ class PreviewImageFragment : Fragment() {
         )
     }
 
-    private fun startUCrop(inputFilePath: String) {
+    private fun startUCrop(filesInfo: Pair<File, File>) {
         findNavController().navigate(
             R.id.action_previewFragment_to_ucropFragment,
-            UCropUtil.getUCropOptionsBundle(
-                File(inputFilePath),
-                File(requireContext().cacheDir, IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME)
-            )
+            UCropUtil.getUCropOptionsBundleWithFilesInfo(filesInfo)
         )
     }
 }

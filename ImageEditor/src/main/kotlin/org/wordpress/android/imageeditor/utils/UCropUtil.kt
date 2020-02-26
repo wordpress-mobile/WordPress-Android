@@ -26,7 +26,9 @@ object UCropUtil {
             )
         }
 
-    fun getUCropOptionsBundle(inputFile: File, outputFile: File) = Bundle().also {
+    fun getUCropOptionsBundleWithFilesInfo(filesInfo: Pair<File, File>) = Bundle().also {
+        val inputFile = filesInfo.first
+        val outputFile = filesInfo.second
         it.putParcelable(EXTRA_INPUT_URI, Uri.fromFile(inputFile))
         it.putParcelable(EXTRA_OUTPUT_URI, Uri.fromFile(outputFile))
         it.putAll(uCropOptions.optionBundle)

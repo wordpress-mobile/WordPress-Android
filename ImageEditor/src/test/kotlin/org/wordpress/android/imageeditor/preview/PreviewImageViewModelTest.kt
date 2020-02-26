@@ -15,16 +15,19 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
+import java.io.File
 
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
 private const val TEST_FILE_PATH = "/file/path"
+
 class PreviewImageViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
     // Class under test
     private lateinit var viewModel: PreviewImageViewModel
+    private val cacheDir = File("/cache/dir")
 
     @Before
     fun setUp() {
@@ -163,7 +166,7 @@ class PreviewImageViewModelTest {
     fun `uCrop started with image file path on image load to file success`() {
         initViewModel()
         viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
-        assertThat(viewModel.startUCrop.value).isEqualTo(TEST_FILE_PATH)
+        assertThat(requireNotNull(viewModel.startUCrop.value).first).isEqualTo(File(TEST_FILE_PATH))
     }
 
     @Test
@@ -173,5 +176,5 @@ class PreviewImageViewModelTest {
         assertNull(viewModel.startUCrop.value)
     }
 
-    private fun initViewModel() = viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL)
+    private fun initViewModel() = viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, cacheDir)
 }

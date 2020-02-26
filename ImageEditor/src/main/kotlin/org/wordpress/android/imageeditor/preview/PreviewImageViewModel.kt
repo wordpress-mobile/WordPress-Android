@@ -12,6 +12,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
+import java.io.File
 
 class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<ImageUiState> = MutableLiveData()
@@ -20,10 +21,14 @@ class PreviewImageViewModel : ViewModel() {
     private val _loadIntoFile = MutableLiveData<ImageLoadToFileState>(ImageLoadToFileIdleState)
     val loadIntoFile: LiveData<ImageLoadToFileState> = _loadIntoFile
 
-    private val _startUCrop = MutableLiveData<String>()
-    val startUCrop: LiveData<String> = _startUCrop
+    private val _startUCrop = MutableLiveData<Pair<File, File>>()
+    val startUCrop: LiveData<Pair<File, File>> = _startUCrop
 
-    fun onCreateView(loResImageUrl: String, hiResImageUrl: String) {
+    private lateinit var cacheDir: File
+
+    fun onCreateView(loResImageUrl: String, hiResImageUrl: String, cacheDir: File) {
+        this.cacheDir = cacheDir
+
         updateUiState(
             ImageDataStartLoadingUiState(
                 ImageData(loResImageUrl, hiResImageUrl)
@@ -68,9 +73,9 @@ class PreviewImageViewModel : ViewModel() {
         updateUiState(newState)
     }
 
-    fun onLoadIntoFileSuccess(filePath: String) {
-        updateLoadIntoFileState(ImageLoadToFileSuccessState(filePath))
-        _startUCrop.value = filePath
+    fun onLoadIntoFileSuccess(inputFilePath: String) {
+        updateLoadIntoFileState(ImageLoadToFileSuccessState(inputFilePath))
+        _startUCrop.value = Pair(File(inputFilePath), File(cacheDir, IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME))
     }
 
     fun onLoadIntoFileFailed() {
