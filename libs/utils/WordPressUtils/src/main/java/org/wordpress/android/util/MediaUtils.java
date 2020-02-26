@@ -170,7 +170,8 @@ public class MediaUtils {
     }
 
     public static @Nullable String getFilenameFromURI(Context context, Uri uri) {
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        Cursor cursor = context.getContentResolver().query(uri, new String[]{OpenableColumns.DISPLAY_NAME},
+                null, null, null);
         try {
             String result = null;
             if (cursor != null && cursor.moveToFirst()) {

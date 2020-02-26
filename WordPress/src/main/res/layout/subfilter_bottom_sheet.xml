@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@drawable/bg_bottom_sheet_handle_container"
     android:contentDescription="@string/reader_bottom_sheet_content_description">
 
-    <include layout="@layout/subfilter_handle"
+    <include layout="@layout/bottom_sheet_handle_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_filter_bottom_sheet_handle_height"/>
+        android:layout_height="wrap_content"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title"

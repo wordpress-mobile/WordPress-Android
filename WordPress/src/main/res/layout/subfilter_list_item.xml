@@ -14,8 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/item_url"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginBottom="@dimen/reader_subfilter_title_gone_margin_bottom"
-        app:layout_goneMarginTop="@dimen/reader_subfilter_title_gone_margin_top"
+        app:layout_goneMarginBottom="@dimen/margin_large"
         tools:text="Unknown" />
 
     <TextView

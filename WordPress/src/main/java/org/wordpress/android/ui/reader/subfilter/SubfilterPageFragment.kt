@@ -59,7 +59,7 @@ class SubfilterPageFragment : DaggerFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.add_content_bottom_sheet, container, false)
+        return inflater.inflate(R.layout.subfilter_page_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

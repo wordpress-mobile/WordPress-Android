@@ -30,7 +30,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.google.android.material.tabs.TabLayout.Tab;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.util.AppLog;
@@ -173,10 +172,6 @@ public class FilteredRecyclerView extends RelativeLayout {
 
                 mUseTabsForFiltering = a.getBoolean(
                         R.styleable.FilteredRecyclerView_wpUseTabsForFiltering, false);
-
-                // TODO: once the feature flag is removed delete this row and use the
-                // app:wpUseTabsForFiltering="true|false" in reader_fragment_post_cards.xml
-                if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) mUseTabsForFiltering = false;
             } finally {
                 a.recycle();
             }
