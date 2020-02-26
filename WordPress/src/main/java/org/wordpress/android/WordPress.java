@@ -154,6 +154,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject StatsStore mStatsStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject ReaderTracker mReaderTracker;
+
+    // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
