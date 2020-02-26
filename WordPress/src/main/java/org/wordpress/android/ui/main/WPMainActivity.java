@@ -900,11 +900,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (data != null) {
                     int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
                     SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
-                    // Mark the site to show the GB popup at first editor run
-                    SiteModel newSiteModel = mSiteStore.getSiteByLocalId(newSiteLocalID);
-                    if (newSiteModel != null) {
-                        AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(newSiteModel.getUrl(), true);
-                    }
                 }
 
                 setSite(data);
