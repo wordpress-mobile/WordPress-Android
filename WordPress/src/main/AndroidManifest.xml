@@ -455,7 +455,7 @@
         <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderUserListActivity"
             android:theme="@style/WordPress.NoActionBar" />
