@@ -31,7 +31,7 @@ class CropFragment : UCropFragment() {
         viewModel = ViewModelProvider(this).get(CropViewModel::class.java)
         setupObservers()
         viewModel.start(navArgs.inputFilePath, requireContext().cacheDir)
-        viewModel.writeToBundle(arguments ?: Bundle())
+        viewModel.writeToBundle(requireNotNull(arguments))
     }
 
     private fun setupObservers() {

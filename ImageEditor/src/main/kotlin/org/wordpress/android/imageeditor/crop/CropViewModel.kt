@@ -17,6 +17,7 @@ class CropViewModel : ViewModel() {
 
     private lateinit var cacheDir: File
     private lateinit var inputFilePath: String
+    private var isStarted = false
 
     private val cropOptions
         get() = Options().also {
@@ -37,8 +38,12 @@ class CropViewModel : ViewModel() {
         }
 
     fun start(inputFilePath: String, cacheDir: File) {
+        if (isStarted) {
+            return
+        }
         this.cacheDir = cacheDir
         this.inputFilePath = inputFilePath
+        isStarted = true
     }
 
     fun writeToBundle(bundle: Bundle) {
