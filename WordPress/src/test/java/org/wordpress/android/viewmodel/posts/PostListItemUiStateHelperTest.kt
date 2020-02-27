@@ -8,20 +8,30 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.MediaStore.MediaError
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadFailed
+import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 
 private const val FORMATTER_DATE = "January 1st, 1:35pm"
@@ -56,24 +66,18 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `label has error color on upload error`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                PostUploadUiState.UploadFailed(
-                        createGenericError(),
-                        isEligibleForAutoUpload = false,
-                        retryWillPushChanges = false
-                )
+                createFailedUploadUiState()
         )
         val state = createPostListItemUiState()
         assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
     }
 
     @Test
-    fun `label has progress color on error when media upload in progress`() {
-        val state = createPostListItemUiState(
-                uploadStatus = createUploadStatus(
-                        uploadError = createGenericError(),
-                        hasInProgressMediaUpload = true
-                )
+    fun `label has progress color on when media upload in progress`() {
+        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
+                PostUploadUiState.UploadingMedia(0)
         )
+        val state = createPostListItemUiState()
         assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
@@ -145,6 +149,9 @@ class PostListItemUiStateHelperTest {
 
     @Test
     fun `verify draft actions on failed upload`() {
+        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
+                createFailedUploadUiState()
+        )
         val state = createPostListItemUiState(
                 post = createPostModel(status = POST_STATE_DRAFT),
                 uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR)))
@@ -947,6 +954,17 @@ class PostListItemUiStateHelperTest {
                     isEligibleForAutoUpload = isEligibleForAutoUpload,
                     uploadWillPushChanges = retryWillPushChanges
                     )
+
+    private fun createFailedUploadUiState(
+        uploadError: UploadError = createGenericError(), isEligibleForAutoUpload: Boolean = false,
+        retryWillPushChanges: Boolean = false
+    ): UploadFailed {
+        return UploadFailed(
+                createGenericError(),
+                isEligibleForAutoUpload = false,
+                retryWillPushChanges = false
+        )
+    }
 
     private fun createGenericError(): UploadError = UploadError(PostError(GENERIC_ERROR))
 }
