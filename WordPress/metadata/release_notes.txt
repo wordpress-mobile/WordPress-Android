@@ -1,7 +1,4 @@
-Lots of updates to the block editor:
-
-* Added a long-press icon for adding blocks before/after.
-* App will try to display images when coming back online after a disconnection.
-* Resolved issue with blank editor when trying to create a post with images or links from another app.
-* Added image size options to the Gallery block.
-* Fixed a bug that prevented paragraph blocks from merging.
+- Block editor additions: Added Button and Group blocks, and support for more options in Image and Gallery block settings.
+- Block editor enhancements: Added scroll support inside block picker and block settings, and introduced a floating toolbar to make navigating blocks easier.
+- Block editor fixes: Fixed issues around placeholder images during image upload, emojis in post titles, and text-wrapping in Shortcode blocks.
+- Reader: Added tab filtering for better sites/tag navigation.
