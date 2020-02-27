@@ -27,12 +27,12 @@ import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 
 @RunWith(MockitoJUnitRunner::class)
 class CreatePageListItemLabelsUseCaseTest {
     @Mock private lateinit var pageConflictResolver: PageConflictResolver
-    @Mock private lateinit var labelColorUseCase: ResolvePageListItemsColorUseCase
+    @Mock private lateinit var labelColorUseCase: PostPageListLabelColorUseCase
     @Mock private lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var useCase: CreatePageListItemLabelsUseCase
 

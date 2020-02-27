@@ -27,7 +27,7 @@ import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.viewmodel.ResourceProvider
-import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
@@ -44,7 +44,7 @@ class SearchListViewModelTest {
     @Mock lateinit var createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase
     @Mock lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
     @Mock lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
-    @Mock lateinit var createUploadStateUseCase: CreatePageUploadUiStateUseCase
+    @Mock lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
 
     private lateinit var searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>>
     private lateinit var viewModel: SearchListViewModel

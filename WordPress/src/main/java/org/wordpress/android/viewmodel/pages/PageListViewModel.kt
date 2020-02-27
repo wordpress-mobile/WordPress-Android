@@ -50,7 +50,7 @@ private const val DEFAULT_INDENT = 0
 
 class PageListViewModel @Inject constructor(
     private val createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase,
-    private val createPageUploadUiStateUseCase: CreatePageUploadUiStateUseCase,
+    private val postModelUploadUiStateUseCase: PostModelUploadUiStateUseCase,
     private val pageListItemActionsUseCase: CreatePageListItemActionsUseCase,
     private val pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase,
     private val mediaStore: MediaStore,
@@ -376,7 +376,7 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun createItemUiStateData(pageModel: PageModel): ItemUiStateData {
-        val uploadUiState = createPageUploadUiStateUseCase.createUploadUiState(
+        val uploadUiState = postModelUploadUiStateUseCase.createUploadUiState(
                 pageModel.post,
                 pagesViewModel.site,
                 pagesViewModel.uploadStatusTracker

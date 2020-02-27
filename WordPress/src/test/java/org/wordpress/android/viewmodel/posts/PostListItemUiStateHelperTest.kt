@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -7,25 +8,20 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.fluxc.store.MediaStore.MediaError
-import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
-import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
-import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
+import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
-import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 
 private const val FORMATTER_DATE = "January 1st, 1:35pm"
@@ -40,11 +36,13 @@ private val POST_STATE_TRASHED = PostStatus.TRASHED.toString()
 @RunWith(MockitoJUnitRunner::class)
 class PostListItemUiStateHelperTest {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock private lateinit var uploadUiStateUseCase: PostModelUploadUiStateUseCase
+    @Mock private lateinit var uploadStatusTracker: PostModelUploadStatusTracker
     private lateinit var helper: PostListItemUiStateHelper
 
     @Before
     fun setup() {
-        helper = PostListItemUiStateHelper(appPrefsWrapper)
+        helper = PostListItemUiStateHelper(appPrefsWrapper, uploadUiStateUseCase)
         whenever(appPrefsWrapper.isAztecEditorEnabled).thenReturn(true)
     }
 
@@ -57,7 +55,14 @@ class PostListItemUiStateHelperTest {
 
     @Test
     fun `label has error color on upload error`() {
-        val state = createPostListItemUiState(uploadStatus = createUploadStatus(uploadError = createGenericError()))
+        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
+                PostUploadUiState.UploadFailed(
+                        createGenericError(),
+                        isEligibleForAutoUpload = false,
+                        retryWillPushChanges = false
+                )
+        )
+        val state = createPostListItemUiState()
         assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
     }
 
@@ -894,7 +899,7 @@ class PostListItemUiStateHelperTest {
     private fun createPostListItemUiState(
         authorFilterSelection: AuthorFilterSelection = EVERYONE,
         post: PostModel = PostModel(),
-        uploadStatus: PostListItemUploadStatus = createUploadStatus(),
+        site: SiteModel = SiteModel(),
         unhandledConflicts: Boolean = false,
         hasAutoSave: Boolean = false,
         capabilitiesToPublish: Boolean = true,
@@ -906,7 +911,7 @@ class PostListItemUiStateHelperTest {
     ): PostListItemUiState = helper.createPostListItemUiState(
             authorFilterSelection,
             post = post,
-            uploadStatus = uploadStatus,
+            site = site,
             unhandledConflicts = unhandledConflicts,
             hasAutoSave = hasAutoSave,
             capabilitiesToPublish = capabilitiesToPublish,
@@ -914,7 +919,8 @@ class PostListItemUiStateHelperTest {
             featuredImageUrl = featuredImageUrl,
             formattedDate = formattedDate,
             onAction = onAction,
-            performingCriticalAction = performingCriticalAction
+            performingCriticalAction = performingCriticalAction,
+            uploadStatusTracker = uploadStatusTracker
     )
 
     private fun createUploadStatus(

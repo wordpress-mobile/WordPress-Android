@@ -32,7 +32,7 @@ import javax.inject.Named
 class SearchListViewModel
 @Inject constructor(
     private val createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase,
-    private val createPageUploadUiStateUseCase: CreatePageUploadUiStateUseCase,
+    private val postModelUploadUiStateUseCase: PostModelUploadUiStateUseCase,
     private val pageListItemActionsUseCase: CreatePageListItemActionsUseCase,
     private val pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase,
     private val resourceProvider: ResourceProvider,
@@ -94,7 +94,7 @@ class SearchListViewModel
     }
 
     private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
-        val uploadUiState = createPageUploadUiStateUseCase.createUploadUiState(
+        val uploadUiState = postModelUploadUiStateUseCase.createUploadUiState(
                 this.post,
                 pagesViewModel.site,
                 pagesViewModel.uploadStatusTracker

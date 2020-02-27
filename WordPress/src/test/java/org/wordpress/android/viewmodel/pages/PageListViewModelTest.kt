@@ -24,7 +24,7 @@ import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
@@ -40,7 +40,7 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
     @Mock lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
-    @Mock lateinit var createUploadStateUseCase: CreatePageUploadUiStateUseCase
+    @Mock lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
     @Mock lateinit var createLabelsUseCase: CreatePageListItemLabelsUseCase
 
     private lateinit var viewModel: PageListViewModel
