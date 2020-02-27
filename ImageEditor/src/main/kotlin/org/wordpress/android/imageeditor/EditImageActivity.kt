@@ -58,7 +58,10 @@ class EditImageActivity : AppCompatActivity(), UCropFragmentCallback {
         }
     }
 
-    override fun onCropFinish(result: UCropResult?) { }
+    override fun onCropFinish(cropResult: UCropResult) {
+        setResult(cropResult.mResultCode, cropResult.mResultData)
+        finish()
+    }
 
     override fun loadingProgress(showLoader: Boolean) { }
 }
