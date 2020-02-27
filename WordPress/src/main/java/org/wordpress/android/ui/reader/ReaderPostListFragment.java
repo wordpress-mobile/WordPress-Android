@@ -915,7 +915,9 @@ public class ReaderPostListFragment extends Fragment
                 if (mIsTopLevel) {
                     if (AppPrefs.getReaderTag() == null) {
                         ReaderTag discoverTag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
-                        if (discoverTag != null) {
+                        String discoverLabel = requireActivity().getString(R.string.reader_discover_display_name);
+
+                        if (discoverTag != null && discoverTag.getTagDisplayName().equals(discoverLabel)) {
                             setCurrentTag(discoverTag, mIsTopLevel);
                         }
                     }
