@@ -16,6 +16,5 @@
     </fragment>
     <fragment
         android:id="@+id/crop_dest"
-        android:name="com.yalantis.ucrop.UCropFragment">
-    </fragment>
+        android:name="org.wordpress.android.imageeditor.crop.CropFragment"/>
 </navigation>
