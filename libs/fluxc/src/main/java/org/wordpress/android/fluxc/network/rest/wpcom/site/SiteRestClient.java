@@ -37,6 +37,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AutomatedTransferEligibilityCheckResponse.EligibilityError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.AccessCookieError;
+import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
@@ -57,6 +59,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesRespo
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedAccessCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
@@ -100,33 +103,42 @@ import javax.inject.Singleton;
 public class SiteRestClient extends BaseWPComRestClient {
     public static final int NEW_SITE_TIMEOUT_MS = 90000;
     private static final String SITE_FIELDS = "ID,URL,name,description,jetpack,visible,is_private,options,plan,"
-        + "capabilities,quota,icon,meta";
+                                              + "capabilities,quota,icon,meta";
 
     private final AppSecrets mAppSecrets;
 
     public static class NewSiteResponsePayload extends Payload<NewSiteError> {
-        public NewSiteResponsePayload() {}
+        public NewSiteResponsePayload() {
+        }
+
         public long newSiteRemoteId;
         public boolean dryRun;
     }
 
     public static class DeleteSiteResponsePayload extends Payload<DeleteSiteError> {
-        public DeleteSiteResponsePayload() {}
+        public DeleteSiteResponsePayload() {
+        }
+
         public SiteModel site;
     }
 
     public static class ExportSiteResponsePayload extends Payload<BaseNetworkError> {
-        public ExportSiteResponsePayload() {}
+        public ExportSiteResponsePayload() {
+        }
     }
 
     public static class IsWPComResponsePayload extends Payload<BaseNetworkError> {
-        public IsWPComResponsePayload() {}
+        public IsWPComResponsePayload() {
+        }
+
         public String url;
         public boolean isWPCom;
     }
 
     public static class FetchWPComSiteResponsePayload extends Payload<SiteError> {
-        public FetchWPComSiteResponsePayload() {}
+        public FetchWPComSiteResponsePayload() {
+        }
+
         public String checkedUrl;
         public SiteModel site;
     }
@@ -135,6 +147,43 @@ public class SiteRestClient extends BaseWPComRestClient {
                           AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mAppSecrets = appSecrets;
+    }
+
+
+    public void fetchAccessCookie(final SiteModel site) {
+        Map<String, String> params = new HashMap<>();
+        String url = WPCOMV2.sites.site(site.getSiteId()).atomic_auth_proxy.read_access_cookies.getUrl();
+        final WPComGsonRequest<SiteCookieResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                SitesResponse.class,
+                new Listener<SiteCookieResponse>() {
+                    @Override
+                    public void onResponse(SiteCookieResponse response) {
+                        if (response != null) {
+                            mDispatcher.dispatch(SiteActionBuilder
+                                    .newFetchedAccessCookieAction(new FetchedAccessCookiePayload(site, response)));
+                        } else {
+                            AppLog.e(T.API, "Failed to fetch access cookie.");
+
+                            AccessCookieError error = new AccessCookieError(
+                                    AccessCookieErrorType.GENERIC_ERROR);
+                            FetchedAccessCookiePayload payload = new FetchedAccessCookiePayload(site, error);
+                            mDispatcher.dispatch(SiteActionBuilder
+                                    .newFetchedAccessCookieAction(payload));
+                        }
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        AccessCookieError cookierror = new AccessCookieError(
+                                AccessCookieErrorType.GENERIC_ERROR);
+                        FetchedAccessCookiePayload payload = new FetchedAccessCookiePayload(site, cookierror);
+                        mDispatcher.dispatch(SiteActionBuilder
+                                .newFetchedAccessCookieAction(payload));
+                    }
+                }
+                                                                                             );
+        add(request);
     }
 
     public void fetchSites() {
@@ -169,7 +218,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload));
                     }
                 }
-        );
+                                                                                        );
         add(request);
     }
 
@@ -206,7 +255,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(payload));
                     }
                 }
-        );
+                                                                                                );
         add(request);
     }
 
@@ -267,7 +316,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload));
                     }
                 }
-        );
+                                                                                     );
 
         // Disable retries and increase timeout for site creation (it can sometimes take a long time to complete)
         request.setRetryPolicy(new DefaultRetryPolicy(NEW_SITE_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -302,7 +351,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
                     }
                 }
-                );
+                                                                                              );
         add(request);
     }
 
@@ -398,7 +447,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
                     }
                 }
-        );
+                                                                                              );
         add(request);
     }
 
@@ -430,7 +479,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedUserRolesAction(payload));
                     }
                 }
-        );
+                                                                                            );
         add(request);
     }
 
@@ -478,7 +527,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
                     }
                 }
-        );
+                                                                                           );
         add(request);
     }
 
@@ -501,7 +550,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
                     }
                 }
-        );
+                                                                                              );
         add(request);
     }
 
@@ -603,7 +652,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
                 }
-        );
+                                                                                                  );
         addUnauthedRequest(request);
     }
 
@@ -656,7 +705,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
                     }
                 }
-        );
+                                                                                                );
         addUnauthedRequest(request);
     }
 
@@ -688,7 +737,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
                     }
                 }
-        );
+                                                                                                );
         addUnauthedRequest(request);
     }
 
@@ -696,7 +745,7 @@ public class SiteRestClient extends BaseWPComRestClient {
      * Performs an HTTP GET call to v1.3 /domains/$domainName/is-available/ endpoint. Upon receiving a response
      * (success or error) a {@link SiteAction#CHECKED_DOMAIN_AVAILABILITY} action is dispatched with a
      * payload of type {@link DomainAvailabilityResponsePayload}.
-     *
+     * <p>
      * {@link DomainAvailabilityResponsePayload#isError()} can be used to check the request result.
      */
     public void checkDomainAvailability(@NonNull final String domainName) {
@@ -730,14 +779,15 @@ public class SiteRestClient extends BaseWPComRestClient {
      * Performs an HTTP GET call to v1.1 /domains/supported-states/$countryCode endpoint. Upon receiving a response
      * (success or error) a {@link SiteAction#FETCHED_DOMAIN_SUPPORTED_STATES} action is dispatched with a
      * payload of type {@link DomainSupportedStatesResponsePayload}.
-     *
+     * <p>
      * {@link DomainSupportedStatesResponsePayload#isError()} can be used to check the request result.
      */
     public void fetchSupportedStates(@NonNull final String countryCode) {
         String url = WPCOMREST.domains.supported_states.countryCode(countryCode).getUrlV1_1();
         final WPComGsonRequest<List<SupportedStateResponse>> request =
                 WPComGsonRequest.buildGetRequest(url, null,
-                        new TypeToken<ArrayList<SupportedStateResponse>>() {}.getType(),
+                        new TypeToken<ArrayList<SupportedStateResponse>>() {
+                        }.getType(),
                         new Listener<List<SupportedStateResponse>>() {
                             @Override
                             public void onResponse(List<SupportedStateResponse> response) {
@@ -763,14 +813,15 @@ public class SiteRestClient extends BaseWPComRestClient {
      * Performs an HTTP GET call to v1.1 /domains/supported-countries/ endpoint. Upon receiving a response
      * (success or error) a {@link SiteAction#FETCHED_DOMAIN_SUPPORTED_COUNTRIES} action is dispatched with a
      * payload of type {@link DomainSupportedCountriesResponsePayload}.
-     *
+     * <p>
      * {@link DomainSupportedCountriesResponsePayload#isError()} can be used to check the request result.
      */
     public void fetchSupportedCountries() {
         String url = WPCOMREST.domains.supported_countries.getUrlV1_1();
         final WPComGsonRequest<ArrayList<SupportedCountryResponse>> request =
                 WPComGsonRequest.buildGetRequest(url, null,
-                        new TypeToken<ArrayList<SupportedCountryResponse>>() {}.getType(),
+                        new TypeToken<ArrayList<SupportedCountryResponse>>() {
+                        }.getType(),
                         new Listener<ArrayList<SupportedCountryResponse>>() {
                             @Override
                             public void onResponse(ArrayList<SupportedCountryResponse> response) {
@@ -833,29 +884,29 @@ public class SiteRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.eligibility.getUrlV1_1();
         final WPComGsonRequest<AutomatedTransferEligibilityCheckResponse> request = WPComGsonRequest
                 .buildGetRequest(url, null, AutomatedTransferEligibilityCheckResponse.class,
-                new Listener<AutomatedTransferEligibilityCheckResponse>() {
-                    @Override
-                    public void onResponse(AutomatedTransferEligibilityCheckResponse response) {
-                        List<String> strErrorCodes = new ArrayList<>();
-                        if (response.errors != null) {
-                            for (EligibilityError eligibilityError : response.errors) {
-                                strErrorCodes.add(eligibilityError.code);
+                        new Listener<AutomatedTransferEligibilityCheckResponse>() {
+                            @Override
+                            public void onResponse(AutomatedTransferEligibilityCheckResponse response) {
+                                List<String> strErrorCodes = new ArrayList<>();
+                                if (response.errors != null) {
+                                    for (EligibilityError eligibilityError : response.errors) {
+                                        strErrorCodes.add(eligibilityError.code);
+                                    }
+                                }
+                                mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
+                                        new AutomatedTransferEligibilityResponsePayload(site, response.isEligible,
+                                                strErrorCodes)));
                             }
-                        }
-                        mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
-                                new AutomatedTransferEligibilityResponsePayload(site, response.isEligible,
-                                        strErrorCodes)));
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
-                        AutomatedTransferError payloadError = new AutomatedTransferError(
-                                networkError.apiError, networkError.message);
-                        mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
-                                new AutomatedTransferEligibilityResponsePayload(site, payloadError)));
-                    }
-                });
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
+                                AutomatedTransferError payloadError = new AutomatedTransferError(
+                                        networkError.apiError, networkError.message);
+                                mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
+                                        new AutomatedTransferEligibilityResponsePayload(site, payloadError)));
+                            }
+                        });
         add(request);
     }
 
@@ -920,7 +971,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                             @Override
                             public void onResponse(QuickStartCompletedResponse response) {
                                 mDispatcher.dispatch(SiteActionBuilder.newCompletedQuickStartAction(
-                                         new QuickStartCompletedResponsePayload(site, response.success)));
+                                        new QuickStartCompletedResponsePayload(site, response.success)));
                             }
                         },
                         new WPComErrorListener() {
@@ -951,6 +1002,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         site.setIsJetpackInstalled(from.jetpack);
         site.setIsVisible(from.visible);
         site.setIsPrivate(from.is_private);
+        site.setIsComingSoon(from.is_coming_soon);
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read site options.
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
@@ -965,6 +1017,7 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setUnmappedUrl(from.options.unmapped_url);
             site.setJetpackVersion(from.options.jetpack_version);
             site.setSoftwareVersion(from.options.software_version);
+            site.setIsWPComAtomic(from.options.is_wpcom_atomic);
 
             try {
                 site.setMaxUploadSize(Long.valueOf(from.options.max_upload_size));
