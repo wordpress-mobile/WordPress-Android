@@ -1060,6 +1060,10 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCProductModel ADD DATE_ON_SALE_FROM_GMT TEXT")
                     db.execSQL("ALTER TABLE WCProductModel ADD DATE_ON_SALE_TO_GMT TEXT")
                 }
+                98 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_WPCOM_ATOMIC BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_COMING_SOON BOOLEAN")
+                }
             }
         }
         db.setTransactionSuccessful()
