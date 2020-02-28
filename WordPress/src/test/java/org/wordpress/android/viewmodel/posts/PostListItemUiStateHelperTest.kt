@@ -1047,7 +1047,8 @@ class PostListItemUiStateHelperTest {
     )
 
     private fun createFailedUploadUiState(
-        uploadError: UploadError = createGenericError(), isEligibleForAutoUpload: Boolean = false,
+        uploadError: UploadError = createGenericError(),
+        isEligibleForAutoUpload: Boolean = false,
         retryWillPushChanges: Boolean = false
     ): UploadFailed {
         return UploadFailed(
