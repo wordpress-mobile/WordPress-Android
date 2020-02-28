@@ -146,7 +146,8 @@ class PostPageListLabelColorUseCaseTest {
         return post
     }
 
-    private fun failedUpload(isEligibleForAutoUpload: Boolean = false) = PostUploadUiState.UploadFailed(mock(), isEligibleForAutoUpload, false)
+    private fun failedUpload(isEligibleForAutoUpload: Boolean = false) =
+            PostUploadUiState.UploadFailed(mock(), isEligibleForAutoUpload, false)
 
     private fun mediaUploadInProgress() = PostUploadUiState.UploadingMedia(0)
 }
