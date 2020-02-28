@@ -31,6 +31,8 @@ import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.pages.ERROR_COLOR
+import org.wordpress.android.viewmodel.pages.PROGRESS_INFO_COLOR
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadFailed
@@ -38,6 +40,8 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingMedia
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingPost
+import org.wordpress.android.viewmodel.pages.PostPageListLabelColorUseCase
+import org.wordpress.android.viewmodel.pages.STATE_INFO_COLOR
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
@@ -57,11 +61,12 @@ class PostListItemUiStateHelperTest {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var uploadUiStateUseCase: PostModelUploadUiStateUseCase
     @Mock private lateinit var uploadStatusTracker: PostModelUploadStatusTracker
+    @Mock private lateinit var labelColorUseCase: PostPageListLabelColorUseCase
     private lateinit var helper: PostListItemUiStateHelper
 
     @Before
     fun setup() {
-        helper = PostListItemUiStateHelper(appPrefsWrapper, uploadUiStateUseCase)
+        helper = PostListItemUiStateHelper(appPrefsWrapper, uploadUiStateUseCase, labelColorUseCase)
         whenever(appPrefsWrapper.isAztecEditorEnabled).thenReturn(true)
     }
 
@@ -70,24 +75,6 @@ class PostListItemUiStateHelperTest {
         val testUrl = "https://example.com"
         val state = createPostListItemUiState(featuredImageUrl = testUrl)
         assertThat(state.data.imageUrl).isEqualTo(testUrl)
-    }
-
-    @Test
-    fun `label has error color on upload error`() {
-        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                createFailedUploadUiState()
-        )
-        val state = createPostListItemUiState()
-        assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
-    }
-
-    @Test
-    fun `label has progress color on when media upload in progress`() {
-        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                PostUploadUiState.UploadingMedia(0)
-        )
-        val state = createPostListItemUiState()
-        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test

@@ -91,7 +91,7 @@ class PagesViewModel
     private val previewStateHelper: PreviewStateHelper,
     private val uploadStarter: UploadStarter,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val pageConflictResolver: PageConflictResolver,
+    private val autoSaveConflictResolver: AutoSaveConflictResolver,
     val uploadStatusTracker: PostModelUploadStatusTracker,
     private val pageListEventListenerFactory: PageListEventListener.Factory,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
@@ -485,7 +485,7 @@ class PagesViewModel
     fun onItemTapped(pageItem: Page) {
         val page = pageMap[pageItem.remoteId]!!.post
         // Then check if an autosave revision is available
-        if (pageConflictResolver.hasUnhandledAutoSave(page)) {
+        if (autoSaveConflictResolver.hasUnhandledAutoSave(page)) {
             pageListDialogHelper.showAutoSaveRevisionDialog(page)
             return
         }

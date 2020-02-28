@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
 import android.text.TextUtils
-import androidx.annotation.ColorRes
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
@@ -40,6 +39,7 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingMedia
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingPost
+import org.wordpress.android.viewmodel.pages.PostPageListLabelColorUseCase
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
@@ -61,16 +61,13 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
-const val ERROR_COLOR = R.color.error
-const val PROGRESS_INFO_COLOR = R.color.neutral_50
-const val STATE_INFO_COLOR = R.color.warning_dark
-
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
  */
 class PostListItemUiStateHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val uploadUiStateUseCase: PostModelUploadUiStateUseCase
+    private val uploadUiStateUseCase: PostModelUploadUiStateUseCase,
+    private val labelColorUseCase: PostPageListLabelColorUseCase
 ) {
     fun createPostListItemUiState(
         authorFilterSelection: AuthorFilterSelection,
@@ -115,14 +112,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 hasUnhandledConflicts = unhandledConflicts,
                 hasAutoSave = hasAutoSave
         )
-        val statusesColor = getStatusesColor(
-                postStatus = postStatus,
-                isLocalDraft = post.isLocalDraft,
-                isLocallyChanged = post.isLocallyChanged,
-                uploadUiState = uploadUiState,
-                hasUnhandledConflicts = unhandledConflicts,
-                hasAutoSave = hasAutoSave
-        )
+        val statusesColor = labelColorUseCase.getLabelsColor(post, uploadUiState, unhandledConflicts, hasAutoSave)
         val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
             when (postStatus) {
@@ -304,31 +294,6 @@ class PostListItemUiStateHelper @Inject constructor(
                 DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
             }
             else -> UiStringRes(R.string.error_media_recover_post)
-        }
-    }
-
-    @ColorRes private fun getStatusesColor(
-        postStatus: PostStatus,
-        isLocalDraft: Boolean,
-        isLocallyChanged: Boolean,
-        uploadUiState: PostUploadUiState,
-        hasUnhandledConflicts: Boolean,
-        hasAutoSave: Boolean
-    ): Int? {
-        // TODO consider removing this logic and explicitly list which labels have which color
-        val isError = (uploadUiState is UploadFailed && !uploadUiState.isEligibleForAutoUpload) ||
-                hasUnhandledConflicts
-        val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
-                uploadUiState is UploadQueued
-        val isStateInfo = (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload) ||
-                isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
-                uploadUiState is UploadWaitingForConnection || hasAutoSave
-
-        return when {
-            isError -> ERROR_COLOR
-            isProgressInfo -> PROGRESS_INFO_COLOR
-            isStateInfo -> STATE_INFO_COLOR
-            else -> null
         }
     }
 

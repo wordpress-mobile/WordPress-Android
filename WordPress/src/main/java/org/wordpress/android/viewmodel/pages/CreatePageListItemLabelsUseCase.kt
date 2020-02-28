@@ -29,20 +29,27 @@ typealias LabelColor = Int?
  * Most of this code has been copied from PostListItemUIStateHelper.
  */
 class CreatePageListItemLabelsUseCase @Inject constructor(
-    private val pageConflictResolver: PageConflictResolver,
+    private val autoSaveConflictResolver: AutoSaveConflictResolver,
     private val labelColorUseCase: PostPageListLabelColorUseCase,
     private val uploadUtilsWrapper: UploadUtilsWrapper
 ) {
     fun createLabels(postModel: PostModel, uploadUiState: PostUploadUiState): Pair<List<UiString>, LabelColor> {
+        val hasUnhandledAutoSave = autoSaveConflictResolver.hasUnhandledAutoSave(postModel)
+        val hasUnhandledConflicts = false // TODO use conflict resolver
         val labels = getLabels(
                 PostStatus.fromPost(postModel),
                 postModel.isLocalDraft,
                 postModel.isLocallyChanged,
                 uploadUiState,
-                false, // TODO use conflict resolver
-                pageConflictResolver.hasUnhandledAutoSave(postModel)
+                hasUnhandledConflicts,
+                hasUnhandledAutoSave
         )
-        val labelColor = labelColorUseCase.getLabelsColor(postModel, uploadUiState)
+        val labelColor = labelColorUseCase.getLabelsColor(
+                postModel,
+                uploadUiState,
+                hasUnhandledConflicts,
+                hasUnhandledAutoSave
+        )
         return Pair(labels, labelColor)
     }
 

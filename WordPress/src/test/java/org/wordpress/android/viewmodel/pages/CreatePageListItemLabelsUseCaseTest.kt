@@ -31,7 +31,7 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 
 @RunWith(MockitoJUnitRunner::class)
 class CreatePageListItemLabelsUseCaseTest {
-    @Mock private lateinit var pageConflictResolver: PageConflictResolver
+    @Mock private lateinit var autoSaveConflictResolver: AutoSaveConflictResolver
     @Mock private lateinit var labelColorUseCase: PostPageListLabelColorUseCase
     @Mock private lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var useCase: CreatePageListItemLabelsUseCase
@@ -39,7 +39,7 @@ class CreatePageListItemLabelsUseCaseTest {
     @Before
     fun setUp() {
         useCase = CreatePageListItemLabelsUseCase(
-                pageConflictResolver,
+                autoSaveConflictResolver,
                 labelColorUseCase,
                 uploadUtilsWrapper
         )
@@ -77,7 +77,7 @@ class CreatePageListItemLabelsUseCaseTest {
 
     @Test
     fun `unhandled auto-save label shown for pages with existing auto-save`() {
-        whenever(pageConflictResolver.hasUnhandledAutoSave(anyOrNull())).thenReturn(true)
+        whenever(autoSaveConflictResolver.hasUnhandledAutoSave(anyOrNull())).thenReturn(true)
         val (labels, _) = useCase.createLabels(PostModel(), mock())
         assertThat(labels).contains(UiStringRes(R.string.local_page_autosave_revision_available))
     }
