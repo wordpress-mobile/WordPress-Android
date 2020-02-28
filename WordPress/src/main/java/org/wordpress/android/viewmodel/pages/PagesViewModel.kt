@@ -74,6 +74,7 @@ import kotlin.coroutines.resume
 
 private const val ACTION_DELAY = 100L
 private const val SEARCH_DELAY = 200L
+private const val SCROLL_DELAY = 200L
 private const val SNACKBAR_DELAY = 500L
 private const val SEARCH_COLLAPSE_DELAY = 500L
 private const val PAGE_UPLOAD_TIMEOUT = 5000L
@@ -475,6 +476,14 @@ class PagesViewModel
 
     private fun publishPageNow(remoteId: Long) {
         _publishAction.value = pageMap[remoteId]
+        launch(uiDispatcher) {
+            withContext(defaultDispatcher) {
+                delay(SCROLL_DELAY)
+            }
+            pageMap[remoteId]?.let {
+                _scrollToPage.postValue(it)
+            }
+        }
     }
 
     fun onImagesChanged() {
