@@ -178,13 +178,21 @@ public class SiteUtils {
     }
 
     public static void enableBlockEditor(Dispatcher dispatcher, SiteModel siteModel) {
-            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                    new DesignateMobileEditorPayload(siteModel, SiteUtils.GB_EDITOR_NAME)));
+        // Send the setting to the server
+        dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
+                new DesignateMobileEditorPayload(siteModel, GB_EDITOR_NAME)));
+        // Update the local site
+        siteModel.setMobileEditor(GB_EDITOR_NAME);
+        dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
     }
 
     public static void disableBlockEditor(Dispatcher dispatcher, SiteModel siteModel) {
+        // Send the setting to the server
         dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                new DesignateMobileEditorPayload(siteModel, SiteUtils.AZTEC_EDITOR_NAME)));
+                new DesignateMobileEditorPayload(siteModel, AZTEC_EDITOR_NAME)));
+        // Update the local site
+        siteModel.setMobileEditor(AZTEC_EDITOR_NAME);
+        dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
     }
 
     public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {
