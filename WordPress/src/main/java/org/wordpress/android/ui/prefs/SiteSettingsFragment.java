@@ -1893,6 +1893,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_quota);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                R.string.pref_key_jetpack_performance_settings);
     }
 
     private void removeNonJetpackPreferences() {
@@ -1943,6 +1945,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
                 R.string.pref_key_jetpack_performance_media_settings);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                R.string.pref_key_jetpack_performance_settings);
     }
 
     private Preference getChangePref(int id) {

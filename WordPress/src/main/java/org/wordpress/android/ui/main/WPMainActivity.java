@@ -998,6 +998,11 @@ public class WPMainActivity extends AppCompatActivity implements
     private void appLanguageChanged() {
         // Recreate this activity (much like a configuration change)
         recreate();
+
+        // When language changed we need to reset the shared prefs reader tag since if we have it stored
+        // it's fields can be in a different language and we can get odd behaviors since we will generally fail
+        // to get the ReaderTag.equals method recognize the equality based on the ReaderTag.getLabel method.
+        AppPrefs.setReaderTag(null);
     }
 
     private void startWithNewAccount() {

@@ -182,6 +182,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         StatsModule.class,
         SupportModule.class,
         ThreadModule.class,
+        TrackerModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
