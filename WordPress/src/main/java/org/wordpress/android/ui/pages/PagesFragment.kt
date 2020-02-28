@@ -160,6 +160,7 @@ class PagesFragment : Fragment() {
     private fun initializeViews(activity: FragmentActivity) {
         pagesPager.adapter = PagesPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(pagesPager)
+        pagesPager.offscreenPageLimit = 3
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
