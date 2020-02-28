@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteCookieResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
@@ -152,6 +153,7 @@ public class SiteStore extends Store {
 
     public static class DesignateMobileEditorForAllSitesResponsePayload extends Payload<SiteEditorsError> {
         public Map<String, String> editors;
+
         public DesignateMobileEditorForAllSitesResponsePayload(Map<String, String> editors) {
             this.editors = editors;
         }
@@ -177,6 +179,21 @@ public class SiteStore extends Store {
         }
 
         public FetchedPlansPayload(SiteModel site, @NonNull PlansError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
+    public static class FetchedAccessCookiePayload extends Payload<AccessCookieError> {
+        public SiteModel site;
+        @Nullable public SiteCookieResponse cookie;
+
+        public FetchedAccessCookiePayload(SiteModel site, @Nullable SiteCookieResponse cookie) {
+            this.site = site;
+            this.cookie = cookie;
+        }
+
+        public FetchedAccessCookiePayload(SiteModel site, @NonNull AccessCookieError error) {
             this.site = site;
             this.error = error;
         }
@@ -210,7 +227,7 @@ public class SiteStore extends Store {
             this.includeVendorDot = includeVendorDot;
         }
 
-         public SuggestDomainsPayload(@NonNull String query, int quantity, String tlds) {
+        public SuggestDomainsPayload(@NonNull String query, int quantity, String tlds) {
             this.query = query;
             this.quantity = quantity;
             this.tlds = tlds;
@@ -621,6 +638,18 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnAccessCookieFetched extends OnChanged<AccessCookieError> {
+        public SiteModel site;
+        public @Nullable SiteCookieResponse cookie;
+
+        public OnAccessCookieFetched(SiteModel site, @Nullable SiteCookieResponse cookie,
+                                     @Nullable AccessCookieError error) {
+            this.site = site;
+            this.cookie = cookie;
+            this.error = error;
+        }
+    }
+
     public static class OnURLChecked extends OnChanged<SiteError> {
         public String url;
         public boolean isWPCom;
@@ -754,6 +783,20 @@ public class SiteStore extends Store {
         }
 
         public PlansError(@NonNull PlansErrorType type) {
+            this.type = type;
+        }
+    }
+
+    public static class AccessCookieError implements OnChangedError {
+        @NonNull public AccessCookieErrorType type;
+        @Nullable public String message;
+
+        public AccessCookieError(@Nullable String type, @Nullable String message) {
+            this.type = AccessCookieErrorType.GENERIC_ERROR;
+            this.message = message;
+        }
+
+        public AccessCookieError(@NonNull AccessCookieErrorType type) {
             this.type = type;
         }
     }
@@ -904,6 +947,10 @@ public class SiteStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum AccessCookieErrorType {
+        GENERIC_ERROR
     }
 
     public enum UserRolesErrorType {
@@ -1516,6 +1563,12 @@ public class SiteStore extends Store {
             case DESIGNATED_PRIMARY_DOMAIN:
                 handleDesignatedPrimaryDomain((DesignatedPrimaryDomainPayload) action.getPayload());
                 break;
+            case FETCH_ACCESS_COOKIE:
+                fetchAccessCookie((SiteModel) action.getPayload());
+                break;
+            case FETCHED_ACCESS_COOKIE:
+                handleFetchAccessCookie((FetchedAccessCookiePayload) action.getPayload());
+                break;
         }
     }
 
@@ -1893,6 +1946,19 @@ public class SiteStore extends Store {
             event.error = payload.error;
         }
         emitChange(event);
+    }
+
+    private void fetchAccessCookie(SiteModel siteModel) {
+//        if (siteModel.isWPComAtomic()) {
+            mSiteRestClient.fetchAccessCookie(siteModel);
+//        } else {
+//            AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.GENERIC_ERROR);
+//            handleFetchAccessCookie(new FetchedAccessCookiePayload(siteModel, cookieError));
+//        }
+    }
+
+    private void handleFetchAccessCookie(FetchedAccessCookiePayload payload) {
+        emitChange(new OnAccessCookieFetched(payload.site, payload.cookie, payload.error));
     }
 
     private void fetchPlans(SiteModel siteModel) {
