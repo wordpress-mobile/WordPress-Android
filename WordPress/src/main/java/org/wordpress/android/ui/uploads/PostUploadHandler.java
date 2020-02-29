@@ -366,9 +366,8 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                 if (mHasCategory) {
                     sCurrentUploadingPostAnalyticsProperties.put("with_categories", true);
                 }
-                if (!mPost.getTagNameList().isEmpty()) {
-                    sCurrentUploadingPostAnalyticsProperties.put("with_tags", true);
-                }
+
+                sCurrentUploadingPostAnalyticsProperties.put("with_tags", !mPost.getTagNameList().isEmpty());
             }
         }
 
