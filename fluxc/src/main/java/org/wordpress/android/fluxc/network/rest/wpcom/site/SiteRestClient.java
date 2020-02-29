@@ -154,7 +154,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         Map<String, String> params = new HashMap<>();
         String url = WPCOMV2.sites.site(site.getSiteId()).atomic_auth_proxy.read_access_cookies.getUrl();
         final WPComGsonRequest<SiteCookieResponse> request = WPComGsonRequest.buildGetRequest(url, params,
-                SitesResponse.class,
+                SiteCookieResponse.class,
                 new Listener<SiteCookieResponse>() {
                     @Override
                     public void onResponse(SiteCookieResponse response) {
