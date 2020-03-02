@@ -42,6 +42,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.yalantis.ucrop.UCrop;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,6 +54,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.AztecEditorFragment;
+import org.wordpress.android.editor.EditorEditMediaListener;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
@@ -62,7 +64,6 @@ import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorImageMetaData;
 import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorImageSettingsListener;
-import org.wordpress.android.editor.EditorEditMediaListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.GutenbergEditorFragment;
@@ -103,6 +104,7 @@ import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -1651,8 +1653,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
 
     @Override public void onImagePreviewRequested(String mediaUrl) {
-//        MediaPreviewActivity.showPreview(this, null, mediaUrl);
-        // TODO: Temporarily open image editor at this point
+        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+    }
+
+    @Override public void onMediaEditorRequested(String mediaUrl) {
         String imageUrl = StringUtils.notNullStr(mediaUrl);
 
         // We're using a separate cache in WPAndroid and RN's Gutenberg editor so we need to reload the image
@@ -1673,10 +1677,6 @@ public class EditPostActivity extends AppCompatActivity implements
         );
 
         ActivityLauncher.openImageEditor(this, resizedImageUrl, imageUrl);
-    }
-
-    @Override public void onMediaEditorRequested(String mediaUrl) {
-//        ActivityLauncher.openImageEditor(this, mediaUrl);
     }
 
     @Override
@@ -2263,6 +2263,14 @@ public class EditPostActivity extends AppCompatActivity implements
                         mRevision = data.getParcelableExtra(KEY_REVISION);
                         new Handler().postDelayed(this::loadRevision,
                                 getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
+                    }
+                    break;
+                case RequestCodes.IMAGE_EDITOR_EDIT_IMAGE:
+                    if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
+                        Uri imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
+                        if (imageUri != null) {
+                            mEditorMedia.addNewMediaToEditorAsync(imageUri, true);
+                        }
                     }
                     break;
             }
