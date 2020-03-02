@@ -1405,7 +1405,6 @@ public class EditPostActivity extends AppCompatActivity implements
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
             AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite,
                     BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap());
-            showPopup = true;
         }
 
         if (showPopup) {
