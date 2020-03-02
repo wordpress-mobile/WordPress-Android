@@ -68,7 +68,6 @@ Language: ja_JP
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_all_sites">すべてのサイト</string>
     <string name="reader_filter_sites_title">サイト</string>
     <string name="reader_filter_tags_title">タグ</string>
     <string name="reader_save_for_later_display_name">保存しました</string>

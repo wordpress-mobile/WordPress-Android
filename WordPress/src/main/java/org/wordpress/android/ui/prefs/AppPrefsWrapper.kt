@@ -115,6 +115,13 @@ class AppPrefsWrapper @Inject constructor() {
     fun getReaderSubfilter() = AppPrefs.getReaderSubfilter()
     fun setReaderSubfilter(json: String) = AppPrefs.setReaderSubfilter(json)
 
+    fun getLastReaderKnownAccessTokenStatus() = AppPrefs.getLastReaderKnownAccessTokenStatus()
+    fun setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus: Boolean) =
+            AppPrefs.setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus)
+
+    fun getLastReaderKnownUserId() = AppPrefs.getLastReaderKnownUserId()
+    fun setLastReaderKnownUserId(userId: Long) = AppPrefs.setLastReaderKnownUserId(userId)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

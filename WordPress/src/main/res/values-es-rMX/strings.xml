@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-31 14:42:00+0000
+Translation-Revision-Date: 2020-02-15 00:43:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es_MX
 -->
 <resources>
+    <string name="gutenberg_native_template_preview">Vista previa de la plantilla</string>
+    <string name="gutenberg_native_replace_current_block">Reemplazar el bloque actual</string>
+    <string name="gutenberg_native_add_to_end">Añadir al final</string>
+    <string name="gutenberg_native_add_to_beginning">Añadir al principio</string>
+    <string name="gutenberg_native_add_block_before">Añadir el bloque antes</string>
+    <string name="gutenberg_native_add_block_after">Añadir el bloque después</string>
+    <string name="reader_filter_empty_tags_action">Añadir una etiqueta</string>
+    <string name="reader_filter_empty_sites_action">Seguir un sitio</string>
+    <string name="reader_filter_empty_tags_list">Puedes seguir entradas sobre un tema específico agregando una etiqueta</string>
+    <string name="reader_filter_empty_sites_list">Mira las entradas más recientes de los sitios que sigues</string>
+    <string name="reader_filter_main_title">Siguiendo</string>
+    <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Leyenda del video. %s</string>
     <string name="gutenberg_native_edit_video">Editar video</string>
     <string name="gutenberg_native_edit_media">Editar medios</string>
@@ -68,7 +80,6 @@ Language: es_MX
     <string name="suffix_1_000_000_000_000_000">%sC</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQ</string>
-    <string name="reader_filter_all_sites">Todos los sitios</string>
     <string name="reader_filter_sites_title">Sitios</string>
     <string name="reader_filter_tags_title">Etiquetas</string>
     <string name="reader_save_for_later_display_name">Guardado</string>

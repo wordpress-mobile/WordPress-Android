@@ -8,7 +8,6 @@ import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -55,6 +54,7 @@ public class ReaderUpdateLogic {
     private Context mContext;
 
     @Inject AccountStore mAccountStore;
+    @Inject TagUpdateClientUtilsProvider mClientUtilsProvider;
 
     public ReaderUpdateLogic(Context context, WordPress app, ServiceCompletionListener listener) {
         mCompletionListener = listener;
@@ -114,7 +114,8 @@ public class ReaderUpdateLogic {
         AppLog.d(AppLog.T.READER, "reader service > updating tags");
         HashMap<String, String> params = new HashMap<>();
         params.put("locale", mLanguage);
-        WordPress.getRestClientUtilsV1_2().get("read/menu", params, null, listener, errorListener);
+        mClientUtilsProvider.getRestClientForTagUpdate()
+                            .get("read/menu", params, null, listener, errorListener);
     }
 
     private boolean displayNameUpdateWasNeeded(ReaderTagList serverTopics) {
@@ -137,27 +138,6 @@ public class ReaderUpdateLogic {
         return updateDone;
     }
 
-    private boolean downgradeFromIAFeatureFlagDetected() {
-        boolean downgradeDetected = false;
-
-        ReaderTagList savedTags = ReaderTagTable.getBookmarkTags();
-
-        if (savedTags != null && savedTags.size() == 1) {
-            ReaderTag savedTag = savedTags.get(0);
-
-            if (savedTag != null) {
-                String tagNameBefore = savedTag.getTagDisplayName();
-
-                if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
-                    && tagNameBefore.equals(mContext.getString(R.string.reader_save_for_later_display_name))) {
-                    downgradeDetected = true;
-                }
-            }
-        }
-
-        return downgradeDetected;
-    }
-
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
         new Thread() {
             @Override
@@ -167,11 +147,7 @@ public class ReaderUpdateLogic {
                 ReaderTagList serverTopics = new ReaderTagList();
                 serverTopics.addAll(parseTags(jsonObject, "default", ReaderTagType.DEFAULT));
 
-                boolean displayNameUpdateWasNeeded = false;
-
-                if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                    displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
-                }
+                boolean displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
 
                 if (!mAccountStore.hasAccessToken()) {
                     serverTopics.addAll(parseTags(jsonObject, "recommended", ReaderTagType.FOLLOWED));
@@ -184,15 +160,12 @@ public class ReaderUpdateLogic {
                 serverTopics.add(
                         new ReaderTag(
                                 "",
-                                BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE
-                                        ? mContext.getString(R.string.reader_save_for_later_display_name) : "",
+                                mContext.getString(R.string.reader_save_for_later_display_name),
                                 mContext.getString(R.string.reader_save_for_later_title),
                                 "",
                                 ReaderTagType.BOOKMARKED
                         )
                 );
-
-                boolean downgradeFromIAFeatureFlagDetected = downgradeFromIAFeatureFlagDetected();
 
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
@@ -204,11 +177,9 @@ public class ReaderUpdateLogic {
                 if (
                         !localTopics.isSameList(serverTopics)
                         || displayNameUpdateWasNeeded
-                        || downgradeFromIAFeatureFlagDetected
                 ) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
-                                              + "updatedDisplaYNames [" + displayNameUpdateWasNeeded
-                                              + "] donwgradeDetected [" + downgradeFromIAFeatureFlagDetected + "]");
+                                              + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
                     // if any local topics have been removed from the server, make sure to delete
                     // them locally (including their posts)
                     deleteTags(localTopics.getDeletions(serverTopics));

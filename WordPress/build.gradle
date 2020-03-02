@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-208"
+            versionName "alpha-210"
         }
-        versionCode 828
+        versionCode 833
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -67,7 +67,6 @@ android {
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
-        buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -84,9 +83,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "14.2-rc-1"
+                versionName "14.3-rc-1"
             }
-            versionCode 827
+            versionCode 832
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
@@ -94,7 +93,6 @@ android {
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
@@ -346,18 +344,18 @@ android.buildTypes.all { buildType ->
 }
 
 task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
-   repositoryOwner = "wordpress-mobile";
-   repositoryName = "WordPress-Android"
-   pullRequestId = System.properties['GITHUB_PULLREQUESTID']
-   username = System.properties['GITHUB_USERNAME']
-   password = System.properties['GITHUB_PASSWORD']
-   oAuth2Token = System.properties['GITHUB_OAUTH2TOKEN']
-   gitHubUrl = "https://api.github.com/"
-   createCommentWithAllSingleFileComments = false
-   createSingleFileComments = true
-   commentOnlyChangedContent = true
-   minSeverity = se.bjurr.violations.lib.model.SEVERITY.INFO //ERROR, INFO, WARN
-   commentTemplate = """
+    repositoryOwner = "wordpress-mobile";
+    repositoryName = "WordPress-Android"
+    pullRequestId = System.properties['GITHUB_PULLREQUESTID']
+    username = System.properties['GITHUB_USERNAME']
+    password = System.properties['GITHUB_PASSWORD']
+    oAuth2Token = System.properties['GITHUB_OAUTH2TOKEN']
+    gitHubUrl = "https://api.github.com/"
+    createCommentWithAllSingleFileComments = false
+    createSingleFileComments = true
+    commentOnlyChangedContent = true
+    minSeverity = se.bjurr.violations.lib.model.SEVERITY.INFO //ERROR, INFO, WARN
+    commentTemplate = """
 **Reporter**: {{violation.reporter}}{{#violation.rule}}\n
 **Rule**: {{violation.rule}}{{/violation.rule}}
 **Severity**: {{violation.severity}}
@@ -365,9 +363,9 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
 **Source**: {{violation.source}}{{/violation.source}}
 {{violation.message}}
 """
-   violations = [
-    ["CHECKSTYLE", ".", ".*/build/.*\\.xml\$", "Checkstyle"]
-   ]
+    violations = [
+            ["CHECKSTYLE", ".", ".*/build/.*\\.xml\$", "Checkstyle"]
+    ]
 }
 
 def checkGradlePropertiesFile() {
