@@ -7,14 +7,19 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.yalantis.ucrop.UCropFragment
-import org.wordpress.android.imageeditor.R
 import androidx.navigation.fragment.navArgs
+import org.wordpress.android.imageeditor.R
+import com.yalantis.ucrop.UCropFragment
 
-class CropFragment : UCropFragment() {
+/**
+ * Container fragment for displaying third party crop fragment and done menu item.
+ */
+class CropFragment : Fragment() {
     private lateinit var viewModel: CropViewModel
+    private lateinit var thirdPartyCropFragment: UCropFragment
     private val navArgs: CropFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,22 +27,30 @@ class CropFragment : UCropFragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_crop_image, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initializeViewModels()
-        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     private fun initializeViewModels() {
         viewModel = ViewModelProvider(this).get(CropViewModel::class.java)
         setupObservers()
         viewModel.start(navArgs.inputFilePath, requireContext().cacheDir)
-        viewModel.writeToBundle(requireNotNull(arguments))
     }
 
     private fun setupObservers() {
+        viewModel.showCropScreenWithBundle.observe(this, Observer { cropOptionsBundleWithFilesInfo ->
+            showThirdPartyCropFragmentWithBundle(cropOptionsBundleWithFilesInfo)
+        })
         viewModel.shouldCropAndSaveImage.observe(this, Observer { shouldCropAndSaveImage ->
             if (shouldCropAndSaveImage) {
-                cropAndSaveImage()
+                thirdPartyCropFragment.cropAndSaveImage()
             }
         })
     }
@@ -52,5 +65,13 @@ class CropFragment : UCropFragment() {
         true
     } else {
         super.onOptionsItemSelected(item)
+    }
+
+    private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
+        thirdPartyCropFragment = UCropFragment.newInstance(bundle)
+        childFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
+                .disallowAddToBackStack()
+                .commit()
     }
 }
