@@ -1,5 +1,6 @@
 package org.wordpress.android.imageeditor.crop
 
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Before
 import org.junit.Test
@@ -22,18 +23,16 @@ class CropViewModelTest {
     }
 
     @Test
+    fun `crop screen shown with bundle on start`() {
+        initViewModel()
+        assertThat(viewModel.showCropScreenWithBundle.value).isInstanceOf(Bundle::class.java)
+    }
+
+    @Test
     fun `crop and save image action triggered on done menu click`() {
         viewModel.onDoneMenuClicked()
         assertThat(viewModel.shouldCropAndSaveImage.value).isEqualTo(true)
     }
-
-    /*@Test
-    fun `file paths written to bundle `() {
-        initViewModel()
-        viewModel.writeToBundle(arguments)
-//        TODO: Mock
-//        verify(arguments).putParcelable(any(), argThat {  })
-    }*/
 
     private fun initViewModel() = viewModel.start(TEST_INPUT_IMAGE_PATH, cacheDir)
 }

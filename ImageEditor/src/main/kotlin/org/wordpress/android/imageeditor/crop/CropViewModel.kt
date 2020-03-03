@@ -15,12 +15,15 @@ class CropViewModel : ViewModel() {
     private val _shouldCropAndSaveImage = MutableLiveData<Boolean>(false)
     val shouldCropAndSaveImage: LiveData<Boolean> = _shouldCropAndSaveImage
 
+    private val _showCropScreenWithBundle = MutableLiveData<Bundle>()
+    val showCropScreenWithBundle: LiveData<Bundle> = _showCropScreenWithBundle
+
     private lateinit var cacheDir: File
     private lateinit var inputFilePath: String
     private var isStarted = false
 
-    private val cropOptions
-        get() = Options().also {
+    private val cropOptions by lazy {
+        Options().also {
             with(it) {
                 setShowCropGrid(true)
                 setFreeStyleCropEnabled(true)
@@ -36,6 +39,17 @@ class CropViewModel : ViewModel() {
                 )
             }
         }
+    }
+
+    private val cropOptionsBundleWithFilesInfo by lazy {
+        Bundle().also {
+            with(it) {
+                putParcelable(UCrop.EXTRA_INPUT_URI, Uri.fromFile(File(inputFilePath)))
+                putParcelable(UCrop.EXTRA_OUTPUT_URI, Uri.fromFile(File(cacheDir, IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME)))
+                putAll(cropOptions.optionBundle)
+            }
+        }
+    }
 
     fun start(inputFilePath: String, cacheDir: File) {
         if (isStarted) {
@@ -43,15 +57,8 @@ class CropViewModel : ViewModel() {
         }
         this.cacheDir = cacheDir
         this.inputFilePath = inputFilePath
+        _showCropScreenWithBundle.value = cropOptionsBundleWithFilesInfo
         isStarted = true
-    }
-
-    fun writeToBundle(bundle: Bundle) {
-        with(bundle) {
-            putParcelable(UCrop.EXTRA_INPUT_URI, Uri.fromFile(File(inputFilePath)))
-            putParcelable(UCrop.EXTRA_OUTPUT_URI, Uri.fromFile(File(cacheDir, IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME)))
-            putAll(cropOptions.optionBundle)
-        }
     }
 
     fun onDoneMenuClicked() {
