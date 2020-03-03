@@ -66,8 +66,8 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        viewModel.navigateToCropScreenWithInputFilePath.observe(this, Observer { filesInfo ->
-            navigateToCropScreenWithFilesInfo(filesInfo)
+        viewModel.navigateToCropScreenWithInputFilePath.observe(this, Observer { filePath ->
+            navigateToCropScreenWithInputFilePath(filePath)
         })
     }
 
@@ -104,7 +104,7 @@ class PreviewImageFragment : Fragment() {
         )
     }
 
-    private fun navigateToCropScreenWithFilesInfo(inputFilePath: String) {
+    private fun navigateToCropScreenWithInputFilePath(inputFilePath: String) {
         findNavController().navigate(
             PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath)
         )

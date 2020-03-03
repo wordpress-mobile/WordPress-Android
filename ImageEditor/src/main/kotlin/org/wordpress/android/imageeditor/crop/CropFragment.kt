@@ -49,7 +49,7 @@ class CropFragment : Fragment() {
             showThirdPartyCropFragmentWithBundle(cropOptionsBundleWithFilesInfo)
         })
         viewModel.shouldCropAndSaveImage.observe(this, Observer { shouldCropAndSaveImage ->
-            if (shouldCropAndSaveImage) {
+            if (shouldCropAndSaveImage && thirdPartyCropFragment.isAdded) {
                 thirdPartyCropFragment.cropAndSaveImage()
             }
         })
