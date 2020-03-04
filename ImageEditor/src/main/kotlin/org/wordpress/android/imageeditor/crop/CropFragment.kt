@@ -1,5 +1,6 @@
 package org.wordpress.android.imageeditor.crop
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -13,11 +14,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import org.wordpress.android.imageeditor.R
 import com.yalantis.ucrop.UCropFragment
+import com.yalantis.ucrop.UCropFragment.UCropResult
+import com.yalantis.ucrop.UCropFragmentCallback
 
 /**
  * Container fragment for displaying third party crop fragment and done menu item.
  */
-class CropFragment : Fragment() {
+class CropFragment : Fragment(), UCropFragmentCallback {
     private lateinit var viewModel: CropViewModel
     private lateinit var thirdPartyCropFragment: UCropFragment
     private val navArgs: CropFragmentArgs by navArgs()
@@ -53,6 +56,10 @@ class CropFragment : Fragment() {
                 thirdPartyCropFragment.cropAndSaveImage()
             }
         })
+
+        viewModel.navigateBackWithCropResult.observe(this, Observer { cropResult ->
+            navigateBackWithCropResult(cropResult)
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -73,5 +80,18 @@ class CropFragment : Fragment() {
                 .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
                 .disallowAddToBackStack()
                 .commit()
+    }
+
+    override fun onCropFinish(result: UCropResult?) {
+        result?.let { viewModel.onCropFinish(it.mResultCode, it.mResultData) }
+    }
+
+    override fun loadingProgress(showLoader: Boolean) { }
+
+    private fun navigateBackWithCropResult(cropResult: Pair<Int, Intent>) {
+        activity?.let {
+            it.setResult(cropResult.first, cropResult.second)
+            it.finish()
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.wordpress.android.imageeditor.crop
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.LiveData
@@ -17,6 +18,9 @@ class CropViewModel : ViewModel() {
 
     private val _showCropScreenWithBundle = MutableLiveData<Bundle>()
     val showCropScreenWithBundle: LiveData<Bundle> = _showCropScreenWithBundle
+
+    private val _navigateBackWithCropResult = MutableLiveData<Pair<Int, Intent>>()
+    val navigateBackWithCropResult: LiveData<Pair<Int, Intent>> = _navigateBackWithCropResult
 
     private lateinit var cacheDir: File
     private lateinit var inputFilePath: String
@@ -63,6 +67,10 @@ class CropViewModel : ViewModel() {
 
     fun onDoneMenuClicked() {
         _shouldCropAndSaveImage.value = true
+    }
+
+    fun onCropFinish(cropResultCode: Int, cropData: Intent) {
+        this._navigateBackWithCropResult.value = Pair(cropResultCode, cropData)
     }
 
     companion object {
