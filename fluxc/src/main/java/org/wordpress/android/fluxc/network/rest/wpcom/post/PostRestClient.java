@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResp
 import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostStatusResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType;
@@ -104,11 +105,38 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void fetchPostStatus(final PostModel post, final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("fields", "status");
+        final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                PostWPComRestResponse.class,
+                new Listener<PostWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PostWPComRestResponse response) {
+                        FetchPostStatusResponsePayload payload = new FetchPostStatusResponsePayload(post, site);
+                        payload.remotePostStatus = response.getStatus();
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(payload));
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        FetchPostStatusResponsePayload payload = new FetchPostStatusResponsePayload(post, site);
+                        payload.error = new PostError(error.apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(payload));
+                    }
+                }
+                                                                                                );
+        add(request);
+    }
+
     public void fetchPostList(final PostListDescriptorForRestSite listDescriptor, final long offset) {
         String url = WPCOMREST.sites.site(listDescriptor.getSite().getSiteId()).posts.getUrlV1_1();
 
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
-        String fields = TextUtils.join(",", Arrays.asList("ID", "modified", "status", "meta"));
+        String fields = TextUtils.join(",", Arrays.asList("ID", "modified", "status", "meta", "date"));
         Map<String, String> params =
                 createFetchPostListParameters(false, offset, pageSize, listDescriptor.getStatusList(),
                         listDescriptor.getAuthor(), fields, listDescriptor.getOrder().getValue(),
@@ -132,9 +160,12 @@ public class PostRestClient extends BaseWPComRestClient {
                             }
                             postListItems
                                     .add(new PostListItem(postResponse.getRemotePostId(), postResponse.getModified(),
-                                            postResponse.getStatus(), autoSaveModified));
+                                            postResponse.getStatus(), autoSaveModified, postResponse.getDate()));
                         }
-                        boolean canLoadMore = postListItems.size() == pageSize;
+                        // The API sometimes return wrong number of posts "found", so we also check if we get an empty
+                        // list in which case there would be no more posts to be fetched.
+                        boolean canLoadMore = postListItems.size() > 0
+                                              && response.getFound() > offset + postListItems.size();
                         FetchPostListResponsePayload responsePayload =
                                 new FetchPostListResponsePayload(listDescriptor, postListItems, loadedMore,
                                         canLoadMore, null);
