@@ -10,14 +10,15 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.model.AspectRatio
 import com.yalantis.ucrop.view.CropImageView
+import  org.wordpress.android.imageeditor.viewmodel.Event
 import java.io.File
 
 class CropViewModel : ViewModel() {
     private val _shouldCropAndSaveImage = MutableLiveData<Boolean>(false)
     val shouldCropAndSaveImage: LiveData<Boolean> = _shouldCropAndSaveImage
 
-    private val _showCropScreenWithBundle = MutableLiveData<Bundle>()
-    val showCropScreenWithBundle: LiveData<Bundle> = _showCropScreenWithBundle
+    private val _showCropScreenWithBundleEvent = MutableLiveData<Event<Bundle>>()
+    val showCropScreenWithBundleEvent: LiveData<Event<Bundle>> = _showCropScreenWithBundleEvent
 
     private val _navigateBackWithCropResult = MutableLiveData<Pair<Int, Intent>>()
     val navigateBackWithCropResult: LiveData<Pair<Int, Intent>> = _navigateBackWithCropResult
@@ -61,7 +62,7 @@ class CropViewModel : ViewModel() {
         }
         this.cacheDir = cacheDir
         this.inputFilePath = inputFilePath
-        _showCropScreenWithBundle.value = cropOptionsBundleWithFilesInfo
+        _showCropScreenWithBundleEvent.value = Event(cropOptionsBundleWithFilesInfo)
         isStarted = true
     }
 

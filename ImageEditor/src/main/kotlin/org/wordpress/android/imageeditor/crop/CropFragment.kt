@@ -22,7 +22,6 @@ import com.yalantis.ucrop.UCropFragmentCallback
  */
 class CropFragment : Fragment(), UCropFragmentCallback {
     private lateinit var viewModel: CropViewModel
-    private lateinit var thirdPartyCropFragment: UCropFragment
     private val navArgs: CropFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,12 +47,15 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun setupObservers() {
-        viewModel.showCropScreenWithBundle.observe(this, Observer { cropOptionsBundleWithFilesInfo ->
-            showThirdPartyCropFragmentWithBundle(cropOptionsBundleWithFilesInfo)
+        viewModel.showCropScreenWithBundleEvent.observe(this, Observer {
+            it?.applyIfNotHandled {
+                showThirdPartyCropFragmentWithBundle(it.peekContent())
+            }
         })
         viewModel.shouldCropAndSaveImage.observe(this, Observer { shouldCropAndSaveImage ->
-            if (shouldCropAndSaveImage && thirdPartyCropFragment.isAdded) {
-                thirdPartyCropFragment.cropAndSaveImage()
+            if (shouldCropAndSaveImage) {
+                val thirdPartyCropFragment = childFragmentManager.findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+                thirdPartyCropFragment?.cropAndSaveImage()
             }
         })
 
@@ -75,7 +77,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
-        thirdPartyCropFragment = UCropFragment.newInstance(bundle)
+        val thirdPartyCropFragment = UCropFragment.newInstance(bundle)
         childFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
                 .disallowAddToBackStack()
