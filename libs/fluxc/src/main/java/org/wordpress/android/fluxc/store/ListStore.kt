@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.action.ListAction.FETCHED_LIST_ITEMS
 import org.wordpress.android.fluxc.action.ListAction.LIST_DATA_INVALIDATED
-import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_CHANGED
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
 import org.wordpress.android.fluxc.action.ListAction.LIST_REQUIRES_REFRESH
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_ALL_LISTS
@@ -64,7 +63,6 @@ class ListStore @Inject constructor(
 
         when (actionType) {
             FETCHED_LIST_ITEMS -> handleFetchedListItems(action.payload as FetchedListItemsPayload)
-            LIST_ITEMS_CHANGED -> handleListItemsChanged(action.payload as ListItemsChangedPayload)
             LIST_ITEMS_REMOVED -> handleListItemsRemoved(action.payload as ListItemsRemovedPayload)
             LIST_REQUIRES_REFRESH -> handleListRequiresRefresh(action.payload as ListDescriptorTypeIdentifier)
             LIST_DATA_INVALIDATED -> handleListDataInvalidated(action.payload as ListDescriptorTypeIdentifier)
@@ -263,25 +261,15 @@ class ListStore @Inject constructor(
     }
 
     /**
-     * Handles the [ListAction.LIST_ITEMS_CHANGED] action.
-     *
-     * Whenever an item of a list is changed, we'll emit the [OnListItemsChanged] event so the consumer of the lists can
-     * update themselves.
-     */
-    private fun handleListItemsChanged(payload: ListItemsChangedPayload) {
-        emitChange(OnListItemsChanged(payload.type, error = null))
-    }
-
-    /**
      * Handles the [ListAction.LIST_ITEMS_REMOVED] action.
      *
      * Items in [ListItemsRemovedPayload.remoteItemIds] will be removed from lists with
-     * [ListDescriptorTypeIdentifier] after which [OnListItemsChanged] event will be emitted.
+     * [ListDescriptorTypeIdentifier] after which [OnListDataInvalidated] event will be emitted.
      */
     private fun handleListItemsRemoved(payload: ListItemsRemovedPayload) {
         val lists = listSqlUtils.getListsWithTypeIdentifier(payload.type)
         listItemSqlUtils.deleteItemsFromLists(lists.map { it.id }, payload.remoteItemIds)
-        emitChange(OnListItemsChanged(payload.type, error = null))
+        emitChange(OnListDataInvalidated(payload.type))
     }
 
     /**
@@ -392,18 +380,6 @@ class ListStore @Inject constructor(
     }
 
     /**
-     * The event to be emitted when there is a change to items for a specific [ListDescriptorTypeIdentifier].
-     */
-    class OnListItemsChanged(
-        val type: ListDescriptorTypeIdentifier,
-        error: ListError?
-    ) : Store.OnChanged<ListError>() {
-        init {
-            this.error = error
-        }
-    }
-
-    /**
      * The event to be emitted when a list needs to be refresh for a specific [ListDescriptorTypeIdentifier].
      */
     class OnListRequiresRefresh(val type: ListDescriptorTypeIdentifier) : Store.OnChanged<ListError>()
@@ -412,14 +388,6 @@ class ListStore @Inject constructor(
      * The event to be emitted when a list's data is invalidated for a specific [ListDescriptorTypeIdentifier].
      */
     class OnListDataInvalidated(val type: ListDescriptorTypeIdentifier) : Store.OnChanged<ListError>()
-
-    /**
-     * This is the payload for [ListAction.LIST_ITEMS_CHANGED].
-     *
-     * @property type [ListDescriptorTypeIdentifier] which will tell [ListStore] and the clients which
-     * [ListDescriptor]s are updated.
-     */
-    class ListItemsChangedPayload(val type: ListDescriptorTypeIdentifier)
 
     /**
      * This is the payload for [ListAction.LIST_ITEMS_REMOVED].

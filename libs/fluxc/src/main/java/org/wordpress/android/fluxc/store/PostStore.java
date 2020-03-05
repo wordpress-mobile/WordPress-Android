@@ -28,6 +28,8 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoveAllPosts;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostSummary;
+import org.wordpress.android.fluxc.model.PostSummaryModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.ListOrder;
@@ -49,7 +51,6 @@ import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListError;
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType;
-import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsRemovedPayload;
 import org.wordpress.android.fluxc.utils.ObjectsUtils;
 import org.wordpress.android.util.AppLog;
@@ -92,12 +93,15 @@ public class PostStore extends Store {
         public String lastModified;
         public String status;
         public String autoSaveModified;
+        public String dateCreated;
 
-        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified) {
+        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified,
+                            String dateCreated) {
             this.remotePostId = remotePostId;
             this.lastModified = lastModified;
             this.status = status;
             this.autoSaveModified = autoSaveModified;
+            this.dateCreated = dateCreated;
         }
     }
 
@@ -246,6 +250,17 @@ public class PostStore extends Store {
         }
     }
 
+    public static class FetchPostStatusResponsePayload extends Payload<PostError> {
+        public PostModel post;
+        public SiteModel site;
+        public String remotePostStatus;
+
+        public FetchPostStatusResponsePayload(PostModel post, SiteModel site) {
+            this.post = post;
+            this.site = site;
+        }
+    }
+
     public static class PostError implements OnChangedError {
         public PostErrorType type;
         public String message;
@@ -309,6 +324,17 @@ public class PostStore extends Store {
         OnRevisionsFetched(PostModel post, RevisionsModel revisionsModel) {
             this.post = post;
             this.revisionsModel = revisionsModel;
+        }
+    }
+
+    public static class OnPostStatusFetched extends OnChanged<PostError> {
+        public PostModel post;
+        public String remotePostStatus;
+
+        OnPostStatusFetched(PostModel post, String remotePostStatus, PostError error) {
+            this.post = post;
+            this.remotePostStatus = remotePostStatus;
+            this.error = error;
         }
     }
 
@@ -595,8 +621,14 @@ public class PostStore extends Store {
             case FETCH_POST:
                 fetchPost((RemotePostPayload) action.getPayload());
                 break;
+            case FETCH_POST_STATUS:
+                fetchPostStatus((RemotePostPayload) action.getPayload());
+                break;
             case FETCHED_POST:
                 handleFetchSinglePostCompleted((FetchPostResponsePayload) action.getPayload());
+                break;
+            case FETCHED_POST_STATUS:
+                handleFetchPostStatusCompleted((FetchPostStatusResponsePayload) action.getPayload());
                 break;
             case PUSH_POST:
                 pushPost((RemotePostPayload) action.getPayload());
@@ -670,6 +702,23 @@ public class PostStore extends Store {
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.fetchPost(payload.post, payload.site);
+        }
+    }
+
+    private void fetchPostStatus(RemotePostPayload payload) {
+        if (payload.post.isLocalDraft()) {
+            // If the post is a local draft, it won't have a remote post status
+            FetchPostStatusResponsePayload responsePayload =
+                    new FetchPostStatusResponsePayload(payload.post, payload.site);
+            responsePayload.error = new PostError(PostErrorType.UNKNOWN_POST);
+            mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(responsePayload));
+            return;
+        }
+        if (payload.site.isUsingWpComRestApi()) {
+            mPostRestClient.fetchPostStatus(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.fetchPostStatus(payload.post, payload.site);
         }
     }
 
@@ -754,6 +803,8 @@ public class PostStore extends Store {
                 }
             }
         }
+
+        updatePostSummaries(payload.listDescriptor.getSite(), payload.postListItems);
 
         FetchedListItemsPayload fetchedListItemsPayload =
                 new FetchedListItemsPayload(payload.listDescriptor, postIds,
@@ -889,6 +940,10 @@ public class PostStore extends Store {
         }
     }
 
+    private void handleFetchPostStatusCompleted(FetchPostStatusResponsePayload payload) {
+        emitChange(new OnPostStatusFetched(payload.post, payload.remotePostStatus, payload.error));
+    }
+
     private void handlePushPostCompleted(RemotePostPayload payload) {
         if (payload.isError()) {
             OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post);
@@ -952,8 +1007,8 @@ public class PostStore extends Store {
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
 
-        mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
-                new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()))));
+        mDispatcher.dispatch(ListActionBuilder.newListDataInvalidatedAction(
+                PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId())));
     }
 
     private void removePost(PostModel post) {
@@ -1062,5 +1117,27 @@ public class PostStore extends Store {
 
     public void deleteLocalRevisionOfAPostOrPage(PostModel post) {
         mPostSqlUtils.deleteLocalRevisionAndDiffsOfAPostOrPage(post);
+    }
+
+    /**
+     * Since we only fetch the ids of a post while fetching the post list, we need to keep a small table in the
+     * DB to be able to check post statuses for sectioning.
+     */
+    private void updatePostSummaries(SiteModel site, List<PostListItem> postListItems) {
+        List<PostSummaryModel> postSummaryModelList = new ArrayList<>(postListItems.size());
+        for (PostListItem item : postListItems) {
+            postSummaryModelList
+                    .add(new PostSummaryModel(site, item.remotePostId, item.status, item.dateCreated));
+        }
+        mPostSqlUtils.insertOrUpdatePostSummaries(postSummaryModelList);
+    }
+
+    public List<PostSummary> getPostSummaries(@NonNull SiteModel site, @NonNull List<Long> remotePostIds) {
+        List<PostSummaryModel> postSummaryModelList = mPostSqlUtils.getPostSummaries(site, remotePostIds);
+        List<PostSummary> postSummaryList = new ArrayList<>(postSummaryModelList.size());
+        for (PostSummaryModel postSummaryModel : postSummaryModelList) {
+            postSummaryList.add(PostSummary.fromPostSummaryModel(postSummaryModel));
+        }
+        return postSummaryList;
     }
 }

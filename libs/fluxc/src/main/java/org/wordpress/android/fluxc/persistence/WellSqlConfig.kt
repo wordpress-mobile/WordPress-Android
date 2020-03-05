@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 96
+        return 98
     }
 
     override fun getDbName(): String {
@@ -1049,6 +1049,16 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "UNIQUE (SLUG, LOCAL_SITE_ID) " +
                                     "ON CONFLICT REPLACE)"
                     )
+                }
+                96 -> migrate(version) {
+                    db.execSQL("CREATE TABLE PostSummaryModel (REMOTE_ID INTEGER,LOCAL_SITE_ID INTEGER,STATUS TEXT," +
+                            "DATE_CREATED TEXT,_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
+                            "UNIQUE(REMOTE_ID) ON CONFLICT REPLACE)")
+                }
+                97 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCProductModel ADD DATE_ON_SALE_FROM_GMT TEXT")
+                    db.execSQL("ALTER TABLE WCProductModel ADD DATE_ON_SALE_TO_GMT TEXT")
                 }
             }
         }
