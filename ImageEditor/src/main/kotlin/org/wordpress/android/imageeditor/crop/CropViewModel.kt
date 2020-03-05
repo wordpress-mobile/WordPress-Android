@@ -10,7 +10,7 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.model.AspectRatio
 import com.yalantis.ucrop.view.CropImageView
-import  org.wordpress.android.imageeditor.viewmodel.Event
+import org.wordpress.android.imageeditor.viewmodel.Event
 import java.io.File
 
 class CropViewModel : ViewModel() {
