@@ -29,7 +29,8 @@ class CropViewModelTest {
     @Test
     fun `crop screen shown with bundle on start`() {
         initViewModel()
-        assertThat(viewModel.showCropScreenWithBundle.value).isInstanceOf(Bundle::class.java)
+        assertThat(requireNotNull(viewModel.showCropScreenWithBundleEvent.value).peekContent())
+                .isInstanceOf(Bundle::class.java)
     }
 
     @Test
