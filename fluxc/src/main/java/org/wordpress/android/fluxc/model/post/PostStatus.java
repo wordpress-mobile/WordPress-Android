@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.model.post;
 
 import org.wordpress.android.fluxc.model.PostImmutableModel;
+import org.wordpress.android.fluxc.model.PostSummaryModel;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.Date;
@@ -61,10 +62,17 @@ public enum PostStatus {
     }
 
     public static synchronized PostStatus fromPost(PostImmutableModel post) {
-        String value = post.getStatus();
+        return fromStringAndDateIso8601(post.getStatus(), post.getDateCreated());
+    }
+
+    public static synchronized PostStatus fromPostSummary(PostSummaryModel postSummaryModel) {
+        return fromStringAndDateIso8601(postSummaryModel.getStatus(), postSummaryModel.getDateCreated());
+    }
+
+    private static synchronized PostStatus fromStringAndDateIso8601(String value, String dateCreatedIso8601) {
         long dateCreatedGMT = 0;
 
-        Date dateCreated = DateTimeUtils.dateUTCFromIso8601(post.getDateCreated());
+        Date dateCreated = DateTimeUtils.dateUTCFromIso8601(dateCreatedIso8601);
         if (dateCreated != null) {
             dateCreatedGMT = dateCreated.getTime();
         }
