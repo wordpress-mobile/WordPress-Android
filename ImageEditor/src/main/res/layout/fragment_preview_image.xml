@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:contentDescription="@null" />
+        android:contentDescription="@string/preview_image_description"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
