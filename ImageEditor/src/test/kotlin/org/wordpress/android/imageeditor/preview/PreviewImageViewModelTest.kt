@@ -175,5 +175,34 @@ class PreviewImageViewModelTest {
         assertNull(viewModel.navigateToCropScreenWithInputFilePath.value)
     }
 
+    @Test
+    fun `retry layout shown on high res image load failed`() {
+        initViewModel()
+        viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
+        assertThat(requireNotNull(viewModel.uiState.value).retryLayoutVisible).isEqualTo(true)
+    }
+
+    @Test
+    fun `retry layout shown when low res image load succeeded but high res image load failed afterwards`() {
+        initViewModel()
+        viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
+        assertThat(requireNotNull(viewModel.uiState.value).retryLayoutVisible).isEqualTo(true)
+    }
+
+    @Test
+    fun `retry layout hidden when low res image load failed but high res image shown afterwards`() {
+        initViewModel()
+        viewModel.onLoadIntoImageViewFailed(TEST_LOW_RES_IMAGE_URL)
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL)
+        assertThat(requireNotNull(viewModel.uiState.value).retryLayoutVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `data loading start triggered on retry`() {
+        viewModel.onLoadIntoImageViewRetry(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL)
+        assertThat(viewModel.uiState.value).isInstanceOf(ImageDataStartLoadingUiState::class.java)
+    }
+
     private fun initViewModel() = viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL)
 }

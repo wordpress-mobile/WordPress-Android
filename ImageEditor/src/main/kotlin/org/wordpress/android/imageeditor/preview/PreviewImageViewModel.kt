@@ -24,11 +24,7 @@ class PreviewImageViewModel : ViewModel() {
     val navigateToCropScreenWithInputFilePath: LiveData<String> = _navigateToCropScreenWithInputFilePath
 
     fun onCreateView(loResImageUrl: String, hiResImageUrl: String) {
-        updateUiState(
-            ImageDataStartLoadingUiState(
-                ImageData(loResImageUrl, hiResImageUrl)
-            )
-        )
+        updateUiState(createImageDataStartLoadingUiState(loResImageUrl, hiResImageUrl))
     }
 
     fun onLoadIntoImageViewSuccess(url: String) {
@@ -78,6 +74,17 @@ class PreviewImageViewModel : ViewModel() {
         updateLoadIntoFileState(ImageLoadToFileFailedState)
     }
 
+    fun onLoadIntoImageViewRetry(loResImageUrl: String, hiResImageUrl: String) {
+        updateUiState(createImageDataStartLoadingUiState(loResImageUrl, hiResImageUrl))
+    }
+
+    private fun createImageDataStartLoadingUiState(
+        loResImageUrl: String,
+        hiResImageUrl: String
+    ): ImageDataStartLoadingUiState = ImageDataStartLoadingUiState(
+        ImageData(loResImageUrl, hiResImageUrl)
+    )
+
     private fun updateUiState(uiState: ImageUiState) {
         _uiState.value = uiState
     }
@@ -89,14 +96,31 @@ class PreviewImageViewModel : ViewModel() {
     data class ImageData(val lowResImageUrl: String, val highResImageUrl: String)
 
     sealed class ImageUiState(
-        val progressBarVisible: Boolean = false
+        val progressBarVisible: Boolean = false,
+        val retryLayoutVisible: Boolean
     ) {
-        data class ImageDataStartLoadingUiState(val imageData: ImageData) : ImageUiState(progressBarVisible = true)
+        data class ImageDataStartLoadingUiState(val imageData: ImageData) : ImageUiState(
+            progressBarVisible = true,
+            retryLayoutVisible = false
+        )
         // Continue displaying progress bar on low res image load success
-        object ImageInLowResLoadSuccessUiState : ImageUiState(progressBarVisible = true)
-        object ImageInLowResLoadFailedUiState : ImageUiState(progressBarVisible = true)
-        object ImageInHighResLoadSuccessUiState : ImageUiState(progressBarVisible = false)
-        object ImageInHighResLoadFailedUiState : ImageUiState(progressBarVisible = false)
+        object ImageInLowResLoadSuccessUiState : ImageUiState(
+            progressBarVisible = true,
+            retryLayoutVisible = false
+        )
+        object ImageInLowResLoadFailedUiState : ImageUiState(
+            progressBarVisible = true,
+            retryLayoutVisible = false
+        )
+        object ImageInHighResLoadSuccessUiState : ImageUiState(
+            progressBarVisible = false,
+            retryLayoutVisible = false
+        )
+        // Display retry only when high res image load failed
+        object ImageInHighResLoadFailedUiState : ImageUiState(
+            progressBarVisible = false,
+            retryLayoutVisible = true
+        )
     }
 
     sealed class ImageLoadToFileState {
