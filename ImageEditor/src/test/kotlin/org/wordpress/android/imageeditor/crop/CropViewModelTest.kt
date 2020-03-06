@@ -6,6 +6,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Before
 import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertNotNull
 import org.junit.Rule
 import java.io.File
 
@@ -34,13 +35,13 @@ class CropViewModelTest {
     }
 
     @Test
-    fun `crop and save image action triggered on done menu click`() {
+    fun `crop and save image event triggered on done menu click`() {
         viewModel.onDoneMenuClicked()
-        assertThat(viewModel.shouldCropAndSaveImage.value).isEqualTo(true)
+        assertNotNull(requireNotNull(viewModel.cropAndSaveImageEvent.value).peekContent())
     }
 
     @Test
-    fun `navigate back action triggered on crop finish`() {
+    fun `navigate back action triggered with crop result on crop finish`() {
         viewModel.onCropFinish(cropResultCode, cropData)
         assertThat(requireNotNull(viewModel.navigateBackWithCropResult.value).first)
                 .isEqualTo(cropResultCode)

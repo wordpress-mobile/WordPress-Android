@@ -52,8 +52,8 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 showThirdPartyCropFragmentWithBundle(it.peekContent())
             }
         })
-        viewModel.shouldCropAndSaveImage.observe(this, Observer { shouldCropAndSaveImage ->
-            if (shouldCropAndSaveImage) {
+        viewModel.cropAndSaveImageEvent.observe(this, Observer {
+            it?.applyIfNotHandled {
                 val thirdPartyCropFragment = childFragmentManager.findFragmentByTag(UCropFragment.TAG) as? UCropFragment
                 thirdPartyCropFragment?.cropAndSaveImage()
             }

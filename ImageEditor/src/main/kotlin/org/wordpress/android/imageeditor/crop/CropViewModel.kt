@@ -14,11 +14,11 @@ import org.wordpress.android.imageeditor.viewmodel.Event
 import java.io.File
 
 class CropViewModel : ViewModel() {
-    private val _shouldCropAndSaveImage = MutableLiveData<Boolean>(false)
-    val shouldCropAndSaveImage: LiveData<Boolean> = _shouldCropAndSaveImage
-
     private val _showCropScreenWithBundleEvent = MutableLiveData<Event<Bundle>>()
     val showCropScreenWithBundleEvent: LiveData<Event<Bundle>> = _showCropScreenWithBundleEvent
+
+    private val _cropAndSaveImageEvent = MutableLiveData<Event<Unit>>()
+    val cropAndSaveImageEvent: LiveData<Event<Unit>> = _cropAndSaveImageEvent
 
     private val _navigateBackWithCropResult = MutableLiveData<Pair<Int, Intent>>()
     val navigateBackWithCropResult: LiveData<Pair<Int, Intent>> = _navigateBackWithCropResult
@@ -67,11 +67,11 @@ class CropViewModel : ViewModel() {
     }
 
     fun onDoneMenuClicked() {
-        _shouldCropAndSaveImage.value = true
+        _cropAndSaveImageEvent.value = Event(Unit)
     }
 
     fun onCropFinish(cropResultCode: Int, cropData: Intent) {
-        this._navigateBackWithCropResult.value = Pair(cropResultCode, cropData)
+        _navigateBackWithCropResult.value = Pair(cropResultCode, cropData)
     }
 
     companion object {
