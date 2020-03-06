@@ -95,7 +95,22 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:fitsSystemWindows">true</item>
-        <item name="bottomSheetStyle">@style/Widget.Design.BottomSheet.Modal</item>
+        <item name="bottomSheetStyle">@style/WordPress.BottomSheetDialogTheme.BottomSheetStyle
+        </item>
+    </style>
+
+    <style name="WordPress.BottomSheetDialogTheme.BottomSheetStyle" parent="@style/Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">
+            @style/WordPress.BottomSheetDialogTheme.ShapeAppearanceOverlay
+        </item>
+    </style>
+
+    <style name="WordPress.BottomSheetDialogTheme.ShapeAppearanceOverlay">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">@dimen/bottom_sheet_handle_container_radius</item>
+        <item name="cornerSizeTopLeft">@dimen/bottom_sheet_handle_container_radius</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
@@ -961,7 +976,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="LoginTheme.Username" parent="TextAppearance.MaterialComponents.Subtitle1"/>
+    <style name="LoginTheme.Username" parent="TextAppearance.MaterialComponents.Subtitle1" />
 
     <style name="LoginTheme.Footnote" parent="TextAppearance.MaterialComponents.Caption" />
 
@@ -1015,10 +1030,9 @@
         <item name="android:paddingBottom">@dimen/margin_large</item>
     </style>
 
-
     <style name="SiteTagFilteredUrl" parent="SiteTagFilteredTitle">
         <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">@dimen/reader_subfilter_url_margin_bottom</item>
     </style>
@@ -1071,17 +1085,6 @@
         <item name="android:layout_width">@dimen/main_fab_tooltip_arrow_size</item>
         <item name="android:layout_height">@dimen/main_fab_tooltip_arrow_size</item>
         <item name="android:elevation">@dimen/main_fab_tooltip_elevation</item>
-    </style>
-
-    <style name="Handled.BottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:fitsSystemWindows">true</item>
-        <item name="bottomSheetStyle">@style/BottomSheetStyleContainer</item>
-    </style>
-
-    <style name="BottomSheetStyleContainer" parent="Widget.MaterialComponents.BottomSheet.Modal">
-        <item name="android:background">@drawable/bg_bottom_sheet_handle_container</item>
     </style>
 
     <!--Publicize styles -->

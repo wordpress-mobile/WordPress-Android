@@ -28,8 +28,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ReaderPostListViewModel
 
-    override fun getTheme() = R.style.Handled_BottomSheetDialogStyle
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
