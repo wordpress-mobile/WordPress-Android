@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.stats_minified_widget_configure_activity.*
+import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.util.LocaleManager
 
@@ -14,7 +14,7 @@ class StatsMinifiedWidgetConfigureActivity : AppCompatActivity() {
 
         setContentView(R.layout.stats_minified_widget_configure_activity)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(toolbar_main)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
