@@ -24,6 +24,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteCookie;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteCookieResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
@@ -640,12 +642,12 @@ public class SiteStore extends Store {
 
     public static class OnAccessCookieFetched extends OnChanged<AccessCookieError> {
         public SiteModel site;
-        public @Nullable SiteCookieResponse cookie;
+        public boolean success;
 
-        public OnAccessCookieFetched(SiteModel site, @Nullable SiteCookieResponse cookie,
+        public OnAccessCookieFetched(SiteModel site, boolean success,
                                      @Nullable AccessCookieError error) {
             this.site = site;
-            this.cookie = cookie;
+            this.success = success;
             this.error = error;
         }
     }
@@ -1104,14 +1106,16 @@ public class SiteStore extends Store {
     private SiteRestClient mSiteRestClient;
     private SiteXMLRPCClient mSiteXMLRPCClient;
     private PostSqlUtils mPostSqlUtils;
+    private PrivateAtomicCookie mPrivateAtomicCookie;
 
     @Inject
     public SiteStore(Dispatcher dispatcher, PostSqlUtils postSqlUtils, SiteRestClient siteRestClient,
-                     SiteXMLRPCClient siteXMLRPCClient) {
+                     SiteXMLRPCClient siteXMLRPCClient, PrivateAtomicCookie privateAtomicCookie) {
         super(dispatcher);
         mSiteRestClient = siteRestClient;
         mSiteXMLRPCClient = siteXMLRPCClient;
         mPostSqlUtils = postSqlUtils;
+        mPrivateAtomicCookie = privateAtomicCookie;
     }
 
     @Override
@@ -1949,8 +1953,13 @@ public class SiteStore extends Store {
     }
 
     private void fetchAccessCookie(SiteModel siteModel) {
+        if (mPrivateAtomicCookie.exists() || !mPrivateAtomicCookie.isExpired()) {
+            emitChange(new OnAccessCookieFetched(siteModel, true, null));
+            return;
+        }
+
 //        if (siteModel.isWPComAtomic()) {
-            mSiteRestClient.fetchAccessCookie(siteModel);
+        mSiteRestClient.fetchAccessCookie(siteModel);
 //        } else {
 //            AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.GENERIC_ERROR);
 //            handleFetchAccessCookie(new FetchedAccessCookiePayload(siteModel, cookieError));
@@ -1958,7 +1967,15 @@ public class SiteStore extends Store {
     }
 
     private void handleFetchAccessCookie(FetchedAccessCookiePayload payload) {
-        emitChange(new OnAccessCookieFetched(payload.site, payload.cookie, payload.error));
+        SiteCookie siteCookie = null;
+
+        if (!payload.isError()) {
+            siteCookie = payload.cookie.getCookies().get(0);
+        }
+
+        mPrivateAtomicCookie.set(siteCookie);
+
+        emitChange(new OnAccessCookieFetched(payload.site, true, payload.error));
     }
 
     private void fetchPlans(SiteModel siteModel) {
