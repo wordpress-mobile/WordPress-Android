@@ -160,7 +160,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     public void onResponse(SiteCookieResponse response) {
                         if (response != null) {
                             mDispatcher.dispatch(SiteActionBuilder
-                                    .newFetchedAccessCookieAction(new FetchedAccessCookiePayload(site, response)));
+                                    .newFetchedAccessCookieAction(new FetchedAccessCookiePayload(site, true)));
                         } else {
                             AppLog.e(T.API, "Failed to fetch access cookie.");
 

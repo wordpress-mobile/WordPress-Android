@@ -7,8 +7,8 @@ class SiteCookieResponse(
 
 class SiteCookie(
     val expires: String,
-    val path: String?,
-    val domain: String?,
-    val name: Boolean,
-    val value: Boolean
+    val path: String,
+    val domain: String,
+    val name: String,
+    val value: String
 )
