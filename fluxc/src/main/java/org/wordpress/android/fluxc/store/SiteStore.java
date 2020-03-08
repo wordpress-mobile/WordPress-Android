@@ -1953,7 +1953,7 @@ public class SiteStore extends Store {
     }
 
     private void fetchAccessCookie(SiteModel siteModel) {
-        if (mPrivateAtomicCookie.exists() || !mPrivateAtomicCookie.isExpired()) {
+        if (mPrivateAtomicCookie.exists() && !mPrivateAtomicCookie.isExpired()) {
             emitChange(new OnAccessCookieFetched(siteModel, true, null));
             return;
         }
