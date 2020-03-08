@@ -34,10 +34,10 @@ class PrivateAtomicCookie(private val context: Context) {
 
     fun isExpired(): Boolean {
         if(!exists()){
-            return true;
+            return true
         }
         val cookieExpiration: Long = cookie!!.expires.toLong()
-        val currentTime = System.currentTimeMillis()
+        val currentTime = System.currentTimeMillis() / 1000
 
         return cookieExpiration <= currentTime
     }
