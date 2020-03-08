@@ -1,6 +1,5 @@
 package org.wordpress.android.imageeditor.crop
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -16,13 +15,19 @@ import org.wordpress.android.imageeditor.R
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
+import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
+import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
+import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveStartState
+import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
+import org.wordpress.android.imageeditor.utils.ToastUtils
+import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 
 /**
  * Container fragment for displaying third party crop fragment and done menu item.
  */
 class CropFragment : Fragment(), UCropFragmentCallback {
     private lateinit var viewModel: CropViewModel
-    private lateinit var thirdPartyCropFragment: UCropFragment
+    private var doneMenu: MenuItem? = null
     private val navArgs: CropFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,12 +53,29 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun setupObservers() {
-        viewModel.showCropScreenWithBundle.observe(this, Observer { cropOptionsBundleWithFilesInfo ->
-            showThirdPartyCropFragmentWithBundle(cropOptionsBundleWithFilesInfo)
+        viewModel.uiState.observe(this, Observer { uiState ->
+            when (uiState) {
+                is UiStartLoadingWithBundleState -> {
+                    showThirdPartyCropFragmentWithBundle(uiState.bundle)
+                }
+                else -> { // Do nothing
+                }
+            }
+            doneMenu?.isVisible = uiState.doneMenuVisible
         })
-        viewModel.shouldCropAndSaveImage.observe(this, Observer { shouldCropAndSaveImage ->
-            if (shouldCropAndSaveImage && thirdPartyCropFragment.isAdded) {
-                thirdPartyCropFragment.cropAndSaveImage()
+
+        viewModel.cropAndSaveImageState.observe(this, Observer { state ->
+            when (state) {
+                is ImageCropAndSaveStartState -> {
+                    val thirdPartyCropFragment = childFragmentManager
+                            .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+                    thirdPartyCropFragment?.cropAndSaveImage()
+                }
+                is ImageCropAndSaveFailedState -> {
+                    showCropError(state.errorMsg, state.errorResId)
+                }
+                else -> { // Do nothing
+                }
             }
         })
 
@@ -65,6 +87,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_crop_fragment, menu)
+        doneMenu = menu?.findItem(R.id.menu_done)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
@@ -75,22 +98,31 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
-        thirdPartyCropFragment = UCropFragment.newInstance(bundle)
+        val thirdPartyCropFragment = UCropFragment.newInstance(bundle)
         childFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
                 .disallowAddToBackStack()
                 .commit()
     }
 
-    override fun onCropFinish(result: UCropResult?) {
-        result?.let { viewModel.onCropFinish(it.mResultCode, it.mResultData) }
+    override fun loadingProgress(loading: Boolean) {
+        viewModel.onLoadingProgress(loading)
     }
 
-    override fun loadingProgress(showLoader: Boolean) { }
+    override fun onCropFinish(result: UCropResult?) {
+        result?.let {
+            viewModel.onCropFinish(it.mResultCode, it.mResultData)
+        }
+    }
 
-    private fun navigateBackWithCropResult(cropResult: Pair<Int, Intent>) {
+    private fun showCropError(errorMsg: String?, errorResId: Int) {
+        // TODO: track exact error errorMsg
+        ToastUtils.showToast(context, getString(errorResId), Duration.LONG)
+    }
+
+    private fun navigateBackWithCropResult(cropResult: CropResult) {
         activity?.let {
-            it.setResult(cropResult.first, cropResult.second)
+            it.setResult(cropResult.resultCode, cropResult.data)
             it.finish()
         }
     }
