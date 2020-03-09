@@ -5,7 +5,7 @@ buildscript {
     }
 
     ext {
-        aztecVersion = 'v1.3.36'
+        aztecVersion = 'v1.3.37'
     }
 
     dependencies {
@@ -77,6 +77,9 @@ dependencies {
     }
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
+
+    debugImplementation files("./libs/hermes-debug.aar")
+    releaseImplementation files("./libs/hermes-release.aar")
 
     if (rootProject.ext.has("buildGutenbergFromSource") && rootProject.ext.buildGutenbergFromSource) {
         implementation (project(':react-native-gutenberg-bridge')) {

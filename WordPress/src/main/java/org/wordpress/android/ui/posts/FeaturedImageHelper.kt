@@ -83,19 +83,20 @@ internal class FeaturedImageHelper @Inject constructor(
         site: SiteModel,
         uri: Uri,
         mimeType: String?
-    ): Boolean {
+    ): EnqueueFeaturedImageResult {
         val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
-                ?: return false
+                ?: return EnqueueFeaturedImageResult.FILE_NOT_FOUND
         if (localPostId != EMPTY_LOCAL_POST_ID) {
             media.localPostId = localPostId
         } else {
             AppLog.e(T.MEDIA, "Upload featured image can't be invoked without a valid local post id.")
+            return EnqueueFeaturedImageResult.INVALID_POST_ID
         }
         media.markedLocallyAsFeatured = true
 
         dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
         startUploadService(media)
-        return true
+        return EnqueueFeaturedImageResult.SUCCESS
     }
 
     fun cancelFeaturedImageUpload(
@@ -167,6 +168,10 @@ internal class FeaturedImageHelper @Inject constructor(
         REMOTE_IMAGE_SET(imageViewVisible = true),
         IMAGE_UPLOAD_IN_PROGRESS(localImageViewVisible = true, progressOverlayVisible = true),
         IMAGE_UPLOAD_FAILED(localImageViewVisible = true, retryOverlayVisible = true);
+    }
+
+    internal enum class EnqueueFeaturedImageResult {
+        FILE_NOT_FOUND, INVALID_POST_ID, SUCCESS
     }
 
     internal enum class TrackableEvent(val label: Stat) {

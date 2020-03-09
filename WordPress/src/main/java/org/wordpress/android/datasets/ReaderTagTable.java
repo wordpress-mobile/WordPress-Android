@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
@@ -273,7 +275,7 @@ public class ReaderTagTable {
         }
     }
 
-    public static ReaderTag getFirstTag() {
+    public static @Nullable ReaderTag getFirstTag() {
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags ORDER BY tag_slug LIMIT 1", null);
         try {
             if (c.moveToFirst()) {

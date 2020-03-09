@@ -242,6 +242,7 @@ public class ThemeBrowserFragment extends Fragment
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setOnQueryTextListener(this);
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
 
         if (!TextUtils.isEmpty(mLastSearch)) {
             mSearchMenuItem.expandActionView();

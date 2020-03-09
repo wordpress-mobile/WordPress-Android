@@ -43,10 +43,10 @@ enum class QuickStartMySitePrompts constructor(
     ),
     PUBLISH_POST_TUTORIAL(
             QuickStartTask.PUBLISH_POST,
-            R.id.root_view_main,
-            R.id.bottom_nav_new_post_button,
-            R.string.quick_start_dialog_publish_post_message_short,
-            R.drawable.ic_create_white_24dp
+            R.id.my_site_scroll_view_root,
+            R.id.row_blog_posts,
+            R.string.quick_start_dialog_create_new_post_message_short,
+            -1
     ),
     FOLLOW_SITES_TUTORIAL(
             QuickStartTask.FOLLOW_SITE,
@@ -97,7 +97,7 @@ enum class QuickStartMySitePrompts constructor(
 
         @JvmStatic
         fun isTargetingBottomNavBar(task: QuickStartTask): Boolean {
-            return task == QuickStartTask.FOLLOW_SITE || task == QuickStartTask.PUBLISH_POST
+            return task == QuickStartTask.FOLLOW_SITE
         }
     }
 }

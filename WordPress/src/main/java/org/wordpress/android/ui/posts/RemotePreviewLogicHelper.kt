@@ -39,7 +39,6 @@ class RemotePreviewLogicHelper @Inject constructor(
 
     interface RemotePreviewHelperFunctions {
         fun notifyUploadInProgress(post: PostImmutableModel): Boolean
-        fun updatePostIfNeeded(): PostImmutableModel? = null
         fun notifyEmptyDraft() {}
         fun startUploading(isRemoteAutoSave: Boolean, post: PostImmutableModel)
         fun notifyEmptyPost() {}
@@ -65,23 +64,19 @@ class RemotePreviewLogicHelper @Inject constructor(
             return PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS
         }
 
-        // Update the post object (copy title/content from the editor to the post object) when it's needed
-        // (eg. during and editing session)
-        val updatedPost = helperFunctions.updatePostIfNeeded() ?: post
-
-        val uploadAction = uploadActionUseCase.getUploadAction(updatedPost)
+        val uploadAction = uploadActionUseCase.getUploadAction(post)
 
         return when {
-            shouldUpload(updatedPost, uploadAction) -> {
+            shouldUpload(post, uploadAction) -> {
                 // We can't upload an unpublishable post (empty), we'll let the user know we can't preview it.
-                if (!postUtilsWrapper.isPublishable(updatedPost)) {
+                if (!postUtilsWrapper.isPublishable(post)) {
                     helperFunctions.notifyEmptyDraft()
                     return PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
                 }
-                helperFunctions.startUploading(false, updatedPost)
+                helperFunctions.startUploading(false, post)
                 PreviewLogicOperationResult.GENERATING_PREVIEW
             }
-            shouldRemoteAutoSave(updatedPost, uploadAction) -> {
+            shouldRemoteAutoSave(post, uploadAction) -> {
                 // We don't support remote auto-save for self hosted sites (accessed via XMLRPC),
                 // we make the preview unavailable in that case.
                 if (!site.isUsingWpComRestApi) {
@@ -94,7 +89,7 @@ class RemotePreviewLogicHelper @Inject constructor(
                 }
 
                 // We can't remote auto-save an unpublishable post (empty), we'll let the user know we can't preview it.
-                if (!postUtilsWrapper.isPublishable(updatedPost)) {
+                if (!postUtilsWrapper.isPublishable(post)) {
                     helperFunctions.notifyEmptyPost()
                     return PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
                 }
@@ -109,7 +104,7 @@ class RemotePreviewLogicHelper @Inject constructor(
                     )
                     return PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE
                 }
-                helperFunctions.startUploading(true, updatedPost)
+                helperFunctions.startUploading(true, post)
                 PreviewLogicOperationResult.GENERATING_PREVIEW
             }
             else -> {
@@ -117,7 +112,7 @@ class RemotePreviewLogicHelper @Inject constructor(
                 activityLauncherWrapper.previewPostOrPageForResult(
                         activity,
                         site,
-                        updatedPost,
+                        post,
                         RemotePreviewType.REMOTE_PREVIEW
                 )
                 PreviewLogicOperationResult.OPENING_PREVIEW

@@ -732,6 +732,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_session_start";
             case EDITOR_SESSION_SWITCH_EDITOR:
                 return "editor_session_switch_editor";
+            case EDITOR_SESSION_TEMPLATE_APPLY:
+                return "editor_session_template_apply";
+            case EDITOR_SESSION_TEMPLATE_PREVIEW:
+                return "editor_session_template_preview";
             case EDITOR_SESSION_END:
                 return "editor_session_end";
             case EDITOR_GUTENBERG_ENABLED:

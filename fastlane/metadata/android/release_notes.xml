@@ -1,118 +1,152 @@
-<ar>
-13.8:
-* تحسينات محرِّر المكوّن: تمت إضافة مكوّن المباعد لإنشاء مسافة بيضاء بين المحتوى.
-* تم تعديل البحث عن المقالات لتضمين المقالات أسفل كل التصنيفات.
-* الكثير من التحسينات التي أجريت في الخلفية عبر التطبيق بالكامل – 26 من الإصلاحات الفريدة للأخطاء والأعطال إجمالاً.
-
-</ar>
 <de-DE>
-13.8:
-* Verbesserungen am Block-Editor: Der Abstandshalter-Block wurde hinzugefügt, damit du Leerräume zwischen Inhalten erstellen kannst.
-* Die Suche nach Blogbeiträgen wurde verändert, um Beiträge unter allen Kategorien einzuschließen.
-* Die gesamte App wurde hinter den Kulissen an zahlreichen Stellen verbessert. Insgesamt wurden 26 Fehler, die zu Abstürzen und Problemen führten, behoben.
+14.2:
+Zahlreiche Updates am Block-Editor:
+
+* Icon zum längeren Drücken hinzugefügt, um Blöcke davor/dahinter einzufügen.
+* Die App versucht, Bilder anzuzeigen, wenn sie nach einer Verbindungsunterbrechung wieder online ist.
+* Problem mit leerem Editor behoben, wenn versucht wird, einen Beitrag mit Bildern oder Links aus einer anderen App zu erstellen.
+* Optionen für Bildgröße zum Galerieblock hinzugefügt.
+* Fehler behoben, der das Zusammenführen von Absatzblöcken verhinderte.
 
 </de-DE>
 <en-US>
-13.8:
-* Block editor improvements: Added Spacer block for creating white space between content.
-* Modified Blog Post Search to include posts under all categories.
-* Lots of under-the-hood improvements across the entire app –26 unique crash and bug fixes in all.
+14.2:
+Lots of updates to the block editor:
+
+* Added a long-press icon for adding blocks before/after.
+* App will try to display images when coming back online after a disconnection.
+* Resolved issue with blank editor when trying to create a post with images or links from another app.
+* Added image size options to the Gallery block.
+* Fixed a bug that prevented paragraph blocks from merging.
 
 </en-US>
 <es-ES>
-13.8:
-* Mejoras en el editor de bloques: Añadido bloque espaciador para crear espacios vacíos entre contenidos.
-* Modificada la búsqueda de entradas del blog para incluir entradas en todas las categorías.
-* Montones de mejoras bajo el capó en toda la aplicación  26 correcciones de errores y problemas en total.
+14.2:
+Muchas actualizaciones para el editor de bloques:
+
+* Añadido un icono de pulsación larga para añadir bloques antes/después.
+* La aplicación intentará mostrar las imágenes cuando vuelva a estar online después de una desconexión.
+* Resuelto un problema con el editor en blanco al intentar crear una entrada con imágenes o enlaces de otra aplicación.
+* Añadidas opciones de tamaño de imagen al bloque de galería.
+* Corregido un error que impedía la combinación de los bloques de párrafos.
 
 </es-ES>
 <fr-CA>
-13.8 :
-* Améliorations de l'éditeur de blocs : un bloc d'espacement a été ajouté pour créer un espace blanc entre le contenu.
-* Modification de la recherche d'articles de blog pour inclure les articles appartenant à toutes les catégories.
-* Nombreuses améliorations en arrière-plan dans toute l'application. Résolution de 26 bugs ou pannes uniques.
+14.2 :
+Nombreuses mises à jour de l'éditeur de blocs :
+
+*Ajout d'une icône à pression longue pour ajouter des blocs avant/après.
+*L'application tentera d'afficher les images lors d'un retour en ligne après une déconnexion.
+*Résolution d'un problème d'éditeur vierge lors de la création d'un article contenant des images ou des liens provenant d'une autre application.
+*Ajout d'options de taille d'image au bloc de galerie.
+*Résolution d'un bug empêchant la fusion des blocs de paragraphe.
 
 </fr-CA>
 <fr-FR>
-13.8 :
-* Améliorations de l'éditeur de blocs : un bloc d'espacement a été ajouté pour créer un espace blanc entre le contenu.
-* Modification de la recherche d'articles de blog pour inclure les articles appartenant à toutes les catégories.
-* Nombreuses améliorations en arrière-plan dans toute l'application. Résolution de 26 bugs ou pannes uniques.
+14.2 :
+Nombreuses mises à jour de l'éditeur de blocs :
+
+*Ajout d'une icône à pression longue pour ajouter des blocs avant/après.
+*L'application tentera d'afficher les images lors d'un retour en ligne après une déconnexion.
+*Résolution d'un problème d'éditeur vierge lors de la création d'un article contenant des images ou des liens provenant d'une autre application.
+*Ajout d'options de taille d'image au bloc de galerie.
+*Résolution d'un bug empêchant la fusion des blocs de paragraphe.
 
 </fr-FR>
-<iw-IL>
-13.8:
-* שיפורים בעורך הבלוקים: הוספנו את בלוק המרווח כדי ליצור רווח ריק בין התכנים.
-* שינינו את חיפוש הפוסטים כדי לכלול פוסטים שמשויכים לכל הקטגוריות.
-* ביצענו המון שיפורים מתחת למכסה המנוע ברחבי האפליקציה – תיקנו 26 מקרים ייחודיים של קריסות ובאגים סך הכול.
-
-</iw-IL>
 <id>
-13.8:
-* Peningkatan penyunting blok: Menambahkan blok Spacer untuk membuat spasi putih di antara konten.
-* Memodifikasi Pencarian Pos Blog untuk menyertakan pos di semua kategori.
-* Banyak peningkatan di seluruh aplikasi – Memperbaiki 26 crash dan bug unik.
+14.2:
+Banyak pembaruan untuk penyunting blok:
+
+* Menambahkan ikon tekan lama untuk menambahkan blok sebelum/sesudah.
+* Aplikasi akan mencoba menampilkan gambar saat kembali online setelah sambungan terputus.
+* Menyelesaikan masalah dengan penyunting yang kosong saat mencoba membuat pos dengan gambar atau tautan dari aplikasi lain.
+* Menambahkan pilihan ukuran gambar ke blok Galeri.
+* Memperbaiki bug yang mencegah blok paragraf tergabung.
 
 </id>
 <it-IT>
-13.8:
-*Miglioramenti all'editor dei blocchi: blocco Spazio vuoto aggiunto per la creazione di spazio bianco tra i contenuti.
-*Ricerca dell'articolo del blog modificata per includere gli articoli presenti in tutte le categorie.
-*Molti miglioramenti sotto controllo nell'intera app, 26 arresti univoci e correzioni di bug in tutti.
+14.2:
+Molti aggiornamenti per l'editor a blocchi:
+
+*Aggiunta un'icona a pressione prolungata per aggiungere blocchi prima/dopo.
+*L'app cercherà di visualizzare le immagini quando si ritorna online dopo una disconnessione.
+*Risolto un problema con l'editor vuoto quando si provava a creare un articolo con immagini o link da un'altra app.
+*Aggiunte le opzioni delle dimensioni dell'immagine dal blocco Galleria.
+*Risolto un bug che impediva l'unione dei blocchi Paragrafo.
 
 </it-IT>
-<ja-JP>
-13.8 :
-* ブロックエディターの改善 :コンテンツ間に空白を作成するためのスペーサーブロックが追加されました。
-* すべてのカテゴリーの投稿を含めるようにブログ投稿検索が変更されました。
-* アプリ全体でさまざまな改善がなされ、合計26個の固有のクラッシュとバグが修正されました。
-
-</ja-JP>
-<ko-KR>
-13.8:
-* 블록 편집기 개선 사항: 콘텐츠 사이에 공백을 만들기 위한 스페이서 블록을 추가했습니다.
-* 모든 카테고리에 글을 포함하도록 블로그 글 검색을 수정했습니다.
-* 앱 내부 전체에서 많은 부분이 개선되었습니다(고유한 충돌 및 버그 수정 총 26개).
-
-</ko-KR>
 <nl-NL>
-13.8:
-* Verbeteringen aan de blok-editor: Vulelementblok toegevoegd voor het creëren van lege ruimte tussen content.
-* De zoekfunctie voor blogberichten is aangepast en bevat nu berichten onder alle categorieën.
-* Veel onopvallende verbeteringen in de gehele app: in totaal 26 unieke crash-oplossingen en bugverwijderingen.
+14.2:
+Veel updates voor de blok-editor:
+
+* Pictogram voor iets langer indrukken toegevoegd om vooraf/achteraf blokken toe te voegen.
+* App probeert afbeeldingen weer te geven als je weer online bent nadat de internetverbinding verbroken is geweest.
+* Probleem opgelost met lege editor die een bericht probeert te maken met afbeeldingen of links van een andere app.
+* Beeldformaatopties toegevoegd aan het galerieblok.
+* Probleem opgelost waarbij werd voorkomen dat paragraafblokken werden samengevoegd.
 
 </nl-NL>
+<pt-BR>
+14.2:
+Várias melhorias no editor de blocos:
+
+* Adicionado um ícone de toque longo para adição de blocos antes e depois.
+* O aplicativo tentará exibir imagens quando ficar online depois de ser desconectado.
+* Solução do problema que mostrava o editor vazio ao tentar criar um post com imagens ou links de outro aplicativo.
+* Agora há opções de tamanho de imagem no bloco de galeria.
+* Solução de um erro que impedia a junção de blocos de paragrafo.
+</pt-BR>
 <ru-RU>
-13.8:
-* Улучшения в редакторе блоков: добавлен блок-заполнитель, для добавления пустого места между содержимым.
-* Поиск по записям в блоге будут включать записи во всех рубриках.
-* Целая куча исправлений ошибок и падений (26).
+14.2:
+Уйма обновлений редактора блоков:
+
+* Добавлен значок при длительном нажатии для добавления блоков перед или после.
+* Приложение будет повторно пытаться загрузить изображения после сбоев сетевого подключения.
+* Исправлена проблема с пустым редактором при создании записи с изображеними или ссылками в другом приложении.
+* В блок галереи добавлены варианты размеров изображений.
+* Исправлена ошибка при объединении блоков параграфов.
+
 </ru-RU>
 <sv-SE>
-13.8:
-* Förbättringar i blockredigeraren: Nytt distanselement som kan skapa avstånd mellan olika innehållsblock.
-* Sökfunktionen för blogginlägg har modifierats så att den söker inom alla kategorier.
-* En rad förbättringar ”under motorhuven” i hela appen. Totalt 26 avhjälpta kraschorsaker och andra fel.
+14.2:
+Många uppdateringar av blockredigeraren:
+
+* Ny ikon vid långt tryck för att lägga till block före/efter.
+* Appen försöker att visa bilder när förbindelsen återkommer efter ett avbrott.
+* Löst problem med tom redigerare vid försök att skapa ett inlägg med bilder eller länkar från annan app.
+* Lagt till alternativ för bildstorlekar i galleriblocket.
+* Rättat ett fel som inte lät styckeblock kombineras.
 
 </sv-SE>
 <tr-TR>
-13.8:
-* Blok düzenleyici iyileştirmeleri: İçerik arasında beyaz boşluk oluşturmak için Spacer bloğu eklendi.
-* Blog Gönderi Arama tüm kategorilerin altındaki gönderileri içerecek şekilde değiştirildi.
-* Tüm uygulama içinde görünmeyen bir çok iyileştirme yapıldı -26 benzersiz kapanma ve hata düzeltmeleri.
+14.2:
+Blok düzenleyicide birçok güncelleme:
 
+* Önce / sonra blok eklemek için uzun basın simgesi eklendi.
+* Uygulama, bağlantı kesildikten sonra tekrar çevrimiçi olduğunda görüntüleri göstermeye çalışacaktır.
+* Başka bir uygulamadan resimler veya bağlantılar içeren bir yazı oluşturmaya çalışırken boş düzenleyici ile ilgili sorun çözüldü.
+* Galeri bloğuna görüntü boyutu seçenekleri eklendi.
+* Paragraf bloklarının birleştirilmesini engelleyen bir hata düzeltildi.
 </tr-TR>
 <zh-CN>
-13.8：
-* 区块编辑器改进：添加了用于在内容之间创建空白的空白区块。
-* 修改了博文搜索，将文章包含在所有类别下。
-* 在整个应用程序中进行了许多改进，包括全部 26 个独特的崩溃和错误修复。
+14.2：
+对区块编辑器进行了许多更新：
+
+* 添加了用于在之前/之后添加区块的长按图标。
+* 断开连接然后重新连接后，应用程序会尝试显示图片。
+* 解决了尝试创建包含图片或其他应用程序链接的文章时出现的空白编辑器问题。
+* 在图库区块中添加了图片大小选项。
+* 修复了阻止段落块合并的错误。
 
 </zh-CN>
 <zh-TW>
-13.8：
-* 改善區塊編輯器：新增空白間隔區塊，你現可在內容之間建立空白字元。
-* 修改網誌文章搜尋功能，納入所有類別底下的文章。
-* 應用程式整體內部改善，一共修正 26 個不同的當機問題和錯誤。
+14.2：
+許多區塊編輯器更新︰
+
+* 新增在之前/之後新增區塊的長按圖示。
+* 應用程式會嘗試在中斷連線又重新上線時顯示圖片。
+* 解決嘗試使用其他應用程式建立包含圖片或連結的文章時的空白編輯器問題。
+* 為「圖庫」區塊新增圖片大小選項。
+* 修正導致段落區塊無法合併的錯誤。
 
 </zh-TW>

@@ -67,4 +67,17 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
 
         return deletions;
     }
+
+    public boolean containsFollowingTag() {
+        boolean containsFollowing = false;
+
+        for (ReaderTag tag : this) {
+            if (tag.isFollowedSites() || tag.isDefaultInMemoryTag()) {
+                containsFollowing = true;
+                break;
+            }
+        }
+
+        return containsFollowing;
+    }
 }

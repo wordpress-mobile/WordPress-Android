@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.view.View
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
@@ -17,7 +18,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.IMAGE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK_BUTTON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
@@ -64,7 +64,6 @@ sealed class BlockListItem(val type: Type) {
         ACTIVITY_ITEM,
         REFERRED_ITEM,
         QUICK_SCAN_ITEM,
-        LINK_BUTTON,
         DIALOG_BUTTONS
     }
 
@@ -125,7 +124,8 @@ sealed class BlockListItem(val type: Type) {
         val showDivider: Boolean = true,
         val textStyle: TextStyle = TextStyle.NORMAL,
         val navigationAction: NavigationAction? = null,
-        val contentDescription: String
+        val contentDescription: String,
+        @ColorRes val tint: Int? = null
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
         override val itemId: Int
             get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
@@ -176,11 +176,6 @@ sealed class BlockListItem(val type: Type) {
         val navigateAction: NavigationAction
     ) : BlockListItem(LINK)
 
-    data class LinkButton(
-        @StringRes val text: Int,
-        val navigateAction: NavigationAction
-    ) : BlockListItem(LINK_BUTTON)
-
     data class DialogButtons(
         @StringRes val positiveButtonText: Int,
         val positiveAction: NavigationAction,
@@ -193,7 +188,8 @@ sealed class BlockListItem(val type: Type) {
         val overlappingEntries: List<Bar>? = null,
         val selectedItem: String? = null,
         val onBarSelected: ((period: String?) -> Unit)? = null,
-        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null
+        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null,
+        val entryContentDescriptions: List<String>
     ) : BlockListItem(BAR_CHART) {
         data class Bar(val label: String, val id: String, val value: Int)
 
@@ -233,7 +229,13 @@ sealed class BlockListItem(val type: Type) {
     data class LoadingItem(val loadMore: () -> Unit, val isLoading: Boolean = false) : BlockListItem(LOADING_ITEM)
 
     data class ActivityItem(val blocks: List<Block>) : BlockListItem(ACTIVITY_ITEM) {
-        data class Block(val label: String, val boxes: List<Box>)
+        data class Block(
+            val label: String,
+            val boxes: List<Box>,
+            val contentDescription: String,
+            val activityContentDescriptions: List<String>
+        )
+
         enum class Box {
             INVISIBLE, VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH
         }
