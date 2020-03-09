@@ -1,0 +1,6 @@
+14.3:
+- Blok düzenleyici eklemeleri: Düğme ve Grup bloklarının yanı sıra, Görsel ve Galeri bloku ayarlarına daha fazla seçenek desteği eklendi.
+- Blok düzenleyici geliştirmeleri: Blok seçici ve blok ayarlarına kaydırma desteği ve bloklarda gezinmeyi kolaylaştırmak için kayan bir araç çubuğu eklendi.
+- Blok düzenleyici düzeltmeleri: Görsel karşıya yüklemesi sırasında yer tutucu görselleri, yazı başlığındaki emojiler ve Kısa Kod bloklarında yazı kaydırma ile ilgili sorunlar düzeltildi.
+- Okuyucu: Daha iyi bir site/etiket gezintisi deneyimi için sekme filtreleme özelliği eklendi.
+
