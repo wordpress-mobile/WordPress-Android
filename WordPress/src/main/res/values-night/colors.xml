@@ -36,6 +36,6 @@
 
     <!-- Post History -->
 
-    <color name="post_history_underlying_background">@color/gray_90</color>
+    <color name="post_history_underlying_background">@color/gray_100</color>
 
 </resources>
