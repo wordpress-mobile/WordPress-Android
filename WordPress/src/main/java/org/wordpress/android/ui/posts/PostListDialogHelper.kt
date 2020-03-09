@@ -16,7 +16,7 @@ private const val CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG = "CONFIRM_TR
 private const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 private const val CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG = "CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG"
-private const val POST_TYPE ="post_type"
+private const val POST_TYPE = "post_type"
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
