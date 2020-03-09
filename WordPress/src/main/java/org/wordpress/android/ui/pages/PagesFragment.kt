@@ -314,10 +314,10 @@ class PagesFragment : Fragment() {
             }
         })
 
-        viewModel.editPage.observe(this, Observer { page ->
-            page?.let {
-                ActivityLauncher.editPageForResult(this, page)
-            }
+       viewModel.editPage.observe(this, Observer { (site, page) ->
+           page?.let {
+               ActivityLauncher.editPostOrPageForResult(getActivity(), site, page)
+           }
         })
 
         viewModel.previewPage.observe(this, Observer { post ->
