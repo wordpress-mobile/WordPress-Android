@@ -26,6 +26,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_POST_TYPE = "post_type";
     private static final String KEY_OUTCOME = "outcome";
     private static final String KEY_SESSION_ID = "session_id";
+    private static final String KEY_STARTUP_TIME = "startup_time_ms";
     private static final String KEY_TEMPLATE = "template";
 
     private String mSessionId = UUID.randomUUID().toString();
@@ -38,6 +39,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private Outcome mOutcome = null;
     private String mTemplate;
     private boolean mHWAccOff = false;
+    private long mStartTime = System.currentTimeMillis();
 
     enum Editor {
         GUTENBERG,
@@ -92,6 +94,7 @@ public class PostEditorAnalyticsSession implements Serializable {
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_UNSUPPORTED_BLOCKS,
                     unsupportedBlocksList != null ? unsupportedBlocksList : new ArrayList<>());
+            properties.put(KEY_STARTUP_TIME, System.currentTimeMillis() - mStartTime);
             AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
             mStarted = true;
         } else {
