@@ -426,7 +426,6 @@
     <dimen name="stats_list_card_last_spacing">8dp</dimen>
     <dimen name="stats_list_item_left_margin">56dp</dimen>
     <dimen name="stats_activity_spacing">1dp</dimen>
-    <dimen name="stats_insights_management_margin">24dp</dimen>
     <dimen name="stats_insights_menu_item_width">231dp</dimen>
     <dimen name="stats_insights_button_container_height">52dp</dimen>
     <dimen name="stats_widget_list_item_height">40dp</dimen>

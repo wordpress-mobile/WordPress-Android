@@ -44,7 +44,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.analytics.AnalyticsTrackerNosara;
+import org.wordpress.android.analytics.Tracker;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -154,6 +154,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject StatsStore mStatsStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject ReaderTracker mReaderTracker;
+
+    // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
+    @Inject Tracker mTracker;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -399,7 +402,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
+        AnalyticsTracker.registerTracker(mTracker);
         AnalyticsTracker.init(getContext());
 
         AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);

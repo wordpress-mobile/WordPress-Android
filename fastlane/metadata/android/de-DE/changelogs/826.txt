@@ -1,7 +1,0 @@
-14.1:
-- Block-Editor: Mit dem neuen Shortcode-Block kannst du Shortcodes erstellen und bearbeiten, wir haben die Abstände um textbasierte Blöcke verringert und sehr lange Beiträge lassen sich nun stabiler bearbeiten.
-- Updates: Die Option zum Entfernen einer Jetpack-Website aus der Website-Auswahl wurde deaktiviert.
-- Fehlerkorrekturen: In Beitragssuchen fehlten manche Ergebnisse. Jetzt funktioniert die Suche wie beabsichtigt!
-
-
-

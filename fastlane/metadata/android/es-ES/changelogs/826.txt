@@ -1,6 +1,0 @@
-14.1:
-- Editor de bloques: un nuevo bloque de shortcode te permite crear y editar shortcodes, hemos reducido el relleno alrededor de los bloques basados en texto y, ahora, la edición de entradas muy largas es una experiencia más estable.
-- Actualizaciones: Ha sido desactivada la opción de eliminar un sitio Jetpack del selector de sitios.
-- Correcciones de fallos: las búsquedas de entradas omitían algunos resultados. ¡Ahora la búsqueda funciona como debe!
-
-

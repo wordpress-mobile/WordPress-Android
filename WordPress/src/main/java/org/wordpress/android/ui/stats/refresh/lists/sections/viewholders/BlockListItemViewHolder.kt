@@ -38,7 +38,7 @@ open class BlockListItemViewHolder(
         }
     }
 
-    protected fun ImageView.setImageOrLoad(
+    private fun ImageView.setImageOrLoad(
         item: ListItemWithIcon,
         imageManager: ImageManager
     ) {
@@ -56,7 +56,7 @@ open class BlockListItemViewHolder(
         }
     }
 
-    protected fun ImageView.setAvatarOrLoad(
+    private fun ImageView.setAvatarOrLoad(
         item: ListItemWithIcon,
         imageManager: ImageManager
     ) {

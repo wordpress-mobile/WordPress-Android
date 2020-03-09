@@ -44,7 +44,9 @@ class ManagementNewsCardUseCaseTest : BaseUnitTest() {
     fun `builds a card`() = test {
         val editTextButton = "Edit"
         val newsCardMessage = "You can $editTextButton your insights"
-        whenever(resourceProvider.getString(R.string.stats_management_edit)).thenReturn(editTextButton)
+        whenever(resourceProvider.getString(R.string.stats_management_add_new_stats_card)).thenReturn(
+                editTextButton
+        )
         whenever(
                 resourceProvider.getString(
                         R.string.stats_management_news_card_message,

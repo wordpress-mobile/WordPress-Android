@@ -204,16 +204,13 @@ public class SitePickerActivity extends AppCompatActivity
         }
 
         // Enable the block editor on sites created on mobile
-        if (requestCode == RequestCodes.CREATE_SITE) {
-            if (data != null) {
-                int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-                SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
-                // Mark the site to show the GB popup at first editor run
-                SiteModel newSiteModel = mSiteStore.getSiteByLocalId(newSiteLocalID);
-                if (newSiteModel != null) {
-                    AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(newSiteModel.getUrl(), true);
+        switch (requestCode) {
+            case RequestCodes.CREATE_SITE:
+                if (data != null) {
+                    int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+                    SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
                 }
-            }
+                break;
         }
     }
 
