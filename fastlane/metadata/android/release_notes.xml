@@ -3,15 +3,12 @@
 - إضافات مُحرِّر المكوِّن: تمت إضافة مكوِّنات الأزرار والمجموعات، ودعم مزيد من الخيارات في إعدادات مكوِّن الصور والمعرض.
 - تحسينات مُحرِّر المكوِّن: تمت إضافة دعم التمرير داخل منتقي المكوِّن وإعداداته، وتم إدخال شريط أدوات عائم لتسهيل التنقل بين المكوِّنات.
 - إصلاحات مُحرِّر المكوِّن: تم إصلاح المشكلات المتعلقة بصور العنصر النائب في أثناء رفع الصور، ورموز المشاعر في عناوين المقالات، والتفاف النص في مكوِّنات الأكواد القصيرة.
-- القارئ: تمت إضافة عامل تصفية علامة التبويب لتحسين التنقل بين المواقع/الوسوم.
 
 </ar>
 <de-DE>
 14.3:
 - Neu im Block-Editor: Die Blöcke „Button“ und „Gruppe“ wurden hinzugefügt. Darüber hinaus werden jetzt weitere Optionen in den Bild- und Galerieblockeinstellungen.
 - Verbesserungen am Block-Editor: Support für den Bildlauf in der Blockauswahl und in den Blockeinstellungen und neue unverankerte Toolbar für einfaches Wechseln zwischen Blöcken.
-- Problembehebungen am Block-Editor: Probleme bei Platzhalterbildern während Bildupload, Probleme mit Emojis in Beitragstiteln und Probleme beim Textumbruch in Shortcode-Blöcken wurden behoben.
-- Reader: Tabfilter für bessere Navigation auf Websites und bei Schlagwörtern hinzugefügt.
 
 </de-DE>
 <en-US>
@@ -26,16 +23,12 @@
 14.3:
 - Añadidos bloques al editor: Añadidos bloques de grupo y de botón, y compatibilidad con más opciones en los ajustes de los bloques de imagen y de galería.
 - Mejoras en el editor de bloques: Añadida compatibilidad con scroll dentro del selector de bloques y ajustes de los bloques, y se ha introducido una barra de herramientas flotante para hacer más sencilla la navegación por los bloques.
-- Correcciones en el editor de bloques: Corregidos errores con las imágenes de marcador de posición durante la subida de imágenes, emojis en títulos de entradas y envoltura de texto en los bloques de shortcode.
-- Lector: Añadido filtrado de pestañas para una mejor navegación por sitios/etiquetas.
-
 </es-ES>
 <fr-CA>
 14.3 :
 - Ajouts de l'éditeur de blocs : blocs Bouton et Groupe ajoutés, + d’options dans les réglages de bloc Image et Galerie.
 - Améliorations de l'éditeur de blocs : défilement ajouté dans le sélecteur et réglages de bloc, nouvelle barre d'outils flottante pour mieux naviguer dans les blocs.
 - Résolutions de l'éditeur de blocs : images de texte indicatif lors du chargement d’images, émojis des titres d'article et habillage du texte de blocs de code abrégé résolus.
-- Lecteur : filtrage d’onglet ajouté pour mieux naviguer sur les sites/étiquette.
 
 </fr-CA>
 <fr-FR>
@@ -43,7 +36,6 @@
 - Ajouts de l'éditeur de blocs : blocs Bouton et Groupe ajoutés, + d’options dans les réglages de bloc Image et Galerie.
 - Améliorations de l'éditeur de blocs : défilement ajouté dans le sélecteur et réglages de bloc, nouvelle barre d'outils flottante pour mieux naviguer dans les blocs.
 - Résolutions de l'éditeur de blocs : images de texte indicatif lors du chargement d’images, émojis des titres d'article et habillage du texte de blocs de code abrégé résolus.
-- Lecteur : filtrage d’onglet ajouté pour mieux naviguer sur les sites/étiquette.
 
 </fr-FR>
 <iw-IL>
@@ -59,7 +51,6 @@
 - Tambahan penyunting blok: Menambahkan blok Tombol dan Kelompok, dan mendukung lebih banyak opsi di pengaturan blok Gambar dan Galeri.
 - Peningkatan pada penyunting blok: Menambahkan dukungan gulir di dalam pemilih blok dan pengaturan blok, dan memperkenalkan bilah peralatan mengambang untuk mempermudah navigasi blok.
 - Perbaikan pada penyunting blok: Memperbaiki masalah seputar gambar placeholder selama pengunggahan gambar, emoji di judul pos, dan text-wrapping di blok Shortcode.
-- Pembaca: Menambahkan penyaringan tab untuk navigasi situs/tag yang lebih baik.
 
 </id>
 <it-IT>
@@ -67,7 +58,6 @@
 - Aggiunte all'editor a blocchi: blocchi Pulsante e Gruppo e opzioni nelle impostazioni di Immagine e Galleria.
 - Miglioramenti all'editor a blocchi: aggiunta dello scorrimento nel selezionatore e nelle impostazioni e di una barra mobile per la navigazione.
 - Correzioni all'editor a blocchi: correzione del caricamento di immagini segnaposto, degli emoji nei titoli degli articoli e del ritorno a capo nei blocchi Shortcode.
-- Reader: aggiunta del filtro schede per migliorare la navigazione di siti/tag.
 
 </it-IT>
 <ja-JP>
@@ -90,8 +80,6 @@
 14.3:
 - Aanvullingen op de blokeditor: de knop- en groepblokken zijn toegevoegd en er wordt ondersteuning voor meer opties geboden in de instellingen van het afbeeldings- en galerijblok.
 - Verbeteringen aan de blokeditor: ondersteuning voor scrollen toegevoegd aan de blokkiezer en blokinstellingen en een zwevende werkbalk geïntroduceerd om het navigeren in blokken eenvoudiger te maken.
-- Fixes van de blokeditor: problemen met placeholder-afbeeldingen opgelost tijdens het uploaden van afbeeldingen, emoji's in berichttitels en tekstafbreking in shortcode-blokken.
-- Reader: tabbladfilters toegevoegd voor verbeterde navigatie van sites/tags.
 
 </nl-NL>
 <ru-RU>
@@ -115,7 +103,6 @@
 - Blok düzenleyici eklemeleri: Düğme ve Grup bloklarının yanı sıra, Görsel ve Galeri bloku ayarlarına daha fazla seçenek desteği eklendi.
 - Blok düzenleyici geliştirmeleri: Blok seçici ve blok ayarlarına kaydırma desteği ve bloklarda gezinmeyi kolaylaştırmak için kayan bir araç çubuğu eklendi.
 - Blok düzenleyici düzeltmeleri: Görsel karşıya yüklemesi sırasında yer tutucu görselleri, yazı başlığındaki emojiler ve Kısa Kod bloklarında yazı kaydırma ile ilgili sorunlar düzeltildi.
-- Okuyucu: Daha iyi bir site/etiket gezintisi deneyimi için sekme filtreleme özelliği eklendi.
 
 </tr-TR>
 <zh-CN>
