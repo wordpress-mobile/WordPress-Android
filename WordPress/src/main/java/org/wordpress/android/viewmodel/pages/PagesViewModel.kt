@@ -112,8 +112,8 @@ class PagesViewModel
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
 
-    private val _editPage = SingleLiveEvent<Pair<SiteModel,PostModel?>>()
-    val editPage: LiveData<Pair<SiteModel,PostModel?>> = _editPage
+    private val _editPage = SingleLiveEvent<Pair<SiteModel, PostModel?>>()
+    val editPage: LiveData<Pair<SiteModel, PostModel?>> = _editPage
 
     private val _previewPage = SingleLiveEvent<PostModel?>()
     val previewPage: LiveData<PostModel?> = _previewPage
@@ -450,7 +450,7 @@ class PagesViewModel
     fun onItemTapped(pageItem: Page) {
         pageMap[pageItem.id]?.let {
             val result = postStore.getPostByRemotePostId(it.remoteId, site)
-            _editPage.postValue(Pair(site,result))
+            _editPage.postValue(Pair(site, result))
         }
     }
 
