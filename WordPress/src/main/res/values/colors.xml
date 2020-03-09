@@ -32,6 +32,10 @@
     <color name="stats_map_activity_high">@color/accent</color>
     <color name="stats_map_activity_empty">@color/neutral_5</color>
 
+    <!-- Post History -->
+
+    <color name="post_history_underlying_background">@color/neutral_0</color>
+
     <!-- LOGIN -->
     <color name="color_primary">@color/primary</color>
 

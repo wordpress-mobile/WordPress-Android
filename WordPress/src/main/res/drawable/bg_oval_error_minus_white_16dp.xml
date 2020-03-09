@@ -8,7 +8,7 @@
             android:shape="oval" >
 
             <solid
-                android:color="@color/error_50" >
+                android:color="?attr/wpColorError" >
             </solid>
 
         </shape>
