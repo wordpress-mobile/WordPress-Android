@@ -10,7 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.NEXT
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.SKIP
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -20,7 +19,6 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
 
 class SiteCreationSiteInfoViewModel @Inject constructor(
-    private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private var currentUiState: SiteInfoUiState by Delegates.observable(
@@ -58,7 +56,6 @@ class SiteCreationSiteInfoViewModel @Inject constructor(
             return
         }
         isStarted = true
-        tracker.trackBasicInformationViewed()
     }
 
     fun onHelpClicked() {
@@ -80,11 +77,9 @@ class SiteCreationSiteInfoViewModel @Inject constructor(
     fun onSkipNextClicked() {
         when (currentUiState.skipButtonState) {
             SKIP -> {
-                tracker.trackBasicInformationSkipped()
                 _skipBtnClicked.call()
             }
             NEXT -> {
-                tracker.trackBasicInformationCompleted(currentUiState.siteTitle, currentUiState.tagLine)
                 _nextBtnClicked.value = currentUiState
             }
         }

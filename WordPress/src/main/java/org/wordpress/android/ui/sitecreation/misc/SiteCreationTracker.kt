@@ -31,24 +31,6 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         )
     }
 
-    fun trackBasicInformationViewed() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_BASIC_INFORMATION_VIEWED)
-    }
-
-    fun trackBasicInformationCompleted(siteTitle: String, siteTagLine: String) {
-        tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_BASIC_INFORMATION_COMPLETED,
-                mapOf(
-                        "site_title" to siteTitle,
-                        "tagline" to siteTagLine
-                )
-        )
-    }
-
-    fun trackBasicInformationSkipped() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_BASIC_INFORMATION_SKIPPED)
-    }
-
     fun trackDomainsAccessed() {
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_ACCESSED)
     }
