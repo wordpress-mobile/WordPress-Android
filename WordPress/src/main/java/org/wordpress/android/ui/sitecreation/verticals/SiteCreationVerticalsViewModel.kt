@@ -135,7 +135,6 @@ class SiteCreationVerticalsViewModel @Inject constructor(
             tracker.trackErrorShown(ERROR_CONTEXT_FULLSCREEN, event.error.type.toString(), event.error.message)
             updateUiState(VerticalsFullscreenErrorUiState.VerticalsGenericErrorUiState)
         } else {
-            tracker.trackVerticalsViewed()
             segmentPrompt = event.prompt!!
             updateUiStateToContent("", Ready(emptyList()))
         }
@@ -150,7 +149,6 @@ class SiteCreationVerticalsViewModel @Inject constructor(
     }
 
     fun onSkipStepBtnClicked() {
-        tracker.trackVerticalsSkipped()
         _skipBtnClicked.call()
     }
 
@@ -262,7 +260,6 @@ class SiteCreationVerticalsViewModel @Inject constructor(
             val lastItemIndex = data.size - 1
             data.forEachIndexed { index, model ->
                 val onItemTapped = {
-                    tracker.trackVerticalSelected(model.name, model.verticalId, model.isUserInputVertical)
                     _verticalSelected.value = if (model.isUserInputVertical) {
                         model.name.toLowerCase(Locale.ROOT)
                     } else {

@@ -31,25 +31,6 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         )
     }
 
-    fun trackVerticalsViewed() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_VERTICALS_VIEWED)
-    }
-
-    fun trackVerticalSelected(verticalName: String, verticalId: String, isUserVertical: Boolean) {
-        tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_VERTICALS_SELECTED,
-                mapOf(
-                        "vertical_name" to verticalName,
-                        "vertical_id" to verticalId,
-                        "vertical_is_user" to isUserVertical
-                )
-        )
-    }
-
-    fun trackVerticalsSkipped() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_VERTICALS_SKIPPED)
-    }
-
     fun trackBasicInformationViewed() {
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_BASIC_INFORMATION_VIEWED)
     }
