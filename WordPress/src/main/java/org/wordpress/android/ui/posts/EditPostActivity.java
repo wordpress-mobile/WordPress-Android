@@ -29,6 +29,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
@@ -409,6 +410,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Set up the action bar.
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -1405,7 +1408,6 @@ public class EditPostActivity extends AppCompatActivity implements
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
             AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite,
                     BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap());
-            showPopup = true;
         }
 
         if (showPopup) {
@@ -2671,6 +2673,14 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocksList) {
         mPostEditorAnalyticsSession.start(unsupportedBlocksList);
+    }
+
+    @Override public void onGutenbergEditorSessionTemplateApplyTracked(String template) {
+        mPostEditorAnalyticsSession.applyTemplate(template);
+    }
+
+    @Override public void onGutenbergEditorSessionTemplatePreviewTracked(String template) {
+        mPostEditorAnalyticsSession.previewTemplate(template);
     }
 
     @Override

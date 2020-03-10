@@ -201,22 +201,6 @@ public class AppLog {
 
     public enum LogLevel {
         v, d, i, w, e;
-
-        private String toHtmlColor() {
-            switch (this) {
-                case v:
-                    return "grey";
-                case i:
-                    return "black";
-                case w:
-                    return "purple";
-                case e:
-                    return "red";
-                case d:
-                default:
-                    return "teal";
-            }
-        }
     }
 
     private static class LogEntry {
@@ -244,16 +228,12 @@ public class AppLog {
 
         private String toHtml() {
             StringBuilder sb = new StringBuilder();
-            sb.append("<font color=\"");
-            sb.append(mLogLevel.toHtmlColor());
-            sb.append("\">");
             sb.append("[");
             sb.append(formatLogDate()).append(" ");
             sb.append(mLogTag.name()).append(" ");
             sb.append(mLogLevel.name());
             sb.append("] ");
             sb.append(TextUtils.htmlEncode(mLogText).replace("\n", "<br />"));
-            sb.append("</font>");
             return sb.toString();
         }
     }

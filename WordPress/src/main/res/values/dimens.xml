@@ -52,7 +52,6 @@
     <dimen name="alert_dialog_max_width">300dp</dimen>
 
     <dimen name="default_cardview_radius">2dp</dimen>
-    <dimen name="default_cardview_elevation">2dp</dimen>
 
     <!-- bottom navigation bar -->
     <dimen name="bottom_nav_bar_icon_size">24dp</dimen>
@@ -147,7 +146,6 @@
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
     <dimen name="text_sz_extra_extra_large">32sp</dimen>
-    <dimen name="text_sz_post_content">18sp</dimen>
 
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
@@ -176,12 +174,11 @@
 
     <dimen name="reader_simple_post_image_width">72dp</dimen>
 
-    <dimen name="reader_filter_bottom_sheet_handle_height">15dp</dimen>
-    <dimen name="reader_remove_filter_icon_width">32dp</dimen>
     <dimen name="reader_subfilter_end_guideline_margin">58dp</dimen>
 
-    <dimen name="reader_subfilter_title_gone_margin_top">0dp</dimen>
-    <dimen name="reader_subfilter_title_gone_margin_bottom">10dp</dimen>
+    <dimen name="reader_subfilter_url_margin_bottom">14dp</dimen>
+
+    <dimen name="reader_subfilter_component_height">48dp</dimen>
 
     <item name="reader_photo_title_shadow_offset" format="float" type="dimen">3.0</item>
     <item name="reader_photo_title_shadow_radius" format="float" type="dimen">1.5</item>
@@ -200,14 +197,10 @@
     <dimen name="reader_follow_button_extra_padding">32dp</dimen>
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
-    <dimen name="empty_list_title_text_size">24sp</dimen>
     <dimen name="empty_list_title_side_margin">32dp</dimen>
     <dimen name="empty_list_title_bottom_margin">8dp</dimen>
 
-    <dimen name="nux_title_font_size">28sp</dimen>
     <dimen name="nux_main_button_height">48dp</dimen>
-
-    <dimen name="nux_width">600dp</dimen>
 
     <!-- editor -->
     <dimen name="post_settings_featured_image_height_min">150dp</dimen>
@@ -222,6 +215,8 @@
     <dimen name="notifications_avatar_sz">48dp</dimen>
     <dimen name="notifications_text_indent_sz">22dp</dimen>
     <dimen name="notifications_note_icon_margin">28dp</dimen>
+    <dimen name="notification_comment_padded_frame_bg_offset">14dp</dimen>  <!-- results in 6dp border -->
+    <dimen name="notification_comment_frame_bg_border_width">6dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
     <dimen name="activity_progress_bar_height">5dp</dimen>
@@ -323,8 +318,6 @@
     <dimen name="publicize_name_margin">8dp</dimen>
 
     <!--post settings-->
-    <dimen name="post_settings_input_dialog_edit_text_side_margin">20dp</dimen>
-    <dimen name="post_settings_input_dialog_hint_side_margin">24dp</dimen>
     <dimen name="tags_list_row_height">40dp</dimen>
     <dimen name="post_settings_retry_image_size">60dp</dimen>
 
@@ -350,8 +343,6 @@
     <dimen name="plugin_banner_size">192dp</dimen>
 
     <dimen name="add_avatar_button_size">24dp</dimen>
-
-    <dimen name="padding_input_row_start">60dp</dimen>
 
     <dimen name="dialog_snackbar_content_padding">20dp</dimen>
     <dimen name="dialog_snackbar_max_icons_size">18dp</dimen>
@@ -434,7 +425,6 @@
     <dimen name="stats_list_card_last_spacing">8dp</dimen>
     <dimen name="stats_list_item_left_margin">56dp</dimen>
     <dimen name="stats_activity_spacing">1dp</dimen>
-    <dimen name="stats_insights_management_margin">24dp</dimen>
     <dimen name="stats_insights_menu_item_width">231dp</dimen>
     <dimen name="stats_insights_button_container_height">52dp</dimen>
     <dimen name="stats_widget_list_item_height">40dp</dimen>
@@ -469,6 +459,7 @@
 
     <!--Main bottom sheet icon size -->
     <dimen name="main_bottom_sheet_list_row_icon_size">32dp</dimen>
+    <dimen name="main_bottom_sheet_list_row_min_height">48dp</dimen>
     <dimen name="main_fab_tooltip_offset_end">20dp</dimen>
     <dimen name="main_fab_tooltip_elevation">6dp</dimen>
     <dimen name="main_fab_tooltip_arrow_size">16dp</dimen>
@@ -479,7 +470,8 @@
 
     <dimen name="bottom_sheet_handle_container_radius">8dp</dimen>
     <dimen name="bottom_sheet_handle_radius">4dp</dimen>
-    <dimen name="bottomsheet_handle_height">5dp</dimen>
-    <dimen name="bottomsheet_handle_width">32dp</dimen>
+    <dimen name="bottom_sheet_handle_height">4dp</dimen>
+    <dimen name="bottom_sheet_handle_width">32dp</dimen>
+    <dimen name="bottom_sheet_handle_margin_top">4dp</dimen>
 
 </resources>

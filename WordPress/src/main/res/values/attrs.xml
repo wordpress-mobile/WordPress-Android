@@ -13,6 +13,7 @@
     <attr name="wpIconColorOnSurface" format="reference|color" />
 
     <attr name="wpColorWarningDark" format="reference|color" />
+    <attr name="wpColorWarningLight" format="reference|color" />
     <attr name="wpColorActionModeIcon" format="reference|color" />
 
     <!-- SummaryEditTextPreference attributes -->
@@ -23,9 +24,6 @@
         <attr name="dialogMessage" format="string" />
         <attr name="iconTint" format="color|reference" />
         <attr name="switchThumbTint" format="integer" />
-        <attr name="switchTrackTint" format="integer" />
-        <attr name="backgroundColorChecked" format="color|reference" />
-        <attr name="backgroundColorUnchecked" format="color|reference" />
         <attr name="startOffset" format="dimension|reference" />
     </declare-styleable>
 

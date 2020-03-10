@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,9 +11,9 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:fillViewport="true"
-        android:paddingBottom="@dimen/margin_extra_large"
-        android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_extra_large"
         app:layout_constraintBottom_toTopOf="@+id/site_info_skip_or_next_button_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,15 +31,15 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/site_info_site_title_layout"
+                style="@style/LoginTheme.EditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/new_site_creation_site_title_hint"
                 android:labelFor="@+id/site_info_site_title"
-                android:textColorHint="@color/neutral_30"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/header_container">
@@ -49,22 +48,19 @@
                     android:id="@+id/site_info_site_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/neutral_30"
                     android:inputType="text"
                     android:singleLine="true"
-                    android:textAlignment="viewStart"
-                    android:textColor="@color/neutral_80">
-                </com.google.android.material.textfield.TextInputEditText>
+                    android:textAlignment="viewStart" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/site_info_tag_line_layout"
+                style="@style/LoginTheme.EditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
                 android:hint="@string/new_site_creation_tag_line_hint"
                 android:labelFor="@+id/site_info_tag_line"
-                android:textColorHint="@color/neutral_30"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/site_info_site_title_layout">
@@ -73,25 +69,22 @@
                     android:id="@+id/site_info_tag_line"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/neutral_30"
-                    android:textAlignment="viewStart"
-                    android:textColor="@color/neutral_80">
-                </com.google.android.material.textfield.TextInputEditText>
+                    android:textAlignment="viewStart" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/site_info_tag_line_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_small"
                 android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
                 android:text="@string/new_site_creation_tag_line_description"
-                android:textColor="?attr/wpColorTextSubtle"
-                android:textSize="@dimen/text_sz_medium"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/wpColorOnSurfaceMedium"
                 app:fixWidowWords="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/site_info_tag_line_layout"/>
+                app:layout_constraintTop_toBottomOf="@id/site_info_tag_line_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
@@ -103,6 +96,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

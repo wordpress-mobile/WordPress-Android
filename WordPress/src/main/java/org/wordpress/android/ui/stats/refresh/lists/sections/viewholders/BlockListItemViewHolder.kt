@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +8,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.EMPTY_SPACE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
+import org.wordpress.android.util.getColorStateListFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.util.image.ImageType.ICON
@@ -39,13 +38,13 @@ open class BlockListItemViewHolder(
         }
     }
 
-    protected fun ImageView.setImageOrLoad(
+    private fun ImageView.setImageOrLoad(
         item: ListItemWithIcon,
         imageManager: ImageManager
     ) {
         when {
             item.icon != null -> {
-                this.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this.context, R.color.neutral_70))
+                this.imageTintList = this.context.getColorStateListFromAttribute(R.attr.wpColorOnSurfaceMedium)
                 this.visibility = View.VISIBLE
                 imageManager.load(this, item.icon)
             }
@@ -57,7 +56,7 @@ open class BlockListItemViewHolder(
         }
     }
 
-    protected fun ImageView.setAvatarOrLoad(
+    private fun ImageView.setAvatarOrLoad(
         item: ListItemWithIcon,
         imageManager: ImageManager
     ) {

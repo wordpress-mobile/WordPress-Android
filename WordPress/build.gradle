@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-208"
+            versionName "alpha-210"
         }
-        versionCode 828
+        versionCode 833
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -67,7 +67,6 @@ android {
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
-        buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -84,9 +83,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "14.2-rc-1"
+                versionName "14.3-rc-1"
             }
-            versionCode 827
+            versionCode 832
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
@@ -94,7 +93,6 @@ android {
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
@@ -173,7 +171,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0-rc02'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.preference:preference:1.0.0'
     implementation "androidx.work:work-runtime:$androidx_work_version"

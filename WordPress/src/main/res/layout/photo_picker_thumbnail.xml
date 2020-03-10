@@ -14,7 +14,7 @@
         android:background="@drawable/photo_picker_item_background"
         android:scaleType="centerCrop" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:importantForAccessibility="no"
         android:id="@+id/text_selection_count"
         android:layout_width="@dimen/media_selection_dot"
