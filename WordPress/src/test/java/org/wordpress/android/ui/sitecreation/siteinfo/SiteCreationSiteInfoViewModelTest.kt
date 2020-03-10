@@ -14,7 +14,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationSiteInfoViewModel
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationSiteInfoViewModel.SiteInfoUiState
 
@@ -28,7 +27,6 @@ private val EMPTY_UI_STATE = SiteInfoUiState(siteTitle = "", tagLine = "")
 class SiteCreationSiteInfoViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
-    @Mock private lateinit var tracker: SiteCreationTracker
     @Mock private lateinit var uiStateObserver: Observer<SiteInfoUiState>
     @Mock private lateinit var onSkipClickedObserver: Observer<Unit>
     @Mock private lateinit var onNextClickedObserver: Observer<SiteInfoUiState>
@@ -38,7 +36,7 @@ class SiteCreationSiteInfoViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = SiteCreationSiteInfoViewModel(tracker, TEST_DISPATCHER)
+        viewModel = SiteCreationSiteInfoViewModel(TEST_DISPATCHER)
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.skipBtnClicked.observeForever(onSkipClickedObserver)
         viewModel.nextBtnClicked.observeForever(onNextClickedObserver)
