@@ -340,7 +340,6 @@
     </style>
 
     <style name="InsightsManagementItem" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_70_neutral_20_selector</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 </resources>
