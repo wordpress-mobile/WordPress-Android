@@ -13,13 +13,8 @@ import org.apache.commons.lang3.StringUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.SegmentPromptModel
-import org.wordpress.android.fluxc.model.vertical.VerticalModel
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentPromptFetched
 import org.wordpress.android.fluxc.store.VerticalStore.OnVerticalsFetched
-import org.wordpress.android.models.networkresource.ListState
-import org.wordpress.android.models.networkresource.ListState.Error
-import org.wordpress.android.models.networkresource.ListState.Loading
-import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
@@ -61,7 +56,6 @@ class SiteCreationVerticalsViewModel @Inject constructor(
     private val _uiState: MutableLiveData<VerticalsUiState> = MutableLiveData()
     val uiState: LiveData<VerticalsUiState> = _uiState
 
-    private var listState: ListState<VerticalModel> = ListState.Init()
     private lateinit var segmentPrompt: SegmentPromptModel
 
     private var segmentId: Long? = null
@@ -131,7 +125,7 @@ class SiteCreationVerticalsViewModel @Inject constructor(
             updateUiState(VerticalsFullscreenErrorUiState.VerticalsGenericErrorUiState)
         } else {
             segmentPrompt = event.prompt!!
-            updateUiStateToContent("", Ready(emptyList()))
+            updateUiStateToContent("")
         }
     }
 
@@ -156,13 +150,13 @@ class SiteCreationVerticalsViewModel @Inject constructor(
         if (query.isNotEmpty()) {
             fetchVerticals(query)
         } else {
-            updateUiStateToContent(query, Ready(emptyList()))
+            updateUiStateToContent(query)
         }
     }
 
     private fun fetchVerticals(query: String) {
         if (networkUtils.isNetworkAvailable()) {
-            updateUiStateToContent(query, Loading(Ready(emptyList()), false))
+            updateUiStateToContent(query)
             fetchVerticalsJob = launch {
                 delay(THROTTLE_DELAY)
                 val fetchedVerticals = fetchVerticalsUseCase.fetchVerticals(query)
@@ -176,18 +170,14 @@ class SiteCreationVerticalsViewModel @Inject constructor(
     }
 
     private fun showConnectionErrorWithDelay(query: String) {
-        updateUiStateToContent(query, Loading(Ready(emptyList()), false))
+        updateUiStateToContent(query)
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
             withContext(mainDispatcher) {
                 updateUiStateToContent(
-                        query,
-                        Error(
-                                listState,
-                                errorMessageResId = R.string.site_creation_fetch_suggestions_error_no_connection
-                        )
+                        query
                 )
             }
         }
@@ -197,19 +187,14 @@ class SiteCreationVerticalsViewModel @Inject constructor(
         if (event.isError) {
             tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, event.error.type.toString(), event.error.message)
             updateUiStateToContent(
-                    query,
-                    Error(
-                            listState,
-                            errorMessageResId = R.string.site_creation_fetch_suggestions_error_unknown
-                    )
+                    query
             )
         } else {
-            updateUiStateToContent(query, ListState.Success(event.verticalList))
+            updateUiStateToContent(query)
         }
     }
 
-    private fun updateUiStateToContent(query: String, state: ListState<VerticalModel>) {
-        listState = state
+    private fun updateUiStateToContent(query: String) {
         updateUiState(
                 VerticalsContentUiState(
                         showSkipButton = StringUtils.isEmpty(query),
@@ -219,8 +204,8 @@ class SiteCreationVerticalsViewModel @Inject constructor(
                         ),
                         searchInputUiState = createSearchInputUiState(
                                 query,
-                                showProgress = state is Loading,
-                                showDivider = state.data.isNotEmpty(),
+                                showProgress = false,
+                                showDivider = false,
                                 hint = segmentPrompt.hint
                         )
                 )
