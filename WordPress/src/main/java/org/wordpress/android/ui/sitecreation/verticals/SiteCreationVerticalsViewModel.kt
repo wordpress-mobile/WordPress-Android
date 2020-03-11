@@ -45,7 +45,6 @@ import kotlin.coroutines.CoroutineContext
 
 private const val THROTTLE_DELAY = 500L
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
-private const val ERROR_CONTEXT_LIST_ITEM = "verticals_list_item"
 private const val ERROR_CONTEXT_FULLSCREEN = "verticals_fullscreen"
 
 class SiteCreationVerticalsViewModel @Inject constructor(
@@ -185,7 +184,6 @@ class SiteCreationVerticalsViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
             withContext(mainDispatcher) {
                 updateUiStateToContent(
                         query,
@@ -200,7 +198,6 @@ class SiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onVerticalsFetched(query: String, event: OnVerticalsFetched) {
         if (event.isError) {
-            tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, event.error.type.toString(), event.error.message)
             updateUiStateToContent(
                     query,
                     Error(
