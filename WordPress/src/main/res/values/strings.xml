@@ -2627,7 +2627,6 @@
     <string name="new_site_creation_preview_subtitle">You\'ll be able to customize look and feel of your site later</string>
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="new_site_creation_site_info_header_title">Basic Information</string>
     <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating.</string>
