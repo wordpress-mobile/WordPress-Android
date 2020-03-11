@@ -1,0 +1,6 @@
+14.3:
+- Aanvullingen op de blokeditor: de knop- en groepblokken zijn toegevoegd en er wordt ondersteuning voor meer opties geboden in de instellingen van het afbeeldings- en galerijblok.
+- Verbeteringen aan de blokeditor: ondersteuning voor scrollen toegevoegd aan de blokkiezer en blokinstellingen en een zwevende werkbalk geïntroduceerd om het navigeren in blokken eenvoudiger te maken.
+- Fixes van de blokeditor: problemen met placeholder-afbeeldingen opgelost tijdens het uploaden van afbeeldingen, emoji's in berichttitels en tekstafbreking in shortcode-blokken.
+- Reader: tabbladfilters toegevoegd voor verbeterde navigatie van sites/tags.
+

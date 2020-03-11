@@ -5,14 +5,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
-import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -91,10 +89,6 @@ class QuickStartUtils {
                 val highlightColor = ContextCompat.getColor(context, android.R.color.white)
                 mutableSpannedMessage.setSpan(
                         ForegroundColorSpan(highlightColor),
-                        startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-                mutableSpannedMessage.setSpan(
-                        StyleSpan(Typeface.BOLD),
                         startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
 
