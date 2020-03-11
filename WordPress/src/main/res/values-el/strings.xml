@@ -1,42 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-28 09:54:01+0000
+Translation-Revision-Date: 2019-10-15 10:29:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: el_GR
 -->
 <resources>
-    <string name="gutenberg_native_remove_image">Αφαίρεση εικόνας</string>
-    <string name="gutenberg_native_move_image_forward">Μετακίνηση εικόνας εμπρός</string>
-    <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Η τρέχουσα τιμή είναι %2$s</string>
-    <string name="post_signup_interstitial_not_right_now">Όχι τώρα</string>
-    <string name="post_signup_interstitial_title">Καλώς ήρθατε στο WordPress!</string>
-    <string name="photo_picker_image_selected">, Επιλεγμένο</string>
-    <string name="my_site_bottom_sheet_title">Προσθήκη νέου</string>
-    <string name="post_settings_publish">Δημοσίευση</string>
-    <string name="login_promo_viewpager_content_description">Εισαγωγή</string>
-    <string name="negative_prefix">-%s</string>
-    <string name="my_site_bottom_sheet_add_page">Σελίδες του ιστότοπου</string>
-    <string name="reader_filter_sites_title">Ιστότοποι</string>
-    <string name="reader_filter_tags_title">Ετικέτες</string>
-    <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
-    <string name="gutenberg_native_translate">Μετάφραση</string>
-    <string name="gutenberg_native_title">Τίτλος:</string>
-    <string name="gutenberg_native_take_a_video">Λήψη βίντεο</string>
-    <string name="gutenberg_native_take_a_photo">Λήψη φωτογραφίας</string>
-    <string name="gutenberg_native_start_writing">Ξεκινήστε να γράφετε …</string>
-    <string name="gutenberg_native_size">Μέγεθος</string>
-    <string name="gutenberg_native_show_section">Εμφάνιση ενότητας</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">«%s» δεν υποστηρίζεται ακόμη στο WordPress για iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">«%s» δεν υποστηρίζεται ακόμη στο WordPress για Android</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s μπλοκ. Αυτό το μπλοκ έχει μη έγκυρο περιεχόμενο</string>
-    <string name="gutenberg_native_s_block_empty">%s μπλοκ. Είναι άδειο</string>
-    <string name="gutenberg_native_reset_block">Επαναφορά μπλοκ</string>
-    <string name="gutenberg_native_link_text">Κείμενο συνδέσμου</string>
-    <string name="gutenberg_native_link_inserted">Έγινε εισαγωγή συνδέσμου</string>
-    <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
-    <string name="gutenberg_native_content">Περιεχόμενο…</string>
     <string name="post_list_drafts">Προσχέδια</string>
     <string name="post_list_published">Δημοσιευμένα</string>
     <string name="post_list_author_everyone">Όλοι</string>
@@ -1111,6 +1080,7 @@ Language: el_GR
     <string name="reader_hint_add_tag_or_url">Εισάγετε μια ετικέτα ή URL για παρακολούθηση</string>
     <string name="reader_page_followed_blogs">Παρακολουθούμενα ιστολόγια</string>
     <string name="reader_page_followed_tags">Παρακολουθούμενες ετικέτες</string>
+    <string name="reader_title_subs">Ετικέτες &amp; Ιστότοποι</string>
     <string name="reader_title_tag_preview">Προεπισκόπηση Ετικέτας</string>
     <string name="ssl_certificate_ask_trust">Αν συνήθως δεν έχετε προβλήματα σύνδεσης σε αυτό τον ιστότοπο, αυτό το σφάλμα θα μπορούσε να σημαίνει ότι κάποιος προσπαθεί να μιμηθεί τον ιστότοπο και δεν θα πρέπει να συνεχίσετε. Θα θέλατε να εμπιστευτείτε το πιστοποιητικό όπως και να\'χει;</string>
     <string name="ssl_certificate_error">Μη έγκυρο πιστοποιητικό SSL</string>

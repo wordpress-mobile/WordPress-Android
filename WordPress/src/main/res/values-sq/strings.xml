@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-08 07:54:39+0000
+Translation-Revision-Date: 2020-02-15 18:35:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
-    <string name="reader_self_hosted_select_filter">Përdorni butonin e filtrave që të gjeni postime rreth subjektesh specifike</string>
-    <string name="reader_bottom_sheet_content_description">Përzgjidhni një Etiketë ose Sajt, Dritare Flluskë</string>
-    <string name="reader_btn_selected_filter_tick_content_description">E përzgjedhur</string>
-    <string name="reader_btn_select_filter_content_description">Përzgjidhni një Sajt ose Etiketë që të filtrohen postime</string>
-    <string name="reader_btn_remove_filter_content_description">Hiqe filtrin e tanishme</string>
-    <string name="reader_title_subs">Administroni Etiketa &amp; Sajte</string>
-    <string name="reader_filter_self_hosted_empty_sites_tags_action">Hyni te WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Bëni hyrjen te llogaria juaj në WordPress.com që të shihni postimet më të reja prej etiketash që ndiqni</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Bëni hyrjen te llogaria juaj në WordPress.com që të shihni postimet më të reja prej sajtesh që ndiqni</string>
     <string name="gutenberg_native_template_preview">Paraparje Gjedheje</string>
     <string name="gutenberg_native_replace_current_block">Zëvendëso Bllokun e Tanishëm</string>
     <string name="gutenberg_native_add_to_end">Shtoje Në Fund</string>
@@ -380,7 +371,6 @@ Language: sq_AL
     <string name="post_list_author_everyone">Cilido</string>
     <string name="post_list_author_me">Unë</string>
     <string name="error_restoring_post">Ndodhi një gabim gjatë rikthimit të postimit</string>
-    <string name="backdated_for">Vënë në plan për: %s</string>
     <string name="stats_insights_management_drag_and_drop_hint">Objektet e treguar më sipër do të shfaqen te skeda juaj Prirje. Për t’i përshtatur, tërhiqini dhe vendosini.</string>
     <string name="stats_insights_add_insights_header">Shtoni Tendencë</string>
     <string name="stats_insights_management_title">Shihni vetëm statistikat më me peshë. Shtoni dhe sistemoni më poshtë tendencat tuaja.</string>
@@ -1959,6 +1949,7 @@ Language: sq_AL
     <string name="reader_hint_add_tag_or_url">Jepni një URL ose etiketë që të ndiqet</string>
     <string name="reader_page_followed_blogs">Sajte te ndjekur</string>
     <string name="reader_page_followed_tags">Etiketa të ndjekura</string>
+    <string name="reader_title_subs">Etiketa &amp; Sajte</string>
     <string name="reader_title_tag_preview">Etiketë Lexuesi</string>
     <string name="reader_title_blog_preview">Sajti i Lexuesit</string>
     <string name="ssl_certificate_ask_trust">Nëse zakonisht lidheni te ky sajt pa probleme, ky gabim mund të thotë që dikush po provon të hiqet si ky sajt, dhe s’duhet të vazhdoni. Doni të besohet dëshmia, sido qoftë?</string>

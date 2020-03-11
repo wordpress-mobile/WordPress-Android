@@ -1,32 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-06 15:31:41+0000
+Translation-Revision-Date: 2020-02-16 12:54:28+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
-    <string name="reader_self_hosted_select_filter">استخدام زر الفلترة للعثور على مقالات في مواضيع معينة</string>
-    <string name="reader_bottom_sheet_content_description">تحديد وسم أو موقع، نافذة منبثقة</string>
-    <string name="reader_btn_selected_filter_tick_content_description">مُحدَّد</string>
-    <string name="reader_btn_select_filter_content_description">تحديد موقع أو وسم لفلترة المقالات</string>
-    <string name="reader_btn_remove_filter_content_description">إزالة الفلتر الحالي</string>
-    <string name="reader_title_subs">إدارة الوسوم والمواقع</string>
-    <string name="reader_filter_self_hosted_empty_sites_tags_action">تسجيل الدخول إلى WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من الوسوم التي تتابعها</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من المواقع التي تتابعها</string>
-    <string name="gutenberg_native_template_preview">معاينة القالب</string>
-    <string name="gutenberg_native_replace_current_block">استبدال المكوِّن الحالي</string>
-    <string name="gutenberg_native_add_to_end">إضافة إلى النهاية</string>
-    <string name="gutenberg_native_add_to_beginning">إضافة إلى البداية</string>
-    <string name="gutenberg_native_add_block_before">إضافة مكوّن قبل</string>
-    <string name="gutenberg_native_add_block_after">إضافة مكوّن بعد</string>
-    <string name="reader_filter_empty_tags_action">إضافة وسم</string>
-    <string name="reader_filter_empty_sites_action">متابعة موقع</string>
-    <string name="reader_filter_empty_tags_list">يمكنك متابعة مقالات حول موضوع معيَّن عن طريق إضافة وسم</string>
-    <string name="reader_filter_empty_sites_list">الاطِّلاع على أحدث المقالات من المواقع التي تتابعها</string>
-    <string name="reader_filter_main_title">المتابعة</string>
-    <string name="reader_filter_cta">عامل التصفية</string>
     <string name="gutenberg_native_video_caption_s">تسمية الفيديو. %s</string>
     <string name="gutenberg_native_edit_video">تحرير الفيديو</string>
     <string name="gutenberg_native_edit_media">تحرير الوسائط</string>
@@ -756,7 +735,7 @@ Language: ar
     <string name="reader_gallery_images_desc">معرض الصور</string>
     <string name="blavatar_desc">أيقونة الموقع</string>
     <string name="theme_image_desc">صورة القالب</string>
-    <string name="featured_image_desc">الصورة البارزة</string>
+    <string name="featured_image_desc">صورة مميزة</string>
     <string name="button_discard">تجاهل</string>
     <string name="reader_avatar_desc">صورة ملف التعريف</string>
     <string name="notification_channel_transient_title">عابر</string>
@@ -1081,7 +1060,7 @@ Language: ar
     <string name="dlg_deleting_tag">جاري الحذف</string>
     <string name="dlg_confirm_delete_tag">هل تريد حذف وسم \"%s\" بشكل دائم؟</string>
     <string name="error_tag_exists">توجد علامة تحمل هذا الاسم بالفعل</string>
-    <string name="add_new_tag">أضف وسماً جديداً</string>
+    <string name="add_new_tag">إضافة علامة جديدة</string>
     <string name="tag_description_hint">الوصف</string>
     <string name="tag_name_hint">العلامة</string>
     <string name="site_settings_amp_summary">يدعم موقعك على WordPress.com استخدام صفحات الجوال المسرّعة، وهي مبادرة تقودها Google لتسريع أوقات التحميل بشكل كبير على الأجهزة المحمولة.</string>
@@ -1121,7 +1100,7 @@ Language: ar
     <string name="plugins">الإضافات</string>
     <string name="my_site_btn_plugins">الإضافات</string>
     <string name="media_edit_link_hint">فتح الرابط في نافذة/علامة تبويب جديدة</string>
-    <string name="media_edit_link_text">رابط لـ</string>
+    <string name="media_edit_link_text">رابط إلى</string>
     <string name="notification_login_failed">حدث خطأ.</string>
     <string name="notification_2fa_needed">يرجى إدخال رمز المصادقة للمتابعة.</string>
     <string name="notification_error_wrong_password">يرجى التحقق مجددًا من كلمة مرورك للمتابعة.</string>
@@ -1528,7 +1507,7 @@ Language: ar
     <string name="error_fetch_followers_list">تعذر استرداد متابعي الموقع</string>
     <string name="editor_failed_uploads_switch_html">فشل رفع بعض الوسائط. يمكنك الإنتقال الى وضع HTML\nبهذه الحالة. إزالة جميع المرفوعات الفاشلة والمتابعة؟</string>
     <string name="image_width">العرض</string>
-    <string name="image_link_to">رابط لـ</string>
+    <string name="image_link_to">رابط إلى</string>
     <string name="image_caption">التسمية التوضيحية</string>
     <string name="image_settings_save_toast">تم حفظ التغييرات</string>
     <string name="image_settings_dismiss_dialog_title">تجاهل التغييرات الغير محفوظة؟</string>
@@ -1959,6 +1938,7 @@ Language: ar
     <string name="reader_hint_add_tag_or_url">أدخل عنوان URL أو اضغط للمتابعة</string>
     <string name="reader_page_followed_blogs">المواقع المتابَعة</string>
     <string name="reader_page_followed_tags">وسوم تمت متابعتها</string>
+    <string name="reader_title_subs">الوسوم والمواقع</string>
     <string name="reader_title_tag_preview">وسم القارئ</string>
     <string name="reader_title_blog_preview">موقع القارئ</string>
     <string name="ssl_certificate_ask_trust">إذا كنت عادة تتصل بهذا الموقع بدون أي مشاكل، فربما يعني هذا الخطأ أن شخصًا ما يحاول سرقة هذا الموقع, وينبغي ألا تقوم بالاستمرار. هل ترغب في الوثوق بالشهادة على أي حال؟</string>

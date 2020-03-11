@@ -1,6 +1,0 @@
-14.3:
-- I blockredigeraren: Nya block för knapp och grupp, fler inställningar i bild- och galleriblock.
-- Förbättringar av blockredigeraren: Rullist i blockväljare och blockinställningar, ny flytande verktygslist för enklare blocknavigering.
-- Rättelser i blockredigeraren: Löst problem med platshållare i samband med bilduppladdning, användning av emoji i inläggsrubriker och radbrytning i kordkodsblock.
-- Läsaren: Lagt till flikfiltrering för bättre navigaton mellan webbplatser och etiketter.
-

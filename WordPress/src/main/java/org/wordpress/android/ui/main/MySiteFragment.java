@@ -209,8 +209,6 @@ public class MySiteFragment extends Fragment implements
 
         updateSiteSettingsIfNecessary();
 
-        reattachQuickStartFragmentListeners();
-
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(getSelectedSite());
 
@@ -232,18 +230,6 @@ public class MySiteFragment extends Fragment implements
         }
 
         showQuickStartNoticeIfNecessary();
-    }
-
-    private void reattachQuickStartFragmentListeners() {
-        if (getFragmentManager() != null) {
-            for (Fragment fragment : getFragmentManager().getFragments()) {
-                if (fragment instanceof FullScreenDialogFragment) {
-                    FullScreenDialogFragment targetFragment = (FullScreenDialogFragment) fragment;
-                    targetFragment.setOnConfirmListener(this);
-                    targetFragment.setOnDismissListener(this);
-                }
-            }
-        }
     }
 
     private void showQuickStartNoticeIfNecessary() {

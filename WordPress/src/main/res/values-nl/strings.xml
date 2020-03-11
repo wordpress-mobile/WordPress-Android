@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-05 01:54:13+0000
+Translation-Revision-Date: 2020-02-22 00:54:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
-    <string name="reader_self_hosted_select_filter">Gebruik de filterknop om berichten over specifieke onderwerpen te vinden</string>
-    <string name="reader_bottom_sheet_content_description">Selecteer een tag of site, pop-upvenster</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Geselecteerd</string>
-    <string name="reader_btn_select_filter_content_description">Selecteer een site of tag om berichten te filteren</string>
-    <string name="reader_btn_remove_filter_content_description">Verwijder het huidige filter</string>
-    <string name="reader_title_subs">Tags en sites beheren</string>
-    <string name="reader_filter_self_hosted_empty_sites_tags_action">Inloggen op WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Log in op WordPress.com om de laatste berichten van gevolgde tags te bekijken</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Log in op WordPress.com om de laatste berichten van gevolgde sites te bekijken</string>
     <string name="gutenberg_native_template_preview">Voorbeeldweergave van sjabloon</string>
     <string name="gutenberg_native_replace_current_block">Huidig blok vervangen</string>
     <string name="gutenberg_native_add_to_end">Toevoegen aan einde</string>
@@ -1844,6 +1835,7 @@ Language: nl
     <string name="reader_hint_add_tag_or_url">Voer een tag of URL in om te volgen</string>
     <string name="reader_page_followed_blogs">Gevolgde sites</string>
     <string name="reader_page_followed_tags">Gevolgde tags</string>
+    <string name="reader_title_subs">Tags &amp; sites</string>
     <string name="reader_title_tag_preview">Reader-tag</string>
     <string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
     <string name="ssl_certificate_error">Ongeldig SSL-certificaat</string>

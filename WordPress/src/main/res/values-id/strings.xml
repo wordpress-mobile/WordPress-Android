@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-05 00:54:14+0000
+Translation-Revision-Date: 2020-02-22 01:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
-    <string name="reader_self_hosted_select_filter">Gunakan tombol penyaring untuk menemukan pos pada subjek tertentu</string>
-    <string name="reader_bottom_sheet_content_description">Pilih Tag atau Situs, Jendela Pop Up</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Terpilih</string>
-    <string name="reader_btn_select_filter_content_description">Pilih Situs atau Tag untuk menyaring pos</string>
-    <string name="reader_btn_remove_filter_content_description">Hapus penyaring saat ini</string>
-    <string name="reader_title_subs">Kelola Tag &amp; Situs</string>
-    <string name="reader_filter_self_hosted_empty_sites_tags_action">Login ke WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Login ke WordPress.com untuk melihat pos terbaru dari tag yang Anda ikuti</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Login ke WordPress.com untuk melihat pos terbaru dari situs yang Anda ikuti</string>
     <string name="gutenberg_native_template_preview">Pratinjau Template</string>
     <string name="gutenberg_native_replace_current_block">Ganti Blok Saat Ini</string>
     <string name="gutenberg_native_add_to_end">Tambahkan ke Akhir</string>
@@ -1916,6 +1907,7 @@ Language: id
     <string name="reader_hint_add_tag_or_url">Masukkan sebuah URL atau tag untuk mengikuti</string>
     <string name="reader_page_followed_blogs">Situs yang diikuti</string>
     <string name="reader_page_followed_tags">Tag yang diikuti</string>
+    <string name="reader_title_subs">Tag &amp; Situs</string>
     <string name="reader_title_tag_preview">Tag Pembaca</string>
     <string name="reader_title_blog_preview">Situs Pembaca</string>
     <string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>
