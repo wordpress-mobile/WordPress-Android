@@ -1879,7 +1879,6 @@
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connection_service_label">Publicize to %s</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
-    <string name="connection_service_facebook_notice">As of August 1, 2018, Facebook no longer allows direct sharing of posts to Facebook Profiles. Connections to Facebook Pages remain unchanged.</string>
     <string name="share_btn_connect">Connect</string>
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_reconnect">Reconnect</string>
