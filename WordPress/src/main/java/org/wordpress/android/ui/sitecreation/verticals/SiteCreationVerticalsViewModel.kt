@@ -14,7 +14,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.SegmentPromptModel
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentPromptFetched
-import org.wordpress.android.fluxc.store.VerticalStore.OnVerticalsFetched
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
@@ -22,7 +21,6 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
-import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
@@ -33,22 +31,18 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-private const val THROTTLE_DELAY = 500L
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
-private const val ERROR_CONTEXT_LIST_ITEM = "verticals_list_item"
 private const val ERROR_CONTEXT_FULLSCREEN = "verticals_fullscreen"
 
 class SiteCreationVerticalsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchSegmentPromptUseCase: FetchSegmentPromptUseCase,
-    private val fetchVerticalsUseCase: FetchVerticalsUseCase,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
-    private var fetchVerticalsJob: Job? = null
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
     private var isStarted = false
@@ -73,15 +67,12 @@ class SiteCreationVerticalsViewModel @Inject constructor(
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
     init {
-        dispatcher.register(fetchVerticalsUseCase)
         dispatcher.register(fetchSegmentPromptUseCase)
     }
 
     override fun onCleared() {
         super.onCleared()
-        dispatcher.unregister(fetchVerticalsUseCase)
         dispatcher.unregister(fetchSegmentPromptUseCase)
-        job.cancel()
     }
 
     fun start(segmentId: Long) {
@@ -146,52 +137,7 @@ class SiteCreationVerticalsViewModel @Inject constructor(
     }
 
     fun updateQuery(query: String) {
-        fetchVerticalsJob?.cancel() // cancel any previous requests
-        if (query.isNotEmpty()) {
-            fetchVerticals(query)
-        } else {
-            updateUiStateToContent(query)
-        }
-    }
-
-    private fun fetchVerticals(query: String) {
-        if (networkUtils.isNetworkAvailable()) {
-            updateUiStateToContent(query)
-            fetchVerticalsJob = launch {
-                delay(THROTTLE_DELAY)
-                val fetchedVerticals = fetchVerticalsUseCase.fetchVerticals(query)
-                withContext(mainDispatcher) {
-                    onVerticalsFetched(query, fetchedVerticals)
-                }
-            }
-        } else {
-            showConnectionErrorWithDelay(query)
-        }
-    }
-
-    private fun showConnectionErrorWithDelay(query: String) {
         updateUiStateToContent(query)
-        launch {
-            // We show the loading indicator for a bit so the user has some feedback when they press retry
-            delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
-            withContext(mainDispatcher) {
-                updateUiStateToContent(
-                        query
-                )
-            }
-        }
-    }
-
-    private fun onVerticalsFetched(query: String, event: OnVerticalsFetched) {
-        if (event.isError) {
-            tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, event.error.type.toString(), event.error.message)
-            updateUiStateToContent(
-                    query
-            )
-        } else {
-            updateUiStateToContent(query)
-        }
     }
 
     private fun updateUiStateToContent(query: String) {
