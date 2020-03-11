@@ -30,6 +30,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
+import org.wordpress.android.widgets.BadgedImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;

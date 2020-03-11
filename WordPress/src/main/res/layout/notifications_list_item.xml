@@ -40,7 +40,7 @@
         android:minHeight="?attr/listPreferredItemHeight"
         android:padding="@dimen/margin_extra_large">
 
-        <org.wordpress.android.ui.notifications.adapters.BadgedImageView
+        <org.wordpress.android.widgets.BadgedImageView
             android:id="@+id/note_avatar"
             android:layout_width="@dimen/activity_log_icon_size"
             android:layout_height="@dimen/activity_log_icon_size"

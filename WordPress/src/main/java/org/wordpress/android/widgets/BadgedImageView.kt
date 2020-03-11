@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.notifications.adapters
+package org.wordpress.android.widgets
 
 import android.content.Context
 import android.graphics.Bitmap
