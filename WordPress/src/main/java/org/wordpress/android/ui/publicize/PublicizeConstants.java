@@ -10,8 +10,8 @@ public class PublicizeConstants {
     public static final String TWITTER_ID = "twitter";
     public static final String LINKEDIN_ID = "linkedin";
 
-    public static final String FACEBOOK_SHARING_CHANGE_BLOG_POST =
-            "https://en.blog.wordpress.com/2018/07/23/sharing-options-from-wordpress-com-to-facebook-are-changing/";
+    public static final String PUBLICIZE_FACEBOOK_SHARING_SUPPORT_LINK =
+            "https://en.support.wordpress.com/publicize/#facebook-pages";
 
     public enum ConnectAction {
         CONNECT,

@@ -39,7 +39,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.publicize.PublicizeConstants.FACEBOOK_SHARING_CHANGE_BLOG_POST;
+import static org.wordpress.android.ui.publicize.PublicizeConstants.PUBLICIZE_FACEBOOK_SHARING_SUPPORT_LINK;
 
 public class PublicizeListActivity extends AppCompatActivity
         implements
@@ -402,7 +402,7 @@ public class PublicizeListActivity extends AppCompatActivity
         builder.setMessage(R.string.sharing_facebook_account_must_have_pages);
         builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
         builder.setNegativeButton(R.string.learn_more, (dialog, which) -> WPWebViewActivity.openURL(this,
-                FACEBOOK_SHARING_CHANGE_BLOG_POST));
+                PUBLICIZE_FACEBOOK_SHARING_SUPPORT_LINK));
         builder.show();
     }
 }
