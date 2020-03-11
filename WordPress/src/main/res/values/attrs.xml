@@ -209,4 +209,15 @@
             <enum name="normal" value="1" />
         </attr>
     </declare-styleable>
+
+    <!-- BadgedImageView attributes -->
+    <declare-styleable name="BadgedImageView">
+        <attr name="badgeBackground" format="reference" />
+        <attr name="badgeBackgroundSize" format="dimension" />
+        <attr name="badgeBackgroundBorderWidth" format="dimension" />
+        <attr name="badgeIcon" format="reference" />
+        <attr name="badgeIconSize" format="dimension" />
+        <attr name="badgeHorizontalOffset" format="dimension" />
+        <attr name="badgeVerticalOffset" format="dimension" />
+    </declare-styleable>
 </resources>

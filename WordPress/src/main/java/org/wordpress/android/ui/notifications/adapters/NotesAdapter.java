@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.graphics.ColorUtils;
@@ -298,13 +297,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         boolean isUnread = note.isUnread();
 
         int gridicon = mNoticonUtils.noticonToGridicon(note.getNoticonCharacter());
-        mImageManager.load(noteViewHolder.mNoteIcon, gridicon);
+        noteViewHolder.mImgAvatar.setBadgeIcon(gridicon);
         if (commentStatus == CommentStatus.UNAPPROVED) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning_stroke_surface);
+            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_warning);
         } else if (isUnread) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_stroke_surface);
+            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_primary);
         } else {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_20_stroke_surface);
+            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_neutral_20);
         }
 
         if (isUnread) {
@@ -364,8 +363,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         private final TextView mTxtSubject;
         private final TextView mTxtSubjectNoticon;
         private final TextView mTxtDetail;
-        private final ImageView mImgAvatar;
-        private final ImageView mNoteIcon;
+        private final BadgedImageView mImgAvatar;
 
         NoteViewHolder(View view) {
             super(view);
@@ -376,7 +374,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             mTxtSubjectNoticon = view.findViewById(R.id.note_subject_noticon);
             mTxtDetail = view.findViewById(R.id.note_detail);
             mImgAvatar = view.findViewById(R.id.note_avatar);
-            mNoteIcon = view.findViewById(R.id.note_icon);
 
             mContentView.setOnClickListener(mOnClickListener);
         }

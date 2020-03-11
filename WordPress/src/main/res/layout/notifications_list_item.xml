@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/header_text"
@@ -31,43 +34,33 @@
         android:layout_below="@+id/header_text"
         android:background="?android:selectableItemBackground"
         android:clickable="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:focusable="true"
         android:minHeight="?attr/listPreferredItemHeight"
         android:padding="@dimen/margin_extra_large">
 
-        <FrameLayout
-            android:id="@+id/note_avatar_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true">
-
-            <ImageView
-                android:id="@+id/note_avatar"
-                android:layout_width="@dimen/activity_log_icon_size"
-                android:layout_height="@dimen/activity_log_icon_size"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_marginEnd="@dimen/activity_log_icon_margin"
-                android:contentDescription="@null"
-                tools:src="@drawable/bg_oval_neutral_30_user_32dp" />
-
-            <ImageView
-                android:id="@+id/note_icon"
-                android:layout_width="@dimen/note_icon_sz"
-                android:layout_height="@dimen/note_icon_sz"
-                android:layout_marginStart="@dimen/notifications_note_icon_margin_start"
-                android:layout_marginTop="@dimen/notifications_note_icon_margin_top"
-                android:background="@drawable/bg_oval_primary_stroke_surface"
-                android:gravity="center"
-                android:importantForAccessibility="no"
-                android:padding="@dimen/notifications_note_icon_padding" />
-
-        </FrameLayout>
+        <org.wordpress.android.ui.notifications.adapters.BadgedImageView
+            android:id="@+id/note_avatar"
+            android:layout_width="@dimen/activity_log_icon_size"
+            android:layout_height="@dimen/activity_log_icon_size"
+            android:layout_marginEnd="@dimen/activity_log_icon_margin"
+            android:layout_marginTop="@dimen/margin_small"
+            android:contentDescription="@null"
+            app:badgeBackground="@drawable/bg_oval_primary"
+            app:badgeBackgroundBorderWidth="@dimen/notification_icon_bg_border_width"
+            app:badgeBackgroundSize="@dimen/note_icon_sz"
+            app:badgeHorizontalOffset="@dimen/notifications_note_icon_horizontal_offset"
+            app:badgeIconSize="@dimen/notifications_note_icon_size"
+            app:badgeVerticalOffset="@dimen/notifications_note_icon_vertical_offset"
+            tools:badgeIcon="@drawable/ic_star_white_24dp"
+            tools:src="@drawable/bg_oval_neutral_30_user_32dp" />
 
         <FrameLayout
             android:id="@+id/note_subject_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/note_avatar_container">
+            android:layout_toEndOf="@+id/note_avatar">
 
             <org.wordpress.android.widgets.NoticonTextView
                 android:id="@+id/note_subject_noticon"
@@ -97,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/note_subject_container"
-            android:layout_toEndOf="@+id/note_avatar_container"
+            android:layout_toEndOf="@+id/note_avatar"
             android:ellipsize="end"
             android:importantForAccessibility="no"
             android:maxLines="2"
