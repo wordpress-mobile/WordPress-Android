@@ -20,7 +20,6 @@ import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.OnSkipClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsListItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
@@ -119,12 +118,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
-        initAdapter()
-    }
-
-    private fun initAdapter() {
-        val adapter = SiteCreationVerticalsAdapter()
-        recyclerView.adapter = adapter
     }
 
     private fun initRetryButton(rootView: ViewGroup) {
@@ -173,7 +166,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
         uiHelpers.updateVisibility(skipButton, uiState.showSkipButton)
         searchInputWithHeader.updateHeader(nonNullActivity, uiState.headerUiState)
         searchInputWithHeader.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
-        updateSuggestions(uiState.items)
     }
 
     private fun updateErrorLayout(errorLayout: ViewGroup, errorUiStateState: VerticalsFullscreenErrorUiState) {
@@ -183,13 +175,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
 
     override fun onHelp() {
         viewModel.onHelpClicked()
-    }
-
-    private fun updateSuggestions(suggestions: List<VerticalsListItemUiState>) {
-        if (suggestions.isNotEmpty()) {
-            view?.announceForAccessibility(getString(R.string.suggestions_updated_content_description))
-        }
-        (recyclerView.adapter as SiteCreationVerticalsAdapter).update(suggestions)
     }
 
     override fun getScreenTitle(): String {

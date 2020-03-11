@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,16 +28,12 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -227,12 +222,6 @@ class SiteCreationVerticalsViewModel @Inject constructor(
                                 showProgress = state is Loading,
                                 showDivider = state.data.isNotEmpty(),
                                 hint = segmentPrompt.hint
-                        ),
-                        items = createSuggestionsUiStates(
-                                onRetry = { updateQuery(query) },
-                                data = state.data,
-                                errorFetchingSuggestions = state is Error,
-                                errorResId = if (state is Error) state.errorMessageResId else null
                         )
                 )
         )
@@ -240,50 +229,6 @@ class SiteCreationVerticalsViewModel @Inject constructor(
 
     private fun updateUiState(uiState: VerticalsUiState) {
         _uiState.value = uiState
-    }
-
-    private fun createSuggestionsUiStates(
-        onRetry: () -> Unit,
-        data: List<VerticalModel>,
-        errorFetchingSuggestions: Boolean,
-        @StringRes errorResId: Int?
-    ): List<VerticalsListItemUiState> {
-        val items: ArrayList<VerticalsListItemUiState> = ArrayList()
-        if (errorFetchingSuggestions) {
-            val errorUiState = VerticalsFetchSuggestionsErrorUiState(
-                    messageResId = errorResId ?: R.string.site_creation_fetch_suggestions_error_unknown,
-                    retryButtonResId = R.string.button_retry
-            )
-            errorUiState.onItemTapped = onRetry
-            items.add(errorUiState)
-        } else {
-            val lastItemIndex = data.size - 1
-            data.forEachIndexed { index, model ->
-                val onItemTapped = {
-                    _verticalSelected.value = if (model.isUserInputVertical) {
-                        model.name.toLowerCase(Locale.ROOT)
-                    } else {
-                        model.verticalId
-                    }
-                }
-                val itemUiState = if (model.isUserInputVertical) {
-                    VerticalsCustomModelUiState(
-                            model.verticalId,
-                            model.name,
-                            R.string.new_site_creation_verticals_custom_subtitle
-                    )
-                } else {
-                    VerticalsModelUiState(
-                            model.verticalId,
-                            model.name,
-                            showDivider = index == lastItemIndex - 1 && data[lastItemIndex].isUserInputVertical
-                    )
-                }
-                itemUiState.onItemTapped = onItemTapped
-                items.add(itemUiState)
-            }
-        }
-        return items
     }
 
     private fun shouldShowHeader(query: String): Boolean {
@@ -322,8 +267,7 @@ class SiteCreationVerticalsViewModel @Inject constructor(
         data class VerticalsContentUiState(
             val searchInputUiState: SiteCreationSearchInputUiState,
             val headerUiState: SiteCreationHeaderUiState?,
-            val showSkipButton: Boolean,
-            val items: List<VerticalsListItemUiState>
+            val showSkipButton: Boolean
         ) : VerticalsUiState(
                 fullscreenProgressLayoutVisibility = false,
                 contentLayoutVisibility = true,
@@ -353,23 +297,5 @@ class SiteCreationVerticalsViewModel @Inject constructor(
                     R.string.no_network_message
             )
         }
-    }
-
-    sealed class VerticalsListItemUiState {
-        var onItemTapped: (() -> Unit)? = null
-
-        data class VerticalsModelUiState(val id: String, val title: String, val showDivider: Boolean) :
-                VerticalsListItemUiState()
-
-        data class VerticalsCustomModelUiState(
-            val id: String,
-            val title: String,
-            @StringRes val subTitleResId: Int
-        ) : VerticalsListItemUiState()
-
-        data class VerticalsFetchSuggestionsErrorUiState(
-            @StringRes val messageResId: Int,
-            @StringRes val retryButtonResId: Int
-        ) : VerticalsListItemUiState()
     }
 }
