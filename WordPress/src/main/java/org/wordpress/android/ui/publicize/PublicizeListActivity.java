@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
@@ -37,6 +38,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.ui.publicize.PublicizeConstants.FACEBOOK_SHARING_CHANGE_BLOG_POST;
 
 public class PublicizeListActivity extends AppCompatActivity
         implements
@@ -323,7 +326,14 @@ public class PublicizeListActivity extends AppCompatActivity
             }
         } else {
             if (event.getReasonResId() != null) {
-                showAlertForFailureReason(event.getReasonResId());
+                // the custom dialog behavior here is specific to a user who is trying to share to Facebook
+                // but does not have any available Facebook Pages.
+                if (event.getService().equals(PublicizeConstants.FACEBOOK_ID)
+                    && event.getReasonResId() == R.string.sharing_facebook_account_must_have_pages) {
+                    showAlertForFacebookPageFailureReason();
+                } else {
+                    showAlertForFailureReason(event.getReasonResId());
+                }
             } else {
                 ToastUtils.showToast(this, R.string.error_generic);
             }
@@ -382,6 +392,17 @@ public class PublicizeListActivity extends AppCompatActivity
                 new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog));
         builder.setMessage(reasonResId);
         builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
+        builder.show();
+    }
+
+    private void showAlertForFacebookPageFailureReason() {
+        final AlertDialog.Builder builder =
+                new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog));
+        builder.setTitle(R.string.dialog_title_sharing_facebook_account_must_have_pages);
+        builder.setMessage(R.string.sharing_facebook_account_must_have_pages);
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
+        builder.setNegativeButton(R.string.learn_more, (dialog, which) -> WPWebViewActivity.openURL(this,
+                FACEBOOK_SHARING_CHANGE_BLOG_POST));
         builder.show();
     }
 }
