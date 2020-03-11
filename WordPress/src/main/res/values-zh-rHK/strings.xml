@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-22 00:54:43+0000
+Translation-Revision-Date: 2020-03-05 00:54:14+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="reader_self_hosted_select_filter">使用篩選按鈕尋找特定主題的文章</string>
+    <string name="reader_bottom_sheet_content_description">選擇一個標籤或網站、快顯視窗</string>
+    <string name="reader_btn_selected_filter_tick_content_description">已選取</string>
+    <string name="reader_btn_select_filter_content_description">選擇網站或標籤以篩選文章</string>
+    <string name="reader_btn_remove_filter_content_description">移除目前的篩選條件</string>
+    <string name="reader_title_subs">管理標籤和網站</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">登入 WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">登入 WordPress.com，查看關注標籤的最新文章</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">登入 WordPress.com，查看關注網站的最新文章</string>
     <string name="gutenberg_native_template_preview">範例預覽</string>
     <string name="gutenberg_native_replace_current_block">取代目前區塊</string>
     <string name="gutenberg_native_add_to_end">新增至「結束」</string>
@@ -1927,7 +1936,6 @@ Language: zh_TW
     <string name="reader_hint_add_tag_or_url">輸入要關注的 URL 或標籤</string>
     <string name="reader_page_followed_blogs">關注的網站</string>
     <string name="reader_page_followed_tags">關注的標籤</string>
-    <string name="reader_title_subs">標籤與網站</string>
     <string name="reader_title_tag_preview">讀者標籤</string>
     <string name="reader_title_blog_preview">讀者網站</string>
     <string name="ssl_certificate_ask_trust">如果你通常能夠順利連線至此網站，則此錯誤可能代表有人正嘗試冒充該網站，因此請勿繼續操作。是否仍然要信任憑證？</string>

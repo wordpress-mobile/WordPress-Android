@@ -370,13 +370,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             }
         });
 
-        mViewModel.getOpenExternalBrowser().observe(this, new Observer<Unit>() {
-            @Override
-            public void onChanged(@Nullable Unit unit) {
-                ReaderActivityLauncher.openUrl(WPWebViewActivity.this, mWebView.getUrl(),
-                        ReaderActivityLauncher.OpenUrlType.EXTERNAL);
-            }
-        });
+        mViewModel.getOpenExternalBrowser().observe(this,
+                unit -> ReaderActivityLauncher.openUrl(WPWebViewActivity.this, getExternalBrowserUrl(),
+                        ReaderActivityLauncher.OpenUrlType.EXTERNAL));
 
         mViewModel.getPreviewModeSelector().observe(this, new Observer<PreviewModeSelectorStatus>() {
             @Override
@@ -818,6 +814,27 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         return "";
+    }
+
+    /**
+     * This function is necessary because we want the external browser to use a link with a primary domain without
+     * preview parameters.
+     *
+     * 1. Within the loadContent function at line 734, the primary domain is being removed for authentication reasons.
+     * 2. For posts on all site types, the shareable url will be available which doesn't have any preview parameters.
+     * 3. In any other case we just fallback to the WebView's current URL.
+     * @return external url
+     */
+    public String getExternalBrowserUrl() {
+        final Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String shareableUrl = extras.getString(SHAREABLE_URL, null);
+            if (!TextUtils.isEmpty(shareableUrl)) {
+                return shareableUrl;
+            }
+        }
+
+        return mWebView.getUrl();
     }
 
     /**

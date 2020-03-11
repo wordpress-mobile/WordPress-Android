@@ -1950,7 +1950,6 @@ Language: pt_BR
     <string name="reader_hint_add_tag_or_url">Insira um URL ou tag para seguir</string>
     <string name="reader_page_followed_blogs">Sites seguidos</string>
     <string name="reader_page_followed_tags">Tags seguidas</string>
-    <string name="reader_title_subs">Tags e sites</string>
     <string name="reader_title_tag_preview">Tag do Leitor</string>
     <string name="reader_title_blog_preview">Leitor do site</string>
     <string name="ssl_certificate_ask_trust">Se você geralmente se conecta a este site sem problemas, talvez este erro signifique que alguém está tentando imitar o site, e você não deve continuar. Deseja confiar no certificado mesmo assim?</string>
