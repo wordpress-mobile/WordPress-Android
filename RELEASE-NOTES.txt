@@ -1,5 +1,9 @@
+14.5
+-----
+ 
 14.4
 -----
+* Fix an issue where image is sometimes uploaded with a path to local storage
  
 14.3
 -----
