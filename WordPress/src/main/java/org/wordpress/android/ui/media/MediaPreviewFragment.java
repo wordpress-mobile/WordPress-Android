@@ -30,6 +30,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -277,43 +278,74 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         }
 
         mImageView.setVisibility(View.VISIBLE);
-        if (mSite == null || SiteUtils.isPhotonCapable(mSite)) {
+        if ((mSite == null || SiteUtils.isPhotonCapable(mSite)) && !UrlUtils.checkIfContentUri(mediaUri)) {
             int maxWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getActivity()),
                     DisplayUtils.getDisplayPixelHeight(getActivity()));
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, maxWidth, 0);
         }
         showProgress(true);
-        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, mediaUri, ScaleType.CENTER, null,
-                new RequestListener<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
-                        if (isAdded()) {
-                            // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
-                            // for it to be correctly resized upon loading
-                            PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
-                            attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+
+        if (UrlUtils.checkIfContentUri(mediaUri)) {
+            mImageManager
+                    .loadWithResultListener(mImageView, ImageType.IMAGE, Uri.parse(mediaUri), ScaleType.CENTER, null,
+                            new RequestListener<Drawable>() {
                                 @Override
-                                public void onViewTap(View view, float x, float y) {
-                                    if (mMediaTapListener != null) {
-                                        mMediaTapListener.onMediaTapped();
+                                public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
+                                    if (isAdded()) {
+                                        // assign the photo attacher to enable pinch/zoom - must come before
+                                        // setImageBitmap
+                                        // for it to be correctly resized upon loading
+                                        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+                                        attacher.setOnViewTapListener((view, x, y) -> {
+                                            if (mMediaTapListener != null) {
+                                                mMediaTapListener.onMediaTapped();
+                                            }
+                                        });
+                                        showProgress(false);
+                                    }
+                                }
+
+                                @Override
+                                public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                                    if (isAdded()) {
+                                        if (e != null) {
+                                            AppLog.e(T.MEDIA, e);
+                                        }
+                                        showProgress(false);
+                                        showLoadingError();
                                     }
                                 }
                             });
-                            showProgress(false);
-                        }
-                    }
-
-                    @Override
-                    public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
-                        if (isAdded()) {
-                            if (e != null) {
-                                AppLog.e(T.MEDIA, e);
+        } else {
+            mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, mediaUri, ScaleType.CENTER, null,
+                    new RequestListener<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
+                            if (isAdded()) {
+                                // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
+                                // for it to be correctly resized upon loading
+                                PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+                                attacher.setOnViewTapListener((view, x, y) -> {
+                                    if (mMediaTapListener != null) {
+                                        mMediaTapListener.onMediaTapped();
+                                    }
+                                });
+                                showProgress(false);
                             }
-                            showProgress(false);
-                            showLoadingError();
                         }
-                    }
-                });
+
+                        @Override
+                        public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                            if (isAdded()) {
+                                if (e != null) {
+                                    AppLog.e(T.MEDIA, e);
+                                }
+                                showProgress(false);
+                                showLoadingError();
+                            }
+                        }
+                    });
+        }
     }
 
     /*
