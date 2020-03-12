@@ -406,7 +406,6 @@
     <dimen name="site_creation_preview_web_view_side_margin">40dp</dimen>
     <dimen name="site_creation_preview_ok_button_container_height">68dp</dimen>
     <dimen name="site_creation_container_elevation">6dp</dimen>
-    <dimen name="site_creation_verticals_search_input_text_padding">32dp</dimen>
 
     <dimen name="site_creation_domains_radio_button_padding_start">28dp</dimen>
 

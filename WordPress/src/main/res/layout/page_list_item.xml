@@ -21,7 +21,6 @@
                 android:id="@+id/page_more"
                 android:layout_width="56dp"
                 android:layout_height="0dp"
-                android:alpha="@dimen/material_emphasis_medium"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/show_more_desc"
                 android:paddingStart="@dimen/page_item_horizontal_padding"

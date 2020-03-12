@@ -99,7 +99,6 @@
                         android:layout_width="@dimen/theme_browser_more_button_width"
                         android:layout_height="@dimen/theme_browser_more_button_height"
                         android:adjustViewBounds="true"
-                        android:alpha="@dimen/material_emphasis_medium"
                         android:background="?attr/selectableItemBackground"
                         android:contentDescription="@string/button_more"
                         android:padding="@dimen/theme_browser_more_button_padding"

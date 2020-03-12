@@ -25,7 +25,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:alpha="@dimen/material_emphasis_medium"
             android:importantForAccessibility="no"
             android:paddingTop="@dimen/margin_extra_large"
             android:paddingBottom="@dimen/margin_extra_large"
