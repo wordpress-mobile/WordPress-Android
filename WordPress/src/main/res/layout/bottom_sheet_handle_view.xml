@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@color/transparent">
+
+    <View
+        android:layout_height="@dimen/bottom_sheet_handle_height"
+        android:layout_width="@dimen/bottom_sheet_handle_width"
+        android:layout_marginTop="@dimen/bottom_sheet_handle_margin_top"
+        android:alpha="@dimen/disabled_alpha"
+        android:background="@drawable/bg_bottom_sheet_handle"
+        android:id="@+id/bottom_sheet_handle"/>
+
+</LinearLayout>

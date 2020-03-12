@@ -250,7 +250,7 @@
         <activity
             android:name=".ui.history.HistoryDetailActivity"
             android:label="@string/history_detail_title"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.Editor.NoActionBar" />
 
         <!-- plans -->
         <activity
@@ -264,21 +264,21 @@
         <activity
             android:name=".ui.stats.refresh.StatsActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.StatsViewAllActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity"
-            android:label="@string/stats_manage_insights"
+            android:label="@string/stats_management_screen_title"
             android:launchMode="singleTop"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.lists.detail.StatsDetailActivity"
             android:label="@string/stats"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.WPWebViewActivity"
             android:theme="@style/WordPress.NoActionBar"/>
@@ -288,8 +288,8 @@
             android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
-            android:theme="@style/Calypso.NoActionBar" />
-        <activity android:name=".ui.JetpackConnectionResultActivity" android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity android:name=".ui.JetpackConnectionResultActivity" android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -455,7 +455,7 @@
         <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderUserListActivity"
             android:theme="@style/WordPress.NoActionBar" />
@@ -498,7 +498,8 @@
 
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
-            android:label="WordPress QuickPress">
+            android:label="@string/quickpress_shortcut_activity_label"
+            android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
@@ -732,33 +733,37 @@
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidgetConfigureActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:label="@string/stats_widget_views_title"
+            android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidgetConfigureActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:label="@string/stats_widget_all_time_title"
+            android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidgetConfigureActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:label="@string/stats_insights_today_stats"
+            android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:label="@string/stats_widget_minified_name"
+            android:theme="@style/WordPress.NoActionBar">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
         <receiver

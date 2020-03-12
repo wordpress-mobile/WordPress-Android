@@ -14,8 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/item_url"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginBottom="@dimen/reader_subfilter_title_gone_margin_bottom"
-        app:layout_goneMarginTop="@dimen/reader_subfilter_title_gone_margin_top"
+        app:layout_goneMarginBottom="@dimen/margin_large"
         tools:text="Unknown" />
 
     <TextView
@@ -41,6 +40,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"
         tools:visibility="visible"
-        android:contentDescription="@null" />
+        android:contentDescription="@string/reader_btn_selected_filter_tick_content_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

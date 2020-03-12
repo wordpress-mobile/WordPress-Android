@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              style="@style/StatsBlockLine"
-              android:background="?attr/selectableItemBackground"
-              android:layout_width="match_parent"
-              android:id="@+id/link_wrapper"
-              android:orientation="horizontal">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/link_wrapper"
+    style="@style/StatsBlockLine"
+    android:layout_width="match_parent"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="horizontal">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
         style="@style/StatsBlockLink"
-        android:drawablePadding="@dimen/margin_extra_medium_large"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:drawablePadding="@dimen/margin_extra_medium_large"
         android:gravity="center_vertical"
         android:text="@string/unknown"
         tools:drawableStart="@drawable/ic_share_white_24dp"
-        tools:text="@string/stats_insights_share_post"/>
+        tools:text="@string/stats_insights_share_post" />
 
 </LinearLayout>
