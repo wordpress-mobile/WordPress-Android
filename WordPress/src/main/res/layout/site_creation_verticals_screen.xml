@@ -38,24 +38,12 @@
             layout="@layout/site_creation_search_input_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/recycler_view"
+            app:layout_constraintBottom_toTopOf="@+id/site_info_skip_or_next_button_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header_layout"
             app:layout_constraintVertical_bias="0.0"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:importantForAccessibility="no"
-            android:scrollbars="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/site_info_skip_or_next_button_container"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_input_layout"/>
 
         <include
             android:id="@+id/site_info_skip_or_next_button_container"

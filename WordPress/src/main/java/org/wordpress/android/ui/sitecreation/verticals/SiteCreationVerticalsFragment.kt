@@ -2,7 +2,6 @@ package org.wordpress.android.ui.sitecreation.verticals
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.annotation.LayoutRes
@@ -10,8 +9,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -27,13 +24,9 @@ import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-private const val KEY_LIST_STATE = "list_state"
-
 class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
     private lateinit var nonNullActivity: FragmentActivity
     private var segmentId by Delegates.notNull<Long>()
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SiteCreationVerticalsViewModel
 
     private lateinit var fullscreenErrorLayout: ViewGroup
@@ -82,7 +75,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
                 rootView = rootView,
                 onClear = { viewModel.onClearTextBtnClicked() }
         )
-        initRecyclerView(rootView)
         initRetryButton(rootView)
         initSkipButton(rootView)
         initViewModel()
@@ -98,26 +90,11 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable(KEY_LIST_STATE, linearLayoutManager.onSaveInstanceState())
-    }
-
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
-            linearLayoutManager.onRestoreInstanceState(it)
-        }
         // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
         // is called when the system sets the restored value to the EditText which results in an unnecessary request
         searchInputWithHeader.onTextChanged = { viewModel.updateQuery(it) }
-    }
-
-    private fun initRecyclerView(rootView: ViewGroup) {
-        recyclerView = rootView.findViewById(R.id.recycler_view)
-        val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        linearLayoutManager = layoutManager
-        recyclerView.layoutManager = linearLayoutManager
     }
 
     private fun initRetryButton(rootView: ViewGroup) {
