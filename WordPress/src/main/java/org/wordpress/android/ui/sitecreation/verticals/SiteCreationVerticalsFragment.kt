@@ -16,7 +16,6 @@ import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.OnSkipClickedListener
-import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
@@ -34,7 +33,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
     private lateinit var contentLayout: ViewGroup
     private lateinit var errorLayout: ViewGroup
     private lateinit var skipButton: Button
-    private lateinit var searchInputWithHeader: SearchInputWithHeader
 
     private lateinit var verticalsScreenListener: VerticalsScreenListener
     private lateinit var helpClickedListener: OnHelpClickedListener
@@ -70,11 +68,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
         contentLayout = rootView.findViewById(R.id.content_layout)
 
         errorLayout = rootView.findViewById(R.id.error_layout)
-        searchInputWithHeader = SearchInputWithHeader(
-                uiHelpers = uiHelpers,
-                rootView = rootView,
-                onClear = { viewModel.onClearTextBtnClicked() }
-        )
         initRetryButton(rootView)
         initSkipButton(rootView)
         initViewModel()
@@ -88,13 +81,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
         if (segmentId == -1L) {
             throw IllegalStateException("SegmentId is required.")
         }
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
-        // is called when the system sets the restored value to the EditText which results in an unnecessary request
-        searchInputWithHeader.onTextChanged = { viewModel.updateQuery(it) }
     }
 
     private fun initRetryButton(rootView: ViewGroup) {
@@ -125,9 +111,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
                 }
             }
         })
-        viewModel.clearBtnClicked.observe(this, Observer {
-            searchInputWithHeader.setInputText("")
-        })
 
         viewModel.verticalSelected.observe(this, Observer { verticalId ->
             verticalId?.let { verticalsScreenListener.onVerticalSelected(verticalId) }
@@ -141,8 +124,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
 
     private fun updateContentLayout(uiState: VerticalsContentUiState) {
         uiHelpers.updateVisibility(skipButton, uiState.showSkipButton)
-        searchInputWithHeader.updateHeader(nonNullActivity, uiState.headerUiState)
-        searchInputWithHeader.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
     }
 
     private fun updateErrorLayout(errorLayout: ViewGroup, errorUiStateState: VerticalsFullscreenErrorUiState) {

@@ -9,20 +9,16 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.apache.commons.lang3.StringUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.SegmentPromptModel
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentPromptFetched
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -49,9 +45,6 @@ class SiteCreationVerticalsViewModel @Inject constructor(
     private lateinit var segmentPrompt: SegmentPromptModel
 
     private var segmentId: Long? = null
-
-    private val _clearBtnClicked = SingleLiveEvent<Unit>()
-    val clearBtnClicked = _clearBtnClicked
 
     private val _verticalSelected = SingleLiveEvent<String>()
     val verticalSelected: LiveData<String> = _verticalSelected
@@ -110,16 +103,12 @@ class SiteCreationVerticalsViewModel @Inject constructor(
             updateUiState(VerticalsFullscreenErrorUiState.VerticalsGenericErrorUiState)
         } else {
             segmentPrompt = event.prompt!!
-            updateUiStateToContent("")
+            updateUiStateToContent()
         }
     }
 
     fun onFetchSegmentsPromptRetry() {
         fetchSegmentsPrompt()
-    }
-
-    fun onClearTextBtnClicked() {
-        _clearBtnClicked.call()
     }
 
     fun onSkipStepBtnClicked() {
@@ -130,24 +119,10 @@ class SiteCreationVerticalsViewModel @Inject constructor(
         _onHelpClicked.call()
     }
 
-    fun updateQuery(query: String) {
-        updateUiStateToContent(query)
-    }
-
-    private fun updateUiStateToContent(query: String) {
+    private fun updateUiStateToContent() {
         updateUiState(
                 VerticalsContentUiState(
-                        showSkipButton = StringUtils.isEmpty(query),
-                        headerUiState = createHeaderUiState(
-                                shouldShowHeader(query),
-                                segmentPrompt
-                        ),
-                        searchInputUiState = createSearchInputUiState(
-                                query,
-                                showProgress = false,
-                                showDivider = false,
-                                hint = segmentPrompt.hint
-                        )
+                        showSkipButton = true
                 )
         )
     }
@@ -156,42 +131,12 @@ class SiteCreationVerticalsViewModel @Inject constructor(
         _uiState.value = uiState
     }
 
-    private fun shouldShowHeader(query: String): Boolean {
-        return StringUtils.isEmpty(query)
-    }
-
-    private fun createHeaderUiState(
-        isVisible: Boolean,
-        segmentsPrompt: SegmentPromptModel
-    ): SiteCreationHeaderUiState? {
-        return if (isVisible) SiteCreationHeaderUiState(
-                UiStringText(segmentsPrompt.title),
-                UiStringText(segmentsPrompt.subtitle)
-        ) else null
-    }
-
-    private fun createSearchInputUiState(
-        query: String,
-        showProgress: Boolean,
-        showDivider: Boolean,
-        hint: String
-    ): SiteCreationSearchInputUiState {
-        return SiteCreationSearchInputUiState(
-                UiStringText(hint),
-                showProgress,
-                showClearButton = !StringUtils.isEmpty(query),
-                showDivider = showDivider
-        )
-    }
-
     sealed class VerticalsUiState(
         val fullscreenProgressLayoutVisibility: Boolean,
         val contentLayoutVisibility: Boolean,
         val fullscreenErrorLayoutVisibility: Boolean
     ) {
         data class VerticalsContentUiState(
-            val searchInputUiState: SiteCreationSearchInputUiState,
-            val headerUiState: SiteCreationHeaderUiState?,
             val showSkipButton: Boolean
         ) : VerticalsUiState(
                 fullscreenProgressLayoutVisibility = false,
