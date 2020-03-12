@@ -62,7 +62,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   RequestExecutor fetchExecutor,
                                   OnImageFullscreenPreviewListener onImageFullscreenPreviewListener,
                                   OnMediaEditorListener onMediaEditorListener,
-                                  OnLogGutenbergUserEventListener onLogGutenbergUserEventListener) {
+                                  OnLogGutenbergUserEventListener onLogGutenbergUserEventListener,
+                                  boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
                     onMediaLibraryButtonListener,
@@ -73,7 +74,8 @@ public class GutenbergContainerFragment extends Fragment {
                     fetchExecutor,
                     onImageFullscreenPreviewListener,
                     onMediaEditorListener,
-                    onLogGutenbergUserEventListener);
+                    onLogGutenbergUserEventListener,
+                    isDarkMode);
     }
 
     @Override

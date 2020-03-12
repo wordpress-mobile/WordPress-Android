@@ -385,7 +385,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                 break;
                         }
                     }
-                });
+                }, isDarkMode());
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {
