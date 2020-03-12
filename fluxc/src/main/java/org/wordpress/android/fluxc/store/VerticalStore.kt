@@ -7,10 +7,8 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.VerticalAction
-import org.wordpress.android.fluxc.action.VerticalAction.FETCH_SEGMENT_PROMPT
 import org.wordpress.android.fluxc.action.VerticalAction.FETCH_VERTICALS
 import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.model.vertical.SegmentPromptModel
 import org.wordpress.android.fluxc.model.vertical.VerticalModel
 import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import org.wordpress.android.fluxc.network.rest.wpcom.vertical.VerticalRestClient
@@ -35,7 +33,6 @@ class VerticalStore @Inject constructor(
             val onChanged = when (actionType) {
                 VerticalAction.FETCH_SEGMENTS -> fetchSegments()
                 FETCH_VERTICALS -> fetchVerticals(action.payload as FetchVerticalsPayload)
-                FETCH_SEGMENT_PROMPT -> fetchSegmentPrompt(action.payload as FetchSegmentPromptPayload)
             }
             emitChange(onChanged)
         }
@@ -48,15 +45,6 @@ class VerticalStore @Inject constructor(
     private suspend fun fetchSegments(): OnSegmentsFetched {
         val fetchedSegmentsPayload = verticalRestClient.fetchSegments()
         return OnSegmentsFetched(fetchedSegmentsPayload.segmentList, fetchedSegmentsPayload.error)
-    }
-
-    private suspend fun fetchSegmentPrompt(payload: FetchSegmentPromptPayload): OnSegmentPromptFetched {
-        val fetchedSegmentPromptPayload = verticalRestClient.fetchSegmentPrompt(payload.segmentId)
-        return OnSegmentPromptFetched(
-                segmentId = payload.segmentId,
-                prompt = fetchedSegmentPromptPayload.prompt,
-                error = fetchedSegmentPromptPayload.error
-        )
     }
 
     private suspend fun fetchVerticals(payload: FetchVerticalsPayload): OnVerticalsFetched {
@@ -87,28 +75,10 @@ class VerticalStore @Inject constructor(
         }
     }
 
-    class OnSegmentPromptFetched(
-        val segmentId: Long,
-        val prompt: SegmentPromptModel?,
-        error: FetchSegmentPromptError?
-    ) : Store.OnChanged<FetchSegmentPromptError>() {
-        init {
-            this.error = error
-        }
-    }
-
     class FetchVerticalsPayload(val searchQuery: String, val limit: Int = DEFAULT_FETCH_VERTICAL_LIMIT)
-    class FetchSegmentPromptPayload(val segmentId: Long)
 
     class FetchedSegmentsPayload(val segmentList: List<VerticalSegmentModel>) : Payload<FetchSegmentsError>() {
         constructor(error: FetchSegmentsError) : this(emptyList()) {
-            this.error = error
-        }
-    }
-
-    class FetchedSegmentPromptPayload internal constructor(val prompt: SegmentPromptModel?) :
-            Payload<FetchSegmentPromptError>() {
-        constructor(error: FetchSegmentPromptError) : this(null) {
             this.error = error
         }
     }
@@ -121,7 +91,6 @@ class VerticalStore @Inject constructor(
 
     class FetchSegmentsError(val type: VerticalErrorType, val message: String? = null) : Store.OnChangedError
     class FetchVerticalsError(val type: VerticalErrorType, val message: String? = null) : Store.OnChangedError
-    class FetchSegmentPromptError(val type: VerticalErrorType, val message: String? = null) : Store.OnChangedError
     enum class VerticalErrorType {
         GENERIC_ERROR
     }
