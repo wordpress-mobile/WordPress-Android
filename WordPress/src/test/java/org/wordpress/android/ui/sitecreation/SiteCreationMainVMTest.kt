@@ -248,7 +248,7 @@ class SiteCreationMainVMTest {
         viewModel.onInfoScreenFinished(SITE_TITLE, null)
         assertThat(currentWizardState(viewModel).siteTitle).isEqualTo(SITE_TITLE)
         wizardManagerNavigatorLiveData.value = SiteCreationStep.SITE_INFO
-        assertThat(currentWizardState(viewModel).verticalId).isEqualTo(null)
+        assertThat(currentWizardState(viewModel).siteTitle).isEqualTo(null)
     }
 
     private fun currentWizardState(vm: SiteCreationMainVM) =
