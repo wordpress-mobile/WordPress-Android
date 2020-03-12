@@ -26,7 +26,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
     <RelativeLayout
         android:id="@+id/preview_container"
         android:layout_width="match_parent"
