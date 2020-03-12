@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
@@ -61,7 +60,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         nonNullActivity = activity!!
-        (nonNullActivity.application as WordPress).component().inject(this)
         segmentId = arguments?.getLong(EXTRA_SEGMENT_ID, -1L) ?: -1L
         if (segmentId == -1L) {
             throw IllegalStateException("SegmentId is required.")
