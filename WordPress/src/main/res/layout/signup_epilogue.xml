@@ -66,7 +66,7 @@
                             android:layout_height="match_parent"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_user_circle_white_24dp"
-                            android:tint="?attr/wpIconColorOnSurface" />
+                            app:tint="?attr/wpColorOnSurfaceMedium" />
 
                         <ImageButton
                             android:id="@+id/signup_epilogue_header_avatar_add"
@@ -77,7 +77,7 @@
                             android:background="@drawable/bg_oval_white"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_add_white_24dp"
-                            android:tint="?attr/wpIconColorOnSurface"
+                            app:tint="?attr/wpColorOnSurfaceMedium"
                             android:visibility="gone"
                             tools:visibility="visible" />
 

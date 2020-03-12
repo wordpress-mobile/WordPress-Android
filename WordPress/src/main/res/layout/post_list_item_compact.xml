@@ -79,7 +79,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/more"
             android:src="@drawable/ic_ellipsis_vertical_white_24dp"
-            android:tint="?attr/colorOnSurface"
+            app:tint="?attr/wpColorOnSurfaceMedium"
             app:layout_constraintBottom_toBottomOf="@+id/image_featured"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"

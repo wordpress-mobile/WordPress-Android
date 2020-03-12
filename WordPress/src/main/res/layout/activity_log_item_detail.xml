@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/margin_extra_large"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/margin_extra_large">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +27,7 @@
             android:layout_marginEnd="12dp"
             android:contentDescription="@string/activity_log_jetpack_icon"
             android:src="@drawable/ic_plans_white_24dp"
-            android:tint="@color/neutral_30"
+            app:tint="@color/neutral_30"
             android:visibility="gone" />
 
         <LinearLayout
@@ -121,7 +122,7 @@
             android:contentDescription="@null"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_history_white_24dp"
-            android:tint="?attr/colorPrimary" />
+            app:tint="?attr/colorPrimary" />
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"

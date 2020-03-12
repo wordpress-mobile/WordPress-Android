@@ -8,6 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:visibility="gone"
     tools:visibility="visible">
 
@@ -33,7 +34,7 @@
             android:contentDescription="@string/description_expand"
             android:padding="@dimen/margin_large"
             android:src="@drawable/ic_chevron_up_white_24dp"
-            android:tint="?attr/colorOnSurface" />
+            app:tint="?attr/wpColorOnSurfaceMedium" />
 
         <org.wordpress.android.widgets.SuggestionAutoCompleteText
             android:id="@+id/edit_comment"

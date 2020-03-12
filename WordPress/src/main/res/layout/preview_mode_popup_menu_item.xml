@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/menu_item_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="start|center_vertical"
     android:orientation="horizontal"
     android:paddingStart="@dimen/menu_item_margin"
@@ -25,6 +26,6 @@
         android:layout_alignParentEnd="true"
         android:contentDescription="@null"
         android:src="@drawable/ic_checkmark_white_24dp"
-        android:tint="?attr/colorPrimary" />
+        app:tint="?attr/colorPrimary" />
 
 </RelativeLayout>

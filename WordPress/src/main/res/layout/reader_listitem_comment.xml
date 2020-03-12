@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/reader_card_margin"
     android:layout_marginEnd="@dimen/reader_card_margin"
+    android:layout_marginStart="@dimen/reader_card_margin"
     android:importantForAccessibility="no"
-    android:paddingStart="@dimen/margin_medium"
-    android:paddingEnd="@dimen/margin_medium">
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingStart="@dimen/margin_medium">
 
     <!-- spacer_comment_indent width and visibility set at run-time based on comment indent level -->
     <View
@@ -100,7 +101,7 @@
                     android:contentDescription="@null"
                     android:padding="@dimen/margin_extra_small"
                     android:src="@drawable/ic_reply_white_24dp"
-                    android:tint="?attr/wpIconColorOnSurface" />
+                    app:tint="?attr/wpColorOnSurfaceMedium" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"

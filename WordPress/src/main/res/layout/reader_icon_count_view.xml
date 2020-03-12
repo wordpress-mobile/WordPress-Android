@@ -11,14 +11,14 @@
     android:paddingEnd="@dimen/margin_medium">
 
     <ImageView
-        android:tintMode="src_atop"
+        android:tintMode="src_in"
         android:id="@+id/image_count"
         android:layout_width="@dimen/reader_count_icon"
         android:layout_height="@dimen/reader_count_icon"
         android:layout_gravity="center_vertical"
         android:contentDescription="@null"
         tools:src="@drawable/ic_comment_white_24dp"
-        tools:tint="?attr/wpIconColorOnSurface"/>
+        tools:tint="?attr/wpColorOnSurfaceMedium"/>
 
     <!--Set appropriate verbose content description to whole layout programmatically ex. "321 people liked this"-->
     <com.google.android.material.textview.MaterialTextView

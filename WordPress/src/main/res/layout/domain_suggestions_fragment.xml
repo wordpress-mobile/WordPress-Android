@@ -61,7 +61,7 @@
                 android:alpha="@dimen/material_emphasis_medium"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_search_white_24dp"
-                android:tint="?attr/colorOnSurface" />
+                app:tint="?attr/wpColorOnSurfaceMedium" />
 
             <ProgressBar
                 android:id="@+id/suggestion_progress_bar"

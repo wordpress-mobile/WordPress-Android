@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar_main" />
@@ -118,7 +119,7 @@
                         android:paddingStart="@dimen/margin_small"
                         android:paddingEnd="@dimen/margin_small"
                         android:src="@drawable/ic_info_outline_white_24dp"
-                        android:tint="?attr/colorOnSurface" />
+                        app:tint="?attr/wpColorOnSurfaceMedium" />
                 </LinearLayout>
 
                 <org.wordpress.android.widgets.WPTextView

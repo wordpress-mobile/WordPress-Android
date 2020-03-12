@@ -8,6 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/selectableItemBackground"
     android:orientation="horizontal"
     android:paddingStart="@dimen/margin_extra_large"
@@ -35,5 +36,5 @@
         android:contentDescription="@string/remove"
         android:padding="@dimen/margin_small"
         android:src="@drawable/ic_cross_white_24dp"
-        android:tint="?attr/wpIconColorOnSurface" />
+        app:tint="?attr/wpColorOnSurfaceMedium" />
 </LinearLayout>

@@ -56,7 +56,7 @@
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/photo_picker_device_desc"
                 android:src="@drawable/media_bar_button_image_multiple"
-                android:tint="?attr/wpColorOnSurfaceMedium"
+                app:tint="?attr/wpColorOnSurfaceMedium"
                 android:tintMode="src_in" />
 
             <ImageView
@@ -67,7 +67,7 @@
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/photo_picker_camera_desc"
                 android:src="@drawable/media_bar_button_camera"
-                android:tint="?attr/wpColorOnSurfaceMedium"
+                app:tint="?attr/wpColorOnSurfaceMedium"
                 android:tintMode="src_in" />
 
             <ImageView
@@ -78,7 +78,7 @@
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/photo_picker_wpmedia_desc"
                 android:src="@drawable/media_bar_button_library"
-                android:tint="?attr/wpColorOnSurfaceMedium"
+                app:tint="?attr/wpColorOnSurfaceMedium"
                 android:tintMode="src_in" />
         </LinearLayout>
 

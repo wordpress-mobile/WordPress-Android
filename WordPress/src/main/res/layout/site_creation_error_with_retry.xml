@@ -13,7 +13,7 @@
         android:contentDescription="@string/cancel_new_site_wizard_content_description"
         android:padding="@dimen/margin_extra_large"
         android:src="@drawable/ic_close_white_24dp"
-        android:tint="?attr/colorPrimary"
+        app:tint="?attr/colorPrimary"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

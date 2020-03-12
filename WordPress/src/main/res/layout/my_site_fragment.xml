@@ -228,7 +228,7 @@
                                 android:contentDescription="@string/content_description_more"
                                 android:focusable="true"
                                 android:src="@drawable/ic_more_vert_white_24dp"
-                                android:tint="?attr/colorOnSurface" />
+                                app:tint="?attr/wpColorOnSurfaceMedium" />
 
                         </RelativeLayout>
 
@@ -316,8 +316,7 @@
                                 android:id="@+id/my_site_register_domain_icon"
                                 style="@style/MySiteListRowAlertIcon"
                                 android:importantForAccessibility="no"
-                                android:src="@drawable/ic_notice_white_24dp"
-                                android:tint="@color/alert_yellow" />
+                                android:src="@drawable/ic_notice_white_24dp" />
 
                             <org.wordpress.android.widgets.WPTextView
                                 android:id="@+id/my_site_register_domain_text_view"
