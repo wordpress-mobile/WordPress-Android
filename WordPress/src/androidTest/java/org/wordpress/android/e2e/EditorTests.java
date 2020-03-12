@@ -51,6 +51,8 @@ public class EditorTests extends BaseTest {
         new MySitesPage()
                 .startNewPost();
 
+        sleep();
+
         EditorPage editorPage = new EditorPage();
         editorPage.enterTitle(title);
         editorPage.enterContent(content);
