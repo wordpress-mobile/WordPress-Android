@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -17,8 +16,6 @@ import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.OnSkipClickedListener
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -28,10 +25,7 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
     private var segmentId by Delegates.notNull<Long>()
     private lateinit var viewModel: SiteCreationVerticalsViewModel
 
-    private lateinit var fullscreenErrorLayout: ViewGroup
-    private lateinit var fullscreenProgressLayout: ViewGroup
     private lateinit var contentLayout: ViewGroup
-    private lateinit var errorLayout: ViewGroup
     private lateinit var skipButton: Button
 
     private lateinit var verticalsScreenListener: VerticalsScreenListener
@@ -63,12 +57,8 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        fullscreenErrorLayout = rootView.findViewById(R.id.error_layout)
-        fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
 
-        errorLayout = rootView.findViewById(R.id.error_layout)
-        initRetryButton(rootView)
         initSkipButton(rootView)
         initViewModel()
     }
@@ -83,11 +73,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
         }
     }
 
-    private fun initRetryButton(rootView: ViewGroup) {
-        val retryBtn = rootView.findViewById<Button>(R.id.error_retry)
-        retryBtn.setOnClickListener { viewModel.onFetchSegmentsPromptRetry() }
-    }
-
     private fun initSkipButton(rootView: ViewGroup) {
         skipButton = rootView.findViewById(R.id.btn_skip)
         skipButton.setOnClickListener { viewModel.onSkipStepBtnClicked() }
@@ -99,15 +84,10 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
 
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
-                uiHelpers.updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
                 uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
-                uiHelpers.updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
 
                 when (uiState) {
                     is VerticalsContentUiState -> updateContentLayout(uiState)
-                    is VerticalsFullscreenProgressUiState -> { // no action
-                    }
-                    is VerticalsFullscreenErrorUiState -> updateErrorLayout(errorLayout, uiState)
                 }
             }
         })
@@ -124,11 +104,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
 
     private fun updateContentLayout(uiState: VerticalsContentUiState) {
         uiHelpers.updateVisibility(skipButton, uiState.showSkipButton)
-    }
-
-    private fun updateErrorLayout(errorLayout: ViewGroup, errorUiStateState: VerticalsFullscreenErrorUiState) {
-        uiHelpers.setTextOrHide(errorLayout.error_title, errorUiStateState.titleResId)
-        uiHelpers.setTextOrHide(errorLayout.error_subtitle, errorUiStateState.subtitleResId)
     }
 
     override fun onHelp() {
