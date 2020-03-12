@@ -1,17 +1,18 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.ContextExtensionsKt;
 
 /*
  * used when showing comment + comment count, like + like count
@@ -55,21 +56,20 @@ public class ReaderIconCountView extends LinearLayout {
                 mIconType = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
                 switch (mIconType) {
                     case ICON_LIKE:
-                        ImageViewCompat.setImageTintList(mImageView, ContextCompat
-                                .getColorStateList(context, R.color.icon_on_surface_secondary_selector));
+                        ColorStateList likeColor = AppCompatResources
+                                .getColorStateList(context, R.color.on_surface_medium_secondary_selector);
                         mImageView.setImageDrawable(ContextCompat.getDrawable(context,
                                 R.drawable.reader_button_like));
-                        mTextCount.setTextColor(ContextCompat
-                                .getColorStateList(context, R.color.on_surface_medium_secondary_selector));
+                        ImageViewCompat.setImageTintList(mImageView, likeColor);
+                        mTextCount.setTextColor(likeColor);
                         break;
                     case ICON_COMMENT:
-                        ImageViewCompat.setImageTintList(mImageView, ContextCompat
-                                .getColorStateList(context, R.color.icon_on_surface_primary_selector));
+                        ColorStateList commentColor = AppCompatResources
+                                .getColorStateList(context, R.color.on_surface_primary_selector);
+                        ImageViewCompat.setImageTintList(mImageView, commentColor);
                         mImageView.setImageDrawable(ContextCompat.getDrawable(context,
                                 R.drawable.ic_comment_white_24dp));
-                        mTextCount.setTextColor(
-                                ContextExtensionsKt
-                                        .getColorStateListFromAttribute(context, R.attr.wpColorOnSurfaceMedium));
+                        mTextCount.setTextColor(commentColor);
                         break;
                 }
             } finally {
