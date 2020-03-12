@@ -49,6 +49,10 @@ public class UrlUtils {
         return "";
     }
 
+    public static boolean checkIfContentUri(String uri) {
+        return "content".equals(Uri.parse(uri).getScheme());
+    }
+
     /**
      * Convert IDN names to punycode if necessary
      */
