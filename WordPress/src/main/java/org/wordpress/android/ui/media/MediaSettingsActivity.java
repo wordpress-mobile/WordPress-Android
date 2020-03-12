@@ -42,6 +42,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
@@ -269,7 +270,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         collapsingToolbar.setCollapsedTitleTextColor(
-                getResources().getColorStateList(
+                AppCompatResources.getColorStateList(this,
                         ContextExtensionsKt.getColorResIdFromAttribute(this, R.attr.colorOnPrimarySurface)));
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
