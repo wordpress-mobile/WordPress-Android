@@ -8,7 +8,6 @@ import kotlinx.android.parcel.Parcelize
 @SuppressLint("ParcelCreator")
 data class SiteCreationServiceData(
     val segmentId: Long?,
-    val verticalId: String?,
     val siteTitle: String?,
     val siteTagLine: String?,
     val domain: String

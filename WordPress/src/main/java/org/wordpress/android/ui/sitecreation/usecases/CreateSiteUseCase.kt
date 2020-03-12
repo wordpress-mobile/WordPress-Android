@@ -53,7 +53,6 @@ class CreateSiteUseCase @Inject constructor(
                     siteData.siteTitle ?: "",
                     languageWordPressId,
                     siteVisibility,
-                    siteData.verticalId,
                     siteData.segmentId,
                     siteData.siteTagLine,
                     dryRun
