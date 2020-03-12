@@ -136,11 +136,6 @@ class SiteCreationMainVM @Inject constructor(
         }
     }
 
-    fun onVerticalsScreenFinished(verticalId: String) {
-        siteCreationState = siteCreationState.copy(verticalId = verticalId)
-        wizardManager.showNextStep()
-    }
-
     fun onDomainsScreenFinished(domain: String) {
         siteCreationState = siteCreationState.copy(domain = domain)
         wizardManager.showNextStep()

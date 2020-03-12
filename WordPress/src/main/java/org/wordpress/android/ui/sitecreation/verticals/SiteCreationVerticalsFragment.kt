@@ -28,7 +28,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
     private lateinit var contentLayout: ViewGroup
     private lateinit var skipButton: Button
 
-    private lateinit var verticalsScreenListener: VerticalsScreenListener
     private lateinit var helpClickedListener: OnHelpClickedListener
     private lateinit var skipClickedListener: OnSkipClickedListener
 
@@ -37,16 +36,12 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context !is VerticalsScreenListener) {
-            throw IllegalStateException("Parent activity must implement VerticalsScreenListener.")
-        }
         if (context !is OnHelpClickedListener) {
             throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
         }
         if (context !is OnSkipClickedListener) {
             throw IllegalStateException("Parent activity must implement OnSkipClickedListener.")
         }
-        verticalsScreenListener = context
         helpClickedListener = context
         skipClickedListener = context
     }
@@ -92,9 +87,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
             }
         })
 
-        viewModel.verticalSelected.observe(this, Observer { verticalId ->
-            verticalId?.let { verticalsScreenListener.onVerticalSelected(verticalId) }
-        })
         viewModel.skipBtnClicked.observe(this, Observer { skipClickedListener.onSkipClicked() })
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_VERTICALS)

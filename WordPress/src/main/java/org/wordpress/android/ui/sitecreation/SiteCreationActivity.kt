@@ -40,7 +40,6 @@ import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragme
 import org.wordpress.android.ui.sitecreation.siteinfo.SiteCreationSiteInfoFragment
 import org.wordpress.android.ui.sitecreation.siteinfo.SiteInfoScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsFragment
-import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -48,7 +47,6 @@ import javax.inject.Inject
 
 class SiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
-        VerticalsScreenListener,
         DomainsScreenListener,
         SiteInfoScreenListener,
         SitePreviewScreenListener,
@@ -120,10 +118,6 @@ class SiteCreationActivity : AppCompatActivity(),
 
     override fun onSegmentSelected(segmentId: Long) {
         mainViewModel.onSegmentSelected(segmentId)
-    }
-
-    override fun onVerticalSelected(verticalId: String) {
-        mainViewModel.onVerticalsScreenFinished(verticalId)
     }
 
     override fun onDomainSelected(domain: String) {

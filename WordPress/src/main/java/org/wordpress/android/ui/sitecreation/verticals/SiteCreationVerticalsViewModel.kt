@@ -15,9 +15,6 @@ class SiteCreationVerticalsViewModel @Inject constructor() : ViewModel() {
 
     private var segmentId: Long? = null
 
-    private val _verticalSelected = SingleLiveEvent<String>()
-    val verticalSelected: LiveData<String> = _verticalSelected
-
     private val _skipBtnClicked = SingleLiveEvent<Unit>()
     val skipBtnClicked: LiveData<Unit> = _skipBtnClicked
 
