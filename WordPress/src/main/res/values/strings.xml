@@ -423,8 +423,8 @@
     <string name="dlg_trashing_comments">Sending to trash</string>
     <string name="dlg_deleting_comments">Deleting comments</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
-    <string name="trash_yes">Trash</string>
-    <string name="trash_no">Don\'t trash</string>
+    <string name="dlg_confirm_action_trash">Trash</string>
+    <string name="dlg_cancel_action_dont_trash">Don\'t trash</string>
 
     <!-- comment actions -->
     <string name="reply">Reply</string>
@@ -2591,10 +2591,10 @@
     <string name="post_list_author">Post author</string>
     <string name="post_list_author_me">Me</string>
     <string name="post_list_author_everyone">Everyone</string>
-    <string name="post_list_published">Published</string>
-    <string name="post_list_drafts">Drafts</string>
-    <string name="post_list_scheduled">Scheduled</string>
-    <string name="post_list_trashed">Trashed</string>
+    <string name="post_list_tab_published_posts">Published</string>
+    <string name="post_list_tab_drafts">Drafts</string>
+    <string name="post_list_tab_scheduled_posts">Scheduled</string>
+    <string name="post_list_tab_trashed_posts">Trashed</string>
     <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 
