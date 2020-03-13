@@ -37,7 +37,6 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.siteinfo.SiteCreationSiteInfoFragment
-import org.wordpress.android.ui.sitecreation.siteinfo.SiteInfoScreenListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -46,7 +45,6 @@ import javax.inject.Inject
 class SiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
         DomainsScreenListener,
-        SiteInfoScreenListener,
         SitePreviewScreenListener,
         OnSkipClickedListener,
         OnHelpClickedListener,
@@ -136,10 +134,6 @@ class SiteCreationActivity : AppCompatActivity(),
 
     override fun onHelpClicked(origin: Origin) {
         ActivityLauncher.viewHelpAndSupport(this, origin, null, null)
-    }
-
-    override fun onSiteInfoFinished(siteTitle: String, tagLine: String?) {
-        mainViewModel.onInfoScreenFinished(siteTitle, tagLine)
     }
 
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {

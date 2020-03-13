@@ -137,11 +137,6 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    fun onInfoScreenFinished(siteTitle: String, tagLine: String?) {
-        siteCreationState = siteCreationState.copy(siteTitle = siteTitle, siteTagLine = tagLine)
-        wizardManager.showNextStep()
-    }
-
     fun onSkipClicked() {
         wizardManager.showNextStep()
     }

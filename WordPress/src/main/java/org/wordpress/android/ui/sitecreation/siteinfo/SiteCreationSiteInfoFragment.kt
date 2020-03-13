@@ -39,7 +39,6 @@ class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
 
     private lateinit var skipClickedListener: OnSkipClickedListener
     private lateinit var helpClickedListener: OnHelpClickedListener
-    private lateinit var siteInfoScreenListener: SiteInfoScreenListener
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -49,12 +48,8 @@ class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
         if (context !is OnHelpClickedListener) {
             throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
         }
-        if (context !is SiteInfoScreenListener) {
-            throw IllegalStateException("Parent activity must implement SiteInfoScreenListener.")
-        }
         skipClickedListener = context
         helpClickedListener = context
-        siteInfoScreenListener = context
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,7 +144,6 @@ class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
         })
         viewModel.nextBtnClicked.observe(this, Observer { uiState ->
             uiState?.let {
-                siteInfoScreenListener.onSiteInfoFinished(uiState.siteTitle, uiState.tagLine)
             }
         })
         viewModel.start()
