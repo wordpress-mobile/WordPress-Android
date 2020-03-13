@@ -207,16 +207,19 @@
     <dimen name="post_settings_featured_image_height_max">300dp</dimen>
 
     <!-- notifications -->
-    <dimen name="note_icon_sz">21dp</dimen>
+    <dimen name="note_icon_sz">16dp</dimen>
     <dimen name="comment_avatar_margin_top">6dp</dimen>
     <dimen name="notifications_max_image_size">240dp</dimen>
     <dimen name="notifications_adjusted_font_margin">10dp</dimen>
     <dimen name="notifications_content_margin">0dp</dimen>
     <dimen name="notifications_avatar_sz">48dp</dimen>
     <dimen name="notifications_text_indent_sz">22dp</dimen>
-    <dimen name="notifications_note_icon_margin">28dp</dimen>
+    <dimen name="notifications_note_icon_horizontal_offset">4dp</dimen>
+    <dimen name="notifications_note_icon_vertical_offset">2dp</dimen>
+    <dimen name="notifications_note_icon_size">12dp</dimen>
     <dimen name="notification_comment_padded_frame_bg_offset">14dp</dimen>  <!-- results in 6dp border -->
     <dimen name="notification_comment_frame_bg_border_width">6dp</dimen>
+    <dimen name="notification_icon_bg_border_width">1dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
     <dimen name="activity_progress_bar_height">5dp</dimen>

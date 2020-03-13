@@ -1,75 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_large"
+        android:textAlignment="viewStart"
+        android:padding="@dimen/margin_extra_large"
+        android:includeFontPadding="false"
         android:textAppearance="?attr/textAppearanceSubtitle2"
         android:textColor="?attr/wpColorOnSurfaceMedium"
         android:visibility="gone"
         tools:text="Today"
         tools:visibility="visible" />
 
+    <View
+        android:id="@+id/header_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_divider_height"
+        android:background="?android:attr/listDivider" />
+
     <FrameLayout
         android:id="@+id/note_content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:foreground="?android:selectableItemBackground">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/listPreferredItemHeight"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingEnd="@dimen/margin_extra_large"
-            android:paddingStart="@dimen/margin_extra_large"
-            android:paddingTop="@dimen/margin_medium"
+            android:padding="@dimen/margin_extra_large"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             tools:ignore="UselessParent">
 
-            <FrameLayout
-                android:id="@+id/note_avatar_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true">
-
-                <ImageView
-                    android:id="@+id/note_avatar"
-                    android:layout_width="@dimen/activity_log_icon_size"
-                    android:layout_height="@dimen/activity_log_icon_size"
-                    android:layout_marginEnd="@dimen/activity_log_icon_margin"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:contentDescription="@null"
-                    tools:src="@drawable/bg_oval_neutral_30_user_32dp" />
-
-                <ImageView
-                    android:id="@+id/note_icon"
-                    android:layout_width="@dimen/note_icon_sz"
-                    android:layout_height="@dimen/note_icon_sz"
-                    android:layout_marginStart="@dimen/notifications_note_icon_margin"
-                    android:layout_marginTop="@dimen/notifications_note_icon_margin"
-                    android:background="@drawable/bg_oval_primary_stroke_surface"
-                    android:gravity="center"
-                    android:importantForAccessibility="no"
-                    android:padding="4dp" />
-
-            </FrameLayout>
+            <org.wordpress.android.widgets.BadgedImageView
+                android:id="@+id/note_avatar"
+                android:layout_width="@dimen/activity_log_icon_size"
+                android:layout_height="@dimen/activity_log_icon_size"
+                android:layout_marginEnd="@dimen/activity_log_icon_margin"
+                android:layout_marginTop="@dimen/margin_small"
+                android:contentDescription="@null"
+                app:badgeBackground="@drawable/bg_oval_primary"
+                app:badgeBackgroundBorderWidth="@dimen/notification_icon_bg_border_width"
+                app:badgeBackgroundSize="@dimen/note_icon_sz"
+                app:badgeHorizontalOffset="@dimen/notifications_note_icon_horizontal_offset"
+                app:badgeIconSize="@dimen/notifications_note_icon_size"
+                app:badgeVerticalOffset="@dimen/notifications_note_icon_vertical_offset"
+                tools:badgeIcon="@drawable/ic_star_white_24dp"
+                tools:src="@drawable/bg_oval_neutral_30_user_32dp" />
 
             <FrameLayout
                 android:id="@+id/note_subject_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/note_avatar_container">
+                android:layout_toEndOf="@+id/note_avatar">
 
                 <org.wordpress.android.widgets.NoticonTextView
                     android:id="@+id/note_subject_noticon"
@@ -99,12 +94,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/note_subject_container"
-                android:layout_toEndOf="@+id/note_avatar_container"
+                android:layout_toEndOf="@+id/note_avatar"
                 android:ellipsize="end"
                 android:importantForAccessibility="no"
                 android:maxLines="2"
-                android:textAppearance="?attr/textAppearanceBody1"
-                android:textColor="?attr/wpColorOnSurfaceMedium"
+                android:textAppearance="?attr/textAppearanceBody2"
                 android:visibility="gone"
                 tools:text="What an amazing post!"
                 tools:visibility="visible" />

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.graphics.ColorUtils;
@@ -31,6 +30,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
+import org.wordpress.android.widgets.BadgedImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -221,8 +221,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         if (previousTimeGroup != null && previousTimeGroup == timeGroup) {
             noteViewHolder.mHeaderText.setVisibility(View.GONE);
+            noteViewHolder.mHeaderDivider.setVisibility(View.GONE);
         } else {
             noteViewHolder.mHeaderText.setVisibility(View.VISIBLE);
+            noteViewHolder.mHeaderDivider.setVisibility(View.VISIBLE);
 
             if (timeGroup == Note.NoteTimeGroup.GROUP_TODAY) {
                 noteViewHolder.mHeaderText.setText(R.string.stats_timeframe_today);
@@ -296,13 +298,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         boolean isUnread = note.isUnread();
 
         int gridicon = mNoticonUtils.noticonToGridicon(note.getNoticonCharacter());
-        mImageManager.load(noteViewHolder.mNoteIcon, gridicon);
+        noteViewHolder.mImgAvatar.setBadgeIcon(gridicon);
         if (commentStatus == CommentStatus.UNAPPROVED) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning_stroke_surface);
+            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_warning_dark);
         } else if (isUnread) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_stroke_surface);
+            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_primary);
         } else {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_20_stroke_surface);
+            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_neutral_20);
         }
 
         if (isUnread) {
@@ -358,21 +360,21 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     class NoteViewHolder extends RecyclerView.ViewHolder {
         private final View mContentView;
         private final TextView mHeaderText;
+        private final View mHeaderDivider;
         private final TextView mTxtSubject;
         private final TextView mTxtSubjectNoticon;
         private final TextView mTxtDetail;
-        private final ImageView mImgAvatar;
-        private final ImageView mNoteIcon;
+        private final BadgedImageView mImgAvatar;
 
         NoteViewHolder(View view) {
             super(view);
             mContentView = view.findViewById(R.id.note_content_container);
             mHeaderText = view.findViewById(R.id.header_text);
+            mHeaderDivider = view.findViewById(R.id.header_divider);
             mTxtSubject = view.findViewById(R.id.note_subject);
             mTxtSubjectNoticon = view.findViewById(R.id.note_subject_noticon);
             mTxtDetail = view.findViewById(R.id.note_detail);
             mImgAvatar = view.findViewById(R.id.note_avatar);
-            mNoteIcon = view.findViewById(R.id.note_icon);
 
             mContentView.setOnClickListener(mOnClickListener);
         }

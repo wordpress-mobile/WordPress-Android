@@ -116,10 +116,11 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         switch (getRangeType()) {
             case USER:
             case MATCH:
-                return Typeface.BOLD;
             case SITE:
             case POST:
             case COMMENT:
+            case B:
+                return Typeface.BOLD;
             case BLOCKQUOTE:
                 return Typeface.ITALIC;
             case STAT:
