@@ -30,7 +30,6 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
     @Inject lateinit var siteStore: SiteStore
     private lateinit var dialogController: CollapseFullScreenDialogController
     private lateinit var reply: SuggestionAutoCompleteText
-    private lateinit var siteModel: SiteModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
