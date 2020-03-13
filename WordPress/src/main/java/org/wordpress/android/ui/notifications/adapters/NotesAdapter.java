@@ -300,7 +300,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         int gridicon = mNoticonUtils.noticonToGridicon(note.getNoticonCharacter());
         noteViewHolder.mImgAvatar.setBadgeIcon(gridicon);
         if (commentStatus == CommentStatus.UNAPPROVED) {
-            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_warning);
+            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_warning_dark);
         } else if (isUnread) {
             noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_primary);
         } else {
