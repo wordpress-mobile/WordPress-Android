@@ -2628,11 +2628,6 @@
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
-    <string name="new_site_creation_site_info_header_title">Basic Information</string>
-    <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating.</string>
-    <string name="new_site_creation_site_title_hint">Site Title</string>
-    <string name="new_site_creation_tag_line_hint">Tagline</string>
-    <string name="new_site_creation_tag_line_description">The tagline is a short line of text shown right below the title.</string>
     <string name="new_site_creation_button_skip">Skip</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
