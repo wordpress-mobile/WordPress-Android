@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -22,7 +23,6 @@ import javax.inject.Singleton
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class JetpackStore
@@ -68,15 +68,19 @@ class JetpackStore
         }
     }
 
-    private suspend fun reloadSite(site: SiteModel) = suspendCoroutine<Unit> { cont ->
+    private suspend fun reloadSite(site: SiteModel) = suspendCancellableCoroutine<Unit> { cont ->
         siteStore.onAction(SiteActionBuilder.newFetchSiteAction(site))
         siteContinuation = cont
-        GlobalScope.launch(coroutineContext) {
+        val job = GlobalScope.launch(coroutineContext) {
             delay(5000)
             if (siteContinuation != null && siteContinuation == cont) {
                 siteContinuation?.resume(Unit)
                 siteContinuation = null
             }
+        }
+        cont.invokeOnCancellation {
+            siteContinuation = null
+            job.cancel()
         }
     }
 
