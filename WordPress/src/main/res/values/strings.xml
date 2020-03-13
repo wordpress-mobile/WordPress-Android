@@ -1138,7 +1138,7 @@
     <string name="notifications_label_new_notifications">New notifications</string>
     <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
     <string name="notifications_tab_title_all">All</string>
-    <string name="notifications_tab_title_unread">Unread</string>
+    <string name="notifications_tab_title_unread_notifications">Unread</string>
     <string name="notifications_tab_title_comments">Comments</string>
     <string name="notifications_tab_title_follows">Follows</string>
     <string name="notifications_tab_title_likes">Likes</string>
