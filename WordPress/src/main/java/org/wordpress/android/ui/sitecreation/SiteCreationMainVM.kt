@@ -34,8 +34,6 @@ const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 @SuppressLint("ParcelCreator")
 data class SiteCreationState(
     val segmentId: Long? = null,
-    val siteTitle: String? = null,
-    val siteTagLine: String? = null,
     val domain: String? = null
 ) : WizardState, Parcelable
 
