@@ -1,90 +1,123 @@
-<de-DE>
-13.7:
-* Updates im Block-Editor: Nicht unterstützte Blöcke zeigen jetzt einen Titel an, Indikatoren für neue Blöcke werden sowohl in leeren Editoren als auch nach dem letzten Block angezeigt, Hinzufügen von Links aus bestehenden URLs in deiner Zwischenablage, Medien- und Textblöcke haben jetzt mehr Ausrichtungsoptionen, Bildblöcke sind jetzt für die Vorschau im Vollbildmodus antippbar.
+<ar>
+14.3:
+- إضافات مُحرِّر المكوِّن: تمت إضافة مكوِّنات الأزرار والمجموعات، ودعم مزيد من الخيارات في إعدادات مكوِّن الصور والمعرض.
+- تحسينات مُحرِّر المكوِّن: تمت إضافة دعم التمرير داخل منتقي المكوِّن وإعداداته، وتم إدخال شريط أدوات عائم لتسهيل التنقل بين المكوِّنات.
+- إصلاحات مُحرِّر المكوِّن: تم إصلاح المشكلات المتعلقة بصور العنصر النائب في أثناء رفع الصور، ورموز المشاعر في عناوين المقالات، والتفاف النص في مكوِّنات الأكواد القصيرة.
 
-* Allgemeine Verbesserungen: Einige Fehler und Abstürze wurden behoben, im Reader gibt es einen besseren Support für den TalkBack-Screenreader.
+</ar>
+<de-DE>
+14.3:
+- Neu im Block-Editor: Die Blöcke „Button“ und „Gruppe“ wurden hinzugefügt. Darüber hinaus werden jetzt weitere Optionen in den Bild- und Galerieblockeinstellungen.
+- Verbesserungen am Block-Editor: Support für den Bildlauf in der Blockauswahl und in den Blockeinstellungen und neue unverankerte Toolbar für einfaches Wechseln zwischen Blöcken.
+
 </de-DE>
 <en-US>
-13.7:
-* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.
+14.3:
+- Block editor additions: Added Button and Group blocks, and support for more options in Image and Gallery block settings.
+- Block editor enhancements: Added scroll support inside block picker and block settings, and introduced a floating toolbar to make navigating blocks easier.
+- Block editor fixes: Fixed issues around placeholder images during image upload, emojis in post titles, and text-wrapping in Shortcode blocks.
+- Reader: Added tab filtering for better sites/tag navigation.
 
-* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.
 </en-US>
 <es-ES>
-13.7:
-* Actualizaciones del editor de bloques: ahora, los bloques no compatibles muestran un título, los indicadores de nuevos bloques se muestran tanto en los editores vacíos como después del último bloque, añadir enlaces a las URLs existentes en tu portapapeles, los bloques de medios y texto tienen más opciones de alineación, los bloques de imagen se pueden tocar para obtener una vista previa a pantalla completa.
-
-* Mejoras generales: corregidos algunos fallos y roturas y añadido una mejor compatibilidad para el lector de pantalla TalkBack en el lector.
+14.3:
+- Añadidos bloques al editor: Añadidos bloques de grupo y de botón, y compatibilidad con más opciones en los ajustes de los bloques de imagen y de galería.
+- Mejoras en el editor de bloques: Añadida compatibilidad con scroll dentro del selector de bloques y ajustes de los bloques, y se ha introducido una barra de herramientas flotante para hacer más sencilla la navegación por los bloques.
 </es-ES>
 <fr-CA>
-13.7 :
-*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
+14.3 :
+- Ajouts de l'éditeur de blocs : blocs Bouton et Groupe ajoutés, + d’options dans les réglages de bloc Image et Galerie.
+- Améliorations de l'éditeur de blocs : défilement ajouté dans le sélecteur et réglages de bloc, nouvelle barre d'outils flottante pour mieux naviguer dans les blocs.
+- Résolutions de l'éditeur de blocs : images de texte indicatif lors du chargement d’images, émojis des titres d'article et habillage du texte de blocs de code abrégé résolus.
 
-* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-CA>
 <fr-FR>
-13.7 :
-*Mises à jour de l'éditeur de blocs : le titre des blocs non pris en charge est désormais affiché, les indicateurs de nouveaux blocs apparaissent à la fois dans les éditeurs vides et après le dernier bloc, l'ajout des liens provient des URL existantes dans votre presse-papier, les blocs multimédia et texte possèdent davantage d'options d'alignement, les blocs d'image sont affichables en mode d'aperçu plein écran.
+14.3 :
+- Ajouts de l'éditeur de blocs : blocs Bouton et Groupe ajoutés, + d’options dans les réglages de bloc Image et Galerie.
+- Améliorations de l'éditeur de blocs : défilement ajouté dans le sélecteur et réglages de bloc, nouvelle barre d'outils flottante pour mieux naviguer dans les blocs.
+- Résolutions de l'éditeur de blocs : images de texte indicatif lors du chargement d’images, émojis des titres d'article et habillage du texte de blocs de code abrégé résolus.
 
-* Améliorations générales : résolutions de certains bugs et de certaines défaillances, et amélioration de la prise en charge du lecteur d'écran TalkBack dans le Lecteur.
 </fr-FR>
 <iw-IL>
-13.7:
-* עדכונים בעורך הבלוקים: בלוקים שלא נתמכים כעת מציגים כותרת, סממנים של בלוקים חדשים מוצגים בעורכים ריקים ולאחר הבלוק האחרון, הוספה של קישורים אפשרית מכתובות URL שנמצאות בלוח שלך, בלוקים של טקסט ומדיה כוללים אפשרויות יישור נוספות, ניתן להקיש על בלוקים של תמונה לתצוגה במסך מלא.
+14.3:
+- הוספות לעורך הבלוקים: הוספנו בלוק כפתור ובלוק קבוצה ותמיכה באפשרויות נוספות בהגדרות הבלוקים של תמונה וגלריה.
+- שיפורים לעורך הבלוקים: הוספנו תמיכה בגלילה בתוך בורר הבלוקים ובהגדרות הבלוק. כמו כן, הוספנו סרגל כלים צף כדי לאפשר ניווט קל יותר בבלוקים.
+- תיקונים לעורך הבלוקים: תיקנו כמה בעיות בתמונות של מצייני המיקום שהופיעו בשלב העלאת תמונות, בסמלי Emoji בכותרות הפוסטים ובגלישת הטקסט בבלוקים של שורטקוד.
+- Reader: הוספנו לשונית לסינון כדי לאפשר ניווט יעיל יותר באתרים/בתגיות.
 
-* שיפורים כלליים: תיקנו כמה באגים וקריסות ושיפרנו את התמיכה בקורא של מסך TalkBack ב-Reader.
 </iw-IL>
 <id>
-13.7.
-* Pembaruan penyunting blok: blok yang tidak didukung kini menampilkan judul, indikator blok baru ditampilkan baik di penyunting kosong maupun setelah blok terakhir, menambahkan tautan dari URL yang sudah ada di papan klip Anda, blok Media dan Teks memiliki lebih banyak pilihan perataan, blok gambar kini dapat diketuk untuk pratinjau layar penuh.
+14.3:
+- Tambahan penyunting blok: Menambahkan blok Tombol dan Kelompok, dan mendukung lebih banyak opsi di pengaturan blok Gambar dan Galeri.
+- Peningkatan pada penyunting blok: Menambahkan dukungan gulir di dalam pemilih blok dan pengaturan blok, dan memperkenalkan bilah peralatan mengambang untuk mempermudah navigasi blok.
+- Perbaikan pada penyunting blok: Memperbaiki masalah seputar gambar placeholder selama pengunggahan gambar, emoji di judul pos, dan text-wrapping di blok Shortcode.
 
-* Penyempurnaan umum: memperbaiki beberapa bug dan kesalahan, serta menambahkan dukungan pembaca layar TalkBack yang lebih baik di Pembaca.
 </id>
-<ja-JP>
-13.7:
-* ブロックエディターの更新 :サポート対象外のブロックにタイトルが表示されるようになり、新しいブロックインジケータが空のエディターと最後のブロック後の両方に表示され、リンクを追加するとクリップボードで既存の URL から抽出され、メディアブロックとテキストブロックに他の配置オプションが追加され、画像ブロックをタップするとフルスクリーンのプレビューが可能になります。
+<it-IT>
+14.3:
+- Aggiunte all'editor a blocchi: blocchi Pulsante e Gruppo e opzioni nelle impostazioni di Immagine e Galleria.
+- Miglioramenti all'editor a blocchi: aggiunta dello scorrimento nel selezionatore e nelle impostazioni e di una barra mobile per la navigazione.
+- Correzioni all'editor a blocchi: correzione del caricamento di immagini segnaposto, degli emoji nei titoli degli articoli e del ritorno a capo nei blocchi Shortcode.
 
-* 一般的な改善 :いくつかのバグとクラッシュが修正され、TalkBack 画面の読者サポートが Reader で改善されました。
+</it-IT>
+<ja-JP>
+14.3:
+- ブロックエディターの追加機能 :「ボタン」ブロックと「Group」ブロックが追加され、画像ブロックとギャラリーブロックの設定で使用できるオプションが増えました。
+ブロックエディターの機能強化 :ブロックピッカー内とブロック設定内で、スクロール機能が使えるようになりました。ブロック操作を簡単にする移動式ツールバーも導入されました。
+- ブロックエディターの修正 :画像アップロード中のプレースホルダー画像、投稿名の絵文字、ショートコードブロックでのワードラップ機能で発生していた問題を修正しました。
+- Reader:サイトやタグへのナビゲーションを向上するタブのフィルタリング機能を追加しました。
+
 </ja-JP>
 <ko-KR>
-13.7:
-* 블록 편집기 업데이트: 지원되지 않는 블록에 이제 제목이 표시됨, 새 블록 표시기가 빈 편집기와 마지막 블록 뒤에 모두 표시됨, 링크를 추가하면 클립보드의 기존 URL에서 가져옴, 미디어 및 텍스트 블록에 정렬 옵션이 추가됨, 이미지 블록을 탭하여 전체 화면으로 미리보기 가능.
+14.3:
+- 블록 편집기 추가 기능: 버튼 및 그룹 블록, 이미지 및 갤러리 블록 설정의 더 많은 옵션을 위한 지원을 추가했습니다.
+- 블록 편집기의 향상된 기능: 블록 선택기 및 블록 설정 내부에 스크롤 지원을 추가하고 블록을 보다 쉽게 탐색할 수 있는 플로팅 도구 모음을 도입했습니다.
+- 블록 편집기 수정 사항: 이미지 업로드 중 자리 표시자 이미지, 글 제목의 이모티콘 및 쇼트코드 블록의 텍스트 줄 바꿈 문제를 수정했습니다.
+- 리더: 더 효과적인 사이트/태그 탐색을 위해 탭 필터링을 추가했습니다.
 
-* 일반 개선 사항 : 일부 버그 및 충돌을 수정하고 리더에서 더 나은 TalkBack 화면 판독기 지원을 추가했습니다.
 </ko-KR>
 <nl-NL>
-13.7:
-* Updates van de blokeditor: in niet-ondersteunde blokken wordt nu een titel weergegeven, indicators van nieuwe blokken worden zowel in lege editors als na het laatste blok weergegeven, links kunnen worden toegevoegd vanuit bestaande URL's in je klembord, de blokken Media en Tekst bevatten nu meer opties voor uitlijning, er kan op afbeeldingsblokken worden getikt voor weergave op volledig scherm.
+14.3:
+- Aanvullingen op de blokeditor: de knop- en groepblokken zijn toegevoegd en er wordt ondersteuning voor meer opties geboden in de instellingen van het afbeeldings- en galerijblok.
+- Verbeteringen aan de blokeditor: ondersteuning voor scrollen toegevoegd aan de blokkiezer en blokinstellingen en een zwevende werkbalk geïntroduceerd om het navigeren in blokken eenvoudiger te maken.
 
-* Algemene verbeteringen: een paar bugs en crashes zijn opgelost en er is verbeterde ondersteuning voor de TalkBack-schermreader in de Reader.
 </nl-NL>
 <ru-RU>
-13.7:
-* Обновления для редактора блоков: для неподдерживаемых блоков показывается их название, индикаторы нового блока показываются и в пустом редакторе и после последнего блока, добавление ссылки может использовать содержимое буфера обмена, мультимедиа и текстовые блоки имеют больше возможностей выравнивания, блоки изображений можно развернуть на полноэкранный просмотр при нажатии.
+14.3:
+- Добавления к редактору блоков: Блоки кнопка и группа, поддержка большего количества настроек для блоков изображений и галереи.
+- Улучшения редактора блоков: поддержка прокрутки при выборе блоков и в настройках, плавающая панель инструментов для навигации по блокам.
+- Исправления редактора блоков: проблемы с изображениями-заменителями во время загрузки, эмодзи в названиях записей, перенос текста в блоках шорткодов. 
+- Чтиво: фильтрация вкладок для улучшенной навигации по меткам/сайтам.
 
-* Общие улучшения: исправлены некоторые ошибки и падения, добавлена поддержка чтения с экрана TalkBack в Чтиво.
 </ru-RU>
 <sv-SE>
-13.7:
-* Blockredigeraren: block utan stöd har nu en särskild rubrik, nya indikatorer visar tomma redigerare och slutet på sista blocket, vid tillägg av ny länk hämtas eventuell URL i urklippet, media- och textblock har fler justeringsalternativ, man kan klicka på bildblock för förhandsvisning i fullskärm.
+14.3:
+- I blockredigeraren: Nya block för knapp och grupp, fler inställningar i bild- och galleriblock.
+- Förbättringar av blockredigeraren: Rullist i blockväljare och blockinställningar, ny flytande verktygslist för enklare blocknavigering.
+- Rättelser i blockredigeraren: Löst problem med platshållare i samband med bilduppladdning, användning av emoji i inläggsrubriker och radbrytning i kordkodsblock.
+- Läsaren: Lagt till flikfiltrering för bättre navigaton mellan webbplatser och etiketter.
 
-* Allmänna förbättringar: korrigerat olika fel och programkrascher och förbättrat stödet för skärmläsaren TalkBack i läsaren.
 </sv-SE>
 <tr-TR>
-13.7:
-* Blok düzenleyici güncellemeleri: desteklenmeyen bloklarda artık bir başlık görüntülenir, yeni blok göstergeleri hem boş düzenleyicilerde hem de son bloktan sonra gösterilir, bağlantılar eklendiğinde panodaki mevcut URL'lerden alınır, Ortam ve Metin bloklarında daha fazla hizalama seçeneği bulunur, görsel bloklarına dokunularak tam ekran önizleme yapılabilir.
+14.3:
+- Blok düzenleyici eklemeleri: Düğme ve Grup bloklarının yanı sıra, Görsel ve Galeri bloku ayarlarına daha fazla seçenek desteği eklendi.
+- Blok düzenleyici geliştirmeleri: Blok seçici ve blok ayarlarına kaydırma desteği ve bloklarda gezinmeyi kolaylaştırmak için kayan bir araç çubuğu eklendi.
+- Blok düzenleyici düzeltmeleri: Görsel karşıya yüklemesi sırasında yer tutucu görselleri, yazı başlığındaki emojiler ve Kısa Kod bloklarında yazı kaydırma ile ilgili sorunlar düzeltildi.
 
-* Genel iyileştirmeler: Bazı hatalar ve kilitlenme durumları düzeltildi, Okuyucu'daki TalkBack ekran okuyucu desteği geliştirildi.
 </tr-TR>
 <zh-CN>
-13.7：
-* 更新了区块编辑器：不支持的区块现可显示标题；新区块指示器同时显示在空白编辑器中和最后一个区块之后；添加从剪贴板的现有 URL 中提取的链接；“媒体和文本”区块具有更多对齐选项；轻点“图片”区块可进行全屏预览。
+14.3：
+- 区块编辑器新增内容：添加了“按钮”和“组”区块，并且在“图片”和“图库”区块设置中支持更多选项。
+- 区块编辑器增强功能：在区块选择器和区块设置中添加了滚动支持，同时引入了浮动工具栏，使得区块间导航变得更加轻松。
+- 区块编辑器修复：修复了图片上传过程中的占位符图片相关问题、文章标题中的表情符号问题以及短代码区块中的文字环绕问题。
+- 阅读器：添加了选项卡过滤功能，以便在站点/标签间更方便地进行导航。
 
-* 常规改进：修复了一些错误和崩溃，并在阅读器中添加了更好的 TalkBack 屏幕阅读器支持。
 </zh-CN>
 <zh-TW>
-13.7：
-* 區塊編輯器更新：不支援的區塊現在會顯示標題；在空白編輯器內和前一個區塊之後，都會顯示新區塊指標；你可從剪貼簿拖入現有網址以新增連結；媒體和文字區塊可提供更多對齊選項；點選圖片區塊即可進行全螢幕預覽。
+14.3：
+- 區塊編輯器新增功能：新增「按鈕」和「群組」區塊，並在「圖片」和「圖庫」區塊設定中支援更多選項。
+- 區塊編輯器增強功能：在區塊挑選器和區塊設定旁新增捲動功能支援，並推出讓區塊瀏覽更輕鬆的浮動工具列。
+- 區塊編輯器修正：修正圖片上傳時預留位置圖片的問題、文章標題的表情符號問題，以及短代碼區塊中的文繞圖問題。
+- 讀取器：新增分頁篩選功能，改善網站/標籤瀏覽體驗。
 
-* 一般改善項目：修正一些錯誤和故障情況，並為讀取器新增更完善的 TalkBack 螢幕讀取器支援。
 </zh-TW>

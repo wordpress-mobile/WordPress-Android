@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.EXPAND_CHANGED
-import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_BAR_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.TAB_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
@@ -19,7 +18,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ImageItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LinkButton
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LoadingItem
@@ -44,7 +42,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.IMAGE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK_BUTTON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
@@ -72,7 +69,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.FourCol
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.HeaderViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ImageItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.InformationViewHolder
-import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LinkButtonViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LinkViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemWithIconViewHolder
@@ -127,7 +123,6 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             ACTIVITY_ITEM -> ActivityViewHolder(parent)
             REFERRED_ITEM -> ReferredItemViewHolder(parent)
             QUICK_SCAN_ITEM -> QuickScanItemViewHolder(parent)
-            LINK_BUTTON -> LinkButtonViewHolder(parent)
             DIALOG_BUTTONS -> DialogButtonsViewHolder(parent)
         }
     }
@@ -151,7 +146,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is TextViewHolder -> holder.bind(item as Text)
             is FourColumnsViewHolder -> holder.bind(item as Columns, payloads)
             is LinkViewHolder -> holder.bind(item as Link)
-            is BarChartViewHolder -> holder.bind(item as BarChartItem, payloads.contains(SELECTED_BAR_CHANGED))
+            is BarChartViewHolder -> holder.bind(item as BarChartItem)
             is ChartLegendViewHolder -> holder.bind(item as ChartLegend)
             is TabsViewHolder -> holder.bind(item as TabsItem, payloads.contains(TAB_CHANGED))
             is InformationViewHolder -> holder.bind(item as Information)
@@ -167,7 +162,6 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is LoadingItemViewHolder -> holder.bind(item as LoadingItem)
             is ReferredItemViewHolder -> holder.bind(item as ReferredItem)
             is QuickScanItemViewHolder -> holder.bind(item as QuickScanItem)
-            is LinkButtonViewHolder -> holder.bind(item as LinkButton)
             is DialogButtonsViewHolder -> holder.bind(item as DialogButtons)
         }
     }

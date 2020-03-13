@@ -385,4 +385,14 @@
     <style name="StatsWidgetBlockValue.Light">
         <item name="android:textColor">@color/gray_50</item>
     </style>
+
+    <style name="InsightsManagementHeader" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/neutral_50</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="InsightsManagementItem" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/neutral_70_neutral_20_selector</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
 </resources>

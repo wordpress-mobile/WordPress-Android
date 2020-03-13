@@ -41,6 +41,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
@@ -49,6 +50,8 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveList
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
@@ -69,6 +72,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
+    private static final String ARG_POST_TYPE = "param_post_type";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
     private static final String ARG_SUPPORT_STOCK_PHOTOS = "param_support_stock_photos";
@@ -77,6 +81,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
 
     private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
+
+    private static final String USER_EVENT_KEY_TEMPLATE = "template";
 
     private boolean mHtmlModeEnabled;
 
@@ -101,6 +107,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
+                                                      String postType,
                                                       boolean isNewPost,
                                                       String localeSlug,
                                                       boolean supportStockPhotos) {
@@ -108,6 +115,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
         args.putString(ARG_PARAM_CONTENT, content);
+        args.putString(ARG_POST_TYPE, postType);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putString(ARG_LOCALE_SLUG, localeSlug);
         args.putBoolean(ARG_SUPPORT_STOCK_PHOTOS, supportStockPhotos);
@@ -207,13 +215,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         super.onCreate(savedInstanceState);
 
         if (getGutenbergContainerFragment() == null) {
+            String postType = getArguments().getString(ARG_POST_TYPE);
             boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
             String localeSlug = getArguments().getString(ARG_LOCALE_SLUG);
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             GutenbergContainerFragment gutenbergContainerFragment =
-                    GutenbergContainerFragment.newInstance(isNewPost, localeSlug, this.getTranslations());
+                    GutenbergContainerFragment.newInstance(postType, isNewPost, localeSlug, this.getTranslations());
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
@@ -333,9 +342,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 new OnEditorAutosaveListener() {
                     @Override public void onEditorAutosave() {
-                        // FIXME the Editable field passed to postTextChanged is never used later, and also nullable,
-                        //  but in theory we should be able to pass either the content field or the title field.
-                        mTextWatcher.postTextChanged(null);
+                        mTextWatcher.postTextChanged();
                     }
                 },
                 new OnAuthHeaderRequestedListener() {
@@ -346,13 +353,33 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new RequestExecutor() {
                     @Override public void performRequest(String path,
                                                          Consumer<String> onResult,
-                                                         Consumer<String> onError) {
+                                                         Consumer<Bundle> onError) {
                         mEditorFragmentListener.onPerformFetch(path, onResult, onError);
                     }
                 },
                 new OnImageFullscreenPreviewListener() {
                     @Override public void onImageFullscreenPreviewClicked(String mediaUrl) {
                         mEditorImagePreviewListener.onImagePreviewRequested(mediaUrl);
+                    }
+                },
+                new OnMediaEditorListener() {
+                    @Override public void onMediaEditorClicked(String mediaUrl) {
+                        // Show Media Editor
+                    }
+                },
+                new OnLogGutenbergUserEventListener() {
+                    @Override
+                    public void onGutenbergUserEvent(GutenbergUserEvent event, Map<String, Object> properties) {
+                        switch (event) {
+                            case EDITOR_SESSION_TEMPLATE_PREVIEW:
+                                mEditorFragmentListener.onGutenbergEditorSessionTemplatePreviewTracked((String)
+                                        properties.get(USER_EVENT_KEY_TEMPLATE));
+                                break;
+                            case EDITOR_SESSION_TEMPLATE_APPLY:
+                                mEditorFragmentListener.onGutenbergEditorSessionTemplateApplyTracked((String)
+                                        properties.get(USER_EVENT_KEY_TEMPLATE));
+                                break;
+                        }
                     }
                 });
 

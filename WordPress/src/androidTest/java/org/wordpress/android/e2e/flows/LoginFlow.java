@@ -62,7 +62,7 @@ public class LoginFlow {
         waitForElementToBeDisplayed(continueButton);
         clickOn(continueButton);
 
-        waitForElementToBeDisplayed(R.id.nav_me);
+        waitForElementToBeDisplayed(R.id.nav_sites);
     }
 
     private void chooseMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {

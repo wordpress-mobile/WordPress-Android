@@ -28,6 +28,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.posts.FeaturedImageHelper;
+import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -251,19 +252,36 @@ public class PhotoPickerActivity extends AppCompatActivity
         // if user chose a featured image, we need to upload it and return the uploaded media object
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             final String mimeType = getContentResolver().getType(mediaUri);
+
+            mFeaturedImageHelper.trackFeaturedImageEvent(
+                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                mLocalPostId
+            );
+
             WPMediaUtils.fetchMediaAndDoNext(this, mediaUri,
                                              new WPMediaUtils.MediaFetchDoNext() {
                                                  @Override
                                                  public void doNext(Uri uri) {
-                                                     boolean imageQueued = mFeaturedImageHelper
+                                                     EnqueueFeaturedImageResult queueImageResult = mFeaturedImageHelper
                                                              .queueFeaturedImageForUpload(mLocalPostId, mSite, uri,
                                                                      mimeType);
-                                                     if (!imageQueued) {
-                                                         // we intentionally display a toast instead of a snackbar as a
-                                                         // Snackbar is tied to an Activity and the activity is finished
-                                                         // right after this call
-                                                         Toast.makeText(getApplicationContext(),
-                                                                 R.string.file_not_found, Toast.LENGTH_SHORT).show();
+                                                     // we intentionally display a toast instead of a snackbar as a
+                                                     // Snackbar is tied to an Activity and the activity is finished
+                                                     // right after this call
+                                                     switch (queueImageResult) {
+                                                         case FILE_NOT_FOUND:
+                                                             Toast.makeText(getApplicationContext(),
+                                                                     R.string.file_not_found, Toast.LENGTH_SHORT)
+                                                                  .show();
+                                                             break;
+                                                         case INVALID_POST_ID:
+                                                             Toast.makeText(getApplicationContext(),
+                                                                     R.string.error_generic, Toast.LENGTH_SHORT)
+                                                                  .show();
+                                                             break;
+                                                         case SUCCESS:
+                                                             // noop
+                                                             break;
                                                      }
                                                      Intent intent = new Intent()
                                                              .putExtra(EXTRA_MEDIA_QUEUED, true);
@@ -281,6 +299,14 @@ public class PhotoPickerActivity extends AppCompatActivity
     }
 
     private void doMediaIdSelected(long mediaId, @NonNull PhotoPickerMediaSource source) {
+        // if user chose a featured image, track image picked event
+        if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+            mFeaturedImageHelper.trackFeaturedImageEvent(
+                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                mLocalPostId
+            );
+        }
+
         Intent data = new Intent()
                 .putExtra(EXTRA_MEDIA_ID, mediaId)
                 .putExtra(EXTRA_MEDIA_SOURCE, source.name());

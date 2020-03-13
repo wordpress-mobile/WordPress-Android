@@ -1,3 +1,3 @@
-* Block editor updates: unsupported blocks now display a title, new-block indicators display both in empty editors and after the last block, adding links pulls from existing URLs in your clipboard, Media and Text blocks have more alignment options, image blocks are tappable for full-screen preview.
+One small fix: this release takes care of an issue that caused images to upload with wonky URLs, which made them inaccessible on your website.
 
-* General improvements: fixed some bugs and crashes, and added better TalkBack screen reader support in the Reader.
+Wash your hands and stay safe, everyone.

@@ -30,6 +30,7 @@ import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
+import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
@@ -127,7 +128,23 @@ public class ActivityLauncher {
                                                 @NonNull MediaBrowserType browserType,
                                                 @Nullable SiteModel site,
                                                 @Nullable Integer localPostId) {
-        Intent intent = new Intent(activity, PhotoPickerActivity.class);
+        Intent intent = createShowPhotoPickerIntent(activity, browserType, site, localPostId);
+        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
+    }
+
+    public static void showPhotoPickerForResult(Fragment fragment,
+                                                @NonNull MediaBrowserType browserType,
+                                                @Nullable SiteModel site,
+                                                @Nullable Integer localPostId) {
+        Intent intent = createShowPhotoPickerIntent(fragment.getContext(), browserType, site, localPostId);
+        fragment.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
+    }
+
+    private static Intent createShowPhotoPickerIntent(Context context,
+                                                      @NonNull MediaBrowserType browserType,
+                                                      @Nullable SiteModel site,
+                                                      @Nullable Integer localPostId) {
+        Intent intent = new Intent(context, PhotoPickerActivity.class);
         intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
@@ -135,7 +152,7 @@ public class ActivityLauncher {
         if (localPostId != null) {
             intent.putExtra(PhotoPickerActivity.LOCAL_POST_ID, localPostId.intValue());
         }
-        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
+        return intent;
     }
 
     public static void showStockMediaPickerForResult(Activity activity,
@@ -194,6 +211,13 @@ public class ActivityLauncher {
     public static void viewNotificationsInNewStack(Context context) {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_NOTIFICATIONS);
+        context.startActivity(intent);
+    }
+
+    public static void viewReader(Context context) {
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
 
@@ -260,10 +284,7 @@ public class ActivityLauncher {
         }
         ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
 
-        Intent intent = new Intent(context, WPMainActivity.class);
-        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
+        viewReader(context);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
@@ -681,10 +702,10 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewMeActivity(Context context) {
-        Intent intent = new Intent(context, MeActivity.class);
+    public static void viewMeActivityForResult(Activity activity) {
+        Intent intent = new Intent(activity, MeActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
     }
 
     public static void viewAccountSettings(Context context) {
@@ -693,7 +714,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewAppSettings(Activity activity) {
+    public static void viewAppSettingsForResult(Activity activity) {
         Intent intent = new Intent(activity, AppSettingsActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
         activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
@@ -702,6 +723,25 @@ public class ActivityLauncher {
     public static void viewNotificationsSettings(Activity activity) {
         Intent intent = new Intent(activity, NotificationsSettingsActivity.class);
         activity.startActivity(intent);
+    }
+
+    public static void viewHelpAndSupportInNewStack(@NonNull Context context, @NonNull Origin origin,
+                                          @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("origin", origin.name());
+        AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
+
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        Intent meIntent = new Intent(context, MeActivity.class);
+        meIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        Intent helpIntent = HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(meIntent);
+        taskStackBuilder.addNextIntent(helpIntent);
+        taskStackBuilder.startActivities();
     }
 
     public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin,
@@ -714,7 +754,7 @@ public class ActivityLauncher {
 
     public static void viewZendeskTickets(@NonNull Context context,
                                           @Nullable SiteModel selectedSite) {
-        viewHelpAndSupport(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
+        viewHelpAndSupportInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {
@@ -769,6 +809,14 @@ public class ActivityLauncher {
         intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
         intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_IS_EMAIL, isEmail);
         activity.startActivityForResult(intent, RequestCodes.SHOW_SIGNUP_EPILOGUE_AND_RETURN);
+    }
+
+    public static void showPostSignupInterstitial(Context context) {
+        final Intent parentIntent = new Intent(context, WPMainActivity.class);
+        parentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        parentIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        final Intent intent = new Intent(context, PostSignupInterstitialActivity.class);
+        TaskStackBuilder.create(context).addNextIntent(parentIntent).addNextIntent(intent).startActivities();
     }
 
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post) {

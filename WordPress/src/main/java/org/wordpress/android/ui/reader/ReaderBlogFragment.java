@@ -176,6 +176,7 @@ public class ReaderBlogFragment extends Fragment
 
         MenuItem searchMenu = menu.findItem(R.id.menu_search);
         SearchView searchView = (SearchView) searchMenu.getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
 
         searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {

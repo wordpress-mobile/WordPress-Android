@@ -22,6 +22,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
@@ -46,6 +47,9 @@ class EditPostPublishSettingsFragment : Fragment() {
         val publishNotificationContainer = rootView.findViewById<LinearLayout>(R.id.publish_notification_container)
         val addToCalendarContainer = rootView.findViewById<LinearLayout>(R.id.post_add_to_calendar_container)
         val addToCalendar = rootView.findViewById<TextView>(R.id.post_add_to_calendar)
+
+        AccessibilityUtils.disableHintAnnouncement(dateAndTime)
+        AccessibilityUtils.disableHintAnnouncement(publishNotification)
 
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
 
@@ -76,8 +80,8 @@ class EditPostPublishSettingsFragment : Fragment() {
                 addToCalendarContainer.isEnabled = uiModel.notificationEnabled
                 if (uiModel.notificationEnabled) {
                     publishNotificationContainer.setOnClickListener {
-                        getPostRepository()?.let { postRepository ->
-                            viewModel.onShowDialog(postRepository)
+                        getPostRepository()?.getPost()?.let { postModel ->
+                            viewModel.onShowDialog(postModel)
                         }
                     }
                     addToCalendarContainer.setOnClickListener {

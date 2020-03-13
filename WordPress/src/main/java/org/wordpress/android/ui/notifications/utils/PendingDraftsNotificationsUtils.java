@@ -44,7 +44,7 @@ public class PendingDraftsNotificationsUtils {
         long oneWeekAgo = now - NotificationsPendingDraftsReceiver.ONE_WEEK;
         long oneMonthAgo = now - NotificationsPendingDraftsReceiver.ONE_MONTH;
 
-        long dateLastUpdated = DateTimeUtils.timestampFromIso8601(dateLocallyChanged);
+        long dateLastUpdated = DateTimeUtils.timestampFromIso8601Millis(dateLocallyChanged);
 
         // set alarms for one day + one week + one month if just over a day but less than a week,
         // set alarms for a week and another for a month, if over a week but less than a month

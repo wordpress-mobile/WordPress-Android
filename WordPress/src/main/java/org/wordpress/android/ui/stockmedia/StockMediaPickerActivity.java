@@ -47,12 +47,14 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaRetainedFragment.StockMediaRetainedData;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PhotoPickerUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -603,6 +605,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
             holder.mImageView.setContentDescription(media.getTitle());
 
+
             boolean isSelected = isItemSelected(position);
             holder.mSelectionCountTextView.setSelected(isSelected);
             if (enableMultiselect()) {
@@ -627,6 +630,23 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             if (mCanLoadMore && position == getItemCount() - 1) {
                 fetchStockMedia(mSearchQuery, mNextPage);
             }
+            addImageSelectedToAccessibilityFocusedEvent(holder.mImageView, position);
+        }
+
+        private void addImageSelectedToAccessibilityFocusedEvent(ImageView imageView, int position) {
+            AccessibilityUtils.addPopulateAccessibilityEventFocusedListener(imageView, event -> {
+                if (isValidPosition(position)) {
+                    if (isItemSelected(position)) {
+                        final String imageSelectedText = imageView.getContext().getString(
+                                R.string.photo_picker_image_selected);
+                        if (!imageView.getContentDescription().toString().contains(imageSelectedText)) {
+                            imageView.setContentDescription(
+                                    imageView.getContentDescription() + " "
+                                    + imageSelectedText);
+                        }
+                    }
+                }
+            });
         }
 
         boolean isValidPosition(int position) {
@@ -702,6 +722,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             boolean isSelected = isItemSelected(position);
             setItemSelected(holder, position, !isSelected);
             notifySelectionCountChanged();
+            PhotoPickerUtils.announceSelectedImageForAccessibility(holder.mImageView, !isSelected);
         }
 
         @SuppressWarnings("unused")

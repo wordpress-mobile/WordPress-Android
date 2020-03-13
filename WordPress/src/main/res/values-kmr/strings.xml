@@ -6,7 +6,6 @@ Generator: GlotPress/2.4.0-alpha
 Language: ku_TR
 -->
 <resources>
-    <string name="notification_settings_moved_notices">Êdî tu dikarî sazkariyên danezanan di hilpeka Danazanan de bibînî.</string>
     <string name="stats_file_downloads_value_label">Daxistin</string>
     <string name="stats_file_downloads_title_label">Pelge</string>
     <string name="stats_file_downloads">Daxistinên pelgeyan</string>
@@ -45,20 +44,16 @@ Language: ku_TR
     <string name="stats_post_views_label">Dîtin</string>
     <string name="stats_post_label">Şandî</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Grafîka çalakiya parvekirina şandiyê.</string>
     <string name="stats_item_collapsed">Hêman hate tengkirin</string>
     <string name="stats_item_expanded">Hêman hate firehkirin</string>
     <string name="stats_collapse_content_description">Veşêre</string>
     <string name="stats_expand_content_description">Fireh bike</string>
     <string name="stats_graph_updated">Grafîk hate hildemandin</string>
     <string name="stats_overview_content_description">%1$s %2$s bo dewra %3$s, ji dewra berê hate guhertin - %4$s</string>
-    <string name="stats_bar_chart_content_description">Grafîka dîtinên malperê. </string>
     <string name="stats_loading_card">Daneya karta bijartî tê barkirin</string>
     <string name="site_settings_editor">Sererastker</string>
     <string name="description_expand">Fireh bike</string>
     <string name="description_collapse">Teng bike</string>
-    <string name="editor_retry_failed_uploads">Hilxistinê dîsa biceribîne</string>
-    <string name="editor_toast_failed_uploads">Hilxistina hinek medyayan bi serneket. Di vê rewşê de \ntu nikare şandiya xwe biweşîne an jî tomar bike.</string>
     <string name="my_site_verify_your_email_without_email">Navnîşana epeyama xwe piştrast bike - rêname bo epeyama te hat şandin</string>
     <string name="my_site_verify_your_email">Navnîşana epeyama xwe piştrast bike - rêname bo %s hate şandin</string>
     <string name="link_dialog_button_cancel">Betal</string>
@@ -69,7 +64,6 @@ Language: ku_TR
     <string name="post_settings_retry_featured_image">Hilxistinê dîsa biceribîne</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Medya tê hilxistin.\nJi kerema xwe bo vebijêrkan, bitepîne.</string>
     <string name="link_open_new_window">Girêdanê di paceyek/hilpekek nû de veke</string>
-    <string name="post_list_search_prompt">Li şandiyên weşandî bigere</string>
     <string name="stats_widget_error_no_access_token">Ji bo rêjejimarên(statîstîk) xwe bibînî, têkeve ajimêra WordPress.comê</string>
     <string name="post_list_search_nothing_found">Li gor lêgerîna te ti şandî nehatin dîtin </string>
     <string name="domains_suggestions_intro_description">Dê mirov di înternetê de te li vir bibînin.</string>
@@ -327,7 +321,6 @@ Language: ku_TR
     <string name="giphy_picker_empty_search_list">Lêgerîna te bi ti medyayan re hevber nebû</string>
     <string name="giphy_picker_initial_empty_text">Ji bo tu GIFan tevlî PirtukxaneyaMedyayê bike, bigere!</string>
     <string name="giphy_picker_search_hint">Li ser Giphyê bigere</string>
-    <string name="photo_picker_giphy">Ji Giphyê Hilbijêre</string>
     <string name="stats_author_views_label">Dîtin</string>
     <string name="stats_author_label">Nivîskar</string>
     <string name="stats_authors">Nivîskar</string>
@@ -528,7 +521,6 @@ Language: ku_TR
     <string name="featured_image_desc">taybetiyên wêneyê</string>
     <string name="button_discard">Biavêje</string>
     <string name="reader_avatar_desc">wêneyê profîlê</string>
-    <string name="reader_blavatar_desc">nîşaneka malperê</string>
     <string name="notification_channel_transient_title">Demkî</string>
     <string name="support_identity_input_dialog_email_label">Epeyam</string>
     <string name="support_identity_input_dialog_enter_email">Ji kerema xwe navnîşan xwe ya epeyamê têxîne</string>
@@ -549,7 +541,6 @@ Language: ku_TR
     <string name="activity_log_rewind_started_snackbar_message">Malpera te bi serkeftî hat vegerandin\nLi şûna %1$s %2$s ê tê vegerandin</string>
     <string name="activity_log_button">Bişkoka çalakiyê ya Tomarên Çalakê</string>
     <string name="plugin_auto_managed">Yên bi otomatikî tê rêvebirin</string>
-    <string name="reader_save_posts_locally_dialog_message">Vê şandiyê tomar bike û kengî kêfa te xwast, ji bo xwendinê dîsa vegere. Tenê di vê amûrê de dikarî bi kar bînî — şandiyên tomarkirî bi amûrên din re nayên hevdemkirin. (Niha! Em li ser wê dixebitin.)</string>
     <string name="reader_save_posts_locally_dialog_title">Şandiyan ji bo Piştre Tomar Bike</string>
     <string name="reader_empty_search_request_failed">Lêgerîn nayê kirin</string>
     <string name="reader_empty_search_title">Ti encam nehatin dîtin</string>
@@ -574,7 +565,6 @@ Language: ku_TR
     <string name="reader_add_bookmark">Tevlî şandiyên tomarkirî bike</string>
     <string name="reader_save_for_later_title">Şandiyên tomarkirî</string>
     <string name="removed">Hat rakirin</string>
-    <string name="tabbar_accessibility_label_write">Şandiya nû. Şandeyike nû binivîse.</string>
     <string name="my_site_icon_content_description">Nîşaneka malperê biguherîne</string>
     <string name="my_site_icon_dialog_cancel_button">Betal</string>
     <string name="my_site_icon_dialog_remove_button">Rake</string>
@@ -605,7 +595,6 @@ Language: ku_TR
     <string name="preference_privacy_settings">Sazkariyên Nihêniyê</string>
     <string name="preference_collect_information">Agahî berhev bike</string>
     <string name="post_submitted">Hat şandin</string>
-    <string name="write_post">Şandî Binivîse</string>
     <string name="login_email_button_signup">Ajimêra te tune ye? %1$sTomar Bibe%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Taybetiya pêvekê pêwîstî bi rewşa baş a malperê dike.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Taybetiya pêvekê pêwîst dike ku endamtiya bingehîn a navperê bi vê bikarhênerê ve girêdayî be.</string>
@@ -647,7 +636,6 @@ Language: ku_TR
     <string name="site_settings_quota_space_unlimited">Ji %1$s bêsînor</string>
     <string name="preview_count">%d pêşdîtin</string>
     <string name="add_count">%d Tevlî Bike</string>
-    <string name="fab_create_desc">biafirîne</string>
     <string name="fab_add_tag_desc">Etîketek Biafirîne</string>
     <string name="navigate_up_desc">here jor</string>
     <string name="notification_settings_switch_desc">Danezan</string>
@@ -1160,7 +1148,6 @@ Language: ku_TR
     <string name="sharing">Parvekirin</string>
     <string name="tabbar_accessibility_label_notifications">Danezan. Danezanên xwe bi rê ve bibe.</string>
     <string name="tabbar_accessibility_label_reader">Xwîner. Ji malperên din naverokan bişopîne.</string>
-    <string name="tabbar_accessibility_label_me">Min. Profîla xwe bibîne û guhertinan bike.</string>
     <string name="tabbar_accessibility_label_my_site">Malpera Min. Malpera xwe bibine, bi rê ve bibe û li rêjejimaran meyzîne.</string>
     <string name="my_site_btn_sharing">Parvekirin</string>
     <string name="button_not_now">Ne aniha</string>
@@ -1655,7 +1642,6 @@ Language: ku_TR
     <string name="auth_required">Bo domandinê dîsa têkevê</string>
     <string name="invalid_verification_code">Koda rastandinê ya nederbasdar</string>
     <string name="verification_code">Koda rastandinê</string>
-    <string name="editor_toast_invalid_path">Rêya pelgeyê nederbasdar e</string>
     <string name="language">Ziman</string>
     <string name="media_fetching">Medya tê stendin…</string>
     <string name="posts_fetching">Şandî tên stendin…</string>
@@ -1734,7 +1720,6 @@ Language: ku_TR
     <string name="reader_hint_add_tag_or_url">Ji bo şopandinê URL an nîşankek binivîse</string>
     <string name="reader_page_followed_blogs">Malperên şopandî</string>
     <string name="reader_page_followed_tags">Nîşankên şopandî</string>
-    <string name="reader_title_subs">Nîşank û Malper</string>
     <string name="reader_title_tag_preview">Nîşankê xwînerê</string>
     <string name="reader_title_blog_preview">Malpera xwînerê</string>
     <string name="ssl_certificate_ask_trust">Eger tu bi pirranî bêyî pirsgirêkek karibî werî girêdan li vê malperê, ev dibe ku were maneya yek dixwaze malpera te teqlîd bike, û tu nikaribî dewam bikî. Dîsa jî dixwazî bi sertîfîkayê bawer bibî?</string>

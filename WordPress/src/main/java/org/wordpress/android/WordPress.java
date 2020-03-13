@@ -44,7 +44,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.analytics.AnalyticsTrackerNosara;
+import org.wordpress.android.analytics.Tracker;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -77,6 +77,7 @@ import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadStarter;
@@ -151,6 +152,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject StatsWidgetUpdaters mStatsWidgetUpdaters;
     @Inject StatsStore mStatsStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
+    @Inject ReaderTracker mReaderTracker;
+
+    // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
+    @Inject Tracker mTracker;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -219,10 +224,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mContext = this;
         long startDate = SystemClock.elapsedRealtime();
 
-        CrashLoggingUtils.startCrashLogging(getContext());
-
         // This call needs be made before accessing any methods in android.webkit package
         setWebViewDataDirectorySuffixOnAndroidP();
+
+        CrashLoggingUtils.startCrashLogging(getContext());
 
         initWellSql();
 
@@ -395,7 +400,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
+        AnalyticsTracker.registerTracker(mTracker);
         AnalyticsTracker.init(getContext());
 
         AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
@@ -832,6 +837,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 properties.put("time_in_app", DateTimeUtils.secondsBetween(now, mApplicationOpenedDate));
                 mApplicationOpenedDate = null;
             }
+            properties.putAll(mReaderTracker.getAnalyticsData());
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
             AnalyticsTracker.endSession(false);
             // Methods onAppComesFromBackground and onAppGoesToBackground are only workarounds to track when the
@@ -855,6 +861,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
          * 2. the app was in background and is now foreground
          */
         public void onAppComesFromBackground() {
+            mReaderTracker.setupTrackers();
             AppLog.i(T.UTILS, "App comes from background");
             if (!sAppIsInTheBackground) {
                 return;

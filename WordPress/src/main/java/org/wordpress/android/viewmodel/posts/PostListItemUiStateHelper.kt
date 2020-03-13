@@ -245,8 +245,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         if (labels.isEmpty()) {
             if (isLocalDraft) {
                 labels.add(UiStringRes(R.string.local_draft))
-            }
-            if (isLocallyChanged) {
+            } else if (isLocallyChanged) {
                 labels.add(UiStringRes(R.string.local_changes))
             }
             if (postStatus == PRIVATE) {
