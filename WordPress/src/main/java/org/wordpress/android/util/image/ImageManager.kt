@@ -163,36 +163,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
         val context = imageView.context
         if (!context.isAvailable()) return
         GlideApp.with(context)
-                .load(imgUrl)
-                .addFallback(imageType)
-                .addPlaceholder(imageType)
-                .addThumbnail(context, thumbnailUrl, requestListener)
-                .applyScaleType(scaleType)
-                .attachRequestListener(requestListener)
-                .into(imageView)
-                .clearOnDetach()
-    }
-
-    /**
-     * Loads an image from the "imgUri" into the ImageView. Adds a placeholder and an error placeholder depending
-     * on the ImageType. Attaches the ResultListener so the client can manually show/hide progress and error
-     * views or add a PhotoViewAttacher(adds support for pinch-to-zoom gesture). Optionally adds
-     * thumbnailUrl - mostly used for loading low resolution images.
-     *
-     * Unless you necessarily need to react on the request result, preferred way is to use one of the load(...) methods.
-     */
-    fun loadWithResultListener(
-        imageView: ImageView,
-        imageType: ImageType,
-        imgUri: Uri,
-        scaleType: ScaleType = CENTER,
-        thumbnailUrl: String? = null,
-        requestListener: RequestListener<Drawable>
-    ) {
-        val context = imageView.context
-        if (!context.isAvailable()) return
-        GlideApp.with(context)
-                .load(imgUri)
+                .load(Uri.parse(imgUrl))
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
                 .addThumbnail(context, thumbnailUrl, requestListener)
