@@ -108,6 +108,15 @@ class SiteCreationDomainsViewModelTest {
     }
 
     /**
+     * Verifies the UI state for when the VM is started with an empty site title.
+     */
+    @Test
+    fun verifyEmptyTitleQueryUiState() = testWithSuccessResponse {
+        viewModel.start(SEGMENT_ID)
+        verifyInitialContentUiState(requireNotNull(viewModel.uiState.value), showProgress = false)
+    }
+
+    /**
      * Verifies the initial UI state for when the user enters a non-empty query.
      */
     @Test
