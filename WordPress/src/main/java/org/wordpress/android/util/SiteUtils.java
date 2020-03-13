@@ -268,6 +268,10 @@ public class SiteUtils {
                 if (index > 0) {
                     jetpackVersion = jetpackVersion.substring(0, index);
                 }
+                // Jetpack version is false on self-hosted sites
+                if (jetpackVersion.equals("false")) {
+                    return false;
+                }
                 Version siteJetpackVersion = new Version(jetpackVersion);
                 Version minVersion = new Version(limitVersion);
                 return siteJetpackVersion.compareTo(minVersion) >= 0;
