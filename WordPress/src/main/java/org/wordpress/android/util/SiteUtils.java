@@ -279,7 +279,7 @@ public class SiteUtils {
                 String errorStr = "Invalid site jetpack version " + jetpackVersion + ", expected " + limitVersion;
                 AppLog.e(AppLog.T.UTILS, errorStr, e);
                 CrashLoggingUtils.logException(e, AppLog.T.UTILS, errorStr);
-                return true;
+                return false;
             }
         }
         return false;
