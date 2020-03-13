@@ -547,6 +547,12 @@ public class EditPostActivity extends AppCompatActivity implements
         setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
+        setupViewPager();
+
+        ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+    }
+
+    private void setupViewPager() {
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -574,8 +580,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         });
-
-        ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
     private void startObserving() {
