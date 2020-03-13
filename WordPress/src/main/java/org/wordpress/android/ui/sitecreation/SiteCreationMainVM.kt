@@ -14,7 +14,6 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
@@ -122,10 +121,6 @@ class SiteCreationMainVM @Inject constructor(
         when (wizardStep) {
             SEGMENTS -> siteCreationState.segmentId?.let {
                 siteCreationState = siteCreationState.copy(segmentId = null) }
-            SITE_INFO -> {
-                siteCreationState.siteTitle?.let { siteCreationState = siteCreationState.copy(siteTitle = null) }
-                siteCreationState.siteTagLine?.let { siteCreationState = siteCreationState.copy(siteTagLine = null) }
-            }
             DOMAINS -> siteCreationState.domain?.let {
                 siteCreationState = siteCreationState.copy(domain = null) }
             SITE_PREVIEW -> {} // intentionally left empty

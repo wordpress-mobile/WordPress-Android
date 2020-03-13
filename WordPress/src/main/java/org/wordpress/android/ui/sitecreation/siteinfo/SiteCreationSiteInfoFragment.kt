@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.textfield.TextInputEditText
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
@@ -55,7 +54,6 @@ class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         nonNullActivity = requireNotNull(activity)
-        (nonNullActivity.application as WordPress).component().inject(this)
     }
 
     @LayoutRes
