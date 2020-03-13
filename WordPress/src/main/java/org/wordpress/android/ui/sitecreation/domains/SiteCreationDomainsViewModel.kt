@@ -60,7 +60,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
         get() = bgDispatcher + job
     private var isStarted = false
     private var segmentId by Delegates.notNull<Long>()
-    private var siteTitle: String? = null
 
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
@@ -91,18 +90,14 @@ class SiteCreationDomainsViewModel @Inject constructor(
         dispatcher.unregister(fetchDomainsUseCase)
     }
 
-    fun start(siteTitle: String?, segmentId: Long) {
+    fun start(segmentId: Long) {
         if (isStarted) {
             return
         }
         this.segmentId = segmentId
-        this.siteTitle = siteTitle
         isStarted = true
         tracker.trackDomainsAccessed()
-        // isNullOrBlank not smart-casting for some reason..
-        if (siteTitle == null || siteTitle.isBlank()) {
-            resetUiState()
-        }
+        resetUiState()
     }
 
     fun createSiteBtnClicked() {

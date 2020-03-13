@@ -140,7 +140,6 @@ class SiteCreationActivity : AppCompatActivity(),
             SEGMENTS -> SiteCreationSegmentsFragment.newInstance(screenTitle)
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle,
-                    target.wizardState.siteTitle,
                     target.wizardState.segmentId!!
             )
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
