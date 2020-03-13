@@ -2,13 +2,13 @@ package org.wordpress.android.fluxc.network.rest.wpapi
 
 import com.android.volley.Request.Method
 import com.android.volley.Response.Listener
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder.Response.Success
 import javax.inject.Inject
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class WPAPIGsonRequestBuilder @Inject constructor() {
     suspend fun <T> syncGetRequest(
@@ -19,12 +19,15 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
         clazz: Class<T>,
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME
-    ) = suspendCoroutine<Response<T>> { cont ->
+    ) = suspendCancellableCoroutine<Response<T>> { cont ->
         val request = WPAPIGsonRequest(Method.GET, url, params, body, clazz, Listener {
             response -> cont.resume(Success(response))
         }, BaseErrorListener {
             error -> cont.resume(Response.Error(error))
         })
+        cont.invokeOnCancellation {
+            request.cancel()
+        }
         if (enableCaching) {
             request.enableCaching(cacheTimeToLive)
         }

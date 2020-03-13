@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel
 
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -11,7 +12,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunne
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class JetpackTunnelGsonRequestBuilder
@@ -60,7 +60,7 @@ class JetpackTunnelGsonRequestBuilder
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
         forced: Boolean = false
-    ) = suspendCoroutine<JetpackResponse<T>> { cont ->
+    ) = suspendCancellableCoroutine<JetpackResponse<T>> { cont ->
         val request = JetpackTunnelGsonRequest.buildGetRequest<T>(url, site.siteId, params, clazz, {
             cont.resume(JetpackSuccess(it))
         }, WPComErrorListener {
@@ -68,6 +68,9 @@ class JetpackTunnelGsonRequestBuilder
         }, {
             request: WPComGsonRequest<*> -> restClient.add(request)
         })
+        cont.invokeOnCancellation {
+            request?.cancel()
+        }
         if (enableCaching) {
             request?.enableCaching(cacheTimeToLive)
         }
@@ -109,12 +112,15 @@ class JetpackTunnelGsonRequestBuilder
         url: String,
         body: Map<String, Any>,
         clazz: Class<T>
-    ) = suspendCoroutine<JetpackResponse<T>> { cont ->
+    ) = suspendCancellableCoroutine<JetpackResponse<T>> { cont ->
         val request = JetpackTunnelGsonRequest.buildPostRequest<T>(url, site.siteId, body, clazz, {
             cont.resume(JetpackSuccess(it))
         }, WPComErrorListener {
             cont.resume(JetpackError(it))
         })
+        cont.invokeOnCancellation {
+            request?.cancel()
+        }
         restClient.add(request)
     }
 
