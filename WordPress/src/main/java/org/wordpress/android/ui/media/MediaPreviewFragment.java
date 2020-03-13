@@ -278,14 +278,14 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         }
 
         mImageView.setVisibility(View.VISIBLE);
-        if ((mSite == null || SiteUtils.isPhotonCapable(mSite)) && !UrlUtils.checkIfContentUri(mediaUri)) {
+        if ((mSite == null || SiteUtils.isPhotonCapable(mSite)) && !UrlUtils.isContentUri(mediaUri)) {
             int maxWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getActivity()),
                     DisplayUtils.getDisplayPixelHeight(getActivity()));
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, maxWidth, 0);
         }
         showProgress(true);
 
-        if (UrlUtils.checkIfContentUri(mediaUri)) {
+        if (UrlUtils.isContentUri(mediaUri)) {
             mImageManager
                     .loadWithResultListener(mImageView, ImageType.IMAGE, Uri.parse(mediaUri), ScaleType.CENTER, null,
                             new RequestListener<Drawable>() {

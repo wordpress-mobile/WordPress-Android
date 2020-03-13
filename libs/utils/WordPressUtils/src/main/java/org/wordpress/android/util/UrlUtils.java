@@ -49,7 +49,7 @@ public class UrlUtils {
         return "";
     }
 
-    public static boolean checkIfContentUri(String uri) {
+    public static boolean isContentUri(String uri) {
         return "content".equals(Uri.parse(uri).getScheme());
     }
 
