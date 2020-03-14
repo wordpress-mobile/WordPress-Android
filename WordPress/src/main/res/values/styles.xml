@@ -15,7 +15,7 @@
         <item name="colorOnBackground">@android:color/black</item>
         <item name="colorOnSurface">@android:color/black</item>
         <item name="colorOnError">@android:color/white</item>
-        <item name="colorAccent">?attr/colorSecondary</item>
+        <item name="colorAccent">?attr/colorPrimary</item>
 
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorControlActivated">@color/primary_30</item>
@@ -26,6 +26,7 @@
 
         <!-- we can remove it after moving away from Bridget version of theme -->
         <item name="materialCardViewStyle"> @style/Widget.MaterialComponents.CardView</item>
+        <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
 
         <item name="wpColorText">@color/neutral_70</item>
         <item name="wpColorTextSubtle">@color/neutral</item>
@@ -85,6 +86,10 @@
     <style name="WordPress.NoActionBar.DarkNavbar" parent="WordPress.NoActionBar">
         <item name="android:windowLightNavigationBar">false</item>
         <item name="android:navigationBarColor">?attr/wpColorAppBar</item>
+    </style>
+
+    <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:backgroundTint">?attr/colorSecondary</item>
     </style>
 
     <style name="NumberPickerTheme" parent="WordPress">
