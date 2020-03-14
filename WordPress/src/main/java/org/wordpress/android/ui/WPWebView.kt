@@ -9,9 +9,8 @@ import androidx.appcompat.view.ContextThemeWrapper
 import org.wordpress.android.R
 
 // https://stackoverflow.com/questions/58028821/webview-crash-on-android-5-5-1-api-21-22-resourcesnotfoundexception-string-r
-open class WPWebView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : WebView(context.getModifiedContextForOlderAPIs(), attrs, defStyleAttr) {
+open class WPWebView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+        WebView(context.getModifiedContextForOlderAPIs(), attrs, defStyleAttr) {
     init {
         isFocusable = true
         isFocusableInTouchMode = true
