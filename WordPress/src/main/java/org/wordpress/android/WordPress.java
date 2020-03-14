@@ -215,11 +215,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleManager.setLocale(base));
-    }
-
-    @Override
     public void onCreate() {
         super.onCreate();
         mContext = this;
