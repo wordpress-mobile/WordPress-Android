@@ -208,7 +208,7 @@ public class WPMainActivity extends AppCompatActivity implements
         boolean onActivityBackPressed();
     }
 
-     @Override
+    @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {
         super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }
