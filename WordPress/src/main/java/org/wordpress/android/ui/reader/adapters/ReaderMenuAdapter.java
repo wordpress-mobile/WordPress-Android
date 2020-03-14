@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.ColorUtils;
@@ -119,7 +119,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
         }
 
         holder.mText.setText(textRes);
-        holder.mText.setTextColor(ContextCompat.getColor(convertView.getContext(), textColorRes));
+        holder.mText.setTextColor(AppCompatResources.getColorStateList(convertView.getContext(), textColorRes));
         ColorUtils.INSTANCE.setImageResourceWithTint(holder.mIcon, iconRes, iconColorRes);
 
         return convertView;
