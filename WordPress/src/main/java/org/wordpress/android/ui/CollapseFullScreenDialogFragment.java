@@ -19,9 +19,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -277,7 +279,9 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
         if (!mAction.isEmpty()) {
             Menu menu = toolbar.getMenu();
             mMenuAction = menu.add(0, ID_ACTION, 0, this.mAction);
-            mMenuAction.setIcon(R.drawable.ic_send_accent_neutral_30_24dp);
+            mMenuAction.setIcon(R.drawable.ic_send_white_24dp);
+            MenuItemCompat.setIconTintList(mMenuAction,
+                    AppCompatResources.getColorStateList(view.getContext(), R.color.accent_neutral_30_selector));
             mMenuAction.setEnabled(false);
             mMenuAction.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             mMenuAction.setOnMenuItemClickListener(
