@@ -16,6 +16,7 @@ import android.webkit.WebViewClient;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.ui.WPWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -31,7 +32,7 @@ import javax.inject.Inject;
  * WebView descendant used by ReaderPostDetailFragment - handles
  * displaying fullscreen video and detecting url/image clicks
  */
-public class ReaderWebView extends WebView {
+public class ReaderWebView extends WPWebView {
     public interface ReaderWebViewUrlClickListener {
         @SuppressWarnings("SameReturnValue")
         boolean onUrlClick(String url);

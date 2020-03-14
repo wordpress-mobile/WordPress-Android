@@ -42,7 +42,7 @@
             </FrameLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <WebView
+        <org.wordpress.android.ui.WPWebView
             android:id="@+id/sitePreviewWebView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
