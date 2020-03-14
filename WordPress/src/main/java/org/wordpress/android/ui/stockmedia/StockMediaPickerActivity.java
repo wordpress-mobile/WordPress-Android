@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.stockmedia;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
@@ -218,8 +218,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     }
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }
 
     @Override

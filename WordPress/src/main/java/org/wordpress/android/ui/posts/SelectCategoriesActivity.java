@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.posts;
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.LongSparseArray;
 import android.util.SparseBooleanArray;
@@ -68,8 +68,8 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     @Inject Dispatcher mDispatcher;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }
 
     @Override

@@ -3,8 +3,8 @@ package org.wordpress.android.ui.main;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -93,8 +93,8 @@ public class SitePickerActivity extends AppCompatActivity
     @Inject StatsStore mStatsStore;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }
 
     @Override

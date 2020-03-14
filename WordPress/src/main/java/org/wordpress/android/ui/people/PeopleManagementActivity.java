@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.people;
 
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -93,8 +93,8 @@ public class PeopleManagementActivity extends AppCompatActivity
     private SiteModel mSite;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }
 
     @Override

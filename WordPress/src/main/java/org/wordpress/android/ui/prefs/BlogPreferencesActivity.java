@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.FragmentManager;
-import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -42,8 +42,8 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     @Inject Dispatcher mDispatcher;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }
 
     @Override

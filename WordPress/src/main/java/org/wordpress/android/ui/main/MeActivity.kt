@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.main
 
-import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -12,8 +12,8 @@ import org.wordpress.android.ui.prefs.AppSettingsFragment.LANGUAGE_CHANGED
 import org.wordpress.android.util.LocaleManager
 
 class MeActivity : AppCompatActivity() {
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase))
+    override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(baseContext, overrideConfiguration))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

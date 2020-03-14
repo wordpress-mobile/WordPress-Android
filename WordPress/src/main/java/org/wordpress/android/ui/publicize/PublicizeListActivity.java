@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.publicize;
 
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
@@ -51,8 +51,8 @@ public class PublicizeListActivity extends AppCompatActivity
     @Inject SiteStore mSiteStore;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }
 
     @Override

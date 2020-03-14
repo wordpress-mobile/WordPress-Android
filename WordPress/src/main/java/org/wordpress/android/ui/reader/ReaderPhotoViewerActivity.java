@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.reader;
 
-import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -49,8 +49,8 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
     private final Handler mFadeHandler = new Handler();
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }
 
     @Override

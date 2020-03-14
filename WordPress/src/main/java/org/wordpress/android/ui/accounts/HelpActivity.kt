@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -41,8 +42,8 @@ class HelpActivity : AppCompatActivity() {
         intent.extras?.get(WordPress.SITE) as SiteModel?
     }
 
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase))
+    override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(baseContext, overrideConfiguration))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
