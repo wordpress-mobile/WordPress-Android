@@ -9,17 +9,13 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.OnSkipClickedListener
-import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -29,12 +25,8 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
     private var segmentId by Delegates.notNull<Long>()
     private lateinit var viewModel: SiteCreationVerticalsViewModel
 
-    private lateinit var fullscreenErrorLayout: ViewGroup
-    private lateinit var fullscreenProgressLayout: ViewGroup
     private lateinit var contentLayout: ViewGroup
-    private lateinit var errorLayout: ViewGroup
     private lateinit var skipButton: Button
-    private lateinit var searchInputWithHeader: SearchInputWithHeader
 
     private lateinit var verticalsScreenListener: VerticalsScreenListener
     private lateinit var helpClickedListener: OnHelpClickedListener
@@ -65,17 +57,8 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        fullscreenErrorLayout = rootView.findViewById(R.id.error_layout)
-        fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
 
-        errorLayout = rootView.findViewById(R.id.error_layout)
-        searchInputWithHeader = SearchInputWithHeader(
-                uiHelpers = uiHelpers,
-                rootView = rootView,
-                onClear = { viewModel.onClearTextBtnClicked() }
-        )
-        initRetryButton(rootView)
         initSkipButton(rootView)
         initViewModel()
     }
@@ -90,18 +73,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
         }
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
-        // is called when the system sets the restored value to the EditText which results in an unnecessary request
-        searchInputWithHeader.onTextChanged = { viewModel.updateQuery(it) }
-    }
-
-    private fun initRetryButton(rootView: ViewGroup) {
-        val retryBtn = rootView.findViewById<Button>(R.id.error_retry)
-        retryBtn.setOnClickListener { viewModel.onFetchSegmentsPromptRetry() }
-    }
-
     private fun initSkipButton(rootView: ViewGroup) {
         skipButton = rootView.findViewById(R.id.btn_skip)
         skipButton.setOnClickListener { viewModel.onSkipStepBtnClicked() }
@@ -113,20 +84,12 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
 
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
-                uiHelpers.updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
                 uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
-                uiHelpers.updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
 
                 when (uiState) {
                     is VerticalsContentUiState -> updateContentLayout(uiState)
-                    is VerticalsFullscreenProgressUiState -> { // no action
-                    }
-                    is VerticalsFullscreenErrorUiState -> updateErrorLayout(errorLayout, uiState)
                 }
             }
-        })
-        viewModel.clearBtnClicked.observe(this, Observer {
-            searchInputWithHeader.setInputText("")
         })
 
         viewModel.verticalSelected.observe(this, Observer { verticalId ->
@@ -141,13 +104,6 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
 
     private fun updateContentLayout(uiState: VerticalsContentUiState) {
         uiHelpers.updateVisibility(skipButton, uiState.showSkipButton)
-        searchInputWithHeader.updateHeader(nonNullActivity, uiState.headerUiState)
-        searchInputWithHeader.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
-    }
-
-    private fun updateErrorLayout(errorLayout: ViewGroup, errorUiStateState: VerticalsFullscreenErrorUiState) {
-        uiHelpers.setTextOrHide(errorLayout.error_title, errorUiStateState.titleResId)
-        uiHelpers.setTextOrHide(errorLayout.error_subtitle, errorUiStateState.subtitleResId)
     }
 
     override fun onHelp() {
