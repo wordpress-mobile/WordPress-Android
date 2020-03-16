@@ -423,8 +423,8 @@
     <string name="dlg_trashing_comments">Sending to trash</string>
     <string name="dlg_deleting_comments">Deleting comments</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
-    <string name="trash_yes">Trash</string>
-    <string name="trash_no">Don\'t trash</string>
+    <string name="dlg_confirm_action_trash">Trash</string>
+    <string name="dlg_cancel_action_dont_trash">Don\'t trash</string>
 
     <!-- comment actions -->
     <string name="reply">Reply</string>
@@ -903,7 +903,8 @@
     <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
     <string name="stats_management_try_it_now">Try it now</string>
     <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
-    <string name="stats_management_edit">Edit</string>
+    <string name="stats_management_add_new_stats_card">Add new stats card</string>
+    <string name="stats_management_screen_title">Add New Card</string>
     <string name="stats_management_new">New</string>
 
     <!-- Stats refreshed widgets -->
@@ -1041,8 +1042,10 @@
     <string name="stats_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
-    <string name="stats_insights_add_insights_header">Add Insights</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customize.</string>
+
+    <string name="stats_insights_management_general">General</string>
+    <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
+    <string name="stats_insights_management_activity">Activity</string>
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
@@ -1135,10 +1138,10 @@
     <string name="notifications_label_new_notifications">New notifications</string>
     <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
     <string name="notifications_tab_title_all">All</string>
-    <string name="notifications_tab_title_unread">Unread</string>
-    <string name="notifications_tab_title_comments" translatable="false">@string/comments</string>
-    <string name="notifications_tab_title_follows" translatable="false">@string/follows</string>
-    <string name="notifications_tab_title_likes" translatable="false">@string/stats_likes</string>
+    <string name="notifications_tab_title_unread_notifications">Unread</string>
+    <string name="notifications_tab_title_comments">Comments</string>
+    <string name="notifications_tab_title_follows">Follows</string>
+    <string name="notifications_tab_title_likes">Likes</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
@@ -2588,10 +2591,10 @@
     <string name="post_list_author">Post author</string>
     <string name="post_list_author_me">Me</string>
     <string name="post_list_author_everyone">Everyone</string>
-    <string name="post_list_published">Published</string>
-    <string name="post_list_drafts">Drafts</string>
-    <string name="post_list_scheduled">Scheduled</string>
-    <string name="post_list_trashed">Trashed</string>
+    <string name="post_list_tab_published_posts">Published</string>
+    <string name="post_list_tab_drafts">Drafts</string>
+    <string name="post_list_tab_scheduled_posts">Scheduled</string>
+    <string name="post_list_tab_trashed_posts">Trashed</string>
     <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 

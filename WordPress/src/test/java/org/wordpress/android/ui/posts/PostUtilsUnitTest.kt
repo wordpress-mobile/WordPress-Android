@@ -95,6 +95,27 @@ class PostUtilsUnitTest {
         assertThat(post.status).isEqualTo(PostStatus.PRIVATE.toString())
     }
 
+    @Test
+    fun `isMediaInGutenberg returns true when the image is found in the post content`() {
+        val imgId = "999"
+        val postContent = "<!-- wp:image {\"id\":$imgId} --> ...... <!-- /wp:image -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, imgId)).isTrue()
+    }
+
+    @Test
+    fun `isMediaInGutenberg returns false when the image with provided id is NOT found in the post content`() {
+        val imgId = "123"
+        val postContent = "<!-- wp:image {\"id\":$imgId} --> ...... <!-- /wp:image -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "999")).isFalse()
+    }
+
+    @Test
+    fun `isMediaInGutenberg works when the image tag has multiple attributes`() {
+        val imgId = "999"
+        val postContent = "<!-- wp:image {\"id\":$imgId,\"sizeSlug\":\"large\"} --> ...... <!-- /wp:image -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, imgId)).isTrue()
+    }
+
     private companion object Fixtures {
         fun invokePreparePostForPublish(
             hasCapabilityPublishPosts: Boolean = true,
