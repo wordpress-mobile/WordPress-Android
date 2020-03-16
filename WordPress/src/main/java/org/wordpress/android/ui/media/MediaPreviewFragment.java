@@ -286,7 +286,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         showProgress(true);
 
         mImageManager
-                .loadWithResultListener(mImageView, ImageType.IMAGE, mediaUri, ScaleType.CENTER, null,
+                .loadWithResultListener(mImageView, ImageType.IMAGE, Uri.parse(mediaUri), ScaleType.CENTER, null,
                         new RequestListener<Drawable>() {
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
