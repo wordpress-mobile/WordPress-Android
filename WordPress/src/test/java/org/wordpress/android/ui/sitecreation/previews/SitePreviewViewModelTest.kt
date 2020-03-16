@@ -47,7 +47,7 @@ private const val DOMAIN = ".wordpress.com"
 private const val URL = "$SUB_DOMAIN$DOMAIN"
 private const val REMOTE_SITE_ID = 1L
 private const val LOCAL_SITE_ID = 2
-private val SITE_CREATION_STATE = SiteCreationState(1, null, null, null, URL)
+private val SITE_CREATION_STATE = SiteCreationState(1, null, null, URL)
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
