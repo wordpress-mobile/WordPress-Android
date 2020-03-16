@@ -477,9 +477,7 @@ class PagesViewModel
     private fun publishPageNow(remoteId: Long) {
         _publishAction.value = pageMap[remoteId]
         launch(uiDispatcher) {
-            withContext(defaultDispatcher) {
-                delay(SCROLL_DELAY)
-            }
+            delay(SCROLL_DELAY)
             pageMap[remoteId]?.let {
                 _scrollToPage.postValue(it)
             }
