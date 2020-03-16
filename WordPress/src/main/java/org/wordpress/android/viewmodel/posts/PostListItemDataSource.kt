@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.PostSummary
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
@@ -32,10 +31,7 @@ sealed class PostListItemIdentifier {
  *
  * 1. Lists managed by `ListStore` works by first fetching a smaller version of the models and then fetching the
  * actual model if necessary.
- * 2. During [getItemIdentifiers] the actual models might not be available and should not be relied upon. For post list
- * specifically, we have [PostSummary] that's always available. If a field that's not in the [PostSummary] is necessary
- * in [getItemIdentifiers], one should add that to [PostSummary] in FluxC and make sure that field is fetched
- * and updated in [PostStore].
+ * 2. During [getItemIdentifiers] the actual models might not be available and should not be relied upon.
  * 3. In [getItemsAndFetchIfNecessary], if the actual model is not available, this class is responsible for fetching
  * that model. For this post list specifically, when the actual model is fetched the list will update itself.
  *
