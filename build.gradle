@@ -96,7 +96,7 @@ buildScan {
 
 ext {
     daggerVersion = '2.22.1'
-    fluxCVersion = 'c2adfce26b4bcd01278253c5589d85973bc9dd9d'
+    fluxCVersion = '1.6.7'
 }
 
 // Onboarding and dev env setup tasks
