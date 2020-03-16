@@ -1,9 +1,9 @@
 14.5
 -----
+* Removes sections from post search results
  
 14.4
 -----
-* Removes sections from post search results
 * Fix an issue where image is sometimes uploaded with a path to local storage
  
 14.3
