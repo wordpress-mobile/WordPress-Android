@@ -64,17 +64,19 @@ class CropFragment : Fragment(), UCropFragmentCallback {
             doneMenu?.isVisible = uiState.doneMenuVisible
         })
 
-        viewModel.cropAndSaveImageState.observe(this, Observer { state ->
-            when (state) {
-                is ImageCropAndSaveStartState -> {
-                    val thirdPartyCropFragment = childFragmentManager
-                            .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
-                    thirdPartyCropFragment?.cropAndSaveImage()
-                }
-                is ImageCropAndSaveFailedState -> {
-                    showCropError(state.errorMsg, state.errorResId)
-                }
-                else -> { // Do nothing
+        viewModel.cropAndSaveImageStateEvent.observe(this, Observer { stateEvent ->
+            stateEvent?.getContentIfNotHandled()?.let { state ->
+                when (state) {
+                    is ImageCropAndSaveStartState -> {
+                        val thirdPartyCropFragment = childFragmentManager
+                                .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+                        thirdPartyCropFragment?.cropAndSaveImage()
+                    }
+                    is ImageCropAndSaveFailedState -> {
+                        showCropError(state.errorMsg, state.errorResId)
+                    }
+                    else -> { // Do nothing
+                    }
                 }
             }
         })

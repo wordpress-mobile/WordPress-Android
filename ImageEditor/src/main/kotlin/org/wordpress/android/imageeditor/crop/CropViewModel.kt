@@ -17,14 +17,15 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveStat
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveSuccessState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
+import org.wordpress.android.imageeditor.viewmodel.Event
 import java.io.File
 
 class CropViewModel : ViewModel() {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
-    private val _cropAndSaveImageState = MutableLiveData<ImageCropAndSaveState>()
-    val cropAndSaveImageState: LiveData<ImageCropAndSaveState> = _cropAndSaveImageState
+    private val _cropAndSaveImageStateEvent = MutableLiveData<Event<ImageCropAndSaveState>>()
+    val cropAndSaveImageStateEvent: LiveData<Event<ImageCropAndSaveState>> = _cropAndSaveImageStateEvent
 
     private val _navigateBackWithCropResult = MutableLiveData<CropResult>()
     val navigateBackWithCropResult: LiveData<CropResult> = _navigateBackWithCropResult
@@ -105,7 +106,7 @@ class CropViewModel : ViewModel() {
     }
 
     private fun updateImageCropAndSaveState(state: ImageCropAndSaveState) {
-        _cropAndSaveImageState.value = state
+        _cropAndSaveImageStateEvent.value = Event(state)
     }
 
     private fun createCropResult(cropResultCode: Int, cropData: Intent) = CropResult(cropResultCode, cropData)
