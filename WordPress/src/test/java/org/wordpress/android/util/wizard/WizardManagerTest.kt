@@ -14,8 +14,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.sitecreation.SiteCreationStep
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 
 private val STEPS = listOf(SEGMENTS, DOMAINS, SITE_PREVIEW)
 private val LAST_STEP_INDEX = STEPS.size - 1
@@ -84,7 +84,7 @@ class WizardManagerTest {
 
     @Test(expected = IllegalStateException::class)
     fun `exception thrown on getting position of unknown step`() {
-        manager.stepPosition(VERTICALS)
+        manager.stepPosition(SITE_INFO)
     }
 
     private fun createWizardManager(initialStepIndex: Int): WizardManager<SiteCreationStep> {

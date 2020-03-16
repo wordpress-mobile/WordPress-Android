@@ -24,7 +24,6 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
@@ -39,8 +38,6 @@ import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.siteinfo.SiteCreationSiteInfoFragment
 import org.wordpress.android.ui.sitecreation.siteinfo.SiteInfoScreenListener
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsFragment
-import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -48,7 +45,6 @@ import javax.inject.Inject
 
 class SiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
-        VerticalsScreenListener,
         DomainsScreenListener,
         SiteInfoScreenListener,
         SitePreviewScreenListener,
@@ -122,10 +118,6 @@ class SiteCreationActivity : AppCompatActivity(),
         mainViewModel.onSegmentSelected(segmentId)
     }
 
-    override fun onVerticalSelected(verticalId: String) {
-        mainViewModel.onVerticalsScreenFinished(verticalId)
-    }
-
     override fun onDomainSelected(domain: String) {
         mainViewModel.onDomainsScreenFinished(domain)
     }
@@ -154,11 +146,6 @@ class SiteCreationActivity : AppCompatActivity(),
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
             SEGMENTS -> SiteCreationSegmentsFragment.newInstance(screenTitle)
-            VERTICALS ->
-                SiteCreationVerticalsFragment.newInstance(
-                        screenTitle,
-                        target.wizardState.segmentId!!
-                )
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle,
                     target.wizardState.siteTitle,
