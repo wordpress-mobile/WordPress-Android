@@ -24,7 +24,7 @@
         <item name="tabStyle">@style/WordPress.TabLayout</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
 
-        <!-- we can remove it after moving away from Bridget version of theme -->
+        <!-- we can remove it after moving away from Bridge version of theme -->
         <item name="materialCardViewStyle"> @style/Widget.MaterialComponents.CardView</item>
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
 
