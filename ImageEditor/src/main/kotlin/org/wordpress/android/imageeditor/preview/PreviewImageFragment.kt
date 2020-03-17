@@ -14,12 +14,10 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_preview_image.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
-import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
-import org.wordpress.android.imageeditor.utils.CropUtil
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
@@ -51,7 +49,7 @@ class PreviewImageFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
         setupObservers()
-        viewModel.onCreateView(lowResImageUrl, highResImageUrl, requireContext().cacheDir)
+        viewModel.onCreateView(lowResImageUrl, highResImageUrl)
     }
 
     private fun setupObservers() {
@@ -68,8 +66,8 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        viewModel.navigateToCropScreenWithFilesInfo.observe(this, Observer { filesInfo ->
-            navigateToCropScreenWithFilesInfo(filesInfo)
+        viewModel.navigateToCropScreenWithInputFilePath.observe(this, Observer { filePath ->
+            navigateToCropScreenWithInputFilePath(filePath)
         })
     }
 
@@ -106,10 +104,9 @@ class PreviewImageFragment : Fragment() {
         )
     }
 
-    private fun navigateToCropScreenWithFilesInfo(filesInfo: Pair<File, File>) {
+    private fun navigateToCropScreenWithInputFilePath(inputFilePath: String) {
         findNavController().navigate(
-            R.id.action_previewFragment_to_cropFragment,
-            CropUtil.getCropInfoBundleWithFilesInfo(filesInfo)
+            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath)
         )
     }
 }

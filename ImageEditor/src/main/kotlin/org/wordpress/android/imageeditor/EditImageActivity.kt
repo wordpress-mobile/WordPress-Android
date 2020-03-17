@@ -8,10 +8,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.navigateUp
-import com.yalantis.ucrop.UCropFragment.UCropResult
-import com.yalantis.ucrop.UCropFragmentCallback
 
-class EditImageActivity : AppCompatActivity(), UCropFragmentCallback {
+class EditImageActivity : AppCompatActivity() {
     private lateinit var hostFragment: NavHostFragment
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -57,8 +55,4 @@ class EditImageActivity : AppCompatActivity(), UCropFragmentCallback {
             navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
         }
     }
-
-    override fun onCropFinish(result: UCropResult?) { }
-
-    override fun loadingProgress(showLoader: Boolean) { }
 }

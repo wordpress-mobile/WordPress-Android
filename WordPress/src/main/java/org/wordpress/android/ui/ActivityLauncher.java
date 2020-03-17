@@ -928,6 +928,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, EditImageActivity.class);
         intent.putExtra(ARG_LOW_RES_IMAGE_URL, loResImageUrl);
         intent.putExtra(ARG_HIGH_RES_IMAGE_URL, hiResImageUrl);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, RequestCodes.IMAGE_EDITOR_EDIT_IMAGE);
     }
 }

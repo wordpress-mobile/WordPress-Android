@@ -208,6 +208,9 @@ dependencies {
 
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
         exclude group: 'com.squareup.okhttp3'
+        exclude group: 'androidx.core', module: 'core'
+        exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
+        exclude group: 'androidx.appcompat', module: 'appcompat'
     }
 
     implementation 'com.github.bumptech.glide:glide:4.10.0'
