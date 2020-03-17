@@ -34,7 +34,9 @@ sealed class InsightsManagementViewHolder(
             if (isTopHeader) {
                 lp.topMargin = itemView.context.resources.getDimensionPixelOffset(R.dimen.margin_extra_large)
             } else {
-                lp.topMargin = itemView.context.resources.getDimensionPixelOffset(R.dimen.margin_extra_extra_medium_large)
+                lp.topMargin = itemView.context.resources.getDimensionPixelOffset(
+                        R.dimen.margin_extra_extra_medium_large
+                )
             }
             itemView.layoutParams = lp
         }
