@@ -70,7 +70,11 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                     is ImageCropAndSaveStartState -> {
                         val thirdPartyCropFragment = childFragmentManager
                                 .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
-                        thirdPartyCropFragment?.cropAndSaveImage()
+                        thirdPartyCropFragment?.let {
+                            if (thirdPartyCropFragment.isAdded) {
+                                thirdPartyCropFragment.cropAndSaveImage()
+                            }
+                        }
                     }
                     is ImageCropAndSaveFailedState -> {
                         showCropError(state.errorMsg, state.errorResId)
@@ -100,11 +104,16 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
-        val thirdPartyCropFragment = UCropFragment.newInstance(bundle)
-        childFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
-                .disallowAddToBackStack()
-                .commit()
+        var thirdPartyCropFragment = childFragmentManager
+                .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+
+        if (thirdPartyCropFragment == null || !thirdPartyCropFragment.isAdded) {
+            thirdPartyCropFragment = UCropFragment.newInstance(bundle)
+            childFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
+                    .disallowAddToBackStack()
+                    .commit()
+        }
     }
 
     override fun loadingProgress(loading: Boolean) {
