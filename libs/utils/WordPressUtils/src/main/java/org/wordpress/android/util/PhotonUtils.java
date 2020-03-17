@@ -98,7 +98,7 @@ public class PhotonUtils {
 
         // must use https for https image urls
         if (UrlUtils.isHttps(imageUrl)) {
-            return "https://i0.wp.com/" + imageUrl.substring(schemePos + 3, imageUrl.length()) + query;
+            return "https://i0.wp.com/" + imageUrl.substring(schemePos + 3, imageUrl.length()) + query + "&ssl=1";
         } else {
             return "http://i0.wp.com/" + imageUrl.substring(schemePos + 3, imageUrl.length()) + query;
         }
