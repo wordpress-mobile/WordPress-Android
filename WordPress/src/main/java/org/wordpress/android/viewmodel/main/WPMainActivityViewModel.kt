@@ -85,11 +85,15 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
         }
     }
 
-    fun setIsBottomSheetShowing(showing: Boolean) {
+    fun onFabClicked(hasFullAccessToContent: Boolean) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true)
 
-        _isBottomSheetShowing.value = Event(showing)
+        if (hasFullAccessToContent) {
+            _isBottomSheetShowing.value = Event(true)
+        } else {
+            _createAction.postValue(CREATE_NEW_POST)
+        }
     }
 
     fun onPageChanged(showFab: Boolean) {
