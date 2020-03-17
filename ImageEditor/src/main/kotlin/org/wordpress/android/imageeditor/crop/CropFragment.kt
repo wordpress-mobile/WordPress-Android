@@ -18,6 +18,8 @@ import com.yalantis.ucrop.UCropFragmentCallback
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveStartState
+import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveSuccessState
+import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.utils.ToastUtils
 import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
@@ -58,7 +60,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 is UiStartLoadingWithBundleState -> {
                     showThirdPartyCropFragmentWithBundle(uiState.bundle)
                 }
-                else -> { // Do nothing
+                is UiLoadedState -> { // Do nothing
                 }
             }
             doneMenu?.isVisible = uiState.doneMenuVisible
@@ -78,7 +80,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 is ImageCropAndSaveFailedState -> {
                     showCropError(state.errorMsg, state.errorResId)
                 }
-                else -> { // Do nothing
+                is ImageCropAndSaveSuccessState -> { // Do nothing
                 }
             }
         })
