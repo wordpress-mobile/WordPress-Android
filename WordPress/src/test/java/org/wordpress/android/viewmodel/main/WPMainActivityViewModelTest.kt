@@ -64,9 +64,17 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
+    fun `fab tooltip disabled when user without full access to content uses the fab`() {
+        whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
+        viewModel.onFabClicked(false)
+        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
+        assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
+    }
+
+    @Test
     fun `fab tooltip disabled when bottom sheet opened`() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
-        viewModel.setIsBottomSheetShowing(true)
+        viewModel.onFabClicked(true)
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
@@ -92,6 +100,20 @@ class WPMainActivityViewModelTest {
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_PAGE)
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_PAGE)
+    }
+
+    @Test
+    fun `bottom sheet is visualized when user has full access to content`() {
+        viewModel.onFabClicked(hasFullAccessToContent = true)
+        assertThat(viewModel.createAction.value).isNull()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
+    }
+
+    @Test
+    fun `new post action is triggered from FAB when user has not full access to content`() {
+        viewModel.onFabClicked(hasFullAccessToContent = false)
+        assertThat(viewModel.isBottomSheetShowing.value).isNull()
+        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
     }
 
     @Test
