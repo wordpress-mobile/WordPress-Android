@@ -1,6 +1,7 @@
 package org.wordpress.android.imageeditor.crop
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -31,6 +32,10 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     private lateinit var viewModel: CropViewModel
     private var doneMenu: MenuItem? = null
     private val navArgs: CropFragmentArgs by navArgs()
+
+    companion object {
+        private val TAG = CropFragment::class.java.simpleName
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,10 +76,10 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 is ImageCropAndSaveStartState -> {
                     val thirdPartyCropFragment = childFragmentManager
                             .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
-                    thirdPartyCropFragment?.let {
-                        if (thirdPartyCropFragment.isAdded) {
-                            thirdPartyCropFragment.cropAndSaveImage()
-                        }
+                    if (thirdPartyCropFragment != null && thirdPartyCropFragment.isAdded) {
+                        thirdPartyCropFragment.cropAndSaveImage()
+                    } else {
+                        Log.e(TAG, "Cannot crop and save image as thirdPartyCropFragment is null or not added!")
                     }
                 }
                 is ImageCropAndSaveFailedState -> {
