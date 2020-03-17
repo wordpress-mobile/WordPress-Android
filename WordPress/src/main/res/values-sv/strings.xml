@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-31 13:46:40+0000
+Translation-Revision-Date: 2020-02-15 06:58:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_template_preview">Förhandsgranska mall</string>
+    <string name="gutenberg_native_replace_current_block">Ersätt aktuellt block</string>
+    <string name="gutenberg_native_add_to_end">Lägg till sist</string>
+    <string name="gutenberg_native_add_to_beginning">Lägg till först</string>
+    <string name="gutenberg_native_add_block_before">Lägg till block före</string>
+    <string name="gutenberg_native_add_block_after">Lägg till block efter</string>
+    <string name="reader_filter_empty_tags_action">Lägg till en etikett</string>
+    <string name="reader_filter_empty_sites_action">Följ en webbplats</string>
+    <string name="reader_filter_empty_tags_list">Du kan följa inlägg om något visst ämne genom att lägga till en etikett</string>
+    <string name="reader_filter_empty_sites_list">Se de senaste inläggen från webbplatserna du följer</string>
+    <string name="reader_filter_main_title">Följer</string>
+    <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_video_caption_s">Beskrivning för video. %s</string>
     <string name="gutenberg_native_edit_video">Redigera video</string>
     <string name="gutenberg_native_edit_media">Redigera media</string>
@@ -68,7 +80,6 @@ Language: sv_SE
     <string name="suffix_1_000_000_000_000_000">%s biljarder</string>
     <string name="suffix_1_000_000_000_000">%s biljoner</string>
     <string name="suffix_1_000_000_000_000_000_000">%s triljoner</string>
-    <string name="reader_filter_all_sites">Alla webbplatser</string>
     <string name="reader_filter_sites_title">Webbplatser</string>
     <string name="reader_filter_tags_title">Etiketter</string>
     <string name="reader_save_for_later_display_name">Sparat</string>

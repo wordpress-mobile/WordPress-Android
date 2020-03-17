@@ -451,6 +451,21 @@ public class WPMainActivity extends AppCompatActivity implements
             });
         });
 
+        mViewModel.getStartLoginFlow().observe(this, event -> {
+            event.applyIfNotHandled(startLoginFlow -> {
+                if (mBottomNav != null) {
+                    mBottomNav.postDelayed(new Runnable() {
+                        @Override public void run() {
+                            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                        }
+                    }, 500);
+                    ActivityLauncher.viewMeActivityForResult(this);
+                }
+
+                return null;
+            });
+        });
+
         mViewModel.start(mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
     }
 
@@ -988,6 +1003,11 @@ public class WPMainActivity extends AppCompatActivity implements
     private void appLanguageChanged() {
         // Recreate this activity (much like a configuration change)
         recreate();
+
+        // When language changed we need to reset the shared prefs reader tag since if we have it stored
+        // it's fields can be in a different language and we can get odd behaviors since we will generally fail
+        // to get the ReaderTag.equals method recognize the equality based on the ReaderTag.getLabel method.
+        AppPrefs.setReaderTag(null);
     }
 
     private void startWithNewAccount() {

@@ -1,7 +1,0 @@
-14.1 :
-- Éditeur de blocs : un nouveau bloc de code court vous permet de créer et de modifier des codes courts, le remplissage autour des blocs textuels a été réduit et la modification d'articles très longs est désormais plus stable.
-- Mises à jour : l’option pour supprimer un site Jetpack du sélecteur de sites a été désactivée.
-- Résolution de bugs : les recherches d’articles omettaient certains résultats. La recherche fonctionne désormais correctement.
-
-
-
