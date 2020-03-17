@@ -11,17 +11,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import org.wordpress.android.imageeditor.R
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
 
 /**
- * Container fragment for displaying third party crop fragment.
+ * Container fragment for displaying third party crop fragment and done menu item.
  */
 class CropFragment : Fragment(), UCropFragmentCallback {
     private lateinit var viewModel: CropViewModel
     private lateinit var thirdPartyCropFragment: UCropFragment
+    private val navArgs: CropFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,17 +39,20 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeViewModels()
-        showThirdPartyCropFragment()
     }
 
     private fun initializeViewModels() {
         viewModel = ViewModelProvider(this).get(CropViewModel::class.java)
         setupObservers()
+        viewModel.start(navArgs.inputFilePath, requireContext().cacheDir)
     }
 
     private fun setupObservers() {
+        viewModel.showCropScreenWithBundle.observe(this, Observer { cropOptionsBundleWithFilesInfo ->
+            showThirdPartyCropFragmentWithBundle(cropOptionsBundleWithFilesInfo)
+        })
         viewModel.shouldCropAndSaveImage.observe(this, Observer { shouldCropAndSaveImage ->
-            if (shouldCropAndSaveImage) {
+            if (shouldCropAndSaveImage && thirdPartyCropFragment.isAdded) {
                 thirdPartyCropFragment.cropAndSaveImage()
             }
         })
@@ -69,12 +74,12 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         super.onOptionsItemSelected(item)
     }
 
-    private fun showThirdPartyCropFragment() {
-        thirdPartyCropFragment = UCropFragment.newInstance(arguments)
+    private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
+        thirdPartyCropFragment = UCropFragment.newInstance(bundle)
         childFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
-            .disallowAddToBackStack()
-            .commit()
+                .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
+                .disallowAddToBackStack()
+                .commit()
     }
 
     override fun onCropFinish(result: UCropResult?) {
