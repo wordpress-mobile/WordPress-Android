@@ -89,6 +89,10 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true)
 
+        // Currently this bottom sheet has only 2 options.
+        // We should evaluate to re-introduce the bottom sheet also for users without full access to content
+        // if user has at least 2 options (eventually filtering the content not accessible like pages in this case)
+        // See p5T066-1cA-p2/#comment-4463
         if (hasFullAccessToContent) {
             _isBottomSheetShowing.value = Event(true)
         } else {
