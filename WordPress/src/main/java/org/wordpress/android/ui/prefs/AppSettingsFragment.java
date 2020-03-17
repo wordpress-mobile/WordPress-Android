@@ -345,6 +345,7 @@ public class AppSettingsFragment extends PreferenceFragment
         Intent refresh = new Intent(getActivity(), getActivity().getClass());
         startActivity(refresh);
         getActivity().setResult(LANGUAGE_CHANGED);
+        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         getActivity().finish();
 
         // update Reader tags as they need be localized
