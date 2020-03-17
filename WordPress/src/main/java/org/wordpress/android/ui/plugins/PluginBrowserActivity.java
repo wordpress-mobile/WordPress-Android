@@ -74,6 +74,11 @@ public class PluginBrowserActivity extends AppCompatActivity
     private SearchView mSearchView;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {
         super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }

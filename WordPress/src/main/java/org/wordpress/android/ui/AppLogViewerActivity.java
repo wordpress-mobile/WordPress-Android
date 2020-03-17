@@ -39,6 +39,11 @@ public class AppLogViewerActivity extends AppCompatActivity {
     private static final int ID_COPY_TO_CLIPBOARD = 2;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {
         super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }

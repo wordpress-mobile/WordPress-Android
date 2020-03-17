@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.publicize;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -49,6 +50,11 @@ public class PublicizeListActivity extends AppCompatActivity
     private ProgressDialog mProgressDialog;
 
     @Inject SiteStore mSiteStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {

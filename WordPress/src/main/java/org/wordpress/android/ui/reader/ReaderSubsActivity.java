@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -77,6 +78,11 @@ public class ReaderSubsActivity extends AppCompatActivity
     public static final int TAB_IDX_FOLLOWED_TAGS = 0;
     public static final int TAB_IDX_FOLLOWED_BLOGS = 1;
     public static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {

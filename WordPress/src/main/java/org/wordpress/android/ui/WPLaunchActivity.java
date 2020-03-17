@@ -1,5 +1,6 @@
 package org.wordpress.android.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,6 +20,11 @@ public class WPLaunchActivity extends AppCompatActivity {
      * previously active activity on startup - note that it's defined in the
      * manifest to have no UI
      */
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {

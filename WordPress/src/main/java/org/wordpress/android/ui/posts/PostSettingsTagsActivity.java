@@ -56,6 +56,11 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
     @Inject TaxonomyStore mTaxonomyStore;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {
         super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.photopicker;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -87,6 +88,11 @@ public class PhotoPickerActivity extends AppCompatActivity
             }
             return null;
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stockmedia;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -215,6 +216,11 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         }
         showUploadProgressDialog(false);
         super.onDestroy();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     @Override

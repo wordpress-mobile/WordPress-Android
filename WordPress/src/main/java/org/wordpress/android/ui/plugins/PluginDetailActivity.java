@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -189,6 +190,11 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {

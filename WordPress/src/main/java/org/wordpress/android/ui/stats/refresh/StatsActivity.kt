@@ -33,6 +33,10 @@ class StatsActivity : AppCompatActivity() {
         }
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase))
+    }
+
     override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
         super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(baseContext, overrideConfiguration))
     }

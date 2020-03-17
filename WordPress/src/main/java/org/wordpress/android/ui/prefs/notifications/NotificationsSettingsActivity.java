@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs.notifications;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -36,6 +37,11 @@ public class NotificationsSettingsActivity extends AppCompatActivity
 
     protected SharedPreferences mSharedPreferences;
     protected View mFragmentContainer;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {

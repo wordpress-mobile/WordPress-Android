@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -33,6 +34,11 @@ import org.wordpress.android.util.ToastUtils;
 public class ReaderPostListActivity extends AppCompatActivity {
     private ReaderPostListType mPostListType;
     private long mSiteId;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {

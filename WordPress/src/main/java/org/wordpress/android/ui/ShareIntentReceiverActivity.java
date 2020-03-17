@@ -1,5 +1,6 @@
 package org.wordpress.android.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -63,6 +64,11 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         super.onNewIntent(intent);
         setIntent(intent);
         refreshContent();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     @Override

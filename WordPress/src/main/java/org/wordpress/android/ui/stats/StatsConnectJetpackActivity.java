@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Html;
@@ -49,6 +50,11 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {

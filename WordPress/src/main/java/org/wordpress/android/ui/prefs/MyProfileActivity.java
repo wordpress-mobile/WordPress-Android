@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -19,6 +20,11 @@ import javax.inject.Inject;
 public class MyProfileActivity extends AppCompatActivity {
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {

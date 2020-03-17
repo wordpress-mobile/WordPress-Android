@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -26,6 +27,11 @@ public class SignupEpilogueActivity extends AppCompatActivity implements SignupE
     public static final String MAGIC_SIGNUP_VALUE = "1";
 
     @Inject SiteStore mSiteStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {

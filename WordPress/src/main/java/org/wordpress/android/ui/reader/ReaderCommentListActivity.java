@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -126,6 +127,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     @Inject AccountStore mAccountStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private ReaderCommentListViewModel mViewModel;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {

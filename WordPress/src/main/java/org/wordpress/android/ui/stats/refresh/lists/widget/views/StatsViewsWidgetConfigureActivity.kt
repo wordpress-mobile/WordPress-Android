@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.views
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
@@ -19,6 +20,10 @@ class StatsViewsWidgetConfigureActivity : AppCompatActivity() {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase))
     }
 
     override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {

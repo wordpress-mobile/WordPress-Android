@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -61,6 +62,11 @@ public class CommentsDetailActivity extends AppCompatActivity
     private boolean mIsLoadingComments;
     private boolean mIsUpdatingComments;
     private boolean mCanLoadMoreComments = true;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {

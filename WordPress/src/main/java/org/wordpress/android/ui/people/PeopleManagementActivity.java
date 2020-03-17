@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.people;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -91,6 +92,11 @@ public class PeopleManagementActivity extends AppCompatActivity
     @Inject AccountStore mAccountStore;
 
     private SiteModel mSite;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {
