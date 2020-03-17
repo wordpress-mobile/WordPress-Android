@@ -13,6 +13,10 @@ public class ReaderInterfaces {
         void onPostSelected(ReaderPost post);
     }
 
+    public interface ReblogActionListener {
+        void reblog(ReaderPost post);
+    }
+
     /*
      * called from post detail fragment so toolbar can animate in/out when scrolling
      */

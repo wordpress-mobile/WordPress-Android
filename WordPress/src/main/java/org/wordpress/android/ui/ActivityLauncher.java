@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
@@ -119,9 +120,19 @@ public class ActivityLauncher {
     }
 
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
-        Intent intent = new Intent(activity, SitePickerActivity.class);
-        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        Intent intent = createSitePickerIntent(activity, site);
         activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
+    }
+
+    public static void showSitePickerForResult(Fragment fragment, SiteModel site) {
+        Intent intent = createSitePickerIntent(fragment.getContext(), site);
+        fragment.startActivityForResult(intent, RequestCodes.SITE_PICKER);
+    }
+
+    private static Intent createSitePickerIntent(Context context, SiteModel site) {
+        Intent intent = new Intent(context, SitePickerActivity.class);
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        return intent;
     }
 
     public static void showPhotoPickerForResult(Activity activity,
@@ -240,6 +251,26 @@ public class ActivityLauncher {
         Intent editorIntent = new Intent(context, EditPostActivity.class);
         editorIntent.putExtra(WordPress.SITE, site);
         editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(editorIntent);
+        taskStackBuilder.startActivities();
+    }
+
+    public static void openEditorForReblog(Context context, @NonNull SiteModel site, @NonNull ReaderPost post) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+
+        Intent editorIntent = new Intent(context, EditPostActivity.class);
+        editorIntent.putExtra(WordPress.SITE, site);
+        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+
+        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_TITLE, post.getTitle());
+        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_QUOTE, post.getExcerpt());
+        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_IMAGE, post.getFeaturedImage());
+        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
+
+        editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(editorIntent);

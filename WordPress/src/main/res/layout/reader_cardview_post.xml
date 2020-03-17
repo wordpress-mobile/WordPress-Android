@@ -257,11 +257,23 @@
                 android:layout_centerVertical="true"
                 android:layout_height="@dimen/reader_button_minimum_height"
                 android:layout_width="@dimen/reader_button_minimum_height"
-                android:layout_toStartOf="@id/count_comments"
+                android:layout_toStartOf="@id/reblog"
                 android:padding="@dimen/margin_medium"
                 android:src="@drawable/ic_bookmark_outline_bookmark_selector_24dp"
                 android:tint="@color/neutral_primary_40_neutral_40_selector" >
             </ImageView>
+
+            <org.wordpress.android.ui.reader.views.ReaderIconCountView
+                android:id="@+id/reblog"
+                android:contentDescription="@string/reader_view_reblog"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_toStartOf="@+id/count_comments"
+                android:layout_width="wrap_content"
+                wp:readerIcon="reblog" >
+            </org.wordpress.android.ui.reader.views.ReaderIconCountView>
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
                 android:id="@+id/count_comments"

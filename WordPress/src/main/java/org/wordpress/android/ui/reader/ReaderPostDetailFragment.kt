@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
@@ -55,6 +56,8 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -163,6 +166,7 @@ class ReaderPostDetailFragment : Fragment(),
     @Inject internal lateinit var dispatcher: Dispatcher
     @Inject internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
+    @Inject internal lateinit var mSiteStore: SiteStore
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -850,6 +854,21 @@ class ReaderPostDetailFragment : Fragment(),
 
         val countLikes = view!!.findViewById<ReaderIconCountView>(R.id.count_likes)
         val countComments = view!!.findViewById<ReaderIconCountView>(R.id.count_comments)
+        val reblogButton = view!!.findViewById<ReaderIconCountView>(R.id.reblog)
+
+        if (canBeReblogged()) {
+            reblogButton.setCount(0)
+            reblogButton.visibility = View.VISIBLE
+            reblogButton.setOnClickListener {
+                val siteLocalId = AppPrefs.getSelectedSite()
+                val site = mSiteStore.getSiteByLocalId(siteLocalId)
+                ActivityLauncher.showSitePickerForResult(this, site)
+                //TODO: Skip site picker when user has only one site and handle users without a site
+            }
+        } else {
+            reblogButton.visibility = View.INVISIBLE
+            reblogButton.setOnClickListener(null)
+        }
 
         if (canShowCommentCount()) {
             countComments.setCount(post.numReplies)
@@ -912,6 +931,21 @@ class ReaderPostDetailFragment : Fragment(),
         }
 
         setPostLike(true)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            RequestCodes.SITE_PICKER -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
+                    val site = mSiteStore.getSiteByLocalId(siteLocalId)
+                    this.post?.let {
+                        ActivityLauncher.openEditorForReblog(activity, site, it)
+                    }
+                }
+            }
+        }
     }
 
     /*
@@ -1475,6 +1509,8 @@ class ReaderPostDetailFragment : Fragment(),
     private fun canShowFooter(): Boolean {
         return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton()
     }
+
+    private fun canBeReblogged(): Boolean = true //TODO: Check if special logic is needed, else remove condition
 
     private fun canShowCommentCount(): Boolean {
         val post = this.post ?: return false
