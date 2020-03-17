@@ -14,7 +14,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.sitecreation.SiteCreationStep
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 
 private val STEPS = listOf(SEGMENTS, DOMAINS, SITE_PREVIEW)
@@ -80,11 +79,6 @@ class WizardManagerTest {
     fun `exception thrown on navigation to invalid index`() {
         manager = createWizardManager(initialStepIndex = LAST_STEP_INDEX)
         manager.showNextStep()
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `exception thrown on getting position of unknown step`() {
-        manager.stepPosition(SITE_INFO)
     }
 
     private fun createWizardManager(initialStepIndex: Int): WizardManager<SiteCreationStep> {
