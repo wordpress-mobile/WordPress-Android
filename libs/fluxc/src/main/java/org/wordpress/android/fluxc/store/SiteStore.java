@@ -78,20 +78,13 @@ public class SiteStore extends Store {
         @NonNull public String siteName;
         @NonNull public String language;
         @NonNull public SiteVisibility visibility;
-        @Nullable public Long segmentId;
         @NonNull public boolean dryRun;
 
         public NewSitePayload(@NonNull String siteName, @NonNull String language,
                               @NonNull SiteVisibility visibility, boolean dryRun) {
-            this(siteName, language, visibility, null, dryRun);
-        }
-
-        public NewSitePayload(@NonNull String siteName, @NonNull String language,
-                              @NonNull SiteVisibility visibility, @Nullable Long segmentId, boolean dryRun) {
             this.siteName = siteName;
             this.language = language;
             this.visibility = visibility;
-            this.segmentId = segmentId;
             this.dryRun = dryRun;
         }
     }
@@ -1684,7 +1677,7 @@ public class SiteStore extends Store {
 
     private void createNewSite(NewSitePayload payload) {
         mSiteRestClient.newSite(payload.siteName, payload.language, payload.visibility,
-                payload.segmentId, payload.dryRun);
+                payload.dryRun);
     }
 
     private void handleCreateNewSiteCompleted(NewSiteResponsePayload payload) {
@@ -1876,7 +1869,7 @@ public class SiteStore extends Store {
 
     private void suggestDomains(SuggestDomainsPayload payload) {
         mSiteRestClient.suggestDomains(payload.query, payload.onlyWordpressCom, payload.includeWordpressCom,
-                payload.includeDotBlogSubdomain, payload.segmentId, payload.quantity, payload.includeVendorDot,
+                payload.includeDotBlogSubdomain, payload.quantity, payload.includeVendorDot,
                 payload.tlds);
     }
 
