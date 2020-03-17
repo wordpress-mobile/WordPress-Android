@@ -8,8 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
-import com.yalantis.ucrop.model.AspectRatio
-import com.yalantis.ucrop.view.CropImageView
 import java.io.File
 
 class CropViewModel : ViewModel() {
@@ -33,14 +31,6 @@ class CropViewModel : ViewModel() {
                 setFreeStyleCropEnabled(true)
                 setShowCropFrame(true)
                 setHideBottomControls(false)
-                setAspectRatioOptions(
-                    0,
-                    AspectRatio("1:2", 1f, 2f),
-                    AspectRatio("3:4", 3f, 4f),
-                    AspectRatio("Original", CropImageView.DEFAULT_ASPECT_RATIO, CropImageView.DEFAULT_ASPECT_RATIO),
-                    AspectRatio("16:9", 16f, 9f),
-                    AspectRatio("1:1", 1f, 1f)
-                )
             }
         }
     }
