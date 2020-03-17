@@ -211,7 +211,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void newSite(@NonNull String siteName, @NonNull String language,
-                        @NonNull SiteVisibility visibility, @Nullable Long segmentId,
+                        @NonNull SiteVisibility visibility,
                         final boolean dryRun) {
         String url = WPCOMREST.sites.new_.getUrlV1_1();
         Map<String, Object> body = new HashMap<>();
@@ -221,15 +221,6 @@ public class SiteRestClient extends BaseWPComRestClient {
         body.put("validate", dryRun ? "1" : "0");
         body.put("client_id", mAppSecrets.getAppId());
         body.put("client_secret", mAppSecrets.getAppSecret());
-
-        // Add site options if available
-        Map<String, Object> options = new HashMap<>();
-        if (segmentId != null) {
-            options.put("site_segment", segmentId);
-        }
-        if (options.size() > 0) {
-            body.put("options", options);
-        }
 
         WPComGsonRequest<NewSiteResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 NewSiteResponse.class,
@@ -498,7 +489,7 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void suggestDomains(@NonNull final String query, final Boolean onlyWordpressCom,
                                final Boolean includeWordpressCom, final Boolean includeDotBlogSubdomain,
-                               final Long segmentId, final int quantity, final boolean includeVendorDot,
+                               final int quantity, final boolean includeVendorDot,
                                final String tlds) {
         String url = WPCOMREST.domains.suggestions.getUrlV1_1();
         Map<String, String> params = new HashMap<>(4);
@@ -511,9 +502,6 @@ public class SiteRestClient extends BaseWPComRestClient {
         }
         if (includeDotBlogSubdomain != null) {
             params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
-        }
-        if (segmentId != null) {
-            params.put("segment_id", String.valueOf(segmentId));
         }
         if (tlds != null) {
             params.put("tlds", tlds);
