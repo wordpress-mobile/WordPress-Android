@@ -1676,6 +1676,9 @@
 
     <string name="reader_excerpt_link">Visit %s for more</string>
 
+    <!-- reblog -->
+    <string name="reader_view_reblog">Reblog</string>
+
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
     <string name="reader_likes_one">One person likes this</string>

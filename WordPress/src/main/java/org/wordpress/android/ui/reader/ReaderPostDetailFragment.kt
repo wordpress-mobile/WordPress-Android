@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
@@ -55,6 +56,8 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -163,6 +166,7 @@ class ReaderPostDetailFragment : Fragment(),
     @Inject internal lateinit var dispatcher: Dispatcher
     @Inject internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
+    @Inject internal lateinit var mSiteStore: SiteStore
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -850,6 +854,26 @@ class ReaderPostDetailFragment : Fragment(),
 
         val countLikes = view!!.findViewById<ReaderIconCountView>(R.id.count_likes)
         val countComments = view!!.findViewById<ReaderIconCountView>(R.id.count_comments)
+        val reblogButton = view?.findViewById<ReaderIconCountView>(R.id.reblog)
+
+        if (canBeReblogged()) {
+            reblogButton?.setCount(0)
+            reblogButton?.visibility = View.VISIBLE
+            reblogButton?.setOnClickListener {
+                val sites = mSiteStore.visibleSites
+                when (sites.size) {
+                    1 -> ActivityLauncher.openEditorForReblog(activity, sites.first(), this.post)
+                    else -> { // The no site (0) case can be handled by the site picker for now
+                        val siteLocalId = AppPrefs.getSelectedSite()
+                        val site = mSiteStore.getSiteByLocalId(siteLocalId)
+                        ActivityLauncher.showSitePickerForResult(this, site)
+                    }
+                }
+            }
+        } else {
+            reblogButton?.visibility = View.GONE
+            reblogButton?.setOnClickListener(null)
+        }
 
         if (canShowCommentCount()) {
             countComments.setCount(post.numReplies)
@@ -862,7 +886,7 @@ class ReaderPostDetailFragment : Fragment(),
                 )
             }
         } else {
-            countComments.visibility = View.INVISIBLE
+            countComments.visibility = View.GONE
             countComments.setOnClickListener(null)
         }
 
@@ -888,7 +912,7 @@ class ReaderPostDetailFragment : Fragment(),
                 likingUsersLabel.visibility = View.INVISIBLE
             }
         } else {
-            countLikes.visibility = View.INVISIBLE
+            countLikes.visibility = View.GONE
             countLikes.setOnClickListener(null)
         }
     }
@@ -912,6 +936,19 @@ class ReaderPostDetailFragment : Fragment(),
         }
 
         setPostLike(true)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            RequestCodes.SITE_PICKER -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
+                    val site = mSiteStore.getSiteByLocalId(siteLocalId)
+                    ActivityLauncher.openEditorForReblog(activity, site, this.post)
+                }
+            }
+        }
     }
 
     /*
@@ -1474,6 +1511,18 @@ class ReaderPostDetailFragment : Fragment(),
      */
     private fun canShowFooter(): Boolean {
         return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton()
+    }
+
+    /**
+     * Returns true if the blog post can be reblogged
+     */
+    private fun canBeReblogged(): Boolean {
+        this.post?.let {
+            if (!it.isPrivate && accountStore.hasAccessToken()) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun canShowCommentCount(): Boolean {

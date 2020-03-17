@@ -80,6 +80,7 @@
         <attr name="readerIcon" format="enum">
             <enum name="like" value="0" />
             <enum name="comment" value="1" />
+            <enum name="reblog" value="2" />
         </attr>
     </declare-styleable>
 
