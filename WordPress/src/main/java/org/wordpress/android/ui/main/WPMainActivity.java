@@ -416,7 +416,12 @@ public class WPMainActivity extends AppCompatActivity implements
         });
 
         mFloatingActionButton.setOnClickListener(v -> {
-            mViewModel.setIsBottomSheetShowing(true);
+            SiteModel site = getSelectedSite();
+
+            mViewModel.onFabClicked(
+                    site != null
+                    && (site.isSelfHostedAdmin() || site.getHasCapabilityEditPages())
+            );
         });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
