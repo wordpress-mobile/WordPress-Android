@@ -285,36 +285,35 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         }
         showProgress(true);
 
-        mImageManager
-                .loadWithResultListener(mImageView, ImageType.IMAGE, Uri.parse(mediaUri), ScaleType.CENTER, null,
-                        new RequestListener<Drawable>() {
-                            @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
-                                if (isAdded()) {
-                                    // assign the photo attacher to enable pinch/zoom - must come before
-                                    // setImageBitmap
-                                    // for it to be correctly resized upon loading
-                                    PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
-                                    attacher.setOnViewTapListener((view, x, y) -> {
-                                        if (mMediaTapListener != null) {
-                                            mMediaTapListener.onMediaTapped();
-                                        }
-                                    });
-                                    showProgress(false);
+        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, Uri.parse(mediaUri), ScaleType.CENTER, null,
+                new RequestListener<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
+                        if (isAdded()) {
+                            // assign the photo attacher to enable pinch/zoom - must come before
+                            // setImageBitmap
+                            // for it to be correctly resized upon loading
+                            PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+                            attacher.setOnViewTapListener((view, x, y) -> {
+                                if (mMediaTapListener != null) {
+                                    mMediaTapListener.onMediaTapped();
                                 }
-                            }
+                            });
+                            showProgress(false);
+                        }
+                    }
 
-                            @Override
-                            public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
-                                if (isAdded()) {
-                                    if (e != null) {
-                                        AppLog.e(T.MEDIA, e);
-                                    }
-                                    showProgress(false);
-                                    showLoadingError();
-                                }
+                    @Override
+                    public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                        if (isAdded()) {
+                            if (e != null) {
+                                AppLog.e(T.MEDIA, e);
                             }
-                        });
+                            showProgress(false);
+                            showLoadingError();
+                        }
+                    }
+                });
     }
 
     /*
