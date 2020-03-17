@@ -339,6 +339,11 @@ public class EditPostActivity extends AppCompatActivity implements
         super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
+    @Override
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
+    }
+
     private void newPostSetup() {
         mIsNewPost = true;
 

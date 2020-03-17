@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView.LayoutParams
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
@@ -30,7 +30,8 @@ class ValueViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             NEGATIVE -> change.context.getColorResIdFromAttribute(R.attr.wpColorError)
             NEUTRAL -> change.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
         }
-        change.setTextColor(ContextCompat.getColor(change.context, color))
+
+        change.setTextColor(AppCompatResources.getColorStateList(change.context, color))
         change.visibility = if (hasChange) View.VISIBLE else View.GONE
         change.text = item.change
         val params = container.layoutParams as LayoutParams

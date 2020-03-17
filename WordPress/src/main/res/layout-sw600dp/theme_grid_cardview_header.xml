@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/header_card"
@@ -66,7 +67,7 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/customize"
                         android:src="@drawable/ic_customize_white_24dp"
-                        android:tint="?attr/colorOnSurface" />
+                        app:tint="?attr/wpColorOnSurfaceMedium" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
@@ -96,7 +97,7 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/details"
                         android:src="@drawable/ic_info_outline_white_24dp"
-                        android:tint="?attr/colorOnSurface" />
+                        app:tint="?attr/wpColorOnSurfaceMedium" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
@@ -126,7 +127,7 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/support"
                         android:src="@drawable/ic_help_outline_white_24dp"
-                        android:tint="?attr/colorOnSurface" />
+                        app:tint="?attr/wpColorOnSurfaceMedium" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"

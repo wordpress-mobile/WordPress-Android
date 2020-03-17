@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
@@ -25,6 +26,6 @@
         android:contentDescription="@string/quick_start_completed_tasks_header_chevron_expand_desc"
         android:minHeight="@dimen/one_line_list_item_height"
         android:src="@drawable/ic_chevron_down_white_24dp"
-        android:tint="?attr/colorOnSurface" />
+        app:tint="?attr/wpColorOnSurfaceMedium" />
 
 </RelativeLayout>

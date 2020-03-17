@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
@@ -8,10 +9,10 @@
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="vertical"
-    android:paddingStart="@dimen/start_over_preference_margin_large"
-    android:paddingTop="@dimen/start_over_preference_margin_large"
+    android:paddingBottom="@dimen/start_over_preference_margin_large"
     android:paddingEnd="@dimen/start_over_preference_margin_large"
-    android:paddingBottom="@dimen/start_over_preference_margin_large">
+    android:paddingStart="@dimen/start_over_preference_margin_large"
+    android:paddingTop="@dimen/start_over_preference_margin_large">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +27,7 @@
             android:layout_marginEnd="@dimen/start_over_icon_margin_right"
             android:contentDescription="@null"
             android:padding="@dimen/start_over_icon_padding"
-            android:tint="?attr/wpColorOnSurfaceMedium" />
+            app:tint="?attr/wpColorOnSurfaceMedium" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@android:id/title"

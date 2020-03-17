@@ -103,7 +103,7 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:contentDescription="@string/stats_expand_content_description"
         android:src="@drawable/ic_chevron_down_white_16dp"
-        android:tint="?attr/colorOnSurface"
+        app:tint="?attr/wpColorOnSurfaceMedium"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:id="@+id/frame_video"
@@ -52,7 +53,7 @@
             android:layout_height="128dp"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_audio_white_24dp"
-            android:tint="@color/neutral_30"
+            app:tint="@color/neutral_30"
             android:contentDescription="@string/media_preview_audio_desc"/>
 
     </RelativeLayout>

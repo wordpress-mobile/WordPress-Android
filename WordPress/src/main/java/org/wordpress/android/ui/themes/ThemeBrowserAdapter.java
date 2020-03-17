@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.widget.ImageViewCompat;
 
 import com.google.android.material.elevation.ElevationOverlayProvider;
 
@@ -172,8 +173,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private void configureCardView(ThemeViewHolder themeViewHolder, boolean isCurrent) {
         if (isCurrent) {
             ColorStateList color =
-                    ColorStateList
-                            .valueOf(ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorOnPrimarySurface));
+                    ContextExtensionsKt.getColorStateListFromAttribute(mContext, R.attr.colorOnPrimarySurface);
             themeViewHolder.mDetailsView
                     .setBackgroundColor(
                             ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorPrimary));
@@ -182,17 +182,16 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             themeViewHolder.mCardView
                     .setCardBackgroundColor(
                             ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorPrimary));
-            themeViewHolder.mImageButton.setImageTintList(color);
+            ImageViewCompat.setImageTintList(themeViewHolder.mImageButton, color);
         } else {
-            ColorStateList color = ColorStateList.valueOf(
-                    ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorOnSurface));
+            ColorStateList color = ContextExtensionsKt.getColorStateListFromAttribute(mContext, R.attr.colorOnSurface);
             themeViewHolder.mDetailsView
                     .setBackgroundColor(mElevatedSurfaceColor);
             themeViewHolder.mNameView.setTextColor(color);
             themeViewHolder.mActiveView.setVisibility(View.GONE);
             themeViewHolder.mCardView
                     .setCardBackgroundColor(mElevatedSurfaceColor);
-            themeViewHolder.mImageButton.setImageTintList(color);
+            ImageViewCompat.setImageTintList(themeViewHolder.mImageButton, color);
         }
     }
 

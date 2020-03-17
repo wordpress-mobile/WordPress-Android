@@ -141,7 +141,7 @@
                                 android:drawablePadding="@dimen/margin_small"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                app:drawableTint="?attr/colorOnSurface"
+                                app:drawableTint="?attr/wpColorOnSurfaceMedium"
                                 tools:text="plugin_version_top" />
 
                             <com.google.android.material.textview.MaterialTextView

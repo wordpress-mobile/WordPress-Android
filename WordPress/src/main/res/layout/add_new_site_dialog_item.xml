@@ -13,5 +13,5 @@
     android:textAlignment="viewStart"
     android:textAppearance="?android:attr/textAppearanceListItem"
     app:drawableStartCompat="@drawable/ic_add_outline_grey_dark_24dp"
-    app:drawableTint="?attr/colorOnSurface"
+    app:drawableTint="?attr/wpColorOnSurfaceMedium"
     tools:text="Dialog item" />

@@ -5,6 +5,6 @@
 
     <item android:color="?attr/colorPrimary" android:state_enabled="false" />
     <item android:color="?attr/colorPrimary" android:state_selected="true" />
-    <item android:color="?attr/wpColorOnSurfaceMedium" />
+    <item android:color="?attr/colorOnSurface" android:alpha="@dimen/material_emphasis_medium" />
 
 </selector>

@@ -6,6 +6,6 @@
 
     <item android:color="?attr/colorOnSurface" android:state_focused="true" />
 
-    <item android:color="@color/material_on_surface_emphasis_medium" />
+    <item android:color="?attr/colorOnSurface" android:alpha="@dimen/material_emphasis_medium" />
 
 </selector>

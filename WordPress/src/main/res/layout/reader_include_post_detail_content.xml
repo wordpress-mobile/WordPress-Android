@@ -67,7 +67,7 @@
             android:padding="@dimen/margin_extra_large"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/wpColorOnSurfaceMedium"
-            app:drawableTint="?attr/wpIconColorOnSurface"
+            app:drawableTint="?attr/wpColorOnSurfaceMedium"
             tools:text="text_excerpt_footer" />
     </RelativeLayout>
 

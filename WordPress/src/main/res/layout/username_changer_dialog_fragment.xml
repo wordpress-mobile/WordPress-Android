@@ -3,6 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <com.google.android.material.textview.MaterialTextView
@@ -24,12 +25,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:alpha="@dimen/material_emphasis_medium"
             android:importantForAccessibility="no"
             android:paddingTop="@dimen/margin_extra_large"
             android:paddingBottom="@dimen/margin_extra_large"
             android:src="@drawable/ic_search_white_24dp"
-            android:tint="?attr/colorOnSurface" />
+            app:tint="?attr/wpColorOnSurfaceMedium" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/username"

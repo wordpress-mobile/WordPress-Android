@@ -34,7 +34,7 @@
                 android:minHeight="@dimen/min_touch_target_sz"
                 android:padding="@dimen/margin_extra_large"
                 android:src="@drawable/ic_chevron_left_white_24dp"
-                android:tint="@color/on_surface_disabled_selector"
+                aztec:tint="@color/on_surface_disabled_selector"
                 android:tintMode="src_in" />
 
             <LinearLayout
@@ -89,7 +89,7 @@
                 android:minHeight="@dimen/min_touch_target_sz"
                 android:padding="@dimen/margin_extra_large"
                 android:src="@drawable/ic_chevron_right_white_24dp"
-                android:tint="@color/on_surface_disabled_selector"
+                aztec:tint="@color/on_surface_disabled_selector"
                 android:tintMode="src_in" />
 
         </RelativeLayout>

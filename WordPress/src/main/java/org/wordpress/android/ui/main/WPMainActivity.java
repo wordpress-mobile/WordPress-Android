@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
@@ -211,6 +213,11 @@ public class WPMainActivity extends AppCompatActivity implements
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
     }
 
     @Override
@@ -997,7 +1004,9 @@ public class WPMainActivity extends AppCompatActivity implements
 
     private void appLanguageChanged() {
         // Recreate this activity (much like a configuration change)
-        recreate();
+        // We need to post this call to UI thread, since it's called from onActivityResult and the call interferes with
+        // onResume that is called right afterwards.
+        new Handler(Looper.getMainLooper()).post(this::recreate);
 
         // When language changed we need to reset the shared prefs reader tag since if we have it stored
         // it's fields can be in a different language and we can get odd behaviors since we will generally fail

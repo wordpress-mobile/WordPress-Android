@@ -72,7 +72,7 @@
             android:paddingStart="@dimen/margin_extra_medium_large"
             android:paddingEnd="@dimen/margin_extra_medium_large"
             android:src="@drawable/ic_reader_follow_white_24dp"
-            android:tint="?attr/colorPrimary" />
+            app:tint="?attr/colorPrimary" />
 
     </RelativeLayout>
 

@@ -2,6 +2,8 @@ package org.wordpress.android.ui.main
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +18,10 @@ class MeActivity : AppCompatActivity() {
         super.attachBaseContext(LocaleManager.setLocale(newBase))
     }
 
+    override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(baseContext, overrideConfiguration))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.me_activity)
@@ -24,6 +30,11 @@ class MeActivity : AppCompatActivity() {
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
+            val activityInfo = packageManager.getActivityInfo(
+                    componentName,
+                    PackageManager.GET_META_DATA
+            )
+            it.setTitle(activityInfo.labelRes)
         }
     }
 

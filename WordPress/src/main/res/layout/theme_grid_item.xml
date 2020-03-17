@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/theme_grid_card_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -98,12 +99,11 @@
                         android:layout_width="@dimen/theme_browser_more_button_width"
                         android:layout_height="@dimen/theme_browser_more_button_height"
                         android:adjustViewBounds="true"
-                        android:alpha="@dimen/material_emphasis_medium"
                         android:background="?attr/selectableItemBackground"
                         android:contentDescription="@string/button_more"
                         android:padding="@dimen/theme_browser_more_button_padding"
                         android:src="@drawable/ic_ellipsis_white_24dp"
-                        android:tint="?attr/colorOnSurface" />
+                        app:tint="?attr/wpColorOnSurfaceMedium" />
 
                 </LinearLayout>
 

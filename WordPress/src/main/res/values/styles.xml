@@ -15,7 +15,7 @@
         <item name="colorOnBackground">@android:color/black</item>
         <item name="colorOnSurface">@android:color/black</item>
         <item name="colorOnError">@android:color/white</item>
-        <item name="colorAccent">?attr/colorSecondary</item>
+        <item name="colorAccent">?attr/colorPrimary</item>
 
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorControlActivated">@color/primary_30</item>
@@ -23,6 +23,10 @@
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
+
+        <!-- we can remove it after moving away from Bridge version of theme -->
+        <item name="materialCardViewStyle"> @style/Widget.MaterialComponents.CardView</item>
+        <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
 
         <item name="wpColorText">@color/neutral_70</item>
         <item name="wpColorTextSubtle">@color/neutral</item>
@@ -33,7 +37,6 @@
         <item name="wpColorAppBar">@color/primary</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
-        <item name="wpIconColorOnSurface">@color/material_on_surface_emphasis_medium</item>
 
         <item name="listPopupWindowStyle">
             @style/Widget.MaterialComponents.PopupMenu.ListPopupWindow
@@ -83,6 +86,10 @@
     <style name="WordPress.NoActionBar.DarkNavbar" parent="WordPress.NoActionBar">
         <item name="android:windowLightNavigationBar">false</item>
         <item name="android:navigationBarColor">?attr/wpColorAppBar</item>
+    </style>
+
+    <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:backgroundTint">?attr/colorSecondary</item>
     </style>
 
     <style name="NumberPickerTheme" parent="WordPress">
@@ -198,7 +205,7 @@
     </style>
 
     <style name="WordPress.ActionBar.Navigation.Inverted" parent="Widget.AppCompat.Toolbar.Button.Navigation">
-        <item name="android:tint">?attr/colorOnSurface</item>
+        <item name="tint">?attr/colorOnSurface</item>
     </style>
 
     <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
@@ -300,8 +307,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorSurface</item>
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:tint">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:tintMode">src_in</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
@@ -321,8 +326,7 @@
     </style>
 
     <style name="MySiteListRowIcon">
-        <item name="android:tint">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:tintMode">src_in</item>
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentStart">true</item>
@@ -334,7 +338,7 @@
     </style>
 
     <style name="MySiteListRowAlertIcon">
-        <item name="android:tint">?attr/wpColorWarningDark</item>
+        <item name="tint">?attr/wpColorWarningLight</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentStart">true</item>
@@ -390,8 +394,7 @@
     <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">
         <item name="android:layout_width">16dp</item>
         <item name="android:layout_height">16dp</item>
-        <item name="android:tint">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:tintMode">src_in</item>
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <style name="MySiteListHeader">
@@ -417,8 +420,7 @@
     </style>
 
     <style name="MeListRowIcon">
-        <item name="android:tint">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:tintMode">src_in</item>
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:layout_width">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_gravity">center_vertical</item>
@@ -497,7 +499,7 @@
         <item name="android:layout_height">24dp</item>
         <item name="android:layout_marginEnd">32dp</item>
         <item name="android:layout_width">24dp</item>
-        <item name="android:tint">?attr/wpIconColorOnSurface</item>
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <style name="QuickStartTitle">
@@ -703,7 +705,7 @@
     <style name="PluginCardViewSecondaryElement.ExternalLinkImage" parent="PluginCardViewSecondaryElement">
         <item name="android:layout_width">@dimen/plugin_external_link_image_size</item>
         <item name="android:layout_height">@dimen/plugin_external_link_image_size</item>
-        <item name="android:tint">@color/neutral_40</item>
+        <item name="tint">@color/neutral_40</item>
         <item name="android:layout_marginEnd">@dimen/margin_medium</item>
     </style>
 
@@ -766,8 +768,7 @@
     <style name="CommentActionIcon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:tint">?attr/colorOnSurface</item>
-        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:paddingStart">@dimen/margin_medium</item>
         <item name="android:paddingEnd">@dimen/margin_medium</item>
         <item name="android:paddingTop">0dp</item>
@@ -908,7 +909,7 @@
     <style name="WebPreviewNavbarButton">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:tint">@drawable/web_preview_navbar_selector</item>
+        <item name="tint">@drawable/web_preview_navbar_selector</item>
         <item name="android:tintMode">multiply</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:layout_weight">20</item>
@@ -944,7 +945,7 @@
     </style>
 
     <style name="LoginTheme.TextLabel.Icon">
-        <item name="android:tint">?attr/colorPrimary</item>
+        <item name="tint">?attr/colorPrimary</item>
         <item name="android:tintMode">src_in</item>
     </style>
 
