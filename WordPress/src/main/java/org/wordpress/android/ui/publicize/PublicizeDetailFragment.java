@@ -16,7 +16,6 @@ import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeService;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.util.ToastUtils;
@@ -25,8 +24,6 @@ import javax.inject.Inject;
 
 public class PublicizeDetailFragment extends PublicizeBaseFragment
         implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
-    private static final String FACEBOOK_SHARING_CHANGE_BLOG_POST =
-            "https://en.blog.wordpress.com/2018/07/23/sharing-options-from-wordpress-com-to-facebook-are-changing/";
     private SiteModel mSite;
     private String mServiceId;
 
@@ -121,14 +118,6 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
             String description = String.format(getString(R.string.connection_service_description), mService.getLabel());
             TextView txtDescription = mServiceContainer.findViewById(R.id.text_description);
             txtDescription.setText(description);
-
-            // Hide the Learn More button by default as at the moment it is only used for the Facebook warning below.
-            TextView learnMoreButton = mServiceContainer.findViewById(R.id.learn_more_button);
-            learnMoreButton.setVisibility(View.GONE);
-
-            if (isFacebook()) {
-                showFacebookWarning();
-            }
         }
 
         long currentUserId = mAccountStore.getAccount().getUserId();
@@ -143,22 +132,6 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
     private boolean isGooglePlus() {
         return mService.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID);
-    }
-
-    private boolean isFacebook() {
-        return mService.getId().equals(PublicizeConstants.FACEBOOK_ID);
-    }
-
-    private void showFacebookWarning() {
-        String noticeText = getString(R.string.connection_service_facebook_notice);
-        TextView txtNotice = mServiceContainer.findViewById(R.id.text_description_notice);
-        txtNotice.setText(noticeText);
-        txtNotice.setVisibility(View.VISIBLE);
-
-        TextView learnMoreButton = mServiceContainer.findViewById(R.id.learn_more_button);
-        learnMoreButton.setOnClickListener(v -> WPWebViewActivity.openURL(getActivity(),
-                FACEBOOK_SHARING_CHANGE_BLOG_POST));
-        learnMoreButton.setVisibility(View.VISIBLE);
     }
 
     private boolean hasOnPublicizeActionListener() {

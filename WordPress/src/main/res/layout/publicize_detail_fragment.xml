@@ -64,34 +64,6 @@
             android:textAppearance="?attr/textAppearanceCaption"
             tools:text="text_description" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_description_notice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:ellipsize="end"
-            android:paddingTop="@dimen/margin_large"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:textStyle="bold"
-            android:visibility="gone"
-            tools:text="text_description_notice"
-            tools:visibility="visible" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/learn_more_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:ellipsize="end"
-            android:text="@string/learn_more"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorPrimary"
-            tools:text="learn_more_button" />
-
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_divider_height"

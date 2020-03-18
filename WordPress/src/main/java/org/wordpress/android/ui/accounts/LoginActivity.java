@@ -217,7 +217,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         switch (getLoginMode()) {
             case FULL:
             case WPCOM_LOGIN_ONLY:
-                if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial()) {
+                if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {
                     ActivityLauncher.showPostSignupInterstitial(this);
                 } else {
                     ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);

@@ -885,8 +885,6 @@ public class ReaderPostListFragment extends Fragment
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
         mRecyclerView = rootView.findViewById(R.id.reader_recycler_view);
 
-        Context context = container.getContext();
-
         mActionableEmptyView = rootView.findViewById(R.id.empty_custom_view);
 
         mRecyclerView.setLogT(AppLog.T.READER);
@@ -964,8 +962,8 @@ public class ReaderPostListFragment extends Fragment
         // add the item decoration (dividers) to the recycler, skipping the first item if the first
         // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
         // having the tag toolbar take up more vertical space than necessary
-        int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
-        int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
+        int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
+        int spacingVertical = getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
