@@ -141,10 +141,12 @@ class SiteCreationMainVM @Inject constructor(
         val stepCount = wizardManager.stepsCount
         val firstStep = stepPosition == 1
         val lastStep = stepPosition == stepCount
+        val singleInBetweenStepDomains = wizardManager.stepsCount == 3 && step.name == DOMAINS.name
 
         return when {
             firstStep -> ScreenTitleGeneral(R.string.new_site_creation_screen_title_general)
             lastStep -> ScreenTitleEmpty
+            singleInBetweenStepDomains -> ScreenTitleGeneral(R.string.my_site_select_domains_page_title)
             else -> ScreenTitleStepCount(
                     R.string.new_site_creation_screen_title_step_count,
                     stepCount - 2, // -2 -> first = general title (Create Site), last item = empty title
