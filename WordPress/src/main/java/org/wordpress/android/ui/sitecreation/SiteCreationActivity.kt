@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.sitecreation
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
@@ -43,7 +41,6 @@ import org.wordpress.android.ui.sitecreation.siteinfo.SiteInfoScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsFragment
 import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
