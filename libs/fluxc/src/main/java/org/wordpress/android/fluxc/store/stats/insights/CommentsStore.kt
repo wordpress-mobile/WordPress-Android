@@ -22,13 +22,13 @@ class CommentsStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchComments(siteModel: SiteModel, limitMode: LimitMode, forced: Boolean = false) =
-            coroutineEngine.runOnBackground(STATS, this, "fetchComments") {
+            coroutineEngine.withDefaultContext(STATS, this, "fetchComments") {
                 val requestedItems = if (limitMode is Top) limitMode.limit else Int.MAX_VALUE
                 if (!forced && sqlUtils.hasFreshRequest(siteModel, requestedItems)) {
-                    return@runOnBackground OnStatsFetched(getComments(siteModel, limitMode), cached = true)
+                    return@withDefaultContext OnStatsFetched(getComments(siteModel, limitMode), cached = true)
                 }
                 val responsePayload = restClient.fetchTopComments(siteModel, forced = forced)
-                return@runOnBackground when {
+                return@withDefaultContext when {
                     responsePayload.isError -> {
                         OnStatsFetched(responsePayload.error)
                     }

@@ -30,12 +30,12 @@ class AuthorsStore
         limitMode: Top,
         date: Date,
         forced: Boolean = false
-    ) = coroutineEngine.runOnBackground(STATS, this, "fetchAuthors") {
+    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchAuthors") {
         if (!forced && sqlUtils.hasFreshRequest(site, period, date, limitMode.limit)) {
-            return@runOnBackground OnStatsFetched(getAuthors(site, period, limitMode, date), cached = true)
+            return@withDefaultContext OnStatsFetched(getAuthors(site, period, limitMode, date), cached = true)
         }
         val payload = restClient.fetchAuthors(site, period, date, limitMode.limit + 1, forced)
-        return@runOnBackground when {
+        return@withDefaultContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, period, date, limitMode.limit)

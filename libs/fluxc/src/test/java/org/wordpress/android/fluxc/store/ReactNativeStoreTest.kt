@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.reactnative.ReactNativeWPC
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals
 
 class ReactNativeStoreTest {
@@ -23,7 +24,7 @@ class ReactNativeStoreTest {
 
     @Before
     fun setup() {
-        store = ReactNativeStore(wpComRestClient, wpApiRestClient, Unconfined)
+        store = ReactNativeStore(wpComRestClient, wpApiRestClient, initCoroutineEngine())
     }
 
     @Test

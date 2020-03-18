@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import java.util.UUID
 import kotlin.random.Random
 
@@ -26,7 +27,7 @@ class PageStoreLocalChangesTest {
     private val pageStore = PageStore(
             postStore = mock(),
             dispatcher = mock(),
-            coroutineContext = Dispatchers.Default,
+            coroutineEngine = initCoroutineEngine(),
             postSqlUtils = postSqlUtils
     )
 

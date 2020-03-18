@@ -60,7 +60,7 @@ import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.fluxc.test
-import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -90,7 +90,6 @@ class InsightsStoreTest {
     @Mock lateinit var tagsSqlUtils: TagsSqlUtils
     @Mock lateinit var todaySqlUtils: TodayInsightsSqlUtils
     @Mock lateinit var mapper: InsightsMapper
-    private val coroutineEngine: CoroutineEngine = initCoroutineEngine()
     private lateinit var allTimeStore: AllTimeInsightsStore
     private lateinit var commentsStore: CommentsStore
     private lateinit var followersStore: FollowersStore
@@ -104,45 +103,45 @@ class InsightsStoreTest {
                 allTimeInsightsRestClient,
                 allTimeSqlUtils,
                 mapper,
-                coroutineEngine
+                initCoroutineEngine()
         )
         commentsStore = CommentsStore(
                 commentsRestClient,
                 commentInsightsSqlUtils,
                 mapper,
-                coroutineEngine
+                initCoroutineEngine()
         )
         followersStore = FollowersStore(
                 followersRestClient,
                 wpComFollowersSqlUtils,
                 emailFollowersSqlUtils,
                 mapper,
-                coroutineEngine
+                initCoroutineEngine()
         )
         latestPostStore = LatestPostInsightsStore(
                 latestPostInsightsRestClient,
                 latestPostDetailSqlUtils,
                 detailedPostStatsSqlUtils,
                 mapper,
-                coroutineEngine
+                initCoroutineEngine()
         )
         publicizeStore = PublicizeStore(
                 publicizeRestClient,
                 publicizeSqlUtils,
                 mapper,
-                coroutineEngine
+                initCoroutineEngine()
         )
         tagsStore = TagsStore(
                 tagsRestClient,
                 tagsSqlUtils,
                 mapper,
-                coroutineEngine
+                initCoroutineEngine()
         )
         todayStore = TodayInsightsStore(
                 todayInsightsRestClient,
                 todaySqlUtils,
                 mapper,
-                coroutineEngine
+                initCoroutineEngine()
         )
     }
 

@@ -20,9 +20,8 @@ import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.stats.POSTING_ACTIVITY_RESPONSE
-import org.wordpress.android.fluxc.store.stats.initCoroutineEngine
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.test
-import org.wordpress.android.fluxc.tools.CoroutineEngine
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -32,7 +31,6 @@ class PostingActivityStoreTest {
     @Mock lateinit var restClient: PostingActivityRestClient
     @Mock lateinit var sqlUtils: PostingActivitySqlUtils
     @Mock lateinit var mapper: InsightsMapper
-    private val coroutineEngine: CoroutineEngine = initCoroutineEngine()
     private lateinit var store: PostingActivityStore
     private val startDate = Day(2018, 1, 1)
     private val endDate = Day(2019, 1, 1)
@@ -41,7 +39,7 @@ class PostingActivityStoreTest {
         store = PostingActivityStore(
                 restClient,
                 sqlUtils,
-                coroutineEngine,
+                initCoroutineEngine(),
                 mapper
         )
     }

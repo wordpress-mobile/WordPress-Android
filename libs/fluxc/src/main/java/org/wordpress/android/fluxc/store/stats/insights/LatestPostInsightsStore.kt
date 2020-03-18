@@ -20,15 +20,15 @@ class LatestPostInsightsStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchLatestPostInsights(site: SiteModel, forced: Boolean = false) =
-            coroutineEngine.runOnBackground(STATS, this, "fetchLatestPostInsights") {
+            coroutineEngine.withDefaultContext(STATS, this, "fetchLatestPostInsights") {
                 if (!forced && latestPostDetailSqlUtils.hasFreshRequest(site)) {
-                    return@runOnBackground OnStatsFetched(getLatestPostInsights(site), cached = true)
+                    return@withDefaultContext OnStatsFetched(getLatestPostInsights(site), cached = true)
                 }
                 val latestPostPayload = restClient.fetchLatestPostForInsights(site, forced)
                 val postsFound = latestPostPayload.response?.postsFound
 
                 val posts = latestPostPayload.response?.posts
-                return@runOnBackground if (postsFound != null && postsFound > 0 && posts != null && posts.isNotEmpty()) {
+                return@withDefaultContext if (postsFound != null && postsFound > 0 && posts != null && posts.isNotEmpty()) {
                     val latestPost = posts[0]
                     val postStats = restClient.fetchPostStats(site, latestPost.id, forced)
                     when {

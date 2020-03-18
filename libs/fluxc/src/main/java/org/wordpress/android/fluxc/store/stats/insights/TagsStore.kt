@@ -22,12 +22,12 @@ class TagsStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchTags(siteModel: SiteModel, limitMode: Top, forced: Boolean = false) =
-            coroutineEngine.runOnBackground(STATS, this, "fetchTags") {
+            coroutineEngine.withDefaultContext(STATS, this, "fetchTags") {
                 if (!forced && sqlUtils.hasFreshRequest(siteModel, limitMode.limit)) {
-                    return@runOnBackground OnStatsFetched(getTags(siteModel, limitMode), cached = true)
+                    return@withDefaultContext OnStatsFetched(getTags(siteModel, limitMode), cached = true)
                 }
                 val response = restClient.fetchTags(siteModel, max = limitMode.limit + 1, forced = forced)
-                return@runOnBackground when {
+                return@withDefaultContext when {
                     response.isError -> {
                         OnStatsFetched(response.error)
                     }

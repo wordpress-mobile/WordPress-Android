@@ -29,12 +29,12 @@ class SearchTermsStore
         limitMode: LimitMode.Top,
         date: Date,
         forced: Boolean = false
-    ) = coroutineEngine.runOnBackground(STATS, this, "fetchSearchTerms") {
+    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchSearchTerms") {
         if (!forced && sqlUtils.hasFreshRequest(site, granularity, date, limitMode.limit)) {
-            return@runOnBackground OnStatsFetched(getSearchTerms(site, granularity, limitMode, date), cached = true)
+            return@withDefaultContext OnStatsFetched(getSearchTerms(site, granularity, limitMode, date), cached = true)
         }
         val payload = restClient.fetchSearchTerms(site, granularity, date, limitMode.limit + 1, forced)
-        return@runOnBackground when {
+        return@withDefaultContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, granularity, date, limitMode.limit)
