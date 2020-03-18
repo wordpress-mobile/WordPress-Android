@@ -13,8 +13,8 @@ import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
-import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
-import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState.UploadingPost
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingPost
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED

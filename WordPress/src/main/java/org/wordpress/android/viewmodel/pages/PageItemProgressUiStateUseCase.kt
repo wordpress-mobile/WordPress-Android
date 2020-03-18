@@ -2,10 +2,10 @@ package org.wordpress.android.viewmodel.pages
 
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState
-import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState.UploadQueued
-import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState.UploadingMedia
-import org.wordpress.android.viewmodel.pages.CreatePageUploadUiStateUseCase.PostUploadUiState.UploadingPost
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadQueued
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingMedia
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingPost
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import javax.inject.Inject
 

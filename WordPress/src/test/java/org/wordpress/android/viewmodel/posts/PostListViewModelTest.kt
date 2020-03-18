@@ -21,6 +21,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.SEARCH
+import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.uploads.UploadStarter
 
 private const val DEFAULT_PHOTON_DIMENSIONS = -9
@@ -29,6 +30,7 @@ private val DEFAULT_AUTHOR_FILTER = AuthorFilterSelection.EVERYONE
 class PostListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var uploadStarter: UploadStarter
+    @Mock private lateinit var uploadStatusTracker: PostModelUploadStatusTracker
 
     private lateinit var viewModel: PostListViewModel
 
@@ -61,7 +63,8 @@ class PostListViewModelTest : BaseUnitTest() {
                 connectionStatus = mock(),
                 uploadUtilsWrapper = mock(),
                 uiDispatcher = TEST_DISPATCHER,
-                bgDispatcher = TEST_DISPATCHER
+                bgDispatcher = TEST_DISPATCHER,
+                uploadStatusTracker = uploadStatusTracker
         )
     }
 
