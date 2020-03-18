@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstalledPayload
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackStoreTest {
@@ -33,7 +34,7 @@ class JetpackStoreTest {
 
     @Before
     fun setUp() {
-        jetpackStore = JetpackStore(jetpackRestClient, siteStore, Dispatchers.Unconfined, dispatcher)
+        jetpackStore = JetpackStore(jetpackRestClient, siteStore, initCoroutineEngine(), dispatcher)
         val siteId = 1
         whenever(site.id).thenReturn(siteId)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
