@@ -476,4 +476,8 @@
     <dimen name="bottom_sheet_handle_width">32dp</dimen>
     <dimen name="bottom_sheet_handle_margin_top">4dp</dimen>
 
+    <!-- unelevated card -->
+    <dimen name="unelevated_card_elevation">0dp</dimen>
+    <dimen name="unelevated_card_stroke_width">1dp</dimen>
+
 </resources>
