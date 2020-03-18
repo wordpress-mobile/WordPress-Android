@@ -334,12 +334,9 @@
         <item name="android:textColor">@color/gray_50</item>
     </style>
 
-    <style name="InsightsManagementHeader" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/neutral_50</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+    <style name="InsightsManagementHeader" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:textColor">?attr/colorAccent</item>
     </style>
 
-    <style name="InsightsManagementItem" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textSize">@dimen/text_sz_large</item>
-    </style>
+    <style name="InsightsManagementItem" parent="TextAppearance.MaterialComponents.Body1" />
 </resources>
