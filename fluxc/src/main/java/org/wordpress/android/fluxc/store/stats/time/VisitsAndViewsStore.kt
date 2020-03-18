@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store.stats.time
 
-import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
@@ -12,11 +11,12 @@ import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.VisitsAndViewsS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import org.wordpress.android.fluxc.utils.SiteUtils
+import org.wordpress.android.util.AppLog.T.STATS
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class VisitsAndViewsStore
@@ -26,23 +26,26 @@ class VisitsAndViewsStore
     private val timeStatsMapper: TimeStatsMapper,
     private val statsUtils: StatsUtils,
     private val currentTimeProvider: CurrentTimeProvider,
-    private val coroutineContext: CoroutineContext
+    private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchVisits(
         site: SiteModel,
         granularity: StatsGranularity,
         limitMode: LimitMode.Top,
         forced: Boolean = false
-    ) = withContext(coroutineContext) {
+    ) = coroutineEngine.runOnBackground(STATS, this, "fetchVisits") {
         val dateWithTimeZone = statsUtils.getFormattedDate(
                 currentTimeProvider.currentDate,
                 SiteUtils.getNormalizedTimezone(site.timezone)
         )
         if (!forced && sqlUtils.hasFreshRequest(site, granularity, dateWithTimeZone, limitMode.limit)) {
-            return@withContext OnStatsFetched(getVisits(site, granularity, limitMode, dateWithTimeZone), cached = true)
+            return@runOnBackground OnStatsFetched(
+                    getVisits(site, granularity, limitMode, dateWithTimeZone),
+                    cached = true
+            )
         }
         val payload = restClient.fetchVisits(site, granularity, dateWithTimeZone, limitMode.limit, forced)
-        return@withContext when {
+        return@runOnBackground when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, granularity, dateWithTimeZone, limitMode.limit)
@@ -73,7 +76,7 @@ class VisitsAndViewsStore
         granularity: StatsGranularity,
         limitMode: LimitMode,
         dateWithTimeZone: String
-    ): VisitsAndViewsModel? {
-        return sqlUtils.select(site, granularity, dateWithTimeZone)?.let { timeStatsMapper.map(it, limitMode) }
+    ) = coroutineEngine.run(STATS, this, "getVisits") {
+        sqlUtils.select(site, granularity, dateWithTimeZone)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
