@@ -33,19 +33,19 @@ class VisitsAndViewsStore
         granularity: StatsGranularity,
         limitMode: LimitMode.Top,
         forced: Boolean = false
-    ) = coroutineEngine.runOnBackground(STATS, this, "fetchVisits") {
+    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchVisits") {
         val dateWithTimeZone = statsUtils.getFormattedDate(
                 currentTimeProvider.currentDate,
                 SiteUtils.getNormalizedTimezone(site.timezone)
         )
         if (!forced && sqlUtils.hasFreshRequest(site, granularity, dateWithTimeZone, limitMode.limit)) {
-            return@runOnBackground OnStatsFetched(
+            return@withDefaultContext OnStatsFetched(
                     getVisits(site, granularity, limitMode, dateWithTimeZone),
                     cached = true
             )
         }
         val payload = restClient.fetchVisits(site, granularity, dateWithTimeZone, limitMode.limit, forced)
-        return@runOnBackground when {
+        return@withDefaultContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, granularity, dateWithTimeZone, limitMode.limit)

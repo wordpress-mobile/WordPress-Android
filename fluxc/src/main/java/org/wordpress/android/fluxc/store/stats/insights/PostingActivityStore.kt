@@ -26,12 +26,12 @@ class PostingActivityStore
         startDay: Day,
         endDay: Day,
         forced: Boolean = false
-    ) = coroutineEngine.runOnBackground(STATS, this, "fetchPostingActivity") {
+    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchPostingActivity") {
         if (!forced && sqlUtils.hasFreshRequest(site)) {
-            return@runOnBackground OnStatsFetched(getPostingActivity(site, startDay, endDay), cached = true)
+            return@withDefaultContext OnStatsFetched(getPostingActivity(site, startDay, endDay), cached = true)
         }
         val payload = restClient.fetchPostingActivity(site, startDay, endDay, forced)
-        return@runOnBackground when {
+        return@withDefaultContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response)

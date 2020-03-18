@@ -21,12 +21,12 @@ class TodayInsightsStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchTodayInsights(siteModel: SiteModel, forced: Boolean = false) =
-            coroutineEngine.runOnBackground(STATS, this, "fetchTodayInsights") {
+            coroutineEngine.withDefaultContext(STATS, this, "fetchTodayInsights") {
                 if (!forced && sqlUtils.hasFreshRequest(siteModel)) {
-                    return@runOnBackground OnStatsFetched(getTodayInsights(siteModel), cached = true)
+                    return@withDefaultContext OnStatsFetched(getTodayInsights(siteModel), cached = true)
                 }
                 val response = restClient.fetchTimePeriodStats(siteModel, DAYS, forced)
-                return@runOnBackground when {
+                return@withDefaultContext when {
                     response.isError -> {
                         OnStatsFetched(response.error)
                     }

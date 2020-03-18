@@ -30,15 +30,15 @@ class PostAndPageViewsStore
         limitMode: Top,
         date: Date,
         forced: Boolean = false
-    ) = coroutineEngine.runOnBackground(STATS, this, "fetchPostAndPageViews") {
+    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchPostAndPageViews") {
         if (!forced && sqlUtils.hasFreshRequest(site, granularity, date, limitMode.limit)) {
-            return@runOnBackground OnStatsFetched(
+            return@withDefaultContext OnStatsFetched(
                     getPostAndPageViews(site, granularity, limitMode, date),
                     cached = true
             )
         }
         val payload = restClient.fetchPostAndPageViews(site, granularity, date, limitMode.limit + 1, forced)
-        return@runOnBackground when {
+        return@withDefaultContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, granularity, date, limitMode.limit)

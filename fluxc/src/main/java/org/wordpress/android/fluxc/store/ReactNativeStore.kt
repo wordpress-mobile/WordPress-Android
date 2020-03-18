@@ -1,15 +1,15 @@
 package org.wordpress.android.fluxc.store
 
 import com.google.gson.JsonElement
-import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.ReactNativeWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.reactnative.ReactNativeWPComRestClient
-import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
+import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
+import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
 /**
  * This store is for use making calls that originate from React Native. It does not use
@@ -21,16 +21,16 @@ class ReactNativeStore
 @Inject constructor(
     private val wpComRestClient: ReactNativeWPComRestClient,
     private val wpAPIRestClient: ReactNativeWPAPIRestClient,
-    private val coroutineContext: CoroutineContext
+    private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun performWPComRequest(url: String, params: Map<String, String>): ReactNativeFetchResponse =
-            withContext(coroutineContext) {
-                return@withContext wpComRestClient.fetch(url, params, ::Success, ::Error)
+            coroutineEngine.withDefaultContext(AppLog.T.EDITOR, this, "performWPComRequest") {
+                return@withDefaultContext wpComRestClient.fetch(url, params, ::Success, ::Error)
             }
 
     suspend fun performWPAPIRequest(url: String, params: Map<String, String>): ReactNativeFetchResponse =
-            withContext(coroutineContext) {
-                return@withContext wpAPIRestClient.fetch(url, params, ::Success, ::Error)
+            coroutineEngine.withDefaultContext(AppLog.T.EDITOR, this, "performWPAPIRequest") {
+                return@withDefaultContext wpAPIRestClient.fetch(url, params, ::Success, ::Error)
             }
 }
 

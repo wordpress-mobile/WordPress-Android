@@ -24,12 +24,12 @@ class PostDetailStore
         site: SiteModel,
         postId: Long,
         forced: Boolean = false
-    ) = coroutineEngine.runOnBackground(AppLog.T.STATS, this, "fetchPostDetail") {
+    ) = coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "fetchPostDetail") {
         if (!forced && sqlUtils.hasFreshRequest(site, postId = postId)) {
-            return@runOnBackground OnStatsFetched(getPostDetail(site, postId), cached = true)
+            return@withDefaultContext OnStatsFetched(getPostDetail(site, postId), cached = true)
         }
         val payload = restClient.fetchPostStats(site, postId, forced)
-        return@runOnBackground when {
+        return@withDefaultContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, postId = postId)
