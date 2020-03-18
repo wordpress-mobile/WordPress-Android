@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.store.stats
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers.Unconfined
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -61,7 +60,7 @@ import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.fluxc.test
-import org.wordpress.android.fluxc.utils.CurrentTimeProvider
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -91,7 +90,7 @@ class InsightsStoreTest {
     @Mock lateinit var tagsSqlUtils: TagsSqlUtils
     @Mock lateinit var todaySqlUtils: TodayInsightsSqlUtils
     @Mock lateinit var mapper: InsightsMapper
-    @Mock lateinit var timeProvider: CurrentTimeProvider
+    private val coroutineEngine: CoroutineEngine = initCoroutineEngine()
     private lateinit var allTimeStore: AllTimeInsightsStore
     private lateinit var commentsStore: CommentsStore
     private lateinit var followersStore: FollowersStore
@@ -99,52 +98,51 @@ class InsightsStoreTest {
     private lateinit var publicizeStore: PublicizeStore
     private lateinit var tagsStore: TagsStore
     private lateinit var todayStore: TodayInsightsStore
-    private val currentDate = Date(10)
     @Before
     fun setUp() {
         allTimeStore = AllTimeInsightsStore(
                 allTimeInsightsRestClient,
                 allTimeSqlUtils,
                 mapper,
-                Unconfined
+                coroutineEngine
         )
         commentsStore = CommentsStore(
                 commentsRestClient,
                 commentInsightsSqlUtils,
                 mapper,
-                Unconfined
+                coroutineEngine
         )
         followersStore = FollowersStore(
                 followersRestClient,
                 wpComFollowersSqlUtils,
                 emailFollowersSqlUtils,
                 mapper,
-                Unconfined
+                coroutineEngine
         )
         latestPostStore = LatestPostInsightsStore(
                 latestPostInsightsRestClient,
                 latestPostDetailSqlUtils,
                 detailedPostStatsSqlUtils,
                 mapper,
-                Unconfined
+                coroutineEngine
         )
         publicizeStore = PublicizeStore(
                 publicizeRestClient,
                 publicizeSqlUtils,
                 mapper,
-                Unconfined
+                coroutineEngine
         )
         tagsStore = TagsStore(
                 tagsRestClient,
                 tagsSqlUtils,
                 mapper,
-                Unconfined
+                coroutineEngine
         )
         todayStore = TodayInsightsStore(
                 todayInsightsRestClient,
                 todaySqlUtils,
                 mapper,
-                Unconfined
+                coroutineEngine
         )
     }
 
