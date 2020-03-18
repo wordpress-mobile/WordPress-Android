@@ -1,0 +1,6 @@
+14.3:
+- Aggiunte all'editor a blocchi: blocchi Pulsante e Gruppo e opzioni nelle impostazioni di Immagine e Galleria.
+- Miglioramenti all'editor a blocchi: aggiunta dello scorrimento nel selezionatore e nelle impostazioni e di una barra mobile per la navigazione.
+- Correzioni all'editor a blocchi: correzione del caricamento di immagini segnaposto, degli emoji nei titoli degli articoli e del ritorno a capo nei blocchi Shortcode.
+- Reader: aggiunta del filtro schede per migliorare la navigazione di siti/tag.
+

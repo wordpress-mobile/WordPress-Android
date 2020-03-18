@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-15 17:40:18+0000
+Translation-Revision-Date: 2020-02-17 09:38:52+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="gutenberg_native_template_preview">Podgląd szablonu</string>
     <string name="gutenberg_native_remove_image">Usuń zdjęcie</string>
     <string name="create_post_page_fab_tooltip">Stwórz wpis lub stronę</string>
     <string name="post_signup_interstitial_not_right_now">Nie teraz</string>
+    <string name="post_settings_publish">Opublikuj</string>
     <string name="login_discovery_error_generic">Nie byliśmy w stanie uzyskać dostępu do twojej witryny. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
     <string name="login_discovery_error_ssl">Nie byliśmy w stanie uzyskać dostępu do twojej witryny z powodu problemu z &lt;b>SSL Certificatem&lt;/b>. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
     <string name="login_discovery_error_http_auth">Nie byliśmy w stanie uzyskać dostępu do twojej witryny ponieważ wymaga &lt;b>Authentykacji HTTP&lt;/b>. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
@@ -26,7 +28,6 @@ Language: pl
     <string name="suffix_1_000_000_000_000_000">%s bld</string>
     <string name="suffix_1_000_000_000_000">%s bln</string>
     <string name="suffix_1_000_000_000_000_000_000">%s tln</string>
-    <string name="reader_filter_all_sites">Wszystkie witryny</string>
     <string name="reader_filter_sites_title">Witryny</string>
     <string name="reader_filter_tags_title">Tagi</string>
     <string name="reader_save_for_later_display_name">Zapisano</string>
@@ -1897,7 +1898,6 @@ Language: pl
     <string name="reader_hint_add_tag_or_url">Wpisz adres lub tag aby obserwować</string>
     <string name="reader_page_followed_blogs">Obserwowane blogi</string>
     <string name="reader_page_followed_tags">Obserwowane tagi</string>
-    <string name="reader_title_subs">Tagi i Witryny</string>
     <string name="reader_title_tag_preview">Tag Czytnika</string>
     <string name="reader_title_blog_preview">Witryna Czytnika</string>
     <string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>

@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-10 01:54:09+0000
+Translation-Revision-Date: 2020-02-25 08:10:40+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="reader_self_hosted_select_filter">フィルターボタンを使って指定トピックの投稿を検索</string>
+    <string name="reader_bottom_sheet_content_description">タグまたはサイトを選択 (ポップアップウィンドウ)</string>
+    <string name="reader_btn_selected_filter_tick_content_description">選択済</string>
+    <string name="reader_btn_select_filter_content_description">投稿を絞り込むためのサイトまたはタグを選択</string>
+    <string name="reader_btn_remove_filter_content_description">現在のフィルターを削除</string>
+    <string name="reader_title_subs">タグとサイトを管理</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com にログイン</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">WordPress.com にログインし、フォロー中のタグの最新投稿をチェック</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">WordPress.com にログインし、フォロー中のサイトの最新投稿をチェック</string>
+    <string name="gutenberg_native_template_preview">テンプレートのプレビュー</string>
+    <string name="gutenberg_native_replace_current_block">現在のブロックを置き換え</string>
+    <string name="gutenberg_native_add_to_end">末尾に追加</string>
+    <string name="gutenberg_native_add_to_beginning">先頭に追加</string>
+    <string name="gutenberg_native_add_block_before">前にブロックを追加</string>
+    <string name="gutenberg_native_add_block_after">後にブロックを追加</string>
+    <string name="reader_filter_empty_tags_action">タグを追加</string>
+    <string name="reader_filter_empty_sites_action">サイトをフォロー</string>
+    <string name="reader_filter_empty_tags_list">タグを追加することで特定の主題に関する投稿をフォローできます。</string>
+    <string name="reader_filter_empty_sites_list">フォローしているサイトの最新の投稿を表示</string>
+    <string name="reader_filter_main_title">フォロー中</string>
+    <string name="reader_filter_cta">フィルター</string>
     <string name="gutenberg_native_video_caption_s">動画の見出しです。%s</string>
     <string name="gutenberg_native_edit_video">動画を編集</string>
     <string name="gutenberg_native_edit_media">メディアを編集</string>
@@ -68,7 +89,6 @@ Language: ja_JP
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_all_sites">すべてのサイト</string>
     <string name="reader_filter_sites_title">サイト</string>
     <string name="reader_filter_tags_title">タグ</string>
     <string name="reader_save_for_later_display_name">保存しました</string>
@@ -1939,7 +1959,6 @@ Language: ja_JP
     <string name="reader_hint_add_tag_or_url">フォローしたい URL またはタグを入力</string>
     <string name="reader_page_followed_blogs">フォロー中のサイト</string>
     <string name="reader_page_followed_tags">フォロー中のタグ</string>
-    <string name="reader_title_subs">タグ・サイト</string>
     <string name="reader_title_tag_preview">Reader タグ</string>
     <string name="reader_title_blog_preview">Reader サイト</string>
     <string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>

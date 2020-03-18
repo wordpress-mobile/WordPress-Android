@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-08 00:54:10+0000
+Translation-Revision-Date: 2020-03-05 01:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="reader_self_hosted_select_filter">Utilizza il pulsante di filtro per trovare articoli su argomenti specifici</string>
+    <string name="reader_bottom_sheet_content_description">Seleziona un tag o un sito, finestra pop-up</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Selezionati</string>
+    <string name="reader_btn_select_filter_content_description">Seleziona un sito o un tag per filtrare gli articoli</string>
+    <string name="reader_btn_remove_filter_content_description">Rimuovi filtro attuale</string>
+    <string name="reader_title_subs">Gestisci tag e siti</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Accedi a WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Accedi a WordPress.com per vedere gli ultimi articoli dei tag che segui</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Accedi a WordPress.com per vedere gli ultimi articoli dei siti che segui</string>
+    <string name="gutenberg_native_template_preview">Anteprima del modello</string>
+    <string name="gutenberg_native_replace_current_block">Sostituisci blocco attuale</string>
+    <string name="gutenberg_native_add_to_end">Aggiungi alla fine</string>
+    <string name="gutenberg_native_add_to_beginning">Aggiungi all\'inizio</string>
+    <string name="gutenberg_native_add_block_before">Aggiungi blocco prima</string>
+    <string name="gutenberg_native_add_block_after">Aggiungi blocco dopo</string>
+    <string name="reader_filter_empty_tags_action">Aggiungi un tag</string>
+    <string name="reader_filter_empty_sites_action">Segui un sito</string>
+    <string name="reader_filter_empty_tags_list">Puoi seguire gli articoli su uno specifico argomento aggiungendo un tag</string>
+    <string name="reader_filter_empty_sites_list">Vedi gli articoli più recenti dei siti che segui</string>
+    <string name="reader_filter_main_title">Stai seguendo</string>
+    <string name="reader_filter_cta">Filtro</string>
     <string name="gutenberg_native_video_caption_s">Didascalia del video. %s</string>
     <string name="gutenberg_native_edit_video">Modifica video</string>
     <string name="gutenberg_native_edit_media">Modifica elemento multimediale</string>
@@ -26,11 +47,18 @@ Language: it
     <string name="stats_bar_chart_accessibility_entry">%3$s, %2$d %1$s</string>
     <string name="gutenberg_native_move_image_forward">Sposta avanti l\'immagine</string>
     <string name="gutenberg_native_move_image_backward">Sposta indietro l\'immagine</string>
+    <string name="create_post_page_fab_tooltip">Crea un articolo o una pagina</string>
+    <string name="post_signup_interstitial_not_right_now">Non adesso</string>
     <string name="post_signup_interstitial_title">Benvenuto in WordPress</string>
+    <string name="photo_picker_image_thumbnail_selected">Immagine selezionata</string>
     <string name="photo_picker_image_thumbnail_content_description">Miniatura immagine</string>
+    <string name="post_settings_publish">Pubblica</string>
+    <string name="dialog_confirm_scheduled_post_sync_yes">Sincronizza ora</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Questo articolo verrà sincronizzato immediatamente.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Pronto per la sincronizzazione?</string>
     <string name="new_site_creation_unavailable_domain">Questo dominio non è disponibile</string>
+    <string name="login_promo_viewpager_content_description">Introduzione</string>
+    <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Non siamo stati in grado di accedere al tuo sito. Dovrai contattare il tuo fornitore di hosting per risolvere questo problema.</string>
     <string name="login_discovery_error_ssl">Non siamo stati in grado di accedere al tuo sito perché abbiamo riscontrato un problema con il &lt;b>certificato SSL&lt;/b>. Dovrai contattare il tuo fornitore di hosting per risolvere questo problema.</string>
     <string name="login_discovery_error_http_auth">Non siamo stati in grado di accedere al tuo sito perché viene richiesta l\'&lt;b>autenticazione HTTP&lt;/b>. Dovrai contattare il tuo fornitore di hosting per risolvere questo problema.</string>
@@ -47,7 +75,6 @@ Language: it
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_all_sites">Tutti i siti</string>
     <string name="reader_filter_sites_title">Siti</string>
     <string name="reader_filter_tags_title">Tag</string>
     <string name="reader_save_for_later_display_name">Salvataggio completato</string>
@@ -80,6 +107,7 @@ Language: it
     <string name="gutenberg_native_post_title_empty">Titolo dell\'articolo. Vuoto</string>
     <string name="gutenberg_native_paste_url">Incolla URL</string>
     <string name="gutenberg_native_open_settings">Apri le impostazioni</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Nessuna applicazione può gestire questa richiesta. Installa un browser web.</string>
     <string name="gutenberg_native_navigate_up">Naviga su</string>
     <string name="gutenberg_native_my_pre_publish_panel">Il mio pannello di prepubblicazione</string>
     <string name="gutenberg_native_my_post_status_info">Le mie informazioni di stato dell\'articolo</string>
@@ -1003,6 +1031,7 @@ Language: it
     <string name="my_site_add_new_site">Aggiungi nuovo sito</string>
     <string name="my_site_create_new_site">Crea un nuovo sito per la tua azienda, rivista o blog personale; in alternativa, connetti un sito WordPress esistente.</string>
     <string name="notifications_jetpack_connection_setup_info">Per ricevere le utili notifiche dal tuo sito WordPress sul tuo dispositivo, sarà necessario installare il plugin di Jetpack. Desideri configurare Jetpack?</string>
+    <string name="site_settings_lazy_load_images">Immagini a caricamento lento</string>
     <string name="stats_jetpack_connection_setup">Installa Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Attiva/Disattiva testo</string>
     <string name="plugin_info_your_version">La tua versione di WordPress</string>
@@ -1913,7 +1942,6 @@ Language: it
     <string name="reader_hint_add_tag_or_url">Inserisci una URL o untag da seguire</string>
     <string name="reader_page_followed_blogs">Siti che segui</string>
     <string name="reader_page_followed_tags">Tag seguiti</string>
-    <string name="reader_title_subs">Tag e siti</string>
     <string name="reader_title_tag_preview">Reader tag</string>
     <string name="reader_title_blog_preview">Reader del sito</string>
     <string name="ssl_certificate_ask_trust">Se in genere ti connetti al sito senza problemi, questo errore potrebbe significare che qualcuno sta tentando di impersonare il sito, pertanto non dovresti continuare. Desideri comunque confermare l\'affidabilità del certificato?</string>

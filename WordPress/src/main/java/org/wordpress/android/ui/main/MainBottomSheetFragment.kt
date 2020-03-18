@@ -24,10 +24,7 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: WPMainActivityViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.LoginTheme_BottomSheetDialogStyle)
-    }
+    override fun getTheme() = R.style.Handled_BottomSheetDialogStyle
 
     override fun onCreateView(
         inflater: LayoutInflater,

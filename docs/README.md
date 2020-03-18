@@ -12,6 +12,7 @@
 ## Accessibility
 
 - [Accessibility Guidelines](accessibility-guidelines.md)
+- [TalkBack Guidelines](talkback-guidelines.md)
 - [Right to Left Layout Guidelines](right-to-left-layout-guidelines.md)
 
 ## Others

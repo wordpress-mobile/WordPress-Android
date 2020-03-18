@@ -269,7 +269,7 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity"
-            android:label="@string/stats_manage_insights"
+            android:label="@string/stats_management_screen_title"
             android:launchMode="singleTop"
             android:theme="@style/CalypsoTheme" />
         <activity

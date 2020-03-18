@@ -339,7 +339,7 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
                 case TAB_POSITION_LIKE:
                     return getString(R.string.notifications_tab_title_likes);
                 case TAB_POSITION_UNREAD:
-                    return getString(R.string.notifications_tab_title_unread);
+                    return getString(R.string.notifications_tab_title_unread_notifications);
                 default:
                     return super.getPageTitle(position);
             }
