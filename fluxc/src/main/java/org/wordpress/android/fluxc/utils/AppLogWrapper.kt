@@ -7,4 +7,3 @@ class AppLogWrapper
 @Inject constructor() {
     fun d(tag: AppLog.T, message: String) = AppLog.d(tag, message)
 }
-

@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.page
 
 import com.nhaarman.mockitokotlin2.mock
 import com.yarolegovich.wellsql.WellSql
-import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
