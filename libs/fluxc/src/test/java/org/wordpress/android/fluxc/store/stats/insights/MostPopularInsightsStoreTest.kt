@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.store.stats.insights
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -21,7 +20,9 @@ import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.stats.MOST_POPULAR_RESPONSE
+import org.wordpress.android.fluxc.store.stats.initCoroutineEngine
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -31,6 +32,7 @@ class MostPopularInsightsStoreTest {
     @Mock lateinit var restClient: MostPopularRestClient
     @Mock lateinit var sqlUtils: MostPopularSqlUtils
     @Mock lateinit var mapper: InsightsMapper
+    private val coroutineEngine: CoroutineEngine = initCoroutineEngine()
     private lateinit var store: MostPopularInsightsStore
     @Before
     fun setUp() {
@@ -38,7 +40,7 @@ class MostPopularInsightsStoreTest {
                 restClient,
                 sqlUtils,
                 mapper,
-                Dispatchers.Unconfined
+                coroutineEngine
         )
     }
 
