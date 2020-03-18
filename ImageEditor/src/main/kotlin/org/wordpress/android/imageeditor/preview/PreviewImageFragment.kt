@@ -27,6 +27,7 @@ class PreviewImageFragment : Fragment() {
     companion object {
         const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
         const val ARG_HIGH_RES_IMAGE_URL = "arg_high_res_image_url"
+        const val ARG_OUTPUT_FILE_EXTENSION = "arg_output_file_extension"
         const val PREVIEW_IMAGE_REDUCED_SIZE_FACTOR = 0.1
     }
 
@@ -46,10 +47,11 @@ class PreviewImageFragment : Fragment() {
     private fun initializeViewModels(nonNullIntent: Intent) {
         val lowResImageUrl = nonNullIntent.getStringExtra(ARG_LOW_RES_IMAGE_URL)
         val highResImageUrl = nonNullIntent.getStringExtra(ARG_HIGH_RES_IMAGE_URL)
+        val outputFileExtension = nonNullIntent.getStringExtra(ARG_OUTPUT_FILE_EXTENSION)
 
         viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
         setupObservers()
-        viewModel.onCreateView(lowResImageUrl, highResImageUrl)
+        viewModel.onCreateView(lowResImageUrl, highResImageUrl, outputFileExtension)
     }
 
     private fun setupObservers() {
@@ -66,7 +68,7 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        viewModel.navigateToCropScreenWithInputFilePath.observe(this, Observer { filePath ->
+        viewModel.navigateToCropScreenWithFileInfo.observe(this, Observer { filePath ->
             navigateToCropScreenWithInputFilePath(filePath)
         })
     }
@@ -104,9 +106,11 @@ class PreviewImageFragment : Fragment() {
         )
     }
 
-    private fun navigateToCropScreenWithInputFilePath(inputFilePath: String) {
+    private fun navigateToCropScreenWithInputFilePath(fileInfo: Pair<String, String?>) {
+        val inputFilePath = fileInfo.first
+        val outputFileExtension = fileInfo.second
         findNavController().navigate(
-            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath)
+            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
         )
     }
 }

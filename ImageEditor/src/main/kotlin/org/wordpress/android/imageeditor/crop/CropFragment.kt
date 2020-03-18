@@ -56,7 +56,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     private fun initializeViewModels() {
         viewModel = ViewModelProvider(this).get(CropViewModel::class.java)
         setupObservers()
-        viewModel.start(navArgs.inputFilePath, requireContext().cacheDir)
+        viewModel.start(navArgs.inputFilePath, navArgs.outputFileExtension, requireContext().cacheDir)
     }
 
     private fun setupObservers() {

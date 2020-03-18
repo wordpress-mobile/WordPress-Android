@@ -29,6 +29,7 @@ class CropViewModel : ViewModel() {
 
     private lateinit var cacheDir: File
     private lateinit var inputFilePath: String
+    private lateinit var outputFileExtension: String
     private var isStarted = false
 
     private val cropOptions by lazy {
@@ -46,18 +47,23 @@ class CropViewModel : ViewModel() {
         Bundle().also {
             with(it) {
                 putParcelable(UCrop.EXTRA_INPUT_URI, Uri.fromFile(File(inputFilePath)))
-                putParcelable(UCrop.EXTRA_OUTPUT_URI, Uri.fromFile(File(cacheDir, IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME)))
+                putParcelable(UCrop.EXTRA_OUTPUT_URI, Uri.fromFile(
+                            File(cacheDir,
+                            "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME.$outputFileExtension"
+                        )))
                 putAll(cropOptions.optionBundle)
             }
         }
     }
 
-    fun start(inputFilePath: String, cacheDir: File) {
+    fun start(inputFilePath: String, outputFileExtension: String?, cacheDir: File) {
         if (isStarted) {
             return
         }
         this.cacheDir = cacheDir
         this.inputFilePath = inputFilePath
+        this.outputFileExtension = outputFileExtension ?: DEFAULT_FILE_EXTENSION
+
         updateUiState(UiStartLoadingWithBundleState(cropOptionsBundleWithFilesInfo))
         isStarted = true
     }
@@ -118,6 +124,7 @@ class CropViewModel : ViewModel() {
     }
 
     companion object {
-        const val IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME = "image_editor_output_image.jpg"
+        const val IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME = "image_editor_output_image"
+        const val DEFAULT_FILE_EXTENSION = "jpg"
     }
 }

@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -1676,7 +1677,8 @@ public class EditPostActivity extends AppCompatActivity implements
             !SiteUtils.isPhotonCapable(mSite)
         );
 
-        ActivityLauncher.openImageEditor(this, resizedImageUrl, imageUrl);
+        String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
+        ActivityLauncher.openImageEditor(this, resizedImageUrl, imageUrl, outputFileExtension);
     }
 
     @Override
