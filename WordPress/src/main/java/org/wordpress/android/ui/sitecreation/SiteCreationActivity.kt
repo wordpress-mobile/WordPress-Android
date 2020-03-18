@@ -26,7 +26,6 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
-import org.wordpress.android.ui.sitecreation.misc.OnSkipClickedListener
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
@@ -44,7 +43,6 @@ class SiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
         DomainsScreenListener,
         SitePreviewScreenListener,
-        OnSkipClickedListener,
         OnHelpClickedListener,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface {
@@ -124,10 +122,6 @@ class SiteCreationActivity : AppCompatActivity(),
 
     override fun onSitePreviewScreenDismissed(createSiteState: CreateSiteState) {
         mainViewModel.onSitePreviewScreenFinished(createSiteState)
-    }
-
-    override fun onSkipClicked() {
-        mainViewModel.onSkipClicked()
     }
 
     override fun onHelpClicked(origin: Origin) {
