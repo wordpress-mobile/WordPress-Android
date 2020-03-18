@@ -71,21 +71,23 @@ class CropFragment : Fragment(), UCropFragmentCallback {
             doneMenu?.isVisible = uiState.doneMenuVisible
         })
 
-        viewModel.cropAndSaveImageState.observe(this, Observer { state ->
-            when (state) {
-                is ImageCropAndSaveStartState -> {
-                    val thirdPartyCropFragment = childFragmentManager
-                            .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
-                    if (thirdPartyCropFragment != null && thirdPartyCropFragment.isAdded) {
-                        thirdPartyCropFragment.cropAndSaveImage()
-                    } else {
-                        Log.e(TAG, "Cannot crop and save image as thirdPartyCropFragment is null or not added!")
+        viewModel.cropAndSaveImageStateEvent.observe(this, Observer { stateEvent ->
+            stateEvent?.getContentIfNotHandled()?.let { state ->
+                when (state) {
+                    is ImageCropAndSaveStartState -> {
+                        val thirdPartyCropFragment = childFragmentManager
+                                .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+                        if (thirdPartyCropFragment != null && thirdPartyCropFragment.isAdded) {
+                            thirdPartyCropFragment.cropAndSaveImage()
+                        } else {
+                            Log.e(TAG, "Cannot crop and save image as thirdPartyCropFragment is null or not added!")
+                        }
                     }
-                }
-                is ImageCropAndSaveFailedState -> {
-                    showCropError(state.errorMsg, state.errorResId)
-                }
-                is ImageCropAndSaveSuccessState -> { // Do nothing
+                    is ImageCropAndSaveFailedState -> {
+                        showCropError(state.errorMsg, state.errorResId)
+                    }
+                    is ImageCropAndSaveSuccessState -> { // Do nothing
+                    }
                 }
             }
         })
@@ -115,9 +117,9 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         if (thirdPartyCropFragment == null || !thirdPartyCropFragment.isAdded) {
             thirdPartyCropFragment = UCropFragment.newInstance(bundle)
             childFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
-                .disallowAddToBackStack()
-                .commit()
+                    .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
+                    .disallowAddToBackStack()
+                    .commit()
         }
     }
 

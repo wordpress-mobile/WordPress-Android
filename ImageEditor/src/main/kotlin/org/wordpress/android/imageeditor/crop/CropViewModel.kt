@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
+import org.wordpress.android.imageeditor.viewmodel.Event
 import java.io.File
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
@@ -21,8 +22,8 @@ class CropViewModel : ViewModel() {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
-    private val _cropAndSaveImageState = MutableLiveData<ImageCropAndSaveState>()
-    val cropAndSaveImageState: LiveData<ImageCropAndSaveState> = _cropAndSaveImageState
+    private val _cropAndSaveImageStateEvent = MutableLiveData<Event<ImageCropAndSaveState>>()
+    val cropAndSaveImageStateEvent: LiveData<Event<ImageCropAndSaveState>> = _cropAndSaveImageStateEvent
 
     private val _navigateBackWithCropResult = MutableLiveData<CropResult>()
     val navigateBackWithCropResult: LiveData<CropResult> = _navigateBackWithCropResult
@@ -95,7 +96,7 @@ class CropViewModel : ViewModel() {
     }
 
     private fun updateImageCropAndSaveState(state: ImageCropAndSaveState) {
-        _cropAndSaveImageState.value = state
+        _cropAndSaveImageStateEvent.value = Event(state)
     }
 
     private fun createCropResult(cropResultCode: Int, cropData: Intent) = CropResult(cropResultCode, cropData)
