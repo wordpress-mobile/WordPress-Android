@@ -1,15 +1,15 @@
 package org.wordpress.android.ui.plans
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.ui.FullScreenDialogFragment
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.plans.PlansListFragment.PlansListInterface
 import org.wordpress.android.util.StringUtils
 
-class PlansActivity : AppCompatActivity(), PlansListInterface {
+class PlansActivity : LocaleAwareActivity(), PlansListInterface {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.plans_activity)

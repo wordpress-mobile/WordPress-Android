@@ -3,9 +3,7 @@ package org.wordpress.android.ui.posts
 import android.R.color
 import android.app.Activity
 import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.GradientDrawable.Orientation
 import android.os.Bundle
@@ -18,7 +16,6 @@ import android.view.View.OnClickListener
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -43,6 +40,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
@@ -57,11 +55,10 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.QuickStartUtils
-import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.widgets.WPDialogSnackbar
@@ -70,7 +67,7 @@ import javax.inject.Inject
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
 const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
 
-class PostsListActivity : AppCompatActivity(),
+class PostsListActivity : LocaleAwareActivity(),
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
         BasicDialogOnDismissByOutsideTouchInterface {
@@ -115,14 +112,6 @@ class PostsListActivity : AppCompatActivity(),
         }
 
         override fun onPageScrollStateChanged(state: Int) {}
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase))
-    }
-
-    override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(baseContext, overrideConfiguration))
     }
 
     override fun onNewIntent(intent: Intent) {

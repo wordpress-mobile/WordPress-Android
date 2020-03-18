@@ -1,9 +1,7 @@
 package org.wordpress.android.ui;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
@@ -36,7 +33,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -45,7 +41,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class AddQuickPressShortcutActivity extends AppCompatActivity {
+public class AddQuickPressShortcutActivity extends LocaleAwareActivity {
     public String[] blogNames;
     public int[] siteIds;
     public String[] blogUrls;
@@ -54,16 +50,6 @@ public class AddQuickPressShortcutActivity extends AppCompatActivity {
 
     @Inject SiteStore mSiteStore;
     @Inject FluxCImageLoader mImageLoader;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
-
-    @Override
-    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

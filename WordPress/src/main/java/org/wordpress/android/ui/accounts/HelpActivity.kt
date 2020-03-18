@@ -2,10 +2,8 @@ package org.wordpress.android.ui.accounts
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.help_activity.*
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
@@ -20,13 +18,13 @@ import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.AppLogViewerActivity
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.SiteUtils
 import java.util.ArrayList
 import javax.inject.Inject
 
-class HelpActivity : AppCompatActivity() {
+class HelpActivity : LocaleAwareActivity() {
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var supportHelper: SupportHelper
@@ -40,14 +38,6 @@ class HelpActivity : AppCompatActivity() {
     }
     private val selectedSiteFromExtras by lazy {
         intent.extras?.get(WordPress.SITE) as SiteModel?
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase))
-    }
-
-    override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(baseContext, overrideConfiguration))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

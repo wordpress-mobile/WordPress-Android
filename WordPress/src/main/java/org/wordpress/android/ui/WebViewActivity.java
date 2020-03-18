@@ -1,7 +1,5 @@
 package org.wordpress.android.ui;
 
-import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,19 +7,17 @@ import android.view.Window;
 import android.webkit.WebView;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.LocaleManager;
 
 import java.util.Map;
 
 /**
  * Basic activity for displaying a WebView.
  */
-public abstract class WebViewActivity extends AppCompatActivity {
+public abstract class WebViewActivity extends LocaleAwareActivity {
     /**
      * Primary webview used to display content.
      */
@@ -29,16 +25,6 @@ public abstract class WebViewActivity extends AppCompatActivity {
     private static final String URL = "url";
 
     protected WebView mWebView;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
-
-    @Override
-    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
