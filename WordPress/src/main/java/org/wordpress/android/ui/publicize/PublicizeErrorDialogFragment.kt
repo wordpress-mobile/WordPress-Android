@@ -12,7 +12,7 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.publicize.PublicizeConstants.PUBLICIZE_FACEBOOK_SHARING_SUPPORT_LINK
 import java.lang.NullPointerException
 
-class PublicizeErrorFragment : DialogFragment() {
+class PublicizeErrorDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         arguments?.let {
             it.getInt(REASON_RES_ID).let { reasonResId ->
@@ -55,7 +55,7 @@ class PublicizeErrorFragment : DialogFragment() {
         const val TAG = "publicize_error_fragment"
 
         @JvmStatic
-        fun newInstance(@StringRes reasonId: Int) = PublicizeErrorFragment().apply {
+        fun newInstance(@StringRes reasonId: Int) = PublicizeErrorDialogFragment().apply {
             arguments = Bundle().apply {
                 putInt(REASON_RES_ID, reasonId)
             }

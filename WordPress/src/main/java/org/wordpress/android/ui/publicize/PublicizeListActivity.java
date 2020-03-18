@@ -324,8 +324,8 @@ public class PublicizeListActivity extends AppCompatActivity
             }
         } else {
             if (event.getReasonResId() != null) {
-                DialogFragment fragment = PublicizeErrorFragment.newInstance(event.getReasonResId());
-                fragment.show(getSupportFragmentManager(), PublicizeErrorFragment.TAG);
+                DialogFragment fragment = PublicizeErrorDialogFragment.newInstance(event.getReasonResId());
+                fragment.show(getSupportFragmentManager(), PublicizeErrorDialogFragment.TAG);
             } else {
                 ToastUtils.showToast(this, R.string.error_generic);
             }
