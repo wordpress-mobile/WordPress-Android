@@ -39,4 +39,3 @@ fun initCoroutineEngine() = runBlocking {
     )
     coroutineEngine
 }
-

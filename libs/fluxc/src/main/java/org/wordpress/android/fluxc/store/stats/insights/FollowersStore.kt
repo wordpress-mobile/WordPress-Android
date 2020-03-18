@@ -53,7 +53,7 @@ class FollowersStore
         followerType: FollowerType,
         fetchMode: PagedMode,
         sqlUtils: InsightsSqlUtils<FollowersResponse>
-    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchFollowers")  {
+    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchFollowers") {
         if (!forced && !fetchMode.loadMore && sqlUtils.hasFreshRequest(
                         siteModel,
                         fetchMode.pageSize
