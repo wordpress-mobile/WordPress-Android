@@ -32,12 +32,12 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
-import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadFailed
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadQueued
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingMedia
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingPost
+import org.wordpress.android.viewmodel.pages.PostPageListLabelColorUseCase
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
@@ -57,11 +57,12 @@ class PostListItemUiStateHelperTest {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var uploadUiStateUseCase: PostModelUploadUiStateUseCase
     @Mock private lateinit var uploadStatusTracker: PostModelUploadStatusTracker
+    @Mock private lateinit var labelColorUseCase: PostPageListLabelColorUseCase
     private lateinit var helper: PostListItemUiStateHelper
 
     @Before
     fun setup() {
-        helper = PostListItemUiStateHelper(appPrefsWrapper, uploadUiStateUseCase)
+        helper = PostListItemUiStateHelper(appPrefsWrapper, uploadUiStateUseCase, labelColorUseCase)
         whenever(appPrefsWrapper.isAztecEditorEnabled).thenReturn(true)
     }
 
@@ -70,24 +71,6 @@ class PostListItemUiStateHelperTest {
         val testUrl = "https://example.com"
         val state = createPostListItemUiState(featuredImageUrl = testUrl)
         assertThat(state.data.imageUrl).isEqualTo(testUrl)
-    }
-
-    @Test
-    fun `label has error color on upload error`() {
-        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                createFailedUploadUiState()
-        )
-        val state = createPostListItemUiState()
-        assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
-    }
-
-    @Test
-    fun `label has progress color on when media upload in progress`() {
-        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                PostUploadUiState.UploadingMedia(0)
-        )
-        val state = createPostListItemUiState()
-        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
@@ -448,83 +431,6 @@ class PostListItemUiStateHelperTest {
         assertThat((state.actions[2] as MoreItem).actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat((state.actions[2] as MoreItem).actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
         assertThat((state.actions[2] as MoreItem).actions).hasSize(2)
-    }
-
-    @Test
-    fun `label has progress color when post queued`() {
-        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                UploadQueued
-        )
-        val state = createPostListItemUiState()
-        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
-    }
-
-    @Test
-    fun `label has progress color when media queued`() {
-        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                UploadQueued
-        )
-        val state = createPostListItemUiState()
-        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
-    }
-
-    @Test
-    fun `label has progress color when uploading media`() {
-        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                UploadingMedia(0)
-        )
-        val state = createPostListItemUiState()
-        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
-    }
-
-    @Test
-    fun `label has progress color when uploading post`() {
-        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                UploadingPost(false)
-        )
-        val state = createPostListItemUiState()
-        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
-    }
-
-    @Test
-    fun `label has state info color after failed upload but eligible for auto upload`() {
-        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                createFailedUploadUiState(
-                        UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = true
-                )
-        )
-        val state = createPostListItemUiState(
-                post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true)
-        )
-
-        assertThat(state.data.statusesColor).isEqualTo(STATE_INFO_COLOR)
-    }
-
-    @Test
-    fun `label has error color after failed upload when not eligible for auto upload`() {
-        whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                createFailedUploadUiState(
-                        UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = false
-                )
-        )
-        val state = createPostListItemUiState(
-                post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true)
-        )
-        assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
-    }
-
-    @Test
-    fun `label has error color on version conflict`() {
-        val state = createPostListItemUiState(unhandledConflicts = true)
-        assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
-    }
-
-    @Test
-    fun `label has state info color on auto-save conflict`() {
-        val state = createPostListItemUiState(hasAutoSave = true)
-        assertThat(state.data.statusesColor).isEqualTo(STATE_INFO_COLOR)
     }
 
     @Test

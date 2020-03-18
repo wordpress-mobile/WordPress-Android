@@ -70,7 +70,7 @@ class PagesViewModelTest {
                 previewStateHelper = mock(),
                 analyticsTracker = mock(),
                 uploadStatusTracker = mock(),
-                pageConflictResolver = mock(),
+                autoSaveConflictResolver = mock(),
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
                 eventBusWrapper = mock(),

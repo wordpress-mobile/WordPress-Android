@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
-import org.wordpress.android.fluxc.model.post.PostStatus.fromPost
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadFailed
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadQueued
@@ -19,17 +18,20 @@ const val ERROR_COLOR = R.color.error
 const val PROGRESS_INFO_COLOR = R.color.neutral_50
 const val STATE_INFO_COLOR = R.color.warning_dark
 
-class PostPageListLabelColorUseCase @Inject constructor(
-    private val pageConflictResolver: PageConflictResolver
-) {
-    @ColorRes fun getLabelsColor(post: PostModel, uploadUiState: PostUploadUiState): Int? {
+class PostPageListLabelColorUseCase @Inject constructor() {
+    @ColorRes fun getLabelsColor(
+        post: PostModel,
+        uploadUiState: PostUploadUiState,
+        hasUnhandledConflicts: Boolean,
+        hasUnhandledAutoSave: Boolean
+    ): Int? {
         return getLabelColor(
-                fromPost(post),
+                PostStatus.fromPost(post),
                 post.isLocalDraft,
                 post.isLocallyChanged,
                 uploadUiState,
-                false, // TODO use conflict resolver
-                pageConflictResolver.hasUnhandledAutoSave(post)
+                hasUnhandledConflicts,
+                hasUnhandledAutoSave
         )
     }
 
