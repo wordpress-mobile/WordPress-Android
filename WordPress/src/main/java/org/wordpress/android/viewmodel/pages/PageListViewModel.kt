@@ -66,6 +66,7 @@ class PageListViewModel @Inject constructor(
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
 
+    private var retryScrollToPage: LocalId? = null
     private var isStarted: Boolean = false
     private lateinit var listType: PageListType
 
@@ -145,12 +146,14 @@ class PageListViewModel @Inject constructor(
         pagesViewModel.onNewPageButtonTapped()
     }
 
-    fun onScrollToPageRequested(remotePageId: Long) {
-        val position = _pages.value?.indexOfFirst { it is Page && it.remoteId == remotePageId } ?: -1
+    fun onScrollToPageRequested(localPageId: Int) {
+        val position = _pages.value?.indexOfFirst { it is Page && it.localId == localPageId } ?: -1
         if (position != -1) {
             _scrollToPosition.postValue(position)
+            retryScrollToPage = null
         } else {
-            AppLog.e(AppLog.T.PAGES, "Attempt to scroll to a missing page with ID $remotePageId")
+            retryScrollToPage = LocalId(localPageId)
+            AppLog.e(AppLog.T.PAGES, "Attempt to scroll to a missing page with ID $localPageId")
         }
     }
 
@@ -206,6 +209,10 @@ class PageListViewModel @Inject constructor(
             val pagesWithBottomGap = newPages.toMutableList()
             pagesWithBottomGap.addAll(listOf(Divider(), Divider()))
             _pages.postValue(pagesWithBottomGap)
+        }
+
+        retryScrollToPage?.let {
+            onScrollToPageRequested(it.value)
         }
     }
 

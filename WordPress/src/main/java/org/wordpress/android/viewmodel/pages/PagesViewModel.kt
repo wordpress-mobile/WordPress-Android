@@ -74,6 +74,7 @@ import kotlin.coroutines.resume
 
 private const val ACTION_DELAY = 100L
 private const val SEARCH_DELAY = 200L
+private const val SCROLL_DELAY = 200L
 private const val SNACKBAR_DELAY = 500L
 private const val SEARCH_COLLAPSE_DELAY = 500L
 private const val PAGE_UPLOAD_TIMEOUT = 5000L
@@ -261,6 +262,7 @@ class PagesViewModel
             refreshPages() // show local changes immediately
             withContext(defaultDispatcher) {
                 pageStore.getPageByLocalId(pageId = localPageId, site = site)?.let {
+                    _scrollToPage.postOnUi(it)
                     _postUploadAction.postValue(Triple(it.post, it.site, data))
                 }
             }
@@ -474,6 +476,12 @@ class PagesViewModel
 
     private fun publishPageNow(remoteId: Long) {
         _publishAction.value = pageMap[remoteId]
+        launch(uiDispatcher) {
+            delay(SCROLL_DELAY)
+            pageMap[remoteId]?.let {
+                _scrollToPage.postValue(it)
+            }
+        }
     }
 
     fun onImagesChanged() {
@@ -615,8 +623,8 @@ class PagesViewModel
                     PageAction(remoteId, UPLOAD) {
                         val updatedPage = updatePageStatus(page, status)
                         pageStore.updatePageInDb(updatedPage)
-
                         refreshPages()
+                        _scrollToPage.postOnUi(updatedPage)
                         pageStore.uploadPageToServer(updatedPage)
                     }
                 } else {
@@ -624,8 +632,8 @@ class PagesViewModel
                     PageAction(remoteId, UPDATE) {
                         val updatedPage = updatePageStatus(page, status)
                         pageStore.updatePageInDb(updatedPage)
-
                         refreshPages()
+                        _scrollToPage.postOnUi(updatedPage)
                     }
                 }
 
@@ -642,7 +650,6 @@ class PagesViewModel
                 action.onSuccess = {
                     launch(defaultDispatcher) {
                         delay(ACTION_DELAY)
-                        reloadPages()
 
                         val message = prepareStatusChangeSnackbar(status, action.undo)
                         showSnackbar(message)
