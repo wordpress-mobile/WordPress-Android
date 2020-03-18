@@ -35,7 +35,7 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
 ) {
     fun createLabels(postModel: PostModel, uploadUiState: PostUploadUiState): Pair<List<UiString>, LabelColor> {
         val hasUnhandledAutoSave = autoSaveConflictResolver.hasUnhandledAutoSave(postModel)
-        val hasUnhandledConflicts = false // TODO use conflict resolver
+        val hasUnhandledConflicts = false // version conflicts aren't currently supported on page list
         val labels = getLabels(
                 PostStatus.fromPost(postModel),
                 postModel.isLocalDraft,
