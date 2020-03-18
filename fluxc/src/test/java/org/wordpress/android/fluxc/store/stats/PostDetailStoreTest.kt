@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
-import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -29,7 +29,6 @@ class PostDetailStoreTest {
     @Mock lateinit var restClient: LatestPostInsightsRestClient
     @Mock lateinit var sqlUtils: DetailedPostStatsSqlUtils
     @Mock lateinit var mapper: PostDetailStatsMapper
-    private val coroutineEngine: CoroutineEngine = initCoroutineEngine()
     private lateinit var store: PostDetailStore
     private val postId: Long = 1L
 
@@ -38,7 +37,7 @@ class PostDetailStoreTest {
         store = PostDetailStore(
                 restClient,
                 sqlUtils,
-                coroutineEngine,
+                initCoroutineEngine(),
                 mapper
         )
     }

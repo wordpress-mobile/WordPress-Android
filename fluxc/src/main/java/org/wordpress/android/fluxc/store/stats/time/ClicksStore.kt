@@ -29,12 +29,12 @@ class ClicksStore
         limitMode: Top,
         date: Date,
         forced: Boolean = false
-    ) = coroutineEngine.runOnBackground(STATS, this, "fetchClicks") {
+    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchClicks") {
         if (!forced && sqlUtils.hasFreshRequest(site, granularity, date, limitMode.limit)) {
-            return@runOnBackground OnStatsFetched(getClicks(site, granularity, limitMode, date), cached = true)
+            return@withDefaultContext OnStatsFetched(getClicks(site, granularity, limitMode, date), cached = true)
         }
         val payload = restClient.fetchClicks(site, granularity, date, limitMode.limit + 1, forced)
-        return@runOnBackground when {
+        return@withDefaultContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, granularity, date, limitMode.limit)

@@ -29,12 +29,12 @@ class CountryViewsStore
         limitMode: LimitMode.Top,
         date: Date,
         forced: Boolean = false
-    ) = coroutineEngine.runOnBackground(STATS, this, "fetchCountryViews") {
+    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchCountryViews") {
         if (!forced && sqlUtils.hasFreshRequest(site, granularity, date, limitMode.limit)) {
-            return@runOnBackground OnStatsFetched(getCountryViews(site, granularity, limitMode, date), cached = true)
+            return@withDefaultContext OnStatsFetched(getCountryViews(site, granularity, limitMode, date), cached = true)
         }
         val payload = restClient.fetchCountryViews(site, granularity, date, limitMode.limit + 1, forced)
-        return@runOnBackground when {
+        return@withDefaultContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, granularity, date, limitMode.limit)

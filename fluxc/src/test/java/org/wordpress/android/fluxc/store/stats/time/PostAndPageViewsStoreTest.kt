@@ -23,9 +23,8 @@ import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.PostsAndPagesSq
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
-import org.wordpress.android.fluxc.store.stats.initCoroutineEngine
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.test
-import org.wordpress.android.fluxc.tools.CoroutineEngine
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -39,7 +38,6 @@ class PostAndPageViewsStoreTest {
     @Mock lateinit var restClient: PostAndPageViewsRestClient
     @Mock lateinit var sqlUtils: PostsAndPagesSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
-    private val coroutineEngine: CoroutineEngine = initCoroutineEngine()
     private lateinit var store: PostAndPageViewsStore
     @Before
     fun setUp() {
@@ -47,7 +45,7 @@ class PostAndPageViewsStoreTest {
                 restClient,
                 sqlUtils,
                 mapper,
-                coroutineEngine
+                initCoroutineEngine()
         )
     }
 

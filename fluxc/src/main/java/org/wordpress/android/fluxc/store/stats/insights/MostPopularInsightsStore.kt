@@ -20,12 +20,12 @@ class MostPopularInsightsStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchMostPopularInsights(site: SiteModel, forced: Boolean = false) =
-            coroutineEngine.runOnBackground(STATS, this, "fetchMostPopularInsights") {
+            coroutineEngine.withDefaultContext(STATS, this, "fetchMostPopularInsights") {
                 if (!forced && sqlUtils.hasFreshRequest(site)) {
-                    return@runOnBackground OnStatsFetched(getMostPopularInsights(site), cached = true)
+                    return@withDefaultContext OnStatsFetched(getMostPopularInsights(site), cached = true)
                 }
                 val payload = restClient.fetchMostPopularInsights(site, forced)
-                return@runOnBackground when {
+                return@withDefaultContext when {
                     payload.isError -> OnStatsFetched(payload.error)
                     payload.response != null -> {
                         val data = payload.response
@@ -39,12 +39,12 @@ class MostPopularInsightsStore @Inject constructor(
             }
 
     suspend fun fetchYearsInsights(site: SiteModel, forced: Boolean = false) =
-            coroutineEngine.runOnBackground(STATS, this, "fetchYearsInsights") {
+            coroutineEngine.withDefaultContext(STATS, this, "fetchYearsInsights") {
                 if (!forced && sqlUtils.hasFreshRequest(site)) {
-                    return@runOnBackground OnStatsFetched(getYearsInsights(site), cached = true)
+                    return@withDefaultContext OnStatsFetched(getYearsInsights(site), cached = true)
                 }
                 val payload = restClient.fetchMostPopularInsights(site, forced)
-                return@runOnBackground when {
+                return@withDefaultContext when {
                     payload.isError -> OnStatsFetched(payload.error)
                     payload.response != null -> {
                         val data = payload.response

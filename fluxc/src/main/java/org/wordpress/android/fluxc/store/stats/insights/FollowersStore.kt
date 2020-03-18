@@ -53,12 +53,12 @@ class FollowersStore
         followerType: FollowerType,
         fetchMode: PagedMode,
         sqlUtils: InsightsSqlUtils<FollowersResponse>
-    ) = coroutineEngine.runOnBackground(STATS, this, "fetchFollowers")  {
+    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchFollowers")  {
         if (!forced && !fetchMode.loadMore && sqlUtils.hasFreshRequest(
                         siteModel,
                         fetchMode.pageSize
                 )) {
-            return@runOnBackground OnStatsFetched(
+            return@withDefaultContext OnStatsFetched(
                     getFollowers(
                             siteModel,
                             followerType,
@@ -76,7 +76,7 @@ class FollowersStore
         }
 
         val responsePayload = restClient.fetchFollowers(siteModel, followerType, nextPage, fetchMode.pageSize, forced)
-        return@runOnBackground when {
+        return@withDefaultContext when {
             responsePayload.isError -> {
                 OnStatsFetched(responsePayload.error)
             }

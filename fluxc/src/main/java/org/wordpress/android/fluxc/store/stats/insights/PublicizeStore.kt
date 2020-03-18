@@ -22,12 +22,12 @@ class PublicizeStore
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchPublicizeData(siteModel: SiteModel, limitMode: LimitMode, forced: Boolean = false) =
-            coroutineEngine.runOnBackground(STATS, this, "fetchPublicizeData") {
+            coroutineEngine.withDefaultContext(STATS, this, "fetchPublicizeData") {
                 if (!forced && sqlUtils.hasFreshRequest(siteModel)) {
-                    return@runOnBackground OnStatsFetched(getPublicizeData(siteModel, limitMode), cached = true)
+                    return@withDefaultContext OnStatsFetched(getPublicizeData(siteModel, limitMode), cached = true)
                 }
                 val response = restClient.fetchPublicizeData(siteModel, forced = forced)
-                return@runOnBackground when {
+                return@withDefaultContext when {
                     response.isError -> {
                         OnStatsFetched(response.error)
                     }

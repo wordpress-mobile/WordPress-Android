@@ -21,12 +21,12 @@ class AllTimeInsightsStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchAllTimeInsights(site: SiteModel, forced: Boolean = false) =
-            coroutineEngine.runOnBackground(AppLog.T.STATS, this, "fetchAllTimeInsights") {
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "fetchAllTimeInsights") {
                 if (!forced && sqlUtils.hasFreshRequest(site)) {
-                    return@runOnBackground OnStatsFetched(getAllTimeInsights(site), cached = true)
+                    return@withDefaultContext OnStatsFetched(getAllTimeInsights(site), cached = true)
                 }
                 val payload = restClient.fetchAllTimeInsights(site, forced)
-                return@runOnBackground when {
+                return@withDefaultContext when {
                     payload.isError -> OnStatsFetched(payload.error)
                     payload.response != null -> {
                         sqlUtils.insert(site, payload.response)

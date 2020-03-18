@@ -23,9 +23,8 @@ import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ReferrersSqlUti
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
-import org.wordpress.android.fluxc.store.stats.initCoroutineEngine
 import org.wordpress.android.fluxc.test
-import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -39,7 +38,6 @@ class ReferrersStoreTest {
     @Mock lateinit var restClient: ReferrersRestClient
     @Mock lateinit var sqlUtils: ReferrersSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
-    private val coroutineEngine: CoroutineEngine = initCoroutineEngine()
     private lateinit var store: ReferrersStore
     @Before
     fun setUp() {
@@ -47,7 +45,7 @@ class ReferrersStoreTest {
                 restClient,
                 sqlUtils,
                 mapper,
-                coroutineEngine
+                initCoroutineEngine()
         )
     }
 
