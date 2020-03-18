@@ -73,12 +73,6 @@ class SiteCreationMainVMTest {
     }
 
     @Test
-    fun skipClickedResultsInNextStep() {
-        viewModel.onSkipClicked()
-        verify(wizardManager).showNextStep()
-    }
-
-    @Test
     fun segmentSelectedResultsInNextStep() {
         viewModel.onSegmentSelected(SEGMENT_ID)
         verify(wizardManager).showNextStep()

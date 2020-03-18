@@ -155,7 +155,6 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     companion object {
         const val TAG = "site_creation_domains_fragment_tag"
-        const val EXTRA_SITE_TITLE = "extra_site_title"
         private const val EXTRA_SEGMENT_ID = "extra_segment_id"
 
         fun newInstance(screenTitle: String, segmentId: Long): SiteCreationDomainsFragment {
