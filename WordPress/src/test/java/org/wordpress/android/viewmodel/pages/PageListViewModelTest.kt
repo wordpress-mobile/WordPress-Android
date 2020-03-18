@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.pages
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
@@ -24,9 +23,9 @@ import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.Locale
@@ -59,7 +58,7 @@ class PageListViewModelTest : BaseUnitTest() {
                 Dispatchers.Unconfined
         )
 
-        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any(), any())).thenReturn(Pair(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(Pair(
                 ProgressBarUiState.Hidden, false))
 
         val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
@@ -227,10 +226,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val pages = MutableLiveData<List<PageModel>>()
 
         whenever(
-                pageItemProgressUiStateUseCase.getProgressStateForPage(
-                        anyOrNull(),
-                        anyOrNull()
-                )
+                pageItemProgressUiStateUseCase.getProgressStateForPage(anyOrNull())
         ).thenReturn(
                 Pair(
                         mock(),
@@ -256,7 +252,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val expectedProgressBarUiState = ProgressBarUiState.Indeterminate
         val pages = MutableLiveData<List<PageModel>>()
 
-        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(anyOrNull(), anyOrNull())).thenReturn(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(anyOrNull())).thenReturn(
                 Pair(
                         expectedProgressBarUiState,
                         true
@@ -273,52 +269,6 @@ class PageListViewModelTest : BaseUnitTest() {
 
         // Assert
         assertThat((result[0].first[0] as Page).progressBarUiState).isEqualTo(expectedProgressBarUiState)
-    }
-
-    @Test
-    fun `progressState is specific to each page`() {
-        // Arrange
-        val pages = MutableLiveData<List<PageModel>>()
-
-        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(argThat { this.id == 0 }, any())).thenReturn(
-                Pair(
-                        ProgressBarUiState.Indeterminate,
-                        true
-                )
-        )
-
-        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(argThat { this.id == 1 }, any())).thenReturn(
-                Pair(
-                        ProgressBarUiState.Hidden,
-                        false
-                )
-        )
-
-        whenever(pagesViewModel.pages).thenReturn(pages)
-
-        viewModel.start(PUBLISHED, pagesViewModel)
-
-        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
-
-        viewModel.pages.observeForever { result.add(it) }
-
-        val firstPage = buildPageModel(0)
-        val secondPage = buildPageModel(1)
-
-        // Act
-        val pageModels = mutableListOf<PageModel>()
-        pageModels += secondPage
-        pageModels += firstPage
-        pages.value = pageModels
-
-        // Assert
-        assertThat((result[0].first[0] as Page).progressBarUiState).isEqualTo(
-                ProgressBarUiState.Indeterminate
-        )
-        assertThat((result[0].first[0] as Page).showOverlay).isEqualTo(true)
-
-        assertThat((result[0].first[1] as Page).progressBarUiState).isEqualTo(ProgressBarUiState.Hidden)
-        assertThat((result[0].first[1] as Page).showOverlay).isEqualTo(false)
     }
 
     @Test

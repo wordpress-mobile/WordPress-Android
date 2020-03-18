@@ -99,8 +99,7 @@ class SearchListViewModel
                 pagesViewModel.site,
                 pagesViewModel.uploadStatusTracker
         )
-        val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(this.post,
-                uploadUiState)
+        val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(uploadUiState)
         val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(this.post, uploadUiState)
 
         return when (status) {

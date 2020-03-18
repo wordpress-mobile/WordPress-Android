@@ -64,7 +64,7 @@ class SearchListViewModelTest {
         )
         searchPages = MutableLiveData()
 
-        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any(), any())).thenReturn(
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
                 Pair(
                         ProgressBarUiState.Hidden,
                         false
