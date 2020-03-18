@@ -22,6 +22,7 @@
         android:minHeight="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
+        android:textAlignment="viewStart"
         tools:text="@string/unknown" />
 
     <View
