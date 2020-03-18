@@ -1,7 +1,9 @@
 14.5
 -----
 * Removes sections from post search results
- 
+* Page List: Unsaved changes are automatically backed up on all devices. On page opening, the app will let you choose which version you prefer.
+* Page List: Minor design improvements
+
 14.4
 -----
 * Fix an issue where image is sometimes uploaded with a path to local storage
