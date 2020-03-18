@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers.Unconfined
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -24,7 +23,9 @@ import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.FileDownloadsSq
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
+import org.wordpress.android.fluxc.store.stats.initCoroutineEngine
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -39,6 +40,7 @@ class FileDownloadsStoreTest {
     @Mock lateinit var restClient: FileDownloadsRestClient
     @Mock lateinit var sqlUtils: FileDownloadsSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
+    private val coroutineEngine: CoroutineEngine = initCoroutineEngine()
     private lateinit var store: FileDownloadsStore
     @Before
     fun setUp() {
@@ -46,7 +48,7 @@ class FileDownloadsStoreTest {
                 restClient,
                 sqlUtils,
                 mapper,
-                Unconfined
+                coroutineEngine
         )
     }
 
