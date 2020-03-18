@@ -65,6 +65,7 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.pages.PageListFragment;
 import org.wordpress.android.ui.pages.PageParentFragment;
+import org.wordpress.android.ui.pages.PageParentSearchFragment;
 import org.wordpress.android.ui.pages.PagesFragment;
 import org.wordpress.android.ui.pages.SearchListFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
@@ -181,6 +182,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         StatsModule.class,
         SupportModule.class,
         ThreadModule.class,
+        TrackerModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
@@ -489,6 +491,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(SubfilterBottomSheetFragment object);
 
     void inject(AddContentAdapter object);
+
+    void inject(PageParentSearchFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

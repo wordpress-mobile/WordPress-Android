@@ -1,6 +1,7 @@
 package org.wordpress.android.imageeditor.crop
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -18,6 +19,8 @@ import com.yalantis.ucrop.UCropFragmentCallback
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveStartState
+import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveSuccessState
+import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.utils.ToastUtils
 import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
@@ -29,6 +32,10 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     private lateinit var viewModel: CropViewModel
     private var doneMenu: MenuItem? = null
     private val navArgs: CropFragmentArgs by navArgs()
+
+    companion object {
+        private val TAG = CropFragment::class.java.simpleName
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +65,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 is UiStartLoadingWithBundleState -> {
                     showThirdPartyCropFragmentWithBundle(uiState.bundle)
                 }
-                else -> { // Do nothing
+                is UiLoadedState -> { // Do nothing
                 }
             }
             doneMenu?.isVisible = uiState.doneMenuVisible
@@ -69,12 +76,16 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 is ImageCropAndSaveStartState -> {
                     val thirdPartyCropFragment = childFragmentManager
                             .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
-                    thirdPartyCropFragment?.cropAndSaveImage()
+                    if (thirdPartyCropFragment != null && thirdPartyCropFragment.isAdded) {
+                        thirdPartyCropFragment.cropAndSaveImage()
+                    } else {
+                        Log.e(TAG, "Cannot crop and save image as thirdPartyCropFragment is null or not added!")
+                    }
                 }
                 is ImageCropAndSaveFailedState -> {
                     showCropError(state.errorMsg, state.errorResId)
                 }
-                else -> { // Do nothing
+                is ImageCropAndSaveSuccessState -> { // Do nothing
                 }
             }
         })
@@ -98,11 +109,16 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
-        val thirdPartyCropFragment = UCropFragment.newInstance(bundle)
-        childFragmentManager.beginTransaction()
+        var thirdPartyCropFragment = childFragmentManager
+                .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+
+        if (thirdPartyCropFragment == null || !thirdPartyCropFragment.isAdded) {
+            thirdPartyCropFragment = UCropFragment.newInstance(bundle)
+            childFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
                 .disallowAddToBackStack()
                 .commit()
+        }
     }
 
     override fun loadingProgress(loading: Boolean) {

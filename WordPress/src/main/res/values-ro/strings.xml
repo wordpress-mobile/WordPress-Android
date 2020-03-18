@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-31 09:20:41+0000
+Translation-Revision-Date: 2020-02-15 06:41:15+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_template_preview">Previzualizare șablon</string>
+    <string name="gutenberg_native_replace_current_block">Înlocuiește blocul curent</string>
+    <string name="gutenberg_native_add_to_end">Adaugă la sfârșit</string>
+    <string name="gutenberg_native_add_to_beginning">Adaugă la început</string>
+    <string name="gutenberg_native_add_block_before">Adaugă bloc înainte</string>
+    <string name="gutenberg_native_add_block_after">Adaugă bloc după</string>
+    <string name="reader_filter_empty_tags_action">Adaugă o etichetă</string>
+    <string name="reader_filter_empty_sites_action">Urmărește un sit</string>
+    <string name="reader_filter_empty_tags_list">Poți urmări articole despre un anumit subiect prin adăugarea unei etichete</string>
+    <string name="reader_filter_empty_sites_list">Vezi ultimele articole de pe siturile pe care le urmărești</string>
+    <string name="reader_filter_main_title">Urmăresc</string>
+    <string name="reader_filter_cta">Filtrează</string>
     <string name="gutenberg_native_video_caption_s">Text asociat video. %s</string>
     <string name="gutenberg_native_edit_video">Editează videoul</string>
     <string name="gutenberg_native_edit_media">Editează media</string>
@@ -68,7 +80,6 @@ Language: ro
     <string name="suffix_1_000_000_000_000_000">peta%s</string>
     <string name="suffix_1_000_000_000_000">tera%s</string>
     <string name="suffix_1_000_000_000_000_000_000">exa%s</string>
-    <string name="reader_filter_all_sites">Toate siturile</string>
     <string name="reader_filter_sites_title">Situri</string>
     <string name="reader_filter_tags_title">Etichete</string>
     <string name="reader_save_for_later_display_name">Salvate</string>

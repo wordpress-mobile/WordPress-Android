@@ -31,6 +31,9 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
+    private val _startLoginFlow = MutableLiveData<Event<Boolean>>()
+    val startLoginFlow: LiveData<Event<Boolean>> = _startLoginFlow
+
     fun start(isFabVisible: Boolean) {
         if (isStarted) return
         isStarted = true
@@ -99,6 +102,10 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
 
     fun onFabLongPressed() {
         disableTooltip()
+    }
+
+    fun onOpenLoginPage() {
+        _startLoginFlow.value = Event(true)
     }
 
     private fun setMainFabUiState(isFabVisible: Boolean) {
