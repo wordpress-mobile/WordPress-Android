@@ -12,6 +12,28 @@ import kotlin.test.assertEquals
 class FormattableContentMapperTest {
     private lateinit var formattableContentMapper: FormattableContentMapper
     private val url = "https://www.wordpress.com"
+    private val notificationSubjectResponse = "{\n" +
+            "      \"text\": \"You've received 20 likes on My Site\",\n" +
+            "      \"ranges\": [\n" +
+            "        {\n" +
+            "          \"type\": \"b\",\n" +
+            "          \"indices\": [\n" +
+            "            16,\n" +
+            "            18\n" +
+            "          ]\n" +
+            "        },\n" +
+            "        {\n" +
+            "          \"type\": \"site\",\n" +
+            "          \"indices\": [\n" +
+            "            28,\n" +
+            "            35\n" +
+            "          ],\n" +
+            "          \"url\": \"http://mysite.wordpress.com\",\n" +
+            "          \"id\": 123\n" +
+            "        }\n" +
+            "      ]\n" +
+            "    }"
+
     private val notificationBodyResponse: String = "{\n" +
             "          \"text\": \"This site was created by Author\",\n" +
             "          \"ranges\": [\n" +
@@ -96,7 +118,24 @@ class FormattableContentMapperTest {
     }
 
     @Test
-    fun mapsNotificationToRichFormattableContent() {
+    fun mapsNotificationSubjectToRichFormattableContent() {
+        val formattableContent = formattableContentMapper.mapToFormattableContent(notificationSubjectResponse)
+        assertEquals("You've received 20 likes on My Site", formattableContent.text)
+        assertEquals(2, formattableContent.ranges!!.size)
+        with(formattableContent.ranges!![0]) {
+            assertEquals(FormattableRangeType.B, this.rangeType())
+            assertEquals(listOf(16, 18), this.indices)
+        }
+        with(formattableContent.ranges!![1]) {
+            assertEquals(FormattableRangeType.SITE, this.rangeType())
+            assertEquals(123, this.id)
+            assertEquals("http://mysite.wordpress.com", this.url)
+            assertEquals(listOf(28, 35), this.indices)
+        }
+    }
+
+    @Test
+    fun mapsNotificationBodyToRichFormattableContent() {
         val formattableContent = formattableContentMapper.mapToFormattableContent(notificationBodyResponse)
         assertEquals("This site was created by Author", formattableContent.text)
         assertEquals(1, formattableContent.ranges!!.size)
