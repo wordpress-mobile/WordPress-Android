@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.pages
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
+import org.wordpress.android.ui.LocaleAwareActivity
 
-class PageParentActivity : AppCompatActivity() {
+class PageParentActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

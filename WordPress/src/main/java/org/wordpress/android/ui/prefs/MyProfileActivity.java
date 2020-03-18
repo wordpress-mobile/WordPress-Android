@@ -1,35 +1,22 @@
 package org.wordpress.android.ui.prefs;
 
-import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.ui.LocaleAwareActivity;
 
 import javax.inject.Inject;
 
-public class MyProfileActivity extends AppCompatActivity {
+public class MyProfileActivity extends LocaleAwareActivity {
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
-
-    @Override
-    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

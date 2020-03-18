@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.comments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,7 +9,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
@@ -30,8 +27,8 @@ import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
@@ -41,7 +38,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PER_PAGE;
 
-public class CommentsDetailActivity extends AppCompatActivity
+public class CommentsDetailActivity extends LocaleAwareActivity
         implements CommentAdapter.OnLoadMoreListener,
         CommentActions.OnCommentActionListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
@@ -62,16 +59,6 @@ public class CommentsDetailActivity extends AppCompatActivity
     private boolean mIsLoadingComments;
     private boolean mIsUpdatingComments;
     private boolean mCanLoadMoreComments = true;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
-
-    @Override
-    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
-    }
 
     @Override
     public void onBackPressed() {

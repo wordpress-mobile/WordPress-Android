@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,8 +32,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -44,7 +42,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-public class PostSettingsTagsActivity extends AppCompatActivity implements TextWatcher, View.OnKeyListener {
+public class PostSettingsTagsActivity extends LocaleAwareActivity implements TextWatcher, View.OnKeyListener {
     public static final String KEY_TAGS = "KEY_TAGS";
     public static final String KEY_SELECTED_TAGS = "KEY_SELECTED_TAGS";
     private SiteModel mSite;
@@ -54,16 +52,6 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
     @Inject Dispatcher mDispatcher;
     @Inject TaxonomyStore mTaxonomyStore;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
-
-    @Override
-    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

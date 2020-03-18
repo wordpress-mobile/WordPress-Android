@@ -2,9 +2,7 @@ package org.wordpress.android.ui.comments;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,7 +15,6 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -39,16 +36,16 @@ import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class EditCommentActivity extends AppCompatActivity {
+public class EditCommentActivity extends LocaleAwareActivity {
     static final String KEY_COMMENT = "KEY_COMMENT";
     static final String KEY_NOTE_ID = "KEY_NOTE_ID";
 
@@ -65,16 +62,6 @@ public class EditCommentActivity extends AppCompatActivity {
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject CommentStore mCommentStore;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
-
-    @Override
-    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
-    }
 
     @Override
     public void onCreate(Bundle icicle) {

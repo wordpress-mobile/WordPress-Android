@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.reader;
 
-import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -15,30 +12,20 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 /*
  * displays a list of users who like a specific reader post
  */
-public class ReaderUserListActivity extends AppCompatActivity {
+public class ReaderUserListActivity extends LocaleAwareActivity {
     private ReaderRecyclerView mRecyclerView;
     private ReaderUserAdapter mAdapter;
     private int mRestorePosition;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
-
-    @Override
-    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

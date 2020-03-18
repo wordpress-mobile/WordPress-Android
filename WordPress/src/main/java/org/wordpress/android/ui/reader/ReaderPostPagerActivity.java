@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -16,7 +14,6 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -35,6 +32,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
@@ -51,7 +49,6 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -82,7 +79,7 @@ import javax.inject.Inject;
  *
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
-public class ReaderPostPagerActivity extends AppCompatActivity
+public class ReaderPostPagerActivity extends LocaleAwareActivity
         implements ReaderInterfaces.AutoHideToolbarListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface {
     /**
@@ -129,16 +126,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     @Inject SiteStore mSiteStore;
     @Inject ReaderTracker mReaderTracker;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
-
-    @Override
-    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

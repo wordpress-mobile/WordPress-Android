@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.themes;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -10,7 +8,6 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
@@ -35,12 +32,12 @@ import org.wordpress.android.fluxc.store.ThemeStore.OnThemeInstalled;
 import org.wordpress.android.fluxc.store.ThemeStore.OnWpComThemesChanged;
 import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashLoggingUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
@@ -49,7 +46,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
+public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBrowserFragmentCallback {
     public static boolean isAccessible(SiteModel site) {
         // themes are only accessible to admin wordpress.com users
         return site != null && site.isUsingWpComRestApi() && site.getHasCapabilityEditThemeOptions();
@@ -68,16 +65,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Inject ThemeStore mThemeStore;
     @Inject Dispatcher mDispatcher;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
-
-    @Override
-    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        super.applyOverrideConfiguration(LocaleManager.updatedConfigLocale(getBaseContext(), overrideConfiguration));
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

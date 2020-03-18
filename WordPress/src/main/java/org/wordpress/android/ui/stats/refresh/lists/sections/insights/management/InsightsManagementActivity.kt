@@ -2,11 +2,11 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.managemen
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
+import org.wordpress.android.ui.LocaleAwareActivity
 
-class InsightsManagementActivity : AppCompatActivity() {
+class InsightsManagementActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
