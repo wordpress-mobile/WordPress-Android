@@ -3,6 +3,7 @@ package org.wordpress.android.ui
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +30,6 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
     @Inject lateinit var siteStore: SiteStore
     private lateinit var dialogController: CollapseFullScreenDialogController
     private lateinit var reply: SuggestionAutoCompleteText
-    private lateinit var siteModel: SiteModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +45,7 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable) {
-                dialogController.setConfirmEnabled(s.isNotEmpty())
+                dialogController.setConfirmEnabled(!TextUtils.isEmpty(s.toString().trim()))
             }
         })
 

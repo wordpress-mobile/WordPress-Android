@@ -309,7 +309,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
             @Override
             public void afterTextChanged(Editable s) {
-                mSubmitReplyBtn.setEnabled(s.length() > 0);
+                mSubmitReplyBtn.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
             }
         });
 
