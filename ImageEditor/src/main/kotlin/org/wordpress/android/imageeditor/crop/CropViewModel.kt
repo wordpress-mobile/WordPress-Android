@@ -2,6 +2,7 @@ package org.wordpress.android.imageeditor.crop
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.LiveData
@@ -40,6 +41,14 @@ class CropViewModel : ViewModel() {
                 setFreeStyleCropEnabled(true)
                 setShowCropFrame(true)
                 setHideBottomControls(false)
+                setCompressionFormat(  // If not set, uCrop takes its default compress format: JPEG
+                    when {
+                        outputFileExtension.equals(PNG, ignoreCase = true) -> Bitmap.CompressFormat.PNG
+                        outputFileExtension.equals(WEBP, ignoreCase = true) -> Bitmap.CompressFormat.WEBP
+                        else -> Bitmap.CompressFormat.JPEG
+                    }
+                )
+                setCompressionQuality(COMPRESS_QUALITY_100) // If not set, uCrop takes its default compress quality: 90
             }
         }
     }
@@ -125,7 +134,10 @@ class CropViewModel : ViewModel() {
     }
 
     companion object {
-        const val IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME = "image_editor_output_image"
-        const val DEFAULT_FILE_EXTENSION = "jpg"
+        private const val IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME = "image_editor_output_image"
+        private const val DEFAULT_FILE_EXTENSION = "jpg"
+        private const val COMPRESS_QUALITY_100 = 100
+        private const val PNG = "png"
+        private const val WEBP = "webp"
     }
 }
