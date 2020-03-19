@@ -423,8 +423,8 @@
     <string name="dlg_trashing_comments">Sending to trash</string>
     <string name="dlg_deleting_comments">Deleting comments</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
-    <string name="trash_yes">Trash</string>
-    <string name="trash_no">Don\'t trash</string>
+    <string name="dlg_confirm_action_trash">Trash</string>
+    <string name="dlg_cancel_action_dont_trash">Don\'t trash</string>
 
     <!-- comment actions -->
     <string name="reply">Reply</string>
@@ -1138,10 +1138,10 @@
     <string name="notifications_label_new_notifications">New notifications</string>
     <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
     <string name="notifications_tab_title_all">All</string>
-    <string name="notifications_tab_title_unread">Unread</string>
-    <string name="notifications_tab_title_comments" translatable="false">@string/comments</string>
-    <string name="notifications_tab_title_follows" translatable="false">@string/follows</string>
-    <string name="notifications_tab_title_likes" translatable="false">@string/stats_likes</string>
+    <string name="notifications_tab_title_unread_notifications">Unread</string>
+    <string name="notifications_tab_title_comments">Comments</string>
+    <string name="notifications_tab_title_follows">Follows</string>
+    <string name="notifications_tab_title_likes">Likes</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
@@ -1880,7 +1880,6 @@
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connection_service_label">Publicize to %s</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
-    <string name="connection_service_facebook_notice">As of August 1, 2018, Facebook no longer allows direct sharing of posts to Facebook Profiles. Connections to Facebook Pages remain unchanged.</string>
     <string name="share_btn_connect">Connect</string>
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_reconnect">Reconnect</string>
@@ -1930,7 +1929,8 @@
     <string name="connecting_account">Connecting account</string>
     <string name="sharing_label_message">Change the text of the sharing buttons\' label. This text won\'t appear until you add at least one sharing button.</string>
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
-    <string name="sharing_facebook_account_must_have_pages">The Facebook connection could not be made because this account does not have access to any pages. Facebook supports sharing connections to Facebook Pages, but not to Facebook Profiles.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicize cannot connect to Facebook Profiles, only published Pages.</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -2592,10 +2592,10 @@
     <string name="post_list_author">Post author</string>
     <string name="post_list_author_me">Me</string>
     <string name="post_list_author_everyone">Everyone</string>
-    <string name="post_list_published">Published</string>
-    <string name="post_list_drafts">Drafts</string>
-    <string name="post_list_scheduled">Scheduled</string>
-    <string name="post_list_trashed">Trashed</string>
+    <string name="post_list_tab_published_posts">Published</string>
+    <string name="post_list_tab_drafts">Drafts</string>
+    <string name="post_list_tab_scheduled_posts">Scheduled</string>
+    <string name="post_list_tab_trashed_posts">Trashed</string>
     <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 

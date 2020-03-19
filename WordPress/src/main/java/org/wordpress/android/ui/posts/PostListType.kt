@@ -20,10 +20,10 @@ enum class PostListType(val postStatuses: List<PostStatus>) {
 
     val titleResId: Int
         get() = when (this) {
-            PUBLISHED -> R.string.post_list_published
-            DRAFTS -> R.string.post_list_drafts
-            SCHEDULED -> R.string.post_list_scheduled
-            TRASHED -> R.string.post_list_trashed
+            PUBLISHED -> R.string.post_list_tab_published_posts
+            DRAFTS -> R.string.post_list_tab_drafts
+            SCHEDULED -> R.string.post_list_tab_scheduled_posts
+            TRASHED -> R.string.post_list_tab_trashed_posts
             SEARCH -> 0 // we don't have title for search list
         }
 
