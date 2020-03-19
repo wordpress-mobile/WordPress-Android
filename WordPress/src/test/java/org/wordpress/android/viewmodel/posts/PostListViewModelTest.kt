@@ -21,7 +21,6 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.SEARCH
-import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.uploads.UploadStarter
 
 private const val DEFAULT_PHOTON_DIMENSIONS = -9
@@ -30,7 +29,6 @@ private val DEFAULT_AUTHOR_FILTER = AuthorFilterSelection.EVERYONE
 class PostListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var uploadStarter: UploadStarter
-    @Mock private lateinit var uploadStatusTracker: PostModelUploadStatusTracker
 
     private lateinit var viewModel: PostListViewModel
 
@@ -71,7 +69,6 @@ class PostListViewModelTest : BaseUnitTest() {
     fun `when swiping to refresh, it uploads all local drafts`() {
         viewModel.start(
                 createPostListViewModelConnector(site = site, postListType = DRAFTS),
-                uploadStatusTracker,
                 DEFAULT_AUTHOR_FILTER,
                 DEFAULT_PHOTON_DIMENSIONS,
                 DEFAULT_PHOTON_DIMENSIONS
@@ -88,7 +85,6 @@ class PostListViewModelTest : BaseUnitTest() {
     fun `empty search query should show search prompt`() {
         viewModel.start(
                 createPostListViewModelConnector(site = site, postListType = SEARCH),
-                uploadStatusTracker,
                 DEFAULT_AUTHOR_FILTER,
                 DEFAULT_PHOTON_DIMENSIONS,
                 DEFAULT_PHOTON_DIMENSIONS
@@ -111,7 +107,7 @@ class PostListViewModelTest : BaseUnitTest() {
                 site = site,
                 postListType = postListType,
                 postActionHandler = mock(),
-                getUploadStatus = mock(),
+                uploadStatusTracker = mock(),
                 doesPostHaveUnhandledConflict = mock(),
                 hasAutoSave = mock(),
                 getFeaturedImageUrl = mock(),
