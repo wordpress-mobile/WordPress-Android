@@ -824,15 +824,14 @@
     <string name="app_theme_entry_value_light" translatable="false">light</string>
     <string name="app_theme_entry_value_dark" translatable="false">dark</string>
     <string name="app_theme_entry_value_default" translatable="false">default</string>
-    <string-array name="app_theme_entries">
+    <string name="app_theme_entry_value_default_key" translatable="false">@string/app_theme_entry_value_light</string>
+    <string-array name="app_theme_entries" tools:ignore="InconsistentArrays">
         <item>@string/app_theme_light</item>
         <item>@string/app_theme_dark</item>
-        <item>@string/app_theme_default</item>
     </string-array>
-    <string-array name="app_theme_entry_values" translatable="false">
+    <string-array name="app_theme_entry_values" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/app_theme_entry_value_light</item>
         <item>@string/app_theme_entry_value_dark</item>
-        <item>@string/app_theme_entry_value_default</item>
     </string-array>
 
     <!-- stats -->
