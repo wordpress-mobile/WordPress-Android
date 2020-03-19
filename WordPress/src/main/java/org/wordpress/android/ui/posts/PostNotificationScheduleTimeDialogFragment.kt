@@ -8,6 +8,7 @@ import android.widget.RadioGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
@@ -24,7 +25,7 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(EditPostPublishSettingsViewModel::class.java)
-        val alertDialogBuilder = AlertDialog.Builder(activity)
+        val alertDialogBuilder = MaterialAlertDialogBuilder(activity)
         val view = activity!!.layoutInflater.inflate(R.layout.post_notification_type_selector, null) as RadioGroup
         alertDialogBuilder.setView(view)
         val notificationTime = arguments?.getString(ARG_NOTIFICATION_SCHEDULE_TIME)?.let {

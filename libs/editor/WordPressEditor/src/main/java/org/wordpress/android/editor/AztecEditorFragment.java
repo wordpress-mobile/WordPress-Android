@@ -29,7 +29,6 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.SuggestionSpan;
 import android.util.DisplayMetrics;
-import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,6 +50,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -771,7 +771,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private void checkForFailedUploadAndSwitchToHtmlMode() {
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (hasFailedMediaUploads()) {
-            new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert))
+            new MaterialAlertDialogBuilder(getActivity())
                     .setMessage(R.string.editor_failed_uploads_switch_html)
                     .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -1692,8 +1692,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         switch (uploadStatus) {
             case ATTR_STATUS_UPLOADING:
                 // Display 'cancel upload' dialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
                         new DialogInterface.OnClickListener() {

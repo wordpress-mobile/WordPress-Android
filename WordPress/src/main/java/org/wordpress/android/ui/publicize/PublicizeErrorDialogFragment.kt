@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.ContextThemeWrapper
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 import org.wordpress.android.R.style
 import org.wordpress.android.ui.WPWebViewActivity
@@ -19,12 +20,7 @@ class PublicizeErrorDialogFragment : DialogFragment() {
                 // the custom dialog behavior here is specific to a user who is trying to share to Facebook
                 // but does not have any available Facebook Pages.
                 if (reasonResId == R.string.sharing_facebook_account_must_have_pages) {
-                    return AlertDialog.Builder(
-                            ContextThemeWrapper(
-                                    activity,
-                                    style.Calypso_Dialog
-                            )
-                    ).apply {
+                    return MaterialAlertDialogBuilder(activity).apply {
                         setTitle(R.string.dialog_title_sharing_facebook_account_must_have_pages)
                         setMessage(R.string.sharing_facebook_account_must_have_pages)
                         setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
@@ -36,12 +32,7 @@ class PublicizeErrorDialogFragment : DialogFragment() {
                         }
                     }.create()
                 } else {
-                    return AlertDialog.Builder(
-                            ContextThemeWrapper(
-                                    activity,
-                                    style.Calypso_Dialog
-                            )
-                    ).apply {
+                    return MaterialAlertDialogBuilder(activity).apply {
                         setMessage(reasonResId)
                         setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
                     }.create()
