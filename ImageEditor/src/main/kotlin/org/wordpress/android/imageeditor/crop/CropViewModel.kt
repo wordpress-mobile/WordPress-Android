@@ -41,7 +41,8 @@ class CropViewModel : ViewModel() {
                 setFreeStyleCropEnabled(true)
                 setShowCropFrame(true)
                 setHideBottomControls(false)
-                setCompressionFormat(  // If not set, uCrop takes its default compress format: JPEG
+                // If not set, uCrop takes its default compress format: JPEG
+                setCompressionFormat(
                     when {
                         outputFileExtension.equals(PNG, ignoreCase = true) -> Bitmap.CompressFormat.PNG
                         outputFileExtension.equals(WEBP, ignoreCase = true) -> Bitmap.CompressFormat.WEBP
