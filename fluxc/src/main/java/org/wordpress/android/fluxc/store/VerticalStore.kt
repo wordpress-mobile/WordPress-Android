@@ -7,9 +7,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.VerticalAction
-import org.wordpress.android.fluxc.action.VerticalAction.FETCH_SEGMENT_PROMPT
 import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.model.vertical.SegmentPromptModel
 import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import org.wordpress.android.fluxc.network.rest.wpcom.vertical.VerticalRestClient
 import org.wordpress.android.util.AppLog
@@ -30,7 +28,6 @@ class VerticalStore @Inject constructor(
         GlobalScope.launch(coroutineContext) {
             val onChanged = when (actionType) {
                 VerticalAction.FETCH_SEGMENTS -> fetchSegments()
-                FETCH_SEGMENT_PROMPT -> fetchSegmentPrompt(action.payload as FetchSegmentPromptPayload)
             }
             emitChange(onChanged)
         }
@@ -45,29 +42,10 @@ class VerticalStore @Inject constructor(
         return OnSegmentsFetched(fetchedSegmentsPayload.segmentList, fetchedSegmentsPayload.error)
     }
 
-    private suspend fun fetchSegmentPrompt(payload: FetchSegmentPromptPayload): OnSegmentPromptFetched {
-        val fetchedSegmentPromptPayload = verticalRestClient.fetchSegmentPrompt(payload.segmentId)
-        return OnSegmentPromptFetched(
-                segmentId = payload.segmentId,
-                prompt = fetchedSegmentPromptPayload.prompt,
-                error = fetchedSegmentPromptPayload.error
-        )
-    }
-
     class OnSegmentsFetched(
         val segmentList: List<VerticalSegmentModel>,
         error: FetchSegmentsError? = null
     ) : Store.OnChanged<FetchSegmentsError>() {
-        init {
-            this.error = error
-        }
-    }
-
-    class OnSegmentPromptFetched(
-        val segmentId: Long,
-        val prompt: SegmentPromptModel?,
-        error: FetchSegmentPromptError?
-    ) : Store.OnChanged<FetchSegmentPromptError>() {
         init {
             this.error = error
         }
@@ -81,15 +59,7 @@ class VerticalStore @Inject constructor(
         }
     }
 
-    class FetchedSegmentPromptPayload internal constructor(val prompt: SegmentPromptModel?) :
-            Payload<FetchSegmentPromptError>() {
-        constructor(error: FetchSegmentPromptError) : this(null) {
-            this.error = error
-        }
-    }
-
     class FetchSegmentsError(val type: VerticalErrorType, val message: String? = null) : Store.OnChangedError
-    class FetchSegmentPromptError(val type: VerticalErrorType, val message: String? = null) : Store.OnChangedError
     enum class VerticalErrorType {
         GENERIC_ERROR
     }
