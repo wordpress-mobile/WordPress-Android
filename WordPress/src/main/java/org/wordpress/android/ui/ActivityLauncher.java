@@ -95,6 +95,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_HIGH_RES_IMAGE_URL;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_LOW_RES_IMAGE_URL;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_OUTPUT_FILE_EXTENSION;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
@@ -924,10 +925,16 @@ public class ActivityLauncher {
         }
     }
 
-    public static void openImageEditor(Activity activity, String loResImageUrl, String hiResImageUrl) {
+    public static void openImageEditor(
+        Activity activity,
+        String loResImageUrl,
+        String hiResImageUrl,
+        String outputFileExtension
+    ) {
         Intent intent = new Intent(activity, EditImageActivity.class);
         intent.putExtra(ARG_LOW_RES_IMAGE_URL, loResImageUrl);
         intent.putExtra(ARG_HIGH_RES_IMAGE_URL, hiResImageUrl);
+        intent.putExtra(ARG_OUTPUT_FILE_EXTENSION, outputFileExtension);
         activity.startActivityForResult(intent, RequestCodes.IMAGE_EDITOR_EDIT_IMAGE);
     }
 }

@@ -16,6 +16,8 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadi
 import java.io.File
 
 private const val TEST_INPUT_IMAGE_PATH = "/input/file/path"
+private const val TEST_OUTPUT_FILE_EXTENSION = "jpg"
+
 class CropViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
@@ -92,5 +94,5 @@ class CropViewModelTest {
                 .isInstanceOf(ImageCropAndSaveFailedState::class.java)
     }
 
-    private fun initViewModel() = viewModel.start(TEST_INPUT_IMAGE_PATH, cacheDir)
+    private fun initViewModel() = viewModel.start(TEST_INPUT_IMAGE_PATH, TEST_OUTPUT_FILE_EXTENSION, cacheDir)
 }
