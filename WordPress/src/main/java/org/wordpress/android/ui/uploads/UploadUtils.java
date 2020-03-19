@@ -188,7 +188,8 @@ public class UploadUtils {
 
         boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
         if (hasFailedMedia) {
-            showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
+            showSnackbar(snackbarAttachView, post.isPage() ? R.string.editor_page_saved_locally_failed_media
+                            : R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
                          new View.OnClickListener() {
                              @Override
                              public void onClick(View v) {
@@ -204,8 +205,10 @@ public class UploadUtils {
         if (isScheduledPost) {
             // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
             if (uploadNotStarted) {
-                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
-                             publishPostListener, sequencer);
+                showSnackbar(snackbarAttachView,
+                        post.isPage() ? R.string.editor_page_saved_locally : R.string.editor_post_saved_locally,
+                        R.string.button_sync,
+                        publishPostListener, sequencer);
             }
             return;
         }
@@ -214,10 +217,13 @@ public class UploadUtils {
         if (isPublished) {
             // if it's a published post, we only want to show a "Sync" button if it's locally saved
             if (uploadNotStarted) {
-                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
-                             publishPostListener, sequencer);
+                showSnackbar(snackbarAttachView,
+                        post.isPage() ? R.string.editor_page_saved_locally : R.string.editor_post_saved_locally,
+                        R.string.button_sync,
+                        publishPostListener, sequencer);
             } else {
-                showSnackbar(snackbarAttachView, R.string.editor_uploading_post, sequencer);
+                showSnackbar(snackbarAttachView,
+                        post.isPage() ? R.string.editor_uploading_page : R.string.editor_uploading_post, sequencer);
             }
             return;
         }
@@ -245,14 +251,18 @@ public class UploadUtils {
             }
         } else {
             if (uploadNotStarted) {
-                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_publish,
+                showSnackbar(snackbarAttachView,
+                        post.isPage() ? R.string.editor_page_saved_locally : R.string.editor_post_saved_locally,
+                        R.string.button_publish,
                              publishPostListener, sequencer);
             } else {
                 if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
                     || UploadService.isPostUploadingOrQueued(post)) {
-                    showSnackbar(snackbarAttachView, R.string.editor_uploading_post, sequencer);
+                    showSnackbar(snackbarAttachView,
+                            post.isPage() ? R.string.editor_uploading_page : R.string.editor_uploading_post, sequencer);
                 } else {
-                    showSnackbarSuccessAction(snackbarAttachView, R.string.editor_post_saved_online,
+                    showSnackbarSuccessAction(snackbarAttachView,
+                            post.isPage() ? R.string.editor_page_saved_online : R.string.editor_post_saved_online,
                                               R.string.button_publish,
                                               publishPostListener, sequencer);
                 }
