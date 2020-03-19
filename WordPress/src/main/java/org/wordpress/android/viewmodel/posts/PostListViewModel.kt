@@ -70,7 +70,6 @@ class PostListViewModel @Inject constructor(
     private val uploadStarter: UploadStarter,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val uploadUtilsWrapper: UploadUtilsWrapper,
-    private val uploadStatusTracker: PostModelUploadStatusTracker,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>
@@ -80,6 +79,7 @@ class PostListViewModel @Inject constructor(
     }
     private var isStarted: Boolean = false
     private lateinit var connector: PostListViewModelConnector
+    private lateinit var uploadStatusTracker: PostModelUploadStatusTracker
 
     private var photonWidth by Delegates.notNull<Int>()
     private var photonHeight by Delegates.notNull<Int>()
@@ -128,6 +128,7 @@ class PostListViewModel @Inject constructor(
 
     fun start(
         postListViewModelConnector: PostListViewModelConnector,
+        uploadStatusTracker: PostModelUploadStatusTracker,
         value: AuthorFilterSelection,
         photonWidth: Int,
         photonHeight: Int
@@ -138,6 +139,7 @@ class PostListViewModel @Inject constructor(
         this.photonHeight = photonHeight
         this.photonWidth = photonWidth
         connector = postListViewModelConnector
+        this.uploadStatusTracker = uploadStatusTracker
 
         isStarted = true
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
