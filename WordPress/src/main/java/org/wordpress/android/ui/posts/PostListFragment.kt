@@ -132,7 +132,6 @@ class PostListFragment : Fragment() {
         // since the MainViewModel has been already started, we need to manually update the authorFilterSelection value
         viewModel.start(
                 postListViewModelConnector,
-                mainViewModel.uploadStatusTracker,
                 mainViewModel.authorSelectionUpdated.value!!,
                 photonWidth = displayWidth - contentSpacing * 2,
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height)
