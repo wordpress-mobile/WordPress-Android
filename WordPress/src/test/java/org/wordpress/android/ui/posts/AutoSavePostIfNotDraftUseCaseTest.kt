@@ -160,7 +160,7 @@ class AutoSavePostIfNotDraftUseCaseTest {
     }
 
     private fun createOnPostChangedEvent(post: PostModel, error: PostError? = null): OnPostChanged {
-        val event = OnPostChanged(CauseOfOnPostChanged.RemoteAutoSavePost(post.id), 0)
+        val event = OnPostChanged(CauseOfOnPostChanged.RemoteAutoSavePost(post.id, post.remotePostId), 0)
         error?.let { event.error = it }
         return event
     }

@@ -33,7 +33,6 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostListType.SEARCH
-import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -70,7 +69,6 @@ class PostListViewModel @Inject constructor(
     private val uploadStarter: UploadStarter,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val uploadUtilsWrapper: UploadUtilsWrapper,
-    private val uploadStatusTracker: PostModelUploadStatusTracker,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>
@@ -373,7 +371,7 @@ class PostListViewModel @Inject constructor(
                         trackPostListAction(connector.site, buttonType, postModel, statEvent)
                         connector.postActionHandler.handlePostButton(buttonType, postModel)
                     },
-                    uploadStatusTracker = uploadStatusTracker
+                    uploadStatusTracker = connector.uploadStatusTracker
             )
 
     private fun retryOnConnectionAvailableAfterRefreshError() {

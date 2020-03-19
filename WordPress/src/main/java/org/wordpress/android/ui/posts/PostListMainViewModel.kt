@@ -272,7 +272,7 @@ class PostListMainViewModel @Inject constructor(
                 site = site,
                 postListType = postListType,
                 postActionHandler = postActionHandler,
-                getUploadStatus = uploadStatusTracker::getUploadStatus,
+                uploadStatusTracker = uploadStatusTracker,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
                 hasAutoSave = postConflictResolver::hasUnhandledAutoSave,
                 postFetcher = postFetcher,
