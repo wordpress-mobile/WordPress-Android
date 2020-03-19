@@ -11,6 +11,7 @@ import com.android.volley.Response.Listener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
@@ -415,7 +416,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         if (from.getAuthor() != null) {
             post.setAuthorId(from.getAuthor().getId());
-            post.setAuthorDisplayName(from.getAuthor().getName());
+            post.setAuthorDisplayName(StringEscapeUtils.unescapeHtml4(from.getAuthor().getName()));
         }
 
         if (from.getPostThumbnail() != null) {
