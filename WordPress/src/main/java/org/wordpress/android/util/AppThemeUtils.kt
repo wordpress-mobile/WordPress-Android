@@ -2,7 +2,6 @@ package org.wordpress.android.util
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
