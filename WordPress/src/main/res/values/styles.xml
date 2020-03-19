@@ -25,7 +25,7 @@
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
 
         <!-- we can remove it after moving away from Bridge version of theme -->
-        <item name="materialCardViewStyle"> @style/Widget.MaterialComponents.CardView</item>
+        <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
 
         <item name="wpColorText">@color/neutral_70</item>
@@ -1096,6 +1096,14 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:gravity">start</item>
+    </style>
+
+    <!-- Unelevated Card Style -->
+    <style name="WordPress.CardView.Unelevated" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/unelevated_card_elevation</item>
+        <item name="strokeColor">@color/on_surface_divider</item>
+        <item name="strokeWidth">@dimen/unelevated_card_stroke_width</item>
+        <item name="contentPadding">@dimen/unelevated_card_stroke_width</item>
     </style>
 
 </resources>
