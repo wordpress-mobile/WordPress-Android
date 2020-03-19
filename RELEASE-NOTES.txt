@@ -1,6 +1,7 @@
 14.5
 -----
 * Removes sections from post search results
+* Site Creation: faster site creation, removed intermediate steps. Just select what kind of site you'd like, enter the domain name and the site will be created.
  
 14.4
 -----
