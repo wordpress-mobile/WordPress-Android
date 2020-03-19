@@ -13,7 +13,6 @@
 /users/username/suggestions/
 
 /segments
-/verticals
 
 /plans/mobile
 
