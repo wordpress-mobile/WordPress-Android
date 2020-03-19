@@ -211,7 +211,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void newSite(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
-                        @NonNull SiteVisibility visibility, @Nullable String verticalId, @Nullable Long segmentId,
+                        @NonNull SiteVisibility visibility, @Nullable Long segmentId,
                         @Nullable String tagLine, final boolean dryRun) {
         String url = WPCOMREST.sites.new_.getUrlV1_1();
         Map<String, Object> body = new HashMap<>();
@@ -225,9 +225,6 @@ public class SiteRestClient extends BaseWPComRestClient {
 
         // Add site options if available
         Map<String, Object> options = new HashMap<>();
-        if (verticalId != null) {
-            options.put("site_vertical", verticalId);
-        }
         if (segmentId != null) {
             options.put("site_segment", segmentId);
         }
