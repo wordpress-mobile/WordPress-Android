@@ -33,7 +33,6 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostListType.SEARCH
-import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -79,7 +78,6 @@ class PostListViewModel @Inject constructor(
     }
     private var isStarted: Boolean = false
     private lateinit var connector: PostListViewModelConnector
-    private lateinit var uploadStatusTracker: PostModelUploadStatusTracker
 
     private var photonWidth by Delegates.notNull<Int>()
     private var photonHeight by Delegates.notNull<Int>()
@@ -128,7 +126,6 @@ class PostListViewModel @Inject constructor(
 
     fun start(
         postListViewModelConnector: PostListViewModelConnector,
-        uploadStatusTracker: PostModelUploadStatusTracker,
         value: AuthorFilterSelection,
         photonWidth: Int,
         photonHeight: Int
@@ -139,7 +136,6 @@ class PostListViewModel @Inject constructor(
         this.photonHeight = photonHeight
         this.photonWidth = photonWidth
         connector = postListViewModelConnector
-        this.uploadStatusTracker = uploadStatusTracker
 
         isStarted = true
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
@@ -375,7 +371,7 @@ class PostListViewModel @Inject constructor(
                         trackPostListAction(connector.site, buttonType, postModel, statEvent)
                         connector.postActionHandler.handlePostButton(buttonType, postModel)
                     },
-                    uploadStatusTracker = uploadStatusTracker
+                    uploadStatusTracker = connector.uploadStatusTracker
             )
 
     private fun retryOnConnectionAvailableAfterRefreshError() {
