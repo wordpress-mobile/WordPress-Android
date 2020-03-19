@@ -6,7 +6,7 @@
         <item>@string/app_theme_dark</item>
         <item>@string/app_theme_default</item>
     </string-array>
-    <string-array name="app_theme_entry_values" tools:ignore="InconsistentArrays" translatable="false">
+    <string-array name="app_theme_entry_values" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/app_theme_entry_value_light</item>
         <item>@string/app_theme_entry_value_dark</item>
         <item>@string/app_theme_entry_value_default</item>
