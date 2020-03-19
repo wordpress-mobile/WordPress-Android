@@ -1,6 +1,7 @@
 14.5
 -----
 * Removes sections from post search results
+* Fix a bug where failed post uploads were sometimes being retried indefinitely
  
 14.4
 -----
