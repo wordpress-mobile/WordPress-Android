@@ -63,8 +63,7 @@ class PostListViewModelTest : BaseUnitTest() {
                 connectionStatus = mock(),
                 uploadUtilsWrapper = mock(),
                 uiDispatcher = TEST_DISPATCHER,
-                bgDispatcher = TEST_DISPATCHER,
-                uploadStatusTracker = uploadStatusTracker
+                bgDispatcher = TEST_DISPATCHER
         )
     }
 
@@ -72,6 +71,7 @@ class PostListViewModelTest : BaseUnitTest() {
     fun `when swiping to refresh, it uploads all local drafts`() {
         viewModel.start(
                 createPostListViewModelConnector(site = site, postListType = DRAFTS),
+                uploadStatusTracker,
                 DEFAULT_AUTHOR_FILTER,
                 DEFAULT_PHOTON_DIMENSIONS,
                 DEFAULT_PHOTON_DIMENSIONS
@@ -88,6 +88,7 @@ class PostListViewModelTest : BaseUnitTest() {
     fun `empty search query should show search prompt`() {
         viewModel.start(
                 createPostListViewModelConnector(site = site, postListType = SEARCH),
+                uploadStatusTracker,
                 DEFAULT_AUTHOR_FILTER,
                 DEFAULT_PHOTON_DIMENSIONS,
                 DEFAULT_PHOTON_DIMENSIONS
