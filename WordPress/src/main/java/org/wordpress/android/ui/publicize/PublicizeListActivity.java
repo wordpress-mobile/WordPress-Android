@@ -2,7 +2,6 @@ package org.wordpress.android.ui.publicize;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
