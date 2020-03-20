@@ -4,6 +4,8 @@
 * Page List: Unsaved changes are automatically backed up on all devices. On page opening, the app will let you choose which version you prefer.
 * Page List: Minor design improvements
 
+* Fixed a bug where failed post uploads were sometimes being retried indefinitely
+ 
 14.4
 -----
 * Fix an issue where image is sometimes uploaded with a path to local storage
@@ -236,4 +238,3 @@
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
-
