@@ -2,7 +2,6 @@ package org.wordpress.android.util
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
@@ -33,15 +32,9 @@ class AppThemeUtils {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 }
                 context.getString(R.string.app_theme_entry_value_default) -> {
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                        AppCompatDelegate.setDefaultNightMode(
-                                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                        )
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(
-                                AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
-                        )
-                    }
+                    AppCompatDelegate.setDefaultNightMode(
+                            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                    )
                 }
                 else -> AppLog.w(AppLog.T.UTILS, "Theme key $themeName is not recognized.")
             }

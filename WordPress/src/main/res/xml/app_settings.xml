@@ -9,7 +9,7 @@
         android:title="@string/interface_language" />
 
     <ListPreference
-        android:defaultValue="@string/app_theme_entry_value_default"
+        android:defaultValue="@string/app_theme_entry_value_default_key"
         android:dialogTitle="@string/app_theme"
         android:entries="@array/app_theme_entries"
         android:entryValues="@array/app_theme_entry_values"
