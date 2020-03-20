@@ -47,7 +47,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun initializeViews(nonNullIntent: Intent) {
-        retry.setOnClickListener {
+        errorLayout.setOnClickListener {
             val lowResImageUrl = nonNullIntent.getStringExtra(ARG_LOW_RES_IMAGE_URL)
             val highResImageUrl = nonNullIntent.getStringExtra(ARG_HIGH_RES_IMAGE_URL)
 
