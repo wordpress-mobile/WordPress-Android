@@ -130,7 +130,7 @@ class PageStore @Inject constructor(
                          */
                         val changesConfirmed = it.contentHashcode() == it.changesConfirmedContentHashcode
                         it.setRemotePostId(-it.id.toLong())
-                        if(changesConfirmed) {
+                        if (changesConfirmed) {
                             it.setChangesConfirmedContentHashcode(it.contentHashcode())
                         }
                     }
