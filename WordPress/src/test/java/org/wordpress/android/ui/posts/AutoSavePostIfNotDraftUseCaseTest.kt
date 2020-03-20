@@ -104,7 +104,7 @@ class AutoSavePostIfNotDraftUseCaseTest {
 
     @Test
     fun `post auto-saved`() {
-        whenever(postStore.getPostByLocalPostId(any())).thenReturn(PostModel())
+        whenever(postStore.getPostByRemotePostId(any(), any())).thenReturn(PostModel())
         val remotePostPayload = createRemotePostPayload()
         val onPostStatusFetched = createOnPostStatusFetchedEvent(
                 post = remotePostPayload.post,
