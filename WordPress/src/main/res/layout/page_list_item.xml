@@ -1,89 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/page_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white">
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/page_layout"
+    <FrameLayout
+        android:id="@+id/page_item"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/two_line_list_item_height"
-        android:background="?attr/selectableItemBackground">
-
-        <ImageButton
-            android:id="@+id/page_more"
-            android:layout_width="56dp"
-            android:layout_height="0dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/show_more_desc"
-            android:paddingEnd="@dimen/page_item_horizontal_padding"
-            android:paddingStart="@dimen/page_item_horizontal_padding"
-            android:src="@drawable/ic_ellipsis_vertical_white_24dp"
-            android:tint="@color/neutral_50"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/featured_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="@string/featured_image_desc"
-            app:layout_constraintBottom_toBottomOf="@id/constraintLayout2"
-            app:layout_constraintEnd_toStartOf="@id/page_more"
-            app:layout_constraintStart_toEndOf="@id/constraintLayout2"
-            app:layout_constraintTop_toTopOf="@id/constraintLayout2"
-            tools:srcCompat="@tools:sample/avatars"/>
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="@dimen/page_item_horizontal_padding"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/featured_image"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:id="@+id/page_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/two_line_list_item_height"
+            android:background="?attr/selectableItemBackground">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/page_title"
-                style="@style/PageListItemTextStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="First pag ds ds sddsdsds ds ds dsdse adsd"/>
+            <ImageButton
+                android:id="@+id/page_more"
+                android:layout_width="56dp"
+                android:layout_height="0dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/show_more_desc"
+                android:paddingStart="@dimen/page_item_horizontal_padding"
+                android:paddingEnd="@dimen/page_item_horizontal_padding"
+                android:src="@drawable/ic_ellipsis_vertical_white_24dp"
+                app:tint="?attr/wpColorOnSurfaceMedium"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/time_posted"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textColor="?attr/wpColorTextSubtle"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@id/page_title"
-                app:layout_constraintTop_toBottomOf="@+id/page_title"
-                tools:text="2 days ago"/>
+            <ImageView
+                android:id="@+id/featured_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/featured_image_desc"
+                app:layout_constraintBottom_toBottomOf="@id/constraintLayout2"
+                app:layout_constraintEnd_toStartOf="@id/page_more"
+                app:layout_constraintStart_toEndOf="@id/constraintLayout2"
+                app:layout_constraintTop_toTopOf="@id/constraintLayout2"
+                tools:srcCompat="@tools:sample/avatars" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/labels"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout2"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textColor="?attr/wpColorTextSubtle"
-                android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@+id/time_posted"
-                app:layout_constraintTop_toBottomOf="@+id/page_title"
-                tools:text="Local Draft"/>
+                android:layout_marginStart="@dimen/page_item_horizontal_padding"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/featured_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/page_title"
+                    style="@style/PageListItemTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="First pag ds ds sddsdsds ds ds dsdse adsd" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/time_posted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    app:layout_constraintStart_toStartOf="@id/page_title"
+                    app:layout_constraintTop_toBottomOf="@+id/page_title"
+                    tools:text="2 days ago" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/labels"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    app:layout_constraintStart_toEndOf="@+id/time_posted"
+                    app:layout_constraintTop_toBottomOf="@+id/page_title"
+                    tools:text="Local Draft" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 
-</FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+</LinearLayout>

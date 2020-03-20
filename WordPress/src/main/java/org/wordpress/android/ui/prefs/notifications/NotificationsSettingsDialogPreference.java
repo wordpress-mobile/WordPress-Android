@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.ContextCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +28,7 @@ import org.wordpress.android.models.NotificationsSettings.Type;
 import org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView.MasterSwitchToolbarListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ContextUtilsKt;
 import org.wordpress.android.util.JSONUtils;
 
 import java.util.Iterator;
@@ -85,10 +87,10 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
     protected void onPrepareDialogBuilder(Builder builder) {
         super.onPrepareDialogBuilder(builder);
         if (mShouldDisplayMasterSwitch) {
-             if (mTitleViewWithMasterSwitch == null) {
-                 AppLog.e(T.NOTIFS, "Master switch enabled but layout not set");
-                 return;
-             }
+            if (mTitleViewWithMasterSwitch == null) {
+                AppLog.e(T.NOTIFS, "Master switch enabled but layout not set");
+                return;
+            }
             builder.setCustomTitle(mTitleViewWithMasterSwitch);
         }
     }
@@ -107,9 +109,10 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         if (mShouldDisplayMasterSwitch) {
             View dividerView = new View(getContext());
             int dividerHeight = getContext().getResources().getDimensionPixelSize(
-                R.dimen.notifications_settings_dialog_divider_height
+                    R.dimen.notifications_settings_dialog_divider_height
             );
-            dividerView.setBackgroundColor(getContext().getResources().getColor(R.color.divider));
+            dividerView
+                    .setBackground(ContextUtilsKt.getDrawableFromAttribute(getContext(), android.R.attr.listDivider));
             dividerView.setLayoutParams(new ViewGroup.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, dividerHeight));
             innerView.addView(dividerView);
         } else {
@@ -122,17 +125,17 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         mDisabledView = View.inflate(getContext(), R.layout.notifications_tab_disabled_text_layout, null);
         mDisabledView.setLayoutParams(
                 new ViewGroup.LayoutParams(
-                    LayoutParams.MATCH_PARENT,
-                    LayoutParams.WRAP_CONTENT
+                        LayoutParams.MATCH_PARENT,
+                        LayoutParams.WRAP_CONTENT
                 )
-            );
+        );
 
         mOptionsView = new LinearLayout(getContext());
         mOptionsView.setLayoutParams(
-            new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                )
         );
         mOptionsView.setOrientation(LinearLayout.VERTICAL);
 
@@ -282,6 +285,8 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
             mMasterSwitchToolbarView = mTitleViewWithMasterSwitch.findViewById(R.id.master_switch);
 
             mMasterSwitchToolbarView.setMasterSwitchToolbarListener(this);
+            mMasterSwitchToolbarView
+                    .setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
 
             // Master Switch initial state:
             // On: If at least one of the settings options is on

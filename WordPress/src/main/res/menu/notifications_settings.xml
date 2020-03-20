@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_notifications_settings_search"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:icon="@drawable/ic_search_white_24dp"
-        app:showAsAction="collapseActionView|ifRoom"
         android:title="@string/search_sites"
-        android:visible="false"/>
+        android:visible="false"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
 </menu>

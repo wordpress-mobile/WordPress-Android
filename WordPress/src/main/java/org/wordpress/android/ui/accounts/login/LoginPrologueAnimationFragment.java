@@ -47,11 +47,9 @@ public class LoginPrologueAnimationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_intro_template_view, container, false);
-        rootView.setBackgroundColor(getResources().getColor(R.color.primary));
 
         TextView promoText = (TextView) rootView.findViewById(R.id.promo_text);
         promoText.setText(mPromoText);
-        promoText.setTextColor(getResources().getColor(android.R.color.white));
 
         mLottieAnimationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
         mLottieAnimationView.setAnimation(mAnimationFilename);

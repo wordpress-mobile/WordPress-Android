@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.wordpress.android.widgets.CheckedLinearLayout
-    android:id="@+id/categoryRow"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.widgets.CheckedLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="@dimen/category_row_height"
+    android:id="@+id/categoryRow"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/category_row_height"
     android:clickable="false"
     android:orientation="horizontal">
 
-    <CheckedTextView
+    <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/categoryRowText"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:checkMark="@drawable/category_checkmark"
-        android:checkMarkTint="@color/neutral"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:textColor="?attr/wpColorText"
-        android:textSize="@dimen/text_sz_large"
         tools:text="Pony Category" />
 </org.wordpress.android.widgets.CheckedLinearLayout>

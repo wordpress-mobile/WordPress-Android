@@ -1,6 +1,0 @@
-14.3:
-- Neu im Block-Editor: Die Blöcke „Button“ und „Gruppe“ wurden hinzugefügt. Darüber hinaus werden jetzt weitere Optionen in den Bild- und Galerieblockeinstellungen.
-- Verbesserungen am Block-Editor: Support für den Bildlauf in der Blockauswahl und in den Blockeinstellungen und neue unverankerte Toolbar für einfaches Wechseln zwischen Blöcken.
-- Problembehebungen am Block-Editor: Probleme bei Platzhalterbildern während Bildupload, Probleme mit Emojis in Beitragstiteln und Probleme beim Textumbruch in Shortcode-Blöcken wurden behoben.
-- Reader: Tabfilter für bessere Navigation auf Websites und bei Schlagwörtern hinzugefügt.
-

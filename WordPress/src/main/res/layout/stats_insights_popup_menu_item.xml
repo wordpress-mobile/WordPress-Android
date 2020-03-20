@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/menu_item_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="start|center_vertical"
     android:orientation="horizontal"
     android:paddingStart="@dimen/menu_item_margin"
@@ -11,15 +12,16 @@
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@null"
         android:layout_marginEnd="@dimen/margin_extra_large"
+        android:contentDescription="@null"
+        app:tint="?attr/wpColorOnSurfaceMedium"
         tools:src="@drawable/ic_arrow_up_grey_dark_24dp" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?textAppearanceSmallPopupMenu"
+        android:textAppearance="?attr/textAppearanceSmallPopupMenu"
         tools:text="@string/stats_menu_remove" />
 
 </LinearLayout>
