@@ -261,28 +261,34 @@ public class FullScreenDialogFragment extends DialogFragment {
      * @param view {@link View}
      */
     private void initToolbar(View view) {
-        mToolbar = view.findViewById(R.id.toolbar_main);
+        mToolbar = view.findViewById(R.id.full_screen_dialog_fragment_toolbar);
         mToolbar.setTitle(mTitle);
         mToolbar.setSubtitle(mSubtitle);
+        mToolbar.setSubtitleTextAppearance(view.getContext(), R.style.Toolbar_Subtitle);
+        mToolbar.setBackgroundColor(getResources().getColor(mToolbarColor));
         mToolbar.setNavigationIcon(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_close_white_24dp));
         mToolbar.setNavigationContentDescription(R.string.close_dialog_button_desc);
-        mToolbar.setNavigationOnClickListener(v -> onDismissClicked());
-
-        if (mToolbarColor > 0) {
-            mToolbar.setBackgroundColor(getResources().getColor(mToolbarColor));
-        }
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onDismissClicked();
+            }
+        });
 
         if (!mAction.isEmpty()) {
             Menu menu = mToolbar.getMenu();
             mActionItem = menu.add(0, ID_ACTION, 0, this.mAction);
             mActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             mActionItem.setOnMenuItemClickListener(
-                    item -> {
-                        if (item.getItemId() == ID_ACTION) {
-                            onConfirmClicked();
-                            return true;
-                        } else {
-                            return false;
+                    new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == ID_ACTION) {
+                                onConfirmClicked();
+                                return true;
+                            } else {
+                                return false;
+                            }
                         }
                     }
             );
@@ -415,7 +421,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         String mSubtitle = "";
         String mTitle = "";
         boolean mHideActivityBar = false;
-        int mToolbarColor = 0;
+        int mToolbarColor = R.color.primary;
 
         /**
          * Builder to construct {@link FullScreenDialogFragment}.

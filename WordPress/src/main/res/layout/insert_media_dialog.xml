@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -86,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|end"
-                    app:tint="@color/neutral_40"
+                    android:tint="@color/neutral_40"
                     android:contentDescription="@null"
                     tools:src="@drawable/gallery_icon_thumbnailgrid"
                     android:layout_marginEnd="@dimen/margin_extra_large"/>

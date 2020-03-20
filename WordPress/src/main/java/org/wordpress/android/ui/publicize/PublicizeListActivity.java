@@ -1,23 +1,24 @@
 package org.wordpress.android.ui.publicize;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -26,10 +27,10 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
@@ -38,7 +39,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class PublicizeListActivity extends LocaleAwareActivity
+public class PublicizeListActivity extends AppCompatActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
         PublicizeServiceAdapter.OnServiceClickListener,
@@ -49,13 +50,18 @@ public class PublicizeListActivity extends LocaleAwareActivity
     @Inject SiteStore mSiteStore;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.publicize_list_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -80,7 +86,7 @@ public class PublicizeListActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
     }
@@ -171,7 +177,8 @@ public class PublicizeListActivity extends LocaleAwareActivity
         }
     }
 
-    private void showWebViewFragment(PublicizeService service, PublicizeConnection publicizeConnection) {
+    private void showWebViewFragment(PublicizeService service,
+                                     PublicizeConnection publicizeConnection) {
         if (isFinishing()) {
             return;
         }
@@ -184,6 +191,16 @@ public class PublicizeListActivity extends LocaleAwareActivity
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(tag)
                 .commit();
+    }
+
+    private PublicizeWebViewFragment getWebViewFragment() {
+        String tag = getString(R.string.fragment_tag_publicize_webview);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+        if (fragment != null) {
+            return (PublicizeWebViewFragment) fragment;
+        } else {
+            return null;
+        }
     }
 
     private void closeWebViewFragment() {
@@ -244,19 +261,23 @@ public class PublicizeListActivity extends LocaleAwareActivity
     }
 
     private void confirmDisconnect(final PublicizeConnection publicizeConnection) {
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
         builder.setMessage(
                 String.format(getString(R.string.dlg_confirm_publicize_disconnect), publicizeConnection.getLabel()));
         builder.setTitle(R.string.share_btn_disconnect);
         builder.setCancelable(true);
-        builder.setPositiveButton(R.string.share_btn_disconnect, (dialog, id) -> {
-            PublicizeActions.disconnect(publicizeConnection);
-            // if the user disconnected from G+, return to the list fragment since the
-            // detail fragment would give them the ability to reconnect
-            if (publicizeConnection.getService().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
-                returnToListFragment();
-            } else {
-                reloadDetailFragment();
+        builder.setPositiveButton(R.string.share_btn_disconnect, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                PublicizeActions.disconnect(publicizeConnection);
+                // if the user disconnected from G+, return to the list fragment since the
+                // detail fragment would give them the ability to reconnect
+                if (publicizeConnection.getService().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
+                    returnToListFragment();
+                } else {
+                    reloadDetailFragment();
+                }
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
@@ -352,9 +373,9 @@ public class PublicizeListActivity extends LocaleAwareActivity
         AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_SHARING_BUTTON_MANAGEMENT, mSite);
         Fragment fragment = PublicizeButtonPrefsFragment.newInstance(mSite);
         getSupportFragmentManager().beginTransaction()
-                                   .replace(R.id.fragment_container, fragment)
-                                   .addToBackStack(null)
-                                   .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                   .commit();
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .commit();
     }
 }

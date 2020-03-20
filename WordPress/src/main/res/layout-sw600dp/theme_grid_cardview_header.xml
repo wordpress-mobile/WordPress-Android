@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/header_card"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/content_margin_normal"
-        android:layout_marginTop="@dimen/content_margin_normal"
-        android:layout_marginEnd="@dimen/content_margin_normal"
-        android:layout_marginBottom="@dimen/default_cardview_radius">
+        android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginBottom="@dimen/default_cardview_radius"
+        card_view:cardCornerRadius="@dimen/default_cardview_radius"
+        card_view:cardElevation="@dimen/card_elevation"
+        android:layout_marginStart="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginEnd="@dimen/theme_browser_cardview_margin_large">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -20,45 +21,46 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_margin="@dimen/margin_large"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_margin="@dimen/theme_browser_cardview_header_margin"
+                android:layout_alignParentStart="true">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/current_theme"
+                    android:textStyle="bold"
+                    android:textColor="@color/neutral_30"
+                    android:textSize="@dimen/text_sz_small"
                     android:textAllCaps="true"
-                    android:textAppearance="?attr/textAppearanceCaption"
-                    android:textStyle="bold" />
+                    android:text="@string/current_theme" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/header_theme_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/current_theme"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="@string/current_theme" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_alignParentEnd="true">
 
                 <View
-                    android:layout_width="@dimen/divider_size"
+                    android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:background="?android:attr/listDivider" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/customize"
                     android:layout_width="@dimen/theme_browser_header_button_width"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="@dimen/icon_size_075"
@@ -67,28 +69,28 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/customize"
                         android:src="@drawable/ic_customize_white_24dp"
-                        app:tint="?attr/wpColorOnSurfaceMedium" />
+                        android:tint="@color/neutral_70" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="@string/customize"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="?attr/wpColorText"
+                        android:text="@string/customize" />
 
                 </LinearLayout>
 
                 <View
-                    android:layout_width="@dimen/divider_size"
+                    android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:background="?android:attr/listDivider" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/details"
                     android:layout_width="@dimen/theme_browser_header_button_width"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="@dimen/icon_size_075"
@@ -97,28 +99,28 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/details"
                         android:src="@drawable/ic_info_outline_white_24dp"
-                        app:tint="?attr/wpColorOnSurfaceMedium" />
+                        android:tint="@color/neutral_70" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="@string/details"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="?attr/wpColorText"
+                        android:text="@string/details" />
 
                 </LinearLayout>
 
                 <View
-                    android:layout_width="@dimen/divider_size"
+                    android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:background="?android:attr/listDivider" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/support"
                     android:layout_width="@dimen/theme_browser_header_button_width"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="@dimen/icon_size_075"
@@ -127,14 +129,14 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/support"
                         android:src="@drawable/ic_help_outline_white_24dp"
-                        app:tint="?attr/wpColorOnSurfaceMedium" />
+                        android:tint="@color/neutral_70" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="@string/support"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="?attr/wpColorText"
+                        android:text="@string/support" />
 
                 </LinearLayout>
 
@@ -142,6 +144,6 @@
 
         </RelativeLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

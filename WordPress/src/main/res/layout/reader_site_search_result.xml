@@ -4,6 +4,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
+             android:background="@android:color/white"
              android:gravity="center_vertical">
 
     <LinearLayout
@@ -12,11 +13,9 @@
         android:background="?android:selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="@dimen/margin_large"
-        tools:ignore="UselessParent">
+        android:padding="@dimen/margin_large">
 
         <ImageView
-            android:backgroundTint="@android:color/white"
             android:id="@+id/image_blavatar"
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
@@ -36,7 +35,8 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/wpColorText"
+                android:textSize="@dimen/text_sz_medium"
                 tools:text="text_title"/>
 
             <org.wordpress.android.widgets.WPTextView
@@ -46,8 +46,8 @@
                 android:layout_below="@+id/text_title"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="?attr/textAppearanceCaption"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/link_reader"
+                android:textSize="@dimen/text_sz_small"
                 tools:text="text_url"/>
 
         </RelativeLayout>

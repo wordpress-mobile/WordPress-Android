@@ -222,11 +222,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             GutenbergContainerFragment gutenbergContainerFragment =
-                    GutenbergContainerFragment.newInstance(postType,
-                            isNewPost,
-                            localeSlug,
-                            getTranslations(),
-                            isDarkMode());
+                    GutenbergContainerFragment.newInstance(postType, isNewPost, localeSlug, this.getTranslations());
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
@@ -385,7 +381,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                 break;
                         }
                     }
-                }, isDarkMode());
+                });
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {
@@ -414,13 +410,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         return view;
-    }
-
-    private boolean isDarkMode() {
-        Configuration configuration = getActivity().getResources().getConfiguration();
-        int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
-
-        return currentNightMode == Configuration.UI_MODE_NIGHT_YES;
     }
 
     private ArrayList<MediaOption> initOtherMediaImageOptions() {

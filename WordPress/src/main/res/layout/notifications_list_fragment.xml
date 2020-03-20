@@ -1,101 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_below="@+id/app_bar"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    </org.wordpress.android.widgets.WPViewPager>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
-        android:layout_width="match_parent"
+        android:background="@android:color/white"
+        android:elevation="@dimen/appbar_elevation"
+        android:layout_alignParentTop="true"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
+        android:layout_width="match_parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_main"
-            android:layout_width="match_parent"
+            android:background="@color/primary"
             android:layout_height="@dimen/toolbar_height"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            android:layout_width="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        </androidx.appcompat.widget.Toolbar>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/tab_height"
+            android:background="@color/primary"
             android:layout_gravity="start"
+            android:layout_height="@dimen/tab_height"
+            android:layout_width="match_parent"
             app:tabGravity="fill"
-            app:tabMode="scrollable" />
+            app:tabIndicatorColor="@android:color/white"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="@android:color/white"
+            app:theme="@style/Base.Widget.Design.TabLayout">
+        </com.google.android.material.tabs.TabLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/connect_jetpack"
-        android:layout_width="match_parent"
+        android:gravity="center"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/toolbar_height"
-        android:gravity="center"
+        android:layout_width="match_parent"
         android:orientation="vertical"
         android:visibility="invisible"
         tools:visibility="visible">
 
         <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             tools:ignore="UselessParent">
 
             <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:contentDescription="@string/content_description_person_reading_device_notification"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
-                    android:contentDescription="@string/content_description_person_reading_device_notification"
-                    android:src="@drawable/img_illustration_notifications_152dp" />
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/img_illustration_notifications_152dp">
+                </ImageView>
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/JetpackConnectionText"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
                     android:maxWidth="@dimen/jetpack_text_width"
                     android:text="@string/notifications_jetpack_connection_setup_info"
                     android:textAlignment="center"
-                    app:fixWidowWords="true" />
+                    app:fixWidowWords="true">
+                </org.wordpress.android.widgets.WPTextView>
 
-                <com.google.android.material.button.MaterialButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/jetpack_setup"
-                    style="@style/JetpackConnectionButton"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_extra_large"
-                    android:text="@string/stats_jetpack_connection_setup" />
+                    android:layout_width="wrap_content"
+                    android:text="@string/stats_jetpack_connection_setup"
+                    android:theme="@style/JetpackConnectionButton">
+                </androidx.appcompat.widget.AppCompatButton>
 
-                <com.google.android.material.textview.MaterialTextView
+                <TextView
                     android:id="@+id/jetpack_terms_and_conditions"
-                    style="@style/JetpackTermsAndConditionsButton"
-                    android:layout_width="@dimen/jetpack_terms_and_conditions_width"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_extra_large"
+                    android:layout_width="@dimen/jetpack_terms_and_conditions_width"
                     android:textAlignment="center"
-                    tools:text="@string/jetpack_connection_terms_and_conditions" />
+                    tools:text="@string/jetpack_connection_terms_and_conditions"
+                    style="@style/JetpackTermsAndConditionsButton">
+                </TextView>
 
-                <com.google.android.material.button.MaterialButton
+                <Button
                     android:id="@+id/jetpack_faq"
-                    style="@style/JetpackFaqButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/stats_jetpack_connection_faq" />
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/stats_jetpack_connection_faq"
+                    style="@style/JetpackFaqButton">
+                </Button>
 
             </LinearLayout>
 

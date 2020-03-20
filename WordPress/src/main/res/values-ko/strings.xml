@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-15 00:54:56+0000
+Translation-Revision-Date: 2020-03-05 00:54:14+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="reader_self_hosted_select_filter">필터 버튼을 사용하여 특정 주제에 대한 글을 찾습니다.</string>
+    <string name="reader_bottom_sheet_content_description">태그 또는 사이트, 팝업 창을 선택합니다.</string>
+    <string name="reader_btn_selected_filter_tick_content_description">선택되었습니다.</string>
+    <string name="reader_btn_select_filter_content_description">사이트 또는 태그를 선택하여 글을 필터링합니다.</string>
+    <string name="reader_btn_remove_filter_content_description">현재 필터 제거</string>
+    <string name="reader_title_subs">태그 및 사이트 관리</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">워드프레스닷컴에 로그인</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">워드프레스닷컴에 로그인하여 내가 팔로우하는 태그의 최신 글을 확인하세요.</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">워드프레스닷컴에 로그인하여 내가 팔로우하는 사이트의 최신 글을 확인하세요.</string>
     <string name="gutenberg_native_video_caption_s">비디오 캡션. %s</string>
     <string name="gutenberg_native_edit_video">비디오 편집</string>
     <string name="gutenberg_native_edit_media">미디어 편집</string>
@@ -1938,7 +1947,6 @@ Language: ko_KR
     <string name="reader_hint_add_tag_or_url">팔로우할 태그나 URL 입력</string>
     <string name="reader_page_followed_blogs">팔로우된 블로그</string>
     <string name="reader_page_followed_tags">팔로우된 태그</string>
-    <string name="reader_title_subs">태그 및 블로그</string>
     <string name="reader_title_tag_preview">리더 태그</string>
     <string name="reader_title_blog_preview">리더 블로그</string>
     <string name="ssl_certificate_ask_trust">일반적으로 문제없이 이 사이트에 연결하는 경우, 이 오류는 누군가가 사이트를 사칭하는 것을 의미 할 수 있습니다, 그렇다면 연결하면 안됩니다.  그래도 인증서를 신뢰 하시겠습니까?</string>

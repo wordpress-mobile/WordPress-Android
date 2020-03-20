@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/WordPress.CardView.Unelevated"
+<androidx.recyclerview.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/stats_block_list"
+    style="@style/StatsBlock"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/stats_block_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</com.google.android.material.card.MaterialCardView>
+    android:layout_height="wrap_content"/>

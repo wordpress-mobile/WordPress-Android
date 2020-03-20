@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="@dimen/one_line_list_item_height"
-    android:background="?attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true"
-    android:orientation="vertical">
+    android:background="@color/white">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/itemTitle"
-        style="@style/InsightsManagementItem"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/divider"
-        android:layout_alignParentTop="true"
-        android:ellipsize="end"
-        android:gravity="start|center_vertical"
-        android:lines="1"
-        android:minHeight="@dimen/margin_extra_large"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:textAlignment="viewStart"
-        tools:text="@string/unknown" />
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:id="@+id/container"
+        android:clickable="true"
+        android:focusable="true">
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_size"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:background="?android:listDivider" />
-
-</RelativeLayout>
+        <TextView
+            android:id="@+id/itemTitle"
+            style="@style/InsightsManagementItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:ellipsize="end"
+            android:lines="1"
+            android:minHeight="@dimen/margin_extra_large"
+            android:textAlignment="viewStart"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="@string/unknown" />
+    </FrameLayout>
+</FrameLayout>

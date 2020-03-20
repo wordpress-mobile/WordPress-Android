@@ -24,6 +24,8 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: WPMainActivityViewModel
 
+    override fun getTheme() = R.style.Handled_BottomSheetDialogStyle
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,10 +44,10 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(WPMainActivityViewModel::class.java)
 
         viewModel.mainActions.observe(this, Observer {
-            (dialog?.content_recycler_view?.adapter as? AddContentAdapter)?.update(it ?: listOf())
+            (dialog.content_recycler_view.adapter as? AddContentAdapter)?.update(it ?: listOf())
         })
 
-        dialog?.setOnShowListener { dialogInterface ->
+        dialog.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
 
             val bottomSheet = sheetDialog?.findViewById<View>(
@@ -59,7 +61,7 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    override fun onAttach(context: Context) {
+    override fun onAttach(context: Context?) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }

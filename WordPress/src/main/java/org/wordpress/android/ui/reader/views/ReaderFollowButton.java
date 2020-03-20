@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.ContextExtensionsKt;
 
 /**
  * Follow button used in reader detail
@@ -78,10 +77,10 @@ public class ReaderFollowButton extends LinearLayout {
         int colorId;
         if (mIsFollowed) {
             drawableId = R.drawable.ic_reader_following_white_24dp;
-            colorId = ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorSuccess);
+            colorId = R.color.success_50;
         } else {
             drawableId = R.drawable.ic_reader_follow_white_24dp;
-            colorId = ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.colorPrimary);
+            colorId = R.color.primary_40;
         }
         ColorUtils.INSTANCE.setImageResourceWithTint(mImageFollow, drawableId, colorId);
     }

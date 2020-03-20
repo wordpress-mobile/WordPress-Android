@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs.notifications;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,29 +12,32 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
-
-import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView.MasterSwitchToolbarListener;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.LocaleManager;
 
 // Simple wrapper activity for NotificationsSettingsFragment
-public class NotificationsSettingsActivity extends LocaleAwareActivity
+public class NotificationsSettingsActivity extends AppCompatActivity
         implements MasterSwitchToolbarListener {
     private TextView mMessageTextView;
     private View mMessageContainer;
 
     protected SharedPreferences mSharedPreferences;
     protected View mFragmentContainer;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,13 +127,6 @@ public class NotificationsSettingsActivity extends LocaleAwareActivity
         // Set master switch state from shared preferences.
         boolean isMasterChecked = mSharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_master), true);
         masterSwitchToolBarView.loadInitialState(isMasterChecked);
-
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
-        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
-        int appBarColor = elevationOverlayProvider
-                .compositeOverlay(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar), cardElevation);
-
-        masterSwitchToolBarView.setBackgroundColor(appBarColor);
 
         hideDisabledView(isMasterChecked);
     }

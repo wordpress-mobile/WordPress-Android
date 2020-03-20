@@ -2,9 +2,7 @@ package org.wordpress.android.util.helpers;
 
 import android.content.Context;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
-import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
 
@@ -29,13 +27,12 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
      * @param listener {@link RefreshListener} notified when a refresh is triggered
      * via the swipe gesture.
      *
-     * @deprecated Use {@link #SwipeToRefreshHelper(CustomSwipeRefreshLayout, RefreshListener, int, int...)} instead.
+     * @deprecated Use {@link #SwipeToRefreshHelper(CustomSwipeRefreshLayout, RefreshListener, int...)} instead.
      */
     @Deprecated
     public SwipeToRefreshHelper(Context context, CustomSwipeRefreshLayout swipeRefreshLayout,
                                 RefreshListener listener) {
-        init(swipeRefreshLayout, listener, ContextCompat.getColor(context, android.R.color.white),
-                android.R.color.holo_blue_dark);
+        init(swipeRefreshLayout, listener, android.R.color.holo_blue_dark);
     }
 
     /**
@@ -46,14 +43,13 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
      * of a view via a vertical swipe gesture.
      * @param listener {@link RefreshListener} notified when a refresh is triggered
      * via the swipe gesture.
-     * @param progressAnimationColors Comma-separated color resource integers used in the progress
+     * @param colorResIds Comma-separated color resource integers used in the progress
      * animation. The first color will also be the color of the bar
      * that grows in response to a user swipe gesture.
      */
     public SwipeToRefreshHelper(CustomSwipeRefreshLayout swipeRefreshLayout, RefreshListener listener,
-                                @ColorInt int backgroundColor,
-                                @ColorRes int... progressAnimationColors) {
-        init(swipeRefreshLayout, listener, backgroundColor, progressAnimationColors);
+                                @ColorRes int... colorResIds) {
+        init(swipeRefreshLayout, listener, colorResIds);
     }
 
     /**
@@ -64,18 +60,16 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
      * of a view via a vertical swipe gesture.
      * @param listener {@link RefreshListener} notified when a refresh is triggered
      * via the swipe gesture.
-     * @param progressAnimationColors Comma-separated color resource integers used in the progress
+     * @param colorResIds Comma-separated color resource integers used in the progress
      * animation. The first color will also be the color of the bar
      * that grows in response to a user swipe gesture.
      */
     public void init(CustomSwipeRefreshLayout swipeRefreshLayout, RefreshListener listener,
-                     @ColorInt int backgroundColor,
-                     @ColorRes int... progressAnimationColors) {
+                     @ColorRes int... colorResIds) {
         mRefreshListener = listener;
         mSwipeRefreshLayout = swipeRefreshLayout;
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(backgroundColor);
-        mSwipeRefreshLayout.setColorSchemeResources(progressAnimationColors);
+        mSwipeRefreshLayout.setColorSchemeResources(colorResIds);
     }
 
     public void setRefreshing(boolean refreshing) {

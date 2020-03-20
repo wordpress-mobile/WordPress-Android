@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.comments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,14 +15,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -53,7 +54,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class CommentsListFragment extends Fragment {
-    static final int COMMENTS_PER_PAGE = 30;
+    public static final int COMMENTS_PER_PAGE = 30;
 
     interface OnCommentSelectedListener {
         void onCommentSelected(long commentId, CommentStatus statusFilter);
@@ -143,40 +144,49 @@ public class CommentsListFragment extends Fragment {
     private CommentAdapter getAdapter() {
         if (mAdapter == null) {
             // called after comments have been loaded
-            CommentAdapter.OnDataLoadedListener dataLoadedListener = isEmpty -> {
-                if (!isAdded()) {
-                    return;
-                }
+            CommentAdapter.OnDataLoadedListener dataLoadedListener = new CommentAdapter.OnDataLoadedListener() {
+                @Override
+                public void onDataLoaded(boolean isEmpty) {
+                    if (!isAdded()) {
+                        return;
+                    }
 
-                if (!isEmpty) {
-                    // Hide the empty view if there are already some displayed comments
-                    mFilteredCommentsView.hideEmptyView();
-                    mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                                                                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-                    mActionableEmptyView.setVisibility(View.GONE);
-                } else if (!mIsUpdatingComments) {
-                    // Change LOADING to NO_CONTENT message
-                    mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                    if (!isEmpty) {
+                        // Hide the empty view if there are already some displayed comments
+                        mFilteredCommentsView.hideEmptyView();
+                        mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                        mActionableEmptyView.setVisibility(View.GONE);
+                    } else if (!mIsUpdatingComments) {
+                        // Change LOADING to NO_CONTENT message
+                        mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                    }
                 }
             };
 
             // adapter calls this to request more comments from server when it reaches the end
-            CommentAdapter.OnLoadMoreListener loadMoreListener = () -> {
-                if (mCanLoadMoreComments && !mIsUpdatingComments) {
-                    updateComments(true);
+            CommentAdapter.OnLoadMoreListener loadMoreListener = new CommentAdapter.OnLoadMoreListener() {
+                @Override
+                public void onLoadMore() {
+                    if (mCanLoadMoreComments && !mIsUpdatingComments) {
+                        updateComments(true);
+                    }
                 }
             };
 
             // adapter calls this when selected comments have changed (CAB)
             CommentAdapter.OnSelectedItemsChangeListener changeListener =
-                    () -> {
-                        if (mActionMode != null) {
-                            if (getSelectedCommentCount() == 0) {
-                                mActionMode.finish();
-                            } else {
-                                updateActionModeTitle();
-                                // must invalidate to ensure onPrepareActionMode is called
-                                mActionMode.invalidate();
+                    new CommentAdapter.OnSelectedItemsChangeListener() {
+                        @Override
+                        public void onSelectedItemsChanged() {
+                            if (mActionMode != null) {
+                                if (getSelectedCommentCount() == 0) {
+                                    mActionMode.finish();
+                                } else {
+                                    updateActionModeTitle();
+                                    // must invalidate to ensure onPrepareActionMode is called
+                                    mActionMode.invalidate();
+                                }
                             }
                         }
                     };
@@ -192,8 +202,8 @@ public class CommentsListFragment extends Fragment {
                         mFilteredCommentsView.invalidate();
                         if (getActivity() instanceof OnCommentSelectedListener) {
                             ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.getRemoteCommentId(),
-                                    mCommentStatusFilter
-                                            .toCommentStatus());
+                                                                                          mCommentStatusFilter
+                                                                                                  .toCommentStatus());
                         }
                     } else {
                         getAdapter().toggleItemSelected(position, view);
@@ -233,7 +243,7 @@ public class CommentsListFragment extends Fragment {
         return getAdapter().getSelectedCommentCount();
     }
 
-    void removeComment(CommentModel comment) {
+    public void removeComment(CommentModel comment) {
         if (hasAdapter() && comment != null) {
             getAdapter().removeComment(comment);
         }
@@ -275,8 +285,6 @@ public class CommentsListFragment extends Fragment {
 
         mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
         mFilteredCommentsView = view.findViewById(R.id.filtered_recycler_view);
-        mFilteredCommentsView
-                .addItemDecoration(new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL));
         mFilteredCommentsView.setLogT(AppLog.T.COMMENTS);
         mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
@@ -360,7 +368,7 @@ public class CommentsListFragment extends Fragment {
 
                     mActionableEmptyView.setVisibility(View.GONE);
                     mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                                                                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                            | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
                     return getString(stringId);
                 }
             }
@@ -370,6 +378,9 @@ public class CommentsListFragment extends Fragment {
             }
         });
 
+        // the following will change the look and feel of the toolbar to match the current design
+        mFilteredCommentsView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.primary_40));
+        mFilteredCommentsView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
         mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
         mFilteredCommentsView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
@@ -390,7 +401,7 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    void setCommentStatusFilter(CommentStatus statusFilter) {
+    public void setCommentStatusFilter(CommentStatus statusFilter) {
         mCommentStatusFilter = CommentStatusCriteria.fromCommentStatus(statusFilter);
     }
 
@@ -431,24 +442,39 @@ public class CommentsListFragment extends Fragment {
 
     private void confirmDeleteComments() {
         if (mCommentStatusFilter == CommentStatusCriteria.TRASH) {
-            AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getActivity());
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             dialogBuilder.setTitle(getResources().getText(R.string.delete));
             int resId = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments
                     : R.string.dlg_sure_to_delete_comment;
             dialogBuilder.setMessage(getResources().getText(resId));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                    (dialog, whichButton) -> deleteSelectedComments(true));
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    deleteSelectedComments(true);
+                                                }
+                                            });
             dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
             dialogBuilder.setCancelable(true);
             dialogBuilder.create().show();
         } else {
-            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             builder.setMessage(R.string.dlg_confirm_trash_comments);
             builder.setTitle(R.string.trash);
             builder.setCancelable(true);
-            builder.setPositiveButton(R.string.dlg_confirm_action_trash, (dialog, id) -> deleteSelectedComments(false));
-            builder.setNegativeButton(R.string.dlg_cancel_action_dont_trash, (dialog, id) -> dialog.cancel());
-
+            builder.setPositiveButton(R.string.dlg_confirm_action_trash, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    deleteSelectedComments(false);
+                }
+            });
+            builder.setNegativeButton(R.string.dlg_cancel_action_dont_trash, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
             AlertDialog alert = builder.create();
             alert.show();
         }
@@ -528,7 +554,7 @@ public class CommentsListFragment extends Fragment {
      * get latest comments from server, or pass loadMore=true to get comments beyond the
      * existing ones
      */
-    private void updateComments(boolean loadMore) {
+    void updateComments(boolean loadMore) {
         if (mIsUpdatingComments) {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
             return;
@@ -556,11 +582,11 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.setRefreshing(true);
 
         mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
-                new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE, offset)));
+                 new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE, offset)));
     }
 
 
-    String getEmptyViewMessage() {
+    public String getEmptyViewMessage() {
         return mEmptyViewMessageType.name();
     }
 

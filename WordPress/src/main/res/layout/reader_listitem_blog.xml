@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:background="?android:selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingStart="@dimen/margin_extra_large"
@@ -41,7 +41,8 @@
             android:gravity="start"
             android:maxLines="1"
             android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/wpColorText"
+            android:textSize="@dimen/text_sz_medium"
             tools:text="text_title" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -53,8 +54,8 @@
             android:gravity="start"
             android:maxLines="1"
             android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="@color/link_reader"
+            android:textSize="@dimen/text_sz_small"
             tools:text="text_url" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -66,7 +67,8 @@
             android:gravity="start"
             android:maxLines="2"
             android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="@color/neutral_40"
+            android:textSize="@dimen/text_sz_small"
             tools:text="text_description" />
 
     </LinearLayout>

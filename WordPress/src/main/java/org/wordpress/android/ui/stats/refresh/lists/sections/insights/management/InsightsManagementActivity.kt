@@ -2,17 +2,14 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.managemen
 
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.toolbar_main.*
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.R
-import org.wordpress.android.ui.LocaleAwareActivity
 
-class InsightsManagementActivity : LocaleAwareActivity() {
+class InsightsManagementActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.insights_management_activity)
-
-        setSupportActionBar(toolbar_main)
 
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)

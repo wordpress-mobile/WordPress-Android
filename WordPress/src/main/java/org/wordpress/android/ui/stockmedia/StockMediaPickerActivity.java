@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stockmedia;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
@@ -41,7 +43,6 @@ import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.fluxc.store.StockMediaStore.FetchStockMediaListPayload;
 import org.wordpress.android.fluxc.store.StockMediaStore.OnStockMediaListFetched;
 import org.wordpress.android.ui.ActionableEmptyView;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -51,6 +52,7 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotoPickerUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -68,7 +70,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class StockMediaPickerActivity extends LocaleAwareActivity implements SearchView.OnQueryTextListener {
+public class StockMediaPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final int MIN_SEARCH_QUERY_SIZE = 3;
     private static final String TAG_RETAINED_FRAGMENT = "retained_fragment";
 
@@ -213,6 +215,11 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
         }
         showUploadProgressDialog(false);
         super.onDestroy();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     @Override

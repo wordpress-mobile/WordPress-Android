@@ -1,52 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true"
-    android:labelFor="@id/radio"
     android:orientation="horizontal"
+    android:background="@android:color/white"
     android:paddingStart="@dimen/dlp_padding_start"
-    android:paddingTop="@dimen/dlp_padding_top"
     android:paddingEnd="@dimen/dlp_padding_end"
-    android:paddingBottom="@dimen/dlp_padding_bottom">
+    android:paddingTop="@dimen/dlp_padding_top"
+    android:paddingBottom="@dimen/dlp_padding_bottom"
+    android:labelFor="@id/radio"
+    android:clickable="true"
+    android:focusable="true" >
 
-    <com.google.android.material.radiobutton.MaterialRadioButton
+    <RadioButton
+        android:buttonTint="@color/primary_40_gray_20_gray_40_selector"
         android:id="@+id/radio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="false"
         android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:clickable="false"
+        android:focusableInTouchMode="false"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" >
+    </RadioButton>
 
     <LinearLayout
         android:id="@+id/text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:orientation="vertical"
         android:layout_marginStart="@dimen/dlp_text_margin_start"
         android:layout_marginEnd="@dimen/dlp_text_margin_end"
-        android:layout_toEndOf="@id/radio"
-        android:orientation="vertical">
+        android:layout_centerInParent="true"
+        android:layout_toEndOf="@id/radio">
 
-        <com.google.android.material.textview.MaterialTextView
+        <TextView
             android:id="@+id/main_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_large"
+            android:textColor="?attr/wpColorText"
             android:gravity="start"
             android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
             tools:text="Main Text" />
 
-        <com.google.android.material.textview.MaterialTextView
+        <TextView
             android:id="@+id/detail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_small"
+            android:textColor="?attr/wpColorTextSubtle"
             android:gravity="start"
             android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceCaption"
             tools:text="Detail Text" />
 
     </LinearLayout>

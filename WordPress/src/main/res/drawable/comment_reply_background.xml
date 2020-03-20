@@ -2,19 +2,23 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="?attr/colorSurface" />
-            <padding
-                android:left="@dimen/margin_extra_large"
-                android:right="@dimen/margin_extra_large"
-                android:top="@dimen/margin_medium" />
+            <solid android:color="@android:color/white" />
         </shape>
     </item>
-    <item android:drawable="?android:attr/listDivider" />
     <item
-        android:bottom="@dimen/divider_size"
-        android:left="@dimen/notification_comment_frame_bg_border_width">
+        android:left="@dimen/margin_extra_large"
+        android:right="@dimen/margin_extra_large"
+        android:top="9dp">
         <shape android:shape="rectangle">
-            <solid android:color="?attr/colorSurface" />
+            <solid android:color="@color/neutral_0" />
+            <padding
+                android:bottom="1dp"
+                android:left="20dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white" />
         </shape>
     </item>
 </layer-list>

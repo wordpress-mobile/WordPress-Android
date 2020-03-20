@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
@@ -32,7 +31,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -54,7 +52,6 @@ public class AppSettingsFragment extends PreferenceFragment
     public static final int LANGUAGE_CHANGED = 1000;
 
     private DetailListPreference mLanguagePreference;
-    private ListPreference mAppThemePreference;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
@@ -77,7 +74,6 @@ public class AppSettingsFragment extends PreferenceFragment
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         setRetainInstance(true);
-
         addPreferencesFromResource(R.xml.app_settings);
 
         findPreference(getString(R.string.pref_key_send_usage)).setOnPreferenceChangeListener(
@@ -105,9 +101,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
-
-        mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
-        mAppThemePreference.setOnPreferenceChangeListener(this);
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
@@ -146,19 +139,19 @@ public class AppSettingsFragment extends PreferenceFragment
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
         setDetailListPreferenceValue(mImageMaxSizePref,
-                String.valueOf(AppPrefs.getImageOptimizeMaxSize()),
-                getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
+                                     String.valueOf(AppPrefs.getImageOptimizeMaxSize()),
+                                     getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
         setDetailListPreferenceValue(mImageQualityPref,
-                String.valueOf(AppPrefs.getImageOptimizeQuality()),
-                getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+                                     String.valueOf(AppPrefs.getImageOptimizeQuality()),
+                                     getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
 
         mOptimizedVideo.setChecked(AppPrefs.isVideoOptimize());
         setDetailListPreferenceValue(mVideoWidthPref,
-                String.valueOf(AppPrefs.getVideoOptimizeWidth()),
-                getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+                                     String.valueOf(AppPrefs.getVideoOptimizeWidth()),
+                                     getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
         setDetailListPreferenceValue(mVideoEncorderBitratePref,
-                String.valueOf(AppPrefs.getVideoOptimizeQuality()),
-                getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+                                     String.valueOf(AppPrefs.getVideoOptimizeQuality()),
+                                     getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
 
         mStripImageLocation.setChecked(AppPrefs.isStripImageLocation());
 
@@ -237,8 +230,8 @@ public class AppSettingsFragment extends PreferenceFragment
             return;
         }
         if (mAccountStore.hasAccessToken()) {
-            SwitchPreference tracksOptOutPreference =
-                    (SwitchPreference) findPreference(getString(R.string.pref_key_send_usage));
+        SwitchPreference tracksOptOutPreference =
+                (SwitchPreference) findPreference(getString(R.string.pref_key_send_usage));
             tracksOptOutPreference.setChecked(!mAccountStore.getAccount().getTracksOptOut());
         }
     }
@@ -279,13 +272,13 @@ public class AppSettingsFragment extends PreferenceFragment
             int newWidth = Integer.parseInt(newValue.toString());
             AppPrefs.setImageOptimizeMaxSize(newWidth);
             setDetailListPreferenceValue(mImageMaxSizePref,
-                    newValue.toString(),
-                    getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
+                                         newValue.toString(),
+                                         getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
         } else if (preference == mImageQualityPref) {
             AppPrefs.setImageOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mImageQualityPref,
-                    newValue.toString(),
-                    getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+                                         newValue.toString(),
+                                         getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
         } else if (preference == mOptimizedVideo) {
             AppPrefs.setVideoOptimize((Boolean) newValue);
             mVideoEncorderBitratePref.setEnabled((Boolean) newValue);
@@ -293,19 +286,15 @@ public class AppSettingsFragment extends PreferenceFragment
             int newWidth = Integer.parseInt(newValue.toString());
             AppPrefs.setVideoOptimizeWidth(newWidth);
             setDetailListPreferenceValue(mVideoWidthPref,
-                    newValue.toString(),
-                    getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+                                         newValue.toString(),
+                                         getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
         } else if (preference == mVideoEncorderBitratePref) {
             AppPrefs.setVideoOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mVideoEncorderBitratePref,
-                    newValue.toString(),
-                    getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+                                         newValue.toString(),
+                                         getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
         } else if (preference == mStripImageLocation) {
             AppPrefs.setStripImageLocation((Boolean) newValue);
-        } else if (preference == mAppThemePreference) {
-            AppThemeUtils.Companion.setAppTheme(getActivity(), (String) newValue);
-            // restart activity to make sure changes are applied to PreferenceScreen
-            getActivity().recreate();
         }
         return true;
     }
@@ -345,7 +334,6 @@ public class AppSettingsFragment extends PreferenceFragment
         Intent refresh = new Intent(getActivity(), getActivity().getClass());
         startActivity(refresh);
         getActivity().setResult(LANGUAGE_CHANGED);
-        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         getActivity().finish();
 
         // update Reader tags as they need be localized

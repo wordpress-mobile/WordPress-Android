@@ -2,15 +2,17 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_main" />
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
 
     <FrameLayout
         android:id="@+id/layout_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="org.wordpress.android.ui.comments.CommentsActivity" />
+        tools:context="org.wordpress.android.ui.comments.CommentsActivity"/>
 </LinearLayout>

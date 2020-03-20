@@ -1,0 +1,6 @@
+14.3:
+- Block editor additions: Added Button and Group blocks, and support for more options in Image and Gallery block settings.
+- Block editor enhancements: Added scroll support inside block picker and block settings, and introduced a floating toolbar to make navigating blocks easier.
+- Block editor fixes: Fixed issues around placeholder images during image upload, emojis in post titles, and text-wrapping in Shortcode blocks.
+- Reader: Added tab filtering for better sites/tag navigation.
+
