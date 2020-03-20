@@ -19,6 +19,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
 private const val TEST_FILE_PATH = "/file/path"
+private const val TEST_OUTPUT_FILE_EXTENSION = ".jpg"
 
 class PreviewImageViewModelTest {
     @Rule
@@ -161,18 +162,20 @@ class PreviewImageViewModelTest {
     }
 
     @Test
-    fun `navigated to crop screen with input file path info on image load to file success`() {
+    fun `navigated to crop screen with file info on image load to file success`() {
         initViewModel()
         viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
-        assertThat(requireNotNull(viewModel.navigateToCropScreenWithInputFilePath.value))
+        assertThat(requireNotNull(viewModel.navigateToCropScreenWithFileInfo.value).first)
                 .isEqualTo(TEST_FILE_PATH)
+        assertThat(requireNotNull(viewModel.navigateToCropScreenWithFileInfo.value).second)
+                .isEqualTo(TEST_OUTPUT_FILE_EXTENSION)
     }
 
     @Test
     fun `not navigated to crop screen on image load to file failure`() {
         initViewModel()
         viewModel.onLoadIntoFileFailed()
-        assertNull(viewModel.navigateToCropScreenWithInputFilePath.value)
+        assertNull(viewModel.navigateToCropScreenWithFileInfo.value)
     }
 
     @Test
@@ -204,5 +207,9 @@ class PreviewImageViewModelTest {
         assertThat(viewModel.uiState.value).isInstanceOf(ImageDataStartLoadingUiState::class.java)
     }
 
-    private fun initViewModel() = viewModel.onCreateView(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL)
+    private fun initViewModel() = viewModel.onCreateView(
+            TEST_LOW_RES_IMAGE_URL,
+            TEST_HIGH_RES_IMAGE_URL,
+            TEST_OUTPUT_FILE_EXTENSION
+    )
 }

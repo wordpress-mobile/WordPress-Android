@@ -20,10 +20,13 @@ class PreviewImageViewModel : ViewModel() {
     private val _loadIntoFile = MutableLiveData<ImageLoadToFileState>(ImageLoadToFileIdleState)
     val loadIntoFile: LiveData<ImageLoadToFileState> = _loadIntoFile
 
-    private val _navigateToCropScreenWithInputFilePath = MutableLiveData<String>()
-    val navigateToCropScreenWithInputFilePath: LiveData<String> = _navigateToCropScreenWithInputFilePath
+    private val _navigateToCropScreenWithFileInfo = MutableLiveData<Pair<String, String?>>()
+    val navigateToCropScreenWithFileInfo: LiveData<Pair<String, String?>> = _navigateToCropScreenWithFileInfo
 
-    fun onCreateView(loResImageUrl: String, hiResImageUrl: String) {
+    private var outputFileExtension: String? = null
+
+    fun onCreateView(loResImageUrl: String, hiResImageUrl: String, outputFileExtension: String?) {
+        this.outputFileExtension = outputFileExtension
         updateUiState(createImageDataStartLoadingUiState(loResImageUrl, hiResImageUrl))
     }
 
@@ -66,7 +69,7 @@ class PreviewImageViewModel : ViewModel() {
 
     fun onLoadIntoFileSuccess(inputFilePath: String) {
         updateLoadIntoFileState(ImageLoadToFileSuccessState(inputFilePath))
-        _navigateToCropScreenWithInputFilePath.value = inputFilePath
+        _navigateToCropScreenWithFileInfo.value = Pair(inputFilePath, outputFileExtension)
     }
 
     fun onLoadIntoFileFailed() {

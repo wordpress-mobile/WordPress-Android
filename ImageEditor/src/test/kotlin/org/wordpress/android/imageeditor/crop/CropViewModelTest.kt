@@ -16,6 +16,8 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadi
 import java.io.File
 
 private const val TEST_INPUT_IMAGE_PATH = "/input/file/path"
+private const val TEST_OUTPUT_FILE_EXTENSION = "jpg"
+
 class CropViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
@@ -61,7 +63,8 @@ class CropViewModelTest {
     @Test
     fun `crop and save image start action triggered on done menu click`() {
         viewModel.onDoneMenuClicked()
-        assertThat(viewModel.cropAndSaveImageState.value).isInstanceOf(ImageCropAndSaveStartState::class.java)
+        assertThat(requireNotNull(viewModel.cropAndSaveImageStateEvent.value).peekContent())
+                .isInstanceOf(ImageCropAndSaveStartState::class.java)
     }
 
     @Test
@@ -80,14 +83,16 @@ class CropViewModelTest {
     @Test
     fun `crop and save image success action triggered on crop success`() {
         viewModel.onCropFinish(cropSuccessResultCode, cropResultData)
-        assertThat(viewModel.cropAndSaveImageState.value).isInstanceOf(ImageCropAndSaveSuccessState::class.java)
+        assertThat(requireNotNull(viewModel.cropAndSaveImageStateEvent.value).peekContent())
+                .isInstanceOf(ImageCropAndSaveSuccessState::class.java)
     }
 
     @Test
     fun `crop and save image failure action triggered on crop failure`() {
         viewModel.onCropFinish(cropFailedResultCode, cropResultData)
-        assertThat(viewModel.cropAndSaveImageState.value).isInstanceOf(ImageCropAndSaveFailedState::class.java)
+        assertThat(requireNotNull(viewModel.cropAndSaveImageStateEvent.value).peekContent())
+                .isInstanceOf(ImageCropAndSaveFailedState::class.java)
     }
 
-    private fun initViewModel() = viewModel.start(TEST_INPUT_IMAGE_PATH, cacheDir)
+    private fun initViewModel() = viewModel.start(TEST_INPUT_IMAGE_PATH, TEST_OUTPUT_FILE_EXTENSION, cacheDir)
 }

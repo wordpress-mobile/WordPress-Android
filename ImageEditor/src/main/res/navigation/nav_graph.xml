@@ -17,6 +17,10 @@
                 android:name="inputFilePath"
                 app:argType="string"
                 android:defaultValue='""'/>
+            <argument
+                android:name="outputFileExtension"
+                app:argType="string"
+                app:nullable="true"/>
         </action>
     </fragment>
     <fragment
@@ -26,5 +30,9 @@
             android:name="inputFilePath"
             app:argType="string"
             android:defaultValue='""'/>
+        <argument
+            android:name="outputFileExtension"
+            app:argType="string"
+            app:nullable="true"/>
     </fragment>
 </navigation>
