@@ -15,7 +15,6 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 
 private val STEPS = listOf(SEGMENTS, DOMAINS, SITE_PREVIEW)
 private val LAST_STEP_INDEX = STEPS.size - 1
@@ -80,11 +79,6 @@ class WizardManagerTest {
     fun `exception thrown on navigation to invalid index`() {
         manager = createWizardManager(initialStepIndex = LAST_STEP_INDEX)
         manager.showNextStep()
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `exception thrown on getting position of unknown step`() {
-        manager.stepPosition(VERTICALS)
     }
 
     private fun createWizardManager(initialStepIndex: Int): WizardManager<SiteCreationStep> {
