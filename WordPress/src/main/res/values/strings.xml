@@ -1256,11 +1256,15 @@
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
+    <string name="editor_page_saved_online">Page saved online</string>
     <string name="editor_post_saved_locally">Post saved on device</string>
+    <string name="editor_page_saved_locally">Page saved on device</string>
     <string name="editor_draft_saved_online">Draft saved online</string>
     <string name="editor_draft_saved_locally">Draft saved on device</string>
     <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
+    <string name="editor_page_saved_locally_failed_media">The page has failed media uploads and has been saved locally</string>
     <string name="editor_uploading_post">Your post is uploading</string>
+    <string name="editor_uploading_page">Your page is uploading</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
