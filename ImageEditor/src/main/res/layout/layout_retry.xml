@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
+    <ImageView
         android:id="@+id/retry"
         android:layout_width="@dimen/retry_image_size"
         android:layout_height="@dimen/retry_image_size"
