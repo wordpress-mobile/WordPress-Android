@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import kotlinx.android.synthetic.main.layout_retry.*
 import kotlinx.android.synthetic.main.fragment_preview_image.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
@@ -42,6 +43,16 @@ class PreviewImageFragment : Fragment() {
 
         val nonNullIntent = checkNotNull(requireActivity().intent)
         initializeViewModels(nonNullIntent)
+        initializeViews(nonNullIntent)
+    }
+
+    private fun initializeViews(nonNullIntent: Intent) {
+        errorLayout.setOnClickListener {
+            val lowResImageUrl = nonNullIntent.getStringExtra(ARG_LOW_RES_IMAGE_URL)
+            val highResImageUrl = nonNullIntent.getStringExtra(ARG_HIGH_RES_IMAGE_URL)
+
+            viewModel.onLoadIntoImageViewRetry(lowResImageUrl, highResImageUrl)
+        }
     }
 
     private fun initializeViewModels(nonNullIntent: Intent) {
@@ -60,6 +71,7 @@ class PreviewImageFragment : Fragment() {
                 loadIntoImageView(uiState.imageData)
             }
             UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
+            UiHelpers.updateVisibility(errorLayout, uiState.retryLayoutVisible)
         })
 
         viewModel.loadIntoFile.observe(this, Observer { fileState ->
@@ -81,7 +93,7 @@ class PreviewImageFragment : Fragment() {
             imageData.lowResImageUrl,
             object : RequestListener<Drawable> {
                 override fun onResourceReady(resource: Drawable, url: String) {
-                    viewModel.onLoadIntoImageViewSuccess(url)
+                    viewModel.onLoadIntoImageViewSuccess(url, imageData)
                 }
 
                 override fun onLoadFailed(e: Exception?, url: String) {
