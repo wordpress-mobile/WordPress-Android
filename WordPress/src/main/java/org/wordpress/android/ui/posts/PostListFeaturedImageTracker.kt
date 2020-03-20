@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts
 
-import androidx.collection.LongSparseArray
+import android.annotation.SuppressLint
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -13,7 +13,16 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
  * you see fit.
  */
 class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private val mediaStore: MediaStore) {
-    private val featuredImageArray = LongSparseArray<String>()
+    /*
+    Using `SparseArray` is results in ArrayIndexOutOfBoundsException when we are trying to put a new item. Although
+    the reason for the crash is unclear, this defeats the whole purpose of using a `SparseArray`. Furthermore,
+    `SparseArray` is actually not objectively better than using a `HashMap` and in this case `HashMap` should perform
+    better due to higher number of items.
+
+    https://github.com/wordpress-mobile/WordPress-Android/issues/11487
+     */
+    @SuppressLint("UseSparseArrays")
+    private val featuredImageArray = HashMap<Long, String>()
 
     fun getFeaturedImageUrl(site: SiteModel, featuredImageId: Long): String? {
         if (featuredImageId == 0L) {
@@ -23,7 +32,7 @@ class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private v
         mediaStore.getSiteMediaWithId(site, featuredImageId)?.let { media ->
             // This should be a pretty rare case, but some media seems to be missing url
             return if (media.url != null) {
-                featuredImageArray.put(featuredImageId, media.url)
+                featuredImageArray[featuredImageId] = media.url
                 media.url
             } else null
         }
