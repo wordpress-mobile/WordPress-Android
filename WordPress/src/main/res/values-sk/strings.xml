@@ -1431,6 +1431,7 @@ Language: sk
     <string name="reader_hint_add_tag_or_url">Zadajte adresu URL alebo značku, ktorú chcete sledovať</string>
     <string name="reader_page_followed_blogs">Sledované webové stránky</string>
     <string name="reader_page_followed_tags">Sledované značky</string>
+    <string name="reader_title_subs">Značky a webové stránky</string>
     <string name="reader_title_tag_preview">Značka čítačky</string>
     <string name="reader_title_blog_preview">Webová stránka čítačky</string>
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>

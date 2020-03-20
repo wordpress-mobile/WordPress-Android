@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-25 14:39:53+0000
+Translation-Revision-Date: 2020-02-15 20:20:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
-    <string name="reader_self_hosted_select_filter">Verwende den Filter-Button, um Beiträge zu einem bestimmten Thema zu finden</string>
-    <string name="reader_bottom_sheet_content_description">Wähle ein Schlagwort oder eine Website, ein Popup-Fenster aus</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Ausgewählt</string>
-    <string name="reader_btn_select_filter_content_description">Wähle eine Website oder ein Schlagwort aus, um Beiträge zu filtern</string>
-    <string name="reader_btn_remove_filter_content_description">Entferne den aktuellen Filter</string>
-    <string name="reader_title_subs">Verwalte Schlagwörter und Websites</string>
-    <string name="reader_filter_self_hosted_empty_sites_tags_action">Melde dich bei WordPress.com an</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Melde dich bei WordPress.com an, um die neuesten Beiträge zu Schlagwörtern zu sehen, denen du folgst</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Melde dich bei WordPress.com an, um die neuesten Beiträge von Websites zu sehen, denen du folgst</string>
     <string name="gutenberg_native_template_preview">Template-Vorschau</string>
     <string name="gutenberg_native_replace_current_block">Aktuellen Block ersetzen</string>
     <string name="gutenberg_native_add_to_end">Am Ende hinzufügen</string>
@@ -1959,6 +1950,7 @@ Language: de
     <string name="reader_hint_add_tag_or_url">Gib eine URL oder einen Tag zum Folgen ein</string>
     <string name="reader_page_followed_blogs">Abonnierte Websites</string>
     <string name="reader_page_followed_tags">Abonnierte Tags</string>
+    <string name="reader_title_subs">Schlagwörter und Websites</string>
     <string name="reader_title_tag_preview">Reader-Schlagwort</string>
     <string name="reader_title_blog_preview">Reader-Website</string>
     <string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>

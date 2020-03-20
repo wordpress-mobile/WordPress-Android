@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.ColorUtils;
@@ -64,37 +65,53 @@ public class ReaderMenuAdapter extends BaseAdapter {
         }
 
         int textRes;
-        int colorRes;
+        int textColorRes;
+        int iconColorRes;
         int iconRes;
         switch (mMenuItems.get(position)) {
             case ITEM_FOLLOW:
                 textRes = R.string.reader_btn_follow;
-                colorRes = R.color.primary;
+                textColorRes =
+                        ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), R.attr.colorPrimary);
+                iconColorRes = textColorRes;
                 iconRes = R.drawable.ic_reader_follow_white_24dp;
                 break;
             case ITEM_UNFOLLOW:
                 textRes = R.string.reader_btn_unfollow;
-                colorRes = R.color.success;
+                textColorRes =
+                        ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), R.attr.wpColorSuccess);
+                iconColorRes = textColorRes;
                 iconRes = R.drawable.ic_reader_following_white_24dp;
                 break;
             case ITEM_BLOCK:
                 textRes = R.string.reader_menu_block_blog;
-                colorRes = ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), R.attr.wpColorText);
+                textColorRes =
+                        ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), R.attr.colorOnSurface);
+                iconColorRes = ContextExtensionsKt
+                        .getColorResIdFromAttribute(convertView.getContext(), R.attr.wpColorOnSurfaceMedium);
                 iconRes = R.drawable.ic_block_white_24dp;
                 break;
             case ITEM_NOTIFICATIONS_OFF:
                 textRes = R.string.reader_btn_notifications_off;
-                colorRes = R.color.success;
+                textColorRes =
+                        ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), R.attr.wpColorSuccess);
+                iconColorRes = textColorRes;
                 iconRes = R.drawable.ic_bell_white_24dp;
                 break;
             case ITEM_NOTIFICATIONS_ON:
                 textRes = R.string.reader_btn_notifications_on;
-                colorRes = R.color.neutral_80;
+                textColorRes = ContextExtensionsKt
+                        .getColorResIdFromAttribute(convertView.getContext(), R.attr.colorOnSurface);
+                iconColorRes = ContextExtensionsKt
+                        .getColorResIdFromAttribute(convertView.getContext(), R.attr.wpColorOnSurfaceMedium);
                 iconRes = R.drawable.ic_bell_white_24dp;
                 break;
             case ITEM_SHARE:
                 textRes = R.string.reader_btn_share;
-                colorRes = ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), R.attr.wpColorText);
+                textColorRes =
+                        ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), R.attr.colorOnSurface);
+                iconColorRes = ContextExtensionsKt
+                        .getColorResIdFromAttribute(convertView.getContext(), R.attr.wpColorOnSurfaceMedium);
                 iconRes = R.drawable.ic_share_white_24dp;
                 break;
             default:
@@ -102,8 +119,8 @@ public class ReaderMenuAdapter extends BaseAdapter {
         }
 
         holder.mText.setText(textRes);
-        holder.mText.setTextColor(convertView.getContext().getResources().getColor(colorRes));
-        ColorUtils.INSTANCE.setImageResourceWithTint(holder.mIcon, iconRes, colorRes);
+        holder.mText.setTextColor(AppCompatResources.getColorStateList(convertView.getContext(), textColorRes));
+        ColorUtils.INSTANCE.setImageResourceWithTint(holder.mIcon, iconRes, iconColorRes);
 
         return convertView;
     }

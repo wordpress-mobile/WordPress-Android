@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-05 01:54:10+0000
+Translation-Revision-Date: 2020-02-21 00:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
-    <string name="reader_self_hosted_select_filter">Utiliser le bouton de filtre pour trouver des articles sur des sujets spécifiques</string>
-    <string name="reader_bottom_sheet_content_description">Sélectionner une étiquette ou un site, fenêtre contextuelle</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Sélectionné</string>
-    <string name="reader_btn_select_filter_content_description">Sélectionner un site ou une étiquette pour filtrer des articles</string>
-    <string name="reader_btn_remove_filter_content_description">Supprimer le filtre actuel</string>
-    <string name="reader_title_subs">Gérer les étiquettes et les sites</string>
-    <string name="reader_filter_self_hosted_empty_sites_tags_action">Se connecter à WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Se connecter à WordPress.com pour voir les derniers articles à partir des étiquettes que vous suivez</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Se connecter à WordPress.com pour voir les derniers articles à partir des sites que vous suivez</string>
     <string name="gutenberg_native_template_preview">Aperçu du modèle</string>
     <string name="gutenberg_native_replace_current_block">Remplacer le bloc actuel</string>
     <string name="gutenberg_native_add_to_end">Ajouter à la fin</string>
@@ -1957,6 +1948,7 @@ Language: fr
     <string name="reader_hint_add_tag_or_url">Saisissez une étiquette ou une adresse web à suivre</string>
     <string name="reader_page_followed_blogs">Sites suivis</string>
     <string name="reader_page_followed_tags">Tags suivis</string>
+    <string name="reader_title_subs">Étiquettes &amp; sites</string>
     <string name="reader_title_tag_preview">Tag du Reader</string>
     <string name="reader_title_blog_preview">Blog du Lecteur</string>
     <string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez-vous faire confiance à ce certificat ?</string>

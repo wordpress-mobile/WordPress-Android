@@ -11,6 +11,7 @@
         android:layout_height="@dimen/bottom_sheet_handle_height"
         android:layout_width="@dimen/bottom_sheet_handle_width"
         android:layout_marginTop="@dimen/bottom_sheet_handle_margin_top"
+        android:alpha="@dimen/disabled_alpha"
         android:background="@drawable/bg_bottom_sheet_handle"
         android:id="@+id/bottom_sheet_handle"/>
 

@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-04 04:54:11+0000
+Translation-Revision-Date: 2020-02-22 00:54:43+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
-    <string name="reader_self_hosted_select_filter">使用“过滤器”按钮查找特定主题的文章</string>
-    <string name="reader_bottom_sheet_content_description">选择标签、站点或弹出窗口</string>
-    <string name="reader_btn_selected_filter_tick_content_description">已选择</string>
-    <string name="reader_btn_select_filter_content_description">选择站点或标签来过滤文章</string>
-    <string name="reader_btn_remove_filter_content_description">删除当前过滤器</string>
-    <string name="reader_title_subs">管理标签和站点</string>
-    <string name="reader_filter_self_hosted_empty_sites_tags_action">登录 WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">登录 WordPress.com 以查看属于您关注的标签的最新文章</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">登录 WordPress.com 以查看您关注的站点的最新文章</string>
     <string name="gutenberg_native_template_preview">模板预览</string>
     <string name="gutenberg_native_replace_current_block">替换现有区块</string>
     <string name="gutenberg_native_add_to_end">添加到结尾</string>
@@ -1881,6 +1872,7 @@ Language: zh_CN
     <string name="reader_hint_add_tag_or_url">输入要关注的 URL 或标签</string>
     <string name="reader_page_followed_blogs">已关注的博客</string>
     <string name="reader_page_followed_tags">关注的标签</string>
+    <string name="reader_title_subs">标签和站点</string>
     <string name="reader_title_tag_preview">阅读器标签</string>
     <string name="reader_title_blog_preview">“阅读器”站点</string>
     <string name="ssl_certificate_ask_trust">如果你平时连接到这个网站没有任何问题，这个错误可能意味着有人试图冒充该网站，你不应该继续下去。你想仍然信任这个证书？</string>

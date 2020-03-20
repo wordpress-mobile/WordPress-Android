@@ -1,6 +1,5 @@
 package org.wordpress.android.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -9,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.TaskStackBuilder;
 
 import org.wordpress.android.R;
@@ -24,7 +22,6 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.util.FluxCUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -45,7 +42,7 @@ import javax.inject.Inject;
  * Moreover it lists what actions the user can perform and redirects the user to the activity,
  * along with the content passed in the intent.
  */
-public class ShareIntentReceiverActivity extends AppCompatActivity implements ShareIntentFragmentListener {
+public class ShareIntentReceiverActivity extends LocaleAwareActivity implements ShareIntentFragmentListener {
     private static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     private static final String KEY_SELECTED_SITE_LOCAL_ID = "KEY_SELECTED_SITE_LOCAL_ID";
     private static final String KEY_SHARE_ACTION_ID = "KEY_SHARE_ACTION_ID";
@@ -63,11 +60,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         super.onNewIntent(intent);
         setIntent(intent);
         refreshContent();
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     @Override

@@ -1720,6 +1720,7 @@ Language: ku_TR
     <string name="reader_hint_add_tag_or_url">Ji bo şopandinê URL an nîşankek binivîse</string>
     <string name="reader_page_followed_blogs">Malperên şopandî</string>
     <string name="reader_page_followed_tags">Nîşankên şopandî</string>
+    <string name="reader_title_subs">Nîşank û Malper</string>
     <string name="reader_title_tag_preview">Nîşankê xwînerê</string>
     <string name="reader_title_blog_preview">Malpera xwînerê</string>
     <string name="ssl_certificate_ask_trust">Eger tu bi pirranî bêyî pirsgirêkek karibî werî girêdan li vê malperê, ev dibe ku were maneya yek dixwaze malpera te teqlîd bike, û tu nikaribî dewam bikî. Dîsa jî dixwazî bi sertîfîkayê bawer bibî?</string>

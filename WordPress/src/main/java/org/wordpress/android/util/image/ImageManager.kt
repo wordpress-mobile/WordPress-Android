@@ -17,6 +17,7 @@ import android.widget.ImageView.ScaleType.FIT_XY
 import android.widget.ImageView.ScaleType.MATRIX
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -239,7 +240,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
         val context = imageView.context
         if (!context.isAvailable()) return
         GlideApp.with(context)
-                .load(resourceId)
+                .load(ContextCompat.getDrawable(context, resourceId))
                 .applyScaleType(scaleType)
                 .into(imageView)
                 .clearOnDetach()

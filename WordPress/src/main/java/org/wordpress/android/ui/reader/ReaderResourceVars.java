@@ -2,8 +2,12 @@ package org.wordpress.android.ui.reader;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 
@@ -23,8 +27,8 @@ class ReaderResourceVars {
 
     final String mLinkColorStr;
     final String mGreyMediumDarkStr;
-    final String mGreyLightStr;
     final String mGreyExtraLightStr;
+    final String mTextColor;
 
     ReaderResourceVars(Context context) {
         Resources resources = context.getResources();
@@ -39,10 +43,29 @@ class ReaderResourceVars {
         mFeaturedImageHeightPx = resources.getDimensionPixelSize(R.dimen.reader_featured_image_height);
         mMarginMediumPx = resources.getDimensionPixelSize(R.dimen.margin_medium);
 
-        mLinkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.link_reader);
-        mGreyMediumDarkStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_60);
-        mGreyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_0);
-        mGreyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_0);
+        int onSurfaceColor = ContextExtensionsKt
+                .getColorFromAttribute(context, R.attr.colorOnSurface);
+
+        String onSurfaceHighType = "rgba(" + Color.red(onSurfaceColor) + ", "
+                                 + Color.green(onSurfaceColor) + ", " + Color
+                                         .blue(onSurfaceColor) + ", " + ResourcesCompat
+                                         .getFloat(resources, R.dimen.material_emphasis_high_type) + ")";
+
+        String onSurfaceMedium = "rgba(" + Color.red(onSurfaceColor) + ", "
+                                 + Color.green(onSurfaceColor) + ", " + Color
+                                         .blue(onSurfaceColor) + ", " + ResourcesCompat
+                                         .getFloat(resources, R.dimen.material_emphasis_medium) + ")";
+
+        String onSurfaceDisabled = "rgba(" + Color.red(onSurfaceColor) + ", "
+                                   + Color.green(onSurfaceColor) + ", " + Color
+                                           .blue(onSurfaceColor) + ", " + ResourcesCompat
+                                           .getFloat(resources, R.dimen.disabled_alpha) + ")";
+
+        mTextColor = onSurfaceHighType;
+        mLinkColorStr = HtmlUtils.colorResToHtmlColor(context,
+                ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
+        mGreyMediumDarkStr = onSurfaceMedium;
+        mGreyExtraLightStr = onSurfaceDisabled;
 
         // full-size image width must take margin into account
         mFullSizeImageWidthPx = displayWidthPx - (detailMarginWidthPx * 2);

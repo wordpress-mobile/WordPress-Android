@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="wrap_content"
-                                                   android:background="@android:color/white"
-                                                   android:elevation="@dimen/appbar_elevation"
-                                                   android:minHeight="@dimen/one_line_list_item_height">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/date_selector_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="@dimen/appbar_elevation"
+    android:minHeight="@dimen/one_line_list_item_height">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/selectedDateTextView"
         style="@style/StatsBlockTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="1dp"
         android:text="@string/unknown"
         app:layout_constraintBottom_toTopOf="@+id/currentSiteTimeZone"
         app:layout_constraintEnd_toStartOf="@+id/previousDateButton"
@@ -23,36 +23,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_goneMarginBottom="10dp"/>
+        app:layout_goneMarginBottom="10dp" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/currentSiteTimeZone"
         style="@style/StatsDateTimeZone"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:visibility="gone"
         android:text="@string/unknown"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/previousDateButton"
         app:layout_constraintStart_toStartOf="@+id/selectedDateTextView"
-        app:layout_constraintTop_toBottomOf="@+id/selectedDateTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/selectedDateTextView" />
 
     <ImageButton
         android:id="@+id/previousDateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/stats_select_previous_period_description"
         android:padding="4dp"
         android:src="@drawable/ic_chevron_left_white_24dp"
-        android:tint="@color/neutral_70_neutral_20_selector"
+        app:tint="@color/on_surface_disabled_selector"
+        android:tintMode="src_in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/nextDateButton"
         app:layout_constraintStart_toEndOf="@+id/selectedDateTextView"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/nextDateButton"
@@ -63,9 +64,10 @@
         android:contentDescription="@string/stats_select_next_period_description"
         android:padding="4dp"
         android:src="@drawable/ic_chevron_right_white_24dp"
-        android:tint="@color/neutral_70_neutral_20_selector"
+        app:tint="@color/on_surface_disabled_selector"
+        android:tintMode="src_in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
