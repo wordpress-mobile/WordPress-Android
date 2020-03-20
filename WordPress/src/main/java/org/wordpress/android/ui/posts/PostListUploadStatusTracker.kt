@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.annotation.SuppressLint
 import androidx.collection.SparseArrayCompat
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -7,6 +8,7 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.viewmodel.posts.PostListItemUploadStatus
+import kotlin.math.roundToInt
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
@@ -16,7 +18,16 @@ class PostListUploadStatusTracker(
     private val uploadStore: UploadStore,
     private val uploadActionUseCase: UploadActionUseCase
 ) {
-    private val uploadStatusArray = SparseArrayCompat<PostListItemUploadStatus>()
+    /*
+    Using `SparseArray` is results in ArrayIndexOutOfBoundsException when we are trying to put a new item. Although
+    the reason for the crash is unclear, this defeats the whole purpose of using a `SparseArray`. Furthermore,
+    `SparseArray` is actually not objectively better than using a `HashMap` and in this case `HashMap` should perform
+    better due to higher number of items.
+
+    https://github.com/wordpress-mobile/WordPress-Android/issues/11487
+     */
+    @SuppressLint("UseSparseArrays")
+    private val uploadStatusArray = HashMap<Int, PostListItemUploadStatus>()
 
     fun getUploadStatus(post: PostModel, siteModel: SiteModel): PostListItemUploadStatus {
         uploadStatusArray[post.id]?.let { return it }
@@ -25,7 +36,7 @@ class PostListUploadStatusTracker(
         val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)
         val newStatus = PostListItemUploadStatus(
                 uploadError = uploadError,
-                mediaUploadProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100),
+                mediaUploadProgress = (UploadService.getMediaUploadProgressForPost(post) * 100).roundToInt(),
                 isUploading = UploadService.isPostUploading(post),
                 isUploadingOrQueued = isUploadingOrQueued,
                 isQueued = UploadService.isPostQueued(post),
@@ -35,7 +46,7 @@ class PostListUploadStatusTracker(
                 isEligibleForAutoUpload = uploadActionUseCase.isEligibleForAutoUpload(siteModel, post),
                 uploadWillPushChanges = uploadActionUseCase.uploadWillPushChanges(post)
         )
-        uploadStatusArray.put(post.id, newStatus)
+        uploadStatusArray[post.id] = newStatus
         return newStatus
     }
 
