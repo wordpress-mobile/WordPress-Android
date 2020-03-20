@@ -235,17 +235,20 @@ public class PostStore extends Store {
     public static class RemoteAutoSavePostPayload extends Payload<PostError> {
         public PostRemoteAutoSaveModel autoSaveModel;
         public int localPostId;
+        public long remotePostId;
         public SiteModel site;
 
-        public RemoteAutoSavePostPayload(int localPostId, @NonNull PostRemoteAutoSaveModel autoSaveModel,
-                                         @NonNull SiteModel site) {
+        public RemoteAutoSavePostPayload(int localPostId, long remotePostId,
+                                         @NonNull PostRemoteAutoSaveModel autoSaveModel, @NonNull SiteModel site) {
             this.localPostId = localPostId;
+            this.remotePostId = remotePostId;
             this.autoSaveModel = autoSaveModel;
             this.site = site;
         }
 
-        public RemoteAutoSavePostPayload(int localPostId, @NonNull PostError error) {
+        public RemoteAutoSavePostPayload(int localPostId, long remotePostId, @NonNull PostError error) {
             this.localPostId = localPostId;
+            this.remotePostId = remotePostId;
             this.error = error;
         }
     }
@@ -1050,13 +1053,15 @@ public class PostStore extends Store {
                     PostErrorType.UNSUPPORTED_ACTION,
                     "Remote-auto-save not support on self-hosted sites."
             );
-            RemoteAutoSavePostPayload response = new RemoteAutoSavePostPayload(payload.post.getId(), postError);
+            RemoteAutoSavePostPayload response =
+                    new RemoteAutoSavePostPayload(payload.post.getId(), payload.post.getRemotePostId(), postError);
             mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(response));
         }
     }
 
     private void handleRemoteAutoSavedPost(RemoteAutoSavePostPayload payload) {
-        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.RemoteAutoSavePost(payload.localPostId);
+        CauseOfOnPostChanged causeOfChange =
+                new CauseOfOnPostChanged.RemoteAutoSavePost(payload.localPostId, payload.remotePostId);
         OnPostChanged onPostChanged;
 
         if (payload.isError()) {
