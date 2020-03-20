@@ -2,6 +2,7 @@
 -----
 * Removes sections from post search results
 * Site Creation: faster site creation, removed intermediate steps. Just select what kind of site you'd like, enter the domain name and the site will be created.
+* Fixed a bug where failed post uploads were sometimes being retried indefinitely
  
 14.4
 -----
@@ -235,4 +236,3 @@
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
-

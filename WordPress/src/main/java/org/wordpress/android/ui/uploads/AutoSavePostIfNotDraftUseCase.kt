@@ -10,7 +10,7 @@ import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
@@ -67,8 +67,8 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
     private val postStore: PostStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    private val postStatusContinuations = HashMap<LocalId, Continuation<OnPostStatusFetched>>()
-    private val autoSaveContinuations = HashMap<LocalId, Continuation<OnPostChanged>>()
+    private val postStatusContinuations = HashMap<RemoteId, Continuation<OnPostStatusFetched>>()
+    private val autoSaveContinuations = HashMap<RemoteId, Continuation<OnPostChanged>>()
 
     init {
         dispatcher.register(this)
@@ -78,12 +78,12 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
         remotePostPayload: RemotePostPayload,
         callback: OnAutoSavePostIfNotDraftCallback
     ) {
-        val localPostId = LocalId(remotePostPayload.post.id)
+        val remotePostId = RemoteId(remotePostPayload.post.remotePostId)
         if (remotePostPayload.post.isLocalDraft) {
             throw IllegalArgumentException("Local drafts should not be auto-saved")
         }
-        if (postStatusContinuations.containsKey(localPostId) ||
-                autoSaveContinuations.containsKey(localPostId)) {
+        if (postStatusContinuations.containsKey(remotePostId) ||
+                autoSaveContinuations.containsKey(remotePostId)) {
             throw IllegalArgumentException(
                     "This post is already being processed. Make sure not to start an autoSave " +
                             "or update draft action while another one is going on."
@@ -110,23 +110,26 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
     }
 
     private suspend fun fetchRemotePostStatus(remotePostPayload: RemotePostPayload): OnPostStatusFetched {
-        val localPostId = LocalId(remotePostPayload.post.id)
+        val remotePostId = RemoteId(remotePostPayload.post.remotePostId)
         return suspendCancellableCoroutine { cont ->
-            postStatusContinuations[localPostId] = cont
+            postStatusContinuations[remotePostId] = cont
             dispatcher.dispatch(PostActionBuilder.newFetchPostStatusAction(remotePostPayload))
         }
     }
 
     private suspend fun autoSavePost(remotePostPayload: RemotePostPayload): AutoSavePostIfNotDraftResult {
-        val localPostId = LocalId(remotePostPayload.post.id)
+        val remotePostId = RemoteId(remotePostPayload.post.remotePostId)
         val onPostChanged: OnPostChanged = suspendCancellableCoroutine { cont ->
-            autoSaveContinuations[localPostId] = cont
+            autoSaveContinuations[remotePostId] = cont
             dispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(remotePostPayload))
         }
         return if (onPostChanged.isError) {
             PostAutoSaveFailed(remotePostPayload.post, onPostChanged.error)
         } else {
-            val updatedPost = postStore.getPostByLocalPostId(localPostId.value)
+            val updatedPost = postStore.getPostByRemotePostId(
+                    remotePostId.value,
+                    remotePostPayload.site
+            )
             PostAutoSaved(updatedPost)
         }
     }
@@ -134,10 +137,10 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
     @Subscribe(threadMode = BACKGROUND)
     @Suppress("unused")
     fun onPostStatusFetched(event: OnPostStatusFetched) {
-        val localPostId = LocalId(event.post.id)
-        postStatusContinuations[localPostId]?.let { continuation ->
+        val remotePostId = RemoteId(event.post.remotePostId)
+        postStatusContinuations[remotePostId]?.let { continuation ->
             continuation.resume(event)
-            postStatusContinuations.remove(localPostId)
+            postStatusContinuations.remove(remotePostId)
         }
     }
 
@@ -145,10 +148,10 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
     @Suppress("unused")
     fun onPostChanged(event: OnPostChanged) {
         if (event.causeOfChange is RemoteAutoSavePost) {
-            val localPostId = LocalId((event.causeOfChange as RemoteAutoSavePost).localPostId)
-            autoSaveContinuations[localPostId]?.let { continuation ->
+            val remotePostId = RemoteId((event.causeOfChange as RemoteAutoSavePost).remotePostId)
+            autoSaveContinuations[remotePostId]?.let { continuation ->
                 continuation.resume(event)
-                autoSaveContinuations.remove(localPostId)
+                autoSaveContinuations.remove(remotePostId)
             }
         }
     }
