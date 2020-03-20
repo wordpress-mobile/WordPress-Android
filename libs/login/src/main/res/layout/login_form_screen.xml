@@ -5,64 +5,58 @@
     android:layout_height="match_parent">
 
     <include
-        android:id="@+id/toolbar_container"
+        android:id="@+id/toolbar"
         layout="@layout/toolbar_login" />
 
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_buttons"
-        android:layout_below="@+id/toolbar_container">
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/bottom_buttons">
 
         <ViewStub
             android:id="@+id/login_form_content_stub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_marginBottom="@dimen/margin_extra_large" />
+            android:layout_marginBottom="@dimen/margin_extra_large"/>
     </ScrollView>
 
-
-    <com.google.android.material.card.MaterialCardView
+    <RelativeLayout
         android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
-        style="@style/LoginTheme.BottomBar"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:background="@color/login_background_color"
+        android:paddingStart="@dimen/margin_small_medium"
+        android:paddingEnd="@dimen/margin_medium_large"
+        android:paddingTop="@dimen/margin_medium_large"
+        android:paddingBottom="@dimen/margin_medium_large"
+        android:layout_alignParentBottom="true"
+        android:clipToPadding="false">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/LoginTheme.Button.Secondary"
+            android:id="@+id/secondary_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:paddingStart="@dimen/margin_small_medium"
-            android:paddingTop="@dimen/margin_medium_large"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/primary_button"
+            android:paddingLeft="@dimen/margin_medium_large"
+            android:paddingStart="@dimen/margin_medium_large"
+            android:paddingRight="@dimen/margin_medium_large"
             android:paddingEnd="@dimen/margin_medium_large"
-            android:paddingBottom="@dimen/margin_medium_large">
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:textAlignment="viewStart"
+            android:gravity="start|center_vertical"
+            tools:text="Secondary action"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/secondary_button"
-                style="@style/LoginTheme.Button.Secondary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_marginEnd="@dimen/margin_extra_large"
-                android:layout_toStartOf="@+id/primary_button"
-                android:gravity="start|center_vertical"
-                android:paddingStart="@dimen/margin_medium_large"
-                android:paddingLeft="@dimen/margin_medium_large"
-                android:paddingEnd="@dimen/margin_medium_large"
-                android:paddingRight="@dimen/margin_medium_large"
-                android:textAlignment="viewStart"
-                tools:text="Secondary action" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/primary_button"
-                style="@style/LoginTheme.Button.Primary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="@string/next" />
-        </RelativeLayout>
-    </com.google.android.material.card.MaterialCardView>
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/LoginTheme.Button.Primary"
+            android:id="@+id/primary_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/next" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -54,6 +54,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     public static final String TAG = "login_magic_link_request_fragment_tag";
 
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
+    private static final String KEY_GRAVATAR_IN_PROGRESS = "KEY_GRAVATAR_IN_PROGRESS";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_MAGIC_LINK_SCHEME = "ARG_MAGIC_LINK_SCHEME";
     private static final String ARG_IS_JETPACK_CONNECT = "ARG_IS_JETPACK_CONNECT";
@@ -223,6 +224,9 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             if (mInProgress) {
                 showMagicLinkRequestProgressDialog();
             }
+
+            boolean gravatarInProgress = savedInstanceState.getBoolean(KEY_GRAVATAR_IN_PROGRESS);
+            mAvatarProgressBar.setVisibility(gravatarInProgress ? View.VISIBLE : View.GONE);
         }
         // important for accessibility - talkback
         getActivity().setTitle(R.string.magic_link_login_title);
@@ -239,6 +243,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
+        outState.putBoolean(KEY_GRAVATAR_IN_PROGRESS, mAvatarProgressBar.getVisibility() == View.VISIBLE);
     }
 
     @Override
