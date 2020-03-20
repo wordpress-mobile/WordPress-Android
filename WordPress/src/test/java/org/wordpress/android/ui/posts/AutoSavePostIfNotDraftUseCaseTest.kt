@@ -28,7 +28,6 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftUseCase
 import org.wordpress.android.ui.uploads.OnAutoSavePostIfNotDraftCallback
-import java.lang.IllegalArgumentException
 import java.lang.reflect.Constructor
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
