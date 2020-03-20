@@ -162,6 +162,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -1658,7 +1659,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override public void onMediaEditorRequested(String mediaUrl) {
-        String imageUrl = StringUtils.notNullStr(mediaUrl);
+        String imageUrl = UrlUtils.removeQuery(StringUtils.notNullStr(mediaUrl));
 
         // We're using a separate cache in WPAndroid and RN's Gutenberg editor so we need to reload the image
         // in the preview screen using WPAndroid's image loader. We create a resized url using Photon service and
