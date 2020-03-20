@@ -7,7 +7,7 @@
     android:paddingEnd="@dimen/margin_extra_large"
     android:paddingBottom="@dimen/margin_medium">
 
-    <com.google.android.material.textview.MaterialTextView
+    <TextView
         android:id="@+id/text"
         style="@style/StatsBlockEmpty"
         android:layout_width="wrap_content"

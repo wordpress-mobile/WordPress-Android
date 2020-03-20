@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,8 +19,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -232,7 +231,7 @@ public class SignupMagicLinkFragment extends Fragment {
             }
         };
 
-        AlertDialog dialog = new MaterialAlertDialogBuilder(getActivity())
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
                 .setMessage(message)
                 .setNegativeButton(R.string.signup_magic_link_error_button_negative, dialogListener)
                 .setPositiveButton(R.string.signup_magic_link_error_button_positive, dialogListener)

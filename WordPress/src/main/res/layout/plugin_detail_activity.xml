@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/plugin_detail_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="false">
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:tools="http://schemas.android.com/tools"
+                                                     android:id="@+id/plugin_detail_container"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent"
+                                                     android:fitsSystemWindows="false">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -19,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="false"
+            app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -40,16 +42,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
-                    android:background="@drawable/media_settings_gradient_scrim"
                     android:contentDescription="@null"
+                    android:background="@drawable/media_settings_gradient_scrim"
                     tools:layout_height="74dp" />
             </FrameLayout>
 
-            <com.google.android.material.appbar.MaterialToolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@null"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -69,13 +70,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView style="@style/PluginCardView">
+            <androidx.cardview.widget.CardView
+                style="@style/PluginCardView"
+                card_view:cardBackgroundColor="@android:color/white"
+                card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@color/neutral_0"
                         android:padding="@dimen/margin_extra_large">
 
                         <ImageView
@@ -90,102 +95,109 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_toEndOf="@+id/image_icon"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_toEndOf="@+id/image_icon">
 
-                            <com.google.android.material.textview.MaterialTextView
+                            <TextView
                                 android:id="@+id/text_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/margin_extra_large"
-                                android:textAppearance="?attr/textAppearanceSubtitle1"
+                                android:textColor="?attr/wpColorText"
+                                android:textSize="@dimen/text_sz_large"
                                 android:textStyle="bold"
-                                tools:text="text_title" />
+                                tools:text="text_title"
+                                android:layout_marginStart="@dimen/margin_extra_large"/>
 
-                            <com.google.android.material.textview.MaterialTextView
+                            <TextView
                                 android:id="@+id/text_byline"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/margin_extra_large"
                                 android:linksClickable="true"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColorLink="?attr/colorPrimary"
-                                tools:text="text_byline" />
+                                android:textColor="?attr/wpColorText"
+                                android:textColorLink="@color/primary_50"
+                                android:textSize="@dimen/text_sz_medium"
+                                tools:text="text_byline"
+                                android:layout_marginStart="@dimen/margin_extra_large"/>
                         </LinearLayout>
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent" >
 
                         <LinearLayout
                             android:id="@+id/plugin_version_layout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:layout_toStartOf="@+id/plugin_btn_container"
-                            android:background="?attr/selectableItemBackground"
+                            android:background="?android:attr/selectableItemBackground"
                             android:clickable="true"
                             android:focusable="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
+                            android:layout_toStartOf="@+id/plugin_btn_container"
+                            android:layout_width="wrap_content"
                             android:orientation="vertical"
+                            android:paddingBottom="@dimen/margin_extra_large"
                             android:paddingStart="@dimen/margin_extra_large"
                             android:paddingTop="@dimen/margin_extra_large"
-                            android:paddingBottom="@dimen/margin_extra_large"
-                            tools:ignore="RtlSymmetry">
+                            tools:ignore="RtlSymmetry" >
 
-                            <com.google.android.material.textview.MaterialTextView
+                            <TextView
                                 android:id="@+id/plugin_version_top"
-                                style="@style/PluginCardViewPrimaryText"
                                 android:drawableEnd="@drawable/ic_info_outline_grey_dark_18dp"
                                 android:drawablePadding="@dimen/margin_small"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                app:drawableTint="?attr/wpColorOnSurfaceMedium"
-                                tools:text="plugin_version_top" />
+                                tools:text="plugin_version_top"
+                                style="@style/PluginCardViewPrimaryText" />
 
-                            <com.google.android.material.textview.MaterialTextView
+                            <TextView
                                 android:id="@+id/plugin_version_bottom"
-                                style="@style/PluginCardViewSecondaryText"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                tools:text="plugin_version_bottom" />
+                                android:textColor="@color/neutral_40"
+                                tools:text="plugin_version_bottom"
+                                style="@style/PluginCardViewSecondaryText" />
                         </LinearLayout>
 
                         <FrameLayout
                             android:id="@+id/plugin_btn_container"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:paddingStart="@dimen/margin_extra_large"
-                            android:paddingEnd="@dimen/margin_extra_large">
+                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:paddingEnd="@dimen/margin_extra_large"
+                            android:paddingStart="@dimen/margin_extra_large" >
 
-                            <com.google.android.material.button.MaterialButton
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/plugin_btn_update"
-                                style="@style/Widget.MaterialComponents.Button.TextButton"
-                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
                                 android:text="@string/update_verb"
+                                android:textAllCaps="true"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+                                android:textSize="@dimen/text_sz_medium"
                                 android:visibility="gone"
-                                tools:visibility="visible" />
+                                tools:visibility="visible"
+                                style="@style/WordPress.Button.Secondary" />
 
-                            <com.google.android.material.button.MaterialButton
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/plugin_btn_install"
-                                style="@style/Widget.MaterialComponents.Button.TextButton"
-                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
                                 android:text="@string/plugin_install"
+                                android:textAllCaps="true"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+                                android:textSize="@dimen/text_sz_medium"
                                 android:visibility="gone"
-                                tools:visibility="visible" />
+                                tools:visibility="visible"
+                                style="@style/WordPress.Button.Secondary" />
 
-                            <com.google.android.material.button.MaterialButton
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/plugin_installed"
-                                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                                android:enabled="false"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:enabled="false"
                                 android:text="@string/plugin_installed"
                                 android:textSize="@dimen/text_sz_medium"
                                 android:visibility="gone"
@@ -203,36 +215,31 @@
                     </RelativeLayout>
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/plugin_card_site"
-                style="@style/PluginCardView">
+                style="@style/PluginCardView"
+                card_view:cardBackgroundColor="@android:color/white"
+                card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/plugin_state_active_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        style="@style/PluginCardViewHorizontalContainer">
 
-                        <RelativeLayout style="@style/PluginCardViewHorizontalContainer">
+                        <TextView
+                            style="@style/PluginCardViewPrimaryText"
+                            android:text="@string/plugin_detail_label_state_active" />
 
-                            <TextView
-                                style="@style/PluginCardViewPrimaryText"
-                                android:text="@string/plugin_detail_label_state_active" />
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/plugin_state_active"
+                            android:theme="@style/SwitchBlueMedium"
+                            style="@style/PluginCardViewSecondaryElement" />
+                    </RelativeLayout>
 
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:id="@+id/plugin_state_active"
-                                style="@style/PluginCardViewSecondaryElement"
-                                android:theme="@style/SwitchBlueMedium" />
-
-                        </RelativeLayout>
-
-                        <View style="@style/PostSettingsDivider" />
-
-                    </LinearLayout>
+                    <View style="@style/PostSettingsDivider" />
 
                     <RelativeLayout
                         android:id="@+id/plugin_state_autoupdates_container"
@@ -244,45 +251,40 @@
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/plugin_state_autoupdates"
-                            style="@style/PluginCardViewSecondaryElement"
-                            android:theme="@style/SwitchBlueMedium" />
+                            android:theme="@style/SwitchBlueMedium"
+                            style="@style/PluginCardViewSecondaryElement" />
                     </RelativeLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
-            <com.google.android.material.card.MaterialCardView style="@style/PluginCardView">
+            <androidx.cardview.widget.CardView
+                style="@style/PluginCardView"
+                card_view:cardBackgroundColor="@android:color/white"
+                card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/plugin_settings_page"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        style="@style/PluginCardViewHorizontalContainer"
+                        android:background="?android:attr/selectableItemBackground">
 
-                        <RelativeLayout
+                        <TextView
+                            style="@style/PluginCardViewPrimaryText"
+                            android:text="@string/plugin_settings" />
 
-                            style="@style/PluginCardViewHorizontalContainer"
-                            android:background="?attr/selectableItemBackground">
+                        <ImageView
+                            style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                            android:contentDescription="@string/plugin_external_link_icon_content_description"
+                            android:src="@drawable/ic_external_white_24dp" />
+                    </RelativeLayout>
 
-                            <TextView
-                                style="@style/PluginCardViewPrimaryText"
-                                android:text="@string/plugin_settings" />
-
-                            <ImageView
-                                style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
-                                android:contentDescription="@string/plugin_external_link_icon_content_description"
-                                android:src="@drawable/ic_external_white_24dp" />
-                        </RelativeLayout>
-
-                        <View style="@style/PostSettingsDivider" />
-
-                    </LinearLayout>
+                    <View style="@style/PostSettingsDivider" />
 
                     <RelativeLayout
                         android:id="@+id/plugin_wp_org_page"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?attr/selectableItemBackground">
+                        android:background="?android:attr/selectableItemBackground">
 
                         <TextView
                             style="@style/PluginCardViewPrimaryText"
@@ -299,7 +301,7 @@
                     <RelativeLayout
                         android:id="@+id/plugin_home_page"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?attr/selectableItemBackground">
+                        android:background="?android:attr/selectableItemBackground">
 
                         <TextView
                             style="@style/PluginCardViewPrimaryText"
@@ -311,18 +313,20 @@
                             android:src="@drawable/ic_external_white_24dp" />
                     </RelativeLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
+                style="@style/PluginCardView"
                 android:id="@+id/plugin_wp_org_details_container"
-                style="@style/PluginCardView">
+                card_view:cardBackgroundColor="@android:color/white"
+                card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
 
                     <RelativeLayout
                         android:id="@+id/plugin_description_container"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?attr/selectableItemBackground">
+                        android:background="?android:attr/selectableItemBackground">
 
                         <TextView
                             android:id="@+id/plugin_description_label"
@@ -351,7 +355,7 @@
                     <RelativeLayout
                         android:id="@+id/plugin_installation_container"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?attr/selectableItemBackground">
+                        android:background="?android:attr/selectableItemBackground">
 
                         <TextView
                             android:id="@+id/plugin_installation_label"
@@ -380,7 +384,7 @@
                     <RelativeLayout
                         android:id="@+id/plugin_whatsnew_container"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?attr/selectableItemBackground">
+                        android:background="?android:attr/selectableItemBackground">
 
                         <TextView
                             android:id="@+id/plugin_whatsnew_label"
@@ -409,7 +413,7 @@
                     <RelativeLayout
                         android:id="@+id/plugin_faq_container"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?attr/selectableItemBackground">
+                        android:background="?android:attr/selectableItemBackground">
 
                         <TextView
                             android:id="@+id/plugin_faq_label"
@@ -433,7 +437,7 @@
 
                     </RelativeLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
             <include layout="@layout/plugin_ratings_cardview" />
         </LinearLayout>

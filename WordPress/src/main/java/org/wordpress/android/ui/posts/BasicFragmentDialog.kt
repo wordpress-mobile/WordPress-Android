@@ -4,8 +4,10 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.view.ContextThemeWrapper
+import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatDialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.wordpress.android.R
 
 /**
  * Basic dialog fragment with support for 1,2 or 3 buttons.
@@ -76,7 +78,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = MaterialAlertDialogBuilder(activity)
+        val builder = Builder(ContextThemeWrapper(activity, R.style.Calypso_Dialog_Alert))
         builder.setMessage(mMessage)
                 .setPositiveButton(mPositiveButtonLabel) { _, _ ->
                     dismissedByPositiveButton = true
@@ -111,7 +113,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
         return builder.create()
     }
 
-    override fun onAttach(context: Context) {
+    override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (activity !is BasicDialogPositiveClickInterface) {
             throw RuntimeException("Hosting activity must implement BasicDialogPositiveClickInterface")
@@ -121,7 +123,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
         }
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
+    override fun onDismiss(dialog: DialogInterface?) {
         val activity = activity
         if (activity != null && activity is BasicDialogOnDismissByOutsideTouchInterface) {
             // Only handle the event if it wasn't triggered by a button

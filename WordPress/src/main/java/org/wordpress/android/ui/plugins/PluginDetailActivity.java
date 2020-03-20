@@ -4,15 +4,20 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
@@ -26,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -33,9 +39,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -71,7 +74,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferStatusChec
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
@@ -84,6 +86,7 @@ import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -111,7 +114,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
 import static org.wordpress.android.util.DomainRegistrationUtilsKt.requestEmailValidation;
 
-public class PluginDetailActivity extends LocaleAwareActivity implements OnDomainRegistrationRequestedListener,
+public class PluginDetailActivity extends AppCompatActivity implements OnDomainRegistrationRequestedListener,
         BasicDialogPositiveClickInterface {
     public static final String KEY_PLUGIN_SLUG = "KEY_PLUGIN_SLUG";
     private static final String KEY_IS_CONFIGURING_PLUGIN = "KEY_IS_CONFIGURING_PLUGIN";
@@ -189,6 +192,11 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     @Inject ImageManager mImageManager;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
@@ -252,16 +260,6 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setElevation(0);
         }
-
-
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
-
-        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
-        int elevatedColor = elevationOverlayProvider
-                .compositeOverlayIfNeeded(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar),
-                        appbarElevation);
-        collapsingToolbarLayout.setContentScrimColor(elevatedColor);
 
         mHandler = new Handler();
         setupViews();
@@ -355,17 +353,24 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             builder.setTitle(R.string.plugin_install_custom_domain_required_dialog_title);
             builder.setMessage(R.string.plugin_install_custom_domain_required_dialog_message);
             builder.setPositiveButton(R.string.plugin_install_custom_domain_required_dialog_register_btn,
-                    (dialogInterface, i) -> {
-                        if (isAdded() && getActivity() instanceof OnDomainRegistrationRequestedListener) {
-                            ((OnDomainRegistrationRequestedListener) getActivity()).onDomainRegistrationRequested();
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (isAdded() && getActivity() instanceof OnDomainRegistrationRequestedListener) {
+                                ((OnDomainRegistrationRequestedListener) getActivity()).onDomainRegistrationRequested();
+                            }
                         }
                     });
             builder.setNegativeButton(R.string.cancel,
-                    (dialogInterface, i) -> {
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
                     });
 
             builder.setCancelable(true);
@@ -425,7 +430,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putString(KEY_PLUGIN_SLUG, mSlug);
@@ -465,18 +470,30 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
         mDescriptionTextView = findViewById(R.id.plugin_description_text);
         mDescriptionChevron = findViewById(R.id.plugin_description_chevron);
-        findViewById(R.id.plugin_description_container).setOnClickListener(
-                v -> toggleText(mDescriptionTextView, mDescriptionChevron));
+        findViewById(R.id.plugin_description_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(mDescriptionTextView, mDescriptionChevron);
+            }
+        });
 
         mInstallationTextView = findViewById(R.id.plugin_installation_text);
         mInstallationChevron = findViewById(R.id.plugin_installation_chevron);
-        findViewById(R.id.plugin_installation_container).setOnClickListener(
-                v -> toggleText(mInstallationTextView, mInstallationChevron));
+        findViewById(R.id.plugin_installation_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(mInstallationTextView, mInstallationChevron);
+            }
+        });
 
         mWhatsNewTextView = findViewById(R.id.plugin_whatsnew_text);
         mWhatsNewChevron = findViewById(R.id.plugin_whatsnew_chevron);
-        findViewById(R.id.plugin_whatsnew_container).setOnClickListener(
-                v -> toggleText(mWhatsNewTextView, mWhatsNewChevron));
+        findViewById(R.id.plugin_whatsnew_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(mWhatsNewTextView, mWhatsNewChevron);
+            }
+        });
 
         // expand description if this plugin isn't installed, otherwise expand "what's new" if
         // this is an installed plugin and there's an update available
@@ -488,56 +505,100 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
         mFaqTextView = findViewById(R.id.plugin_faq_text);
         mFaqChevron = findViewById(R.id.plugin_faq_chevron);
-        findViewById(R.id.plugin_faq_container).setOnClickListener(v -> toggleText(mFaqTextView, mFaqChevron));
+        findViewById(R.id.plugin_faq_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(mFaqTextView, mFaqChevron);
+            }
+        });
 
-        findViewById(R.id.plugin_version_layout).setOnClickListener(v -> showPluginInfoPopup());
+        findViewById(R.id.plugin_version_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPluginInfoPopup();
+            }
+        });
 
-        mSwitchActive.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (compoundButton.isPressed()) {
-                if (NetworkUtils.checkConnection(PluginDetailActivity.this)) {
-                    mIsActive = isChecked;
-                    dispatchConfigurePluginAction(false);
-                } else {
-                    compoundButton.setChecked(mIsActive);
+        mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (compoundButton.isPressed()) {
+                    if (NetworkUtils.checkConnection(PluginDetailActivity.this)) {
+                        mIsActive = isChecked;
+                        dispatchConfigurePluginAction(false);
+                    } else {
+                        compoundButton.setChecked(mIsActive);
+                    }
                 }
             }
         });
 
-        mSwitchAutoupdates.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (compoundButton.isPressed()) {
-                if (NetworkUtils.checkConnection(PluginDetailActivity.this)) {
-                    mIsAutoUpdateEnabled = isChecked;
-                    dispatchConfigurePluginAction(false);
-                } else {
-                    compoundButton.setChecked(mIsAutoUpdateEnabled);
+        mSwitchAutoupdates.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (compoundButton.isPressed()) {
+                    if (NetworkUtils.checkConnection(PluginDetailActivity.this)) {
+                        mIsAutoUpdateEnabled = isChecked;
+                        dispatchConfigurePluginAction(false);
+                    } else {
+                        compoundButton.setChecked(mIsAutoUpdateEnabled);
+                    }
                 }
             }
         });
 
-        mUpdateButton.setOnClickListener(view -> dispatchUpdatePluginAction());
+        mUpdateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchUpdatePluginAction();
+            }
+        });
 
-        mInstallButton.setOnClickListener(v -> {
-            if (isCustomDomainRequired()) {
-                showDomainCreditsCheckProgressDialog();
-                mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(mSite));
-            } else {
-                dispatchInstallPluginAction();
+        mInstallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isCustomDomainRequired()) {
+                    showDomainCreditsCheckProgressDialog();
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(mSite));
+                } else {
+                    dispatchInstallPluginAction();
+                }
             }
         });
 
         View settingsView = findViewById(R.id.plugin_settings_page);
         if (canShowSettings()) {
             settingsView.setVisibility(View.VISIBLE);
-            settingsView.setOnClickListener(v -> openUrl(mPlugin.getSettingsUrl()));
+            settingsView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openUrl(mPlugin.getSettingsUrl());
+                }
+            });
         } else {
             settingsView.setVisibility(View.GONE);
         }
 
-        findViewById(R.id.plugin_wp_org_page).setOnClickListener(view -> openUrl(getWpOrgPluginUrl()));
+        findViewById(R.id.plugin_wp_org_page).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openUrl(getWpOrgPluginUrl());
+            }
+        });
 
-        findViewById(R.id.plugin_home_page).setOnClickListener(view -> openUrl(mPlugin.getHomepageUrl()));
+        findViewById(R.id.plugin_home_page).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openUrl(mPlugin.getHomepageUrl());
+            }
+        });
 
-        findViewById(R.id.read_reviews_container).setOnClickListener(view -> openUrl(getWpOrgReviewsUrl()));
+        findViewById(R.id.read_reviews_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openUrl(getWpOrgReviewsUrl());
+            }
+        });
 
         // set the height of the gradient scrim that appears atop the banner image
         int toolbarHeight = DisplayUtils.getActionBarHeight(this);
@@ -601,12 +662,11 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
         if (!TextUtils.isEmpty(htmlText)) {
-            textView.setTextColor(ContextExtensionsKt.getColorFromAttribute(this, R.attr.colorOnSurface));
+            textView.setTextColor(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorText));
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             textView.setText(Html.fromHtml(htmlText));
         } else {
-            textView.setTextColor(
-                    ContextExtensionsKt.getColorStateListFromAttribute(this, R.attr.wpColorOnSurfaceMedium));
+            textView.setTextColor(getResources().getColor(R.color.neutral_20));
             textView.setText(R.string.plugin_empty_text);
         }
     }
@@ -751,9 +811,14 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
                 from,
                 to);
 
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
         builder.setCancelable(true);
-        builder.setAdapter(adapter, (dialog, which) -> dialog.dismiss());
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
         builder.show();
     }
 
@@ -780,19 +845,31 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     private void confirmRemovePlugin() {
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
         builder.setTitle(getResources().getText(R.string.plugin_remove_dialog_title));
         String confirmationMessage = getString(R.string.plugin_remove_dialog_message,
                 mPlugin.getDisplayName(),
                 SiteUtils.getSiteNameOrHomeURL(mSite));
         builder.setMessage(confirmationMessage);
-        builder.setPositiveButton(R.string.remove, (dialogInterface, i) -> {
-            mIsShowingRemovePluginConfirmationDialog = false;
-            disableAndRemovePlugin();
+        builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mIsShowingRemovePluginConfirmationDialog = false;
+                disableAndRemovePlugin();
+            }
         });
-        builder.setNegativeButton(R.string.cancel,
-                (dialogInterface, i) -> mIsShowingRemovePluginConfirmationDialog = false);
-        builder.setOnCancelListener(dialogInterface -> mIsShowingRemovePluginConfirmationDialog = false);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mIsShowingRemovePluginConfirmationDialog = false;
+            }
+        });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                mIsShowingRemovePluginConfirmationDialog = false;
+            }
+        });
         builder.setCancelable(true);
         builder.create();
         mIsShowingRemovePluginConfirmationDialog = true;
@@ -823,14 +900,24 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     private void showUpdateFailedSnackbar() {
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_updated_failed, mPlugin.getDisplayName()), Snackbar.LENGTH_LONG)
-                  .setAction(R.string.retry, view -> dispatchUpdatePluginAction())
+                  .setAction(R.string.retry, new View.OnClickListener() {
+                      @Override
+                      public void onClick(View view) {
+                          dispatchUpdatePluginAction();
+                      }
+                  })
                   .show();
     }
 
     private void showInstallFailedSnackbar() {
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_installed_failed, mPlugin.getDisplayName()), Snackbar.LENGTH_LONG)
-                  .setAction(R.string.retry, view -> dispatchInstallPluginAction())
+                  .setAction(R.string.retry, new View.OnClickListener() {
+                      @Override
+                      public void onClick(View view) {
+                          dispatchInstallPluginAction();
+                      }
+                  })
                   .show();
     }
 
@@ -1216,21 +1303,30 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
      * UI for it, so we get a confirmation first in this step.
      */
     private void confirmInstallPluginForAutomatedTransfer() {
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
         builder.setTitle(getResources().getText(R.string.plugin_install_first_plugin_confirmation_dialog_title));
         builder.setMessage(R.string.plugin_install_first_plugin_confirmation_dialog_message);
         builder.setPositiveButton(R.string.plugin_install_first_plugin_confirmation_dialog_install_btn,
-                (dialogInterface, i) -> {
-                    mIsShowingInstallFirstPluginConfirmationDialog = false;
-                    startAutomatedTransfer();
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mIsShowingInstallFirstPluginConfirmationDialog = false;
+                        startAutomatedTransfer();
+                    }
                 });
-        builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
-            AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_CONFIRM_DIALOG_CANCELLED, mSite);
-            mIsShowingInstallFirstPluginConfirmationDialog = false;
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_CONFIRM_DIALOG_CANCELLED, mSite);
+                mIsShowingInstallFirstPluginConfirmationDialog = false;
+            }
         });
-        builder.setOnCancelListener(dialogInterface -> {
-            AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_CONFIRM_DIALOG_CANCELLED, mSite);
-            mIsShowingInstallFirstPluginConfirmationDialog = false;
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_CONFIRM_DIALOG_CANCELLED, mSite);
+                mIsShowingInstallFirstPluginConfirmationDialog = false;
+            }
         });
         builder.setCancelable(true);
         builder.create();
@@ -1419,10 +1515,13 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
                 AppLog.v(T.PLUGINS, "Automated Transfer is still in progress: " + event.currentStep + "/"
                                     + event.totalSteps);
                 mAutomatedTransferProgressDialog.setProgress(event.currentStep * 100 / event.totalSteps);
-                mHandler.postDelayed(() -> {
-                    AppLog.v(T.PLUGINS, "Checking the Automated Transfer status...");
-                    // Wait 3 seconds before checking the status again
-                    mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppLog.v(T.PLUGINS, "Checking the Automated Transfer status...");
+                        // Wait 3 seconds before checking the status again
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
+                    }
                 }, DEFAULT_RETRY_DELAY_MS);
             }
         }
@@ -1463,11 +1562,14 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
                 // the user will make after this point will not be done on the correct `SiteModel`. If we don't get the
                 // correct site information, it's actually safer if the user force quits the app, because they will
                 // start from the my site page and the site will be refreshed.
-                mHandler.postDelayed(() -> {
-                    AppLog.v(T.PLUGINS, "Fetching the site again after Automated Transfer since the changes "
-                                        + "are not yet reflected");
-                    // Wait 3 seconds before fetching the site again
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppLog.v(T.PLUGINS, "Fetching the site again after Automated Transfer since the changes "
+                                            + "are not yet reflected");
+                        // Wait 3 seconds before fetching the site again
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
+                    }
                 }, DEFAULT_RETRY_DELAY_MS);
             }
         }
@@ -1533,9 +1635,13 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     private void fetchPluginDirectory(int delay) {
-        mHandler.postDelayed(
-                () -> mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
-                        .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false))), delay);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
+                        .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
+            }
+        }, delay);
     }
 
     private String getEligibilityErrorMessage(String errorCode) {

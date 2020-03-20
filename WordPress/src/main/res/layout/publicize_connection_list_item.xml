@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:orientation="horizontal"
+    android:paddingBottom="@dimen/publicize_default_margin"
     android:paddingTop="@dimen/publicize_default_margin"
-    android:paddingBottom="@dimen/publicize_default_margin">
+    android:background="?attr/selectableItemBackground">
 
-    <com.google.android.material.radiobutton.MaterialRadioButton
+    <RadioButton
         android:id="@+id/radio_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -17,14 +17,15 @@
         android:id="@+id/profile_pic"
         android:layout_width="@dimen/publicize_pic_width"
         android:layout_height="@dimen/publicize_pic_width"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"/>
 
-    <com.google.android.material.textview.MaterialTextView
+    <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/publicize_name_margin"
-        android:textAppearance="?attr/textAppearanceSubtitle1" />
+        android:textColor="?attr/wpColorText"
+        android:textSize="@dimen/publicize_name_size"
+        android:layout_marginStart="@dimen/publicize_name_margin"/>
 
 </LinearLayout>

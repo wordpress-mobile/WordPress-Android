@@ -1,14 +1,16 @@
 package org.wordpress.android.ui.prefs;
 
+import android.content.Context;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 
 import java.util.List;
@@ -19,20 +21,24 @@ import java.util.List;
 public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSelectRecyclerViewAdapter.ItemHolder> {
     private final List<String> mItems;
     private final SparseBooleanArray mItemsSelected;
+    private final int mSelectedColor;
+    private final int mUnselectedColor;
 
-    MultiSelectRecyclerViewAdapter(List<String> items) {
+    public MultiSelectRecyclerViewAdapter(Context context, List<String> items) {
+        this.mSelectedColor = ContextCompat.getColor(context, android.R.color.white);
+        this.mUnselectedColor = ContextCompat.getColor(context, android.R.color.transparent);
         this.mItems = items;
         this.mItemsSelected = new SparseBooleanArray();
     }
 
-    class ItemHolder extends RecyclerView.ViewHolder {
-        private final View mContainer;
+    public class ItemHolder extends RecyclerView.ViewHolder {
+        private final LinearLayout mContainer;
         private final TextView mText;
 
-        ItemHolder(View view) {
+        public ItemHolder(View view) {
             super(view);
-            mContainer = view.findViewById(R.id.container);
-            mText = view.findViewById(R.id.text);
+            mContainer = (LinearLayout) view.findViewById(R.id.container);
+            mText = (TextView) view.findViewById(R.id.text);
         }
     }
 
@@ -45,10 +51,13 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
     public void onBindViewHolder(final ItemHolder holder, int position) {
         String item = getItem(holder.getAdapterPosition());
         holder.mText.setText(item);
-        holder.mContainer.setSelected(isItemSelected(position));
+        holder.mContainer.setBackgroundColor(
+                isItemSelected(position)
+                        ? mSelectedColor
+                        : mUnselectedColor);
     }
 
-    @NotNull @Override
+    @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int type) {
         return new ItemHolder(
                 LayoutInflater.from(parent.getContext()).inflate(R.layout.wp_simple_list_item_1, parent, false));
@@ -58,7 +67,7 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
         return mItems.get(position);
     }
 
-    SparseBooleanArray getItemsSelected() {
+    public SparseBooleanArray getItemsSelected() {
         return mItemsSelected;
     }
 
@@ -67,12 +76,12 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
         return item != null && mItemsSelected.get(position);
     }
 
-    void removeItemsSelected() {
+    public void removeItemsSelected() {
         mItemsSelected.clear();
         notifyDataSetChanged();
     }
 
-    void setItemSelected(int position) {
+    public void setItemSelected(int position) {
         if (!mItemsSelected.get(position)) {
             mItemsSelected.put(position, true);
         }
@@ -80,7 +89,7 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
         notifyItemChanged(position);
     }
 
-    void toggleItemSelected(int position) {
+    public void toggleItemSelected(int position) {
         if (!mItemsSelected.get(position)) {
             mItemsSelected.put(position, true);
         } else {

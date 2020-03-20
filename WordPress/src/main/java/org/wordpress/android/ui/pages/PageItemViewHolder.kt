@@ -11,6 +11,7 @@ import android.widget.PopupMenu
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.widget.CompoundButtonCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
@@ -19,11 +20,11 @@ import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
-import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -162,6 +163,10 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 radioButton.setOnClickListener {
                     onParentSelected(pageItem)
                 }
+
+                @Suppress("DEPRECATION")
+                CompoundButtonCompat.setButtonTintList(radioButton,
+                        radioButton.resources.getColorStateList(R.color.primary_40_gray_20_gray_40_selector))
             }
         }
     }

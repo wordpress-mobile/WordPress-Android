@@ -1,9 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <include layout="@layout/toolbar_login" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_login" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,69 +20,65 @@
 
             <ImageView
                 android:id="@+id/gravatar"
+                android:importantForAccessibility="no"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:importantForAccessibility="no" />
+                android:layout_height="wrap_content"/>
 
             <ProgressBar
                 android:id="@+id/avatar_progress"
+                style="@style/Widget.AppCompat.ProgressBar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="@dimen/margin_large"
                 android:background="@drawable/shape_oval_translucent"
-                android:indeterminate="true"
-                android:padding="@dimen/margin_large" />
+                android:indeterminate="true"/>
         </FrameLayout>
 
-        <com.google.android.material.textview.MaterialTextView
+        <TextView
             android:id="@+id/label"
-            style="@style/LoginTheme.TextLabel"
+            style="@style/Base.TextAppearance.AppCompat.Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/avatar_container"
             android:gravity="center"
             android:padding="@dimen/margin_extra_large"
-            android:text="@string/login_magic_links_label" />
+            android:text="@string/login_magic_links_label"/>
     </RelativeLayout>
 
-    <com.google.android.material.card.MaterialCardView
-        style="@style/LoginTheme.BottomBar"
+    <RelativeLayout
+        android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:background="@color/login_background_color"
+        android:paddingStart="@dimen/margin_small_medium"
+        android:paddingEnd="@dimen/margin_medium_large"
+        android:paddingTop="@dimen/margin_medium_large"
+        android:paddingBottom="@dimen/margin_medium_large"
+        android:layout_alignParentBottom="true"
+        android:clipToPadding="false"
+        tools:ignore="InconsistentLayout">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/LoginTheme.Button.Secondary"
+            android:id="@+id/login_enter_password"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:clipToPadding="false"
-            android:paddingStart="@dimen/margin_small_medium"
-            android:paddingTop="@dimen/margin_medium_large"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/login_request_magic_link"
+            android:paddingLeft="@dimen/margin_medium_large"
+            android:paddingStart="@dimen/margin_medium_large"
+            android:paddingRight="@dimen/margin_medium_large"
             android:paddingEnd="@dimen/margin_medium_large"
-            android:paddingBottom="@dimen/margin_medium_large"
-            tools:ignore="InconsistentLayout">
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:gravity="start|center_vertical"
+            android:text="@string/enter_your_password_instead"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/login_enter_password"
-                style="@style/LoginTheme.Button.Secondary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_marginEnd="@dimen/margin_extra_large"
-                android:layout_toStartOf="@+id/login_request_magic_link"
-                android:gravity="start|center_vertical"
-                android:paddingStart="@dimen/margin_medium_large"
-                android:paddingLeft="@dimen/margin_medium_large"
-                android:paddingEnd="@dimen/margin_medium_large"
-                android:paddingRight="@dimen/margin_medium_large"
-                android:text="@string/enter_your_password_instead" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/login_request_magic_link"
-                style="@style/LoginTheme.Button.Primary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="@string/send_link" />
-        </RelativeLayout>
-    </com.google.android.material.card.MaterialCardView>
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/LoginTheme.Button.Primary"
+            android:id="@+id/login_request_magic_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/send_link" />
+    </RelativeLayout>
 </RelativeLayout>

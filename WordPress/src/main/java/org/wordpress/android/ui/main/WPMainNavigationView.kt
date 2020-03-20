@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
@@ -30,7 +30,6 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderPostListFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
-import org.wordpress.android.util.getColorStateListFromAttribute
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -47,10 +46,6 @@ class WPMainNavigationView @JvmOverloads constructor(
     private lateinit var fragmentManager: FragmentManager
     private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
-    private val unselectedButtonAlpha = ResourcesCompat.getFloat(
-            resources,
-            R.dimen.material_emphasis_disabled
-    )
 
     private var currentPosition: Int
         get() = getPositionForItemId(selectedItemId)
@@ -177,17 +172,12 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
-        getImageViewForPosition(position)?.let {
-            it.isSelected = isSelected
-            it.alpha = if (isSelected) 1f else unselectedButtonAlpha
-        }
+        getImageViewForPosition(position)?.isSelected = isSelected
     }
 
     private fun setTitleViewSelected(position: Int, isSelected: Boolean) {
         getTitleViewForPosition(position)?.setTextColor(
-                context.getColorStateListFromAttribute(
-                        if (isSelected) R.attr.colorPrimary else R.attr.wpColorOnSurfaceMedium
-                )
+                ContextCompat.getColor(context, if (isSelected) R.color.primary_40 else R.color.neutral_20)
         )
     }
 

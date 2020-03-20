@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
     android:paddingStart="?android:attr/listPreferredItemPaddingStart">
 
-    <com.google.android.material.textview.MaterialTextView
+    <TextView
         android:id="@+id/text_suggestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +16,8 @@
         android:gravity="center_vertical"
         android:lines="1"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textColor="?attr/wpColorText"
         tools:text="Suggestion"
         android:layout_toStartOf="@+id/image_delete"/>
 
@@ -32,5 +32,5 @@
         android:contentDescription="@string/reader_list_item_suggestion_remove_desc"
         android:padding="@dimen/margin_small"
         android:src="@drawable/ic_cross_white_24dp"
-        app:tint="?attr/wpColorOnSurfaceMedium"/>
+        android:tint="@color/gray_60"/>
 </RelativeLayout>

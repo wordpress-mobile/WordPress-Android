@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.sitecreation
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -11,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
@@ -34,10 +35,11 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
-class SiteCreationActivity : LocaleAwareActivity(),
+class SiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
         DomainsScreenListener,
         SitePreviewScreenListener,
@@ -47,6 +49,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var mainViewModel: SiteCreationMainVM
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

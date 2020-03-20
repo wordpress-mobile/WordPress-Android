@@ -1,16 +1,13 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
-import androidx.core.widget.ImageViewCompat;
 
 import org.wordpress.android.R;
 
@@ -56,20 +53,16 @@ public class ReaderIconCountView extends LinearLayout {
                 mIconType = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
                 switch (mIconType) {
                     case ICON_LIKE:
-                        ColorStateList likeColor = AppCompatResources
-                                .getColorStateList(context, R.color.on_surface_medium_secondary_selector);
                         mImageView.setImageDrawable(ContextCompat.getDrawable(context,
                                 R.drawable.reader_button_like));
-                        ImageViewCompat.setImageTintList(mImageView, likeColor);
-                        mTextCount.setTextColor(likeColor);
+                        mImageView.setImageTintList(getResources().getColorStateList(
+                                R.color.neutral_accent_neutral_40_selector));
                         break;
                     case ICON_COMMENT:
-                        ColorStateList commentColor = AppCompatResources
-                                .getColorStateList(context, R.color.on_surface_primary_selector);
-                        ImageViewCompat.setImageTintList(mImageView, commentColor);
                         mImageView.setImageDrawable(ContextCompat.getDrawable(context,
                                 R.drawable.ic_comment_white_24dp));
-                        mTextCount.setTextColor(commentColor);
+                        mImageView.setImageTintList(getResources().getColorStateList(
+                                R.color.neutral_primary_40_neutral_40_selector));
                         break;
                 }
             } finally {

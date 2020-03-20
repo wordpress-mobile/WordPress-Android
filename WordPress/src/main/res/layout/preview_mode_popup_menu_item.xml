@@ -1,12 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/menu_item_height"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="start|center_vertical"
-    android:orientation="horizontal"
-    android:paddingStart="@dimen/menu_item_margin"
-    android:paddingEnd="@dimen/menu_item_margin">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/menu_item_height"
+                android:gravity="start|center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/menu_item_margin"
+                android:paddingStart="@dimen/menu_item_margin">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/preview_mode_label"
@@ -17,7 +16,7 @@
         android:layout_toStartOf="@+id/checkmark"
         android:textAppearance="?textAppearanceSmallPopupMenu"
         tools:text="@string/web_preview_default"
-        tools:textColor="?attr/colorPrimary" />
+        tools:textColor="@color/primary"/>
 
     <ImageView
         android:id="@+id/checkmark"
@@ -26,6 +25,6 @@
         android:layout_alignParentEnd="true"
         android:contentDescription="@null"
         android:src="@drawable/ic_checkmark_white_24dp"
-        app:tint="?attr/colorPrimary" />
+        android:tint="@color/primary"/>
 
 </RelativeLayout>

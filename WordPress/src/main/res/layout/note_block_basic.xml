@@ -20,7 +20,9 @@
             android:id="@+id/note_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/wpColorText"
+            android:textColorLink="?attr/wpColorText"
+            android:textSize="@dimen/text_sz_large"
             app:fixWidowWords="true"/>
 
         <Button

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -24,10 +26,10 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.WPUrlUtils;
 
 import javax.inject.Inject;
@@ -39,7 +41,7 @@ import static org.wordpress.android.ui.JetpackConnectionSource.STATS;
  * An activity that shows when user tries to open Stats without Jetpack connected.
  * It offers a link to the Jetpack connection flow.
  */
-public class StatsConnectJetpackActivity extends LocaleAwareActivity {
+public class StatsConnectJetpackActivity extends AppCompatActivity {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String FAQ_URL = "https://wordpress.org/plugins/jetpack/#faq";
 
@@ -49,13 +51,18 @@ public class StatsConnectJetpackActivity extends LocaleAwareActivity {
     @Inject Dispatcher mDispatcher;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.stats_jetpack_connection_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();

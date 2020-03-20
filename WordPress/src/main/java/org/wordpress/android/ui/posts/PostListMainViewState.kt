@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
@@ -29,20 +30,20 @@ sealed class PostListViewLayoutTypeMenuUiState(@DrawableRes val iconRes: Int, va
 sealed class AuthorFilterListItemUIState(
     val id: Long,
     val text: UiString,
-    open val isSelected: Boolean
+    @ColorRes open val dropDownBackground: Int
 ) {
-    data class Everyone(override val isSelected: Boolean, @DrawableRes val imageRes: Int) :
+    data class Everyone(@ColorRes override val dropDownBackground: Int, @DrawableRes val imageRes: Int) :
             AuthorFilterListItemUIState(
-                    id = EVERYONE.id,
+                    id = AuthorFilterSelection.EVERYONE.id,
                     text = UiStringRes(R.string.post_list_author_everyone),
-                    isSelected = isSelected
+                    dropDownBackground = dropDownBackground
             )
 
-    data class Me(val avatarUrl: String?, override val isSelected: Boolean) :
+    data class Me(val avatarUrl: String?, @ColorRes override val dropDownBackground: Int) :
             AuthorFilterListItemUIState(
-                    id = ME.id,
+                    id = AuthorFilterSelection.ME.id,
                     text = UiStringRes(R.string.post_list_author_me),
-                    isSelected = isSelected
+                    dropDownBackground = dropDownBackground
             )
 }
 
@@ -51,10 +52,14 @@ fun getAuthorFilterItems(
     avatarUrl: String?
 ): List<AuthorFilterListItemUIState> {
     return AuthorFilterSelection.values().map { value ->
+        @ColorRes val backgroundColorRes: Int =
+                if (selection == value) R.color.grey_lighten_30_translucent_50
+                else R.color.transparent
+
         when (value) {
-            ME -> AuthorFilterListItemUIState.Me(avatarUrl, selection == value)
+            ME -> AuthorFilterListItemUIState.Me(avatarUrl, backgroundColorRes)
             EVERYONE -> AuthorFilterListItemUIState.Everyone(
-                    selection == value,
+                    backgroundColorRes,
                     R.drawable.bg_oval_neutral_30_multiple_users_white_40dp
             )
         }

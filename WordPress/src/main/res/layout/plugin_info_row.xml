@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:minHeight="@dimen/min_touch_target_sz"
     android:orientation="horizontal"
-    android:paddingStart="@dimen/margin_extra_large"
-    android:paddingEnd="@dimen/margin_extra_large">
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large">
 
     <TextView
         android:id="@+id/text1"
@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="?attr/wpColorText"
+        android:textSize="@dimen/text_sz_large"
         tools:text="text1" />
 
     <TextView
@@ -24,7 +25,8 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:gravity="end"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="?attr/wpColorText"
+        android:textSize="@dimen/text_sz_large"
         android:textStyle="bold"
         tools:text="text2" />
 </LinearLayout>

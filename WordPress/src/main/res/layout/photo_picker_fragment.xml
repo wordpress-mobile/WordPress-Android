@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white">
 
     <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
         android:id="@+id/recycler"
@@ -12,36 +13,42 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_bar"
         android:fadeScrollbars="true"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"/>
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_above="@+id/bottom_bar"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:visibility="gone"
         app:aevImage="@drawable/img_illustration_media_105dp"
         app:aevTitle="@string/media_empty_list"
-        tools:visibility="visible" />
+        tools:visibility="visible" >
+    </org.wordpress.android.ui.ActionableEmptyView>
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/soft_ask_view"
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:visibility="gone"
         app:aevButton="@string/photo_picker_soft_ask_allow"
         app:aevImage="@drawable/img_illustration_add_media_150dp"
         app:aevTitle="@string/photo_picker_soft_ask_label"
-        tools:visibility="visible" />
+        tools:visibility="visible" >
+    </org.wordpress.android.ui.ActionableEmptyView>
 
-
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="@dimen/appbar_elevation">
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_divider_height"
+            android:background="@color/divider"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,9 +62,7 @@
                 android:layout_weight="1"
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/photo_picker_device_desc"
-                android:src="@drawable/media_bar_button_image_multiple"
-                app:tint="?attr/wpColorOnSurfaceMedium"
-                android:tintMode="src_in" />
+                android:src="@drawable/media_bar_button_image_multiple"/>
 
             <ImageView
                 android:id="@+id/icon_camera"
@@ -66,9 +71,7 @@
                 android:layout_weight="1"
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/photo_picker_camera_desc"
-                android:src="@drawable/media_bar_button_camera"
-                app:tint="?attr/wpColorOnSurfaceMedium"
-                android:tintMode="src_in" />
+                android:src="@drawable/media_bar_button_camera"/>
 
             <ImageView
                 android:id="@+id/icon_wpmedia"
@@ -77,11 +80,9 @@
                 android:layout_weight="1"
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/photo_picker_wpmedia_desc"
-                android:src="@drawable/media_bar_button_library"
-                app:tint="?attr/wpColorOnSurfaceMedium"
-                android:tintMode="src_in" />
+                android:src="@drawable/media_bar_button_library"/>
         </LinearLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
 </RelativeLayout>

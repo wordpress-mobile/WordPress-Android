@@ -1,21 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/editor_activity"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <include
-        android:id="@+id/toolbar_container"
-        layout="@layout/toolbar_main" />
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/editor_activity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/photo_fragment_container"
-        android:layout_below="@+id/toolbar_container"
         android:importantForAccessibility="no"
-        tools:context=".ui.posts.EditPostActivity" />
+        android:layout_above="@+id/photo_fragment_container"
+        tools:context=".ui.posts.EditPostActivity"/>
 
     <View
         android:id="@+id/view_overlay"

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.signup;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -8,6 +9,7 @@ import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -191,9 +191,12 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
         });
 
         mGetSuggestionsHandler = new Handler();
-        mGetSuggestionsRunnable = () -> {
-            mUsernameSuggestionInput = mUsernameView.getText().toString();
-            getUsernameSuggestions(mUsernameSuggestionInput);
+        mGetSuggestionsRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mUsernameSuggestionInput = mUsernameView.getText().toString();
+                getUsernameSuggestions(mUsernameSuggestionInput);
+            }
         };
     }
 
@@ -214,7 +217,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
         ActivityUtils.hideKeyboard(getActivity());
 
         if (mUsernamesAdapter != null && mUsernamesAdapter.mItems != null) {
-            onUsernameConfirmed(controller, mUsernameSelected);
+           onUsernameConfirmed(controller, mUsernameSelected);
         } else {
             controller.dismiss();
         }
@@ -238,7 +241,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_IS_SHOWING_DISMISS_DIALOG, mIsShowingDismissDialog);
         outState.putBoolean(KEY_SHOULD_WATCH_TEXT, false);
@@ -305,17 +308,27 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
     private void showDismissDialog() {
         mIsShowingDismissDialog = true;
 
-        new MaterialAlertDialogBuilder(getContext())
+        new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.LoginTheme))
                 .setMessage(R.string.username_changer_dismiss_message)
                 .setPositiveButton(R.string.username_changer_dismiss_button_positive,
-                        (dialog, which) -> mDialogController.dismiss())
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mDialogController.dismiss();
+                            }
+                        })
                 .setNegativeButton(android.R.string.cancel,
-                        (dialog, which) -> mIsShowingDismissDialog = false)
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mIsShowingDismissDialog = false;
+                            }
+                        })
                 .show();
     }
 
     protected void showErrorDialog(Spanned message) {
-        AlertDialog dialog = new MaterialAlertDialogBuilder(getContext())
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
                 .setMessage(message)
                 .setPositiveButton(R.string.login_error_button, null)
                 .create();
@@ -344,9 +357,9 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
                                     "<b>",
                                     mUsernameSuggestionInput,
                                     "</b>"
-                            )
-                    )
-            );
+                                         )
+                                 )
+                           );
         } else {
             populateUsernameSuggestions(event.suggestions);
         }
