@@ -1815,6 +1815,7 @@
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
+    <string name="my_site_select_domains_page_title">Site Address</string>
     <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
     <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
     <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
@@ -2627,15 +2628,7 @@
     <string name="new_site_creation_preview_subtitle">You\'ll be able to customize look and feel of your site later</string>
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
-    <string name="new_site_creation_site_info_header_title">Basic Information</string>
-    <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating.</string>
-    <string name="new_site_creation_site_title_hint">Site Title</string>
-    <string name="new_site_creation_tag_line_hint">Tagline</string>
-    <string name="new_site_creation_tag_line_description">The tagline is a short line of text shown right below the title.</string>
-    <string name="new_site_creation_button_skip">Skip</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
