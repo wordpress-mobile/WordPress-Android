@@ -1,69 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tool="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" >
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:importantForAccessibility="yes"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
             <ImageView
                 android:id="@+id/image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:layout_marginBottom="@dimen/margin_extra_large"
                 android:adjustViewBounds="true"
-                android:contentDescription="@string/content_description_person_reading_device_notification"
-                android:visibility="gone"
-                tool:src="@drawable/img_illustration_empty_results_216dp"
-                tool:visibility="visible" />
+                android:importantForAccessibility="no"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_width="wrap_content"
+                android:visibility="gone" >
+            </ImageView>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/title"
-                style="@style/ActionableEmptyStateTitle"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 app:fixWidowWords="true"
-                tool:text="Title" />
+                style="@style/ActionableEmptyStateTitle" >
+            </org.wordpress.android.widgets.WPTextView>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/subtitle"
-                style="@style/ActionableEmptyStateSubtitle"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:visibility="gone"
                 app:fixWidowWords="true"
-                tool:text="Subtitle"
-                tool:visibility="visible" />
+                style="@style/ActionableEmptyStateSubtitle" >
+            </org.wordpress.android.widgets.WPTextView>
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button"
-                style="@style/ActionableEmptyStateButton"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_extra_large"
-                android:visibility="gone"
-                tool:text="Button"
-                tool:visibility="visible" />
+                android:layout_width="wrap_content"
+                android:theme="@style/ActionableEmptyStateButton"
+                android:visibility="gone" >
+            </androidx.appcompat.widget.AppCompatButton>
 
             <ImageView
                 android:id="@+id/bottom_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/content_description_person_reading_device_notification"
-                android:visibility="gone" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_width="wrap_content"
+                android:visibility="gone" >
+            </ImageView>
 
         </LinearLayout>
 

@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.cursoradapter.widget.CursorAdapter;
-
-import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderSearchTable;
@@ -37,14 +36,8 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         super(context, null, false);
         String clearAllText = context.getString(R.string.label_clear_search_history);
         mClearAllRow = new Object[]{CLEAR_ALL_ROW_ID, clearAllText};
-
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(context);
-        float appbarElevation = context.getResources().getDimension(R.dimen.appbar_elevation);
-        int elevatedSurfaceColor =
-                elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation);
-
-        mClearAllBgColor = elevatedSurfaceColor;
-        mSuggestionBgColor = elevatedSurfaceColor;
+        mClearAllBgColor = ContextCompat.getColor(context, R.color.neutral_0);
+        mSuggestionBgColor = ContextCompat.getColor(context, R.color.neutral_0);
     }
 
     public synchronized void setFilter(String filter) {
@@ -123,8 +116,8 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         private final ImageView mImgDelete;
 
         SuggestionViewHolder(View view) {
-            mTxtSuggestion = view.findViewById(R.id.text_suggestion);
-            mImgDelete = view.findViewById(R.id.image_delete);
+            mTxtSuggestion = (TextView) view.findViewById(R.id.text_suggestion);
+            mImgDelete = (ImageView) view.findViewById(R.id.image_delete);
         }
     }
 

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,7 +10,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -27,8 +28,8 @@ import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
@@ -38,7 +39,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PER_PAGE;
 
-public class CommentsDetailActivity extends LocaleAwareActivity
+public class CommentsDetailActivity extends AppCompatActivity
         implements CommentAdapter.OnLoadMoreListener,
         CommentActions.OnCommentActionListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
@@ -61,6 +62,11 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     private boolean mCanLoadMoreComments = true;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void onBackPressed() {
         CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
                 getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
@@ -81,10 +87,9 @@ public class CommentsDetailActivity extends LocaleAwareActivity
 
         setContentView(R.layout.comments_detail_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setElevation(0);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -102,7 +107,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         // set up the viewpager and adapter for lateral navigation
         mViewPager = findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
-                new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+                                      new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
         mProgressBar = findViewById(R.id.progress_loading);
 
@@ -208,7 +213,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         } else {
             // If current items change, rebuild the adapter
             mAdapter = new CommentDetailFragmentAdapter(getSupportFragmentManager(), commentList, mSite,
-                    CommentsDetailActivity.this);
+                                                        CommentsDetailActivity.this);
             mViewPager.setAdapter(mAdapter);
         }
 

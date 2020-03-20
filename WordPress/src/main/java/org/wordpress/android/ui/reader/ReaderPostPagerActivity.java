@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -32,7 +34,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
@@ -49,6 +50,7 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -79,7 +81,7 @@ import javax.inject.Inject;
  *
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
-public class ReaderPostPagerActivity extends LocaleAwareActivity
+public class ReaderPostPagerActivity extends AppCompatActivity
         implements ReaderInterfaces.AutoHideToolbarListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface {
     /**
@@ -128,13 +130,18 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
     @Inject ReaderTracker mReaderTracker;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.reader_activity_post_pager);
 
-        mToolbar = findViewById(R.id.toolbar_main);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();

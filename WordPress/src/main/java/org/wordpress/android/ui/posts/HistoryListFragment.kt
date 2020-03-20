@@ -64,7 +64,7 @@ class HistoryListFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
     }
 
-    override fun onAttach(context: Context) {
+    override fun onAttach(context: Context?) {
         super.onAttach(context)
         check(activity is HistoryItemClickInterface) {
             "Parent activity has to implement HistoryItemClickInterface"

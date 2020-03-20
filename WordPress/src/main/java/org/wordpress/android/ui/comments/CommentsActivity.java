@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -29,7 +31,6 @@ import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
@@ -37,12 +38,13 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import javax.inject.Inject;
 
-public class CommentsActivity extends LocaleAwareActivity
+public class CommentsActivity extends AppCompatActivity
         implements OnCommentSelectedListener,
         NotificationFragment.OnPostClickListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface {
@@ -53,10 +55,17 @@ public class CommentsActivity extends LocaleAwareActivity
     public static final String COMMENT_MODERATE_STATUS_EXTRA = "commentModerateStatus";
     private final CommentList mTrashedComments = new CommentList();
 
+    private CommentStatus mCurrentCommentStatusType = CommentStatus.ALL;
+
     private SiteModel mSite;
 
     @Inject Dispatcher mDispatcher;
     @Inject CommentStore mCommentStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,10 +74,11 @@ public class CommentsActivity extends LocaleAwareActivity
 
         setContentView(R.layout.comment_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setElevation(0);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -85,22 +95,21 @@ public class CommentsActivity extends LocaleAwareActivity
             return;
         }
 
-        CommentStatus currentCommentStatusType;
         if (getIntent() != null && getIntent().hasExtra(SAVED_COMMENTS_STATUS_TYPE)) {
-            currentCommentStatusType = (CommentStatus) getIntent().getSerializableExtra(SAVED_COMMENTS_STATUS_TYPE);
+            mCurrentCommentStatusType = (CommentStatus) getIntent().getSerializableExtra(SAVED_COMMENTS_STATUS_TYPE);
         } else {
             // Read the value from app preferences here. Default to 0 - All
-            currentCommentStatusType = AppPrefs.getCommentsStatusFilter().toCommentStatus();
+            mCurrentCommentStatusType = AppPrefs.getCommentsStatusFilter().toCommentStatus();
         }
 
         if (savedInstanceState == null) {
             CommentsListFragment commentsListFragment = new CommentsListFragment();
             // initialize comment status filter first time
-            commentsListFragment.setCommentStatusFilter(currentCommentStatusType);
+            commentsListFragment.setCommentStatusFilter(mCurrentCommentStatusType);
             getSupportFragmentManager().beginTransaction()
-                                       .add(R.id.layout_fragment_container, commentsListFragment,
-                                               getString(R.string.fragment_tag_comment_list))
-                                       .commitAllowingStateLoss();
+                                .add(R.id.layout_fragment_container, commentsListFragment,
+                                     getString(R.string.fragment_tag_comment_list))
+                                .commitAllowingStateLoss();
         } else {
             getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));
             getIntent().putExtra(KEY_EMPTY_VIEW_MESSAGE, savedInstanceState.getString(KEY_EMPTY_VIEW_MESSAGE));
@@ -208,13 +217,12 @@ public class CommentsActivity extends LocaleAwareActivity
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             long commentId = data.getLongExtra(COMMENT_MODERATE_ID_EXTRA, -1);
             String newStatus = data.getStringExtra(COMMENT_MODERATE_STATUS_EXTRA);
             if (commentId >= 0 && !TextUtils.isEmpty(newStatus)) {
                 onModerateComment(mCommentStore.getCommentBySiteAndRemoteId(mSite, commentId),
-                        CommentStatus.fromString(newStatus));
+                                  CommentStatus.fromString(newStatus));
             }
         }
     }
@@ -234,13 +242,16 @@ public class CommentsActivity extends LocaleAwareActivity
             String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed)
                     : newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed)
                             : getString(R.string.comment_deleted_permanently));
-            View.OnClickListener undoListener = v -> {
-                mTrashedComments.remove(comment);
-                getListFragment().loadComments();
+            View.OnClickListener undoListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mTrashedComments.remove(comment);
+                    getListFragment().loadComments();
+                }
             };
 
             WPSnackbar snackbar = WPSnackbar.make(getListFragment().getView(), message, Snackbar.LENGTH_LONG)
-                                            .setAction(R.string.undo, undoListener);
+                    .setAction(R.string.undo, undoListener);
 
             // do the actual moderation once the undo bar has been hidden
             snackbar.setCallback(new Snackbar.Callback() {

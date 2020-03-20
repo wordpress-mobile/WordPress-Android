@@ -1,65 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
-
-    <style name="LoginTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+    <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorAccent">@color/login_theme_accent_color</item>
 
         <item name="android:statusBarColor" tools:targetApi="21">@color/status_bar</item>
         <item name="android:windowBackground">@color/login_background_color</item>
         <item name="actionMenuTextColor">@android:color/white</item>
-
-        <item name="bottomSheetDialogTheme">
-            @style/LoginTheme.BottomSheetDialogStyle
-        </item>
-
-        <item name="toolbarStyle">@style/LoginTheme.ToolBar</item>
     </style>
 
-    <style name="LoginTheme.ActionBar" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:textColorSecondary">@android:color/white</item>
+    <style name="LoginTheme.Toolbar" parent="LoginTheme">
+        <item name="colorControlNormal">@color/color_control_normal</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_left_white_24dp</item>
     </style>
 
-    <style name="LoginTheme.ToolBar" parent="Widget.MaterialComponents.Toolbar.Primary">
-        <item name="titleTextColor">?attr/colorOnPrimary</item>
-        <item name="android:background">@color/login_toolbar_color</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    <style name="LoginTheme.Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/login_base_button_normal_color</item>
     </style>
 
-    <style name="LoginTheme.Button.Primary" parent="Widget.MaterialComponents.Button">
+    <style name="LoginTheme.Button.Primary" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/login_primary_button_normal_color</item>
         <item name="android:textColor">@color/login_primary_button_text_color</item>
     </style>
 
-    <style name="LoginTheme.Button.SignUp" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="colorButtonNormal">@color/login_primary_button_normal_color</item>
-        <item name="android:textColor">@color/login_primary_button_text_color</item>
-    </style>
-
-    <style name="LoginTheme.Button.Secondary" parent="Widget.MaterialComponents.Button.TextButton">
+    <style name="LoginTheme.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:textColor">@color/login_secondary_button_text_color</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
     </style>
 
-    <style name="LoginTheme.Button.LoginOption" parent="TextAppearance.MaterialComponents.Body2">
+    <style name="LoginTheme.Button.Google" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/login_google_button_text_color</item>
     </style>
 
-
-    <style name="LoginTheme.BottomBar" parent="@style/Widget.MaterialComponents.CardView" />
-
-    <style name="LoginTheme.TextLabel" parent="TextAppearance.MaterialComponents.Body2">
+    <style name="LoginTheme.TextLabel" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/login_text_label_text_color</item>
         <item name="android:lineSpacingExtra">2dp</item>
     </style>
 
-    <style name="LoginTheme.TextLabel.Icon" />
-
-    <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.MaterialComponents.Subtitle2">
+    <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/login_input_label_static_text_color</item>
     </style>
 
-    <style name="LoginTheme.EditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+    <style name="LoginTheme.EditText" parent="LoginTheme">
         <item name="colorControlNormal">@color/login_edit_text_color_control_normal</item>
         <item name="android:textColor">@color/login_edit_text_text_color</item>
         <item name="android:textColorHint">@color/login_edit_text_text_hint_color</item>
@@ -67,31 +49,27 @@
         <item name="colorControlHighlight">@color/login_edit_text_color_control_highlight</item>
     </style>
 
-    <style name="LoginTheme.PromoText" parent="TextAppearance.MaterialComponents.Headline6">
+    <style name="LoginTheme.PromoText" parent="TextAppearance.AppCompat.Title">
         <item name="android:gravity">center</item>
         <item name="android:lineSpacingExtra">2dp</item>
     </style>
 
-    <style name="LoginTheme.Heading" parent="TextAppearance.MaterialComponents.Subtitle2">
+    <style name="LoginTheme.Heading" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/login_heading_text_color</item>
     </style>
 
-    <style name="LoginTheme.Subhead" parent="TextAppearance.MaterialComponents.Subtitle1">
+    <style name="LoginTheme.Subhead" parent="TextAppearance.AppCompat.Subhead">
         <item name="android:textColor">@color/login_subhead_text_color</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="LoginTheme.Username" parent="TextAppearance.MaterialComponents.Subtitle1">
+    <style name="LoginTheme.Username" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/login_username_text_color</item>
     </style>
 
-    <style name="LoginTheme.Footnote" parent="TextAppearance.MaterialComponents.Caption">
+    <style name="LoginTheme.Footnote" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textColor">@color/login_footnote_text_color</item>
     </style>
-
-    <style name="LoginTheme.SiteTitle" parent="TextAppearance.MaterialComponents.Subtitle2" />
-
-    <style name="LoginTheme.SiteUrl" parent="TextAppearance.MaterialComponents.Body2" />
 
     <style name="LoginTheme.BottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="android:colorBackground">@color/login_background_color</item>
@@ -99,5 +77,4 @@
         <item name="android:windowIsFloating">false</item>
         <item name="bottomSheetStyle">@style/Widget.Design.BottomSheet.Modal</item>
     </style>
-
 </resources>

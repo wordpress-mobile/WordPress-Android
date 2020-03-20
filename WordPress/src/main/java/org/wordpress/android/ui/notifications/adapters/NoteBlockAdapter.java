@@ -13,14 +13,16 @@ import java.util.List;
 
 public class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
     private final LayoutInflater mLayoutInflater;
+    private final int mBackgroundColor;
 
     private List<NoteBlock> mNoteBlockList;
 
-    public NoteBlockAdapter(Context context, List<NoteBlock> noteBlocks) {
+    public NoteBlockAdapter(Context context, List<NoteBlock> noteBlocks, int backgroundColor) {
         super(context, 0, noteBlocks);
 
         mNoteBlockList = noteBlocks;
         mLayoutInflater = LayoutInflater.from(context);
+        mBackgroundColor = backgroundColor;
     }
 
     @Override
@@ -45,6 +47,8 @@ public class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
 
         // Update the block type for this view
         convertView.setTag(R.id.note_block_tag_id, noteBlock.getBlockType());
+
+        noteBlock.setBackgroundColor(mBackgroundColor);
 
         return noteBlock.configureView(convertView);
     }

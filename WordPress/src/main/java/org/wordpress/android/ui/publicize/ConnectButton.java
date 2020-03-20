@@ -2,10 +2,10 @@ package org.wordpress.android.ui.publicize;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.StringRes;
-
-import com.google.android.material.button.MaterialButton;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
@@ -13,21 +13,26 @@ import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 /**
  * Publicize connect/disconnect/reconnect button
  */
-public class ConnectButton extends MaterialButton {
+public class ConnectButton extends FrameLayout {
     private ConnectAction mConnectAction = ConnectAction.CONNECT;
 
     public ConnectButton(Context context) {
         super(context);
-        updateView();
+        initView(context);
     }
 
     public ConnectButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        updateView();
+        initView(context);
     }
 
     public ConnectButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        initView(context);
+    }
+
+    private void initView(Context context) {
+        inflate(context, R.layout.publicize_connect_button, this);
         updateView();
     }
 
@@ -49,7 +54,8 @@ public class ConnectButton extends MaterialButton {
             default:
                 return;
         }
-        setText(captionResId);
+        TextView txtConnect = (TextView) findViewById(R.id.text_connect);
+        txtConnect.setText(captionResId);
     }
 
     public ConnectAction getAction() {

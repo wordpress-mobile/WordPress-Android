@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -11,7 +12,7 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -34,7 +35,6 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -49,6 +49,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
@@ -67,7 +68,7 @@ import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
 import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 
-public class NotificationsDetailActivity extends LocaleAwareActivity implements
+public class NotificationsDetailActivity extends AppCompatActivity implements
         CommentActions.OnNoteCommentActionListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface {
     private static final String ARG_TITLE = "activityTitle";
@@ -83,6 +84,11 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     private WPViewPager mViewPager;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private NotificationDetailFragmentAdapter mAdapter;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onBackPressed() {
@@ -104,9 +110,6 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
         setContentView(R.layout.notifications_detail_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -126,7 +129,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         // set up the viewpager and adapter for lateral navigation
         mViewPager = findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
-                new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+                                      new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
         Note note = NotificationsTable.getNoteById(mNoteId);
         // if this is coming from a tapped push notification, let's try refreshing it as its contents may have been
@@ -340,9 +343,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         if (note.isCommentType()) {
             // show comment detail for comment notifications
             boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
-                    false);
+                                                                 false);
             fragment = CommentDetailFragment.newInstance(note.getId(),
-                    getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
+                                                         getIntent().getStringExtra(
+                                                                 NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
 
             if (isInstantReply) {
                 ((CommentDetailFragment) fragment).enableShouldFocusReplyField();

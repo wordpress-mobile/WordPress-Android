@@ -1,11 +1,12 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -20,7 +21,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteDeleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
-import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -30,7 +31,7 @@ import javax.inject.Inject;
 /**
  * Activity for configuring blog specific settings.
  */
-public class BlogPreferencesActivity extends LocaleAwareActivity {
+public class BlogPreferencesActivity extends AppCompatActivity {
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
 
     private SiteModel mSite;
@@ -40,10 +41,14 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
     @Inject Dispatcher mDispatcher;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
-        setContentView(R.layout.site_settings_activity);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -56,9 +61,6 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
             finish();
             return;
         }
-
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -77,7 +79,7 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
             siteSettingsFragment = new SiteSettingsFragment();
             siteSettingsFragment.setArguments(getIntent().getExtras());
             fragmentManager.beginTransaction()
-                           .replace(R.id.fragment_container, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
+                           .replace(android.R.id.content, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
                            .commit();
         }
     }

@@ -1,0 +1,6 @@
+14.3:
+- Tambahan penyunting blok: Menambahkan blok Tombol dan Kelompok, dan mendukung lebih banyak opsi di pengaturan blok Gambar dan Galeri.
+- Peningkatan pada penyunting blok: Menambahkan dukungan gulir di dalam pemilih blok dan pengaturan blok, dan memperkenalkan bilah peralatan mengambang untuk mempermudah navigasi blok.
+- Perbaikan pada penyunting blok: Memperbaiki masalah seputar gambar placeholder selama pengunggahan gambar, emoji di judul pos, dan text-wrapping di blok Shortcode.
+- Pembaca: Menambahkan penyaringan tab untuk navigasi situs/tag yang lebih baik.
+

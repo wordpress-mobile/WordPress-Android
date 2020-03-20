@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_main" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,13 +28,13 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:contentDescription="@string/content_description_people_looking_charts"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
-                    android:contentDescription="@string/content_description_people_looking_charts"
+                    android:layout_width="wrap_content"
                     android:src="@drawable/img_illustration_stats_226dp" />
 
-                <com.google.android.material.textview.MaterialTextView
+                <TextView
                     style="@style/JetpackConnectionText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -39,30 +42,30 @@
                     android:text="@string/stats_jetpack_connection_setup_info"
                     android:textAlignment="center" />
 
-                <com.google.android.material.button.MaterialButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/jetpack_setup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_extra_large"
                     android:text="@string/stats_jetpack_connection_setup"
-                    style="@style/JetpackConnectionButton" />
+                    android:theme="@style/JetpackConnectionButton"/>
 
-                <com.google.android.material.textview.MaterialTextView
+                <TextView
                     android:id="@+id/jetpack_terms_and_conditions"
-                    style="@style/JetpackTermsAndConditionsButton"
                     android:layout_width="@dimen/jetpack_terms_and_conditions_width"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_extra_large"
                     android:textAlignment="center"
-                    tools:text="@string/jetpack_connection_terms_and_conditions" />
+                    tools:text="@string/jetpack_connection_terms_and_conditions"
+                    style="@style/JetpackTermsAndConditionsButton"/>
 
-                <com.google.android.material.button.MaterialButton
+                <Button
                     android:id="@+id/jetpack_faq"
-                    style="@style/JetpackFaqButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/stats_jetpack_connection_faq" />
+                    android:text="@string/stats_jetpack_connection_faq"
+                    style="@style/JetpackFaqButton"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

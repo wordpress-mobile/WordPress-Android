@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,11 +22,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -73,6 +75,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
 
     private ViewGroup mAvatarCard;
     private View mProgressBar;
+    private ViewGroup mAvatarContainer;
     private ImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
@@ -85,6 +88,9 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
     @Nullable
     private Toolbar mToolbar = null;
     private String mToolbarTitle;
+
+    // setUserVisibleHint is not available so we need to manually handle the UserVisibleHint state
+    private boolean mIsUserVisible;
 
     private boolean mIsUpdatingGravatar;
 
@@ -110,12 +116,19 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        mIsUserVisible = isVisibleToUser;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.me_fragment, container, false);
 
         mAvatarCard = rootView.findViewById(R.id.card_avatar);
-        ViewGroup avatarContainer = rootView.findViewById(R.id.avatar_container);
+        mAvatarContainer = rootView.findViewById(R.id.avatar_container);
         mAvatarImageView = rootView.findViewById(R.id.me_avatar);
         mProgressBar = rootView.findViewById(R.id.avatar_progress);
         mDisplayNameTextView = rootView.findViewById(R.id.me_display_name);
@@ -125,30 +138,53 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         mAccountSettingsView = rootView.findViewById(R.id.row_account_settings);
         mScrollView = rootView.findViewById(R.id.scroll_view);
 
-        OnClickListener showPickerListener = v -> {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED);
-            showPhotoPickerForGravatar();
+        OnClickListener showPickerListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED);
+                showPhotoPickerForGravatar();
+            }
         };
 
-        avatarContainer.setOnClickListener(showPickerListener);
+        mAvatarContainer.setOnClickListener(showPickerListener);
         rootView.findViewById(R.id.change_photo).setOnClickListener(showPickerListener);
 
-        mMyProfileView.setOnClickListener(v -> ActivityLauncher.viewMyProfile(getActivity()));
+        mMyProfileView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewMyProfile(getActivity());
+            }
+        });
 
-        mAccountSettingsView.setOnClickListener(v -> ActivityLauncher.viewAccountSettings(getActivity()));
+        mAccountSettingsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewAccountSettings(getActivity());
+            }
+        });
 
-        rootView.findViewById(R.id.row_app_settings).setOnClickListener(
-                v -> ActivityLauncher.viewAppSettingsForResult(getActivity()));
+        rootView.findViewById(R.id.row_app_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewAppSettingsForResult(getActivity());
+            }
+        });
 
-        rootView.findViewById(R.id.row_support).setOnClickListener(
-                v -> ActivityLauncher
-                        .viewHelpAndSupport(getActivity(), Origin.ME_SCREEN_HELP, getSelectedSite(), null));
+        rootView.findViewById(R.id.row_support).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewHelpAndSupport(getActivity(), Origin.ME_SCREEN_HELP, getSelectedSite(), null);
+            }
+        });
 
-        rootView.findViewById(R.id.row_logout).setOnClickListener(v -> {
-            if (mAccountStore.hasAccessToken()) {
-                signOutWordPressComWithConfirmation();
-            } else {
-                ActivityLauncher.showSignInForResult(getActivity());
+        rootView.findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAccountStore.hasAccessToken()) {
+                    signOutWordPressComWithConfirmation();
+                } else {
+                    ActivityLauncher.showSignInForResult(getActivity());
+                }
             }
         });
 
@@ -169,7 +205,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         if (mDisconnectProgressDialog != null) {
             outState.putBoolean(IS_DISCONNECTING, true);
         }
@@ -193,7 +229,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
     }
 
     @Override
-    public void setTitle(@NotNull String title) {
+    public void setTitle(String title) {
         mToolbarTitle = title;
         if (mToolbar != null) {
             mToolbar.setTitle(title);
@@ -326,9 +362,13 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
             message = getString(R.string.sign_out_wpcom_confirm_with_no_changes);
         }
 
-        new MaterialAlertDialogBuilder(getActivity())
+        new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert))
                 .setMessage(message)
-                .setPositiveButton(R.string.signout, (dialog, whichButton) -> signOutWordPressCom())
+                .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        signOutWordPressCom();
+                    }
+                })
                 .setNegativeButton(R.string.cancel, null)
                 .setCancelable(true)
                 .create().show();
@@ -372,7 +412,12 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
                     Uri imageUri = Uri.parse(strMediaUri);
                     if (imageUri != null) {
                         boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
-                                this::startCropActivity);
+                                                                             new WPMediaUtils.MediaFetchDoNext() {
+                                                                                 @Override
+                                                                                 public void doNext(Uri uri) {
+                                                                                     startCropActivity(uri);
+                                                                                 }
+                                                                             });
 
                         if (!didGoWell) {
                             AppLog.e(AppLog.T.UTILS, "Can't download picked or captured image");
@@ -385,8 +430,13 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
 
                 if (resultCode == Activity.RESULT_OK) {
                     WPMediaUtils.fetchMediaAndDoNext(getActivity(), UCrop.getOutput(data),
-                            uri -> startGravatarUpload(
-                                    MediaUtils.getRealPathFromURI(getActivity(), uri)));
+                                                     new WPMediaUtils.MediaFetchDoNext() {
+                                                         @Override
+                                                         public void doNext(Uri uri) {
+                                                             startGravatarUpload(
+                                                                     MediaUtils.getRealPathFromURI(getActivity(), uri));
+                                                         }
+                                                     });
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(AppLog.T.MAIN, "Image cropping failed!", UCrop.getError(data));
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
@@ -434,24 +484,24 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         showGravatarProgressBar(true);
 
         GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(), mAccountStore.getAccessToken(),
-                new GravatarApi.GravatarUploadListener() {
-                    @Override
-                    public void onSuccess() {
-                        EventBus.getDefault().post(new GravatarUploadFinished(filePath, true));
-                    }
+                                   new GravatarApi.GravatarUploadListener() {
+                                       @Override
+                                       public void onSuccess() {
+                                           EventBus.getDefault().post(new GravatarUploadFinished(filePath, true));
+                                       }
 
-                    @Override
-                    public void onError() {
-                        EventBus.getDefault().post(new GravatarUploadFinished(filePath, false));
-                    }
-                });
+                                       @Override
+                                       public void onError() {
+                                           EventBus.getDefault().post(new GravatarUploadFinished(filePath, false));
+                                       }
+                                   });
     }
 
     public static class GravatarUploadFinished {
         public final String filePath;
         public final boolean success;
 
-        GravatarUploadFinished(String filePath, boolean success) {
+        public GravatarUploadFinished(String filePath, boolean success) {
             this.filePath = filePath;
             this.success = success;
         }

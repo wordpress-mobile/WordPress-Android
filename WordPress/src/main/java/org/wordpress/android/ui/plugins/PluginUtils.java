@@ -57,11 +57,11 @@ public class PluginUtils {
         }
     }
 
-    static boolean isJetpack(@NonNull ImmutablePluginModel plugin) {
+    public static boolean isJetpack(@NonNull ImmutablePluginModel plugin) {
         return StringUtils.equals(plugin.getName(), JETPACK_PLUGIN_NAME);
     }
 
-    static boolean isAutoManaged(@NonNull SiteModel site, @NonNull ImmutablePluginModel plugin) {
+    public static boolean isAutoManaged(@NonNull SiteModel site, @NonNull ImmutablePluginModel plugin) {
         if (!site.isAutomatedTransfer()) {
             return false;
         }

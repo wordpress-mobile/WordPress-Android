@@ -4,7 +4,7 @@
     android:shape="rectangle">
 
     <solid
-        android:color="?attr/colorOnSurface">
+        android:color="@color/divider">
     </solid>
 
     <corners

@@ -11,13 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.MaterialToolbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog.T;
@@ -38,11 +36,6 @@ public class WPActivityUtils {
 
         View dialogContainerView = DialogExtensionsKt.getPreferenceDialogContainerView(dialog);
 
-        // just in case, try to find a container of our own custom dialog
-        if (dialogContainerView == null) {
-            dialogContainerView = dialog.findViewById(R.id.list);
-        }
-
         if (dialogContainerView == null) {
             AppLog.e(T.SETTINGS, "Preference Dialog View was null when adding Toolbar");
             return;
@@ -50,23 +43,28 @@ public class WPActivityUtils {
 
         // find the root view, then make sure the toolbar doesn't already exist
         ViewGroup root = (ViewGroup) dialogContainerView.getParent();
-        if (root.findViewById(R.id.toolbar) != null || root.findViewById(R.id.appbar_main) != null) {
+        if (root.findViewById(R.id.toolbar) != null) {
             return;
         }
 
-        AppBarLayout appbar = (AppBarLayout) LayoutInflater.from(context.getActivity())
-                                                           .inflate(R.layout.toolbar_main, root, false);
-
-        MaterialToolbar toolbar = appbar.findViewById(R.id.toolbar_main);
-
-        root.addView(appbar, 0);
+        Toolbar toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
+                                                  .inflate(org.wordpress.android.R.layout.toolbar, root, false);
+        root.addView(toolbar, 0);
 
         dialog.getWindow().setWindowAnimations(R.style.DialogAnimations);
 
+        TextView titleView = toolbar.findViewById(R.id.toolbar_title);
+        titleView.setVisibility(View.VISIBLE);
+        titleView.setText(title);
 
-        toolbar.setTitle(title);
+        toolbar.setTitle("");
         toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_left_white_24dp);
-        toolbar.setNavigationOnClickListener(v -> dialog.dismiss());
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         toolbar.setNavigationContentDescription(R.string.navigate_up_desc);
     }
 
@@ -104,6 +102,7 @@ public class WPActivityUtils {
     public static void setStatusBarColor(Window window, int color) {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //noinspection deprecation
         window.setStatusBarColor(window.getContext().getResources().getColor(color));
     }
 

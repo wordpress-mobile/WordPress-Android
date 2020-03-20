@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+<RadioGroup
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/data_types"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,20 +10,20 @@
     android:paddingTop="@dimen/margin_extra_large"
     android:scrollbars="vertical">
 
-    <com.google.android.material.radiobutton.MaterialRadioButton
+    <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/stats_widget_light_color"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_extra_extra_large"
         android:checked="true"
-        android:paddingEnd="@dimen/stats_widget_color_selector_padding"
         android:paddingStart="@dimen/stats_widget_color_selector_padding"
-        android:text="@string/stats_widget_color_light" />
+        android:paddingEnd="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/stats_widget_color_light"/>
 
-    <com.google.android.material.radiobutton.MaterialRadioButton
+    <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/stats_widget_dark_color"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_extra_extra_large"
-        android:paddingEnd="@dimen/stats_widget_color_selector_padding"
         android:paddingStart="@dimen/stats_widget_color_selector_padding"
-        android:text="@string/stats_widget_color_dark" />
+        android:paddingEnd="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/stats_widget_color_dark"/>
 </RadioGroup>

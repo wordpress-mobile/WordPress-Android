@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -35,7 +36,7 @@ public class WPStartOverPreference extends WPPreference {
             if (index == R.styleable.WPStartOverPreference_buttonText) {
                 mButtonText = array.getString(index);
             } else if (index == R.styleable.WPStartOverPreference_buttonTextColor) {
-                mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, 0));
+                mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, android.R.color.black));
             } else if (index == R.styleable.WPStartOverPreference_buttonTextAllCaps) {
                 mButtonTextAllCaps = array.getBoolean(index, false);
             } else if (index == R.styleable.WPStartOverPreference_preficon) {
@@ -51,26 +52,29 @@ public class WPStartOverPreference extends WPPreference {
         super.onBindView(view);
 
         if (view.findViewById(R.id.pref_icon) != null) {
-            ImageView imageView = view.findViewById(R.id.pref_icon);
+            ImageView imageView = (ImageView) view.findViewById(R.id.pref_icon);
             imageView.setImageDrawable(mPrefIcon);
         }
 
         if (view.findViewById(R.id.button) != null) {
             final WPStartOverPreference wpStartOverPreference = this;
 
-            Button button = view.findViewById(R.id.button);
+            Button button = (Button) view.findViewById(R.id.button);
             button.setText(mButtonText);
-            if (mButtonTextColor > 0) {
-                button.setTextColor(mButtonTextColor);
-            }
+            button.setTextColor(mButtonTextColor);
             button.setAllCaps(mButtonTextAllCaps);
-            button.setOnClickListener(v -> getOnPreferenceClickListener().onPreferenceClick(wpStartOverPreference));
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getOnPreferenceClickListener().onPreferenceClick(wpStartOverPreference);
+                }
+            });
         }
 
-        // TODO: FluxC: We might want to get the selected site here and update the view
-        // if (view.findViewById(R.id.domain) != null) {
-        // TextView textView = (TextView) view.findViewById(R.id.domain);
-        // textView.setText(UrlUtils.getHost(blog.getHomeURL()));
-        // }
+        if (view.findViewById(R.id.domain) != null) {
+            TextView textView = (TextView) view.findViewById(R.id.domain);
+            // TODO: FluxC: We might want to get the selected site here and update the view
+            // textView.setText(UrlUtils.getHost(blog.getHomeURL()));
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -17,6 +19,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -34,7 +37,7 @@ import static org.wordpress.android.WordPress.getContext;
  * <p>
  * Redirects users to the reader activity along with IDs passed in the intent
  */
-public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
+public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private static final String DEEP_LINK_HOST_NOTIFICATIONS = "notifications";
     private static final String DEEP_LINK_HOST_POST = "post";
     private static final String DEEP_LINK_HOST_STATS = "stats";
@@ -54,6 +57,11 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
