@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.annotation.SuppressLint
-import androidx.collection.SparseArrayCompat
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.UploadStore
@@ -27,10 +26,10 @@ class PostListUploadStatusTracker(
     https://github.com/wordpress-mobile/WordPress-Android/issues/11487
      */
     @SuppressLint("UseSparseArrays")
-    private val uploadStatusArray = HashMap<Int, PostListItemUploadStatus>()
+    private val uploadStatusMap = HashMap<Int, PostListItemUploadStatus>()
 
     fun getUploadStatus(post: PostModel, siteModel: SiteModel): PostListItemUploadStatus {
-        uploadStatusArray[post.id]?.let { return it }
+        uploadStatusMap[post.id]?.let { return it }
         val uploadError = uploadStore.getUploadErrorForPost(post)
         val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
         val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)
@@ -46,11 +45,11 @@ class PostListUploadStatusTracker(
                 isEligibleForAutoUpload = uploadActionUseCase.isEligibleForAutoUpload(siteModel, post),
                 uploadWillPushChanges = uploadActionUseCase.uploadWillPushChanges(post)
         )
-        uploadStatusArray[post.id] = newStatus
+        uploadStatusMap[post.id] = newStatus
         return newStatus
     }
 
     fun invalidateUploadStatus(localPostIds: List<Int>) {
-        localPostIds.forEach { uploadStatusArray.remove(it) }
+        localPostIds.forEach { uploadStatusMap.remove(it) }
     }
 }

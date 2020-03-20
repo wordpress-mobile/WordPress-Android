@@ -22,17 +22,17 @@ class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private v
     https://github.com/wordpress-mobile/WordPress-Android/issues/11487
      */
     @SuppressLint("UseSparseArrays")
-    private val featuredImageArray = HashMap<Long, String>()
+    private val featuredImageMap = HashMap<Long, String>()
 
     fun getFeaturedImageUrl(site: SiteModel, featuredImageId: Long): String? {
         if (featuredImageId == 0L) {
             return null
         }
-        featuredImageArray[featuredImageId]?.let { return it }
+        featuredImageMap[featuredImageId]?.let { return it }
         mediaStore.getSiteMediaWithId(site, featuredImageId)?.let { media ->
             // This should be a pretty rare case, but some media seems to be missing url
             return if (media.url != null) {
-                featuredImageArray[featuredImageId] = media.url
+                featuredImageMap[featuredImageId] = media.url
                 media.url
             } else null
         }
@@ -46,6 +46,6 @@ class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private v
     }
 
     fun invalidateFeaturedMedia(featuredImageIds: List<Long>) {
-        featuredImageIds.forEach { featuredImageArray.remove(it) }
+        featuredImageIds.forEach { featuredImageMap.remove(it) }
     }
 }
