@@ -860,10 +860,18 @@ class ReaderPostDetailFragment : Fragment(),
             reblogButton.setCount(0)
             reblogButton.visibility = View.VISIBLE
             reblogButton.setOnClickListener {
-                val siteLocalId = AppPrefs.getSelectedSite()
-                val site = mSiteStore.getSiteByLocalId(siteLocalId)
-                ActivityLauncher.showSitePickerForResult(this, site)
-                //TODO: Skip site picker when user has only one site and handle users without a site
+                val sites = mSiteStore.visibleSites
+                when (sites.size) {
+                    0 -> {
+                        // TODO: handle no site
+                    }
+                    1 -> ActivityLauncher.openEditorForReblog(activity, mSiteStore.visibleSites[0], this.post)
+                    else -> {
+                        val siteLocalId = AppPrefs.getSelectedSite()
+                        val site = mSiteStore.getSiteByLocalId(siteLocalId)
+                        ActivityLauncher.showSitePickerForResult(this, site)
+                    }
+                }
             }
         } else {
             reblogButton.visibility = View.INVISIBLE
@@ -940,9 +948,7 @@ class ReaderPostDetailFragment : Fragment(),
                 if (resultCode == Activity.RESULT_OK) {
                     val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
                     val site = mSiteStore.getSiteByLocalId(siteLocalId)
-                    this.post?.let {
-                        ActivityLauncher.openEditorForReblog(activity, site, it)
-                    }
+                    ActivityLauncher.openEditorForReblog(activity, site, this.post)
                 }
             }
         }
@@ -1510,8 +1516,8 @@ class ReaderPostDetailFragment : Fragment(),
         return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton()
     }
 
-    private fun canBeReblogged(): Boolean = true //TODO: Check if special logic is needed, else remove condition
-
+    private fun canBeReblogged(): Boolean = true
+    // TODO: Check if special logic is needed, else remove condition
     private fun canShowCommentCount(): Boolean {
         val post = this.post ?: return false
         return if (!accountStore.hasAccessToken()) {

@@ -1014,7 +1014,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void showReblogButton(final ReaderPostViewHolder holder, final ReaderPost post) {
-        boolean canBeReblogged = true; //TODO: Check if special logic is needed, else remove condition
+        boolean canBeReblogged = true; // TODO: Check if special logic is needed, else remove condition
         if (canBeReblogged) {
             holder.mReblog.setCount(0);
             holder.mReblog.setVisibility(View.VISIBLE);

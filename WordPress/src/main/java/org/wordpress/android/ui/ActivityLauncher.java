@@ -257,7 +257,12 @@ public class ActivityLauncher {
         taskStackBuilder.startActivities();
     }
 
-    public static void openEditorForReblog(Context context, @NonNull SiteModel site, @NonNull ReaderPost post) {
+    public static void openEditorForReblog(Context context, @NonNull SiteModel site, @Nullable ReaderPost post) {
+        if (post == null) {
+            ToastUtils.showToast(context, R.string.post_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 

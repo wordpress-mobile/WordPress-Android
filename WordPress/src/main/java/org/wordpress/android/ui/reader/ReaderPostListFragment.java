@@ -74,6 +74,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
@@ -235,6 +236,7 @@ public class ReaderPostListFragment extends Fragment
     @Inject QuickStartStore mQuickStartStore;
     @Inject UiHelpers mUiHelpers;
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
+    @Inject SiteStore mSiteStore;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -2895,10 +2897,21 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    @Override public void reblog(ReaderPost post) {
+    @Override
+    public void reblog(ReaderPost post) {
         this.mPostToReblog = post;
-        ActivityLauncher.showSitePickerForResult(this, getSelectedSite());
-        //TODO: Skip site picker when user has only one site and handle users without a site
+        List<SiteModel> sites = mSiteStore.getVisibleSites();
+        switch (sites.size()) {
+            case 0:
+                // TODO: handle no site
+                break;
+            case 1:
+                ActivityLauncher.openEditorForReblog(getActivity(), getSelectedSite(), this.mPostToReblog);
+                break;
+            default:
+                ActivityLauncher.showSitePickerForResult(this, getSelectedSite());
+                break;
+        }
     }
 
     @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
