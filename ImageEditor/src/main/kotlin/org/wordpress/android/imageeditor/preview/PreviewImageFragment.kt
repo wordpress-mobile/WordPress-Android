@@ -93,7 +93,7 @@ class PreviewImageFragment : Fragment() {
             imageData.lowResImageUrl,
             object : RequestListener<Drawable> {
                 override fun onResourceReady(resource: Drawable, url: String) {
-                    viewModel.onLoadIntoImageViewSuccess(url)
+                    viewModel.onLoadIntoImageViewSuccess(url, imageData)
                 }
 
                 override fun onLoadFailed(e: Exception?, url: String) {
