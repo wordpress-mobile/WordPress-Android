@@ -29,12 +29,11 @@
         android:gravity="center"
         android:layout_marginTop="@dimen/retry_text_view_top_margin"
         android:text="@string/failed_to_insert_image_tap_to_retry"
-        android:textSize="@dimen/text_sz_medium"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/retry"/>
+        app:layout_constraintTop_toBottomOf="@+id/retry"
+        style="@style/ErrorTextStyle"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
