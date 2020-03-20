@@ -30,9 +30,6 @@ import org.wordpress.android.viewmodel.helpers.DialogHolder
 
 private const val LOCAL_SITE_ID = 1
 private const val SEGMENT_ID = 1L
-private const val VERTICAL_ID = "m1v1"
-private const val SITE_TITLE = "test title"
-private const val SITE_TAG_LINE = "test tagLine"
 private const val DOMAIN = "test.domain.com"
 private const val STEP_COUNT = 20
 private const val FIRST_STEP_INDEX = 1
@@ -76,26 +73,8 @@ class SiteCreationMainVMTest {
     }
 
     @Test
-    fun skipClickedResultsInNextStep() {
-        viewModel.onSkipClicked()
-        verify(wizardManager).showNextStep()
-    }
-
-    @Test
     fun segmentSelectedResultsInNextStep() {
         viewModel.onSegmentSelected(SEGMENT_ID)
-        verify(wizardManager).showNextStep()
-    }
-
-    @Test
-    fun verticalSelectedResultsInNextStep() {
-        viewModel.onVerticalsScreenFinished(VERTICAL_ID)
-        verify(wizardManager).showNextStep()
-    }
-
-    @Test
-    fun siteInfoFinishedResultsInNextStep() {
-        viewModel.onInfoScreenFinished(SITE_TITLE, null)
         verify(wizardManager).showNextStep()
     }
 
@@ -108,27 +87,11 @@ class SiteCreationMainVMTest {
     @Test
     fun siteCreationStateUpdatedWithSelectedSegment() {
         whenever(wizardManager.showNextStep()).then {
-            wizardManagerNavigatorLiveData.value = SiteCreationStep.VERTICALS
+            wizardManagerNavigatorLiveData.value = SiteCreationStep.DOMAINS
             Unit
         }
         viewModel.onSegmentSelected(SEGMENT_ID)
         assertThat(currentWizardState(viewModel).segmentId).isEqualTo(SEGMENT_ID)
-    }
-
-    @Test
-    fun siteCreationStateUpdatedWithSelectedVertical() {
-        viewModel.onVerticalsScreenFinished(VERTICAL_ID)
-        assertThat(currentWizardState(viewModel).verticalId).isEqualTo(VERTICAL_ID)
-    }
-
-    @Test
-    fun siteCreationStateUpdatedWithSiteInfo() {
-        viewModel.onInfoScreenFinished(
-                SITE_TITLE,
-                SITE_TAG_LINE
-        )
-        assertThat(currentWizardState(viewModel).siteTitle).isEqualTo(SITE_TITLE)
-        assertThat(currentWizardState(viewModel).siteTagLine).isEqualTo(SITE_TAG_LINE)
     }
 
     @Test
@@ -231,9 +194,9 @@ class SiteCreationMainVMTest {
         val newViewModel = SiteCreationMainVM(tracker, wizardManager)
         newViewModel.start(savedInstanceState)
 
-        /* we need to simulate navigation to the next step (Vertical selection, see comment above) as
+        /* we need to simulate navigation to the next step (Domain selection, see comment above) as
         wizardManager.showNextStep() isn't invoked when the VM is restored from a savedInstanceState. */
-        wizardManagerNavigatorLiveData.value = SiteCreationStep.VERTICALS
+        wizardManagerNavigatorLiveData.value = SiteCreationStep.DOMAINS
 
         newViewModel.navigationTargetObservable.observeForever(navigationTargetObserver)
         assertThat(currentWizardState(newViewModel)).isSameAs(expectedState)
@@ -253,15 +216,6 @@ class SiteCreationMainVMTest {
         newViewModel.start(savedInstanceState)
 
         verify(wizardManager).setCurrentStepIndex(index)
-    }
-
-    @Test
-    fun oldSiteCreationDataClearedWhenReturningToPreviousStep() {
-        // See issue #10189 - unintended data retained if user goes backwards in wizard
-        viewModel.onVerticalsScreenFinished(VERTICAL_ID)
-        assertThat(currentWizardState(viewModel).verticalId).isEqualTo(VERTICAL_ID)
-        wizardManagerNavigatorLiveData.value = SiteCreationStep.VERTICALS
-        assertThat(currentWizardState(viewModel).verticalId).isEqualTo(null)
     }
 
     private fun currentWizardState(vm: SiteCreationMainVM) =
