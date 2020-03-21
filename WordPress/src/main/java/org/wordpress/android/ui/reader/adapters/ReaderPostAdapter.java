@@ -1021,19 +1021,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * @param post   the current reader post
      */
     private void showReblogButton(final ReaderPostViewHolder holder, final ReaderPost post) {
-        boolean canBeReblogged = mIsLoggedOutReader;
+        boolean canBeReblogged = !mIsLoggedOutReader;
         if (canBeReblogged) {
             holder.mReblog.setCount(0);
             holder.mReblog.setVisibility(View.VISIBLE);
-            holder.mReblog.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mReblogActionListener.reblog(post);
-                }
-            });
+            holder.mReblog.setOnClickListener(v -> mReblogActionListener.reblog(post));
         } else {
-            holder.mCommentCount.setVisibility(View.GONE);
-            holder.mCommentCount.setOnClickListener(null);
+            holder.mReblog.setVisibility(View.GONE);
+            holder.mReblog.setOnClickListener(null);
         }
     }
 
