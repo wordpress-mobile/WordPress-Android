@@ -871,7 +871,7 @@ class ReaderPostDetailFragment : Fragment(),
                 }
             }
         } else {
-            reblogButton?.visibility = View.INVISIBLE
+            reblogButton?.visibility = View.GONE
             reblogButton?.setOnClickListener(null)
         }
 
@@ -886,7 +886,7 @@ class ReaderPostDetailFragment : Fragment(),
                 )
             }
         } else {
-            countComments.visibility = View.INVISIBLE
+            countComments.visibility = View.GONE
             countComments.setOnClickListener(null)
         }
 
@@ -912,7 +912,7 @@ class ReaderPostDetailFragment : Fragment(),
                 likingUsersLabel.visibility = View.INVISIBLE
             }
         } else {
-            countLikes.visibility = View.INVISIBLE
+            countLikes.visibility = View.GONE
             countLikes.setOnClickListener(null)
         }
     }
