@@ -2899,16 +2899,14 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     public void reblog(ReaderPost post) {
-        this.mPostToReblog = post;
         List<SiteModel> sites = mSiteStore.getVisibleSites();
         switch (sites.size()) {
-            case 0:
-                // TODO: handle no site
-                break;
             case 1:
                 ActivityLauncher.openEditorForReblog(getActivity(), getSelectedSite(), this.mPostToReblog);
                 break;
+            case 0: // The no site case can be handled by the site picker for now
             default:
+                this.mPostToReblog = post; // Stores the post to be handled in the onActivityResult after site selection
                 ActivityLauncher.showSitePickerForResult(this, getSelectedSite());
                 break;
         }

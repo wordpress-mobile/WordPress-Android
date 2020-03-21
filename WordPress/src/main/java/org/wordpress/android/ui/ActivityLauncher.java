@@ -119,16 +119,35 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
+    /**
+     * Presents the site picker and expects the selection result
+     *
+     * @param activity the activity that starts the site picker and expects the result
+     * @param site     the preselected site
+     */
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
         Intent intent = createSitePickerIntent(activity, site);
         activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
+    /**
+     * Presents the site picker and expects the selection result
+     *
+     * @param fragment the fragment that starts the site picker and expects the result
+     * @param site     the preselected site
+     */
     public static void showSitePickerForResult(Fragment fragment, SiteModel site) {
         Intent intent = createSitePickerIntent(fragment.getContext(), site);
         fragment.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
+    /**
+     * Creates a site picker intent
+     *
+     * @param context the context to use for the intent creation
+     * @param site    the preselected site
+     * @return the site picker intent
+     */
     private static Intent createSitePickerIntent(Context context, SiteModel site) {
         Intent intent = new Intent(context, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
@@ -257,6 +276,13 @@ public class ActivityLauncher {
         taskStackBuilder.startActivities();
     }
 
+    /**
+     * Opens the editor and passes the information needed for a reblog action
+     *
+     * @param context the context
+     * @param site    the site on which the post should be reblogged
+     * @param post    the post to be reblogged
+     */
     public static void openEditorForReblog(Context context, @NonNull SiteModel site, @Nullable ReaderPost post) {
         if (post == null) {
             ToastUtils.showToast(context, R.string.post_not_found, ToastUtils.Duration.SHORT);

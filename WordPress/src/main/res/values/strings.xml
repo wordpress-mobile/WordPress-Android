@@ -1683,7 +1683,7 @@
     <string name="reader_excerpt_link">Visit %s for more</string>
 
     <!-- reblog -->
-    <string name="reader_view_reblog">Reblog</string> <!-- TODO: Add localizations -->
+    <string name="reader_view_reblog">Reblog</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>

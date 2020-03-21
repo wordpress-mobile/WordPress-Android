@@ -2150,7 +2150,10 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    protected void setPostContentFromReblogAction() {
+    /**
+     * Sets the content of the reblogged post
+     */
+    private void setPostContentFromReblogAction() {
         Intent intent = getIntent();
         final String title = intent.getStringExtra(EXTRA_REBLOG_POST_TITLE);
         final String quote = intent.getStringExtra(EXTRA_REBLOG_POST_QUOTE);

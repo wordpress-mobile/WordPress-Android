@@ -13,6 +13,9 @@ public class ReaderInterfaces {
         void onPostSelected(ReaderPost post);
     }
 
+    /*
+     * Called by the [ReaderPostAdapter] to trigger the reblog action
+     */
     public interface ReblogActionListener {
         void reblog(ReaderPost post);
     }
