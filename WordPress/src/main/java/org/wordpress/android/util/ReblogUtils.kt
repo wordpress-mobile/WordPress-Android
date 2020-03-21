@@ -30,7 +30,7 @@ val String.htmlImage
  * Returns an html WordPress image
  */
 val String.htmlWpImage
-    get() = "<!-- wp:image -->${this.htmlImage}<!-- /wp:image -->"
+    get() = "<!-- wp:image --><figure class=\"wp-block-image\">${this.htmlImage}</figure><!-- /wp:image -->"
 
 /**
  * Returns an html paragraph
@@ -82,7 +82,7 @@ fun reblogContent(
     val quoteWithCitation = quoteWithCitation(quote, citationTitle, citationUrl)
     val html = if (isGutenberg) quoteWithCitation.embeddedWpQuote else quoteWithCitation.embeddedQuote
     if (imageUrl != null && UrlUtils.isImageUrl(imageUrl)) {
-        val imageHtml = if (isGutenberg) imageUrl.htmlImage.htmlWpParagraph else imageUrl.htmlImage.htmlParagraph
+        val imageHtml = if (isGutenberg) imageUrl.htmlWpImage else imageUrl.htmlImage.htmlParagraph
         return imageHtml + html
     }
     return html
