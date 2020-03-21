@@ -290,6 +290,8 @@ dependencies {
         exclude group: 'com.google.dagger'
     }
 
+    implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'
+
     lintChecks 'org.wordpress:lint:1.0.1'
 
     // Sentry
