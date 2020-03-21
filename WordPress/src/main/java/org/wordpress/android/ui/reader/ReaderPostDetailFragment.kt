@@ -863,7 +863,7 @@ class ReaderPostDetailFragment : Fragment(),
                 val sites = mSiteStore.visibleSites
                 when (sites.size) {
                     1 -> ActivityLauncher.openEditorForReblog(activity, sites.first(), this.post)
-                    else -> {  // The no site (0) case can be handled by the site picker for now
+                    else -> { // The no site (0) case can be handled by the site picker for now
                         val siteLocalId = AppPrefs.getSelectedSite()
                         val site = mSiteStore.getSiteByLocalId(siteLocalId)
                         ActivityLauncher.showSitePickerForResult(this, site)
