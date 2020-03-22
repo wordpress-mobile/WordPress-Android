@@ -21,16 +21,28 @@ val String.embeddedCitation
     get() = "<cite>$this</cite>"
 
 /**
- * Returns an html image from an image url string
+ * Creates an html image from an image url string or null if the url is not valid
+ * @param imageUrlString the image url string
+ * @param urlUtils optional UrlUtilsWrapper
+ * @return html image or null if the url is not valid
  */
-val String.htmlImage
-    get() = """<img src="$this">"""
+@JvmOverloads
+fun htmlImage(imageUrlString: String?, urlUtils: UrlUtilsWrapper = UrlUtilsWrapper()): String? {
+    return if (urlUtils.isImageUrl(imageUrlString)) """<img src="$imageUrlString">""" else null
+}
 
 /**
- * Returns an html WordPress image
+ * Returns an html WordPress image from an image url string or null if the url is not valid
+ * @param imageUrlString the image url string
+ * @param urlUtils optional UrlUtilsWrapper
+ * @return html image or null if the url is not valid
  */
-val String.htmlWpImage
-    get() = "<!-- wp:image --><figure class=\"wp-block-image\">${this.htmlImage}</figure><!-- /wp:image -->"
+@JvmOverloads
+fun htmlWpImage(imageUrlString: String?, urlUtils: UrlUtilsWrapper = UrlUtilsWrapper()): String? {
+    if (!urlUtils.isImageUrl(imageUrlString)) return null
+    return """<!-- wp:image --><figure class="wp-block-image">""" +
+            htmlImage(imageUrlString, urlUtils) + "</figure><!-- /wp:image -->"
+}
 
 /**
  * Returns an html paragraph
@@ -39,28 +51,35 @@ val String.htmlParagraph
     get() = "<p>$this</p>"
 
 /**
- * Returns an html WordPress paragraph
- */
-val String.htmlWpParagraph
-    get() = "<!-- wp:paragraph -->${this.htmlParagraph}<!-- /wp:paragraph -->"
-
-/**
- * Creates a hyperlink from a URL
+ * Creates a hyperlink from a url after validating the link
  * @param url the url
  * @param text the text to display. If not provided the [url] will be used
- * @return the html of the hyperlink
+ * @param urlUtils optional UrlUtilsWrapper
+ * @return the html of the hyperlink or null if the url is not valid
  */
-fun hyperLink(url: String, text: String? = null) = """<a href="$url">${text ?: url}</a>"""
+@JvmOverloads
+fun hyperLink(url: String, text: String = url, urlUtils: UrlUtilsWrapper = UrlUtilsWrapper()): String? {
+    if (!urlUtils.isValidUrlAndHostNotNull(url)) return null
+    return """<a href="$url">$text</a>"""
+}
 
 /**
- * Provides an html containing the post [quote] followed by a link citation
- * @param quote the post quote
- * @param citationTitle the citation text
- * @param citationUrl the citation link
- * @return the html containing the post [quote] followed by a link citation
+ * Provides an html containing the post [quote] followed by a link citation if the later is valid
+ * @param quote the post quot
+ * @param citationUrl the citation link (optional)
+ * @param citationTitle the citation text (optional)
+ * @param urlUtils optional UrlUtilsWrapper
+ * @return the html containing the post [quote] followed by a link citation if the later is valid
  */
-fun quoteWithCitation(quote: String, citationTitle: String, citationUrl: String): String {
-    return quote.htmlParagraph + hyperLink(citationUrl, citationTitle).embeddedCitation
+fun quoteWithCitation(
+    quote: String,
+    citationUrl: String? = null,
+    citationTitle: String? = null,
+    urlUtils: UrlUtilsWrapper = UrlUtilsWrapper()
+): String = when {
+    citationUrl == null -> quote.htmlParagraph
+    citationTitle == null -> quote.htmlParagraph + (hyperLink(citationUrl, urlUtils = urlUtils)?.embeddedCitation ?: "")
+    else -> quote.htmlParagraph + (hyperLink(citationUrl, citationTitle, urlUtils)?.embeddedCitation ?: "")
 }
 
 /**
@@ -70,20 +89,24 @@ fun quoteWithCitation(quote: String, citationTitle: String, citationUrl: String)
  * @param citationTitle the citation text
  * @param citationUrl the citation link
  * @param isGutenberg if true
+ * @param urlUtils optional UrlUtilsWrapper instance
  * @return the html containing the featured image (if exists) followed by the quote and citation
  */
+@JvmOverloads
 fun reblogContent(
     imageUrl: String?,
     quote: String,
-    citationTitle: String,
-    citationUrl: String,
-    isGutenberg: Boolean = true
+    citationTitle: String?,
+    citationUrl: String?,
+    isGutenberg: Boolean = true,
+    urlUtils: UrlUtilsWrapper = UrlUtilsWrapper()
 ): String {
-    val quoteWithCitation = quoteWithCitation(quote, citationTitle, citationUrl)
+    val quoteWithCitation = quoteWithCitation(quote, citationUrl, citationTitle, urlUtils)
     val html = if (isGutenberg) quoteWithCitation.embeddedWpQuote else quoteWithCitation.embeddedQuote
-    if (imageUrl != null && UrlUtils.isImageUrl(imageUrl)) {
-        val imageHtml = if (isGutenberg) imageUrl.htmlWpImage else imageUrl.htmlImage.htmlParagraph
-        return imageHtml + html
+    val imageHtml = if (isGutenberg) {
+        htmlWpImage(imageUrl, urlUtils)
+    } else {
+        htmlImage(imageUrl, urlUtils)?.htmlParagraph
     }
-    return html
+    return (imageHtml ?: "") + html
 }
