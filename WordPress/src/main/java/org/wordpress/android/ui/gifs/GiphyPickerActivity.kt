@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.giphy
+package org.wordpress.android.ui.gifs
 
 import android.app.Activity
 import android.content.Intent
@@ -20,7 +20,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.LocaleAwareActivity
-import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
+import org.wordpress.android.ui.gifs.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils

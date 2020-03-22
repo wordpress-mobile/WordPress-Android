@@ -40,7 +40,7 @@ import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment;
 import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
-import org.wordpress.android.ui.giphy.GiphyPickerActivity;
+import org.wordpress.android.ui.gifs.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryAdapter;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.main.AddContentAdapter;
