@@ -91,6 +91,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.MainToolbarFragment;
+import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -2915,7 +2916,9 @@ public class ReaderPostListFragment extends Fragment
     @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {
-            ActivityLauncher.openEditorForReblog(getActivity(), getSelectedSite(), this.mPostToReblog);
+            int siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+            SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+            ActivityLauncher.openEditorForReblog(getActivity(), site, this.mPostToReblog);
         }
     }
 }
