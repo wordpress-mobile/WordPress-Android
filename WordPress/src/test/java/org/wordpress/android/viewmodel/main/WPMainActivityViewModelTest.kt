@@ -10,6 +10,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
@@ -29,36 +30,36 @@ class WPMainActivityViewModelTest {
     fun setUp() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(false)
         viewModel = WPMainActivityViewModel(appPrefsWrapper)
-        viewModel.start(true)
+        viewModel.start(isFabVisible = true, hasFullAccessToContent = true)
     }
 
     @Test
     fun `fab visible when asked`() {
-        viewModel.onPageChanged(true)
+        viewModel.onPageChanged(showFab = true, hasFullAccessToContent = true)
         assertThat(viewModel.fabUiState.value?.isFabVisible).isEqualTo(true)
     }
 
     @Test
     fun `fab hidden when asked`() {
-        viewModel.onPageChanged(false)
+        viewModel.onPageChanged(showFab = false, hasFullAccessToContent = true)
         assertThat(viewModel.fabUiState.value?.isFabVisible).isEqualTo(false)
     }
 
     @Test
     fun `fab tooltip visible when asked`() {
-        viewModel.onPageChanged(true)
+        viewModel.onPageChanged(showFab = true, hasFullAccessToContent = true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(true)
     }
 
     @Test
     fun `fab tooltip hidden when asked`() {
-        viewModel.onPageChanged(false)
+        viewModel.onPageChanged(showFab = false, hasFullAccessToContent = true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
 
     @Test
     fun `fab tooltip disabled when tapped`() {
-        viewModel.onTooltipTapped()
+        viewModel.onTooltipTapped(true)
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
@@ -81,7 +82,7 @@ class WPMainActivityViewModelTest {
 
     @Test
     fun `fab tooltip disabled when fab long pressed`() {
-        viewModel.onFabLongPressed()
+        viewModel.onFabLongPressed(true)
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
@@ -121,5 +122,18 @@ class WPMainActivityViewModelTest {
         viewModel.onOpenLoginPage()
 
         assertThat(viewModel.startLoginFlow.value!!.peekContent()).isEqualTo(true)
+    }
+
+    @Test
+    fun `onResume set expected content message when user has full access to content`() {
+        viewModel.onResume(true)
+        assertThat(viewModel.fabUiState.value!!.CreateContentMessageId).isEqualTo(R.string.create_post_page_fab_tooltip)
+    }
+
+    @Test
+    fun `onResume set expected content message when user has not full access to content`() {
+        viewModel.onResume(false)
+        assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_contributors)
     }
 }

@@ -138,7 +138,7 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
         _fabUiState.value = newState
     }
 
-    private fun getCreateContentMessageId(hasFullAccessToContent: Boolean) : Int {
+    private fun getCreateContentMessageId(hasFullAccessToContent: Boolean): Int {
         return if (hasFullAccessToContent)
             R.string.create_post_page_fab_tooltip
         else

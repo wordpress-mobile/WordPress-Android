@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.ABOVE
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.BELOW
