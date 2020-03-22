@@ -34,11 +34,11 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
     private val _startLoginFlow = MutableLiveData<Event<Boolean>>()
     val startLoginFlow: LiveData<Event<Boolean>> = _startLoginFlow
 
-    fun start(isFabVisible: Boolean) {
+    fun start(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
         if (isStarted) return
         isStarted = true
 
-        setMainFabUiState(isFabVisible)
+        setMainFabUiState(isFabVisible, hasFullAccessToContent)
 
         loadMainActions()
     }
@@ -73,21 +73,22 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
         _createAction.postValue(actionType)
     }
 
-    private fun disableTooltip() {
+    private fun disableTooltip(hasFullAccessToContent: Boolean) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
 
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
                     isFabVisible = it.isFabVisible,
-                    isFabTooltipVisible = false
+                    isFabTooltipVisible = false,
+                    CreateContentMessageId = getCreateContentMessageId(hasFullAccessToContent)
             )
         }
     }
 
     fun onFabClicked(hasFullAccessToContent: Boolean) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
-        setMainFabUiState(true)
+        setMainFabUiState(true, hasFullAccessToContent)
 
         // Currently this bottom sheet has only 2 options.
         // We should evaluate to re-introduce the bottom sheet also for users without full access to content
@@ -100,28 +101,47 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
         }
     }
 
-    fun onPageChanged(showFab: Boolean) {
-        setMainFabUiState(showFab)
+    fun onPageChanged(showFab: Boolean, hasFullAccessToContent: Boolean) {
+        setMainFabUiState(showFab, hasFullAccessToContent)
     }
 
-    fun onTooltipTapped() {
-        disableTooltip()
+    fun onTooltipTapped(hasFullAccessToContent: Boolean) {
+        disableTooltip(hasFullAccessToContent)
     }
 
-    fun onFabLongPressed() {
-        disableTooltip()
+    fun onFabLongPressed(hasFullAccessToContent: Boolean) {
+        disableTooltip(hasFullAccessToContent)
     }
 
     fun onOpenLoginPage() {
         _startLoginFlow.value = Event(true)
     }
 
-    private fun setMainFabUiState(isFabVisible: Boolean) {
+    fun onResume(hasFullAccessToContent: Boolean) {
+        val oldState = _fabUiState.value
+        oldState?.let {
+            _fabUiState.value = MainFabUiState(
+                    isFabVisible = it.isFabVisible,
+                    isFabTooltipVisible = it.isFabTooltipVisible,
+                    CreateContentMessageId = getCreateContentMessageId(hasFullAccessToContent)
+            )
+        }
+    }
+
+    private fun setMainFabUiState(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
         val newState = MainFabUiState(
                         isFabVisible = isFabVisible,
-                        isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible
+                        isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible,
+                        CreateContentMessageId = getCreateContentMessageId(hasFullAccessToContent)
         )
 
         _fabUiState.value = newState
+    }
+
+    private fun getCreateContentMessageId(hasFullAccessToContent: Boolean) : Int {
+        return if (hasFullAccessToContent)
+            R.string.create_post_page_fab_tooltip
+        else
+            R.string.create_post_page_fab_tooltip_contributors
     }
 }
