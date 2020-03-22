@@ -2658,6 +2658,9 @@
     <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 
+    <!-- Gifs -->
+    <string name="gifs_list_search_nothing_found">No gifs matching your search</string>
+
 
     <!-- Web Preview -->
     <string name="web_preview_default">Default</string>

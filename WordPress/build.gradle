@@ -225,6 +225,7 @@ dependencies {
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
     testImplementation "org.assertj:assertj-core:$assertJVersion"
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1'
+    testImplementation 'androidx.test:core:1.2.0'
 
     androidTestImplementation 'org.mockito:mockito-android:2.27.0'
     androidTestImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
