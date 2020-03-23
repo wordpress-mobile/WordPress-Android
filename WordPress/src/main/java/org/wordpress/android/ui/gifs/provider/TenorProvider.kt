@@ -11,18 +11,28 @@ import com.tenor.android.core.response.impl.GifsResponse
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.ui.gifs.provider.GifProvider.Gif
 
+/**
+ * Implementation of a GifProvider using the Tenor gif API as provider
+ *
+ * This Provider performs requests to the Tenor API using the [tenorClient].
+ */
+
 internal class TenorProvider(
     val context: Context,
-    client: IApiClient? = null
+    tenorClient: IApiClient? = null
 ) : GifProvider {
-    private val tenorClient: IApiClient
+    private val apiClient: IApiClient
     private val searchResultLimit = 10
 
+    /**
+     * Initializes the Tenor API client with the environment API key, if no tenorClient is provided via constructor,
+     * the init will use the default implementation provided by the Tenor library.
+     */
     init {
         ApiService.Builder(context, IApiClient::class.java).apply {
             apiKey(BuildConfig.TENOR_API_KEY)
             ApiClient.init(context, this)
-            tenorClient = client ?: ApiClient.getInstance(context)
+            apiClient = tenorClient ?: ApiClient.getInstance(context)
         }
     }
 
@@ -31,13 +41,13 @@ internal class TenorProvider(
         onSuccess: (List<Gif>) -> Unit,
         onFailure: (String) -> Unit
     ) {
-        tenorClient.simpleSearch(query,
+        apiClient.simpleSearch(query,
                 onSuccess = { response ->
                     response?.run { results.map { Gif(it.url) } }
                             ?.let { onSuccess(it) }
                             ?: onFailure(context.getString(GifProvider.unknownErrorStringId))
                 },
-                onFail = {
+                onFailure = {
                     onFailure(context.getString(GifProvider.queryReturnedNothingStringId))
                 }
         )
@@ -46,7 +56,7 @@ internal class TenorProvider(
     private inline fun IApiClient.simpleSearch(
         query: String,
         crossinline onSuccess: (GifsResponse?) -> Unit,
-        crossinline onFail: (Throwable?) -> Unit
+        crossinline onFailure: (Throwable?) -> Unit
     ) {
         search(
                 ApiClient.getServiceIds(context),
@@ -62,7 +72,7 @@ internal class TenorProvider(
             }
 
             override fun failure(ctx: Context, throwable: Throwable?) {
-                onFail(throwable)
+                onFailure(throwable)
             }
         })
     }
