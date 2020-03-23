@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.gif.provider.GifProvider.Gif
 
 /**
  * A mutable implementation of [GifMediaViewModel]
@@ -21,6 +22,14 @@ class MutableGifMediaViewModel(
     override val largeImageUri: Uri,
     override val title: String
 ) : GifMediaViewModel {
+    constructor(id: String, title: String, gif: Gif) : this(
+            id = id,
+            thumbnailUri = gif.thumbnailUri,
+            previewImageUri = gif.previewImageUri,
+            largeImageUri = gif.largeImageUri,
+            title = title
+    )
+
     /**
      * Using [SingleLiveEvent] will prevent calls like this from running immediately when a ViewHolder is bound:
      *

@@ -68,12 +68,20 @@ class GifPickerDataSource(
         _rangeLoadErrorEvent.postValue(null)
 
         // Do not do any API call if the [searchQuery] is empty
-        if (searchQuery.isBlank()) {
-            callback.onResult(emptyList(), startPosition, 0)
-            return
-        }
+        when {
+            searchQuery.isBlank() ->
+                callback.onResult(emptyList(), startPosition, 0)
 
-        callback.onResult(emptyList(), startPosition, 0)
+            else -> gifProvider.search(
+                    searchQuery,
+                    startPosition,
+                    params.requestedLoadSize,
+                    onSuccess = {
+                        callback.onResult(it, startPosition, it.size)
+                    },
+                    onFailure = { callback.onResult(emptyList(), startPosition, 0) }
+            )
+        }
     }
 
     /**
@@ -83,7 +91,15 @@ class GifPickerDataSource(
      * automatically retried using [retryAllFailedRangeLoads].
      */
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<GifMediaViewModel>) {
-        // Logic removed for now.
+        gifProvider.search(
+                searchQuery,
+                params.startPosition,
+                params.loadSize,
+                onSuccess = { callback.onResult(it) },
+                onFailure = {
+                    failedRangeLoadArguments.add(RangeLoadArguments(params, callback))
+                    if(_rangeLoadErrorEvent.value == null) _rangeLoadErrorEvent.value = it
+                })
     }
 
     /**

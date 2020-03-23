@@ -1,14 +1,20 @@
 package org.wordpress.android.viewmodel.gif.provider
 
 import android.content.Context
+import android.net.Uri
 import com.tenor.android.core.constant.AspectRatioRange
+import com.tenor.android.core.constant.MediaCollectionFormat
 import com.tenor.android.core.constant.MediaFilter
+import com.tenor.android.core.model.impl.MediaCollection
+import com.tenor.android.core.model.impl.Result
 import com.tenor.android.core.network.ApiClient
 import com.tenor.android.core.network.ApiService
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.WeakRefCallback
 import com.tenor.android.core.response.impl.GifsResponse
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.viewmodel.gif.GifMediaViewModel
+import org.wordpress.android.viewmodel.gif.MutableGifMediaViewModel
 import org.wordpress.android.viewmodel.gif.provider.GifProvider.Gif
 
 /**
@@ -22,7 +28,7 @@ internal class TenorProvider @JvmOverloads constructor(
     tenorClient: IApiClient? = null
 ) : GifProvider {
     private val apiClient: IApiClient
-    private val searchResultLimit = 10
+    private val maximumAllowedLoadSize = 50
 
     /**
      * Initializes the Tenor API client with the environment API key, if no tenorClient is provided via constructor,
@@ -38,31 +44,36 @@ internal class TenorProvider @JvmOverloads constructor(
 
     override fun search(
         query: String,
-        onSuccess: (List<Gif>) -> Unit,
-        onFailure: (String) -> Unit
+        position: Int,
+        loadSize: Int?,
+        onSuccess: (List<GifMediaViewModel>) -> Unit,
+        onFailure: (Throwable) -> Unit
     ) {
-        apiClient.simpleSearch(query,
+        apiClient.simpleSearch(
+                query,
+                position.toString(),
+                loadSize,
                 onSuccess = { response ->
-                    response?.run { results.map { Gif(it.url) } }
+                    response?.run { results.map { it.toMutableGifMediaViewModel() } }
                             ?.let { onSuccess(it) }
-                            ?: onFailure(context.getString(GifProvider.unknownErrorStringId))
+                            ?: onFailure(RuntimeException())
                 },
-                onFailure = {
-                    onFailure(context.getString(GifProvider.queryReturnedNothingStringId))
-                }
+                onFailure = { it?.let(onFailure) }
         )
     }
 
     private inline fun IApiClient.simpleSearch(
         query: String,
+        position: String,
+        loadSize: Int?,
         crossinline onSuccess: (GifsResponse?) -> Unit,
         crossinline onFailure: (Throwable?) -> Unit
     ) {
         search(
                 ApiClient.getServiceIds(context),
                 query,
-                searchResultLimit,
-                "",
+                loadSize.fittedToMaximumAllowed,
+                position,
                 MediaFilter.BASIC,
                 AspectRatioRange.ALL
 
@@ -76,4 +87,24 @@ internal class TenorProvider @JvmOverloads constructor(
             }
         })
     }
+
+    private fun Result.toMutableGifMediaViewModel() = MutableGifMediaViewModel(
+            id,
+            title,
+            medias.first().toGif()
+    )
+
+    private fun MediaCollection.toGif() = Gif(
+            thumbnailUri = Uri.parse(this[MediaCollectionFormat.GIF_NANO].url),
+            previewImageUri = Uri.parse(this[MediaCollectionFormat.GIF_TINY].url),
+            largeImageUri = Uri.parse(this[MediaCollectionFormat.GIF].url)
+    )
+
+    private val Int?.fittedToMaximumAllowed
+        get() = this?.let {
+            when {
+                this > maximumAllowedLoadSize -> maximumAllowedLoadSize
+                else -> this
+            }
+        } ?: maximumAllowedLoadSize
 }
