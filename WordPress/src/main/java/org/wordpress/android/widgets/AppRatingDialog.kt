@@ -10,7 +10,6 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker

@@ -1,14 +1,11 @@
 package org.wordpress.android.ui.publicize
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
-import org.wordpress.android.R.style
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.publicize.PublicizeConstants.PUBLICIZE_FACEBOOK_SHARING_SUPPORT_LINK
 import java.lang.NullPointerException
