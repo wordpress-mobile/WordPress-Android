@@ -10,8 +10,9 @@ import com.tenor.android.core.constant.MediaFilter
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.WeakRefCallback
 import com.tenor.android.core.response.impl.GifsResponse
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.fail
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,8 +23,8 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.wordpress.android.TestApplication
-import org.wordpress.android.viewmodel.gif.provider.TenorProviderTestUtils.Companion.createGifResultList
-import org.wordpress.android.viewmodel.gif.provider.TenorProviderTestUtils.Companion.expectedMediaViewModelCollection
+import org.wordpress.android.viewmodel.gif.provider.TenorProviderTestUtils.Companion.expectedGifMediaViewModelCollection
+import org.wordpress.android.viewmodel.gif.provider.TenorProviderTestUtils.Companion.mockedTenorResult
 import retrofit2.Call
 
 @Config(application = TestApplication::class)
@@ -45,7 +46,7 @@ class TenorProviderTest {
         whenever(apiClient.search(any(), any(), any(), any(), any(), any()))
                 .thenReturn(gifSearchCall)
 
-        val gifResults = createGifResultList()
+        val gifResults = mockedTenorResult
         whenever(gifResponse.results).thenReturn(gifResults)
 
         tenorProviderUnderTest = TenorProvider(ApplicationProvider.getApplicationContext(), apiClient)
@@ -59,7 +60,7 @@ class TenorProviderTest {
                 0,
                 onSuccess = {
                     onSuccessWasCalled = true
-                    assertEquals(expectedMediaViewModelCollection, it)
+                    assertEquals(expectedGifMediaViewModelCollection, it)
                 },
                 onFailure = {
                     fail("Failure handler should not be called")
@@ -68,7 +69,7 @@ class TenorProviderTest {
         verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
         val capturedCallback = callbackCaptor.value
         capturedCallback.success(ApplicationProvider.getApplicationContext(), gifResponse)
-        assert(onSuccessWasCalled) { "onSuccess should be called" }
+        assertTrue("onSuccess should be called", onSuccessWasCalled)
     }
 
     @Test
@@ -88,7 +89,7 @@ class TenorProviderTest {
         verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
         val capturedCallback = callbackCaptor.value
         capturedCallback.failure(ApplicationProvider.getApplicationContext(), RuntimeException("Expected message"))
-        assert(onFailureWasCalled) { "onFailure should be called" }
+        assertTrue("onFailure should be called", onFailureWasCalled)
     }
 
     @Test
@@ -108,7 +109,7 @@ class TenorProviderTest {
         verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
         val capturedCallback = callbackCaptor.value
         capturedCallback.success(ApplicationProvider.getApplicationContext(), null)
-        assert(onFailureWasCalled) { "onFailure should be called" }
+        assertTrue("onFailure should be called", onFailureWasCalled)
     }
 
     @Test

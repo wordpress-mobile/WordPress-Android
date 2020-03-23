@@ -12,11 +12,19 @@ import org.wordpress.android.viewmodel.gif.provider.GifProvider.Gif
 
 class TenorProviderTestUtils {
     companion object {
-        internal fun createGifResultList(): List<Result> = listOf(
-                createGifResultMock("first GIF"),
-                createGifResultMock("second GIF"),
-                createGifResultMock("third GIF"),
-                createGifResultMock("fourth GIF")
+        internal val mockedTenorResult
+            get() = listOf(
+                    createGifResultMock("first GIF"),
+                    createGifResultMock("second GIF"),
+                    createGifResultMock("third GIF"),
+                    createGifResultMock("fourth GIF")
+            )
+
+        internal val expectedGifMediaViewModelCollection = listOf(
+                createExpectedGifMediaViewModel("first GIF"),
+                createExpectedGifMediaViewModel("second GIF"),
+                createExpectedGifMediaViewModel("third GIF"),
+                createExpectedGifMediaViewModel("fourth GIF")
         )
 
         private fun createGifResultMock(mockFilling: String) =
@@ -41,28 +49,12 @@ class TenorProviderTestUtils {
         private fun createMediaMock(mockContent: String) =
                 mock<Media>().apply { whenever(this.url).thenReturn(mockContent) }
 
-        internal val expectedMediaViewModelCollection = listOf(
+        private fun createExpectedGifMediaViewModel(mockContent: String) =
                 MutableGifMediaViewModel(
-                        "first GIF",
-                        "first GIF",
-                        createExpectedGif("first GIF")
-                ),
-                MutableGifMediaViewModel(
-                        "second GIF",
-                        "second GIF",
-                        createExpectedGif("second GIF")
-                ),
-                MutableGifMediaViewModel(
-                        "third GIF",
-                        "third GIF",
-                        createExpectedGif("third GIF")
-                ),
-                MutableGifMediaViewModel(
-                        "fourth GIF",
-                        "fourth GIF",
-                        createExpectedGif("fourth GIF")
+                        mockContent,
+                        mockContent,
+                        createExpectedGif(mockContent)
                 )
-        )
 
         private fun createExpectedGif(expectedContent: String) = Gif(
                 Uri.parse("$expectedContent gif_nano"),
