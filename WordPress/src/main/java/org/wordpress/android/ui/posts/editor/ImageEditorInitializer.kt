@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import org.wordpress.android.imageeditor.ImageEditor
@@ -51,15 +52,15 @@ class ImageEditorInitializer {
         }
 
         private fun <T : Any> onResourceReady(model: Any?, listener: ImageEditor.RequestListener<T>, resource: T) =
-            if (model != null && model is String) {
-                listener.onResourceReady(resource, model)
+            if (model != null && (model is String || model is Uri)) {
+                listener.onResourceReady(resource, model.toString())
             } else {
                 throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
             }
 
         private fun <T : Any> onLoadFailed(model: Any?, listener: ImageEditor.RequestListener<T>, e: Exception?) =
-            if (model != null && model is String) {
-                listener.onLoadFailed(e, model)
+            if (model != null && (model is String || model is Uri)) {
+                listener.onLoadFailed(e, model.toString())
             } else {
                 throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
             }
