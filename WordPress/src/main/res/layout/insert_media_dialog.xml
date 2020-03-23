@@ -125,19 +125,19 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_cancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
-                android:text="@android:string/cancel"
-                android:layout_toStartOf="@+id/button_ok"/>
+                android:layout_toStartOf="@+id/button_ok"
+                android:text="@android:string/cancel" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
                 android:id="@+id/button_ok"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@android:string/ok"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"
+                android:text="@android:string/ok" />
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>
