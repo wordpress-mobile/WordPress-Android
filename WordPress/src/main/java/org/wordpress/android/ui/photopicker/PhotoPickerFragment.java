@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -352,8 +353,12 @@ public class PhotoPickerFragment extends Fragment {
             if (count == 0) {
                 finishActionMode();
             } else {
+                FragmentActivity activity = getActivity();
+                if (activity == null) {
+                    return;
+                }
                 if (mActionMode == null) {
-                    ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
+                    ((AppCompatActivity) activity).startSupportActionMode(new ActionModeCallback());
                 }
                 updateActionModeTitle();
             }

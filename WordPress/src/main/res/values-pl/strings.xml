@@ -1898,7 +1898,6 @@ Language: pl
     <string name="reader_hint_add_tag_or_url">Wpisz adres lub tag aby obserwować</string>
     <string name="reader_page_followed_blogs">Obserwowane blogi</string>
     <string name="reader_page_followed_tags">Obserwowane tagi</string>
-    <string name="reader_title_subs">Tagi i Witryny</string>
     <string name="reader_title_tag_preview">Tag Czytnika</string>
     <string name="reader_title_blog_preview">Witryna Czytnika</string>
     <string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>
