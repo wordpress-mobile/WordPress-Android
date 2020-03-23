@@ -268,7 +268,8 @@ public class SiteUtils {
                 if (index > 0) {
                     jetpackVersion = jetpackVersion.substring(0, index);
                 }
-                // Jetpack version is false on self-hosted sites
+                // Jetpack version field is sometimes "false" instead of a number on self-hosted sites that are no
+                // longer active.
                 if (jetpackVersion.equals("false")) {
                     return false;
                 }
