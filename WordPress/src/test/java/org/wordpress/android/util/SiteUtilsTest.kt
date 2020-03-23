@@ -82,7 +82,7 @@ class SiteUtilsTest {
     }
 
     @Test
-    fun `checkMinimalJetpackVersion returns false when version is lower than to input`() {
+    fun `checkMinimalJetpackVersion returns false when version is lower than input`() {
         val site = SiteModel()
         site.jetpackVersion = "5.8"
         site.origin = 1
