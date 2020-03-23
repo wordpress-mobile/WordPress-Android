@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.gifs.provider
+package org.wordpress.android.viewmodel.gif.provider
 
 import android.content.Context
 import com.tenor.android.core.constant.AspectRatioRange
@@ -9,7 +9,7 @@ import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.WeakRefCallback
 import com.tenor.android.core.response.impl.GifsResponse
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.ui.gifs.provider.GifProvider.Gif
+import org.wordpress.android.viewmodel.gif.provider.GifProvider.Gif
 
 /**
  * Implementation of a GifProvider using the Tenor gif API as provider

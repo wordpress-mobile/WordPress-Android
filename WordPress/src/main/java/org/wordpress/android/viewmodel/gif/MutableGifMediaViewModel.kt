@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.giphy
+package org.wordpress.android.viewmodel.gif
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -6,21 +6,21 @@ import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.viewmodel.SingleLiveEvent
 
 /**
- * A mutable implementation of [GiphyMediaViewModel]
+ * A mutable implementation of [GifMediaViewModel]
  *
- * This is meant to be accessible by [GiphyPickerViewModel] and [GiphyPickerDataSource] only. This is designed this
- * way so that [GiphyPickerViewModel] encapsulates all the logic of managing selected items as well as keeping their
+ * This is meant to be accessible by [GifPickerViewModel] and [GifPickerDataSource] only. This is designed this
+ * way so that [GifPickerViewModel] encapsulates all the logic of managing selected items as well as keeping their
  * selection numbers continuous.
  *
  * The [GiphyPickerViewHolder] should never have access to the mutating methods of this class.
  */
-class MutableGiphyMediaViewModel(
+class MutableGifMediaViewModel(
     override val id: String,
     override val thumbnailUri: Uri,
     override val previewImageUri: Uri,
     override val largeImageUri: Uri,
     override val title: String
-) : GiphyMediaViewModel {
+) : GifMediaViewModel {
     /**
      * Using [SingleLiveEvent] will prevent calls like this from running immediately when a ViewHolder is bound:
      *

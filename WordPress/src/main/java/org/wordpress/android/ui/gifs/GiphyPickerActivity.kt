@@ -28,10 +28,10 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ViewModelFactory
-import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
-import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
-import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
-import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
+import org.wordpress.android.viewmodel.gif.GifMediaViewModel
+import org.wordpress.android.viewmodel.gif.GifPickerViewModel
+import org.wordpress.android.viewmodel.gif.GifPickerViewModel.EmptyDisplayMode
+import org.wordpress.android.viewmodel.gif.GifPickerViewModel.State
 import javax.inject.Inject
 
 /**
@@ -46,7 +46,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelFactory
 
-    private lateinit var viewModel: GiphyPickerViewModel
+    private lateinit var viewModel: GifPickerViewModel
 
     private val gridColumnCount: Int by lazy { if (DisplayUtils.isLandscape(this)) 4 else 3 }
 
@@ -64,7 +64,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
 
         val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GiphyPickerViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GifPickerViewModel::class.java)
         viewModel.setup(site)
 
         // We are intentionally reusing this layout since the UI is very similar.
@@ -150,7 +150,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
     }
 
     /**
-     * Configure the selection bar and its labels when the [GiphyPickerViewModel] selected items change
+     * Configure the selection bar and its labels when the [GifPickerViewModel] selected items change
      */
     private fun initializeSelectionBar() {
         viewModel.selectionBarIsVisible.observe(this, Observer {
@@ -275,7 +275,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
      *
      * @param mediaViewModels A non-empty list
      */
-    private fun showPreview(mediaViewModels: List<GiphyMediaViewModel>) {
+    private fun showPreview(mediaViewModels: List<GifMediaViewModel>) {
         check(mediaViewModels.isNotEmpty())
 
         val uris = mediaViewModels.map { it.previewImageUri.toString() }
@@ -308,7 +308,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
     }
 
     /**
-     * Set up enabling/disabling of controls depending on the current [GiphyPickerViewModel.State]:
+     * Set up enabling/disabling of controls depending on the current [GifPickerViewModel.State]:
      *
      * - [State.IDLE]: All normal functions are allowed
      * - [State.DOWNLOADING] or [State.FINISHED]: "Add", "Preview", searching, and selecting are disabled

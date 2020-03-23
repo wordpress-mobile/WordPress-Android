@@ -1,9 +1,9 @@
-package org.wordpress.android.ui.gifs.provider
+package org.wordpress.android.viewmodel.gif.provider
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.tenor.android.core.model.impl.Result
-import org.wordpress.android.ui.gifs.provider.GifProvider.Gif
+import org.wordpress.android.viewmodel.gif.provider.GifProvider.Gif
 
 class TenorProviderTestUtils {
     companion object {

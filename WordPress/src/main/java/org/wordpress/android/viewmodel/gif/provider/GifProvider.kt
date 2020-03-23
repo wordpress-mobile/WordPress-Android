@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.gifs.provider
+package org.wordpress.android.viewmodel.gif.provider
 
 import org.wordpress.android.R
 

@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.giphy
+package org.wordpress.android.viewmodel.gif
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -15,7 +15,7 @@ import androidx.lifecycle.LiveData
  * See the [Giphy API docs](https://developers.giphy.com/docs/) for more information on what a [Media] object contains.
  * Search for "The GIF Object" section.
  */
-interface GiphyMediaViewModel {
+interface GifMediaViewModel {
     /**
      * The id from Giphy's [Media]
      */

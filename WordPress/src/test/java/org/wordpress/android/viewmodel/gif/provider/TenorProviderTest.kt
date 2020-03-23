@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.gifs.provider
+package org.wordpress.android.viewmodel.gif.provider
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -21,8 +21,8 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.wordpress.android.TestApplication
-import org.wordpress.android.ui.gifs.provider.TenorProviderTestUtils.Companion.createGifResultList
-import org.wordpress.android.ui.gifs.provider.TenorProviderTestUtils.Companion.expectedGifList
+import org.wordpress.android.viewmodel.gif.provider.TenorProviderTestUtils.Companion.createGifResultList
+import org.wordpress.android.viewmodel.gif.provider.TenorProviderTestUtils.Companion.expectedGifList
 import retrofit2.Call
 
 @Config(application = TestApplication::class)
