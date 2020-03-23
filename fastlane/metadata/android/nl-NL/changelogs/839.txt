@@ -1,0 +1,4 @@
+14.4:
+Eén kleine fix: in deze release is een probleem opgelost dat ervoor zorgde dat afbeeldingen werden geüpload met vreemde URL's, waardoor ze niet toegankelijk waren op je website.
+
+Was je handen en denk aan je veiligheid, allemaal.

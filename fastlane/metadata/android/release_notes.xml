@@ -1,123 +1,100 @@
 <ar>
-14.3:
-- إضافات مُحرِّر المكوِّن: تمت إضافة مكوِّنات الأزرار والمجموعات، ودعم مزيد من الخيارات في إعدادات مكوِّن الصور والمعرض.
-- تحسينات مُحرِّر المكوِّن: تمت إضافة دعم التمرير داخل منتقي المكوِّن وإعداداته، وتم إدخال شريط أدوات عائم لتسهيل التنقل بين المكوِّنات.
-- إصلاحات مُحرِّر المكوِّن: تم إصلاح المشكلات المتعلقة بصور العنصر النائب في أثناء رفع الصور، ورموز المشاعر في عناوين المقالات، والتفاف النص في مكوِّنات الأكواد القصيرة.
+14.4:
+إصلاح واحد طفيف: يهتم هذا الإصدار بمشكلة تسببت في رفع صور باستخدام عناوين URL بها خلل، الأمر الذي جعل الوصول إليها غير ممكن على موقعك على الويب.
 
+ليغسل الجميع أيديهم وليبقوا في مكان آمن.
 </ar>
 <de-DE>
-14.3:
-- Neu im Block-Editor: Die Blöcke „Button“ und „Gruppe“ wurden hinzugefügt. Darüber hinaus werden jetzt weitere Optionen in den Bild- und Galerieblockeinstellungen.
-- Verbesserungen am Block-Editor: Support für den Bildlauf in der Blockauswahl und in den Blockeinstellungen und neue unverankerte Toolbar für einfaches Wechseln zwischen Blöcken.
+14.4:
+Eine kleine Korrektur: Diese Version kümmert sich um ein Problem, das dazu führte, dass Bilder mit URLs hochgeladen wurden, die nicht in Ordnung waren, wodurch die Bilder auf deiner Website nicht mehr zugänglich waren.
 
+Wascht eure Hände und bleibt alle gesund.
 </de-DE>
 <en-US>
-14.3:
-- Block editor additions: Added Button and Group blocks, and support for more options in Image and Gallery block settings.
-- Block editor enhancements: Added scroll support inside block picker and block settings, and introduced a floating toolbar to make navigating blocks easier.
-- Block editor fixes: Fixed issues around placeholder images during image upload, emojis in post titles, and text-wrapping in Shortcode blocks.
-- Reader: Added tab filtering for better sites/tag navigation.
+14.4:
+One small fix: this release takes care of an issue that caused images to upload with wonky URLs, which made them inaccessible on your website.
 
+Wash your hands and stay safe, everyone.
 </en-US>
 <es-ES>
-14.3:
-- Añadidos bloques al editor: Añadidos bloques de grupo y de botón, y compatibilidad con más opciones en los ajustes de los bloques de imagen y de galería.
-- Mejoras en el editor de bloques: Añadida compatibilidad con scroll dentro del selector de bloques y ajustes de los bloques, y se ha introducido una barra de herramientas flotante para hacer más sencilla la navegación por los bloques.
+14.4:
+Una pequeña corrección: esta versión se ocupa de un problema que hace que las imágenes se carguen con URL inestables, lo que las hace inaccesibles en tu web.
+
+Lávate las manos y mantén a salvo a todos.
 </es-ES>
 <fr-CA>
-14.3 :
-- Ajouts de l'éditeur de blocs : blocs Bouton et Groupe ajoutés, + d’options dans les réglages de bloc Image et Galerie.
-- Améliorations de l'éditeur de blocs : défilement ajouté dans le sélecteur et réglages de bloc, nouvelle barre d'outils flottante pour mieux naviguer dans les blocs.
-- Résolutions de l'éditeur de blocs : images de texte indicatif lors du chargement d’images, émojis des titres d'article et habillage du texte de blocs de code abrégé résolus.
+14.4 :
+Une petite correction : Cette version corrige un problème qui provoquait le téléversement d'images avec des URL bancales, ce qui les rendait inaccessibles sur votre site web.
 
+Lavez-vous les mains et restez en sécurité, tout le monde.
 </fr-CA>
 <fr-FR>
-14.3 :
-- Ajouts de l'éditeur de blocs : blocs Bouton et Groupe ajoutés, + d’options dans les réglages de bloc Image et Galerie.
-- Améliorations de l'éditeur de blocs : défilement ajouté dans le sélecteur et réglages de bloc, nouvelle barre d'outils flottante pour mieux naviguer dans les blocs.
-- Résolutions de l'éditeur de blocs : images de texte indicatif lors du chargement d’images, émojis des titres d'article et habillage du texte de blocs de code abrégé résolus.
+14.4 :
+Une petite correction : Cette version corrige un problème qui provoquait le téléversement d'images avec des URL bancales, ce qui les rendait inaccessibles sur votre site web.
 
+Lavez-vous les mains et restez en sécurité, tout le monde.
 </fr-FR>
 <iw-IL>
-14.3:
-- הוספות לעורך הבלוקים: הוספנו בלוק כפתור ובלוק קבוצה ותמיכה באפשרויות נוספות בהגדרות הבלוקים של תמונה וגלריה.
-- שיפורים לעורך הבלוקים: הוספנו תמיכה בגלילה בתוך בורר הבלוקים ובהגדרות הבלוק. כמו כן, הוספנו סרגל כלים צף כדי לאפשר ניווט קל יותר בבלוקים.
-- תיקונים לעורך הבלוקים: תיקנו כמה בעיות בתמונות של מצייני המיקום שהופיעו בשלב העלאת תמונות, בסמלי Emoji בכותרות הפוסטים ובגלישת הטקסט בבלוקים של שורטקוד.
-- Reader: הוספנו לשונית לסינון כדי לאפשר ניווט יעיל יותר באתרים/בתגיות.
+14.4:
+תיקון אחד קטן: בגרסה הזאת טיפלנו בבעיה שגרמה להעלאה של תמונות עם כתובות URL מוזרות ולכן, לא היה ניתן לגשת לתמונות האלה באתר שלך.
 
+רחצו ידיים ושמרו על עצמכם.
 </iw-IL>
 <id>
-14.3:
-- Tambahan penyunting blok: Menambahkan blok Tombol dan Kelompok, dan mendukung lebih banyak opsi di pengaturan blok Gambar dan Galeri.
-- Peningkatan pada penyunting blok: Menambahkan dukungan gulir di dalam pemilih blok dan pengaturan blok, dan memperkenalkan bilah peralatan mengambang untuk mempermudah navigasi blok.
-- Perbaikan pada penyunting blok: Memperbaiki masalah seputar gambar placeholder selama pengunggahan gambar, emoji di judul pos, dan text-wrapping di blok Shortcode.
+14.4:
+Satu perbaikan kecil: Rilis ini mengatasi masalah penyebab gambar diunggah dengan URL miring, yang membuat URL tersebut tidak dapat diakses di situs web Anda.
 
+Cuci tangan dan tetap jaga diri semuanya.
 </id>
 <it-IT>
-14.3:
-- Aggiunte all'editor a blocchi: blocchi Pulsante e Gruppo e opzioni nelle impostazioni di Immagine e Galleria.
-- Miglioramenti all'editor a blocchi: aggiunta dello scorrimento nel selezionatore e nelle impostazioni e di una barra mobile per la navigazione.
-- Correzioni all'editor a blocchi: correzione del caricamento di immagini segnaposto, degli emoji nei titoli degli articoli e del ritorno a capo nei blocchi Shortcode.
+14.4:
+Una piccola correzione: questo rilascio risolve un problema a causa del quale le immagini si caricavano con URL inaffidabili, rendendole inaccessibili sul sito web.
 
+Lavatevi le mani e state tutti al sicuro.
 </it-IT>
 <ja-JP>
-14.3:
-- ブロックエディターの追加機能 :「ボタン」ブロックと「Group」ブロックが追加され、画像ブロックとギャラリーブロックの設定で使用できるオプションが増えました。
-ブロックエディターの機能強化 :ブロックピッカー内とブロック設定内で、スクロール機能が使えるようになりました。ブロック操作を簡単にする移動式ツールバーも導入されました。
-- ブロックエディターの修正 :画像アップロード中のプレースホルダー画像、投稿名の絵文字、ショートコードブロックでのワードラップ機能で発生していた問題を修正しました。
-- Reader:サイトやタグへのナビゲーションを向上するタブのフィルタリング機能を追加しました。
+14.4:
+軽微な修正 :今回のリリースでは、誤った URL で画像がアップロードされ、サイト上でクセスできなくなる問題に対処しています。
 
+手を洗い、身の安全を守りましょう。
 </ja-JP>
-<ko-KR>
-14.3:
-- 블록 편집기 추가 기능: 버튼 및 그룹 블록, 이미지 및 갤러리 블록 설정의 더 많은 옵션을 위한 지원을 추가했습니다.
-- 블록 편집기의 향상된 기능: 블록 선택기 및 블록 설정 내부에 스크롤 지원을 추가하고 블록을 보다 쉽게 탐색할 수 있는 플로팅 도구 모음을 도입했습니다.
-- 블록 편집기 수정 사항: 이미지 업로드 중 자리 표시자 이미지, 글 제목의 이모티콘 및 쇼트코드 블록의 텍스트 줄 바꿈 문제를 수정했습니다.
-- 리더: 더 효과적인 사이트/태그 탐색을 위해 탭 필터링을 추가했습니다.
-
-</ko-KR>
 <nl-NL>
-14.3:
-- Aanvullingen op de blokeditor: de knop- en groepblokken zijn toegevoegd en er wordt ondersteuning voor meer opties geboden in de instellingen van het afbeeldings- en galerijblok.
-- Verbeteringen aan de blokeditor: ondersteuning voor scrollen toegevoegd aan de blokkiezer en blokinstellingen en een zwevende werkbalk geïntroduceerd om het navigeren in blokken eenvoudiger te maken.
+14.4:
+Eén kleine fix: in deze release is een probleem opgelost dat ervoor zorgde dat afbeeldingen werden geüpload met vreemde URL's, waardoor ze niet toegankelijk waren op je website.
 
+Was je handen en denk aan je veiligheid, allemaal.
 </nl-NL>
-<ru-RU>
-14.3:
-- Добавления к редактору блоков: Блоки кнопка и группа, поддержка большего количества настроек для блоков изображений и галереи.
-- Улучшения редактора блоков: поддержка прокрутки при выборе блоков и в настройках, плавающая панель инструментов для навигации по блокам.
-- Исправления редактора блоков: проблемы с изображениями-заменителями во время загрузки, эмодзи в названиях записей, перенос текста в блоках шорткодов. 
-- Чтиво: фильтрация вкладок для улучшенной навигации по меткам/сайтам.
+<pt-BR>
+14.4:
+Uma pequena correção: essa versão corrige um problema que fazia com que imagens fossem enviadas com URLs estranhas, o que as tornava inacessíveis no site.
 
+Lave as mãos e mantenha-se em segurança.
+</pt-BR>
+<ru-RU>
+14.4:
+Небольшое исправление: этот выпуск исправляет проблему с загрузкой изображений и неправильными URL, которые делали изображения недоступными на сайте.
 </ru-RU>
 <sv-SE>
-14.3:
-- I blockredigeraren: Nya block för knapp och grupp, fler inställningar i bild- och galleriblock.
-- Förbättringar av blockredigeraren: Rullist i blockväljare och blockinställningar, ny flytande verktygslist för enklare blocknavigering.
-- Rättelser i blockredigeraren: Löst problem med platshållare i samband med bilduppladdning, användning av emoji i inläggsrubriker och radbrytning i kordkodsblock.
-- Läsaren: Lagt till flikfiltrering för bättre navigaton mellan webbplatser och etiketter.
+14.4:
+En liten rättelse: denna utgåva korrigerar en problem som gjorde att bilder laddades upp med konstiga URL:er, något som sedan gjorde att de inte kunde nås på din webbplats.
 
+Tvätta händerna ofta och var försiktiga.
 </sv-SE>
 <tr-TR>
-14.3:
-- Blok düzenleyici eklemeleri: Düğme ve Grup bloklarının yanı sıra, Görsel ve Galeri bloku ayarlarına daha fazla seçenek desteği eklendi.
-- Blok düzenleyici geliştirmeleri: Blok seçici ve blok ayarlarına kaydırma desteği ve bloklarda gezinmeyi kolaylaştırmak için kayan bir araç çubuğu eklendi.
-- Blok düzenleyici düzeltmeleri: Görsel karşıya yüklemesi sırasında yer tutucu görselleri, yazı başlığındaki emojiler ve Kısa Kod bloklarında yazı kaydırma ile ilgili sorunlar düzeltildi.
+14.4:
+Ufak bir düzeltme: bu dağıtım görsellerin garip adreslerle yüklenmesine ve web sitenizde görüntülenmemesine sebep olan bir problemi düzeltiyor.
 
+Ellerinizi yıkayın ve güvende kalın.
 </tr-TR>
 <zh-CN>
-14.3：
-- 区块编辑器新增内容：添加了“按钮”和“组”区块，并且在“图片”和“图库”区块设置中支持更多选项。
-- 区块编辑器增强功能：在区块选择器和区块设置中添加了滚动支持，同时引入了浮动工具栏，使得区块间导航变得更加轻松。
-- 区块编辑器修复：修复了图片上传过程中的占位符图片相关问题、文章标题中的表情符号问题以及短代码区块中的文字环绕问题。
-- 阅读器：添加了选项卡过滤功能，以便在站点/标签间更方便地进行导航。
+14.4：
+修复了一个小问题：此版本解决了导致图像通过不可靠 URL 上传，使其在您的网站上无法访问的问题。
 
+请大家勤洗手，注意安全。
 </zh-CN>
 <zh-TW>
-14.3：
-- 區塊編輯器新增功能：新增「按鈕」和「群組」區塊，並在「圖片」和「圖庫」區塊設定中支援更多選項。
-- 區塊編輯器增強功能：在區塊挑選器和區塊設定旁新增捲動功能支援，並推出讓區塊瀏覽更輕鬆的浮動工具列。
-- 區塊編輯器修正：修正圖片上傳時預留位置圖片的問題、文章標題的表情符號問題，以及短代碼區塊中的文繞圖問題。
-- 讀取器：新增分頁篩選功能，改善網站/標籤瀏覽體驗。
+14.4：
+一個細部修正：此版本解決了以不良網址上傳圖片的問題，此問題可能會導致使用者無法存取網站圖片。
 
+請各位勤加洗手，注意安全。
 </zh-TW>
