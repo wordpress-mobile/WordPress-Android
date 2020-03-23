@@ -92,7 +92,7 @@
         <!-- Account activities -->
         <activity
             android:name=".ui.main.MeActivity"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:label="@string/me_section_screen_title" />
         <activity
             android:name=".ui.accounts.LoginActivity"
@@ -153,12 +153,12 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.prefs.ReleaseNotesActivity"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:label="@string/release_notes_screen_title"/>
         <activity
             android:name=".ui.prefs.LicensesActivity"
             android:label="@string/license_screen_title"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity android:name=".ui.prefs.SiteSettingsTagListActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/site_settings_tags_title" />
@@ -184,7 +184,7 @@
         </activity>
         <activity
             android:name=".networking.SSLCertsViewActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Comments activities -->
         <activity
@@ -284,7 +284,7 @@
             android:theme="@style/WordPress.NoActionBar"/>
         <activity
             android:name=".ui.JetpackConnectionWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
@@ -302,7 +302,7 @@
         <activity
             android:name=".ui.JetpackRemoteInstallActivity"
             android:label="@string/jetpack"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Media Activities -->
         <activity
@@ -339,7 +339,7 @@
         <!-- Deep Linking Activity -->
         <activity
             android:name=".ui.DeepLinkingIntentReceiverActivity"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -477,7 +477,7 @@
             android:name=".ui.publicize.PublicizeListActivity"
             android:label="@string/sharing"
             android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <activity
             android:name=".ui.ShareIntentReceiverActivity"
@@ -519,10 +519,10 @@
         <activity
             android:name=".ui.stockmedia.StockMediaPickerActivity"
             android:label=""
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.giphy.GiphyPickerActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Notifications activities -->
         <activity
