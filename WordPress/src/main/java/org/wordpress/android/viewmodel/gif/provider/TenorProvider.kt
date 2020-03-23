@@ -13,9 +13,11 @@ import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.WeakRefCallback
 import com.tenor.android.core.response.impl.GifsResponse
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.R.string
 import org.wordpress.android.viewmodel.gif.GifMediaViewModel
 import org.wordpress.android.viewmodel.gif.MutableGifMediaViewModel
 import org.wordpress.android.viewmodel.gif.provider.GifProvider.Gif
+import org.wordpress.android.viewmodel.gif.provider.GifProvider.GifRequestFailedException
 
 /**
  * Implementation of a GifProvider using the Tenor gif API as provider
@@ -53,13 +55,23 @@ internal class TenorProvider @JvmOverloads constructor(
                 query,
                 position.toString(),
                 loadSize,
-                onSuccess = { response ->
-                    response?.run { results.map { it.toMutableGifMediaViewModel() } }
-                            ?.let { onSuccess(it) }
-                            ?: onFailure(RuntimeException())
-                },
+                onSuccess = { handleResponse(it, onSuccess, onFailure) },
                 onFailure = { it?.let(onFailure) }
         )
+    }
+
+    private fun handleResponse(
+        response: GifsResponse?,
+        onSuccess: (List<GifMediaViewModel>) -> Unit,
+        onFailure: (Throwable) -> Unit
+    ) {
+        response?.run { results.map { it.toMutableGifMediaViewModel() } }
+                ?.let { onSuccess(it) }
+                ?: onFailure(
+                        GifRequestFailedException(
+                                context.getString(string.gifs_list_search_nothing_found)
+                        )
+                )
     }
 
     private inline fun IApiClient.simpleSearch(

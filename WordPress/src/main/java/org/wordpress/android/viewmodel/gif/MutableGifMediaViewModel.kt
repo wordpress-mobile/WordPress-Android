@@ -15,7 +15,7 @@ import org.wordpress.android.viewmodel.gif.provider.GifProvider.Gif
  *
  * The [GiphyPickerViewHolder] should never have access to the mutating methods of this class.
  */
-class MutableGifMediaViewModel(
+data class MutableGifMediaViewModel(
     override val id: String,
     override val thumbnailUri: Uri,
     override val previewImageUri: Uri,

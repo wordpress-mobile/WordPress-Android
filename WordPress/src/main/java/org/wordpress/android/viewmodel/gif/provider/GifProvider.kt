@@ -37,10 +37,7 @@ interface GifProvider {
     )
 
     /**
-     *  String resources to describe failures when a [onFailure] is called
+     * Exception to describe errors within the Provider when a [onFailure] is called
      */
-    companion object {
-        const val queryReturnedNothingStringId = R.string.gifs_list_search_nothing_found
-        const val unknownErrorStringId = R.string.error
-    }
+    class GifRequestFailedException(message: String) : Exception(message)
 }
