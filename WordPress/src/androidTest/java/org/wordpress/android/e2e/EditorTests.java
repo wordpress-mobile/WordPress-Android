@@ -51,6 +51,13 @@ public class EditorTests extends BaseTest {
         new MySitesPage()
                 .startNewPost();
 
+        /*
+        Since gutenberg currently takes a long time to load this sleep is necessary. There are some improvements
+        in the works for improving the load time for Gutenberg. Once they land we could decrease the sleep duration,
+        but we probably should have a little bit of a delay here to avoid false negative tests.
+         */
+        sleep(8000);
+
         EditorPage editorPage = new EditorPage();
         editorPage.enterTitle(title);
         editorPage.enterContent(content);
@@ -71,6 +78,13 @@ public class EditorTests extends BaseTest {
         MasterbarComponent mb = new MasterbarComponent().goToMySitesTab();
         sleep();
         mb.clickBlogPosts();
+
+        /*
+        Since gutenberg currently takes a long time to load this sleep is necessary. There are some improvements
+        in the works for improving the load time for Gutenberg. Once they land we could decrease the sleep duration,
+        but we probably should have a little bit of a delay here to avoid false negative tests.
+         */
+        sleep(8000);
 
         new MySitesPage()
                 .startNewPost();
