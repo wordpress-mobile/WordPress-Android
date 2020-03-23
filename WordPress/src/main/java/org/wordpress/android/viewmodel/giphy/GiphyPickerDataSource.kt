@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.giphy
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PositionalDataSource
+import org.wordpress.android.ui.gifs.provider.GifProvider
 
 /**
  * The PagedListDataSource that is created and managed by [GiphyPickerDataSourceFactory]
@@ -11,6 +12,7 @@ import androidx.paging.PositionalDataSource
  * [searchQuery] is changed by the user.
  */
 class GiphyPickerDataSource(
+    private val gifProvider: GifProvider,
     private val searchQuery: String
 ) : PositionalDataSource<GiphyMediaViewModel>() {
     /**

@@ -10,6 +10,8 @@ import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
+import org.wordpress.android.ui.gifs.provider.GifProvider;
+import org.wordpress.android.ui.gifs.provider.TenorProvider;
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment;
@@ -107,5 +109,10 @@ public abstract class ApplicationModule {
     @Provides
     static LiveData<ConnectionStatus> provideConnectionStatusLiveData(Context context) {
         return new ConnectionStatusLiveData.Factory(context).create();
+    }
+
+    @Provides
+    static GifProvider provideGifProvider(Context context) {
+        return new TenorProvider(context);
     }
 }

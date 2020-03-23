@@ -17,7 +17,7 @@ import org.wordpress.android.ui.gifs.provider.GifProvider.Gif
  * This Provider performs requests to the Tenor API using the [tenorClient].
  */
 
-internal class TenorProvider(
+internal class TenorProvider @JvmOverloads constructor(
     val context: Context,
     tenorClient: IApiClient? = null
 ) : GifProvider {

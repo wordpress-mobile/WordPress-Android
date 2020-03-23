@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.DataSource
 import androidx.paging.DataSource.Factory
+import org.wordpress.android.ui.gifs.provider.GifProvider
 import javax.inject.Inject
 
 /**
@@ -16,7 +17,7 @@ import javax.inject.Inject
  * 2. The [LivePagedListBuilder] will create a new [GiphyPickerDataSource] by calling [create]
  * 3. The new [GiphyPickerDataSource] will start another paged API request
  */
-class GiphyPickerDataSourceFactory @Inject constructor() : Factory<Int, GiphyMediaViewModel>() {
+class GiphyPickerDataSourceFactory @Inject constructor(private val gifProvider: GifProvider) : Factory<Int, GiphyMediaViewModel>() {
     /**
      * The active search query.
      *
@@ -52,7 +53,7 @@ class GiphyPickerDataSourceFactory @Inject constructor() : Factory<Int, GiphyMed
     fun retryAllFailedRangeLoads() = dataSource.value?.retryAllFailedRangeLoads()
 
     override fun create(): DataSource<Int, GiphyMediaViewModel> {
-        val dataSource = GiphyPickerDataSource(searchQuery)
+        val dataSource = GiphyPickerDataSource(gifProvider, searchQuery)
         this.dataSource.postValue(dataSource)
         return dataSource
     }
