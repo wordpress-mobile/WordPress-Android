@@ -54,14 +54,17 @@ class TenorProviderTest {
     }
 
     @Test
-    fun `search call should invoke onSuccess with expected GIF list for valid query`() {
+    fun `search call should invoke onSuccess with expected GIF list and nextPosition for valid query`() {
         var onSuccessWasCalled = false
+        whenever(gifResponse.next).thenReturn("0")
+        val expectedNextPosition = 0
 
         tenorProviderUnderTest.search("test",
                 0,
-                onSuccess = {
+                onSuccess = { actualViewModelCollection, actualNextPosition ->
                     onSuccessWasCalled = true
-                    assertEquals(expectedGifMediaViewModelCollection, it)
+                    assertEquals(expectedGifMediaViewModelCollection, actualViewModelCollection)
+                    assertEquals(expectedNextPosition, actualNextPosition)
                 },
                 onFailure = {
                     fail("Failure handler should not be called")
@@ -79,7 +82,7 @@ class TenorProviderTest {
 
         tenorProviderUnderTest.search("test",
                 0,
-                onSuccess = {
+                onSuccess = { _, _ ->
                     fail("Success handler should not be called")
                 },
                 onFailure = {
@@ -100,13 +103,13 @@ class TenorProviderTest {
 
         tenorProviderUnderTest.search("test",
                 0,
-                onSuccess = {
+                onSuccess = { _, _ ->
                     fail("Success handler should not be called")
                 },
                 onFailure = {
                     onFailureWasCalled = true
                     assertTrue(it is GifRequestFailedException)
-                    assertEquals("No GIFs matching your search", it.message)
+                    assertEquals("No media matching your search", it.message)
                 })
 
         verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
@@ -122,7 +125,7 @@ class TenorProviderTest {
         tenorProviderUnderTest.search(
                 "test",
                 0,
-                onSuccess = {},
+                onSuccess = { _,_ -> },
                 onFailure = {})
 
         verify(apiClient).search(
@@ -144,7 +147,7 @@ class TenorProviderTest {
         tenorProviderUnderTest.search(
                 "test",
                 0,
-                onSuccess = {},
+                onSuccess = { _,_ -> },
                 onFailure = {})
 
         verify(apiClient).search(
@@ -167,7 +170,7 @@ class TenorProviderTest {
                 "test",
                 0,
                 20,
-                onSuccess = {},
+                onSuccess = { _,_ -> },
                 onFailure = {})
 
         verify(apiClient).search(
@@ -190,7 +193,7 @@ class TenorProviderTest {
                 "test",
                 0,
                 1500,
-                onSuccess = {},
+                onSuccess = { _,_ -> },
                 onFailure = {})
 
         verify(apiClient).search(

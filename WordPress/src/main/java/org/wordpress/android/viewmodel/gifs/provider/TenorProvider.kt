@@ -59,15 +59,19 @@ internal class TenorProvider @JvmOverloads constructor(
         query: String,
         position: Int,
         loadSize: Int?,
-        onSuccess: (List<GifMediaViewModel>) -> Unit,
+        onSuccess: (List<GifMediaViewModel>, Int?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
         apiClient.simpleSearch(
                 query,
                 position.toString(),
                 loadSize,
-                onSuccess = {
-                    handleResponse(it, onSuccess, onFailure)
+                onSuccess = { response ->
+                    response.results.map { it.toMutableGifMediaViewModel() }
+                            .let { gifs ->
+                                val nextPosition = response.next.toIntOrNull()?.let { it + 1 }
+                                onSuccess(gifs, nextPosition)
+                            }
                 },
                 onFailure = {
                     it?.let { throwable ->
@@ -83,13 +87,16 @@ internal class TenorProvider @JvmOverloads constructor(
      * [MediaFilter] must be BASIC or the returned Media will not have a displayable thumbnail
      * All other provided parameters are set following the Tenor API Documentation
      *
+     * The [onFailure] will be called assuming that no valid GIF was found
+     * or that a direct failure was found by Tenor API
+     *
      * Method is inlined for better high-order functions performance
      */
     private inline fun IApiClient.simpleSearch(
         query: String,
         position: String,
         loadSize: Int?,
-        crossinline onSuccess: (GifsResponse?) -> Unit,
+        crossinline onSuccess: (GifsResponse) -> Unit,
         crossinline onFailure: (Throwable?) -> Unit
     ) {
         search(
@@ -102,34 +109,18 @@ internal class TenorProvider @JvmOverloads constructor(
 
         ).enqueue(object : WeakRefCallback<Context, GifsResponse>(context) {
             override fun success(ctx: Context, response: GifsResponse?) {
-                onSuccess(response)
+                response?.let(onSuccess)
+                        ?: onFailure(
+                                GifRequestFailedException(
+                                        context.getString(string.giphy_picker_empty_search_list)
+                                )
+                        )
             }
 
             override fun failure(ctx: Context, throwable: Throwable?) {
                 onFailure(throwable)
             }
         })
-    }
-
-    /**
-     * When the Tenor API returns the [GifsResponse] this method will try to parse it
-     * to a [List] of [GifMediaViewModel], if the parse fails, the [onFailure] will be called
-     * with a [GifRequestFailedException] assuming that no valid GIF was found
-     *
-     * Method is inlined for better high-order functions performance
-     */
-    private inline fun handleResponse(
-        response: GifsResponse?,
-        onSuccess: (List<GifMediaViewModel>) -> Unit,
-        onFailure: (Throwable) -> Unit
-    ) {
-        response?.run { results.map { it.toMutableGifMediaViewModel() } }
-                ?.let { onSuccess(it) }
-                ?: onFailure(
-                        GifRequestFailedException(
-                                context.getString(string.giphy_picker_empty_search_list)
-                        )
-                )
     }
 
     /**

@@ -72,12 +72,10 @@ class GifPickerDataSource(
             searchQuery.isBlank() ->
                 callback.onResult(emptyList(), startPosition, 0)
 
-            else -> gifProvider.search(
-                    searchQuery,
-                    startPosition,
-                    params.requestedLoadSize,
-                    onSuccess = {
-                        callback.onResult(it, startPosition, it.size)
+            else -> gifProvider.search(searchQuery, startPosition, params.requestedLoadSize,
+                    onSuccess = { gifs, nextPosition ->
+                        val totalCount = nextPosition ?: gifs.size
+                        callback.onResult(gifs, startPosition, totalCount)
                     },
                     onFailure = { callback.onResult(emptyList(), startPosition, 0) }
             )
@@ -95,10 +93,10 @@ class GifPickerDataSource(
                 searchQuery,
                 params.startPosition,
                 params.loadSize,
-                onSuccess = { callback.onResult(it) },
+                onSuccess = { gifs, _ -> callback.onResult(gifs) },
                 onFailure = {
                     failedRangeLoadArguments.add(RangeLoadArguments(params, callback))
-                    if(_rangeLoadErrorEvent.value == null) _rangeLoadErrorEvent.value = it
+                    if (_rangeLoadErrorEvent.value == null) _rangeLoadErrorEvent.value = it
                 })
     }
 

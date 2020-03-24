@@ -13,7 +13,8 @@ interface GifProvider {
      * [position] to request results starting from a given position for that [query]
      * [loadSize] to request a result list limited to a specific amount
      * [onSuccess] will be called if the Provider had success finding GIFs
-     * and will deliver a List<Gif> with all matching GIFs
+     * and will deliver a [List] of [GifMediaViewModel] with all matching GIFs
+     * and a [Int] describing the next position for pagination
      * [onFailure] will be called if the Provider didn't succeed with the task of bringing GIFs,
      * the delivered String will describe the error to be presented to the user
      */
@@ -21,7 +22,7 @@ interface GifProvider {
         query: String,
         position: Int,
         loadSize: Int? = null,
-        onSuccess: (List<GifMediaViewModel>) -> Unit,
+        onSuccess: (List<GifMediaViewModel>, Int?) -> Unit,
         onFailure: (Throwable) -> Unit
     )
 

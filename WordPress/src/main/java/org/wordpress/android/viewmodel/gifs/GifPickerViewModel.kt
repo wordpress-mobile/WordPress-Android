@@ -141,8 +141,16 @@ class GifPickerViewModel @Inject constructor(
      * The [PagedList] that should be displayed in the RecyclerView
      */
     val mediaViewModelPagedList: LiveData<PagedList<GifMediaViewModel>> by lazy {
-        val pagedListConfig = PagedList.Config.Builder().setEnablePlaceholders(true).setPageSize(30).build()
-        LivePagedListBuilder(dataSourceFactory, pagedListConfig).setBoundaryCallback(pagedListBoundaryCallback).build()
+        val pagedListConfig = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setPrefetchDistance(15)
+                .setInitialLoadSizeHint(50)
+                .setPageSize(21)
+                .build()
+
+        LivePagedListBuilder(dataSourceFactory, pagedListConfig)
+                .setBoundaryCallback(pagedListBoundaryCallback)
+                .build()
     }
 
     /**
