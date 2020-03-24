@@ -1678,6 +1678,8 @@ public class EditPostActivity extends AppCompatActivity implements
         );
 
         String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
+
+        AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN);
         ActivityLauncher.openImageEditor(this, resizedImageUrl, imageUrl, outputFileExtension);
     }
 
@@ -2271,6 +2273,10 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
                         Uri imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
                         if (imageUri != null) {
+                            Map<String, String> properties = new HashMap<>();
+                            properties.put("actions", "crop");
+                            AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, properties);
+
                             mEditorMedia.addNewMediaToEditorAsync(imageUri, true);
                         }
                     }
