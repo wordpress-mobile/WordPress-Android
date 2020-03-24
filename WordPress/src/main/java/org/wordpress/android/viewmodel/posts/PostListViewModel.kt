@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.posts
 
-import android.annotation.SuppressLint
 import android.text.TextUtils
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -58,7 +57,6 @@ private const val SEARCH_DELAY_MS = 500L
 private const val SEARCH_PROGRESS_INDICATOR_DELAY_MS = 500L
 private const val EMPTY_VIEW_THROTTLE = 250L
 
-@SuppressLint("UseSparseArrays")
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val listStore: ListStore,
