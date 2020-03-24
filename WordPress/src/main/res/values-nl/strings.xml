@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-05 01:54:13+0000
+Translation-Revision-Date: 2020-03-18 00:55:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="stats_insights_management_activity">Activiteit</string>
+    <string name="stats_insights_management_posts_and_pages">Berichten en pagina\'s</string>
+    <string name="stats_insights_management_general">Algemeen</string>
+    <string name="stats_management_screen_title">Nieuwe kaart toevoegen</string>
+    <string name="stats_management_add_new_stats_card">Nieuwe statistiekenkaart toevoegen</string>
     <string name="reader_self_hosted_select_filter">Gebruik de filterknop om berichten over specifieke onderwerpen te vinden</string>
     <string name="reader_bottom_sheet_content_description">Selecteer een tag of site, pop-upvenster</string>
     <string name="reader_btn_selected_filter_tick_content_description">Geselecteerd</string>
@@ -351,7 +356,6 @@ Language: nl
     <string name="domain_registration_contact_form_input_error">Voer een geldige %s in</string>
     <string name="domains_suggestions_choose_domain">Ander domein kiezen</string>
     <string name="stats_management_new">Nieuw</string>
-    <string name="stats_management_edit">Bewerken</string>
     <string name="stats_management_dismiss_insights_news_card">Negeren</string>
     <string name="stats_management_try_it_now">Probeer het nu</string>
     <string name="stats_management_news_card_message">Kies welke statistieken je wilt bekijken en richt je op de gegevens die voor jou het belangrijkst zijn. Tik op %1$s onderaan Inzichten om je statistieken te personaliseren.</string>
@@ -366,8 +370,6 @@ Language: nl
     <string name="post_list_author_me">Ik</string>
     <string name="error_restoring_post">Er is een fout opgetreden tijdens het herstellen van het bericht</string>
     <string name="backdated_for">Van datum voorzien voor: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Items die hierboven getoond worden, worden op het tabblad Inzichten weergegeven. Sleep items hierheen om ze aan te passen.</string>
-    <string name="stats_insights_add_insights_header">Inzichten toevoegen</string>
     <string name="stats_insights_management_title">Bekijk alleen de meest relevante statistieken. Voeg je inzichten hieronder toe en sorteer ze.</string>
     <string name="stats_insights_social">Sociaal</string>
     <string name="stats_insights_annual_site_stats">Jaarlijkse sitestatistieken</string>

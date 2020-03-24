@@ -134,7 +134,7 @@ class PostListMainViewModel @Inject constructor(
     private val _searchQuery = MutableLiveData<String>()
     val searchQuery: LiveData<String> = _searchQuery
 
-    private val uploadStatusTracker = PostListUploadStatusTracker(
+    private val uploadStatusTracker = PostModelUploadStatusTracker(
             uploadStore = uploadStore,
             uploadActionUseCase = uploadActionUseCase
     )
@@ -272,7 +272,7 @@ class PostListMainViewModel @Inject constructor(
                 site = site,
                 postListType = postListType,
                 postActionHandler = postActionHandler,
-                getUploadStatus = uploadStatusTracker::getUploadStatus,
+                uploadStatusTracker = uploadStatusTracker,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
                 hasAutoSave = postConflictResolver::hasUnhandledAutoSave,
                 postFetcher = postFetcher,

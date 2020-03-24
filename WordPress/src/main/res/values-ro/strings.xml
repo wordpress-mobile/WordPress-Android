@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-25 07:13:34+0000
+Translation-Revision-Date: 2020-03-11 17:29:21+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="stats_insights_management_activity">Activitate</string>
+    <string name="stats_insights_management_posts_and_pages">Articole și pagini</string>
+    <string name="stats_insights_management_general">Generale</string>
+    <string name="stats_management_screen_title">Adaugă cartuș nou</string>
+    <string name="stats_management_add_new_stats_card">Adaugă un cartuș nou pentru statistici</string>
     <string name="reader_self_hosted_select_filter">Folosește butonul de filtrare pentru a găsi articole pentru anumite subiecte</string>
     <string name="reader_bottom_sheet_content_description">Selectează o etichetă sau un sit, ferestră popup</string>
     <string name="reader_btn_selected_filter_tick_content_description">Selectat(ă)</string>
@@ -366,7 +371,6 @@ Language: ro
     <string name="domain_registration_contact_form_input_error">Te rog introdu un %s valid</string>
     <string name="domains_suggestions_choose_domain">Alege domeniul</string>
     <string name="stats_management_new">Nou</string>
-    <string name="stats_management_edit">Editează</string>
     <string name="stats_management_dismiss_insights_news_card">Renunță</string>
     <string name="stats_management_try_it_now">Încearcă-l acum</string>
     <string name="stats_management_news_card_message">Alegi ce statistici să vezi și te axezi asupra datelor care te interesează cel mai mult. Atinge %1$s în partea de jos a ecranului Privire generală pentru a-ți personaliza statisticile.</string>
@@ -381,8 +385,6 @@ Language: ro
     <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">A apărut o eroare la restaurarea articolului</string>
     <string name="backdated_for">Antedatat pentru: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Elementele afișate mai sus vor apărea în fila Privire generală. Trage și plasează pentru a personaliza.</string>
-    <string name="stats_insights_add_insights_header">Adaugă Perspective</string>
     <string name="stats_insights_management_title">Vezi numai statisticile relevante. Adaugi informații și le organizezi în privirea generală de mai jos.</string>
     <string name="stats_insights_social">Sociale</string>
     <string name="stats_insights_annual_site_stats">Statistici sit anuale</string>

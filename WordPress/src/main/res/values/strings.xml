@@ -109,6 +109,8 @@
     <string name="exit">exit</string>
     <string name="ok">OK</string>
     <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
+    <string name="local_draft">Local draft</string>
+    <string name="local_changes">Local changes</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -246,7 +248,6 @@
     <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="untitled">Untitled</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
-    <string name="local_draft">Local draft</string>
     <string name="post_uploading">Uploading post</string>
     <string name="post_uploading_draft">Uploading draft</string>
     <string name="post_queued">Queued post</string>
@@ -358,6 +359,7 @@
     <!-- post autosave revision dialog -->
     <string name="dialog_confirm_autosave_title">Which version would you like to edit?</string>
     <string name="dialog_confirm_autosave_body_first_part">You recently made changes to this post but didn\'t save them. Choose a version to load:\n\n</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">You recently made changes to this page but didn\'t save them. Choose a version to load:\n\n</string>
     <string name="dialog_confirm_autosave_body_second_part">From this app\nSaved on %s\n\nFrom another device\nSaved on %s\n</string>
     <string name="dialog_confirm_autosave_restore_button">The version from another device</string>
     <string name="dialog_confirm_autosave_dont_restore_button">The version from this app</string>
@@ -1254,11 +1256,15 @@
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
+    <string name="editor_page_saved_online">Page saved online</string>
     <string name="editor_post_saved_locally">Post saved on device</string>
+    <string name="editor_page_saved_locally">Page saved on device</string>
     <string name="editor_draft_saved_online">Draft saved online</string>
     <string name="editor_draft_saved_locally">Draft saved on device</string>
     <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
+    <string name="editor_page_saved_locally_failed_media">The page has failed media uploads and has been saved locally</string>
     <string name="editor_uploading_post">Your post is uploading</string>
+    <string name="editor_uploading_page">Your page is uploading</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
@@ -1462,12 +1468,11 @@
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
 
-    <!-- Remote Post Changes -->
-    <string name="local_changes">Local changes</string>
-
-    <!-- Remote Post has conflicts with local post -->
+    <!-- Remote Post&Page has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
     <string name="local_post_autosave_revision_available">You\'ve made unsaved changes to this post</string>
+    <string name="local_page_is_conflicted">@string/local_post_is_conflicted</string>
+    <string name="local_page_autosave_revision_available">You\'ve made unsaved changes to this page</string>
 
     <!-- Post Remote Preview -->
     <string name="post_preview_saving_draft">Saving…</string>
@@ -1512,6 +1517,7 @@
     <string name="error_publish_empty_page">Can\'t publish an empty page</string>
     <string name="error_save_empty_draft">Can\'t save an empty draft</string>
     <string name="error_publish_no_network">Device is offline. Post saved locally.</string>
+    <string name="error_publish_page_no_network">Device is offline. Page saved locally.</string>
     <string name="error_upload_post_param">There was an error uploading this post: %s.</string>
     <string name="error_upload_page_param">There was an error uploading this page: %s.</string>
     <string name="error_upload_post_media_param">There was an error uploading the media in this post: %s.</string>
@@ -1815,6 +1821,7 @@
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
+    <string name="my_site_select_domains_page_title">Site Address</string>
     <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
     <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
     <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
@@ -1879,7 +1886,6 @@
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connection_service_label">Publicize to %s</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
-    <string name="connection_service_facebook_notice">As of August 1, 2018, Facebook no longer allows direct sharing of posts to Facebook Profiles. Connections to Facebook Pages remain unchanged.</string>
     <string name="share_btn_connect">Connect</string>
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_reconnect">Reconnect</string>
@@ -1929,7 +1935,8 @@
     <string name="connecting_account">Connecting account</string>
     <string name="sharing_label_message">Change the text of the sharing buttons\' label. This text won\'t appear until you add at least one sharing button.</string>
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
-    <string name="sharing_facebook_account_must_have_pages">The Facebook connection could not be made because this account does not have access to any pages. Facebook supports sharing connections to Facebook Pages, but not to Facebook Profiles.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicize cannot connect to Facebook Profiles, only published Pages.</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -2587,6 +2594,45 @@
     <string name="pages_open_page_error">The selected page is not available</string>
 
 
+    <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
+    <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
+
+    <string name="page_local_draft" translatable="false">@string/local_draft</string>
+    <string name="page_local_changes" translatable="false">@string/local_changes</string>
+    <string name="page_uploading">Uploading page</string>
+    <string name="page_uploading_draft" translatable="false">@string/post_uploading_draft</string>
+    <string name="page_queued">Queued page</string>
+
+    <string name="page_waiting_for_connection_publish">We\'ll publish the page when your device is back online.</string>
+    <string name="page_waiting_for_connection_pending">We\'ll submit your page for review when your device is back online.</string>
+    <string name="page_waiting_for_connection_scheduled">We\'ll schedule your page when your device is back online.</string>
+    <string name="page_waiting_for_connection_private">We\'ll publish your private page when your device is back online.</string>
+    <string name="page_waiting_for_connection_draft">We\'ll save your draft when your device is back online</string>
+
+    <string name="error_media_recover_page_not_published">We couldn\'t upload this media, and didn\'t publish the page.</string>
+    <string name="error_media_recover_page_not_published_private">We couldn\'t upload this media, and didn\'t publish this private page.</string>
+    <string name="error_media_recover_page_not_scheduled">We couldn\'t upload this media, and didn\'t schedule this page.</string>
+    <string name="error_media_recover_page_not_submitted">We couldn\'t upload this media, and didn\'t submit this page for review. </string>
+
+    <string name="error_page_not_published_retrying">We couldn\'t publish this page, but we\'ll try again later.</string>
+    <string name="error_page_not_published_retrying_private">We couldn\'t publish this private page, but we\'ll try again later.</string>
+    <string name="error_page_not_scheduled_retrying">We couldn\'t schedule this page, but we\'ll try again later.</string>
+    <string name="error_page_not_submitted_retrying">We couldn\'t submit this page for review, but we\'ll try again later. </string>
+
+    <string name="error_media_recover_page_not_published_retrying" translatable="false">@string/error_page_not_published_retrying</string>
+    <string name="error_media_recover_page_not_published_retrying_private" translatable="false">@string/error_page_not_published_retrying_private</string>
+    <string name="error_media_recover_page_not_scheduled_retrying" translatable="false">@string/error_page_not_scheduled_retrying</string>
+    <string name="error_media_recover_page_not_submitted_retrying" translatable="false">@string/error_page_not_submitted_retrying</string>
+
+
+    <string name="error_page_not_published">We couldn\'t complete this action, and didn\'t publish this page.</string>
+    <string name="error_page_not_published_private">We couldn\'t complete this action, and didn\'t publish this private page.</string>
+    <string name="error_page_not_scheduled">We couldn\'t complete this action, and didn\'t schedule this page.</string>
+    <string name="error_page_not_submitted">We couldn\'t complete this action, and didn\'t submit this page for review.</string>
+
+    <string name="error_media_recover_page" translatable="false">@string/error_media_recover_post</string>
+    <string name="error_unknown_page_type">Unknown page format</string>
+
     <!-- Posts -->
     <string name="post_list_author">Post author</string>
     <string name="post_list_author_me">Me</string>
@@ -2604,6 +2650,7 @@
     <string name="web_preview_desktop">Desktop</string>
 
     <string name="create_post_page_fab_tooltip">Create a post or page</string>
+    <string name="create_post_page_fab_tooltip_contributors">Create a post</string>
 
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
@@ -2627,15 +2674,7 @@
     <string name="new_site_creation_preview_subtitle">You\'ll be able to customize look and feel of your site later</string>
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
-    <string name="new_site_creation_site_info_header_title">Basic Information</string>
-    <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating.</string>
-    <string name="new_site_creation_site_title_hint">Site Title</string>
-    <string name="new_site_creation_tag_line_hint">Tagline</string>
-    <string name="new_site_creation_tag_line_description">The tagline is a short line of text shown right below the title.</string>
-    <string name="new_site_creation_button_skip">Skip</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>

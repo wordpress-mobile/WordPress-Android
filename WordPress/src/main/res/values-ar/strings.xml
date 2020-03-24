@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-06 15:31:41+0000
+Translation-Revision-Date: 2020-03-18 00:55:07+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="stats_insights_management_activity">النشاط</string>
+    <string name="stats_insights_management_posts_and_pages">المقالات والصفحات</string>
+    <string name="stats_insights_management_general">عام</string>
+    <string name="stats_management_screen_title">إضافة بطاقة جديدة</string>
+    <string name="stats_management_add_new_stats_card">إضافة بطاقة إحصاءات جديدة</string>
     <string name="reader_self_hosted_select_filter">استخدام زر الفلترة للعثور على مقالات في مواضيع معينة</string>
     <string name="reader_bottom_sheet_content_description">تحديد وسم أو موقع، نافذة منبثقة</string>
     <string name="reader_btn_selected_filter_tick_content_description">مُحدَّد</string>
@@ -366,7 +371,6 @@ Language: ar
     <string name="domain_registration_contact_form_input_error">الرجاء إدخال عنوان %s صالح</string>
     <string name="domains_suggestions_choose_domain">اختيار النطاق</string>
     <string name="stats_management_new">جديد</string>
-    <string name="stats_management_edit">تحرير</string>
     <string name="stats_management_dismiss_insights_news_card">تجاهل</string>
     <string name="stats_management_try_it_now">التجربة الآن</string>
     <string name="stats_management_news_card_message">اختر الإحصائيات التي ستراها، والتركيز على البيانات التي تهمك أكثر. أنقر على %1$s في الجزء السفلي من الإحصائيات لتخصيص إحصائياتك.</string>
@@ -381,8 +385,6 @@ Language: ar
     <string name="post_list_author_me">أنا</string>
     <string name="error_restoring_post">حدث خطأ أثناء استعادة المقالة</string>
     <string name="backdated_for">تاريخ سابق ليوم: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">ستظهر العناصر الموضَّحة أعلاه في علامة تبويب الرؤى الخاصة بك. اسحب وأفلت للتخصيص.</string>
-    <string name="stats_insights_add_insights_header">إضافة رؤى</string>
     <string name="stats_insights_management_title">لن ترى إلا الإحصاءات الأكثر أهمية. أضف الرؤى الخاصة بك ونظِّمها أدناه.</string>
     <string name="stats_insights_social">اجتماعي</string>
     <string name="stats_insights_annual_site_stats">إحصاءات الموقع السنوية</string>

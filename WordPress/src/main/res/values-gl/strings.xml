@@ -25,8 +25,6 @@ Language: gl_ES
     <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">Ocurriu un erro mentres se restauraba a entrada</string>
     <string name="backdated_for">Retroceder a: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Os elementos que se ven abaixo mostrarán a túa pestana de detalles. Arrastra e solta para personalizala.</string>
-    <string name="stats_insights_add_insights_header">Engadir detalles</string>
     <string name="stats_insights_management_title">Só ves as estatísticas máis relevantes. Engade e organiza os teus detalles abaixo.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estatísticas anuais do sitio</string>
