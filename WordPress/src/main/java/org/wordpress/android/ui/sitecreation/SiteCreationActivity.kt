@@ -22,13 +22,10 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
-import org.wordpress.android.ui.sitecreation.misc.OnSkipClickedListener
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
@@ -37,10 +34,6 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment
-import org.wordpress.android.ui.sitecreation.siteinfo.SiteCreationSiteInfoFragment
-import org.wordpress.android.ui.sitecreation.siteinfo.SiteInfoScreenListener
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsFragment
-import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -48,11 +41,8 @@ import javax.inject.Inject
 
 class SiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
-        VerticalsScreenListener,
         DomainsScreenListener,
-        SiteInfoScreenListener,
         SitePreviewScreenListener,
-        OnSkipClickedListener,
         OnHelpClickedListener,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface {
@@ -122,10 +112,6 @@ class SiteCreationActivity : AppCompatActivity(),
         mainViewModel.onSegmentSelected(segmentId)
     }
 
-    override fun onVerticalSelected(verticalId: String) {
-        mainViewModel.onVerticalsScreenFinished(verticalId)
-    }
-
     override fun onDomainSelected(domain: String) {
         mainViewModel.onDomainsScreenFinished(domain)
     }
@@ -138,33 +124,18 @@ class SiteCreationActivity : AppCompatActivity(),
         mainViewModel.onSitePreviewScreenFinished(createSiteState)
     }
 
-    override fun onSkipClicked() {
-        mainViewModel.onSkipClicked()
-    }
-
     override fun onHelpClicked(origin: Origin) {
         ActivityLauncher.viewHelpAndSupport(this, origin, null, null)
-    }
-
-    override fun onSiteInfoFinished(siteTitle: String, tagLine: String?) {
-        mainViewModel.onInfoScreenFinished(siteTitle, tagLine)
     }
 
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
             SEGMENTS -> SiteCreationSegmentsFragment.newInstance(screenTitle)
-            VERTICALS ->
-                SiteCreationVerticalsFragment.newInstance(
-                        screenTitle,
-                        target.wizardState.segmentId!!
-                )
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle,
-                    target.wizardState.siteTitle,
                     target.wizardState.segmentId!!
             )
-            SITE_INFO -> SiteCreationSiteInfoFragment.newInstance(screenTitle)
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
         }
         slideInFragment(fragment, target.wizardStep.toString())

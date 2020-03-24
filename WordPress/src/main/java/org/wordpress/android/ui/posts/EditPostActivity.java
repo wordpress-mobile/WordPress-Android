@@ -1414,7 +1414,6 @@ public class EditPostActivity extends AppCompatActivity implements
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
             AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite,
                     BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap());
-            showPopup = true;
         }
 
         if (showPopup) {
@@ -2711,6 +2710,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocksList) {
+        // Note that this method is also used to track startup performance
+        // It assumes this is being called when the editor has finished loading
+        // If you need to refactor this, please ensure that the startup_time_ms property
+        // is still reflecting the actual startup time of the editor
         mPostEditorAnalyticsSession.start(unsupportedBlocksList);
     }
 

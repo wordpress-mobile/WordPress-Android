@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-15 06:41:15+0000
+Translation-Revision-Date: 2020-02-25 07:13:34+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="reader_self_hosted_select_filter">Folosește butonul de filtrare pentru a găsi articole pentru anumite subiecte</string>
+    <string name="reader_bottom_sheet_content_description">Selectează o etichetă sau un sit, ferestră popup</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Selectat(ă)</string>
+    <string name="reader_btn_select_filter_content_description">Selectează un sit sau o etichetă pentru a filtra articolele</string>
+    <string name="reader_btn_remove_filter_content_description">Înlătură filtrul curent</string>
+    <string name="reader_title_subs">Administrează etichetele și siturile</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Autentifică-te în WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Autentifică-te în WordPress.com pentru a vedea ultimele articole pentru etichetele pe care le urmărești</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Autentifică-te în WordPress.com pentru a vedea ultimele din siturile pe care le urmărești</string>
     <string name="gutenberg_native_template_preview">Previzualizare șablon</string>
     <string name="gutenberg_native_replace_current_block">Înlocuiește blocul curent</string>
     <string name="gutenberg_native_add_to_end">Adaugă la sfârșit</string>
@@ -1482,7 +1491,7 @@ Language: ro
     <string name="comment_q_action_done_generic">Acțiune terminată!</string>
     <string name="comment_liked">Comentariu apreciat</string>
     <string name="signout">Dezautentificare</string>
-    <string name="sign_in_wpcom">Autentificare la WordPress.com</string>
+    <string name="sign_in_wpcom">Autentifică-te în WordPress.com</string>
     <string name="reader_label_global_related_posts">Mai multe pe WordPress.com</string>
     <string name="reader_label_local_related_posts">Mai multe în %s</string>
     <string name="preference_open_device_settings">Deschide setări dispozitiv</string>
@@ -1847,7 +1856,7 @@ Language: ro
     <string name="stats_insights">Privire generală</string>
     <string name="me_disconnect_from_wordpress_com">Dezautentificare din WordPress.com</string>
     <string name="me_btn_login_logout">Autentificare/Deautentificare</string>
-    <string name="me_connect_to_wordpress_com">Conectare la WordPress.com</string>
+    <string name="me_connect_to_wordpress_com">Autentifică-te în WordPress.com</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" n-a fost ascuns pentru că este situl curent</string>
     <string name="me_btn_support">Ajutor și suport</string>
     <string name="account_settings">Setări cont</string>
@@ -1950,7 +1959,6 @@ Language: ro
     <string name="reader_hint_add_tag_or_url">Introdu un URL sau o etichetă pentru urmărire</string>
     <string name="reader_page_followed_blogs">Situri urmărite</string>
     <string name="reader_page_followed_tags">Etichete urmărite</string>
-    <string name="reader_title_subs">Etichete și situri</string>
     <string name="reader_title_tag_preview">Etichetă cititor</string>
     <string name="reader_title_blog_preview">Sit Cititor</string>
     <string name="ssl_certificate_ask_trust">Dacă în mod uzual te conectezi fără probleme la acest sit, această eroare poate să însemne că cineva încearcă să se substituie sitului și n-ar trebui să mai continui. Preferi să te încrezi în certificat oricum?</string>

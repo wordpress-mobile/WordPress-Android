@@ -1,152 +1,123 @@
-<de-DE>
-14.2:
-Zahlreiche Updates am Block-Editor:
+<ar>
+14.3:
+- إضافات مُحرِّر المكوِّن: تمت إضافة مكوِّنات الأزرار والمجموعات، ودعم مزيد من الخيارات في إعدادات مكوِّن الصور والمعرض.
+- تحسينات مُحرِّر المكوِّن: تمت إضافة دعم التمرير داخل منتقي المكوِّن وإعداداته، وتم إدخال شريط أدوات عائم لتسهيل التنقل بين المكوِّنات.
+- إصلاحات مُحرِّر المكوِّن: تم إصلاح المشكلات المتعلقة بصور العنصر النائب في أثناء رفع الصور، ورموز المشاعر في عناوين المقالات، والتفاف النص في مكوِّنات الأكواد القصيرة.
 
-* Icon zum längeren Drücken hinzugefügt, um Blöcke davor/dahinter einzufügen.
-* Die App versucht, Bilder anzuzeigen, wenn sie nach einer Verbindungsunterbrechung wieder online ist.
-* Problem mit leerem Editor behoben, wenn versucht wird, einen Beitrag mit Bildern oder Links aus einer anderen App zu erstellen.
-* Optionen für Bildgröße zum Galerieblock hinzugefügt.
-* Fehler behoben, der das Zusammenführen von Absatzblöcken verhinderte.
+</ar>
+<de-DE>
+14.3:
+- Neu im Block-Editor: Die Blöcke „Button“ und „Gruppe“ wurden hinzugefügt. Darüber hinaus werden jetzt weitere Optionen in den Bild- und Galerieblockeinstellungen.
+- Verbesserungen am Block-Editor: Support für den Bildlauf in der Blockauswahl und in den Blockeinstellungen und neue unverankerte Toolbar für einfaches Wechseln zwischen Blöcken.
 
 </de-DE>
 <en-US>
-14.2:
-Lots of updates to the block editor:
-
-* Added a long-press icon for adding blocks before/after.
-* App will try to display images when coming back online after a disconnection.
-* Resolved issue with blank editor when trying to create a post with images or links from another app.
-* Added image size options to the Gallery block.
-* Fixed a bug that prevented paragraph blocks from merging.
+14.3:
+- Block editor additions: Added Button and Group blocks, and support for more options in Image and Gallery block settings.
+- Block editor enhancements: Added scroll support inside block picker and block settings, and introduced a floating toolbar to make navigating blocks easier.
+- Block editor fixes: Fixed issues around placeholder images during image upload, emojis in post titles, and text-wrapping in Shortcode blocks.
+- Reader: Added tab filtering for better sites/tag navigation.
 
 </en-US>
 <es-ES>
-14.2:
-Muchas actualizaciones para el editor de bloques:
-
-* Añadido un icono de pulsación larga para añadir bloques antes/después.
-* La aplicación intentará mostrar las imágenes cuando vuelva a estar online después de una desconexión.
-* Resuelto un problema con el editor en blanco al intentar crear una entrada con imágenes o enlaces de otra aplicación.
-* Añadidas opciones de tamaño de imagen al bloque de galería.
-* Corregido un error que impedía la combinación de los bloques de párrafos.
-
+14.3:
+- Añadidos bloques al editor: Añadidos bloques de grupo y de botón, y compatibilidad con más opciones en los ajustes de los bloques de imagen y de galería.
+- Mejoras en el editor de bloques: Añadida compatibilidad con scroll dentro del selector de bloques y ajustes de los bloques, y se ha introducido una barra de herramientas flotante para hacer más sencilla la navegación por los bloques.
 </es-ES>
 <fr-CA>
-14.2 :
-Nombreuses mises à jour de l'éditeur de blocs :
-
-*Ajout d'une icône à pression longue pour ajouter des blocs avant/après.
-*L'application tentera d'afficher les images lors d'un retour en ligne après une déconnexion.
-*Résolution d'un problème d'éditeur vierge lors de la création d'un article contenant des images ou des liens provenant d'une autre application.
-*Ajout d'options de taille d'image au bloc de galerie.
-*Résolution d'un bug empêchant la fusion des blocs de paragraphe.
+14.3 :
+- Ajouts de l'éditeur de blocs : blocs Bouton et Groupe ajoutés, + d’options dans les réglages de bloc Image et Galerie.
+- Améliorations de l'éditeur de blocs : défilement ajouté dans le sélecteur et réglages de bloc, nouvelle barre d'outils flottante pour mieux naviguer dans les blocs.
+- Résolutions de l'éditeur de blocs : images de texte indicatif lors du chargement d’images, émojis des titres d'article et habillage du texte de blocs de code abrégé résolus.
 
 </fr-CA>
 <fr-FR>
-14.2 :
-Nombreuses mises à jour de l'éditeur de blocs :
-
-*Ajout d'une icône à pression longue pour ajouter des blocs avant/après.
-*L'application tentera d'afficher les images lors d'un retour en ligne après une déconnexion.
-*Résolution d'un problème d'éditeur vierge lors de la création d'un article contenant des images ou des liens provenant d'une autre application.
-*Ajout d'options de taille d'image au bloc de galerie.
-*Résolution d'un bug empêchant la fusion des blocs de paragraphe.
+14.3 :
+- Ajouts de l'éditeur de blocs : blocs Bouton et Groupe ajoutés, + d’options dans les réglages de bloc Image et Galerie.
+- Améliorations de l'éditeur de blocs : défilement ajouté dans le sélecteur et réglages de bloc, nouvelle barre d'outils flottante pour mieux naviguer dans les blocs.
+- Résolutions de l'éditeur de blocs : images de texte indicatif lors du chargement d’images, émojis des titres d'article et habillage du texte de blocs de code abrégé résolus.
 
 </fr-FR>
-<id>
-14.2:
-Banyak pembaruan untuk penyunting blok:
+<iw-IL>
+14.3:
+- הוספות לעורך הבלוקים: הוספנו בלוק כפתור ובלוק קבוצה ותמיכה באפשרויות נוספות בהגדרות הבלוקים של תמונה וגלריה.
+- שיפורים לעורך הבלוקים: הוספנו תמיכה בגלילה בתוך בורר הבלוקים ובהגדרות הבלוק. כמו כן, הוספנו סרגל כלים צף כדי לאפשר ניווט קל יותר בבלוקים.
+- תיקונים לעורך הבלוקים: תיקנו כמה בעיות בתמונות של מצייני המיקום שהופיעו בשלב העלאת תמונות, בסמלי Emoji בכותרות הפוסטים ובגלישת הטקסט בבלוקים של שורטקוד.
+- Reader: הוספנו לשונית לסינון כדי לאפשר ניווט יעיל יותר באתרים/בתגיות.
 
-* Menambahkan ikon tekan lama untuk menambahkan blok sebelum/sesudah.
-* Aplikasi akan mencoba menampilkan gambar saat kembali online setelah sambungan terputus.
-* Menyelesaikan masalah dengan penyunting yang kosong saat mencoba membuat pos dengan gambar atau tautan dari aplikasi lain.
-* Menambahkan pilihan ukuran gambar ke blok Galeri.
-* Memperbaiki bug yang mencegah blok paragraf tergabung.
+</iw-IL>
+<id>
+14.3:
+- Tambahan penyunting blok: Menambahkan blok Tombol dan Kelompok, dan mendukung lebih banyak opsi di pengaturan blok Gambar dan Galeri.
+- Peningkatan pada penyunting blok: Menambahkan dukungan gulir di dalam pemilih blok dan pengaturan blok, dan memperkenalkan bilah peralatan mengambang untuk mempermudah navigasi blok.
+- Perbaikan pada penyunting blok: Memperbaiki masalah seputar gambar placeholder selama pengunggahan gambar, emoji di judul pos, dan text-wrapping di blok Shortcode.
 
 </id>
 <it-IT>
-14.2:
-Molti aggiornamenti per l'editor a blocchi:
-
-*Aggiunta un'icona a pressione prolungata per aggiungere blocchi prima/dopo.
-*L'app cercherà di visualizzare le immagini quando si ritorna online dopo una disconnessione.
-*Risolto un problema con l'editor vuoto quando si provava a creare un articolo con immagini o link da un'altra app.
-*Aggiunte le opzioni delle dimensioni dell'immagine dal blocco Galleria.
-*Risolto un bug che impediva l'unione dei blocchi Paragrafo.
+14.3:
+- Aggiunte all'editor a blocchi: blocchi Pulsante e Gruppo e opzioni nelle impostazioni di Immagine e Galleria.
+- Miglioramenti all'editor a blocchi: aggiunta dello scorrimento nel selezionatore e nelle impostazioni e di una barra mobile per la navigazione.
+- Correzioni all'editor a blocchi: correzione del caricamento di immagini segnaposto, degli emoji nei titoli degli articoli e del ritorno a capo nei blocchi Shortcode.
 
 </it-IT>
-<nl-NL>
-14.2:
-Veel updates voor de blok-editor:
+<ja-JP>
+14.3:
+- ブロックエディターの追加機能 :「ボタン」ブロックと「Group」ブロックが追加され、画像ブロックとギャラリーブロックの設定で使用できるオプションが増えました。
+ブロックエディターの機能強化 :ブロックピッカー内とブロック設定内で、スクロール機能が使えるようになりました。ブロック操作を簡単にする移動式ツールバーも導入されました。
+- ブロックエディターの修正 :画像アップロード中のプレースホルダー画像、投稿名の絵文字、ショートコードブロックでのワードラップ機能で発生していた問題を修正しました。
+- Reader:サイトやタグへのナビゲーションを向上するタブのフィルタリング機能を追加しました。
 
-* Pictogram voor iets langer indrukken toegevoegd om vooraf/achteraf blokken toe te voegen.
-* App probeert afbeeldingen weer te geven als je weer online bent nadat de internetverbinding verbroken is geweest.
-* Probleem opgelost met lege editor die een bericht probeert te maken met afbeeldingen of links van een andere app.
-* Beeldformaatopties toegevoegd aan het galerieblok.
-* Probleem opgelost waarbij werd voorkomen dat paragraafblokken werden samengevoegd.
+</ja-JP>
+<ko-KR>
+14.3:
+- 블록 편집기 추가 기능: 버튼 및 그룹 블록, 이미지 및 갤러리 블록 설정의 더 많은 옵션을 위한 지원을 추가했습니다.
+- 블록 편집기의 향상된 기능: 블록 선택기 및 블록 설정 내부에 스크롤 지원을 추가하고 블록을 보다 쉽게 탐색할 수 있는 플로팅 도구 모음을 도입했습니다.
+- 블록 편집기 수정 사항: 이미지 업로드 중 자리 표시자 이미지, 글 제목의 이모티콘 및 쇼트코드 블록의 텍스트 줄 바꿈 문제를 수정했습니다.
+- 리더: 더 효과적인 사이트/태그 탐색을 위해 탭 필터링을 추가했습니다.
+
+</ko-KR>
+<nl-NL>
+14.3:
+- Aanvullingen op de blokeditor: de knop- en groepblokken zijn toegevoegd en er wordt ondersteuning voor meer opties geboden in de instellingen van het afbeeldings- en galerijblok.
+- Verbeteringen aan de blokeditor: ondersteuning voor scrollen toegevoegd aan de blokkiezer en blokinstellingen en een zwevende werkbalk geïntroduceerd om het navigeren in blokken eenvoudiger te maken.
 
 </nl-NL>
-<pt-BR>
-14.2:
-Várias melhorias no editor de blocos:
-
-* Adicionado um ícone de toque longo para adição de blocos antes e depois.
-* O aplicativo tentará exibir imagens quando ficar online depois de ser desconectado.
-* Solução do problema que mostrava o editor vazio ao tentar criar um post com imagens ou links de outro aplicativo.
-* Agora há opções de tamanho de imagem no bloco de galeria.
-* Solução de um erro que impedia a junção de blocos de paragrafo.
-</pt-BR>
 <ru-RU>
-14.2:
-Уйма обновлений редактора блоков:
-
-* Добавлен значок при длительном нажатии для добавления блоков перед или после.
-* Приложение будет повторно пытаться загрузить изображения после сбоев сетевого подключения.
-* Исправлена проблема с пустым редактором при создании записи с изображеними или ссылками в другом приложении.
-* В блок галереи добавлены варианты размеров изображений.
-* Исправлена ошибка при объединении блоков параграфов.
+14.3:
+- Добавления к редактору блоков: Блоки кнопка и группа, поддержка большего количества настроек для блоков изображений и галереи.
+- Улучшения редактора блоков: поддержка прокрутки при выборе блоков и в настройках, плавающая панель инструментов для навигации по блокам.
+- Исправления редактора блоков: проблемы с изображениями-заменителями во время загрузки, эмодзи в названиях записей, перенос текста в блоках шорткодов. 
+- Чтиво: фильтрация вкладок для улучшенной навигации по меткам/сайтам.
 
 </ru-RU>
 <sv-SE>
-14.2:
-Många uppdateringar av blockredigeraren:
-
-* Ny ikon vid långt tryck för att lägga till block före/efter.
-* Appen försöker att visa bilder när förbindelsen återkommer efter ett avbrott.
-* Löst problem med tom redigerare vid försök att skapa ett inlägg med bilder eller länkar från annan app.
-* Lagt till alternativ för bildstorlekar i galleriblocket.
-* Rättat ett fel som inte lät styckeblock kombineras.
+14.3:
+- I blockredigeraren: Nya block för knapp och grupp, fler inställningar i bild- och galleriblock.
+- Förbättringar av blockredigeraren: Rullist i blockväljare och blockinställningar, ny flytande verktygslist för enklare blocknavigering.
+- Rättelser i blockredigeraren: Löst problem med platshållare i samband med bilduppladdning, användning av emoji i inläggsrubriker och radbrytning i kordkodsblock.
+- Läsaren: Lagt till flikfiltrering för bättre navigaton mellan webbplatser och etiketter.
 
 </sv-SE>
 <tr-TR>
-14.2:
-Blok düzenleyicide birçok güncelleme:
+14.3:
+- Blok düzenleyici eklemeleri: Düğme ve Grup bloklarının yanı sıra, Görsel ve Galeri bloku ayarlarına daha fazla seçenek desteği eklendi.
+- Blok düzenleyici geliştirmeleri: Blok seçici ve blok ayarlarına kaydırma desteği ve bloklarda gezinmeyi kolaylaştırmak için kayan bir araç çubuğu eklendi.
+- Blok düzenleyici düzeltmeleri: Görsel karşıya yüklemesi sırasında yer tutucu görselleri, yazı başlığındaki emojiler ve Kısa Kod bloklarında yazı kaydırma ile ilgili sorunlar düzeltildi.
 
-* Önce / sonra blok eklemek için uzun basın simgesi eklendi.
-* Uygulama, bağlantı kesildikten sonra tekrar çevrimiçi olduğunda görüntüleri göstermeye çalışacaktır.
-* Başka bir uygulamadan resimler veya bağlantılar içeren bir yazı oluşturmaya çalışırken boş düzenleyici ile ilgili sorun çözüldü.
-* Galeri bloğuna görüntü boyutu seçenekleri eklendi.
-* Paragraf bloklarının birleştirilmesini engelleyen bir hata düzeltildi.
 </tr-TR>
 <zh-CN>
-14.2：
-对区块编辑器进行了许多更新：
-
-* 添加了用于在之前/之后添加区块的长按图标。
-* 断开连接然后重新连接后，应用程序会尝试显示图片。
-* 解决了尝试创建包含图片或其他应用程序链接的文章时出现的空白编辑器问题。
-* 在图库区块中添加了图片大小选项。
-* 修复了阻止段落块合并的错误。
+14.3：
+- 区块编辑器新增内容：添加了“按钮”和“组”区块，并且在“图片”和“图库”区块设置中支持更多选项。
+- 区块编辑器增强功能：在区块选择器和区块设置中添加了滚动支持，同时引入了浮动工具栏，使得区块间导航变得更加轻松。
+- 区块编辑器修复：修复了图片上传过程中的占位符图片相关问题、文章标题中的表情符号问题以及短代码区块中的文字环绕问题。
+- 阅读器：添加了选项卡过滤功能，以便在站点/标签间更方便地进行导航。
 
 </zh-CN>
 <zh-TW>
-14.2：
-許多區塊編輯器更新︰
-
-* 新增在之前/之後新增區塊的長按圖示。
-* 應用程式會嘗試在中斷連線又重新上線時顯示圖片。
-* 解決嘗試使用其他應用程式建立包含圖片或連結的文章時的空白編輯器問題。
-* 為「圖庫」區塊新增圖片大小選項。
-* 修正導致段落區塊無法合併的錯誤。
+14.3：
+- 區塊編輯器新增功能：新增「按鈕」和「群組」區塊，並在「圖片」和「圖庫」區塊設定中支援更多選項。
+- 區塊編輯器增強功能：在區塊挑選器和區塊設定旁新增捲動功能支援，並推出讓區塊瀏覽更輕鬆的浮動工具列。
+- 區塊編輯器修正：修正圖片上傳時預留位置圖片的問題、文章標題的表情符號問題，以及短代碼區塊中的文繞圖問題。
+- 讀取器：新增分頁篩選功能，改善網站/標籤瀏覽體驗。
 
 </zh-TW>
