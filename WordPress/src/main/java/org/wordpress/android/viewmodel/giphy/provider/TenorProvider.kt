@@ -67,16 +67,10 @@ internal class TenorProvider @JvmOverloads constructor(
                 position.toString(),
                 loadSize,
                 onSuccess = { response ->
-                    response.results.map { it.toMutableGifMediaViewModel() }
-                            .let { gifs ->
-                                val nextPosition = response.next.toIntOrNull()?.let { it + 1 }
-                                onSuccess(gifs, nextPosition)
-                            }
+                    handleResponse(response, onSuccess)
                 },
                 onFailure = {
-                    it?.let { throwable ->
-                        handleFailure(throwable, onFailure)
-                    }
+                    it?.let { throwable -> handleFailure(throwable, onFailure) }
                 }
         )
     }
@@ -124,8 +118,24 @@ internal class TenorProvider @JvmOverloads constructor(
     }
 
     /**
+     * If the search request succeeds an [List] of [MutableGiphyMediaViewModel] will be passed with the next position
+     * for pagination. If there's no next position provided, it will be passed as null.
+     */
+    private fun handleResponse(
+        response: GifsResponse,
+        onSuccess: (List<GiphyMediaViewModel>, Int?) -> Unit
+    ) {
+        response.results.map { it.toMutableGifMediaViewModel() }
+                .let { gifs ->
+                    val nextPosition = response.next.toIntOrNull()
+                    onSuccess(gifs, nextPosition)
+                }
+    }
+
+    /**
      * If the search request fails an [GifRequestFailedException] will be passed with the API
      * message. If there's no message provided, a generic message will be applied.
+     *
      */
     private inline fun handleFailure(
         throwable: Throwable,

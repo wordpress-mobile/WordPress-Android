@@ -57,13 +57,33 @@ class TenorProviderTest {
     fun `search call should invoke onSuccess with expected GIF list and nextPosition for valid query`() {
         var onSuccessWasCalled = false
         whenever(gifResponse.next).thenReturn("0")
+
+        tenorProviderUnderTest.search("test",
+                0,
+                onSuccess = { actualViewModelCollection, _ ->
+                    onSuccessWasCalled = true
+                    assertEquals(expectedGifMediaViewModelCollection, actualViewModelCollection)
+                },
+                onFailure = {
+                    fail("Failure handler should not be called")
+                })
+
+        verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
+        val capturedCallback = callbackCaptor.value
+        capturedCallback.success(ApplicationProvider.getApplicationContext(), gifResponse)
+        assertTrue("onSuccess should be called", onSuccessWasCalled)
+    }
+
+    @Test
+    fun `search call should invoke onSuccess with expected nextPosition for a valid query`() {
+        var onSuccessWasCalled = false
+        whenever(gifResponse.next).thenReturn("0")
         val expectedNextPosition = 0
 
         tenorProviderUnderTest.search("test",
                 0,
-                onSuccess = { actualViewModelCollection, actualNextPosition ->
+                onSuccess = { _, actualNextPosition ->
                     onSuccessWasCalled = true
-                    assertEquals(expectedGifMediaViewModelCollection, actualViewModelCollection)
                     assertEquals(expectedNextPosition, actualNextPosition)
                 },
                 onFailure = {

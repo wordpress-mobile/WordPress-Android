@@ -69,17 +69,30 @@ class GiphyPickerDataSource(
 
         when {
             // Do not do any API call if the [searchQuery] is empty
-            searchQuery.isBlank() ->
-                callback.onResult(emptyList(), startPosition, 0)
-
-            else -> gifProvider.search(searchQuery, startPosition, params.requestedLoadSize,
-                    onSuccess = { gifs, nextPosition ->
-                        val totalCount = nextPosition ?: gifs.size
-                        callback.onResult(gifs, startPosition, totalCount)
-                    },
-                    onFailure = { callback.onResult(emptyList(), startPosition, 0) }
-            )
+            searchQuery.isBlank() -> callback.onResult(emptyList(), startPosition, 0)
+            else -> requestInitialSearch(params, callback)
         }
+    }
+
+    /**
+     * Basic search request handling to initialize the list for the loadInitial function
+     */
+    private fun requestInitialSearch(
+        params: LoadInitialParams,
+        callback: LoadInitialCallback<GiphyMediaViewModel>
+    ) {
+        val startPosition = 0
+        gifProvider.search(searchQuery, startPosition, params.requestedLoadSize,
+                onSuccess = { gifs, nextPosition ->
+                    // nextPosition is increased by 1 to represents the total amount instead of a positional index
+                    val totalCount = nextPosition?.let { it + 1 } ?: gifs.size
+                    callback.onResult(gifs, startPosition, totalCount)
+                },
+                onFailure = {
+                    initialLoadError = it
+                    callback.onResult(emptyList(), startPosition, 0)
+                }
+        )
     }
 
     /**
@@ -93,7 +106,10 @@ class GiphyPickerDataSource(
                 searchQuery,
                 params.startPosition,
                 params.loadSize,
-                onSuccess = { gifs, _ -> callback.onResult(gifs) },
+                onSuccess = {
+                    gifs, _ -> callback.onResult(gifs)
+                    retryAllFailedRangeLoads()
+                },
                 onFailure = {
                     failedRangeLoadArguments.add(RangeLoadArguments(params, callback))
                     if (_rangeLoadErrorEvent.value == null) _rangeLoadErrorEvent.value = it
