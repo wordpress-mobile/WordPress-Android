@@ -1515,10 +1515,15 @@ class ReaderPostDetailFragment : Fragment(),
 
     /**
      * Returns true if the blog post can be reblogged
-     *
-     * TODO: Validate that no extra business logic is needed here
      */
-    private fun canBeReblogged(): Boolean = this.post != null && accountStore.hasAccessToken()
+    private fun canBeReblogged(): Boolean {
+        this.post?.let {
+            if (!it.isPrivate && accountStore.hasAccessToken()) {
+                return true
+            }
+        }
+        return false
+    }
 
     private fun canShowCommentCount(): Boolean {
         val post = this.post ?: return false

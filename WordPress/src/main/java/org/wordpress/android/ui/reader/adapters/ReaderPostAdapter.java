@@ -1015,13 +1015,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     /**
      * Sets reblog button visibility and action
-     * TODO: Validate that no extra business logic is needed for button visibility
      *
      * @param holder the view holder
      * @param post   the current reader post
      */
     private void showReblogButton(final ReaderPostViewHolder holder, final ReaderPost post) {
-        boolean canBeReblogged = !mIsLoggedOutReader;
+        boolean canBeReblogged = !mIsLoggedOutReader && !post.isPrivate;
         if (canBeReblogged) {
             holder.mReblog.setCount(0);
             holder.mReblog.setVisibility(View.VISIBLE);
