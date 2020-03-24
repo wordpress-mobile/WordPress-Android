@@ -144,7 +144,7 @@ class GiphyPickerViewModel @Inject constructor(
         val pagedListConfig = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPrefetchDistance(15)
-                .setInitialLoadSizeHint(50)
+                .setInitialLoadSizeHint(42)
                 .setPageSize(21)
                 .build()
 
