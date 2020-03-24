@@ -1713,6 +1713,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "featured_image_upload_retry_clicked_post_settings";
             case FEATURED_IMAGE_REMOVE_CLICKED_POST_SETTINGS:
                 return "featured_image_remove_clicked_post_settings";
+            case MEDIA_EDITOR_SHOWN:
+                return "media_editor_shown";
+            case MEDIA_EDITOR_USED:
+                return "media_editor_used";
         }
         return null;
     }
