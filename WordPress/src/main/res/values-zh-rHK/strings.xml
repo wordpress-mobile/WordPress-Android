@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-05 00:54:14+0000
+Translation-Revision-Date: 2020-03-20 01:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="stats_insights_management_activity">活動</string>
+    <string name="stats_insights_management_posts_and_pages">文章與頁面</string>
+    <string name="stats_insights_management_general">一般</string>
+    <string name="stats_management_screen_title">新增卡片</string>
+    <string name="stats_management_add_new_stats_card">新增統計資料卡片</string>
     <string name="reader_self_hosted_select_filter">使用篩選按鈕尋找特定主題的文章</string>
     <string name="reader_bottom_sheet_content_description">選擇一個標籤或網站、快顯視窗</string>
     <string name="reader_btn_selected_filter_tick_content_description">已選取</string>
@@ -364,7 +369,6 @@ Language: zh_TW
     <string name="domain_registration_contact_form_input_error">請輸入有效的 %s</string>
     <string name="domains_suggestions_choose_domain">選擇網域</string>
     <string name="stats_management_new">新增</string>
-    <string name="stats_management_edit">編輯</string>
     <string name="stats_management_dismiss_insights_news_card">忽略</string>
     <string name="stats_management_try_it_now">立即試試</string>
     <string name="stats_management_news_card_message">選擇想查看的統計資料，並專注於你最在乎的資料。點選「洞察報告」底端的 %1$s，自訂你的統計資料。</string>
@@ -379,8 +383,6 @@ Language: zh_TW
     <string name="post_list_author_me">我</string>
     <string name="error_restoring_post">還原文章時發生錯誤</string>
     <string name="backdated_for">回溯至：%s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">上方顯示的項目會顯示在你的「洞察報告」分頁中。拖放以進行自訂。</string>
-    <string name="stats_insights_add_insights_header">新增洞察報告</string>
     <string name="stats_insights_management_title">只查看最相關的統計資料。在下方新增及管理你的洞察報告。</string>
     <string name="stats_insights_social">社交</string>
     <string name="stats_insights_annual_site_stats">年度網站統計</string>

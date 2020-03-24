@@ -1,6 +1,0 @@
-14.3:
-- Añadidos bloques al editor: Añadidos bloques de grupo y de botón, y compatibilidad con más opciones en los ajustes de los bloques de imagen y de galería.
-- Mejoras en el editor de bloques: Añadida compatibilidad con scroll dentro del selector de bloques y ajustes de los bloques, y se ha introducido una barra de herramientas flotante para hacer más sencilla la navegación por los bloques.
-- Correcciones en el editor de bloques: Corregidos errores con las imágenes de marcador de posición durante la subida de imágenes, emojis en títulos de entradas y envoltura de texto en los bloques de shortcode.
-- Lector: Añadido filtrado de pestañas para una mejor navegación por sitios/etiquetas.
-

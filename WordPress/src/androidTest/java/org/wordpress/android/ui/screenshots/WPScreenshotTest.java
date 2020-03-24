@@ -84,7 +84,7 @@ public class WPScreenshotTest extends BaseTest {
         scrollToThenClickOn(R.id.quick_action_posts_button);
 
         // Choose "Drafts"
-        selectItemWithTitleInTabLayout(getTranslatedString(R.string.post_list_drafts), R.id.tabLayout);
+        selectItemWithTitleInTabLayout(getTranslatedString(R.string.post_list_tab_drafts), R.id.tabLayout);
 
         // Get a screenshot of the writing feature (without image)
         String name = "2-create-beautiful-posts-and-pages";

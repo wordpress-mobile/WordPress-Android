@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-05 00:54:14+0000
+Translation-Revision-Date: 2020-03-18 00:55:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="stats_insights_management_activity">Aktivitas</string>
+    <string name="stats_insights_management_posts_and_pages">Pos dan Halaman</string>
+    <string name="stats_insights_management_general">Umum</string>
+    <string name="stats_management_screen_title">Tambahkan Kartu Baru</string>
+    <string name="stats_management_add_new_stats_card">Tambahkan kartu statistik baru</string>
     <string name="reader_self_hosted_select_filter">Gunakan tombol penyaring untuk menemukan pos pada subjek tertentu</string>
     <string name="reader_bottom_sheet_content_description">Pilih Tag atau Situs, Jendela Pop Up</string>
     <string name="reader_btn_selected_filter_tick_content_description">Terpilih</string>
@@ -366,7 +371,6 @@ Language: id
     <string name="domain_registration_contact_form_input_error">Masukkan %s yang valid</string>
     <string name="domains_suggestions_choose_domain">Pilih Domain</string>
     <string name="stats_management_new">Baru</string>
-    <string name="stats_management_edit">Sunting</string>
     <string name="stats_management_dismiss_insights_news_card">Tutup</string>
     <string name="stats_management_try_it_now">Coba sekarang</string>
     <string name="stats_management_news_card_message">Pilih statistik apa yang ingin dilihat, dan fokus pada data yang paling Anda perhatikan. Ketuk %1$s di bagian bawah Wawasan untuk menyesuaikan statistik Anda.</string>
@@ -381,8 +385,6 @@ Language: id
     <string name="post_list_author_me">Saya</string>
     <string name="error_restoring_post">Terjadi error saat memulihkan pos</string>
     <string name="backdated_for">Dimundurkan selama: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Item yang ditampilkan di atas akan ditampilkan di tab Wawasan. Seret dan lepas untuk menyesuaikan.</string>
-    <string name="stats_insights_add_insights_header">Tambahkan Wawasan</string>
     <string name="stats_insights_management_title">Hanya lihat statistik yang paling relevan. Tambahkan dan kelola wawasan Anda di bawah ini.</string>
     <string name="stats_insights_social">Sosial</string>
     <string name="stats_insights_annual_site_stats">Statistik Situs Tahunan</string>
