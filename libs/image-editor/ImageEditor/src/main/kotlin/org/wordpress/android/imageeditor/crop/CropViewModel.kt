@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
+import org.wordpress.android.imageeditor.ImageEditor.TrackableAction
+import org.wordpress.android.imageeditor.ImageEditor.TrackableEvent
 import org.wordpress.android.imageeditor.viewmodel.Event
 import java.io.File
 import org.wordpress.android.imageeditor.R
@@ -28,6 +30,9 @@ class CropViewModel : ViewModel() {
 
     private val _navigateBackWithCropResult = MutableLiveData<CropResult>()
     val navigateBackWithCropResult: LiveData<CropResult> = _navigateBackWithCropResult
+
+    private val _trackEvent = MutableLiveData<Event<Pair<TrackableEvent, TrackableAction?>>>()
+    val trackEvent: LiveData<Event<Pair<TrackableEvent, TrackableAction?>>> = _trackEvent
 
     private lateinit var cacheDir: File
     private lateinit var inputFilePath: String
@@ -86,6 +91,7 @@ class CropViewModel : ViewModel() {
     }
 
     fun onDoneMenuClicked() {
+        _trackEvent.value = Event(Pair(TrackableEvent.MEDIA_EDITOR_USED, TrackableAction.CROP))
         updateImageCropAndSaveState(ImageCropAndSaveStartState)
     }
 

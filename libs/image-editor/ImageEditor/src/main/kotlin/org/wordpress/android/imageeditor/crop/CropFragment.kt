@@ -16,6 +16,7 @@ import org.wordpress.android.imageeditor.R
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
+import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveStartState
@@ -89,6 +90,12 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                     is ImageCropAndSaveSuccessState -> { // Do nothing
                     }
                 }
+            }
+        })
+
+        viewModel.trackEvent.observe(this, Observer { trackDataEvent ->
+            trackDataEvent?.getContentIfNotHandled()?.let { data ->
+                ImageEditor.instance.trackEventWithActionData(data)
             }
         })
 

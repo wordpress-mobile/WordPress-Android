@@ -9,6 +9,8 @@ import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertNull
 import org.junit.Rule
+import org.wordpress.android.imageeditor.ImageEditor.TrackableAction
+import org.wordpress.android.imageeditor.ImageEditor.TrackableEvent
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveStartState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveSuccessState
@@ -65,6 +67,15 @@ class CropViewModelTest {
         viewModel.onDoneMenuClicked()
         assertThat(requireNotNull(viewModel.cropAndSaveImageStateEvent.value).peekContent())
                 .isInstanceOf(ImageCropAndSaveStartState::class.java)
+    }
+
+    @Test
+    fun `media editor used event with crop action tracking triggered on done menu click`() {
+        viewModel.onDoneMenuClicked()
+        assertThat(requireNotNull(viewModel.trackEvent.value).peekContent().first)
+                .isEqualTo(TrackableEvent.MEDIA_EDITOR_USED)
+        assertThat(requireNotNull(viewModel.trackEvent.value).peekContent().second)
+                .isEqualTo(TrackableAction.CROP)
     }
 
     @Test
