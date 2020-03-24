@@ -2193,6 +2193,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.refreshViews();
                         }
+                    } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URI)) {
+                        mEditorMedia.addNewMediaToEditorAsync(
+                                Uri.parse(data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI)), false);
                     }
                     break;
                 case RequestCodes.MEDIA_LIBRARY:
@@ -2426,7 +2429,13 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO, allowMultipleSelection);
+        if (allowMultipleSelection) {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_IMAGE_PICKER, mSite,
+                    mEditPostRepository.getId());
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER, mSite,
+                    mEditPostRepository.getId());
+        }
     }
 
     @Override
