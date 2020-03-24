@@ -1,11 +1,11 @@
-package org.wordpress.android.viewmodel.gifs
+package org.wordpress.android.viewmodel.giphy
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.DataSource
 import androidx.paging.DataSource.Factory
-import org.wordpress.android.viewmodel.gifs.provider.GifProvider
+import org.wordpress.android.viewmodel.giphy.provider.GifProvider
 import javax.inject.Inject
 
 /**

@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.gifs
+package org.wordpress.android.viewmodel.giphy
 
 import android.content.Context
 import android.webkit.MimeTypeMap

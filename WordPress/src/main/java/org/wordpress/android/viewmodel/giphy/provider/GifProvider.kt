@@ -1,6 +1,6 @@
-package org.wordpress.android.viewmodel.gifs.provider
+package org.wordpress.android.viewmodel.giphy.provider
 
-import org.wordpress.android.viewmodel.gifs.GiphyMediaViewModel
+import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
 
 /**
  * Interface to interact with a GIF provider API avoiding coupling with the concrete implementation

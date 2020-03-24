@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.gifs
+package org.wordpress.android.viewmodel.giphy
 
 import android.net.Uri
 import androidx.lifecycle.LiveData

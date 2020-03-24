@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.gifs.provider
+package org.wordpress.android.viewmodel.giphy.provider
 
 import android.content.Context
 import android.net.Uri
@@ -13,9 +13,9 @@ import com.tenor.android.core.response.WeakRefCallback
 import com.tenor.android.core.response.impl.GifsResponse
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R.string
-import org.wordpress.android.viewmodel.gifs.GiphyMediaViewModel
-import org.wordpress.android.viewmodel.gifs.MutableGiphyMediaViewModel
-import org.wordpress.android.viewmodel.gifs.provider.GifProvider.GifRequestFailedException
+import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
+import org.wordpress.android.viewmodel.giphy.MutableGiphyMediaViewModel
+import org.wordpress.android.viewmodel.giphy.provider.GifProvider.GifRequestFailedException
 
 /**
  * Implementation of a GifProvider using the Tenor GIF API as provider

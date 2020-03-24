@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.gifs.provider
+package org.wordpress.android.viewmodel.giphy.provider
 
 import android.net.Uri
 import com.nhaarman.mockitokotlin2.mock
@@ -7,7 +7,7 @@ import com.tenor.android.core.constant.MediaCollectionFormat
 import com.tenor.android.core.model.impl.Media
 import com.tenor.android.core.model.impl.MediaCollection
 import com.tenor.android.core.model.impl.Result
-import org.wordpress.android.viewmodel.gifs.MutableGiphyMediaViewModel
+import org.wordpress.android.viewmodel.giphy.MutableGiphyMediaViewModel
 
 class TenorProviderTestUtils {
     companion object {

@@ -28,10 +28,10 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ViewModelFactory
-import org.wordpress.android.viewmodel.gifs.GiphyMediaViewModel
-import org.wordpress.android.viewmodel.gifs.GiphyPickerViewModel
-import org.wordpress.android.viewmodel.gifs.GiphyPickerViewModel.EmptyDisplayMode
-import org.wordpress.android.viewmodel.gifs.GiphyPickerViewModel.State
+import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
 import javax.inject.Inject
 
 /**

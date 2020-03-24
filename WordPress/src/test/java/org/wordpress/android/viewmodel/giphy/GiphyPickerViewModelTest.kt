@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.gifs
+package org.wordpress.android.viewmodel.giphy
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PositionalDataSource.LoadInitialCallback
@@ -19,8 +19,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.viewmodel.gifs.GiphyPickerViewModel.EmptyDisplayMode
-import org.wordpress.android.viewmodel.gifs.GiphyPickerViewModel.State
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
 import java.util.Random
 import java.util.UUID
 

@@ -5,7 +5,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.viewmodel.gifs.GiphyMediaViewModel
+import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
 
 /**
  * An [RecyclerView] adapter to be used with the [PagedList] created by [GiphyPickerViewModel]
