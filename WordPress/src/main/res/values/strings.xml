@@ -2253,11 +2253,13 @@
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
 
-    <string name="giphy_picker_search_hint">Search Giphy</string>
+    <!-- GIFs -->
+    <string name="giphy_picker_search_hint">Search Tenor</string>
     <string name="giphy_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
     <string name="giphy_picker_empty_search_list">No media matching your search</string>
     <string name="giphy_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
-    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
+    <string name="gifs_list_search_returned_unknown_error">Sorry, there was a problem</string>
+    <string name="giphy_powered_by_giphy">Powered by Tenor</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -2657,10 +2659,6 @@
     <string name="post_list_tab_trashed_posts">Trashed</string>
     <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
-
-    <!-- Gifs -->
-    <string name="gifs_list_search_nothing_found">No gifs matching your search</string>
-
 
     <!-- Web Preview -->
     <string name="web_preview_default">Default</string>

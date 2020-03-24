@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.gif.provider
+package org.wordpress.android.viewmodel.gifs.provider
 
 import android.net.Uri
 import com.nhaarman.mockitokotlin2.mock
@@ -7,8 +7,7 @@ import com.tenor.android.core.constant.MediaCollectionFormat
 import com.tenor.android.core.model.impl.Media
 import com.tenor.android.core.model.impl.MediaCollection
 import com.tenor.android.core.model.impl.Result
-import org.wordpress.android.viewmodel.gif.MutableGifMediaViewModel
-import org.wordpress.android.viewmodel.gif.provider.GifProvider.Gif
+import org.wordpress.android.viewmodel.gifs.MutableGifMediaViewModel
 
 class TenorProviderTestUtils {
     companion object {
@@ -49,17 +48,13 @@ class TenorProviderTestUtils {
         private fun createMediaMock(mockContent: String) =
                 mock<Media>().apply { whenever(this.url).thenReturn(mockContent) }
 
-        private fun createExpectedGifMediaViewModel(mockContent: String) =
+        private fun createExpectedGifMediaViewModel(expectedContent: String) =
                 MutableGifMediaViewModel(
-                        mockContent,
-                        mockContent,
-                        createExpectedGif(mockContent)
+                        expectedContent,
+                        Uri.parse("$expectedContent gif_nano"),
+                        Uri.parse("$expectedContent gif_tiny"),
+                        Uri.parse("$expectedContent gif"),
+                        expectedContent
                 )
-
-        private fun createExpectedGif(expectedContent: String) = Gif(
-                Uri.parse("$expectedContent gif_nano"),
-                Uri.parse("$expectedContent gif_tiny"),
-                Uri.parse("$expectedContent gif")
-        )
     }
 }

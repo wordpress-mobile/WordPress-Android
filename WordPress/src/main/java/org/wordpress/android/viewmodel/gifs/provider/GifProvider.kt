@@ -1,22 +1,20 @@
-package org.wordpress.android.viewmodel.gif.provider
+package org.wordpress.android.viewmodel.gifs.provider
 
-import android.net.Uri
-import org.wordpress.android.R
-import org.wordpress.android.viewmodel.gif.GifMediaViewModel
+import org.wordpress.android.viewmodel.gifs.GifMediaViewModel
 
 /**
  * Interface to interact with a GIF provider API avoiding coupling with the concrete implementation
  */
 interface GifProvider {
     /**
-     * Request GIF search given a query string
+     * Request GIF search from a query string
      *
-     * The [query] parameter represents the desired text to be search within the provider.
+     * The [query] parameter represents the desired text to search within the provider.
      * [position] to request results starting from a given position for that [query]
      * [loadSize] to request a result list limited to a specific amount
      * [onSuccess] will be called if the Provider had success finding GIFs
      * and will deliver a List<Gif> with all matching GIFs
-     * [onFailure] will be called if the Provider didn't succeeded with the task of bringing GIFs,
+     * [onFailure] will be called if the Provider didn't succeed with the task of bringing GIFs,
      * the delivered String will describe the error to be presented to the user
      */
     fun search(
@@ -28,16 +26,7 @@ interface GifProvider {
     )
 
     /**
-     * A class to represent the default data model delivered by any [GifProvider] implementation
-     */
-    data class Gif(
-        val thumbnailUri: Uri,
-        val previewImageUri: Uri,
-        val largeImageUri: Uri
-    )
-
-    /**
-     * Exception to describe errors within the Provider when a [onFailure] is called
+     * An Exception to describe errors within the Provider when a [onFailure] is called
      */
     class GifRequestFailedException(message: String) : Exception(message)
 }

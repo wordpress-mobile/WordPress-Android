@@ -14,7 +14,7 @@ import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.redirectContextClickToLongPressListener
-import org.wordpress.android.viewmodel.gif.GifMediaViewModel
+import org.wordpress.android.viewmodel.gifs.GifMediaViewModel
 
 /**
  * Represents a single item in the [GiphyPickerActivity]'s grid (RecyclerView).
@@ -75,7 +75,7 @@ class GiphyMediaViewHolder(
      * Update the views to use the given [GifMediaViewModel]
      *
      * The [mediaViewModel] is optional because we enable placeholders in the paged list created by
-     * [org.wordpress.android.viewmodel.gif.GifPickerViewModel]. This causes null values to be bound to
+     * [org.wordpress.android.viewmodel.gifs.GifPickerViewModel]. This causes null values to be bound to
      * [GiphyMediaViewHolder] instances.
      */
     override fun bind(item: GifMediaViewModel?) {

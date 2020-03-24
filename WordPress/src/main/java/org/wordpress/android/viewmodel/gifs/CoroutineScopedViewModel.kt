@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.gif
+package org.wordpress.android.viewmodel.gifs
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope

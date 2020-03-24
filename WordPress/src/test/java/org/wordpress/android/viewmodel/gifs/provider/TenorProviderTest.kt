@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.gif.provider
+package org.wordpress.android.viewmodel.gifs.provider
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -23,8 +23,9 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.wordpress.android.TestApplication
-import org.wordpress.android.viewmodel.gif.provider.TenorProviderTestUtils.Companion.expectedGifMediaViewModelCollection
-import org.wordpress.android.viewmodel.gif.provider.TenorProviderTestUtils.Companion.mockedTenorResult
+import org.wordpress.android.viewmodel.gifs.provider.GifProvider.GifRequestFailedException
+import org.wordpress.android.viewmodel.gifs.provider.TenorProviderTestUtils.Companion.expectedGifMediaViewModelCollection
+import org.wordpress.android.viewmodel.gifs.provider.TenorProviderTestUtils.Companion.mockedTenorResult
 import retrofit2.Call
 
 @Config(application = TestApplication::class)
@@ -53,7 +54,7 @@ class TenorProviderTest {
     }
 
     @Test
-    fun `search call should invoke onSuccess with expected Gif list for valid query`() {
+    fun `search call should invoke onSuccess with expected GIF list for valid query`() {
         var onSuccessWasCalled = false
 
         tenorProviderUnderTest.search("test",
@@ -83,6 +84,7 @@ class TenorProviderTest {
                 },
                 onFailure = {
                     onFailureWasCalled = true
+                    assertTrue(it is GifRequestFailedException)
                     assertEquals("Expected message", it.message)
                 })
 
@@ -103,7 +105,8 @@ class TenorProviderTest {
                 },
                 onFailure = {
                     onFailureWasCalled = true
-                    assertEquals("No gifs matching your search", it.message)
+                    assertTrue(it is GifRequestFailedException)
+                    assertEquals("No GIFs matching your search", it.message)
                 })
 
         verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
