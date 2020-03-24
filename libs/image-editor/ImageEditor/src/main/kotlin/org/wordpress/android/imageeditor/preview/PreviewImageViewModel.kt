@@ -3,6 +3,8 @@ package org.wordpress.android.imageeditor.preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.imageeditor.ImageEditor.TrackableAction
+import org.wordpress.android.imageeditor.ImageEditor.TrackableEvent
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
@@ -12,6 +14,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
+import org.wordpress.android.imageeditor.viewmodel.Event
 
 class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<ImageUiState> = MutableLiveData()
@@ -23,11 +26,22 @@ class PreviewImageViewModel : ViewModel() {
     private val _navigateToCropScreenWithFileInfo = MutableLiveData<Pair<String, String?>>()
     val navigateToCropScreenWithFileInfo: LiveData<Pair<String, String?>> = _navigateToCropScreenWithFileInfo
 
+    private val _trackEvent = MutableLiveData<Event<Pair<TrackableEvent, TrackableAction?>>>()
+    val trackEvent: LiveData<Event<Pair<TrackableEvent, TrackableAction?>>> = _trackEvent
+
+    private var isStarted = false
     private var outputFileExtension: String? = null
 
     fun onCreateView(loResImageUrl: String, hiResImageUrl: String, outputFileExtension: String?) {
-        this.outputFileExtension = outputFileExtension
         updateUiState(createImageDataStartLoadingUiState(loResImageUrl, hiResImageUrl))
+
+        if (isStarted) {
+            return
+        }
+        this.outputFileExtension = outputFileExtension
+        _trackEvent.value = Event(Pair(TrackableEvent.MEDIA_EDITOR_SHOWN, null))
+
+        isStarted = true
     }
 
     fun onLoadIntoImageViewSuccess(currentUrl: String, imageData: ImageData) {

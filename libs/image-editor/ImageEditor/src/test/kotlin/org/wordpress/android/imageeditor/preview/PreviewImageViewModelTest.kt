@@ -6,6 +6,7 @@ import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertNull
 import org.junit.Rule
+import org.wordpress.android.imageeditor.ImageEditor.TrackableEvent
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
@@ -41,6 +42,13 @@ class PreviewImageViewModelTest {
     fun `data loading started on view create`() {
         initViewModel()
         assertThat(viewModel.uiState.value).isInstanceOf(ImageDataStartLoadingUiState::class.java)
+    }
+
+    @Test
+    fun `media editor shown tracking triggered on start`() {
+        initViewModel()
+        assertThat(requireNotNull(viewModel.trackEvent.value).peekContent().first)
+                .isEqualTo(TrackableEvent.MEDIA_EDITOR_SHOWN)
     }
 
     @Test

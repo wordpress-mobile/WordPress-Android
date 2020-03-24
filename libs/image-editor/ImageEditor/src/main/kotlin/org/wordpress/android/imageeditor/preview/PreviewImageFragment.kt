@@ -80,6 +80,12 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
+        viewModel.trackEvent.observe(this, Observer { trackEvent ->
+            trackEvent?.getContentIfNotHandled()?.let { data ->
+                ImageEditor.instance.trackEventWithActionData(data)
+            }
+        })
+
         viewModel.navigateToCropScreenWithFileInfo.observe(this, Observer { filePath ->
             navigateToCropScreenWithInputFilePath(filePath)
         })
