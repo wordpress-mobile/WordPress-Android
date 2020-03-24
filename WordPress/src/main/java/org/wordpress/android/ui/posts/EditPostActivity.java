@@ -2193,9 +2193,13 @@ public class EditPostActivity extends AppCompatActivity implements
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.refreshViews();
                         }
-                    } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URI)) {
-                        mEditorMedia.addNewMediaToEditorAsync(
-                                Uri.parse(data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI)), false);
+                    } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+                        String[] mediaUrisArray = data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS);
+                        List<Uri> uris = new ArrayList<>(mediaUrisArray.length);
+                        for (String stringUri : mediaUrisArray) {
+                            uris.add(Uri.parse(stringUri));
+                        }
+                        mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
                     }
                     break;
                 case RequestCodes.MEDIA_LIBRARY:

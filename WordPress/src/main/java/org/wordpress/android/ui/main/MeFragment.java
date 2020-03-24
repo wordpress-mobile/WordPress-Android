@@ -397,8 +397,8 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         switch (requestCode) {
             case RequestCodes.PHOTO_PICKER:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    String strMediaUri = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
-                    if (strMediaUri == null) {
+                    String[] mediaUriStringsArray = data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS);
+                    if (mediaUriStringsArray == null || mediaUriStringsArray.length == 0) {
                         AppLog.e(AppLog.T.UTILS, "Can't resolve picked or captured image");
                         return;
                     }
@@ -409,7 +409,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
                                     ? AnalyticsTracker.Stat.ME_GRAVATAR_SHOT_NEW
                                     : AnalyticsTracker.Stat.ME_GRAVATAR_GALLERY_PICKED;
                     AnalyticsTracker.track(stat);
-                    Uri imageUri = Uri.parse(strMediaUri);
+                    Uri imageUri = Uri.parse(mediaUriStringsArray[0]);
                     if (imageUri != null) {
                         boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
                                                                              new WPMediaUtils.MediaFetchDoNext() {
