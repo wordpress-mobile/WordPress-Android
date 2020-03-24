@@ -4,7 +4,12 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.imageeditor.ImageEditor
+import org.wordpress.android.imageeditor.ImageEditor.Companion.MEDIA_EDITOR_ACTIONS_KEY
+import org.wordpress.android.imageeditor.ImageEditor.TrackableAction
+import org.wordpress.android.imageeditor.ImageEditor.TrackableEvent
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.IMAGE
@@ -17,7 +22,8 @@ class ImageEditorInitializer {
         fun init(imageManager: ImageManager) {
             ImageEditor.init(
                 loadIntoImageViewWithResultListener(imageManager),
-                loadIntoFileWithResultListener(imageManager)
+                loadIntoFileWithResultListener(imageManager),
+                trackData()
             )
         }
 
@@ -64,5 +70,21 @@ class ImageEditorInitializer {
             } else {
                 throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
             }
+
+        private fun trackData(): (Pair<TrackableEvent, TrackableAction?>) -> Unit = { data ->
+            val event = data.first
+            val action = data.second
+
+            val currentStat = when (event) {
+                TrackableEvent.MEDIA_EDITOR_SHOWN -> Stat.MEDIA_EDITOR_SHOWN
+                TrackableEvent.MEDIA_EDITOR_USED -> Stat.MEDIA_EDITOR_USED
+            }
+
+            if (action == null) {
+                AnalyticsTracker.track(currentStat)
+            } else {
+                AnalyticsTracker.track(currentStat, mapOf(MEDIA_EDITOR_ACTIONS_KEY to action.label))
+            }
+        }
     }
 }

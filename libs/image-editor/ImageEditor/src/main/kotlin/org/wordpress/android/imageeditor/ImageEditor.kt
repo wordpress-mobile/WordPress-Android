@@ -9,7 +9,8 @@ class ImageEditor private constructor(
     private val loadIntoImageViewWithResultListener: (
         (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
     ),
-    private val loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit)
+    private val loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit),
+    private val trackData: ((Pair<TrackableEvent, TrackableAction?>) -> Unit)
 ) {
     interface RequestListener<T> {
         /**
@@ -46,8 +47,22 @@ class ImageEditor private constructor(
         loadIntoFileWithResultListener.invoke(imageUrl, listener)
     }
 
+    fun trackEventWithActionData(data: Pair<TrackableEvent, TrackableAction?>) {
+        trackData(data)
+    }
+
+    enum class TrackableAction(val label: String) {
+        CROP("crop")
+    }
+
+    enum class TrackableEvent {
+        MEDIA_EDITOR_SHOWN,
+        MEDIA_EDITOR_USED
+    }
+
     companion object {
         private lateinit var INSTANCE: ImageEditor
+        const val MEDIA_EDITOR_ACTIONS_KEY = "actions"
 
         val instance: ImageEditor get() = INSTANCE
 
@@ -55,11 +70,13 @@ class ImageEditor private constructor(
             loadIntoImageViewWithResultListener: (
                 (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
             ),
-            loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit)
+            loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit),
+            trackData: ((Pair<TrackableEvent, TrackableAction?>) -> Unit)
         ) {
             INSTANCE = ImageEditor(
                 loadIntoImageViewWithResultListener,
-                loadIntoFileWithResultListener
+                loadIntoFileWithResultListener,
+                trackData
             )
         }
     }
