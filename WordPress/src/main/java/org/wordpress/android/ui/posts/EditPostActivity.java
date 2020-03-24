@@ -2194,11 +2194,8 @@ public class EditPostActivity extends AppCompatActivity implements
                             mEditPostSettingsFragment.refreshViews();
                         }
                     } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
-                        String[] mediaUrisArray = data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS);
-                        List<Uri> uris = new ArrayList<>(mediaUrisArray.length);
-                        for (String stringUri : mediaUrisArray) {
-                            uris.add(Uri.parse(stringUri));
-                        }
+                        List<Uri> uris = convertStringArrayIntoUrisList(
+                                data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS));
                         mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
                     }
                     break;
@@ -2257,6 +2254,14 @@ public class EditPostActivity extends AppCompatActivity implements
             uriList.add(data.getData());
         }
         return uriList;
+    }
+
+    private List<Uri> convertStringArrayIntoUrisList(String[] stringArray) {
+        List<Uri> uris = new ArrayList<>(stringArray.length);
+        for (String stringUri : stringArray) {
+            uris.add(Uri.parse(stringUri));
+        }
+        return uris;
     }
 
     private void addLastTakenPicture() {
