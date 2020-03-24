@@ -279,33 +279,23 @@ public class ActivityLauncher {
     /**
      * Opens the editor and passes the information needed for a reblog action
      *
-     * @param context the context
-     * @param site    the site on which the post should be reblogged
-     * @param post    the post to be reblogged
+     * @param activity the calling activity
+     * @param site     the site on which the post should be reblogged
+     * @param post     the post to be reblogged
      */
-    public static void openEditorForReblog(Context context, @NonNull SiteModel site, @Nullable ReaderPost post) {
+    public static void openEditorForReblog(Activity activity, @NonNull SiteModel site, @Nullable ReaderPost post) {
         if (post == null) {
-            ToastUtils.showToast(context, R.string.post_not_found, ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(activity, R.string.post_not_found, ToastUtils.Duration.SHORT);
             return;
         }
-
-        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
-        Intent mainActivityIntent = getMainActivityInNewStack(context);
-
-        Intent editorIntent = new Intent(context, EditPostActivity.class);
-        editorIntent.putExtra(WordPress.SITE, site);
-        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
-
+        Intent editorIntent = new Intent(activity, EditPostActivity.class);
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_TITLE, post.getTitle());
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_QUOTE, post.getExcerpt());
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_IMAGE, post.getFeaturedImage());
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
-
         editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
 
-        taskStackBuilder.addNextIntent(mainActivityIntent);
-        taskStackBuilder.addNextIntent(editorIntent);
-        taskStackBuilder.startActivities();
+        addNewPostForResult(editorIntent, activity, site, false, PagePostCreationSourcesDetail.POST_FROM_REBLOG);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {

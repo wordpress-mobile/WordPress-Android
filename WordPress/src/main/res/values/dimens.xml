@@ -484,4 +484,6 @@
     <dimen name="bottom_sheet_handle_width">32dp</dimen>
     <dimen name="bottom_sheet_handle_margin_top">4dp</dimen>
 
+    <!-- reader post detail snackbar bottom margin -->
+    <dimen name="reader_post_detail_snackbar_bottom_margin">56dp</dimen>
 </resources>
