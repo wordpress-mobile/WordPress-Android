@@ -13,8 +13,8 @@ import com.tenor.android.core.response.WeakRefCallback
 import com.tenor.android.core.response.impl.GifsResponse
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R.string
-import org.wordpress.android.viewmodel.gifs.GifMediaViewModel
-import org.wordpress.android.viewmodel.gifs.MutableGifMediaViewModel
+import org.wordpress.android.viewmodel.gifs.GiphyMediaViewModel
+import org.wordpress.android.viewmodel.gifs.MutableGiphyMediaViewModel
 import org.wordpress.android.viewmodel.gifs.provider.GifProvider.GifRequestFailedException
 
 /**
@@ -59,7 +59,7 @@ internal class TenorProvider @JvmOverloads constructor(
         query: String,
         position: Int,
         loadSize: Int?,
-        onSuccess: (List<GifMediaViewModel>, Int?) -> Unit,
+        onSuccess: (List<GiphyMediaViewModel>, Int?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
         apiClient.simpleSearch(
@@ -142,10 +142,10 @@ internal class TenorProvider @JvmOverloads constructor(
 
     /**
      * Every GIF returned by the Tenor will be available as [Result], to better interface
-     * with our app, it will be converted to [MutableGifMediaViewModel] to avoid any external
+     * with our app, it will be converted to [MutableGiphyMediaViewModel] to avoid any external
      * coupling with the Tenor API
      */
-    private fun Result.toMutableGifMediaViewModel() = MutableGifMediaViewModel(
+    private fun Result.toMutableGifMediaViewModel() = MutableGiphyMediaViewModel(
             id,
             Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)),
             Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_TINY)),

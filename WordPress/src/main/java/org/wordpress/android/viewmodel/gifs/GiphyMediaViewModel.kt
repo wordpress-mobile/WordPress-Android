@@ -15,7 +15,7 @@ import androidx.lifecycle.LiveData
  * See the [Giphy API docs](https://developers.giphy.com/docs/) for more information on what a [Media] object contains.
  * Search for "The GIF Object" section.
  */
-interface GifMediaViewModel {
+interface GiphyMediaViewModel {
     /**
      * The id from Giphy's [Media]
      */

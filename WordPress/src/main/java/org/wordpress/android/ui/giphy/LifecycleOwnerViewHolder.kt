@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.gifs
+package org.wordpress.android.ui.giphy
 
 import android.view.View
 import android.view.View.OnAttachStateChangeListener

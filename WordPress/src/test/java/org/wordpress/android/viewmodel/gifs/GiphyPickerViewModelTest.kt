@@ -19,26 +19,26 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.viewmodel.gifs.GifPickerViewModel.EmptyDisplayMode
-import org.wordpress.android.viewmodel.gifs.GifPickerViewModel.State
+import org.wordpress.android.viewmodel.gifs.GiphyPickerViewModel.EmptyDisplayMode
+import org.wordpress.android.viewmodel.gifs.GiphyPickerViewModel.State
 import java.util.Random
 import java.util.UUID
 
 @RunWith(MockitoJUnitRunner::class)
-class GifPickerViewModelTest {
+class GiphyPickerViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel: GifPickerViewModel
+    private lateinit var viewModel: GiphyPickerViewModel
 
-    private val dataSourceFactory = mock<GifPickerDataSourceFactory>()
-    private val mediaFetcher = mock<GifMediaFetcher>()
+    private val dataSourceFactory = mock<GiphyPickerDataSourceFactory>()
+    private val mediaFetcher = mock<GiphyMediaFetcher>()
 
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
 
     @Before
     fun setUp() {
-        viewModel = GifPickerViewModel(
+        viewModel = GiphyPickerViewModel(
                 dataSourceFactory = dataSourceFactory,
                 networkUtils = networkUtils,
                 mediaFetcher = mediaFetcher
@@ -147,12 +147,12 @@ class GifPickerViewModelTest {
     @Test
     fun `when search results are empty, the empty view should be visible and says there are no results`() {
         // Arrange
-        val dataSource = mock<GifPickerDataSource>()
+        val dataSource = mock<GiphyPickerDataSource>()
 
         whenever(dataSourceFactory.create()).thenReturn(dataSource)
         whenever(dataSourceFactory.searchQuery).thenReturn("dummy")
 
-        val callbackCaptor = argumentCaptor<LoadInitialCallback<GifMediaViewModel>>()
+        val callbackCaptor = argumentCaptor<LoadInitialCallback<GiphyMediaViewModel>>()
         doNothing().whenever(dataSource).loadInitial(any(), callbackCaptor.capture())
 
         // Observe mediaViewModelPagedList so the DataSourceFactory will be activated and perform API requests
@@ -174,12 +174,12 @@ class GifPickerViewModelTest {
     @Test
     fun `when the initial load fails, the empty view should show a network error`() {
         // Arrange
-        val dataSource = mock<GifPickerDataSource>()
+        val dataSource = mock<GiphyPickerDataSource>()
 
         whenever(dataSourceFactory.create()).thenReturn(dataSource)
         whenever(dataSourceFactory.initialLoadError).thenReturn(mock())
 
-        val callbackCaptor = argumentCaptor<LoadInitialCallback<GifMediaViewModel>>()
+        val callbackCaptor = argumentCaptor<LoadInitialCallback<GiphyMediaViewModel>>()
         doNothing().whenever(dataSource).loadInitial(any(), callbackCaptor.capture())
 
         // Observe mediaViewModelPagedList so the DataSourceFactory will be activated and perform API requests
@@ -313,7 +313,7 @@ class GifPickerViewModelTest {
         id = Random().nextInt()
     }
 
-    private fun createGiphyMediaViewModel() = MutableGifMediaViewModel(
+    private fun createGiphyMediaViewModel() = MutableGiphyMediaViewModel(
             id = UUID.randomUUID().toString(),
             thumbnailUri = mock(),
             largeImageUri = mock(),

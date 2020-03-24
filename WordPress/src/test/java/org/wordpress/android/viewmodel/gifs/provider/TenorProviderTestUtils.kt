@@ -7,7 +7,7 @@ import com.tenor.android.core.constant.MediaCollectionFormat
 import com.tenor.android.core.model.impl.Media
 import com.tenor.android.core.model.impl.MediaCollection
 import com.tenor.android.core.model.impl.Result
-import org.wordpress.android.viewmodel.gifs.MutableGifMediaViewModel
+import org.wordpress.android.viewmodel.gifs.MutableGiphyMediaViewModel
 
 class TenorProviderTestUtils {
     companion object {
@@ -49,7 +49,7 @@ class TenorProviderTestUtils {
                 mock<Media>().apply { whenever(this.url).thenReturn(mockContent) }
 
         private fun createExpectedGifMediaViewModel(expectedContent: String) =
-                MutableGifMediaViewModel(
+                MutableGiphyMediaViewModel(
                         expectedContent,
                         Uri.parse("$expectedContent gif_nano"),
                         Uri.parse("$expectedContent gif_tiny"),

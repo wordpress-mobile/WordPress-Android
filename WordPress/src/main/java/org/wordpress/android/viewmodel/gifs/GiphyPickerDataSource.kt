@@ -6,28 +6,28 @@ import androidx.paging.PositionalDataSource
 import org.wordpress.android.viewmodel.gifs.provider.GifProvider
 
 /**
- * The PagedListDataSource that is created and managed by [GifPickerDataSourceFactory]
+ * The PagedListDataSource that is created and managed by [GiphyPickerDataSourceFactory]
  *
  * This performs paged API requests using the [apiClient]. A new instance of this class must be created if the
  * [searchQuery] is changed by the user.
  */
-class GifPickerDataSource(
+class GiphyPickerDataSource(
     private val gifProvider: GifProvider,
     private val searchQuery: String
-) : PositionalDataSource<GifMediaViewModel>() {
+) : PositionalDataSource<GiphyMediaViewModel>() {
     /**
      * The data structure used for storing failed [loadRange] calls so they can be retried later.
      */
     private data class RangeLoadArguments(
         val params: LoadRangeParams,
-        val callback: LoadRangeCallback<GifMediaViewModel>
+        val callback: LoadRangeCallback<GiphyMediaViewModel>
     )
 
     /**
      * The error received when [loadInitial] fails.
      *
      * Unlike [rangeLoadErrorEvent], this is not a [LiveData] because the consumer of this method
-     * [GifPickerViewModel] simply uses it to check for null values and reacts to a different event.
+     * [GiphyPickerViewModel] simply uses it to check for null values and reacts to a different event.
      *
      * This is cleared when [loadInitial] is started.
      */
@@ -53,15 +53,15 @@ class GifPickerDataSource(
     /**
      * Always the load the first page (startingPosition = 0) from the Giphy API
      *
-     * The [GifPickerDataSourceFactory] recreates [GifPickerDataSource] instances whenever a new [searchQuery]
+     * The [GiphyPickerDataSourceFactory] recreates [GiphyPickerDataSource] instances whenever a new [searchQuery]
      * is queued. The [LoadInitialParams.requestedStartPosition] may have a value that is only valid for the
      * previous [searchQuery]. If that value is greater than the total search results of the new [searchQuery],
      * a crash will happen.
      *
-     * Using `0` as the `startPosition` forces the [GifPickerDataSource] consumer to reset the list (UI) from the
+     * Using `0` as the `startPosition` forces the [GiphyPickerDataSource] consumer to reset the list (UI) from the
      * top.
      */
-    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<GifMediaViewModel>) {
+    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<GiphyMediaViewModel>) {
         val startPosition = 0
 
         initialLoadError = null
@@ -88,7 +88,7 @@ class GifPickerDataSource(
      * Errors are dispatched to [rangeLoadErrorEvent]. If successful, previously failed calls of this method are
      * automatically retried using [retryAllFailedRangeLoads].
      */
-    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<GifMediaViewModel>) {
+    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<GiphyMediaViewModel>) {
         gifProvider.search(
                 searchQuery,
                 params.startPosition,

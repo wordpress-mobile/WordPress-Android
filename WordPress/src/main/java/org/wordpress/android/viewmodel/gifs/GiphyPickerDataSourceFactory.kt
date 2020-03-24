@@ -9,19 +9,19 @@ import org.wordpress.android.viewmodel.gifs.provider.GifProvider
 import javax.inject.Inject
 
 /**
- * Creates instances of [GifPickerDataSource]
+ * Creates instances of [GiphyPickerDataSource]
  *
  * Whenever the [searchQuery] is changed:
  *
- * 1. The last [GifPickerDataSource] is invalidated
- * 2. The [LivePagedListBuilder] will create a new [GifPickerDataSource] by calling [create]
- * 3. The new [GifPickerDataSource] will start another paged API request
+ * 1. The last [GiphyPickerDataSource] is invalidated
+ * 2. The [LivePagedListBuilder] will create a new [GiphyPickerDataSource] by calling [create]
+ * 3. The new [GiphyPickerDataSource] will start another paged API request
  */
-class GifPickerDataSourceFactory @Inject constructor(private val gifProvider: GifProvider) : Factory<Int, GifMediaViewModel>() {
+class GiphyPickerDataSourceFactory @Inject constructor(private val gifProvider: GifProvider) : Factory<Int, GiphyMediaViewModel>() {
     /**
      * The active search query.
      *
-     * When changed, the current [GifPickerDataSource] will be invalidated. A new API search will be performed.
+     * When changed, the current [GiphyPickerDataSource] will be invalidated. A new API search will be performed.
      */
     var searchQuery: String = ""
         set(value) {
@@ -34,26 +34,26 @@ class GifPickerDataSourceFactory @Inject constructor(private val gifProvider: Gi
      *
      * We retain this so we can invalidate it later when [searchQuery] is changed.
      */
-    private val dataSource = MutableLiveData<GifPickerDataSource>()
+    private val dataSource = MutableLiveData<GiphyPickerDataSource>()
 
     /**
-     * The [GifPickerDataSource.initialLoadError] of the current [dataSource]
+     * The [GiphyPickerDataSource.initialLoadError] of the current [dataSource]
      */
     val initialLoadError: Throwable? get() = dataSource.value?.initialLoadError
     /**
-     * The [GifPickerDataSource.rangeLoadErrorEvent] of the current [dataSource]
+     * The [GiphyPickerDataSource.rangeLoadErrorEvent] of the current [dataSource]
      */
     val rangeLoadErrorEvent: LiveData<Throwable> = Transformations.switchMap(dataSource) { it.rangeLoadErrorEvent }
 
     /**
      * Retries all previously failed page loads.
      *
-     * @see [GifPickerDataSource.retryAllFailedRangeLoads]
+     * @see [GiphyPickerDataSource.retryAllFailedRangeLoads]
      */
     fun retryAllFailedRangeLoads() = dataSource.value?.retryAllFailedRangeLoads()
 
-    override fun create(): DataSource<Int, GifMediaViewModel> {
-        val dataSource = GifPickerDataSource(gifProvider, searchQuery)
+    override fun create(): DataSource<Int, GiphyMediaViewModel> {
+        val dataSource = GiphyPickerDataSource(gifProvider, searchQuery)
         this.dataSource.postValue(dataSource)
         return dataSource
     }
