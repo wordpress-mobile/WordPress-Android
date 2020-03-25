@@ -1,6 +1,7 @@
 14.6
 -----
- 
+* Block editor: You can now crop, zoom in/out and rotate images that are already inserted in a post.
+
 14.5
 -----
 * Block editor: New block: Latest Posts
