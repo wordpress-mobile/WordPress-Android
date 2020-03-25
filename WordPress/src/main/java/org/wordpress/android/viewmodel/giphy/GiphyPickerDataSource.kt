@@ -86,8 +86,12 @@ class GiphyPickerDataSource(
         val startPosition = 0
         gifProvider.search(searchQuery, startPosition, params.requestedLoadSize,
                 onSuccess = { gifs, nextPosition ->
-                    // nextPosition is increased by 1 to represents the total amount instead of a positional index
-                    val totalCount = nextPosition?.let { it + 1 } ?: gifs.size
+                    val totalCount = when {
+                        // nextPosition should never be smaller than the number of GIFs returned
+                        nextPosition == null || nextPosition < gifs.size -> gifs.size
+                        else -> nextPosition
+                    }
+
                     callback.onResult(gifs, startPosition, totalCount)
                 },
                 onFailure = {
@@ -105,8 +109,8 @@ class GiphyPickerDataSource(
      */
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<GiphyMediaViewModel>) {
         gifProvider.search(searchQuery, params.startPosition, params.loadSize,
-                onSuccess = {
-                    gifs, _ -> callback.onResult(gifs)
+                onSuccess = { gifs, _ ->
+                    callback.onResult(gifs)
                     retryAllFailedRangeLoads()
                 },
                 onFailure = {
