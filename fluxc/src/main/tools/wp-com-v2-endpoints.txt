@@ -15,8 +15,6 @@
 /users/username/suggestions/
 
 /segments
-/verticals
-/verticals/prompt
 
 /plans/mobile
 
