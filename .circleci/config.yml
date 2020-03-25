@@ -3,7 +3,7 @@ orbs:
   android: wordpress-mobile/android@1.0
   git: wordpress-mobile/git@1.0
   bundle-install: toshimaru/bundle-install@0.3.1
-  slack: circleci/slack@2.5.0
+  slack: circleci/slack@3.4.2
 
 commands:
   copy-gradle-properties:
@@ -113,8 +113,14 @@ jobs:
           device: model=Nexus5X,version=26,locale=en,orientation=portrait
           project: api-project-108380595987
           timeout: 10m
+          num-flaky-test-attempts: 2
           results-history-name: CircleCI WordPress Connected Tests
       - android/save-gradle-cache
+      - slack/status:
+          fail_only: true
+          include_job_number_field: false
+          include_project_field: false
+          failure_message: ':red_circle: WordPress Android connected tests failed on \`${CIRCLE_BRANCH}\` branch after merge by ${CIRCLE_USERNAME}. See <https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670|Firebase console test results> for details.'
   strings-check:
     docker:
       - image: circleci/ruby:2.5.5
@@ -139,7 +145,11 @@ workflows:
           filters:
             branches:
               ignore: /pull\/[0-9]+/
+  wordpress_android_connected_tests:
+    jobs:
       - connected-tests:
           filters:
             branches:
-              ignore: /pull\/[0-9]+/
+              only:
+                - develop
+                - /^release.*/ # Runs on any release branch

@@ -10,6 +10,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
@@ -29,36 +30,44 @@ class WPMainActivityViewModelTest {
     fun setUp() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(false)
         viewModel = WPMainActivityViewModel(appPrefsWrapper)
-        viewModel.start(true)
+        viewModel.start(isFabVisible = true, hasFullAccessToContent = true)
     }
 
     @Test
     fun `fab visible when asked`() {
-        viewModel.onPageChanged(true)
+        viewModel.onPageChanged(showFab = true, hasFullAccessToContent = true)
         assertThat(viewModel.fabUiState.value?.isFabVisible).isEqualTo(true)
     }
 
     @Test
     fun `fab hidden when asked`() {
-        viewModel.onPageChanged(false)
+        viewModel.onPageChanged(showFab = false, hasFullAccessToContent = true)
         assertThat(viewModel.fabUiState.value?.isFabVisible).isEqualTo(false)
     }
 
     @Test
     fun `fab tooltip visible when asked`() {
-        viewModel.onPageChanged(true)
+        viewModel.onPageChanged(showFab = true, hasFullAccessToContent = true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(true)
     }
 
     @Test
     fun `fab tooltip hidden when asked`() {
-        viewModel.onPageChanged(false)
+        viewModel.onPageChanged(showFab = false, hasFullAccessToContent = true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
 
     @Test
     fun `fab tooltip disabled when tapped`() {
-        viewModel.onTooltipTapped()
+        viewModel.onTooltipTapped(true)
+        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
+        assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `fab tooltip disabled when user without full access to content uses the fab`() {
+        whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
+        viewModel.onFabClicked(false)
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
@@ -66,14 +75,14 @@ class WPMainActivityViewModelTest {
     @Test
     fun `fab tooltip disabled when bottom sheet opened`() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
-        viewModel.setIsBottomSheetShowing(true)
+        viewModel.onFabClicked(true)
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
 
     @Test
     fun `fab tooltip disabled when fab long pressed`() {
-        viewModel.onFabLongPressed()
+        viewModel.onFabLongPressed(true)
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
@@ -95,9 +104,36 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
+    fun `bottom sheet is visualized when user has full access to content`() {
+        viewModel.onFabClicked(hasFullAccessToContent = true)
+        assertThat(viewModel.createAction.value).isNull()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
+    }
+
+    @Test
+    fun `new post action is triggered from FAB when user has not full access to content`() {
+        viewModel.onFabClicked(hasFullAccessToContent = false)
+        assertThat(viewModel.isBottomSheetShowing.value).isNull()
+        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
+    }
+
+    @Test
     fun `when user taps to open the login page from the bottom sheet empty view cta the correct action is triggered`() {
         viewModel.onOpenLoginPage()
 
         assertThat(viewModel.startLoginFlow.value!!.peekContent()).isEqualTo(true)
+    }
+
+    @Test
+    fun `onResume set expected content message when user has full access to content`() {
+        viewModel.onResume(true)
+        assertThat(viewModel.fabUiState.value!!.CreateContentMessageId).isEqualTo(R.string.create_post_page_fab_tooltip)
+    }
+
+    @Test
+    fun `onResume set expected content message when user has not full access to content`() {
+        viewModel.onResume(false)
+        assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_contributors)
     }
 }

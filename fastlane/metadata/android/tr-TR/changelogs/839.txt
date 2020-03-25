@@ -1,0 +1,4 @@
+14.4:
+Ufak bir düzeltme: bu dağıtım görsellerin garip adreslerle yüklenmesine ve web sitenizde görüntülenmemesine sebep olan bir problemi düzeltiyor.
+
+Ellerinizi yıkayın ve güvende kalın.

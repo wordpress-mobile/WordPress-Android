@@ -1,6 +1,0 @@
-14.3 :
-- Ajouts de l'éditeur de blocs : blocs Bouton et Groupe ajoutés, + d’options dans les réglages de bloc Image et Galerie.
-- Améliorations de l'éditeur de blocs : défilement ajouté dans le sélecteur et réglages de bloc, nouvelle barre d'outils flottante pour mieux naviguer dans les blocs.
-- Résolutions de l'éditeur de blocs : images de texte indicatif lors du chargement d’images, émojis des titres d'article et habillage du texte de blocs de code abrégé résolus.
-- Lecteur : filtrage d’onglet ajouté pour mieux naviguer sur les sites/étiquette.
-
