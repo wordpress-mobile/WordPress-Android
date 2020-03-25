@@ -102,7 +102,7 @@ internal class TenorProvider @JvmOverloads constructor(
                 AspectRatioRange.ALL
 
         ).enqueue(object : WeakRefCallback<Context, GifsResponse>(context) {
-            override fun success(ctx: Context, response: GifsResponse?) {
+            override fun success(context: Context, response: GifsResponse?) {
                 response?.let(onSuccess)
                         ?: onFailure(
                                 GifRequestFailedException(
@@ -111,7 +111,7 @@ internal class TenorProvider @JvmOverloads constructor(
                         )
             }
 
-            override fun failure(ctx: Context, throwable: Throwable?) {
+            override fun failure(context: Context, throwable: Throwable?) {
                 onFailure(throwable)
             }
         })
@@ -121,7 +121,7 @@ internal class TenorProvider @JvmOverloads constructor(
      * If the search request succeeds an [List] of [MutableGiphyMediaViewModel] will be passed with the next position
      * for pagination. If there's no next position provided, it will be passed as null.
      */
-    private fun handleResponse(
+    private inline fun handleResponse(
         response: GifsResponse,
         onSuccess: (List<GiphyMediaViewModel>, Int?) -> Unit
     ) {
