@@ -28,10 +28,6 @@ internal class TenorProvider @JvmOverloads constructor(
     tenorClient: IApiClient? = null
 ) : GifProvider {
     private val apiClient: IApiClient
-    /**
-     * To better refers to the Tenor API maximum GIF limit per request
-     */
-    private val maximumAllowedLoadSize = 50
 
     /**
      * Initializes the Tenor API client with the environment API key, if no tenorClient is provided via constructor,
@@ -178,8 +174,15 @@ internal class TenorProvider @JvmOverloads constructor(
     private val Int?.fittedToMaximumAllowed
         get() = this?.let {
             when {
-                this > maximumAllowedLoadSize -> maximumAllowedLoadSize
+                this > MAXIMUM_ALLOWED_LOAD_SIZE -> MAXIMUM_ALLOWED_LOAD_SIZE
                 else -> this
             }
-        } ?: maximumAllowedLoadSize
+        } ?: MAXIMUM_ALLOWED_LOAD_SIZE
+
+    companion object {
+        /**
+         * To better refers to the Tenor API maximum GIF limit per request
+         */
+        private const val MAXIMUM_ALLOWED_LOAD_SIZE = 50
+    }
 }
