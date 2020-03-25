@@ -2465,7 +2465,13 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO, allowMultipleSelection);
+        if (allowMultipleSelection) {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_MEDIA_PICKER, mSite,
+                    mEditPostRepository.getId());
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER, mSite,
+                    mEditPostRepository.getId());
+        }
     }
 
     @Override
