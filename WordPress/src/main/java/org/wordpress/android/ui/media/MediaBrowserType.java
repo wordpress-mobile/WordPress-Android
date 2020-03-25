@@ -9,7 +9,8 @@ public enum MediaBrowserType {
     SITE_ICON_PICKER, // select a single image as a site icon
     GUTENBERG_IMAGE_PICKER, // select one or multiple images from Gutenberg editor
     GUTENBERG_SINGLE_IMAGE_PICKER, // select image from Gutenberg editor
-    GUTENBERG_VIDEO_PICKER, // select video from Gutenberg editor
+    GUTENBERG_VIDEO_PICKER, // select one or multiple videos from Gutenberg editor
+    GUTENBERG_SINGLE_VIDEO_PICKER, // select video from Gutenberg editor
     GUTENBERG_SINGLE_MEDIA_PICKER; // select multiple images or videos to insert into a post
 
     public boolean isPicker() {
