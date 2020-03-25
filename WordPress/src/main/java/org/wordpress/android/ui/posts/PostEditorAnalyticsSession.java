@@ -26,6 +26,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_POST_TYPE = "post_type";
     private static final String KEY_OUTCOME = "outcome";
     private static final String KEY_SESSION_ID = "session_id";
+    private static final String KEY_STARTUP_TIME = "startup_time_ms";
     private static final String KEY_TEMPLATE = "template";
 
     private String mSessionId = UUID.randomUUID().toString();
@@ -38,6 +39,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private Outcome mOutcome = null;
     private String mTemplate;
     private boolean mHWAccOff = false;
+    private long mStartTime = System.currentTimeMillis();
 
     enum Editor {
         GUTENBERG,
@@ -92,6 +94,14 @@ public class PostEditorAnalyticsSession implements Serializable {
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_UNSUPPORTED_BLOCKS,
                     unsupportedBlocksList != null ? unsupportedBlocksList : new ArrayList<>());
+            // Note that start time only counts when the analytics session was created and not when the editor
+            // activity started. We are mostly interested in measuring the loading times for the block editor,
+            // where the main bottleneck seems to be initializing React Native and doing the initial load of Gutenberg.
+            //
+            // Measuring the full editor activity initialization would be more accurate, but we don't expect the
+            // difference to be significant enough, and doing that would add more complexity to how we are initializing
+            // the session.
+            properties.put(KEY_STARTUP_TIME, System.currentTimeMillis() - mStartTime);
             AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
             mStarted = true;
         } else {

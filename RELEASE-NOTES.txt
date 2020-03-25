@@ -1,5 +1,15 @@
+14.6
+-----
+ 
 14.5
 -----
+* Block editor: New block: Latest Posts
+* Block editor: Fix Quote block's left border not being visible in Dark Mode
+* Block editor: Added Starter Page Templates: when you create a new page, we now show you a few templates to get started more quickly.
+* Block editor: Fix crash when pasting HTML content with embeded images on paragraphs
+* Removes sections from post search results
+* Site Creation: faster site creation, removed intermediate steps. Just select what kind of site you'd like, enter the domain name and the site will be created.
+* Fixed a bug where failed post uploads were sometimes being retried indefinitely
  
 14.4
 -----
@@ -233,4 +243,3 @@
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
-

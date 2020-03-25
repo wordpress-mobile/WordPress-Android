@@ -219,7 +219,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mSubmitReplyBtn.setEnabled(s.length() > 0);
+                mSubmitReplyBtn.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
             }
         });
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
