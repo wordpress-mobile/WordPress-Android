@@ -30,7 +30,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.google.android.material.tabs.TabLayout.Tab;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.util.AppLog;
@@ -60,6 +59,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     private View mCustomEmptyView;
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
+    private RecyclerView mSearchSuggestionsRecyclerView;
 
     private List<FilterCriteria> mFilterCriteriaOptions;
     private FilterCriteria mCurrentFilter;
@@ -172,10 +172,6 @@ public class FilteredRecyclerView extends RelativeLayout {
 
                 mUseTabsForFiltering = a.getBoolean(
                         R.styleable.FilteredRecyclerView_wpUseTabsForFiltering, false);
-
-                // TODO: once the feature flag is removed delete this row and use the
-                // app:wpUseTabsForFiltering="true|false" in reader_fragment_post_cards.xml
-                if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) mUseTabsForFiltering = false;
             } finally {
                 a.recycle();
             }
@@ -197,6 +193,8 @@ public class FilteredRecyclerView extends RelativeLayout {
             params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                                   | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
         }
+
+        mSearchSuggestionsRecyclerView = findViewById(R.id.suggestions_recycler_view);
 
         mEmptyView = findViewById(R.id.empty_view);
 
@@ -497,6 +495,18 @@ public class FilteredRecyclerView extends RelativeLayout {
     * */
     public void refreshFilterCriteriaOptions() {
         setup(true);
+    }
+
+    public void showSearchSuggestions() {
+        mSearchSuggestionsRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideSearchSuggestions() {
+        mSearchSuggestionsRecyclerView.setVisibility(View.GONE);
+    }
+
+    public void setSearchSuggestionAdapter(RecyclerView.Adapter searchSuggestionAdapter) {
+        mSearchSuggestionsRecyclerView.setAdapter(searchSuggestionAdapter);
     }
 
     /*

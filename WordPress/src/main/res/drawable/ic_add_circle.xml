@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/shape_oval_green" android:gravity="center" />
-    <item android:drawable="@drawable/ic_plus_small_24dp" android:gravity="center" />
-</layer-list>

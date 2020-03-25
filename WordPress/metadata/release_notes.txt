@@ -1,6 +1,3 @@
-- Block Editor: a new Shortcode block lets you create and edit shortcodes, we’ve reduced the padding around text-based blocks, and editing very long posts is now a more stable experience.
-- Updates: The option to remove a Jetpack site from the site picker has been disabled.
-- Bug fixes: searches for posts omitted some results. Now searching works as intended!
+One small fix: this release takes care of an issue that caused images to upload with wonky URLs, which made them inaccessible on your website.
 
-
-
+Wash your hands and stay safe, everyone.

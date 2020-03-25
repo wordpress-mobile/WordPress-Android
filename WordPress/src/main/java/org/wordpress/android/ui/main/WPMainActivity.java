@@ -391,11 +391,17 @@ public class WPMainActivity extends AppCompatActivity implements
 
         // Setup Observers
         mViewModel.getFabUiState().observe(this, fabUiState -> {
+            String message = getResources().getString(fabUiState.getCreateContentMessageId());
+
+            mFabTooltip.setMessage(message);
+
             if (fabUiState.isFabTooltipVisible()) {
                 mFabTooltip.show();
             } else {
                 mFabTooltip.hide();
             }
+
+            mFloatingActionButton.setContentDescription(message);
 
             if (fabUiState.isFabVisible()) {
                 mFloatingActionButton.show();
@@ -416,22 +422,27 @@ public class WPMainActivity extends AppCompatActivity implements
         });
 
         mFloatingActionButton.setOnClickListener(v -> {
-            mViewModel.setIsBottomSheetShowing(true);
+            mViewModel.onFabClicked(hasFullAccessToContent());
         });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
             if (v.isHapticFeedbackEnabled()) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
-            mViewModel.onFabLongPressed();
-            Toast.makeText(v.getContext(), R.string.create_post_page_fab_tooltip, Toast.LENGTH_SHORT).show();
+            mViewModel.onFabLongPressed(hasFullAccessToContent());
+
+            int messageId = hasFullAccessToContent()
+                    ? R.string.create_post_page_fab_tooltip
+                    : R.string.create_post_page_fab_tooltip_contributors;
+
+            Toast.makeText(v.getContext(), messageId, Toast.LENGTH_SHORT).show();
             return true;
         });
 
         ViewUtilsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
 
         mFabTooltip.setOnClickListener(v -> {
-            mViewModel.onTooltipTapped();
+            mViewModel.onTooltipTapped(hasFullAccessToContent());
         });
 
         mViewModel.isBottomSheetShowing().observe(this, event -> {
@@ -451,7 +462,25 @@ public class WPMainActivity extends AppCompatActivity implements
             });
         });
 
-        mViewModel.start(mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
+        mViewModel.getStartLoginFlow().observe(this, event -> {
+            event.applyIfNotHandled(startLoginFlow -> {
+                if (mBottomNav != null) {
+                    mBottomNav.postDelayed(new Runnable() {
+                        @Override public void run() {
+                            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                        }
+                    }, 500);
+                    ActivityLauncher.viewMeActivityForResult(this);
+                }
+
+                return null;
+            });
+        });
+
+        mViewModel.start(
+                mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
+                hasFullAccessToContent()
+        );
     }
 
     private @Nullable String getAuthToken() {
@@ -682,6 +711,8 @@ public class WPMainActivity extends AppCompatActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
 
+        mViewModel.onResume(hasFullAccessToContent());
+
         mFirstResume = false;
     }
 
@@ -745,7 +776,10 @@ public class WPMainActivity extends AppCompatActivity implements
             }
         }
 
-        mViewModel.onPageChanged(mSiteStore.hasSite() && pageType == PageType.MY_SITE);
+        mViewModel.onPageChanged(
+                mSiteStore.hasSite() && pageType == PageType.MY_SITE,
+                hasFullAccessToContent()
+        );
     }
 
     // user tapped the new post button in the bottom navbar
@@ -885,11 +919,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (data != null) {
                     int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
                     SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
-                    // Mark the site to show the GB popup at first editor run
-                    SiteModel newSiteModel = mSiteStore.getSiteByLocalId(newSiteLocalID);
-                    if (newSiteModel != null) {
-                        AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(newSiteModel.getUrl(), true);
-                    }
                 }
 
                 setSite(data);
@@ -988,6 +1017,11 @@ public class WPMainActivity extends AppCompatActivity implements
     private void appLanguageChanged() {
         // Recreate this activity (much like a configuration change)
         recreate();
+
+        // When language changed we need to reset the shared prefs reader tag since if we have it stored
+        // it's fields can be in a different language and we can get odd behaviors since we will generally fail
+        // to get the ReaderTag.equals method recognize the equality based on the ReaderTag.getLabel method.
+        AppPrefs.setReaderTag(null);
     }
 
     private void startWithNewAccount() {
@@ -1363,6 +1397,10 @@ public class WPMainActivity extends AppCompatActivity implements
             mQuickStartSnackbar.dismiss();
             mQuickStartSnackbar = null;
         }
+    }
+
+    private boolean hasFullAccessToContent() {
+        return SiteUtils.hasFullAccessToContent(getSelectedSite());
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because

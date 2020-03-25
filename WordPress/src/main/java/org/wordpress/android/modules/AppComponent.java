@@ -65,6 +65,7 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.pages.PageListFragment;
 import org.wordpress.android.ui.pages.PageParentFragment;
+import org.wordpress.android.ui.pages.PageParentSearchFragment;
 import org.wordpress.android.ui.pages.PagesFragment;
 import org.wordpress.android.ui.pages.SearchListFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
@@ -135,8 +136,6 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment;
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
-import org.wordpress.android.ui.sitecreation.siteinfo.SiteCreationSiteInfoFragment;
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsModule;
@@ -181,6 +180,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         StatsModule.class,
         SupportModule.class,
         ThreadModule.class,
+        TrackerModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
@@ -218,11 +218,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(SiteCreationSegmentsFragment object);
 
-    void inject(SiteCreationSiteInfoFragment object);
-
     void inject(SiteCreationDomainsFragment object);
-
-    void inject(SiteCreationVerticalsFragment object);
 
     void inject(SiteCreationPreviewFragment object);
 
@@ -489,6 +485,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(SubfilterBottomSheetFragment object);
 
     void inject(AddContentAdapter object);
+
+    void inject(PageParentSearchFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

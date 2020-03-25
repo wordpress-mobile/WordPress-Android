@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-31 09:33:28+0000
+Translation-Revision-Date: 2020-03-11 17:58:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="stats_insights_management_activity">Actividad</string>
+    <string name="stats_insights_management_posts_and_pages">Entradas y páginas</string>
+    <string name="stats_insights_management_general">General</string>
+    <string name="stats_management_screen_title">Añadir una nueva tarjeta</string>
+    <string name="stats_management_add_new_stats_card">Añadir una nueva tarjeta de estadísticas</string>
+    <string name="reader_self_hosted_select_filter">Usa el botón de filtro para encontrar entradas sobre temas específicos</string>
+    <string name="reader_bottom_sheet_content_description">Selecciona una etiqueta o sitio, ventana emergente</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Seleccionado</string>
+    <string name="reader_btn_select_filter_content_description">Selecciona un sitio o etiqueta para filtrar entradas</string>
+    <string name="reader_btn_remove_filter_content_description">Quitar el filtro actual</string>
+    <string name="reader_title_subs">Gestionar etiquetas y sitios</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Accede a WordPress.com para ver las últimas entradas de las etiquetas que sigues</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Accede a WordPress.com para ver las últimas entradas de los sitios que sigues</string>
+    <string name="gutenberg_native_template_preview">Vista previa de la plantilla</string>
+    <string name="gutenberg_native_replace_current_block">Reemplazar el bloque actual</string>
+    <string name="gutenberg_native_add_to_end">Añadir al final</string>
+    <string name="gutenberg_native_add_to_beginning">Añadir al principio</string>
+    <string name="gutenberg_native_add_block_before">Añadir el bloque antes</string>
+    <string name="gutenberg_native_add_block_after">Añadir el bloque después</string>
+    <string name="reader_filter_empty_tags_action">Añadir una etiqueta</string>
+    <string name="reader_filter_empty_sites_action">Seguir un sitio</string>
+    <string name="reader_filter_empty_tags_list">Puedes seguir entradas sobre un tema específico añadiendo una etiqueta</string>
+    <string name="reader_filter_empty_sites_list">Mira las entradas más recientes de los sitios que sigues</string>
+    <string name="reader_filter_main_title">Siguiendo</string>
+    <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Leyenda del vídeo. %s</string>
     <string name="gutenberg_native_edit_video">Editar el vídeo</string>
     <string name="gutenberg_native_edit_media">Editar los medios</string>
@@ -68,7 +94,6 @@ Language: es
     <string name="suffix_1_000_000_000_000_000">%sP</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sE</string>
-    <string name="reader_filter_all_sites">Todos los sitios</string>
     <string name="reader_filter_sites_title">Sitios</string>
     <string name="reader_filter_tags_title">Etiquetas</string>
     <string name="reader_save_for_later_display_name">Guardado</string>
@@ -346,7 +371,6 @@ Language: es
     <string name="domain_registration_contact_form_input_error">Por favor, introduce un %s válido</string>
     <string name="domains_suggestions_choose_domain">Elegir dominio</string>
     <string name="stats_management_new">Nuevo</string>
-    <string name="stats_management_edit">Editar</string>
     <string name="stats_management_dismiss_insights_news_card">Descartar</string>
     <string name="stats_management_try_it_now">Pruébalo ahora</string>
     <string name="stats_management_news_card_message">Elige qué estadísticas ver, y céntrate en los datos que más te preocupen. Toca en %1$s al fondo de las estadísticas para personalizarlas.</string>
@@ -361,8 +385,6 @@ Language: es
     <string name="post_list_author_me">Yo</string>
     <string name="error_restoring_post">Ocurrió un error mientras se restauraba la entrada</string>
     <string name="backdated_for">Retroceder a: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Los elementos que se ven abajo mostrarán tu pestaña de detalles. Arrastra y suelta para personalizarla.</string>
-    <string name="stats_insights_add_insights_header">Añadir detalles</string>
     <string name="stats_insights_management_title">Solo ves las estadísticas más relevantes. Añade y organiza tus detalles abajo.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estadísticas anuales del sitio</string>
@@ -537,7 +559,7 @@ Language: es
     <string name="giphy_powered_by_giphy">Creado por GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Algunos medios no se cargaron debido a un error de red.</string>
     <string name="giphy_picker_empty_search_list">Ningún medio coincide con tu búsqueda</string>
-    <string name="giphy_picker_initial_empty_text">¡Busca para encontrar GIFs para agregar a tu biblioteca de medios!</string>
+    <string name="giphy_picker_initial_empty_text">¡Busca para encontrar GIF para añadir a tu biblioteca de medios!</string>
     <string name="giphy_picker_search_hint">Buscar en Giphy</string>
     <string name="stats_author_views_label">Vistas</string>
     <string name="stats_author_label">Autor</string>
@@ -829,17 +851,17 @@ Language: es
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalar</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_message">Instalar el primer plugin en tu sitio puede tomar hasta 1 minuto. Durante este tiempo, no podrás realizar cambios en tu sitio.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Instalar plugin</string>
-    <string name="notification_settings_followed_dialog_title">Notificaciones</string>
+    <string name="notification_settings_followed_dialog_title">Avisos</string>
     <string name="notification_settings_followed_dialog_email_comments">Enviarme nuevos comentarios por correo electrónico</string>
     <string name="notification_settings_followed_dialog_email_posts_weekly">Semanalmente</string>
     <string name="notification_settings_followed_dialog_email_posts_instantly">Instantáneamente</string>
     <string name="notification_settings_followed_dialog_email_posts_daily">Diariamente</string>
     <string name="notification_settings_followed_dialog_notification_posts_switch">Entradas nuevas</string>
-    <string name="notification_settings_followed_dialog_notification_posts_description">Recibe notificaciones de nuevas publicaciones en este sitio</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Recibe avisos de las nuevas entradas de este sitio</string>
     <string name="notification_settings_followed_dialog_email_posts_switch">Enviarme nuevas entradas por correo electrónico</string>
     <string name="notification_settings_item_your_sites_all_followed_sites">Todos mis sitios seguidos</string>
     <string name="notification_settings_category_followed_sites">Sitios seguidos</string>
-    <string name="content_description_person_reading_device_notification">Dispositivo de lectura personal con notificaciones</string>
+    <string name="content_description_person_reading_device_notification">Dispositivo de lectura personal con avisos</string>
     <string name="content_description_people_looking_charts">Gente mirando gráficos y tablas</string>
     <string name="comment_title">%s en %s</string>
     <string name="dialog_confirm_delete_permanently_post">¿Seguro que quieres eliminar definitivamente esta publicación?</string>
@@ -857,7 +879,7 @@ Language: es
     <string name="add_count">Añadir %d</string>
     <string name="fab_add_tag_desc">Crear etiqueta</string>
     <string name="navigate_up_desc">navegar hacia arriba</string>
-    <string name="notification_settings_switch_desc">Notificaciones</string>
+    <string name="notification_settings_switch_desc">Avisos</string>
     <string name="open_external_link_desc">Abrir enlace externo</string>
     <string name="show_more_desc">mostrar más</string>
     <string name="reader_photo_view_desc">foto</string>
@@ -919,7 +941,7 @@ Language: es
     <string name="person_detail_screen_title">Detalle de la persona</string>
     <string name="media_settings_screen_title">Detalles del archivo</string>
     <string name="publicize_buttons_screen_title">Botones de compartir</string>
-    <string name="notifications_screen_title">Notificaciones</string>
+    <string name="notifications_screen_title">Avisos</string>
     <string name="reader_screen_title">Lector</string>
     <string name="me_section_screen_title">Yo</string>
     <string name="my_site_section_screen_title">Mi sitio</string>
@@ -929,11 +951,11 @@ Language: es
     <string name="release_notes_screen_title">Notas de la versión</string>
     <string name="signup_epilogue_error_avatar_view">Tu avatar se ha subido y estará disponible en breve.</string>
     <string name="email_not_registered_wpcom">Umm, no encontramos una cuenta WordPress.com conectada a esta dirección de correo. Prueba con el enlace de abajo para acceder usando la dirección de tu sitio.</string>
-    <string name="permissions_denied_message">Parece que has desactivado los permisos necesarios para esta funcionalidad.&lt;br/>&lt;br/>Si deseas usarla, edita tus permisos y comprueba que &lt;strong>%s&lt;/strong> se ha habilitado.</string>
+    <string name="permissions_denied_message">Parece que has desactivado los permisos necesarios para esta característica.&lt;br/>&lt;br/>Para cambiarlo, edita tus permisos y asegúrate de que &lt;strong>%s&lt;/strong> está activado.</string>
     <string name="permissions_denied_title">Permisos</string>
     <string name="plugin_caption_featured">Destacados</string>
-    <string name="sharing_disabled_description">No puedes acceder a los ajustes compartidos porque el módulo Compartir de Jetpack está deshabilitado.</string>
-    <string name="sharing_disabled">Módulo Compartir deshabilitado.</string>
+    <string name="sharing_disabled_description">No puedes acceder a tus ajustes para compartir porque tu módulo de compartir de Jetpack está desactivado.</string>
+    <string name="sharing_disabled">Módulo para compartir desactivado.</string>
     <string name="version_with_name_param">Versión %s</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Editor: %s</string>
@@ -1414,7 +1436,7 @@ Language: es
     <string name="media_encoder_quality_90">Alta</string>
     <string name="media_encoder_quality_85">Media</string>
     <string name="media_encoder_quality_80">Baja</string>
-    <string name="media_upload_state_uploaded">Se ha subido</string>
+    <string name="media_upload_state_uploaded">Subido</string>
     <string name="media_upload_state_failed">Fallo al subir</string>
     <string name="media_upload_state_deleted">Se ha eliminado</string>
     <string name="media_upload_state_deleting">Eliminando</string>
@@ -1426,8 +1448,8 @@ Language: es
     <string name="error_unknown_post_type">Formato de entrada desconocido</string>
     <string name="submit_for_review">Enviar</string>
     <string name="duplicate_site_detected">Se ha detectado un sitio duplicado.</string>
-    <string name="cannot_add_duplicate_site">Este sitio ya existe en la aplicación, no se puede Agregar.</string>
-    <string name="already_logged_in_wpcom">Ya estás registrado en una cuenta de WordPress.com, no se puede agregar un sitio de WordPress.com a otra cuenta.</string>
+    <string name="cannot_add_duplicate_site">Este sitio ya existe en la aplicación, no puedes añadirlo.</string>
+    <string name="already_logged_in_wpcom">Ya estás conectado en una cuenta de WordPress.com, no puedes añadir un sitio de WordPress.com vinculado a otra cuenta.</string>
     <string name="error_media_load">No se puede cargar archivos multimedia</string>
     <string name="error_media_refresh_no_connection">Se necesita estar conectado para actualizar la biblioteca</string>
     <string name="error_media_unauthorized">No tienes permiso para ver o editar archivos multimedia</string>
@@ -1463,7 +1485,7 @@ Language: es
     <string name="error_notif_q_action_approve">No se pudo aprobar el comentario. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="error_notif_q_action_like">No se puede marcar como me gusta el comentario. Por favor inténtalo de nuevo más tarde.</string>
     <string name="notifications_label_new_notifications_subtitle">Pulsa para mostrarlos</string>
-    <string name="notifications_label_new_notifications">Nuevas notificaciones</string>
+    <string name="notifications_label_new_notifications">Nuevos avisos</string>
     <string name="comment_q_action_replying">Respondiendo…</string>
     <string name="comment_q_action_approving">Aprobando…</string>
     <string name="comment_q_action_liking">Enlazando…</string>
@@ -1536,12 +1558,12 @@ Language: es
     <string name="reader_empty_search_description">No se han encontrado resultados con %s para tu idioma</string>
     <string name="reader_hint_post_search">Buscar en WordPress</string>
     <string name="reader_title_related_post_detail">Entrada relacionada</string>
-    <string name="preview_screen_links_disabled">Los enlaces están inhabilitados en la pantalla de vista previa</string>
+    <string name="preview_screen_links_disabled">Los enlaces están desactivados en la pantalla de vista previa</string>
     <string name="send">Enviar</string>
     <string name="person_removed">\@%1$s eliminado correctamente.</string>
     <string name="user_remove_confirmation_message">Si eliminas %1$s, ese usuario ya no será capaz de acceder a este sitio, pero cualquier contenido que fuera creado por %1$s permanecerá en el sitio.\n\n¿Aún te gustaría eliminar este usuario?</string>
     <string name="person_remove_confirmation_title">Eliminar %1$s</string>
-    <string name="role">Rol</string>
+    <string name="role">Perfil</string>
     <string name="people">Gente</string>
     <string name="reader_empty_posts_in_custom_list">Los sitios de esta lista no han publicado nada últimamente.</string>
     <string name="error_remove_user">No se pudo eliminar el usuario</string>
@@ -1590,7 +1612,7 @@ Language: es
     <string name="comments_empty_list_filtered_approved">No hay comentarios aprobados</string>
     <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
     <string name="alignment_center">Centrado</string>
-    <string name="post_format_video">Video</string>
+    <string name="post_format_video">Vídeo</string>
     <string name="post_format_status">Estado</string>
     <string name="post_format_standard">Estándar</string>
     <string name="post_format_quote">Cita</string>
@@ -1635,7 +1657,7 @@ Language: es
     <string name="error_refresh_comments_showing_older">No se pudieron actualizar los comentarios ahora mismo - se muestran comentarios antiguos</string>
     <string name="post_settings_set_featured_image">Establece la imagen destacada</string>
     <string name="post_settings_featured_image">Imagen destacada</string>
-    <string name="email_address">Correo electrónico</string>
+    <string name="email_address">Dirección de correo electrónico</string>
     <string name="dlg_sure_to_delete_comments">¿Eliminar de forma permanente estos comentarios?</string>
     <string name="dlg_sure_to_delete_comment">¿Eliminar de forma permanente este comentario?</string>
     <string name="mnu_comment_delete_permanently">Eliminar</string>
@@ -1664,7 +1686,7 @@ Language: es
     <string name="about_me">Sobre mí</string>
     <string name="public_display_name_hint">El nombre público mostrará por defecto el nombre de usuario si no está establecido</string>
     <string name="public_display_name">Nombre que se mostrará públicamente</string>
-    <string name="last_name">Apellido</string>
+    <string name="last_name">Apellidos</string>
     <string name="first_name">Nombre</string>
     <string name="my_profile">Mi perfil</string>
     <string name="cd_related_post_preview_image">Imagen de vista previa de entradas relacionadas</string>
@@ -1700,7 +1722,7 @@ Language: es
     <string name="site_settings_threading_hint">Permitir comentarios anidados hasta cierto nivel</string>
     <string name="site_settings_sort_by_hint">Determina el orden de los comentarios mostrados</string>
     <string name="site_settings_close_after_hint">No permitir los comentarios después de un tiempo</string>
-    <string name="site_settings_receive_pingbacks_hint">Permitir notificaciones de enlace de otros sitios</string>
+    <string name="site_settings_receive_pingbacks_hint">Permitir avisos de enlace de otros sitios</string>
     <string name="site_settings_send_pingbacks_hint">Intenta notificar cualquier sitio enlazado desde el artículo</string>
     <string name="site_settings_allow_comments_hint">Permitir a los lectores publicar comentarios</string>
     <string name="site_settings_discussion_hint">Ver y cambiar la configuración de discusiones de tu sitio</string>
@@ -1805,11 +1827,11 @@ Language: es
     <string name="reader_short_like_count_one">1 Me gusta</string>
     <string name="reader_menu_tags">Editar etiquetas y sitios</string>
     <string name="reader_title_post_detail">Entrada del lector</string>
-    <string name="notifications_push_summary">Opciones para las notificaciones que aparecen en tu dispositivo.</string>
-    <string name="notifications_email_summary">Opciones para las notificaciones que se envían al correo electrónico ligado a tu cuenta.</string>
-    <string name="notifications_tab_summary">Opciones para las notificaciones que aparecen en la pestaña de notificaciones.</string>
-    <string name="notifications_disabled">Las notificaciones de la App han sido desativadas. Pulsa aquí para activarlas en Opciones.</string>
-    <string name="notification_types">Tipos de notificaciones</string>
+    <string name="notifications_push_summary">Ajustes para los avisos que aparecen en tu dispositivo.</string>
+    <string name="notifications_email_summary">Ajustes para los avisos que se envían al correo electrónico enlazado a tu cuenta.</string>
+    <string name="notifications_tab_summary">Ajustes para los avisos que aparecen en la pestaña de avisos.</string>
+    <string name="notifications_disabled">Los avisos de la aplicación han sido desactivados. Toca aquí para activarlos en los ajustes.</string>
+    <string name="notification_types">Tipos de avisos</string>
     <string name="error_loading_notifications">No se han podido cargar los ajustes de avisos</string>
     <string name="comment_likes">Me gusta al comentario</string>
     <string name="email">Correo electrónico</string>
@@ -1839,7 +1861,7 @@ Language: es
     <string name="me_connect_to_wordpress_com">Acceder a WordPress.com</string>
     <string name="site_picker_cant_hide_current_site">«%s» no se ha ocultado porque es el sitio actual</string>
     <string name="me_btn_support">Ayuda y soporte</string>
-    <string name="account_settings">Configuración de la cuenta</string>
+    <string name="account_settings">Ajustes de la cuenta</string>
     <string name="site_picker_create_wpcom">Crear sitio en WordPress.com</string>
     <string name="site_picker_edit_visibility">Mostrar/Ocultar sitios</string>
     <string name="site_picker_add_self_hosted">Añadir sitio autoalojado</string>
@@ -1938,16 +1960,15 @@ Language: es
     <string name="reader_label_followed_blog">Sitio seguido</string>
     <string name="reader_hint_add_tag_or_url">Introduce la URL o etiqueta que quieras seguir</string>
     <string name="reader_page_followed_blogs">Sitios que sigues</string>
-    <string name="reader_page_followed_tags">Etiquetas que se siguen</string>
-    <string name="reader_title_subs">Etiquetas y sitios</string>
+    <string name="reader_page_followed_tags">Etiquetas seguidas</string>
     <string name="reader_title_tag_preview">Etiqueta del lector</string>
     <string name="reader_title_blog_preview">Sitio del lector</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
     <string name="ssl_certificate_error">Certificado SSL no válido</string>
     <string name="forgot_password">¿Has olvidado la contraseña?</string>
     <string name="help">Ayuda</string>
-    <string name="username_or_password_incorrect">El usuario o contraseña que ingresaste no son correctos.</string>
-    <string name="email_invalid">Ingresa una dirección de correo electrónico válida</string>
+    <string name="username_or_password_incorrect">El nombre de usuario o contraseña que has introducido son incorrectos</string>
+    <string name="email_invalid">Introduce una dirección de correo electrónico válida</string>
     <string name="invalid_email_message">Tu dirección de correo electrónico no es válida</string>
     <string name="error_downloading_image">Error al descargar la imagen</string>
     <string name="error_load_comment">No se pudo cargar el comentario</string>
@@ -1958,10 +1979,10 @@ Language: es
     <string name="error_refresh_pages">Las páginas no pueden ser actualizadas en este momento.</string>
     <string name="error_refresh_posts">Las entradas no pueden ser actualizadas en este momento</string>
     <string name="error_deleting_post">Ocurrió un error al eliminar la entrada</string>
-    <string name="notifications_empty_list">Sin notificaciones</string>
+    <string name="notifications_empty_list">Sin avisos</string>
     <string name="sdcard_message">Se necesita una tarjeta SD montada para subir medios</string>
     <string name="cat_name_required">El campo nombre de categoría es necesario</string>
-    <string name="adding_cat_success">Categoría agregada correctamente.</string>
+    <string name="adding_cat_success">Categoría añadida correctamente</string>
     <string name="adding_cat_failed">No se pudo añadir la categoría</string>
     <string name="mnu_comment_unspam">No es spam</string>
     <string name="theme_fetch_failed">Ocurrió un error al obtener los temas.</string>
@@ -1971,7 +1992,7 @@ Language: es
     <string name="reader_toast_err_remove_tag">No se pudo eliminar esta etiqueta</string>
     <string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
-    <string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
+    <string name="fatal_db_error">Ha ocurrido un error al crear la base de datos de la aplicación. Por favor, intenta reinstalar la aplicación. </string>
     <string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
     <string name="error_refresh_media">No se pueden actualizar los medios en este momento</string>
     <string name="wordpress_blog">Blog de WordPress</string>
@@ -1980,10 +2001,10 @@ Language: es
     <string name="privacy_policy">Política de privacidad</string>
     <string name="new_media">Nuevo elemento multimedia</string>
     <string name="new_post">Nueva entrada</string>
-    <string name="notifications_empty_all">No hay notificaciones… aún.</string>
+    <string name="notifications_empty_all">No hay avisos… aún.</string>
     <string name="http_authorization_required">Se necesita autorización</string>
     <string name="invalid_site_url_message">Comprueba que la URL del sitio introducida es válida</string>
-    <string name="open_source_licenses">Licencias Open source</string>
+    <string name="open_source_licenses">Licencias de código abierto</string>
     <string name="file_error_create">No se pudo crear un archivo temporal para subir el archivo multimedia. Asegúrate que haya suficiente espacio libre en tu dispositivo.</string>
     <string name="category_name">Nombre de la categoría</string>
     <string name="add_new_category">Añadir nueva categoría</string>
@@ -2018,9 +2039,9 @@ Language: es
     <string name="local_draft">Borrador local</string>
     <string name="page_settings">Ajustes de página</string>
     <string name="link_enter_url_text">Texto del enlace (opcional)</string>
-    <string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde</string>
+    <string name="cannot_delete_multi_media_items">Algunos medios no se han podido borrar en este momento. Inténtalo de nuevo más tarde.</string>
     <string name="media_error_no_permission">No tienes permiso para ver la librería multimedia</string>
-    <string name="media_gallery_type_thumbnail_grid">Malla (red) de miniaturas</string>
+    <string name="media_gallery_type_thumbnail_grid">Cuadrícula de miniaturas</string>
     <string name="learn_more">Aprender más</string>
     <string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
     <string name="plugin_not_found">Ocurrió un error al acceder a este plugin</string>
@@ -2037,7 +2058,7 @@ Language: es
     <string name="reader_toast_err_get_post">No fue posible recuperar esta entrada</string>
     <string name="pick_video">Elige un vídeo</string>
     <string name="pick_photo">Elige una foto</string>
-    <string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto.</string>
+    <string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto</string>
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>
     <string name="reader_toast_err_view_image">Imposible ver la imágen</string>
     <string name="reader_toast_err_share_intent">Imposible compartir</string>
@@ -2078,7 +2099,7 @@ Language: es
     <string name="discard">Descartar</string>
     <string name="manage">Gestionar</string>
     <string name="more_notifications">y %d más.</string>
-    <string name="new_notifications">%d nuevas notificaciones</string>
+    <string name="new_notifications">%d nuevos avisos</string>
     <string name="follows">Seguimientos</string>
     <string name="note_reply_successful">Respuesta publicada</string>
     <string name="sign_in">Acceder</string>
@@ -2102,21 +2123,21 @@ Language: es
     <string name="app_title">WordPress para Android</string>
     <string name="tos">Términos del servicio</string>
     <string name="version">Versión</string>
-    <string name="image_alignment">Alineamiento</string>
+    <string name="image_alignment">Alineación</string>
     <string name="refresh">Refrescar</string>
     <string name="untitled">Sin Título</string>
     <string name="edit">Editar</string>
     <string name="immediately">Inmediatamente</string>
-    <string name="quickpress_add_alert_title">Nombre del Acceso Directo</string>
+    <string name="quickpress_add_alert_title">Establecer el nombre del atajo</string>
     <string name="settings">Ajustes</string>
-    <string name="quickpress_add_error">El nombre del acceso directo no puede ser vacío.</string>
-    <string name="quickpress_window_title">Selecciona un blog para el acceso directo a la Publicación Rápida</string>
+    <string name="quickpress_add_error">El nombre del atajo no puede estar vacío.</string>
+    <string name="quickpress_window_title">Selecciona un blog para el atajo de QuickPress</string>
     <string name="pages_private">Privado</string>
     <string name="categories">Categorías</string>
     <string name="tags_separate_with_commas">Separa las etiquetas con comas</string>
     <string name="title">Título</string>
     <string name="dlg_deleting_comments">Eliminando comentarios</string>
-    <string name="sdcard_title">Requiere tarjeta SD</string>
+    <string name="sdcard_title">Se necesita una tarjeta SD</string>
     <string name="media">Multimedia</string>
     <string name="approve">Aprobar</string>
     <string name="delete">Eliminar</string>

@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-05 17:30:41+0000
+Translation-Revision-Date: 2020-02-17 13:37:26+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_template_preview">Visualizar modelo</string>
+    <string name="gutenberg_native_replace_current_block">Substituir o bloco atual</string>
+    <string name="gutenberg_native_add_to_end">Adicionar ao final</string>
+    <string name="gutenberg_native_add_to_beginning">Adicionar no início</string>
+    <string name="gutenberg_native_add_block_before">Adicionar bloco antes</string>
+    <string name="gutenberg_native_add_block_after">Adicionar bloco depois</string>
+    <string name="reader_filter_empty_tags_action">Adicionar uma tag</string>
+    <string name="reader_filter_empty_sites_action">Seguir um site</string>
+    <string name="reader_filter_empty_tags_list">Você pode seguir posts de um assunto específico adicionando uma tag</string>
+    <string name="reader_filter_empty_sites_list">Veja os posts mais recentes de sites que você segue</string>
+    <string name="reader_filter_main_title">Seguindo</string>
+    <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Legenda do vídeo. %s</string>
     <string name="gutenberg_native_edit_video">Editar vídeo</string>
     <string name="gutenberg_native_edit_media">Editar mídia</string>
@@ -68,7 +80,6 @@ Language: pt_BR
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_all_sites">Todos os sites</string>
     <string name="reader_filter_sites_title">Sites</string>
     <string name="reader_filter_tags_title">Tags</string>
     <string name="reader_save_for_later_display_name">Salvo</string>
@@ -346,7 +357,6 @@ Language: pt_BR
     <string name="domain_registration_contact_form_input_error">Digite um %s válido</string>
     <string name="domains_suggestions_choose_domain">Escolher o domínio</string>
     <string name="stats_management_new">Novo</string>
-    <string name="stats_management_edit">Editar</string>
     <string name="stats_management_dismiss_insights_news_card">Dispensar</string>
     <string name="stats_management_try_it_now">Faça um teste</string>
     <string name="stats_management_news_card_message">Escolha as estatísticas que você deseja ver e foque nos dados mais importantes para você. Clique em %1$s na parte inferior da tela para personalizar suas estatísticas.</string>
@@ -361,8 +371,6 @@ Language: pt_BR
     <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">Ocorreu um erro ao restaurar o post</string>
     <string name="backdated_for">Retroceder para: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Os itens acima serão exibidos em sua aba resumo. Arraste e solte para personalizar.</string>
-    <string name="stats_insights_add_insights_header">Adicionar informações</string>
     <string name="stats_insights_management_title">Ver apenas as estatísticas mais relevantes. Adicione e organize duas informações abaixo.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estatística anual do site</string>
@@ -1939,7 +1947,6 @@ Language: pt_BR
     <string name="reader_hint_add_tag_or_url">Insira um URL ou tag para seguir</string>
     <string name="reader_page_followed_blogs">Sites seguidos</string>
     <string name="reader_page_followed_tags">Tags seguidas</string>
-    <string name="reader_title_subs">Tags e sites</string>
     <string name="reader_title_tag_preview">Tag do Leitor</string>
     <string name="reader_title_blog_preview">Leitor do site</string>
     <string name="ssl_certificate_ask_trust">Se você geralmente se conecta a este site sem problemas, talvez este erro signifique que alguém está tentando imitar o site, e você não deve continuar. Deseja confiar no certificado mesmo assim?</string>

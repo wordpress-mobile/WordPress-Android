@@ -16,8 +16,6 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsViewModel;
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationSiteInfoViewModel;
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
@@ -43,6 +41,7 @@ import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
+import org.wordpress.android.viewmodel.pages.PageParentSearchViewModel;
 import org.wordpress.android.viewmodel.pages.PageParentViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.pages.SearchListViewModel;
@@ -194,18 +193,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SiteCreationVerticalsViewModel.class)
-    abstract ViewModel siteCreationVerticalsViewModel(SiteCreationVerticalsViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(SiteCreationDomainsViewModel.class)
     abstract ViewModel siteCreationDomainsViewModel(SiteCreationDomainsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SiteCreationSiteInfoViewModel.class)
-    abstract ViewModel siteCreationSiteInfoViewModel(SiteCreationSiteInfoViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -281,6 +270,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostSignupInterstitialViewModel.class)
     abstract ViewModel postSignupInterstitialViewModel(PostSignupInterstitialViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PageParentSearchViewModel.class)
+    abstract ViewModel pageParentSearchViewModel(PageParentSearchViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

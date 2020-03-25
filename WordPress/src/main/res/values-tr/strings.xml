@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-06 00:54:10+0000
+Translation-Revision-Date: 2020-03-17 18:08:43+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="stats_insights_management_activity">Etkinlik</string>
+    <string name="stats_insights_management_posts_and_pages">Yazılar ve sayfalar</string>
+    <string name="stats_insights_management_general">Genel</string>
+    <string name="stats_management_screen_title">Yeni kart ekle</string>
+    <string name="stats_management_add_new_stats_card">Yeni istatistik kartı ekle</string>
+    <string name="reader_self_hosted_select_filter">Belirli konular hakkında yazılar bulmak için filtre düğmesini kullanın</string>
+    <string name="reader_bottom_sheet_content_description">Etiket veya Site Seçin, Açılır Pencere</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Seçilen</string>
+    <string name="reader_btn_select_filter_content_description">Yazıları filtrelemek için bir Site veya Etiket seçin</string>
+    <string name="reader_btn_remove_filter_content_description">Geçerli filtreyi kaldır</string>
+    <string name="reader_title_subs">Etiketleri ve Siteleri Yönet</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com\'da oturum aç</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Takip ettiğiniz etiketlerle ilişkili en son yazıları görmek için WordPress.com\'da oturum açın</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Takip ettiğiniz sitelerdeki en son yazıları görmek için WordPress.com\'da oturum açın</string>
+    <string name="gutenberg_native_template_preview">Şablon ön izlemesi</string>
+    <string name="gutenberg_native_replace_current_block">Mevcut bloğu değiştir</string>
+    <string name="gutenberg_native_add_to_end">Sona ekle</string>
+    <string name="gutenberg_native_add_to_beginning">Başa ekle</string>
+    <string name="gutenberg_native_add_block_before">Blok öncesine ekle</string>
+    <string name="gutenberg_native_add_block_after">Blok sonrasına ekle</string>
+    <string name="reader_filter_empty_tags_action">Bir etiket ekle</string>
+    <string name="reader_filter_empty_sites_action">Bir siteyi takip et</string>
+    <string name="reader_filter_empty_tags_list">Bir etiket ekleyerek belirli bir konudaki yayınları takip edebilirsiniz</string>
+    <string name="reader_filter_empty_sites_list">Takip ettiğiniz sitelerdeki en yeni yazıları görün</string>
+    <string name="reader_filter_main_title">Takip edilen</string>
+    <string name="reader_filter_cta">Filtrele</string>
     <string name="gutenberg_native_video_caption_s">Video yazısı. %s</string>
     <string name="gutenberg_native_edit_video">Videoyu düzenle</string>
     <string name="gutenberg_native_edit_media">Ortamı düzenle</string>
@@ -68,7 +94,6 @@ Language: tr
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_all_sites">Tüm siteler</string>
     <string name="reader_filter_sites_title">Siteler</string>
     <string name="reader_filter_tags_title">Etiketler</string>
     <string name="reader_save_for_later_display_name">Kaydedildi</string>
@@ -346,7 +371,6 @@ Language: tr
     <string name="domain_registration_contact_form_input_error">Lütfen geçerli bir %s girin</string>
     <string name="domains_suggestions_choose_domain">Alan adını seç</string>
     <string name="stats_management_new">Yeni</string>
-    <string name="stats_management_edit">Düzenle</string>
     <string name="stats_management_dismiss_insights_news_card">Kapat</string>
     <string name="stats_management_try_it_now">Şimdi deneyin</string>
     <string name="stats_management_news_card_message">Hangi istatistikleri göreceğinizi seçin ve en çok önem verdiğiniz verilere odaklanın. İstatistiklerinizi özelleştirmek için \"Yönelimler\" altındaki %1$s öğesine dokunun.</string>
@@ -361,8 +385,6 @@ Language: tr
     <string name="post_list_author_me">Ben</string>
     <string name="error_restoring_post">Yazı geri yüklenirken bir hata oluştu</string>
     <string name="backdated_for">Geriye dönüldü: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Yukarıda gösterilen öğeler yönelim adlı sekmenizde gösterilecektir. Kişiselleştirmek için sürükleyip bırakın.</string>
-    <string name="stats_insights_add_insights_header">Yönelime ekle</string>
     <string name="stats_insights_management_title">Sadece en çok ilgili olan istatistikleri görün. Yönelimleri aşağıya ekleyin ve düzenleyin.</string>
     <string name="stats_insights_social">Sosyal</string>
     <string name="stats_insights_annual_site_stats">Yıllık site istatistikleri</string>
@@ -1939,7 +1961,6 @@ Language: tr
     <string name="reader_hint_add_tag_or_url">Takip etmek için etiket veya adres girin</string>
     <string name="reader_page_followed_blogs">Takip edilen siteler</string>
     <string name="reader_page_followed_tags">Takip edilen etiketler</string>
-    <string name="reader_title_subs">Etiketler ve siteler</string>
     <string name="reader_title_tag_preview">Okuyucu etiketi</string>
     <string name="reader_title_blog_preview">Okuyucu sitesi</string>
     <string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>

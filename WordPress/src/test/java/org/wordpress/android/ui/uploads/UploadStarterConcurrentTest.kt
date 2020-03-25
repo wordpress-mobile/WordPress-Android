@@ -16,6 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.DateTimeUtils
@@ -45,6 +46,10 @@ class UploadStarterConcurrentTest {
         on { getPostsWithLocalChanges(eq(site)) } doReturn draftPosts
     }
 
+    private val pageStore = mock<PageStore> {
+        onBlocking { getPagesWithLocalChanges(any()) } doReturn emptyList()
+    }
+
     @Test
     fun `it uploads local drafts concurrently`() {
         // Given
@@ -68,6 +73,7 @@ class UploadStarterConcurrentTest {
     private fun createUploadStarter(uploadServiceFacade: UploadServiceFacade) = UploadStarter(
             context = mock(),
             postStore = postStore,
+            pageStore = pageStore,
             siteStore = mock(),
             bgDispatcher = Dispatchers.Default,
             ioDispatcher = Dispatchers.IO,

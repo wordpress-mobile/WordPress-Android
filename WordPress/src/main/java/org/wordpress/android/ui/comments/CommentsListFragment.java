@@ -463,13 +463,13 @@ public class CommentsListFragment extends Fragment {
             builder.setMessage(R.string.dlg_confirm_trash_comments);
             builder.setTitle(R.string.trash);
             builder.setCancelable(true);
-            builder.setPositiveButton(R.string.trash_yes, new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(R.string.dlg_confirm_action_trash, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
                     deleteSelectedComments(false);
                 }
             });
-            builder.setNegativeButton(R.string.trash_no, new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(R.string.dlg_cancel_action_dont_trash, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.cancel();

@@ -1,141 +1,100 @@
 <ar>
-14.1:
-- محرر المكون: يتيح لك مكون الكود القصير الجديد إنشاء أكواد قصيرة وتعديلها، وقد قمنا بتقليل الحشو حول المكونات النصية، وأصبح تحرير المقالات الطويلة جدًا الآن بمنزلة تجربة أكثر استقرارًا.
-- التحديثات: تم تعطيل خيار إزالة موقع Jetpack من منتقي المواقع.
-- إصلاحات الأخطاء: حذفت عمليات البحث عن المقالات بعض النتائج. يجري الآن البحث بالشكل المطلوب!
+14.4:
+إصلاح واحد طفيف: يهتم هذا الإصدار بمشكلة تسببت في رفع صور باستخدام عناوين URL بها خلل، الأمر الذي جعل الوصول إليها غير ممكن على موقعك على الويب.
 
-
-
+ليغسل الجميع أيديهم وليبقوا في مكان آمن.
 </ar>
 <de-DE>
-14.1:
-- Block-Editor: Mit dem neuen Shortcode-Block kannst du Shortcodes erstellen und bearbeiten, wir haben die Abstände um textbasierte Blöcke verringert und sehr lange Beiträge lassen sich nun stabiler bearbeiten.
-- Updates: Die Option zum Entfernen einer Jetpack-Website aus der Website-Auswahl wurde deaktiviert.
-- Fehlerkorrekturen: In Beitragssuchen fehlten manche Ergebnisse. Jetzt funktioniert die Suche wie beabsichtigt!
+14.4:
+Eine kleine Korrektur: Diese Version kümmert sich um ein Problem, das dazu führte, dass Bilder mit URLs hochgeladen wurden, die nicht in Ordnung waren, wodurch die Bilder auf deiner Website nicht mehr zugänglich waren.
 
-
-
+Wascht eure Hände und bleibt alle gesund.
 </de-DE>
 <en-US>
-14.1:
-- Block Editor: a new Shortcode block lets you create and edit shortcodes, we’ve reduced the padding around text-based blocks, and editing very long posts is now a more stable experience.
-- Updates: The option to remove a Jetpack site from the site picker has been disabled.
-- Bug fixes: searches for posts omitted some results. Now searching works as intended!
+14.4:
+One small fix: this release takes care of an issue that caused images to upload with wonky URLs, which made them inaccessible on your website.
 
-
-
+Wash your hands and stay safe, everyone.
 </en-US>
 <es-ES>
-14.1:
-- Editor de bloques: un nuevo bloque de shortcode te permite crear y editar shortcodes, hemos reducido el relleno alrededor de los bloques basados en texto y, ahora, la edición de entradas muy largas es una experiencia más estable.
-- Actualizaciones: Ha sido desactivada la opción de eliminar un sitio Jetpack del selector de sitios.
-- Correcciones de fallos: las búsquedas de entradas omitían algunos resultados. ¡Ahora la búsqueda funciona como debe!
+14.4:
+Una pequeña corrección: esta versión se ocupa de un problema que hace que las imágenes se carguen con URL inestables, lo que las hace inaccesibles en tu web.
 
-
+Lávate las manos y mantén a salvo a todos.
 </es-ES>
 <fr-CA>
-14.1 :
-- Éditeur de blocs : un nouveau bloc de code court vous permet de créer et de modifier des codes courts, le remplissage autour des blocs textuels a été réduit et la modification d'articles très longs est désormais plus stable.
-- Mises à jour : l’option pour supprimer un site Jetpack du sélecteur de sites a été désactivée.
-- Résolution de bugs : les recherches d’articles omettaient certains résultats. La recherche fonctionne désormais correctement.
+14.4 :
+Une petite correction : Cette version corrige un problème qui provoquait le téléversement d'images avec des URL bancales, ce qui les rendait inaccessibles sur votre site web.
 
-
-
+Lavez-vous les mains et restez en sécurité, tout le monde.
 </fr-CA>
 <fr-FR>
-14.1 :
-- Éditeur de blocs : un nouveau bloc de code court vous permet de créer et de modifier des codes courts, le remplissage autour des blocs textuels a été réduit et la modification d'articles très longs est désormais plus stable.
-- Mises à jour : l’option pour supprimer un site Jetpack du sélecteur de sites a été désactivée.
-- Résolution de bugs : les recherches d’articles omettaient certains résultats. La recherche fonctionne désormais correctement.
+14.4 :
+Une petite correction : Cette version corrige un problème qui provoquait le téléversement d'images avec des URL bancales, ce qui les rendait inaccessibles sur votre site web.
 
-
-
+Lavez-vous les mains et restez en sécurité, tout le monde.
 </fr-FR>
 <iw-IL>
-14.1:
-- עורך הבלוקים: בלוק השורטקוד החדש מאפשר לך ליצור ולערוך פריטי שורטקוד, צמצמנו את המרווחים מסביב לבלוקים שמבוססים על טקסט והעריכה של פוסטים מאוד ארוכים יציבה יותר כעת.
-- עדכונים: האפשרות להסיר אתר של Jetpack מבורר האתרים הושבתה.
-- תיקוני באגים: בחיפושים של פוסטים הושמטו כמה תוצאות. כעת החיפוש עובד כשורה!
+14.4:
+תיקון אחד קטן: בגרסה הזאת טיפלנו בבעיה שגרמה להעלאה של תמונות עם כתובות URL מוזרות ולכן, לא היה ניתן לגשת לתמונות האלה באתר שלך.
 
-
-
+רחצו ידיים ושמרו על עצמכם.
 </iw-IL>
+<id>
+14.4:
+Satu perbaikan kecil: Rilis ini mengatasi masalah penyebab gambar diunggah dengan URL miring, yang membuat URL tersebut tidak dapat diakses di situs web Anda.
+
+Cuci tangan dan tetap jaga diri semuanya.
+</id>
 <it-IT>
-14.1:
-- Editor a blocchi: un nuovo blocco Shortcode ti consente di creare e modificare shortcode, abbiamo ridotto il padding intorno ai blocchi basati sul testo e la modifica di articoli molto lunghi è ora un'esperienza più duratura.
-- Aggiornamenti: è stata disabilitata l'opzione per rimuovere un sito Jetpack dal selezionatore di siti.
-- Correzioni di bug: la ricerca per articoli ometteva alcuni risultati. Ora funziona come previsto!
+14.4:
+Una piccola correzione: questo rilascio risolve un problema a causa del quale le immagini si caricavano con URL inaffidabili, rendendole inaccessibili sul sito web.
 
-
-
+Lavatevi le mani e state tutti al sicuro.
 </it-IT>
 <ja-JP>
-14.1:
-- ブロックエディター :新しいショートコードブロックで、ショートコードの作成や編集ができます。テキストベースのブロック周囲にあるパディングが削減され、長文の投稿の編集では安定性が向上しました。
-- 更新 :サイトピッカーから Jetpack サイトを削除するオプションが無効になりました。
-- バグ修正 :投稿の検索で一部の結果が除外されていました。意図したとおりの検索が可能になりました。
+14.4:
+軽微な修正 :今回のリリースでは、誤った URL で画像がアップロードされ、サイト上でクセスできなくなる問題に対処しています。
 
-
-
+手を洗い、身の安全を守りましょう。
 </ja-JP>
-<ko-KR>
-14.1:
-- 블록 편집기: 새로운 쇼트코드를 사용하여 쇼트코드를 만들고 편집할 수 있습니다. 텍스트 기반 블록 주변의 여백을 줄였으며, 이제 긴 글을 더 안정적인 환경에서 편집할 수 있습니다.
-- 업데이트: 사이트 선택기에서 젯팩 사이트를 제거하는 옵션이 비활성화되었습니다.
-- 버그 수정: 게시물 검색에서 일부 결과가 생략되었습니다. 이제 검색이 원래대로 작동합니다!
+<nl-NL>
+14.4:
+Eén kleine fix: in deze release is een probleem opgelost dat ervoor zorgde dat afbeeldingen werden geüpload met vreemde URL's, waardoor ze niet toegankelijk waren op je website.
 
-
-
-</ko-KR>
+Was je handen en denk aan je veiligheid, allemaal.
+</nl-NL>
 <pt-BR>
-14.1:
-- Editor de blocos: um novo bloco de shortcode permite criar e editar shortcodes, reduzimos o espaço em volta de blocos de texto e melhoramos a estabilidade ao editar posts muito longos.
-- Atualização: a opção para remover um site Jetpack do seletor de sites foi desabilitada.
-- Correção de erros: pesquisar por posts omitia alguns resultados. Agora a pesquisa funciona como esperado.
+14.4:
+Uma pequena correção: essa versão corrige um problema que fazia com que imagens fossem enviadas com URLs estranhas, o que as tornava inacessíveis no site.
 
-
+Lave as mãos e mantenha-se em segurança.
 </pt-BR>
 <ru-RU>
-14.1:
-- Редактор блоков: новый блок шорткодов позволяет создавать и редактировать шорткоды, мы также уменьшили отступы вокруг текстовых блоков. Редактирование очень длинных записей стало более стабильным.
-- Возможность удаления сайта с Jetpack из списка сайтов была отключена.
-- Исправлен поиск, теперь некоторые результаты поиска более не будут пропущены.
-
-
+14.4:
+Небольшое исправление: этот выпуск исправляет проблему с загрузкой изображений и неправильными URL, которые делали изображения недоступными на сайте.
 </ru-RU>
 <sv-SE>
-14.1:
-- Blockredigeraren: ett nytt kordkodsblock låter dig skapa och redigera kortkoder. Vi har minskat utfyllnaden runt textbaserade block. Nu är upplevelsen stabilare när man redigerar  mycket långa inlägg.
-- Uppdateringar: Möjligheten att ta bort Jetpack från webbplatsen har inaktiverats.
-- Felrättningar: Vid sökning efter inlägg saknades vissa resultat. Nu fungerar sökningen som det är tänkt!
+14.4:
+En liten rättelse: denna utgåva korrigerar en problem som gjorde att bilder laddades upp med konstiga URL:er, något som sedan gjorde att de inte kunde nås på din webbplats.
 
-
-
+Tvätta händerna ofta och var försiktiga.
 </sv-SE>
 <tr-TR>
-14.1:
-- Blok Düzenleyici: Kısa kodlar oluşturup düzenlemenizi sağlayan yeni bir Kısa Kod bloğu. Metin tabanlı blokların etrafındaki dolguları azalttık ve çok uzun gönderileri düzenlemek artık daha istikrarlı bir deneyim sunuyor.
-- Güncelleştirmeler: Site seçiciden bir Jetpack sitesini kaldırma seçeneği devre dışı bırakıldı.
-- Hata düzeltmeleri: gönderi aramalarında bazı sonuçlar çıkarıldı. Arama işlevi artık istendiği gibi çalışıyor!
+14.4:
+Ufak bir düzeltme: bu dağıtım görsellerin garip adreslerle yüklenmesine ve web sitenizde görüntülenmemesine sebep olan bir problemi düzeltiyor.
 
-
-
+Ellerinizi yıkayın ve güvende kalın.
 </tr-TR>
 <zh-CN>
-14.1：
-- 区块编辑器：新的短代码区块允许您创建和编辑短代码，我们减少了基于文本的区块周围的填充，可以更稳定地编辑非常长的文章。
-- 更新：从站点选择器中删除 Jetpack 站点的选项已被禁用。
-– 错误修复：搜索文章时忽略了一些结果。现在可以按搜索预期工作！
+14.4：
+修复了一个小问题：此版本解决了导致图像通过不可靠 URL 上传，使其在您的网站上无法访问的问题。
 
-
-
+请大家勤洗手，注意安全。
 </zh-CN>
 <zh-TW>
-14.1：
-- 區塊編輯器：全新短代碼區塊可讓你建立和編輯短代碼，我們已縮短文字區塊周圍的邊框間距，你現在能夠更穩定地編輯內容很長的文章。
-- 更新：從網站選擇器移除 Jetpack 網站的選項已停用。
-- 錯誤修正：過去搜尋文章時會省略部分結果。現在搜尋功能已可正常運作！
+14.4：
+一個細部修正：此版本解決了以不良網址上傳圖片的問題，此問題可能會導致使用者無法存取網站圖片。
 
-
-
+請各位勤加洗手，注意安全。
 </zh-TW>
