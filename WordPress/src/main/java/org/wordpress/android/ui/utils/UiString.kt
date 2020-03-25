@@ -9,4 +9,5 @@ import androidx.annotation.StringRes
 sealed class UiString {
     data class UiStringText(val text: String) : UiString()
     data class UiStringRes(@StringRes val stringRes: Int) : UiString()
+    data class UiStringResWithParams(@StringRes val stringRes: Int, val params: List<UiString>) : UiString()
 }

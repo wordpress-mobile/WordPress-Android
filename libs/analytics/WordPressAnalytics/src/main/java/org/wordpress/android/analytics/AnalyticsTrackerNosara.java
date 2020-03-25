@@ -1300,18 +1300,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_segments_viewed";
             case ENHANCED_SITE_CREATION_SEGMENTS_SELECTED:
                 return "enhanced_site_creation_segments_selected";
-            case ENHANCED_SITE_CREATION_VERTICALS_VIEWED:
-                return "enhanced_site_creation_verticals_viewed";
-            case ENHANCED_SITE_CREATION_VERTICALS_SELECTED:
-                return "enhanced_site_creation_verticals_selected";
-            case ENHANCED_SITE_CREATION_VERTICALS_SKIPPED:
-                return "enhanced_site_creation_verticals_skipped";
-            case ENHANCED_SITE_CREATION_BASIC_INFORMATION_VIEWED:
-                return "enhanced_site_creation_basic_information_viewed";
-            case ENHANCED_SITE_CREATION_BASIC_INFORMATION_COMPLETED:
-                return "enhanced_site_creation_basic_information_completed";
-            case ENHANCED_SITE_CREATION_BASIC_INFORMATION_SKIPPED:
-                return "enhanced_site_creation_basic_information_skipped";
             case ENHANCED_SITE_CREATION_DOMAINS_ACCESSED:
                 return "enhanced_site_creation_domains_accessed";
             case ENHANCED_SITE_CREATION_DOMAINS_SELECTED:
@@ -1702,6 +1690,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_action_tapped";
             case AUTO_UPLOAD_POST_INVOKED:
                 return "auto_upload_post_invoked";
+            case AUTO_UPLOAD_PAGE_INVOKED:
+                return "auto_upload_page_invoked";
             case UNPUBLISHED_REVISION_DIALOG_SHOWN:
                 return "unpublished_revision_dialog_shown";
             case UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED:

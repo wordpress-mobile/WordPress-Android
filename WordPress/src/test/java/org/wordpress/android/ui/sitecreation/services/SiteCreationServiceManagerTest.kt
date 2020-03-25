@@ -33,9 +33,6 @@ private const val NEW_SITE_REMOTE_ID = 1234L
 
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         123,
-        "m2p1",
-        "title",
-        "tagLine",
         "slug"
 )
 

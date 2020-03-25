@@ -301,4 +301,8 @@ public class SiteUtils {
     public static boolean hasCustomDomain(@NonNull SiteModel site) {
         return !site.getUrl().contains(".wordpress.com");
     }
+
+    public static boolean hasFullAccessToContent(@Nullable SiteModel site) {
+        return site != null && (site.isSelfHostedAdmin() || site.getHasCapabilityEditPages());
+    }
 }
