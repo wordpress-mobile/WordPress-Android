@@ -317,12 +317,7 @@ class PagesFragment : Fragment() {
 
         viewModel.editPage.observe(this, Observer { (site, page, loadAutoRevision) ->
             page?.let {
-                ActivityLauncher.editPostOrPageForResult(
-                        this@PagesFragment.activity,
-                        site,
-                        page,
-                        loadAutoRevision
-                )
+                ActivityLauncher.editPageForResult(this, site, page.id, loadAutoRevision)
             }
         })
 
