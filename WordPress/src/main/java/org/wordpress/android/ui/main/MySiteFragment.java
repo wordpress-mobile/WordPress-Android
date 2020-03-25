@@ -849,8 +849,8 @@ public class MySiteFragment extends Fragment implements
                         showSiteIconProgressBar(true);
                         updateSiteIconMediaId(mediaId);
                     } else {
-                        String strMediaUri = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
-                        if (strMediaUri == null) {
+                        String[] mediaUriStringsArray = data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS);
+                        if (mediaUriStringsArray == null || mediaUriStringsArray.length == 0) {
                             AppLog.e(AppLog.T.UTILS, "Can't resolve picked or captured image");
                             return;
                         }
@@ -864,7 +864,7 @@ public class MySiteFragment extends Fragment implements
                                         : AnalyticsTracker.Stat.MY_SITE_ICON_GALLERY_PICKED;
                         AnalyticsTracker.track(stat);
 
-                        Uri imageUri = Uri.parse(strMediaUri);
+                        Uri imageUri = Uri.parse(mediaUriStringsArray[0]);
                         if (imageUri != null) {
                             boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
                                     new WPMediaUtils.MediaFetchDoNext() {

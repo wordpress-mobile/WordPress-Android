@@ -331,9 +331,10 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                     switch (requestCode) {
                         case RequestCodes.PHOTO_PICKER:
                             if (data != null) {
-                                String mediaUriString = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
+                                String[] mediaUriStringsArray =
+                                        data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS);
 
-                                if (mediaUriString != null) {
+                                if (mediaUriStringsArray != null && mediaUriStringsArray.length > 0) {
                                     PhotoPickerMediaSource source = PhotoPickerMediaSource.fromString(
                                             data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE));
                                     AnalyticsTracker.Stat stat =
@@ -341,7 +342,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                                 ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
                                                 : AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
                                     AnalyticsTracker.track(stat);
-                                    Uri imageUri = Uri.parse(mediaUriString);
+                                    Uri imageUri = Uri.parse(mediaUriStringsArray[0]);
 
                                     if (imageUri != null) {
                                         boolean wasSuccess = WPMediaUtils.fetchMediaAndDoNext(
