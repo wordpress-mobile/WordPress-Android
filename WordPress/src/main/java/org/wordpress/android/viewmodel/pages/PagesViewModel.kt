@@ -749,7 +749,7 @@ class PagesViewModel
 
     private fun editPage(pageId: RemoteId, loadAutoSaveRevision: LoadAutoSaveRevision = false) {
         val page = pageMap.getValue(pageId.value)
-        val result = if (page.hasLocalChanges) {
+        val result = if (page.post.isLocalDraft) {
             postStore.getPostByLocalPostId(page.pageId)
         } else {
             postStore.getPostByRemotePostId(page.remoteId, site)
