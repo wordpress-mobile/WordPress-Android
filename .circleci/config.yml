@@ -158,6 +158,18 @@ jobs:
       - run:
           name: Validate login strings
           command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
+  WordPressUtils Unit Tests:
+    executor:
+      name: android/default
+      api-version: "28"
+    steps:
+      - git/shallow-checkout
+      - android/restore-gradle-cache
+      - copy-gradle-properties
+      - run:
+          name: Test Library
+          command: cd libs/utils && ./gradlew --stacktrace testReleaseUnitTest
+      - android/save-gradle-cache
 
 workflows:
   wordpress_android:
@@ -165,6 +177,7 @@ workflows:
       - strings-check
       - test
       - lint
+      - WordPressUtils Unit Tests
       - Installable Build:
           filters:
             branches:
