@@ -7,11 +7,9 @@ import com.tenor.android.core.constant.MediaCollectionFormat
 import com.tenor.android.core.constant.MediaFilter
 import com.tenor.android.core.model.impl.Result
 import com.tenor.android.core.network.ApiClient
-import com.tenor.android.core.network.ApiService
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.WeakRefCallback
 import com.tenor.android.core.response.impl.GifsResponse
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R.string
 import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
 import org.wordpress.android.viewmodel.giphy.MutableGiphyMediaViewModel
@@ -25,28 +23,8 @@ import org.wordpress.android.viewmodel.giphy.provider.GifProvider.GifRequestFail
 
 internal class TenorProvider @JvmOverloads constructor(
     val context: Context,
-    tenorClient: IApiClient? = null
+    private val tenorClient: IApiClient
 ) : GifProvider {
-    private val apiClient: IApiClient
-
-    /**
-     * Initializes the Tenor API client with the environment API key, if no tenorClient is provided via constructor,
-     * the init will use the default implementation provided by the Tenor library.
-     */
-    init {
-        ApiService.Builder(context, IApiClient::class.java).apply {
-            apiKey(BuildConfig.TENOR_API_KEY)
-            ApiClient.init(context, this)
-            /**
-             * If we call [ApiClient.getInstance] before the [ApiClient.init] the Tenor API
-             * will throw an exception for an illegal operation, but to still make possible for the
-             * constructor to have the [tenorClient] as a optional parameter, the actual [apiClient]
-             * will be decided after everything is initialized
-             */
-            apiClient = tenorClient ?: ApiClient.getInstance(context)
-        }
-    }
-
     /**
      * Implementation of the [GifProvider] search method, it will call the Tenor client search
      * right away with the provided parameters.
@@ -58,7 +36,7 @@ internal class TenorProvider @JvmOverloads constructor(
         onSuccess: (List<GiphyMediaViewModel>, Int?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
-        apiClient.simpleSearch(
+        tenorClient.simpleSearch(
                 query,
                 position.toString(),
                 loadSize,

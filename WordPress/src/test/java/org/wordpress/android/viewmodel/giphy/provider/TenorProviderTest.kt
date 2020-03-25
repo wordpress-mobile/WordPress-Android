@@ -7,6 +7,8 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.tenor.android.core.constant.MediaFilter
+import com.tenor.android.core.network.ApiClient
+import com.tenor.android.core.network.ApiService.Builder
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.WeakRefCallback
 import com.tenor.android.core.response.impl.GifsResponse
@@ -21,6 +23,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.TestApplication
 import org.wordpress.android.viewmodel.giphy.provider.GifProvider.GifRequestFailedException
 import org.wordpress.android.viewmodel.giphy.provider.TenorProviderTestFixtures.expectedGifMediaViewModelCollection
@@ -43,13 +46,20 @@ class TenorProviderTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
+        val context = ApplicationProvider.getApplicationContext<Context>()
+
+        Builder(context, IApiClient::class.java).apply {
+            apiKey(BuildConfig.TENOR_API_KEY)
+            ApiClient.init(context, this)
+        }
+
         whenever(apiClient.search(any(), any(), any(), any(), any(), any()))
                 .thenReturn(gifSearchCall)
 
         val gifResults = mockedTenorResult
         whenever(gifResponse.results).thenReturn(gifResults)
 
-        tenorProviderUnderTest = TenorProvider(ApplicationProvider.getApplicationContext(), apiClient)
+        tenorProviderUnderTest = TenorProvider(context, apiClient)
     }
 
     @Test

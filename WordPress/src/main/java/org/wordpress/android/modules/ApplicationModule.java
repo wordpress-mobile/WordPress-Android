@@ -5,13 +5,16 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
+import com.tenor.android.core.network.ApiClient;
+import com.tenor.android.core.network.ApiService;
+import com.tenor.android.core.network.IApiClient;
+
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
-import org.wordpress.android.viewmodel.giphy.provider.GifProvider;
-import org.wordpress.android.viewmodel.giphy.provider.TenorProvider;
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment;
@@ -30,6 +33,8 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureFragment;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.ContextProvider;
+import org.wordpress.android.viewmodel.giphy.provider.GifProvider;
+import org.wordpress.android.viewmodel.giphy.provider.TenorProvider;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
@@ -113,6 +118,9 @@ public abstract class ApplicationModule {
 
     @Provides
     static GifProvider provideGifProvider(Context context) {
-        return new TenorProvider(context);
+        ApiService.IBuilder<IApiClient> builder = new ApiService.Builder<>(context, IApiClient.class);
+        builder.apiKey(BuildConfig.TENOR_API_KEY);
+        ApiClient.init(context, builder);
+        return new TenorProvider(context, ApiClient.getInstance(context));
     }
 }
