@@ -259,13 +259,12 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void newSite(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
-                        @NonNull SiteVisibility visibility, @Nullable String verticalId, @Nullable Long segmentId,
-                        @Nullable String tagLine, final boolean dryRun) {
+    public void newSite(@NonNull String siteName, @NonNull String language,
+                        @NonNull SiteVisibility visibility, @Nullable Long segmentId,
+                        final boolean dryRun) {
         String url = WPCOMREST.sites.new_.getUrlV1_1();
         Map<String, Object> body = new HashMap<>();
         body.put("blog_name", siteName);
-        body.put("blog_title", siteTitle);
         body.put("lang_id", language);
         body.put("public", visibility.toString());
         body.put("validate", dryRun ? "1" : "0");
@@ -274,16 +273,8 @@ public class SiteRestClient extends BaseWPComRestClient {
 
         // Add site options if available
         Map<String, Object> options = new HashMap<>();
-        if (verticalId != null) {
-            options.put("site_vertical", verticalId);
-        }
         if (segmentId != null) {
             options.put("site_segment", segmentId);
-        }
-        if (tagLine != null) {
-            Map<String, Object> siteInformation = new HashMap<>();
-            siteInformation.put("site_tagline", tagLine);
-            options.put("site_information", siteInformation);
         }
         if (options.size() > 0) {
             body.put("options", options);
