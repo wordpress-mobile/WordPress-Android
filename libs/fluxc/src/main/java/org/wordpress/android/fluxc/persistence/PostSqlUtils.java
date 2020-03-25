@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import com.wellsql.generated.LocalDiffModelTable;
 import com.wellsql.generated.LocalRevisionModelTable;
 import com.wellsql.generated.PostModelTable;
-import com.wellsql.generated.PostSummaryModelTable;
 import com.yarolegovich.wellsql.ConditionClauseBuilder;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.SelectQuery.Order;
@@ -20,7 +19,6 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.model.PostSummaryModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
 import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
@@ -28,10 +26,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveMod
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -403,45 +399,5 @@ public class PostSqlUtils {
             localPostIds.add(new LocalId(post.getId()));
         }
         return localPostIds;
-    }
-
-    public void insertOrUpdatePostSummaries(List<PostSummaryModel> postSummaryModelList) {
-        // The "unique(remote_id) on conflict replace" constraint will take care of updating on insert
-        WellSql.insert(postSummaryModelList).asSingleTransaction(true).execute();
-    }
-
-    public List<PostSummaryModel> getPostSummaries(@NonNull SiteModel site, @NonNull List<Long> remotePostIds) {
-        if (remotePostIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-        List<PostSummaryModel> postSummaryModelList = WellSql.select(PostSummaryModel.class)
-                      .where()
-                      .equals(PostSummaryModelTable.LOCAL_SITE_ID, site.getId())
-                      .isIn(PostSummaryModelTable.REMOTE_ID, remotePostIds)
-                      .endWhere()
-                      .getAsModel();
-        // Re-order the post summaries to preserve the list order
-        return orderPostSummaries(remotePostIds, postSummaryModelList);
-    }
-
-    /**
-     * Orders the `postSummaryModelList` for the given `remotePostIds`.
-     */
-    private List<PostSummaryModel> orderPostSummaries(List<Long> remotePostIds,
-                                                      List<PostSummaryModel> postSummaryModelList) {
-        Map<Long, PostSummaryModel> map = new HashMap<>();
-        for (PostSummaryModel postSummaryModel : postSummaryModelList) {
-            if (postSummaryModel.getRemoteId() != null) {
-                map.put(postSummaryModel.getRemoteId(), postSummaryModel);
-            }
-        }
-        List<PostSummaryModel> resultList = new ArrayList<>(postSummaryModelList.size());
-        for (Long remotePostId : remotePostIds) {
-            @Nullable PostSummaryModel postSummaryModel = map.get(remotePostId);
-            if (postSummaryModel != null) {
-                resultList.add(postSummaryModel);
-            }
-        }
-        return resultList;
     }
 }
