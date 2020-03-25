@@ -9,13 +9,13 @@ interface GifProvider {
     /**
      * Request GIF search from a query string
      *
-     * The [query] parameter represents the desired text to search within the provider.
-     * [position] to request results starting from a given position for that [query]
-     * [loadSize] to request a result list limited to a specific amount
-     * [onSuccess] will be called if the Provider had success finding GIFs
+     * @param query represents the desired text to search within the provider.
+     * @param position to request results starting from a given position for that query
+     * @param loadSize to request a result list limited to a specific amount
+     * @param onSuccess will be called if the Provider had success finding GIFs
      * and will deliver a [List] of [GiphyMediaViewModel] with all matching GIFs
      * and a [Int] describing the next position for pagination
-     * [onFailure] will be called if the Provider didn't succeed with the task of bringing GIFs,
+     * @param onFailure will be called if the Provider didn't succeed with the task of bringing GIFs,
      * the delivered String will describe the error to be presented to the user
      */
     fun search(
