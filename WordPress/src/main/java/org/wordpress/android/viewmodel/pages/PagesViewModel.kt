@@ -449,7 +449,11 @@ class PagesViewModel
 
     fun onItemTapped(pageItem: Page) {
         pageMap[pageItem.id]?.let {
-            val result = postStore.getPostByRemotePostId(it.remoteId, site)
+            val result = if (it.hasLocalChanges) {
+                postStore.getPostByLocalPostId(it.pageId)
+            } else {
+                postStore.getPostByRemotePostId(it.remoteId, site)
+            }
             _editPage.postValue(Pair(site, result))
         }
     }
