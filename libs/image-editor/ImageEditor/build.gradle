@@ -33,7 +33,7 @@ android {
     }
 
     buildTypes {
-        release { // TODO: enable proguard, resource shrinking
+        release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

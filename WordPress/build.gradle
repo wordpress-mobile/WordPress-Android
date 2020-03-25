@@ -16,7 +16,6 @@ repositories {
     jcenter()
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://giphy.bintray.com/giphy-sdk" }
-    maven { url "https://www.jitpack.io" }
 }
 
 apply plugin: 'com.android.application'
