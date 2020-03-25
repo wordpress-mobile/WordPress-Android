@@ -77,7 +77,7 @@ class GiphyPickerDataSource(
     /**
      * Basic search request handling to initialize the list for the loadInitial function
      *
-     * If no next position is informed by Tenor, the total count will be set with the size of the GIF list
+     * If no next position is informed by the GIF provider, the total count will be set with the size of the GIF list
      */
     private fun requestInitialSearch(
         params: LoadInitialParams,
