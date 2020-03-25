@@ -24,8 +24,8 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.wordpress.android.TestApplication
 import org.wordpress.android.viewmodel.giphy.provider.GifProvider.GifRequestFailedException
-import org.wordpress.android.viewmodel.giphy.provider.TenorProviderTestUtils.Companion.expectedGifMediaViewModelCollection
-import org.wordpress.android.viewmodel.giphy.provider.TenorProviderTestUtils.Companion.mockedTenorResult
+import org.wordpress.android.viewmodel.giphy.provider.TenorProviderTestFixtures.expectedGifMediaViewModelCollection
+import org.wordpress.android.viewmodel.giphy.provider.TenorProviderTestFixtures.mockedTenorResult
 import retrofit2.Call
 
 @Config(application = TestApplication::class)
@@ -145,7 +145,7 @@ class TenorProviderTest {
         tenorProviderUnderTest.search(
                 "test",
                 0,
-                onSuccess = { _,_ -> },
+                onSuccess = { _, _ -> },
                 onFailure = {})
 
         verify(apiClient).search(
@@ -167,7 +167,7 @@ class TenorProviderTest {
         tenorProviderUnderTest.search(
                 "test",
                 0,
-                onSuccess = { _,_ -> },
+                onSuccess = { _, _ -> },
                 onFailure = {})
 
         verify(apiClient).search(
@@ -190,7 +190,7 @@ class TenorProviderTest {
                 "test",
                 0,
                 20,
-                onSuccess = { _,_ -> },
+                onSuccess = { _, _ -> },
                 onFailure = {})
 
         verify(apiClient).search(
@@ -213,7 +213,7 @@ class TenorProviderTest {
                 "test",
                 0,
                 1500,
-                onSuccess = { _,_ -> },
+                onSuccess = { _, _ -> },
                 onFailure = {})
 
         verify(apiClient).search(
