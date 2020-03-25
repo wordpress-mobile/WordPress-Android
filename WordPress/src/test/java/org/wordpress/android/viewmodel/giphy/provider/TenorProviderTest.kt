@@ -10,8 +10,7 @@ import com.tenor.android.core.constant.MediaFilter
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.WeakRefCallback
 import com.tenor.android.core.response.impl.GifsResponse
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
@@ -62,7 +61,7 @@ class TenorProviderTest {
                 0,
                 onSuccess = { actualViewModelCollection, _ ->
                     onSuccessWasCalled = true
-                    assertEquals(expectedGifMediaViewModelCollection, actualViewModelCollection)
+                    assertThat(actualViewModelCollection).isEqualTo(expectedGifMediaViewModelCollection)
                 },
                 onFailure = {
                     fail("Failure handler should not be called")
@@ -71,7 +70,7 @@ class TenorProviderTest {
         verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
         val capturedCallback = callbackCaptor.value
         capturedCallback.success(ApplicationProvider.getApplicationContext(), gifResponse)
-        assertTrue("onSuccess should be called", onSuccessWasCalled)
+        assertThat(onSuccessWasCalled).isTrue()
     }
 
     @Test
@@ -84,7 +83,7 @@ class TenorProviderTest {
                 0,
                 onSuccess = { _, actualNextPosition ->
                     onSuccessWasCalled = true
-                    assertEquals(expectedNextPosition, actualNextPosition)
+                    assertThat(actualNextPosition).isEqualTo(expectedNextPosition)
                 },
                 onFailure = {
                     fail("Failure handler should not be called")
@@ -93,7 +92,7 @@ class TenorProviderTest {
         verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
         val capturedCallback = callbackCaptor.value
         capturedCallback.success(ApplicationProvider.getApplicationContext(), gifResponse)
-        assertTrue("onSuccess should be called", onSuccessWasCalled)
+        assertThat(onSuccessWasCalled).isTrue()
     }
 
     @Test
@@ -105,16 +104,16 @@ class TenorProviderTest {
                 onSuccess = { _, _ ->
                     fail("Success handler should not be called")
                 },
-                onFailure = {
+                onFailure = { throwable ->
                     onFailureWasCalled = true
-                    assertTrue(it is GifRequestFailedException)
-                    assertEquals("Expected message", it.message)
+                    assertThat(throwable).isInstanceOf(GifRequestFailedException::class.java)
+                    assertThat(throwable.message).isEqualTo("Expected message")
                 })
 
         verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
         val capturedCallback = callbackCaptor.value
         capturedCallback.failure(ApplicationProvider.getApplicationContext(), RuntimeException("Expected message"))
-        assertTrue("onFailure should be called", onFailureWasCalled)
+        assertThat(onFailureWasCalled).isTrue()
     }
 
     @Test
@@ -126,16 +125,16 @@ class TenorProviderTest {
                 onSuccess = { _, _ ->
                     fail("Success handler should not be called")
                 },
-                onFailure = {
+                onFailure = { throwable ->
                     onFailureWasCalled = true
-                    assertTrue(it is GifRequestFailedException)
-                    assertEquals("No media matching your search", it.message)
+                    assertThat(throwable).isInstanceOf(GifRequestFailedException::class.java)
+                    assertThat(throwable.message).isEqualTo("No media matching your search")
                 })
 
         verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
         val capturedCallback = callbackCaptor.value
         capturedCallback.success(ApplicationProvider.getApplicationContext(), null)
-        assertTrue("onFailure should be called", onFailureWasCalled)
+        assertThat(onFailureWasCalled).isTrue()
     }
 
     @Test
@@ -157,7 +156,8 @@ class TenorProviderTest {
                 any()
         )
 
-        assertEquals(MediaFilter.BASIC, argument.value)
+        val requestedMediaFilter = argument.value
+        assertThat(requestedMediaFilter).isEqualTo(MediaFilter.BASIC)
     }
 
     @Test
@@ -179,7 +179,8 @@ class TenorProviderTest {
                 any()
         )
 
-        assertEquals(50, argument.value)
+        val requestedLoadSize = argument.value
+        assertThat(requestedLoadSize).isEqualTo(50)
     }
 
     @Test
@@ -202,7 +203,8 @@ class TenorProviderTest {
                 any()
         )
 
-        assertEquals(20, argument.value)
+        val requestedLoadSize = argument.value
+        assertThat(requestedLoadSize).isEqualTo(20)
     }
 
     @Test
@@ -225,6 +227,7 @@ class TenorProviderTest {
                 any()
         )
 
-        assertEquals(50, argument.value)
+        val requestedLoadSize = argument.value
+        assertThat(requestedLoadSize).isEqualTo(50)
     }
 }
