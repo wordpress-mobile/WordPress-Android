@@ -120,6 +120,8 @@ internal class TenorProvider @JvmOverloads constructor(
     /**
      * If the search request succeeds an [List] of [MutableGiphyMediaViewModel] will be passed with the next position
      * for pagination. If there's no next position provided, it will be passed as null.
+     *
+     * Method is inlined for better high-order functions performance
      */
     private inline fun handleResponse(
         response: GifsResponse,
@@ -136,6 +138,7 @@ internal class TenorProvider @JvmOverloads constructor(
      * If the search request fails an [GifRequestFailedException] will be passed with the API
      * message. If there's no message provided, a generic message will be applied.
      *
+     * Method is inlined for better high-order functions performance
      */
     private inline fun handleFailure(
         throwable: Throwable,
