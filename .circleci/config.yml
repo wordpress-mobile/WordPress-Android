@@ -93,7 +93,7 @@ jobs:
       - store_artifacts:
           path: Artifacts
           destination: Artifacts
-  connected-tests:
+  Connected Tests:
     executor:
       name: android/default
       api-version: "28"
@@ -176,11 +176,18 @@ workflows:
           filters:
             branches:
               ignore: /pull\/[0-9]+/
-  wordpress_android_connected_tests:
-    jobs:
-      - connected-tests:
+      - Connected Tests:
           filters:
             branches:
               only:
                 - develop
                 - /^release.*/ # Runs on any release branch
+      - Hold:
+          type: approval
+      - Connected Tests:
+          requires: [Hold] # Optionally run connected tests on PRs
+          filters:
+            branches:
+              ignore:
+                - develop
+                - /^release.*/
