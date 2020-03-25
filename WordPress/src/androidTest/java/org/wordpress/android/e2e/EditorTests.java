@@ -62,7 +62,7 @@ package org.wordpress.android.e2e;
 //    public void testPublishFullPost() {
 //        String title = "Hello Espresso!";
 //        String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod "
-//                         + "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
+//                         + "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis "
 //                         + "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
 //        String category = "Wedding";
 //        long now = Instant.now().toEpochMilli();
