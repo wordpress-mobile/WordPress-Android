@@ -23,8 +23,11 @@ jobs:
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
-          name: Test
+          name: Test WordPress
           command: ./gradlew --stacktrace testVanillaRelease
+      - run:
+          name: Test WordPressUtils
+          command: cd libs/utils && ./gradlew --stacktrace testReleaseUnitTest
       - android/save-gradle-cache
       - android/save-test-results
   lint:
