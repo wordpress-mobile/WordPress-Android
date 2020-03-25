@@ -76,6 +76,8 @@ class GiphyPickerDataSource(
 
     /**
      * Basic search request handling to initialize the list for the loadInitial function
+     *
+     * If no next position is informed by Tenor, the total count will be set with the size of the GIF list
      */
     private fun requestInitialSearch(
         params: LoadInitialParams,
@@ -102,10 +104,7 @@ class GiphyPickerDataSource(
      * automatically retried using [retryAllFailedRangeLoads].
      */
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<GiphyMediaViewModel>) {
-        gifProvider.search(
-                searchQuery,
-                params.startPosition,
-                params.loadSize,
+        gifProvider.search(searchQuery, params.startPosition, params.loadSize,
                 onSuccess = {
                     gifs, _ -> callback.onResult(gifs)
                     retryAllFailedRangeLoads()
