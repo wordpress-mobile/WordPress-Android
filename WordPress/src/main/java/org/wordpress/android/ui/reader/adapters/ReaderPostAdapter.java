@@ -42,6 +42,7 @@ import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
+import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -104,6 +105,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
+    private ReblogActionListener mReblogActionListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -185,6 +187,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView mTxtAuthorAndBlogName;
         private final TextView mTxtDateline;
 
+        private final ReaderIconCountView mReblog;
         private final ReaderIconCountView mCommentCount;
         private final ReaderIconCountView mLikeCount;
         private final ImageView mBtnBookmark;
@@ -218,6 +221,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mTxtAuthorAndBlogName = itemView.findViewById(R.id.text_author_and_blog_name);
             mTxtDateline = itemView.findViewById(R.id.text_dateline);
 
+            mReblog = itemView.findViewById(R.id.reblog);
             mCommentCount = itemView.findViewById(R.id.count_comments);
             mLikeCount = itemView.findViewById(R.id.count_likes);
             mBtnBookmark = itemView.findViewById(R.id.bookmark);
@@ -553,6 +557,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         showLikes(holder, post);
         showComments(holder, post);
+        showReblogButton(holder, post);
         initBookmarkButton(position, holder, post);
 
         // more menu only shows for followed tags
@@ -691,7 +696,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Context context,
             ReaderPostListType postListType,
             ImageManager imageManager,
-            boolean isMainReader
+            boolean isMainReader,
+            ReblogActionListener reblogActionListener
     ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -702,6 +708,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = !mAccountStore.hasAccessToken();
         mIsMainReader = isMainReader;
+        mReblogActionListener = reblogActionListener;
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
@@ -1003,6 +1010,24 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             holder.mCommentCount.setVisibility(View.GONE);
             holder.mCommentCount.setOnClickListener(null);
+        }
+    }
+
+    /**
+     * Sets reblog button visibility and action
+     *
+     * @param holder the view holder
+     * @param post   the current reader post
+     */
+    private void showReblogButton(final ReaderPostViewHolder holder, final ReaderPost post) {
+        boolean canBeReblogged = !mIsLoggedOutReader && !post.isPrivate;
+        if (canBeReblogged) {
+            holder.mReblog.setCount(0);
+            holder.mReblog.setVisibility(View.VISIBLE);
+            holder.mReblog.setOnClickListener(v -> mReblogActionListener.reblog(post));
+        } else {
+            holder.mReblog.setVisibility(View.GONE);
+            holder.mReblog.setOnClickListener(null);
         }
     }
 

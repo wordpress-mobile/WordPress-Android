@@ -74,6 +74,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
@@ -86,13 +87,16 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.MainToolbarFragment;
+import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -154,7 +158,8 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
-        MainToolbarFragment {
+        MainToolbarFragment,
+        ReblogActionListener {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
     private static final int NO_POSITION = -1;
@@ -194,6 +199,8 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostListType mPostListType;
     private ReaderSiteModel mLastTappedSiteSearchResult;
 
+    private ReaderPost mPostToReblog;
+
     private int mRestorePosition;
     private int mSiteSearchRestorePosition;
     private int mPostSearchAdapterPos;
@@ -230,6 +237,7 @@ public class ReaderPostListFragment extends Fragment
     @Inject QuickStartStore mQuickStartStore;
     @Inject UiHelpers mUiHelpers;
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
+    @Inject SiteStore mSiteStore;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -2070,7 +2078,8 @@ public class ReaderPostListFragment extends Fragment
                     context,
                     getPostListType(),
                     mImageManager,
-                    mIsTopLevel
+                    mIsTopLevel,
+                    this
             );
             mPostAdapter.setOnFollowListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
@@ -2886,6 +2895,30 @@ public class ReaderPostListFragment extends Fragment
                 //noinspection unchecked
                 mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
             }
+        }
+    }
+
+    @Override
+    public void reblog(ReaderPost post) {
+        List<SiteModel> sites = mSiteStore.getVisibleSites();
+        switch (sites.size()) {
+            case 1:
+                ActivityLauncher.openEditorForReblog(getActivity(), getSelectedSite(), this.mPostToReblog);
+                break;
+            case 0: // The no site case can be handled by the site picker for now
+            default:
+                this.mPostToReblog = post; // Stores the post to be handled in the onActivityResult after site selection
+                ActivityLauncher.showSitePickerForResult(this, getSelectedSite());
+                break;
+        }
+    }
+
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {
+            int siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+            SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+            ActivityLauncher.openEditorForReblog(getActivity(), site, this.mPostToReblog);
         }
     }
 }
