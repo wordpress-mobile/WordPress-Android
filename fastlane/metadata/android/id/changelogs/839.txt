@@ -1,0 +1,4 @@
+14.4:
+Satu perbaikan kecil: Rilis ini mengatasi masalah penyebab gambar diunggah dengan URL miring, yang membuat URL tersebut tidak dapat diakses di situs web Anda.
+
+Cuci tangan dan tetap jaga diri semuanya.

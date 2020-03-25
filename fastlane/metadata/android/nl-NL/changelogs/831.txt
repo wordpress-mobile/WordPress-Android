@@ -1,9 +1,0 @@
-14.2:
-Veel updates voor de blok-editor:
-
-* Pictogram voor iets langer indrukken toegevoegd om vooraf/achteraf blokken toe te voegen.
-* App probeert afbeeldingen weer te geven als je weer online bent nadat de internetverbinding verbroken is geweest.
-* Probleem opgelost met lege editor die een bericht probeert te maken met afbeeldingen of links van een andere app.
-* Beeldformaatopties toegevoegd aan het galerieblok.
-* Probleem opgelost waarbij werd voorkomen dat paragraafblokken werden samengevoegd.
-

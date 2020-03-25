@@ -1,0 +1,4 @@
+14.4:
+Una piccola correzione: questo rilascio risolve un problema a causa del quale le immagini si caricavano con URL inaffidabili, rendendole inaccessibili sul sito web.
+
+Lavatevi le mani e state tutti al sicuro.

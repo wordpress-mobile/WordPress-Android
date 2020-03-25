@@ -25,7 +25,6 @@ Language: cs_CZ
     <string name="domain_contact_information_phone_number_hint">Telefon</string>
     <string name="domain_contact_information_organization_hint">Organizace (volitelné)</string>
     <string name="stats_management_new">Nový</string>
-    <string name="stats_management_edit">Upravit</string>
     <string name="stats_management_dismiss_insights_news_card">Skrýt</string>
     <string name="stats_management_try_it_now">Vyzkoušet</string>
     <string name="post_list_drafts">Koncepty</string>
@@ -1456,7 +1455,6 @@ Language: cs_CZ
     <string name="reader_hint_add_tag_or_url">Zadejte URL nebo štítek, který chcete sledovat</string>
     <string name="reader_page_followed_blogs">Stránky které sledujete</string>
     <string name="reader_page_followed_tags">Štítky které sledujete</string>
-    <string name="reader_title_subs">Štítky a weby</string>
     <string name="reader_title_tag_preview">Štítek čtenáře</string>
     <string name="reader_title_blog_preview">Web čtenáře</string>
     <string name="ssl_certificate_ask_trust">Pokud se k tomuto webu obvykle připojujete bez problémů, pak tato chyba znamená, že se někdo snaží podvrhnout vaši identitu a neměli byste dále pokračovat. Chcete i přesto důvěřovat tomuto certifikátu?</string>
