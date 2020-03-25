@@ -13,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -502,7 +501,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
             viewModel = ViewModelProviders.of(targetFragment!!, viewModelFactory)
                     .get(DomainRegistrationDetailsViewModel::class.java)
-            val builder = AlertDialog.Builder(requireContext())
+            val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_country_picker_dialog_title)
             builder.setItems(countries.map { it.name }.toTypedArray()) { _, which ->
                 viewModel.onCountrySelected(countries[which])

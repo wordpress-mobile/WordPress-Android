@@ -13,7 +13,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -1511,7 +1510,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void showClearSearchSuggestionsConfirmationDialog(final Context context) {
-        new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Calypso_Dialog_Alert))
+        new MaterialAlertDialogBuilder(context)
                 .setMessage(R.string.dlg_confirm_clear_search_history)
                 .setCancelable(true)
                 .setNegativeButton(R.string.no, null)
