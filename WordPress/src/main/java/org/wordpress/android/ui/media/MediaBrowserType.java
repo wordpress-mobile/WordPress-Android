@@ -27,6 +27,19 @@ public enum MediaBrowserType {
                || this == GUTENBERG_SINGLE_IMAGE_PICKER;
     }
 
+    public boolean isImagePicker() {
+        return this == EDITOR_PICKER || this == AZTEC_EDITOR_PICKER || this == FEATURED_IMAGE_PICKER
+               || this == GRAVATAR_IMAGE_PICKER || this == SITE_ICON_PICKER || this == GUTENBERG_IMAGE_PICKER
+               || this == GUTENBERG_SINGLE_IMAGE_PICKER || this == GUTENBERG_SINGLE_MEDIA_PICKER
+               || this == GUTENBERG_MEDIA_PICKER;
+    }
+
+    public boolean isVideoPicker() {
+        return this == EDITOR_PICKER || this == AZTEC_EDITOR_PICKER || this == GUTENBERG_VIDEO_PICKER
+               || this == GUTENBERG_SINGLE_VIDEO_PICKER || this == GUTENBERG_SINGLE_MEDIA_PICKER
+               || this == GUTENBERG_MEDIA_PICKER;
+    }
+
     public boolean isSingleMediaPicker() {
         return this == GUTENBERG_SINGLE_MEDIA_PICKER;
     }
