@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import org.mockito.Mockito.lenient
 
@@ -28,9 +29,10 @@ fun initCoroutineEngine() = runBlocking {
             any<(() -> Any)>()
     )
     lenient().doAnswer {
-        return@doAnswer runBlocking {
+        runBlocking {
             it.getArgument<(suspend CoroutineScope.() -> Any)>(3).invoke(this)
         }
+        return@doAnswer mock<Job>()
     }.whenever(coroutineEngine).launchInGlobalScope(
             any(),
             any(),
