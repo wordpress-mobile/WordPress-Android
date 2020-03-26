@@ -242,8 +242,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         sOAuthAuthenticator = mOAuthAuthenticator;
 
         ProfilingUtils.start("App Startup");
+
         // Enable log recording
         AppLog.enableRecording(true);
+        AppLog.enableLogFilePersistence(this.getBaseContext(), 3);
         AppLog.addListener(new AppLogListener() {
             @Override
             public void onLog(T tag, LogLevel logLevel, String message) {
