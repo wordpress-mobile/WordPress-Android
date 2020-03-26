@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.tools
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -31,9 +32,9 @@ class CoroutineEngine
         caller: Any,
         loggedMessage: String,
         block: suspend CoroutineScope.() -> RESULT_TYPE
-    ) {
+    ): Job {
         appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage")
-        GlobalScope.launch(coroutineContext) {
+        return GlobalScope.launch(coroutineContext) {
             block.invoke(this)
         }
     }
