@@ -141,7 +141,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchPostList(final PostListDescriptorForXmlRpcSite listDescriptor, final long offset) {
         SiteModel site = listDescriptor.getSite();
-        List<String> fields = Arrays.asList("post_id", "post_modified_gmt", "post_date_gmt", "post_status");
+        List<String> fields = Arrays.asList("post_id", "post_modified_gmt", "post_status");
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
         List<Object> params =
                 createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
@@ -320,11 +320,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             String postStatus = MapUtils.getMapStr(postMap, "post_status");
             Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified_gmt");
             String lastModifiedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(lastModifiedGmt);
-            Date dateCreatedGmt = MapUtils.getMapDate(postMap, "post_date_gmt");
-            String dateCreatedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(dateCreatedGmt);
 
-            postListItems.add(new PostListItem(Long.parseLong(postID), lastModifiedAsIso8601, postStatus, null,
-                    dateCreatedAsIso8601));
+            postListItems.add(new PostListItem(Long.parseLong(postID), lastModifiedAsIso8601, postStatus, null));
         }
         return postListItems;
     }
