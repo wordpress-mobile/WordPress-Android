@@ -328,6 +328,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject EditorActionsProvider mEditorActionsProvider;
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject ReblogUtils mReblogUtils;
 
     private StorePostViewModel mViewModel;
 
@@ -2163,7 +2164,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mHasSetPostContent = true;
             mEditPostRepository.updateAsync(postModel -> {
                 postModel.setTitle(title + "\n" + mSite.getDescription());
-                String content = ReblogUtils.reblogContent(image, quote, title, citation, mShowGutenbergEditor);
+                String content = mReblogUtils.reblogContent(image, quote, title, citation, mShowGutenbergEditor);
                 postModel.setContent(content);
                 mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
                 return true;
