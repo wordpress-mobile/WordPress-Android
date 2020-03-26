@@ -64,7 +64,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final String KEY_IS_SOCIAL = "KEY_IS_SOCIAL";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
-    private static final String VALIDITY_EMAIL = "VALIDITY_EMAIL";
+    private static final String VALIDITY_EMAIL = "KEY_VALIDITY_EMAIL";
     private static final String LOG_TAG = LoginEmailFragment.class.getSimpleName();
     private static final int GOOGLE_API_CLIENT_ID = 1002;
     private static final int EMAIL_CREDENTIALS_REQUEST_CODE = 25100;
@@ -79,7 +79,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private String mGoogleEmail;
     private String mRequestedEmail;
     private boolean mIsSocialLogin;
-    private Boolean mIsValidEmail;
+    private Boolean mIsValidEmail = null;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -315,11 +315,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mIsSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
             mIsDisplayingEmailHints = savedInstanceState.getBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS);
             mHasDismissedEmailHints = savedInstanceState.getBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS);
-            if (savedInstanceState.getBoolean(VALIDITY_EMAIL) || !(savedInstanceState
-                    .getBoolean(VALIDITY_EMAIL))) {
+            if (savedInstanceState.containsKey(VALIDITY_EMAIL)) {
                 mIsValidEmail = savedInstanceState.getBoolean(VALIDITY_EMAIL);
-            } else {
-                mIsValidEmail = null;
             }
         } else {
             mAnalyticsListener.trackEmailFormViewed();
@@ -358,7 +355,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     private void showErrorIfEmailInvalid() {
         if (mIsValidEmail != null && !mIsValidEmail) {
-            showEmailError(R.string.email_invalid);
+             showEmailError(R.string.email_invalid);
         }
     }
 
@@ -395,6 +392,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mEmailInput.setError(null);
+        mIsValidEmail = null;
         mIsSocialLogin = false;
     }
 
