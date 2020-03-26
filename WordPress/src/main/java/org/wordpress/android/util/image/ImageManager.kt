@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.text.TextUtils
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
@@ -21,13 +22,16 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bumptech.glide.request.target.BaseTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
+import com.bumptech.glide.request.transition.Transition
 import com.bumptech.glide.signature.ObjectKey
 import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.util.AppLog
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -162,7 +166,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
         val context = imageView.context
         if (!context.isAvailable()) return
         GlideApp.with(context)
-                .load(imgUrl)
+                .load(Uri.parse(imgUrl))
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
                 .addThumbnail(context, thumbnailUrl, requestListener)
@@ -170,6 +174,61 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .attachRequestListener(requestListener)
                 .into(imageView)
                 .clearOnDetach()
+    }
+
+    /**
+     * Loads an image from the "imgUri" into the ImageView. Doing this allows content and remote URIs to interchangeable.
+     * Adds a placeholder and an error placeholder depending
+     * on the ImageType. Attaches the ResultListener so the client can manually show/hide progress and error
+     * views or add a PhotoViewAttacher(adds support for pinch-to-zoom gesture). Optionally adds
+     * thumbnailUrl - mostly used for loading low resolution images.
+     *
+     * Unless you necessarily need to react on the request result, preferred way is to use one of the load(...) methods.
+     */
+    fun loadWithResultListener(
+        imageView: ImageView,
+        imageType: ImageType,
+        imgUri: Uri,
+        scaleType: ScaleType = CENTER,
+        thumbnailUrl: String? = null,
+        requestListener: RequestListener<Drawable>
+    ) {
+        val context = imageView.context
+        if (!context.isAvailable()) return
+        GlideApp.with(context)
+                .load(imgUri)
+                .addFallback(imageType)
+                .addPlaceholder(imageType)
+                .addThumbnail(context, thumbnailUrl, requestListener)
+                .applyScaleType(scaleType)
+                .attachRequestListener(requestListener)
+                .into(imageView)
+                .clearOnDetach()
+    }
+
+    /**
+     * Loads a File from the Glide's disk cache for the provided imgUrl using asFile().
+     *
+     * We can use asFile() asynchronously on the ui thread or synchronously on a background thread.
+     * This function uses the asynchronous api which takes a Target argument to invoke asFile().
+     */
+    fun loadIntoFileWithResultListener(
+        imgUrl: String,
+        requestListener: RequestListener<File>
+    ) {
+        val context = WordPress.getContext()
+        if (!context.isAvailable()) return
+        GlideApp.with(context)
+            .asFile()
+            .load(imgUrl)
+            .attachRequestListener(requestListener)
+            .into(
+                // Used just to invoke asFile() and ignored thereafter.
+                object : CustomTarget<File>() {
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                    override fun onResourceReady(resource: File, transition: Transition<in File>?) {}
+                }
+            )
     }
 
     /**
