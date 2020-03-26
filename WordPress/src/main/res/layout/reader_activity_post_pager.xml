@@ -27,7 +27,6 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/reader_post_detail_snackbar_bottom_margin" />
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

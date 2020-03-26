@@ -854,16 +854,17 @@ class ReaderPostDetailFragment : Fragment(),
 
         val countLikes = view!!.findViewById<ReaderIconCountView>(R.id.count_likes)
         val countComments = view!!.findViewById<ReaderIconCountView>(R.id.count_comments)
-        val reblogButton = view?.findViewById<ReaderIconCountView>(R.id.reblog)
+        val reblogButton = view!!.findViewById<ReaderIconCountView>(R.id.reblog)
 
         if (canBeReblogged()) {
-            reblogButton?.setCount(0)
-            reblogButton?.visibility = View.VISIBLE
-            reblogButton?.setOnClickListener {
+            reblogButton.setCount(0)
+            reblogButton.visibility = View.VISIBLE
+            reblogButton.setOnClickListener {
                 val sites = mSiteStore.visibleSites
                 when (sites.size) {
+                    0 -> ToastUtils.showToast(activity, R.string.reader_no_site_to_reblog)
                     1 -> ActivityLauncher.openEditorForReblog(activity, sites.first(), this.post)
-                    else -> { // The no site (0) case can be handled by the site picker for now
+                    else -> {
                         val siteLocalId = AppPrefs.getSelectedSite()
                         val site = mSiteStore.getSiteByLocalId(siteLocalId)
                         ActivityLauncher.showSitePickerForResult(this, site)
@@ -871,8 +872,8 @@ class ReaderPostDetailFragment : Fragment(),
                 }
             }
         } else {
-            reblogButton?.visibility = View.GONE
-            reblogButton?.setOnClickListener(null)
+            reblogButton.visibility = View.GONE
+            reblogButton.setOnClickListener(null)
         }
 
         if (canShowCommentCount()) {
