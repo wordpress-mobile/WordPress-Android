@@ -11,6 +11,7 @@ import com.android.volley.Response.Listener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
@@ -135,7 +136,7 @@ public class PostRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(listDescriptor.getSite().getSiteId()).posts.getUrlV1_1();
 
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
-        String fields = TextUtils.join(",", Arrays.asList("ID", "modified", "status", "meta", "date"));
+        String fields = TextUtils.join(",", Arrays.asList("ID", "modified", "status", "meta"));
         Map<String, String> params =
                 createFetchPostListParameters(false, offset, pageSize, listDescriptor.getStatusList(),
                         listDescriptor.getAuthor(), fields, listDescriptor.getOrder().getValue(),
@@ -159,7 +160,7 @@ public class PostRestClient extends BaseWPComRestClient {
                             }
                             postListItems
                                     .add(new PostListItem(postResponse.getRemotePostId(), postResponse.getModified(),
-                                            postResponse.getStatus(), autoSaveModified, postResponse.getDate()));
+                                            postResponse.getStatus(), autoSaveModified));
                         }
                         // The API sometimes return wrong number of posts "found", so we also check if we get an empty
                         // list in which case there would be no more posts to be fetched.
@@ -281,7 +282,7 @@ public class PostRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(PostRemoteAutoSaveModel response) {
                         RemoteAutoSavePostPayload payload =
-                                new RemoteAutoSavePostPayload(post.getId(), response, site);
+                                new RemoteAutoSavePostPayload(post.getId(), post.getRemotePostId(), response, site);
                         mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(payload));
                     }
                 },
@@ -291,7 +292,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         // Possible non-generic errors: 404 unknown_post (invalid post ID)
                         PostError postError = new PostError(error.apiError, error.message);
                         RemoteAutoSavePostPayload payload =
-                                new RemoteAutoSavePostPayload(post.getId(), postError);
+                                new RemoteAutoSavePostPayload(post.getId(), post.getRemotePostId(), postError);
                         mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(payload));
                     }
                 }
@@ -415,7 +416,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         if (from.getAuthor() != null) {
             post.setAuthorId(from.getAuthor().getId());
-            post.setAuthorDisplayName(from.getAuthor().getName());
+            post.setAuthorDisplayName(StringEscapeUtils.unescapeHtml4(from.getAuthor().getName()));
         }
 
         if (from.getPostThumbnail() != null) {
