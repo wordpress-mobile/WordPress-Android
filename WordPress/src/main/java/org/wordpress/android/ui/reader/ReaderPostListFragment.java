@@ -2902,10 +2902,12 @@ public class ReaderPostListFragment extends Fragment
     public void reblog(ReaderPost post) {
         List<SiteModel> sites = mSiteStore.getVisibleSites();
         switch (sites.size()) {
+            case 0:
+                ToastUtils.showToast(getActivity(), R.string.reader_no_site_to_reblog);
+                break;
             case 1:
                 ActivityLauncher.openEditorForReblog(getActivity(), getSelectedSite(), this.mPostToReblog);
                 break;
-            case 0: // The no site case can be handled by the site picker for now
             default:
                 this.mPostToReblog = post; // Stores the post to be handled in the onActivityResult after site selection
                 ActivityLauncher.showSitePickerForResult(this, getSelectedSite());
