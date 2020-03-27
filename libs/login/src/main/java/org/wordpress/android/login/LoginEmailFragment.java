@@ -392,7 +392,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mEmailInput.setError(null);
-        mIsValidEmail = null;
         mIsSocialLogin = false;
     }
 
