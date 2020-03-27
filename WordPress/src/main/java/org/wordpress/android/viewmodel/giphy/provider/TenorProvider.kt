@@ -8,18 +8,16 @@ import com.tenor.android.core.constant.MediaFilter
 import com.tenor.android.core.model.impl.Result
 import com.tenor.android.core.network.ApiClient
 import com.tenor.android.core.network.IApiClient
-import com.tenor.android.core.response.WeakRefCallback
 import com.tenor.android.core.response.impl.GifsResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
 import org.wordpress.android.viewmodel.giphy.MutableGiphyMediaViewModel
 import org.wordpress.android.viewmodel.giphy.provider.GifProvider.GifRequestFailedException
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
  * Implementation of a GifProvider using the Tenor GIF API as provider
@@ -81,20 +79,16 @@ internal class TenorProvider @JvmOverloads constructor(
         crossinline onSuccess: (GifsResponse) -> Unit,
         crossinline onFailure: (Throwable?) -> Unit
     ) = buildSearchCall(query, loadSize, position).apply {
-        enqueue(object : WeakRefCallback<Context, GifsResponse>(context) {
-            override fun success(context: Context, response: GifsResponse?) {
-                this@apply.cancel()
+        enqueue(object : Callback<GifsResponse> {
+            override fun onResponse(call: Call<GifsResponse>, response: Response<GifsResponse>) {
                 val defaultErrorMessage = context.getString(string.giphy_picker_empty_search_list)
-                response?.let(onSuccess) ?: onFailure(GifRequestFailedException(defaultErrorMessage))
+                response.body()?.let(onSuccess) ?: onFailure(GifRequestFailedException(defaultErrorMessage))
             }
 
-            override fun failure(context: Context, throwable: Throwable?) {
-                this@apply.cancel()
+            override fun onFailure(call: Call<GifsResponse>, throwable: Throwable) {
                 onFailure(throwable)
             }
         })
-
-        dispatchTimeoutClock(onFailure)
     }
 
     /**
@@ -116,30 +110,6 @@ internal class TenorProvider @JvmOverloads constructor(
             MediaFilter.BASIC,
             AspectRatioRange.ALL
     )
-
-    /**
-     * This method counts from 0 to [DEFAULT_SECONDS_TO_TIMEOUT] to make sure that
-     * every request responds within the expected amount of time.
-     *
-     * If the call isn't canceled until the timer reaches the limit,
-     * the [onFailure] will be called passing an [GifRequestTimeoutException]
-     *
-     * But if the call is canceled before the timer reaches the limit,
-     * the coroutine job will right away be canceled and the [onFailure] call
-     * won't be reached
-     *
-     * Method is inlined for better high-order functions performance
-     */
-    private inline fun Call<GifsResponse>.dispatchTimeoutClock(
-        crossinline onFailure: (Throwable?) -> Unit
-    ) = scope.launch {
-        for (timeTick in 0 until DEFAULT_SECONDS_TO_TIMEOUT) {
-            if (this@dispatchTimeoutClock.isCanceled) this@launch.cancel()
-            delay(ONE_SECOND_IN_MILLIS)
-        }
-
-        CoroutineScope(Dispatchers.Main).launch { onFailure(GifRequestTimeoutException()) }
-    }
 
     /**
      * Every GIF returned by the Tenor will be available as [Result], to better interface
@@ -181,7 +151,5 @@ internal class TenorProvider @JvmOverloads constructor(
          * To better refers to the Tenor API maximum GIF limit per request
          */
         private const val MAXIMUM_ALLOWED_LOAD_SIZE = 50
-        private const val DEFAULT_SECONDS_TO_TIMEOUT = 10
-        private const val ONE_SECOND_IN_MILLIS = 1000L
     }
 }
