@@ -177,15 +177,22 @@ workflows:
             branches:
               ignore: /pull\/[0-9]+/
       - Connected Tests:
+          # Always run connected tests on develop and release branches
           filters:
             branches:
               only:
                 - develop
-                - /^release.*/ # Runs on any release branch
+                - /^release.*/
       - Hold:
           type: approval
+          filters:
+            branches:
+              ignore:
+                - develop
+                - /^release.*/
       - Connected Tests:
-          requires: [Hold] # Optionally run connected tests on PRs
+          #Optionally run connected tests on PRs
+          requires: [Hold]
           filters:
             branches:
               ignore:
