@@ -9,8 +9,6 @@ import com.tenor.android.core.model.impl.Result
 import com.tenor.android.core.network.ApiClient
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.impl.GifsResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import org.wordpress.android.R.string
 import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
 import org.wordpress.android.viewmodel.giphy.MutableGiphyMediaViewModel
@@ -25,10 +23,9 @@ import retrofit2.Response
  * This Provider performs requests to the Tenor API using the [tenorClient].
  */
 
-internal class TenorProvider @JvmOverloads constructor(
+internal class TenorProvider constructor(
     val context: Context,
-    private val tenorClient: IApiClient,
-    private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
+    private val tenorClient: IApiClient
 ) : GifProvider {
     /**
      * Implementation of the [GifProvider] search method, it will call the Tenor client search
