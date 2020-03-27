@@ -62,6 +62,10 @@ class TenorProviderTest {
 
         val gifResults = mockedTenorResult
         whenever(gifResponse.results).thenReturn(gifResults)
+        whenever(gifResponse.next).thenReturn("0")
+        whenever(gifSearchCall.cancel()).then {
+            whenever(gifSearchCall.isCanceled).thenReturn(true)
+        }
 
         tenorProviderUnderTest = TenorProvider(context, apiClient)
     }
@@ -69,7 +73,6 @@ class TenorProviderTest {
     @Test
     fun `search call should invoke onSuccess with expected GIF list and nextPosition for valid query`() {
         var onSuccessWasCalled = false
-        whenever(gifResponse.next).thenReturn("0")
 
         tenorProviderUnderTest.search("test",
                 0,
@@ -90,7 +93,6 @@ class TenorProviderTest {
     @Test
     fun `search call should invoke onSuccess with expected nextPosition for a valid query`() {
         var onSuccessWasCalled = false
-        whenever(gifResponse.next).thenReturn("0")
         val expectedNextPosition = 0
 
         tenorProviderUnderTest.search("test",
@@ -248,10 +250,7 @@ class TenorProviderTest {
     @Test
     fun `timeout job should trigger onFailure when nothing is invoked from search`() {
         var onFailureWasCalled = false
-        whenever(gifResponse.next).thenReturn("0")
-        whenever(gifSearchCall.cancel()).then {
-            whenever(gifSearchCall.isCanceled).thenReturn(true)
-        }
+        var onSuccessWasCalled = false
 
         runBlockingTest {
             val context = ApplicationProvider.getApplicationContext<Context>()
@@ -259,14 +258,16 @@ class TenorProviderTest {
 
             tenorProviderUnderTest.search("test",
                     0,
-                    onSuccess = { actualViewModelCollection, _ ->
-                        fail("Failure handler should not be called")
+                    onSuccess = { _, _ ->
+                        onSuccessWasCalled = true
                     },
                     onFailure = {
                         onFailureWasCalled = true
                     })
         }
+
         assertThat(onFailureWasCalled).isTrue()
+        assertThat(onSuccessWasCalled).isFalse()
         assertThat(gifSearchCall.isCanceled).isFalse()
     }
 
@@ -275,18 +276,13 @@ class TenorProviderTest {
         var onFailureWasCalled = false
         var onSuccessWasCalled = false
 
-        whenever(gifResponse.next).thenReturn("0")
-        whenever(gifSearchCall.cancel()).then {
-            whenever(gifSearchCall.isCanceled).thenReturn(true)
-        }
-
         runBlockingTest {
             val context = ApplicationProvider.getApplicationContext<Context>()
             tenorProviderUnderTest = TenorProvider(context, apiClient, this)
 
             tenorProviderUnderTest.search("test",
                     0,
-                    onSuccess = { actualViewModelCollection, _ ->
+                    onSuccess = { _, _ ->
                         onSuccessWasCalled = true
                     },
                     onFailure = {
@@ -309,18 +305,13 @@ class TenorProviderTest {
         var onSuccessWasCalled = false
         var expectedException: Throwable? = null
 
-        whenever(gifResponse.next).thenReturn("0")
-        whenever(gifSearchCall.cancel()).then {
-            whenever(gifSearchCall.isCanceled).thenReturn(true)
-        }
-
         runBlockingTest {
             val context = ApplicationProvider.getApplicationContext<Context>()
             tenorProviderUnderTest = TenorProvider(context, apiClient, this)
 
             tenorProviderUnderTest.search("test",
                     0,
-                    onSuccess = { actualViewModelCollection, _ ->
+                    onSuccess = { _, _ ->
                         onSuccessWasCalled = true
                     },
                     onFailure = {
