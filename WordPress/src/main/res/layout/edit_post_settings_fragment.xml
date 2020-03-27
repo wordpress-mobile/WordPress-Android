@@ -189,7 +189,7 @@
                             android:layout_width="@dimen/post_settings_retry_image_size"
                             android:layout_height="@dimen/post_settings_retry_image_size"
                             android:contentDescription="@string/retry"
-                            android:src="@drawable/media_retry_image"/>
+                            android:src="@drawable/ic_refresh_white_24dp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
