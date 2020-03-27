@@ -202,7 +202,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
         val emptyView: ActionableEmptyView = actionable_empty_view
         emptyView.run {
             image.setImageResource(R.drawable.img_illustration_media_105dp)
-            bottomImage.setImageResource(R.drawable.img_giphy_100dp)
+            bottomImage.setImageResource(R.drawable.img_tenor_100dp)
             bottomImage.contentDescription = getString(R.string.giphy_powered_by_giphy)
         }
 
