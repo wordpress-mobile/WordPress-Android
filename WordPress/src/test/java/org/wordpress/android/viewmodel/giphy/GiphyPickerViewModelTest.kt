@@ -19,6 +19,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
 import java.util.Random
@@ -33,6 +34,7 @@ class GiphyPickerViewModelTest {
 
     private val dataSourceFactory = mock<GiphyPickerDataSourceFactory>()
     private val mediaFetcher = mock<GiphyMediaFetcher>()
+    private val analyticsTracker = mock<AnalyticsTrackerWrapper>()
 
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
 
@@ -41,7 +43,8 @@ class GiphyPickerViewModelTest {
         viewModel = GiphyPickerViewModel(
                 dataSourceFactory = dataSourceFactory,
                 networkUtils = networkUtils,
-                mediaFetcher = mediaFetcher
+                mediaFetcher = mediaFetcher,
+                analyticsTrackerWrapper = analyticsTracker
         )
         viewModel.setup(site = mock())
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
