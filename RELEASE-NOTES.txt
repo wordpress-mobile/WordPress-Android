@@ -1,7 +1,7 @@
 14.6
 -----
- Page List : Fixed an issue where opening a page would sometimes result in an empty editor.
- 
+ Page List: Fixed an issue where opening a page would sometimes result in an empty editor.
+
 14.5
 -----
 * Block editor: New block: Latest Posts
