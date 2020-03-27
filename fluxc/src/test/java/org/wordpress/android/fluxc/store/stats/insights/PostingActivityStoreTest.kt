@@ -3,8 +3,7 @@ package org.wordpress.android.fluxc.store.stats.insights
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,6 +20,7 @@ import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.stats.POSTING_ACTIVITY_RESPONSE
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -39,13 +39,13 @@ class PostingActivityStoreTest {
         store = PostingActivityStore(
                 restClient,
                 sqlUtils,
-                Dispatchers.Unconfined,
+                initCoroutineEngine(),
                 mapper
         )
     }
 
     @Test
-    fun `returns posting activity per site`() = test {
+    fun `fetches posting activity per site`() = test {
         val fetchInsightsPayload = FetchStatsPayload(
                 POSTING_ACTIVITY_RESPONSE
         )
@@ -56,12 +56,12 @@ class PostingActivityStoreTest {
 
         val responseModel = store.fetchPostingActivity(site, startDate, endDate, forced)
 
-        Assertions.assertThat(responseModel.model).isEqualTo(model)
+        assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, POSTING_ACTIVITY_RESPONSE)
     }
 
     @Test
-    fun `returns error when posting activity call fail`() = test {
+    fun `fetches error when posting activity call fail`() = test {
         val type = API_ERROR
         val message = "message"
         val errorPayload = FetchStatsPayload<PostingActivityResponse>(StatsError(type, message))
@@ -74,5 +74,16 @@ class PostingActivityStoreTest {
         val error = responseModel.error!!
         assertEquals(type, error.type)
         assertEquals(message, error.message)
+    }
+
+    @Test
+    fun `loads posting activity per site from DB`() = test {
+        whenever(sqlUtils.select(site)).thenReturn(POSTING_ACTIVITY_RESPONSE)
+        val model = mock<PostingActivityModel>()
+        whenever(mapper.map(POSTING_ACTIVITY_RESPONSE, startDate, endDate)).thenReturn(model)
+
+        val dbModel = store.getPostingActivity(site, startDate, endDate)
+
+        assertThat(dbModel).isEqualTo(model)
     }
 }
