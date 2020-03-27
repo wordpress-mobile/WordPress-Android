@@ -141,11 +141,6 @@ internal class TenorProvider @JvmOverloads constructor(
             }
         } ?: MAXIMUM_ALLOWED_LOAD_SIZE
 
-    /**
-     * An Exception to describe timeouts within the TenorProvider when a [onFailure] is called
-     */
-    class GifRequestTimeoutException : Exception("The Tenor request took too long to respond")
-
     companion object {
         /**
          * To better refers to the Tenor API maximum GIF limit per request
