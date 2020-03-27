@@ -12,6 +12,8 @@ import com.tenor.android.core.network.ApiService.Builder
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.WeakRefCallback
 import com.tenor.android.core.response.impl.GifsResponse
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.fail
 import org.junit.Before
@@ -26,10 +28,12 @@ import org.robolectric.annotation.Config
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.TestApplication
 import org.wordpress.android.viewmodel.giphy.provider.GifProvider.GifRequestFailedException
+import org.wordpress.android.viewmodel.giphy.provider.TenorProvider.GifRequestTimeoutException
 import org.wordpress.android.viewmodel.giphy.provider.TenorProviderTestFixtures.expectedGifMediaViewModelCollection
 import org.wordpress.android.viewmodel.giphy.provider.TenorProviderTestFixtures.mockedTenorResult
 import retrofit2.Call
 
+@ExperimentalCoroutinesApi
 @Config(application = TestApplication::class)
 @RunWith(RobolectricTestRunner::class)
 class TenorProviderTest {
@@ -239,5 +243,99 @@ class TenorProviderTest {
 
         val requestedLoadSize = argument.value
         assertThat(requestedLoadSize).isEqualTo(50)
+    }
+
+    @Test
+    fun `timeout job should trigger onFailure when nothing is invoked from search`() {
+        var onFailureWasCalled = false
+        whenever(gifResponse.next).thenReturn("0")
+        whenever(gifSearchCall.cancel()).then {
+            whenever(gifSearchCall.isCanceled).thenReturn(true)
+        }
+
+        runBlockingTest {
+            val context = ApplicationProvider.getApplicationContext<Context>()
+            tenorProviderUnderTest = TenorProvider(context, apiClient, this)
+
+            tenorProviderUnderTest.search("test",
+                    0,
+                    onSuccess = { actualViewModelCollection, _ ->
+                        fail("Failure handler should not be called")
+                    },
+                    onFailure = {
+                        onFailureWasCalled = true
+                    })
+        }
+        assertThat(onFailureWasCalled).isTrue()
+        assertThat(gifSearchCall.isCanceled).isFalse()
+    }
+
+    @Test
+    fun `timeout job should not trigger onFailure when onSuccess is called`() {
+        var onFailureWasCalled = false
+        var onSuccessWasCalled = false
+
+        whenever(gifResponse.next).thenReturn("0")
+        whenever(gifSearchCall.cancel()).then {
+            whenever(gifSearchCall.isCanceled).thenReturn(true)
+        }
+
+        runBlockingTest {
+            val context = ApplicationProvider.getApplicationContext<Context>()
+            tenorProviderUnderTest = TenorProvider(context, apiClient, this)
+
+            tenorProviderUnderTest.search("test",
+                    0,
+                    onSuccess = { actualViewModelCollection, _ ->
+                        onSuccessWasCalled = true
+                    },
+                    onFailure = {
+                        onFailureWasCalled = true
+                    })
+
+            verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
+            val capturedCallback = callbackCaptor.value
+            capturedCallback.success(ApplicationProvider.getApplicationContext(), gifResponse)
+        }
+
+        assertThat(onSuccessWasCalled).isTrue()
+        assertThat(onFailureWasCalled).isFalse()
+        assertThat(gifSearchCall.isCanceled).isTrue()
+    }
+
+    @Test
+    fun `timeout job should not trigger when onFailure is called from the search`() {
+        var onFailureWasCalled = false
+        var onSuccessWasCalled = false
+        var expectedException: Throwable? = null
+
+        whenever(gifResponse.next).thenReturn("0")
+        whenever(gifSearchCall.cancel()).then {
+            whenever(gifSearchCall.isCanceled).thenReturn(true)
+        }
+
+        runBlockingTest {
+            val context = ApplicationProvider.getApplicationContext<Context>()
+            tenorProviderUnderTest = TenorProvider(context, apiClient, this)
+
+            tenorProviderUnderTest.search("test",
+                    0,
+                    onSuccess = { actualViewModelCollection, _ ->
+                        onSuccessWasCalled = true
+                    },
+                    onFailure = {
+                        onFailureWasCalled = true
+                        expectedException = it
+                    })
+
+            verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())
+            val capturedCallback = callbackCaptor.value
+            capturedCallback.failure(ApplicationProvider.getApplicationContext(), RuntimeException("Expected message"))
+        }
+
+        assertThat(onSuccessWasCalled).isFalse()
+        assertThat(onFailureWasCalled).isTrue()
+        assertThat(expectedException).isNotInstanceOf(GifRequestTimeoutException::class.java)
+        assertThat(gifSearchCall.isCanceled).isTrue()
     }
 }
