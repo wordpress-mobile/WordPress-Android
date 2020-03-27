@@ -112,6 +112,13 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mWPAndroidGlueCode.onDetach(getActivity());
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
 
