@@ -356,7 +356,7 @@ class PostListViewModel @Inject constructor(
             listItemUiStateHelper.createPostListItemUiState(
                     authorFilterSelection,
                     post = post,
-                    uploadStatus = connector.getUploadStatus(post, connector.site),
+                    site = connector.site,
                     unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
                     hasAutoSave = connector.hasAutoSave(post),
                     capabilitiesToPublish = uploadUtilsWrapper.userCanPublish(connector.site),
@@ -368,7 +368,8 @@ class PostListViewModel @Inject constructor(
                     onAction = { postModel, buttonType, statEvent ->
                         trackPostListAction(connector.site, buttonType, postModel, statEvent)
                         connector.postActionHandler.handlePostButton(buttonType, postModel)
-                    }
+                    },
+                    uploadStatusTracker = connector.uploadStatusTracker
             )
 
     private fun retryOnConnectionAvailableAfterRefreshError() {

@@ -28,6 +28,9 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.11.1'
 
     lintChecks 'org.wordpress:lint:1.0.1'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
 }
 
 android {
@@ -40,6 +43,8 @@ android {
         versionName "1.24"
         minSdkVersion 15
         targetSdkVersion 26
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 

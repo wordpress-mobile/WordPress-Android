@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
 import android.text.TextUtils
-import androidx.annotation.ColorRes
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
@@ -11,6 +10,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ITEM_SELE
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
@@ -19,10 +19,10 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
-import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
+import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils
@@ -31,15 +31,19 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.NothingToUpload
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadFailed
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadQueued
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingMedia
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingPost
+import org.wordpress.android.viewmodel.pages.PostPageListLabelColorUseCase
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
-import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.NothingToUpload
-import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadFailed
-import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadQueued
-import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadWaitingForConnection
-import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingMedia
-import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingPost
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
@@ -57,18 +61,18 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
-const val ERROR_COLOR = R.color.error
-const val PROGRESS_INFO_COLOR = R.color.neutral_50
-const val STATE_INFO_COLOR = R.color.warning_dark
-
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
  */
-class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) {
+class PostListItemUiStateHelper @Inject constructor(
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val uploadUiStateUseCase: PostModelUploadUiStateUseCase,
+    private val labelColorUseCase: PostPageListLabelColorUseCase
+) {
     fun createPostListItemUiState(
         authorFilterSelection: AuthorFilterSelection,
         post: PostModel,
-        uploadStatus: PostListItemUploadStatus,
+        site: SiteModel,
         unhandledConflicts: Boolean,
         hasAutoSave: Boolean,
         capabilitiesToPublish: Boolean,
@@ -76,10 +80,11 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         featuredImageUrl: String?,
         formattedDate: String,
         performingCriticalAction: Boolean,
+        uploadStatusTracker: PostModelUploadStatusTracker,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
-        val uploadUiState = createUploadUiState(uploadStatus, post)
+        val uploadUiState = uploadUiStateUseCase.createUploadUiState(post, site, uploadStatusTracker)
 
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
@@ -107,14 +112,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 hasUnhandledConflicts = unhandledConflicts,
                 hasAutoSave = hasAutoSave
         )
-        val statusesColor = getStatusesColor(
-                postStatus = postStatus,
-                isLocalDraft = post.isLocalDraft,
-                isLocallyChanged = post.isLocallyChanged,
-                uploadUiState = uploadUiState,
-                hasUnhandledConflicts = unhandledConflicts,
-                hasAutoSave = hasAutoSave
-        )
+        val statusesColor = labelColorUseCase.getLabelsColor(post, uploadUiState, unhandledConflicts, hasAutoSave)
         val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
             when (postStatus) {
@@ -136,7 +134,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 statuses = statuses,
                 statusesColor = statusesColor,
                 statusesDelimiter = statusesDelimeter,
-                progressBarState = getProgressBarState(
+                progressBarUiState = getProgressBarState(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
                 ),
@@ -186,15 +184,15 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     private fun getProgressBarState(
         uploadUiState: PostUploadUiState,
         performingCriticalAction: Boolean
-    ): PostListItemProgressBar {
+    ): ProgressBarUiState {
         return if (shouldShowProgress(uploadUiState, performingCriticalAction)) {
             if (uploadUiState is UploadingMedia) {
-                PostListItemProgressBar.Determinate(uploadUiState.progress)
+                ProgressBarUiState.Determinate(uploadUiState.progress)
             } else {
-                PostListItemProgressBar.Indeterminate
+                ProgressBarUiState.Indeterminate
             }
         } else {
-            PostListItemProgressBar.Hidden
+            ProgressBarUiState.Hidden
         }
     }
 
@@ -296,30 +294,6 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
             }
             else -> UiStringRes(R.string.error_media_recover_post)
-        }
-    }
-
-    @ColorRes private fun getStatusesColor(
-        postStatus: PostStatus,
-        isLocalDraft: Boolean,
-        isLocallyChanged: Boolean,
-        uploadUiState: PostUploadUiState,
-        hasUnhandledConflicts: Boolean,
-        hasAutoSave: Boolean
-    ): Int? {
-        val isError = (uploadUiState is UploadFailed && !uploadUiState.isEligibleForAutoUpload) ||
-                hasUnhandledConflicts
-        val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
-                uploadUiState is UploadQueued
-        val isStateInfo = (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload) ||
-                isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
-                uploadUiState is UploadWaitingForConnection || hasAutoSave
-
-        return when {
-            isError -> ERROR_COLOR
-            isProgressInfo -> PROGRESS_INFO_COLOR
-            isStateInfo -> STATE_INFO_COLOR
-            else -> null
         }
     }
 
@@ -431,41 +405,5 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             PostListItemAction.SingleItem(buttonType, onButtonClicked)
         }
         return PostListItemAction.MoreItem(allItems, onButtonClicked)
-    }
-
-    private sealed class PostUploadUiState {
-        data class UploadingMedia(val progress: Int) : PostUploadUiState()
-        data class UploadingPost(val isDraft: Boolean) : PostUploadUiState()
-        data class UploadFailed(
-            val error: UploadError,
-            val isEligibleForAutoUpload: Boolean,
-            val retryWillPushChanges: Boolean
-        ) : PostUploadUiState()
-
-        data class UploadWaitingForConnection(val postStatus: PostStatus) : PostUploadUiState()
-        object UploadQueued : PostUploadUiState()
-        object NothingToUpload : PostUploadUiState()
-    }
-
-    private fun createUploadUiState(
-        uploadStatus: PostListItemUploadStatus,
-        post: PostModel
-    ): PostUploadUiState {
-        val postStatus = PostStatus.fromPost(post)
-        return when {
-            uploadStatus.hasInProgressMediaUpload -> UploadingMedia(uploadStatus.mediaUploadProgress)
-            uploadStatus.isUploading -> UploadingPost(postStatus == DRAFT)
-            // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
-            uploadStatus.uploadError != null -> UploadFailed(
-                    uploadStatus.uploadError,
-                    uploadStatus.isEligibleForAutoUpload,
-                    uploadStatus.uploadWillPushChanges
-            )
-            uploadStatus.hasPendingMediaUpload ||
-                    uploadStatus.isQueued ||
-                    uploadStatus.isUploadingOrQueued -> UploadQueued
-            uploadStatus.isEligibleForAutoUpload -> UploadWaitingForConnection(postStatus)
-            else -> NothingToUpload
-        }
     }
 }
