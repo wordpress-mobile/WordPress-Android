@@ -1051,18 +1051,16 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        if (getLifecycle().getCurrentState().isAtLeast(STARTED)) {
-            int siteLocalId = AppPrefs.getSelectedSite();
-            SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
-            if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
-                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                        this,
-                        findViewById(R.id.coordinator),
-                        event.isError(),
-                        event.post,
-                        null,
-                        site);
-            }
+        int siteLocalId = AppPrefs.getSelectedSite();
+        SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+        if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
+            mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                    this,
+                    findViewById(R.id.coordinator),
+                    event.isError(),
+                    event.post,
+                    null,
+                    site);
         }
     }
 }
