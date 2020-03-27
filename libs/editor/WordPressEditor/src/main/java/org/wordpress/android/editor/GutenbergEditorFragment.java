@@ -41,7 +41,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
-import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
@@ -50,7 +49,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveList
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
@@ -81,8 +79,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
 
     private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
-
-    private static final String USER_EVENT_KEY_TEMPLATE = "template";
 
     private boolean mHtmlModeEnabled;
 
@@ -365,21 +361,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnMediaEditorListener() {
                     @Override public void onMediaEditorClicked(String mediaUrl) {
                         // Show Media Editor
-                    }
-                },
-                new OnLogGutenbergUserEventListener() {
-                    @Override
-                    public void onGutenbergUserEvent(GutenbergUserEvent event, Map<String, Object> properties) {
-                        switch (event) {
-                            case EDITOR_SESSION_TEMPLATE_PREVIEW:
-                                mEditorFragmentListener.onGutenbergEditorSessionTemplatePreviewTracked((String)
-                                        properties.get(USER_EVENT_KEY_TEMPLATE));
-                                break;
-                            case EDITOR_SESSION_TEMPLATE_APPLY:
-                                mEditorFragmentListener.onGutenbergEditorSessionTemplateApplyTracked((String)
-                                        properties.get(USER_EVENT_KEY_TEMPLATE));
-                                break;
-                        }
                     }
                 });
 
