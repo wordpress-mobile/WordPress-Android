@@ -1676,6 +1676,10 @@
 
     <string name="reader_excerpt_link">Visit %s for more</string>
 
+    <!-- reblog -->
+    <string name="reader_view_reblog">Reblog</string>
+    <string name="reader_no_site_to_reblog">You should have at least one site to be able to reblog</string>
+
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
     <string name="reader_likes_one">One person likes this</string>
