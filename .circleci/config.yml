@@ -183,6 +183,9 @@ workflows:
               only:
                 - develop
                 - /^release.*/
+  Optional Tests:
+    #Optionally run connected tests on PRs
+    jobs:
       - Hold:
           type: approval
           filters:
@@ -191,7 +194,6 @@ workflows:
                 - develop
                 - /^release.*/
       - Connected Tests:
-          #Optionally run connected tests on PRs
           requires: [Hold]
           filters:
             branches:
