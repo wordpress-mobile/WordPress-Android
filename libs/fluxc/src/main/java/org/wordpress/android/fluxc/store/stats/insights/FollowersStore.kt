@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store.stats.insights
 
-import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
@@ -18,9 +17,10 @@ import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.WpComFollowersSq
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.util.AppLog.T.STATS
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class FollowersStore
@@ -29,7 +29,7 @@ class FollowersStore
     private val wpComFollowersSqlUtils: WpComFollowersSqlUtils,
     private val emailFollowersSqlUtils: EmailFollowersSqlUtils,
     private val insightsMapper: InsightsMapper,
-    private val coroutineContext: CoroutineContext
+    private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchWpComFollowers(
         siteModel: SiteModel,
@@ -53,12 +53,12 @@ class FollowersStore
         followerType: FollowerType,
         fetchMode: PagedMode,
         sqlUtils: InsightsSqlUtils<FollowersResponse>
-    ) = withContext(coroutineContext) {
+    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchFollowers") {
         if (!forced && !fetchMode.loadMore && sqlUtils.hasFreshRequest(
                         siteModel,
                         fetchMode.pageSize
                 )) {
-            return@withContext OnStatsFetched(
+            return@withDefaultContext OnStatsFetched(
                     getFollowers(
                             siteModel,
                             followerType,
@@ -76,7 +76,7 @@ class FollowersStore
         }
 
         val responsePayload = restClient.fetchFollowers(siteModel, followerType, nextPage, fetchMode.pageSize, forced)
-        return@withContext when {
+        return@withDefaultContext when {
             responsePayload.isError -> {
                 OnStatsFetched(responsePayload.error)
             }
@@ -113,8 +113,8 @@ class FollowersStore
         followerType: FollowerType,
         cacheMode: LimitMode,
         sqlUtils: InsightsSqlUtils<FollowersResponse>
-    ): FollowersModel? {
+    ) = coroutineEngine.run(STATS, this, "getFollowers") {
         val followerResponses = sqlUtils.selectAll(site)
-        return insightsMapper.mapAndMergeFollowersModels(followerResponses, followerType, cacheMode)
+        insightsMapper.mapAndMergeFollowersModels(followerResponses, followerType, cacheMode)
     }
 }
