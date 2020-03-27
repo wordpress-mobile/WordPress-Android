@@ -35,6 +35,13 @@ internal class TenorProvider @JvmOverloads constructor(
     /**
      * Implementation of the [GifProvider] search method, it will call the Tenor client search
      * right away with the provided parameters.
+     *
+     * If the search request succeeds an [List] of [MutableGiphyMediaViewModel] will be passed with the next position
+     * for pagination. If there's no next position provided, it will be passed as null.
+     *
+     * If the search request fails an [GifRequestFailedException] will be passed with the API
+     * message. If there's no message provided, a generic message will be applied.
+     *
      */
     override fun search(
         query: String,
@@ -48,10 +55,13 @@ internal class TenorProvider @JvmOverloads constructor(
                 position.toString(),
                 loadSize,
                 onSuccess = { response ->
-                    handleResponse(response, onSuccess)
+                    val gifList = response.results.map { it.toMutableGifMediaViewModel() }
+                    val nextPosition = response.next.toIntOrNull()
+                    onSuccess(gifList, nextPosition)
                 },
                 onFailure = {
-                    it?.let { throwable -> handleFailure(throwable, onFailure) }
+                    val errorMessage = it?.message ?: context.getString(string.gifs_list_search_returned_unknown_error)
+                    onFailure(GifRequestFailedException(errorMessage))
                 }
         )
     }
@@ -74,8 +84,8 @@ internal class TenorProvider @JvmOverloads constructor(
         enqueue(object : WeakRefCallback<Context, GifsResponse>(context) {
             override fun success(context: Context, response: GifsResponse?) {
                 this@apply.cancel()
-                response?.let(onSuccess)
-                        ?: onFailure(buildGifRequestFailure(string.giphy_picker_empty_search_list))
+                val defaultErrorMessage = context.getString(string.giphy_picker_empty_search_list)
+                response?.let(onSuccess) ?: onFailure(GifRequestFailedException(defaultErrorMessage))
             }
 
             override fun failure(context: Context, throwable: Throwable?) {
@@ -132,38 +142,6 @@ internal class TenorProvider @JvmOverloads constructor(
     }
 
     /**
-     * If the search request succeeds an [List] of [MutableGiphyMediaViewModel] will be passed with the next position
-     * for pagination. If there's no next position provided, it will be passed as null.
-     *
-     * Method is inlined for better high-order functions performance
-     */
-    private inline fun handleResponse(
-        response: GifsResponse,
-        crossinline onSuccess: (List<GiphyMediaViewModel>, Int?) -> Unit
-    ) = CoroutineScope(Dispatchers.Main).launch {
-        response.results.map { it.toMutableGifMediaViewModel() }
-                .let { gifs ->
-                    val nextPosition = response.next.toIntOrNull()
-                    onSuccess(gifs, nextPosition)
-                }
-    }
-
-    /**
-     * If the search request fails an [GifRequestFailedException] will be passed with the API
-     * message. If there's no message provided, a generic message will be applied.
-     *
-     * Method is inlined for better high-order functions performance
-     */
-    private inline fun handleFailure(
-        throwable: Throwable,
-        crossinline onFailure: (Throwable) -> Unit
-    ) = CoroutineScope(Dispatchers.Main).launch {
-        throwable.message?.let { message ->
-            onFailure(GifRequestFailedException(message))
-        } ?: onFailure(buildGifRequestFailure(string.gifs_list_search_returned_unknown_error))
-    }
-
-    /**
      * Every GIF returned by the Tenor will be available as [Result], to better interface
      * with our app, it will be converted to [MutableGiphyMediaViewModel] to avoid any external
      * coupling with the Tenor API
@@ -192,8 +170,6 @@ internal class TenorProvider @JvmOverloads constructor(
                 else -> this
             }
         } ?: MAXIMUM_ALLOWED_LOAD_SIZE
-
-    private fun buildGifRequestFailure(resourceId: Int) = GifRequestFailedException(context.getString(resourceId))
 
     /**
      * An Exception to describe timeouts within the TenorProvider when a [onFailure] is called
