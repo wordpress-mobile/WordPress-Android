@@ -25,6 +25,7 @@ import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ViewModelFactory
@@ -45,6 +46,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
      */
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private lateinit var viewModel: GiphyPickerViewModel
 
@@ -346,7 +348,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
         }
 
         val properties = mapOf("number_of_media_selected" to mediaLocalIds.size)
-        AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_DOWNLOADED, properties)
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.GIF_PICKER_DOWNLOADED, properties)
     }
 
     /**

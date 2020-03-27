@@ -19,6 +19,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -33,6 +34,7 @@ import javax.inject.Inject
  */
 class GiphyPickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val mediaFetcher: GiphyMediaFetcher,
     /**
      * The [GiphyPickerDataSourceFactory] to use
@@ -231,7 +233,7 @@ class GiphyPickerViewModel @Inject constructor(
 
             dataSourceFactory.searchQuery = query
 
-            AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_SEARCHED)
+            analyticsTrackerWrapper.track(AnalyticsTracker.Stat.GIF_PICKER_SEARCHED)
         } else {
             searchQueryChannel.send(query)
         }
