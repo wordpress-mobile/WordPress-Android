@@ -1,3 +1,4 @@
-One small fix: this release takes care of an issue that caused images to upload with wonky URLs, which made them inaccessible on your website.
-
-Wash your hands and stay safe, everyone.
+Block editor: Added Latest Posts block, fixed crash caused by pasting HTML content with embedded images
+Page Templates: Added a block-based templates for quicker page creation.
+Site Creation: removed a few steps for faster setup — select the kind of site, enter the domain name, done.
+Bug fix: fixed an issue causing failed post uploads to be retried indefinitely.
