@@ -98,6 +98,7 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
+import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
@@ -858,6 +859,19 @@ public class WPMainActivity extends AppCompatActivity implements
             AnalyticsUtils.trackWithDefaultInterceptor(AnalyticsTracker.Stat.DEEP_LINK_NOT_DEFAULT_HANDLER,
                     resolveInfo.activityInfo.name);
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(ReaderEvents.SiteManagerTriggered event) {
+        setMySitePageActive();
+    }
+
+    /**
+     * Ste My Site page active
+     */
+    public void setMySitePageActive() {
+        mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
     }
 
     public void setReaderPageActive() {

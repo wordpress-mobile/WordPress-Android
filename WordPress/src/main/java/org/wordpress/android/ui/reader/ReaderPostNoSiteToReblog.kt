@@ -20,6 +20,7 @@ class ReaderPostNoSiteToReblog : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         no_site_to_reblog_view.button.setOnClickListener {
+            EventBus.getDefault().post(ReaderEvents.SiteManagerTriggered())
             setResult(RESULT_OK)
             finish()
         }
