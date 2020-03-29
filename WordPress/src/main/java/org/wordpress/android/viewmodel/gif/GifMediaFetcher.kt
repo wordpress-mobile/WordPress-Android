@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.giphy
+package org.wordpress.android.viewmodel.gif
 
 import android.content.Context
 import android.webkit.MimeTypeMap
@@ -18,13 +18,13 @@ import org.wordpress.android.util.WPMediaUtils
 import javax.inject.Inject
 
 /**
- * Downloads [GiphyMediaViewModel.largeImageUri] objects and saves them as [MediaModel]
+ * Downloads [GifMediaViewModel.largeImageUri] objects and saves them as [MediaModel]
  *
  * The download happens concurrently and primarily uses [Dispatchers.IO]. This means that we are limited by the number
  * of threads backed by that `CoroutineDispatcher`. In the future, we should probably add a limit to the number of
  * GIFs that users can select to reduce the likelihood of OOM exceptions.
  */
-class GiphyMediaFetcher @Inject constructor(
+class GifMediaFetcher @Inject constructor(
     private val context: Context,
     private val mediaStore: MediaStore,
     private val dispatcher: Dispatcher
@@ -38,22 +38,22 @@ class GiphyMediaFetcher @Inject constructor(
      */
     @Throws
     suspend fun fetchAndSave(
-        giphyMediaViewModels: List<GiphyMediaViewModel>,
+        gifMediaViewModels: List<GifMediaViewModel>,
         site: SiteModel
     ): List<MediaModel> = coroutineScope {
         // Execute [fetchAndSave] for all giphyMediaViewModels first so that they are queued and executed in the
         // background. We'll call `await()` once they are queued.
-        return@coroutineScope giphyMediaViewModels.map {
-            fetchAndSave(scope = this, giphyMediaViewModel = it, site = site)
+        return@coroutineScope gifMediaViewModels.map {
+            fetchAndSave(scope = this, gifMediaViewModel = it, site = site)
         }.map { it.await() }
     }
 
     private fun fetchAndSave(
         scope: CoroutineScope,
-        giphyMediaViewModel: GiphyMediaViewModel,
+        gifMediaViewModel: GifMediaViewModel,
         site: SiteModel
     ): Deferred<MediaModel> = scope.async(Dispatchers.IO) {
-        val uri = giphyMediaViewModel.largeImageUri
+        val uri = gifMediaViewModel.largeImageUri
         // No need to log the Exception here. The underlying method that is used, [MediaUtils.downloadExternalMedia]
         // already logs any errors.
         val downloadedUri = WPMediaUtils.fetchMedia(context, uri) ?: throw Exception("Failed to download the image.")
@@ -65,7 +65,7 @@ class GiphyMediaFetcher @Inject constructor(
         val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension)
 
         val mediaModel = FluxCUtils.mediaModelFromLocalUri(context, downloadedUri, mimeType, mediaStore, site.id)
-        mediaModel.title = giphyMediaViewModel.title
+        mediaModel.title = gifMediaViewModel.title
         dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel))
 
         return@async mediaModel

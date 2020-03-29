@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.giphy.provider
+package org.wordpress.android.viewmodel.gif.provider
 
 import android.content.Context
 import android.net.Uri
@@ -10,9 +10,9 @@ import com.tenor.android.core.network.ApiClient
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.impl.GifsResponse
 import org.wordpress.android.R.string
-import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
-import org.wordpress.android.viewmodel.giphy.MutableGiphyMediaViewModel
-import org.wordpress.android.viewmodel.giphy.provider.GifProvider.GifRequestFailedException
+import org.wordpress.android.viewmodel.gif.GifMediaViewModel
+import org.wordpress.android.viewmodel.gif.MutableGifMediaViewModel
+import org.wordpress.android.viewmodel.gif.provider.GifProvider.GifRequestFailedException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,7 +31,7 @@ internal class TenorProvider constructor(
      * Implementation of the [GifProvider] search method, it will call the Tenor client search
      * right away with the provided parameters.
      *
-     * If the search request succeeds an [List] of [MutableGiphyMediaViewModel] will be passed with the next position
+     * If the search request succeeds an [List] of [MutableGifMediaViewModel] will be passed with the next position
      * for pagination. If there's no next position provided, it will be passed as null.
      *
      * If the search request fails an [GifRequestFailedException] will be passed with the API
@@ -42,7 +42,7 @@ internal class TenorProvider constructor(
         query: String,
         position: Int,
         loadSize: Int?,
-        onSuccess: (List<GiphyMediaViewModel>, Int?) -> Unit,
+        onSuccess: (List<GifMediaViewModel>, Int?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
         tenorClient.enqueueSearchRequest(
@@ -110,10 +110,10 @@ internal class TenorProvider constructor(
 
     /**
      * Every GIF returned by the Tenor will be available as [Result], to better interface
-     * with our app, it will be converted to [MutableGiphyMediaViewModel] to avoid any external
+     * with our app, it will be converted to [MutableGifMediaViewModel] to avoid any external
      * coupling with the Tenor API
      */
-    private fun Result.toMutableGifMediaViewModel() = MutableGiphyMediaViewModel(
+    private fun Result.toMutableGifMediaViewModel() = MutableGifMediaViewModel(
             id,
             Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)),
             Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_TINY)),

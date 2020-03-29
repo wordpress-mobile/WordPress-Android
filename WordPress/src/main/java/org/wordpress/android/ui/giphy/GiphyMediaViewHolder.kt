@@ -14,14 +14,14 @@ import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.redirectContextClickToLongPressListener
-import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
+import org.wordpress.android.viewmodel.gif.GifMediaViewModel
 
 /**
  * Represents a single item in the [GiphyPickerActivity]'s grid (RecyclerView).
  *
  * This is meant to show a single animated gif.
  *
- * This ViewHolder references a readonly [GiphyMediaViewModel]. It should never update the [GiphyMediaViewModel]. That
+ * This ViewHolder references a readonly [GifMediaViewModel]. It should never update the [GifMediaViewModel]. That
  * behavior is handled by the [GiphyPickerViewModel]. This is designed this way so that [GiphyPickerViewModel]
  * encapsulates all the logic of managing selected items as well as keeping their selection numbers continuous.
  */
@@ -35,11 +35,11 @@ class GiphyMediaViewHolder(
      *
      * If there is no bound [mediaViewModel], this can mean that there was an API error or this is just a placeholder.
      */
-    private val onClickListener: (GiphyMediaViewModel?) -> Unit,
+    private val onClickListener: (GifMediaViewModel?) -> Unit,
     /**
      * A function that is called when the user performs a long press on the thumbnail
      */
-    private val onLongClickListener: (GiphyMediaViewModel) -> Unit,
+    private val onLongClickListener: (GifMediaViewModel) -> Unit,
     /**
      * The view used for this `ViewHolder`.
      */
@@ -48,13 +48,13 @@ class GiphyMediaViewHolder(
      * The dimensions used for the ImageView
      */
     thumbnailViewDimensions: ThumbnailViewDimensions
-) : LifecycleOwnerViewHolder<GiphyMediaViewModel>(itemView) {
+) : LifecycleOwnerViewHolder<GifMediaViewModel>(itemView) {
     data class ThumbnailViewDimensions(val width: Int, val height: Int)
 
     private val thumbnailView: ImageView = itemView.image_thumbnail
     private val selectionNumberTextView: TextView = itemView.text_selection_count
 
-    private var mediaViewModel: GiphyMediaViewModel? = null
+    private var mediaViewModel: GifMediaViewModel? = null
 
     init {
         thumbnailView.apply {
@@ -72,13 +72,13 @@ class GiphyMediaViewHolder(
     }
 
     /**
-     * Update the views to use the given [GiphyMediaViewModel]
+     * Update the views to use the given [GifMediaViewModel]
      *
      * The [mediaViewModel] is optional because we enable placeholders in the paged list created by
-     * [org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel]. This causes null values to be bound to
+     * [org.wordpress.android.viewmodel.gif.GifPickerViewModel]. This causes null values to be bound to
      * [GiphyMediaViewHolder] instances.
      */
-    override fun bind(item: GiphyMediaViewModel?) {
+    override fun bind(item: GifMediaViewModel?) {
         super.bind(item)
 
         this.mediaViewModel = item
@@ -141,8 +141,8 @@ class GiphyMediaViewHolder(
          */
         fun create(
             imageManager: ImageManager,
-            onClickListener: (GiphyMediaViewModel?) -> Unit,
-            onLongClickListener: (GiphyMediaViewModel) -> Unit,
+            onClickListener: (GifMediaViewModel?) -> Unit,
+            onLongClickListener: (GifMediaViewModel) -> Unit,
             parent: ViewGroup,
             thumbnailViewDimensions: ThumbnailViewDimensions
         ): GiphyMediaViewHolder {

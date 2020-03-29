@@ -33,8 +33,8 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureFragment;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.ContextProvider;
-import org.wordpress.android.viewmodel.giphy.provider.GifProvider;
-import org.wordpress.android.viewmodel.giphy.provider.TenorProvider;
+import org.wordpress.android.viewmodel.gif.provider.GifProvider;
+import org.wordpress.android.viewmodel.gif.provider.TenorProvider;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 

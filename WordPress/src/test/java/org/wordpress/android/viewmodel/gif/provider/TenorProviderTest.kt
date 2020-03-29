@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.giphy.provider
+package org.wordpress.android.viewmodel.gif.provider
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -25,9 +25,9 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.TestApplication
-import org.wordpress.android.viewmodel.giphy.provider.GifProvider.GifRequestFailedException
-import org.wordpress.android.viewmodel.giphy.provider.TenorProviderTestFixtures.expectedGifMediaViewModelCollection
-import org.wordpress.android.viewmodel.giphy.provider.TenorProviderTestFixtures.mockedTenorResult
+import org.wordpress.android.viewmodel.gif.provider.GifProvider.GifRequestFailedException
+import org.wordpress.android.viewmodel.gif.provider.TenorProviderTestFixtures.expectedGifMediaViewModelCollection
+import org.wordpress.android.viewmodel.gif.provider.TenorProviderTestFixtures.mockedTenorResult
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

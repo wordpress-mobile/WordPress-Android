@@ -5,7 +5,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
+import org.wordpress.android.viewmodel.gif.GifMediaViewModel
 
 /**
  * An [RecyclerView] adapter to be used with the [PagedList] created by [GiphyPickerViewModel]
@@ -13,9 +13,9 @@ import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
 class GiphyPickerPagedListAdapter(
     private val imageManager: ImageManager,
     private val thumbnailViewDimensions: ThumbnailViewDimensions,
-    private val onMediaViewClickListener: (GiphyMediaViewModel?) -> Unit,
-    private val onMediaViewLongClickListener: (GiphyMediaViewModel) -> Unit
-) : PagedListAdapter<GiphyMediaViewModel, GiphyMediaViewHolder>(DIFF_CALLBACK) {
+    private val onMediaViewClickListener: (GifMediaViewModel?) -> Unit,
+    private val onMediaViewLongClickListener: (GifMediaViewModel) -> Unit
+) : PagedListAdapter<GifMediaViewModel, GiphyMediaViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GiphyMediaViewHolder {
         return GiphyMediaViewHolder.create(
                 imageManager = imageManager,
@@ -31,18 +31,18 @@ class GiphyPickerPagedListAdapter(
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : ItemCallback<GiphyMediaViewModel>() {
-            override fun areItemsTheSame(oldItem: GiphyMediaViewModel, newItem: GiphyMediaViewModel): Boolean {
+        private val DIFF_CALLBACK = object : ItemCallback<GifMediaViewModel>() {
+            override fun areItemsTheSame(oldItem: GifMediaViewModel, newItem: GifMediaViewModel): Boolean {
                 return oldItem.id == newItem.id
             }
 
             /**
-             * Always assume that two similar [GiphyMediaViewModel] objects always have the same content.
+             * Always assume that two similar [GifMediaViewModel] objects always have the same content.
              *
              * It is probably extremely unlikely that GIFs from Giphy will change while the user is performing
              * a search.
              */
-            override fun areContentsTheSame(oldItem: GiphyMediaViewModel, newItem: GiphyMediaViewModel): Boolean {
+            override fun areContentsTheSame(oldItem: GifMediaViewModel, newItem: GifMediaViewModel): Boolean {
                 return true
             }
         }
