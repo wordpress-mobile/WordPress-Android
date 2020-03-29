@@ -867,7 +867,7 @@ class ReaderPostDetailFragment : Fragment(),
                     else -> {
                         val siteLocalId = AppPrefs.getSelectedSite()
                         val site = mSiteStore.getSiteByLocalId(siteLocalId)
-                        ActivityLauncher.showSitePickerForResult(this, site)
+                        ActivityLauncher.showSitePickerForResult(this, site, true)
                     }
                 }
             }

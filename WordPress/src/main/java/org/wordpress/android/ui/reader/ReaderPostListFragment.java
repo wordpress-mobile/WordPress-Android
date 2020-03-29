@@ -2910,7 +2910,7 @@ public class ReaderPostListFragment extends Fragment
                 break;
             default:
                 this.mPostToReblog = post; // Stores the post to be handled in the onActivityResult after site selection
-                ActivityLauncher.showSitePickerForResult(this, getSelectedSite());
+                ActivityLauncher.showSitePickerForResult(this, getSelectedSite(), true);
                 break;
         }
     }

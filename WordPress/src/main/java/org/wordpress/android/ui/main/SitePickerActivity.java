@@ -80,6 +80,7 @@ public class SitePickerActivity extends AppCompatActivity
     private static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
     private static final String KEY_LAST_SEARCH = "last_search";
     private static final String KEY_REFRESHING = "refreshing_sites";
+    public static final String KEY_ONLY_SEARCH_MODE = "only_search";
 
     private ActionableEmptyView mActionableEmptyView;
     private SitePickerAdapter mAdapter;
@@ -91,6 +92,7 @@ public class SitePickerActivity extends AppCompatActivity
     private MenuItem mMenuSearch;
     private SearchView mSearchView;
     private int mCurrentLocalId;
+    private boolean mSearchOnlyMode;
     private Debouncer mDebouncer = new Debouncer();
 
     @Inject AccountStore mAccountStore;
@@ -132,6 +134,7 @@ public class SitePickerActivity extends AppCompatActivity
         outState.putBoolean(KEY_IS_IN_SEARCH_MODE, getAdapter().getIsInSearchMode());
         outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
         outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
+        outState.putBoolean(KEY_ONLY_SEARCH_MODE, mSearchOnlyMode);
         super.onSaveInstanceState(outState);
     }
 
@@ -158,7 +161,7 @@ public class SitePickerActivity extends AppCompatActivity
             return;
         }
 
-        if (getAdapter().getIsInSearchMode()) {
+        if (getAdapter().getIsInSearchMode() || mSearchOnlyMode) {
             mMenuEdit.setVisible(false);
             mMenuAdd.setVisible(false);
         } else {
@@ -313,8 +316,10 @@ public class SitePickerActivity extends AppCompatActivity
             mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
             isInSearchMode = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
             lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
+            mSearchOnlyMode = savedInstanceState.getBoolean(KEY_ONLY_SEARCH_MODE);
         } else if (getIntent() != null) {
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
+            mSearchOnlyMode = getIntent().getBooleanExtra(KEY_ONLY_SEARCH_MODE, false);
         }
 
         setNewAdapter(lastSearch, isInSearchMode);

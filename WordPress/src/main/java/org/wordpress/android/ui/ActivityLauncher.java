@@ -126,31 +126,34 @@ public class ActivityLauncher {
      * @param site     the preselected site
      */
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
-        Intent intent = createSitePickerIntent(activity, site);
+        Intent intent = createSitePickerIntent(activity, site, false);
         activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
     /**
      * Presents the site picker and expects the selection result
      *
-     * @param fragment the fragment that starts the site picker and expects the result
-     * @param site     the preselected site
+     * @param fragment         the fragment that starts the site picker and expects the result
+     * @param site             the preselected site
+     * @param searchOnlyAction when true only the search and back actions are shown
      */
-    public static void showSitePickerForResult(Fragment fragment, SiteModel site) {
-        Intent intent = createSitePickerIntent(fragment.getContext(), site);
+    public static void showSitePickerForResult(Fragment fragment, SiteModel site, boolean searchOnlyAction) {
+        Intent intent = createSitePickerIntent(fragment.getContext(), site, searchOnlyAction);
         fragment.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
     /**
      * Creates a site picker intent
      *
-     * @param context the context to use for the intent creation
-     * @param site    the preselected site
+     * @param context          the context to use for the intent creation
+     * @param site             the preselected site
+     * @param searchOnlyAction when true only the search and back actions are shown
      * @return the site picker intent
      */
-    private static Intent createSitePickerIntent(Context context, SiteModel site) {
+    private static Intent createSitePickerIntent(Context context, SiteModel site, boolean searchOnlyAction) {
         Intent intent = new Intent(context, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        intent.putExtra(SitePickerActivity.KEY_ONLY_SEARCH_MODE, searchOnlyAction);
         return intent;
     }
 
