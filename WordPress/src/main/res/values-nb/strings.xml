@@ -530,11 +530,11 @@ Language: nb_NO
     <string name="stats_no_data_for_period">Ingen data for denne perioden</string>
     <string name="preference_strip_image_location">Fjern dette stedet fra media</string>
     <string name="stats_cannot_be_started">Vi kan ikke åpne statistikken i øyeblikket. Vennligst prøv igjen senere</string>
-    <string name="giphy_powered_by_giphy">Drevet av GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Noe media kunne ikke lastes på grunn av en nettverksfeil.</string>
-    <string name="giphy_picker_empty_search_list">Ingen media passet ditt søk</string>
-    <string name="giphy_picker_initial_empty_text">Søk for å finne GIF-er å legge til i ditt mediebibliotek!</string>
-    <string name="giphy_picker_search_hint">Søk Giphy</string>
+    <string name="gif_powered_by_tenor">Drevet av TENOR</string>
+    <string name="gif_picker_endless_scroll_network_error">Noe media kunne ikke lastes på grunn av en nettverksfeil.</string>
+    <string name="gif_picker_empty_search_list">Ingen media passet ditt søk</string>
+    <string name="gif_picker_initial_empty_text">Søk for å finne GIF-er å legge til i ditt mediebibliotek!</string>
+    <string name="gif_picker_search_hint">Søk Tenor</string>
     <string name="stats_author_views_label">Visninger</string>
     <string name="stats_author_label">Forfatter</string>
     <string name="stats_authors">Forfattere</string>

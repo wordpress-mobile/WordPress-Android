@@ -55,7 +55,7 @@ Language: el_GR
     <string name="new_site_creation_screen_title_step_count">%1$d από %2$d</string>
     <string name="new_site_creation_screen_title_general">Δημιουργία ιστότοπου</string>
     <string name="snackbar_conflict_undo">Αναίρεση</string>
-    <string name="giphy_picker_search_hint">Αναζήτηση στο Giphy</string>
+    <string name="gif_picker_search_hint">Αναζήτηση στο Tenor</string>
     <string name="stats_author_views_label">Προβολές</string>
     <string name="stats_author_label">Συγγραφέας</string>
     <string name="stats_authors">Συγγραφείς</string>
