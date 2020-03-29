@@ -2903,7 +2903,7 @@ public class ReaderPostListFragment extends Fragment
         List<SiteModel> sites = mSiteStore.getVisibleSites();
         switch (sites.size()) {
             case 0:
-                ToastUtils.showToast(getActivity(), R.string.reader_no_site_to_reblog);
+                ReaderActivityLauncher.showNoSiteToReblog(getActivity());
                 break;
             case 1:
                 ActivityLauncher.openEditorForReblog(getActivity(), getSelectedSite(), this.mPostToReblog);
