@@ -12,7 +12,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
  * way so that [GifPickerViewModel] encapsulates all the logic of managing selected items as well as keeping their
  * selection numbers continuous.
  *
- * The [GiphyPickerViewHolder] should never have access to the mutating methods of this class.
+ * The [GifPickerViewHolder] should never have access to the mutating methods of this class.
  */
 data class MutableGifMediaViewModel(
     override val id: String,

@@ -36,9 +36,7 @@ import org.wordpress.android.viewmodel.gif.GifPickerViewModel.State
 import javax.inject.Inject
 
 /**
- * Allows searching of gifs from Giphy
- *
- * Important: Giphy is currently disabled everywhere. We are planning to replace it with a different service provider.
+ * Allows searching of gifs from a giving provider
  */
 class GifPickerActivity : LocaleAwareActivity() {
     /**
@@ -126,7 +124,7 @@ class GifPickerActivity : LocaleAwareActivity() {
      * Configure the search view to execute search when the keyboard's Done button is pressed.
      */
     private fun initializeSearchView() {
-        search_view.queryHint = getString(R.string.giphy_picker_search_hint)
+        search_view.queryHint = getString(R.string.gif_picker_search_hint)
 
         search_view.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -203,7 +201,7 @@ class GifPickerActivity : LocaleAwareActivity() {
         emptyView.run {
             image.setImageResource(R.drawable.img_illustration_media_105dp)
             bottomImage.setImageResource(R.drawable.img_tenor_100dp)
-            bottomImage.contentDescription = getString(R.string.giphy_powered_by_giphy)
+            bottomImage.contentDescription = getString(R.string.gif_powered_by_tenor)
         }
 
         viewModel.emptyDisplayMode.getDistinct().observe(this, Observer { emptyDisplayMode ->
@@ -216,7 +214,7 @@ class GifPickerActivity : LocaleAwareActivity() {
                         updateLayoutForSearch(isSearching = true, topMargin = 0)
 
                         visibility = View.VISIBLE
-                        title.setText(R.string.giphy_picker_empty_search_list)
+                        title.setText(R.string.gif_picker_empty_search_list)
                         image.visibility = View.GONE
                         bottomImage.visibility = View.GONE
                     }
@@ -226,7 +224,7 @@ class GifPickerActivity : LocaleAwareActivity() {
                         updateLayoutForSearch(isSearching = false, topMargin = 0)
 
                         visibility = View.VISIBLE
-                        title.setText(R.string.giphy_picker_initial_empty_text)
+                        title.setText(R.string.gif_picker_initial_empty_text)
                         image.visibility = View.VISIBLE
                         bottomImage.visibility = View.VISIBLE
                     }
@@ -254,7 +252,7 @@ class GifPickerActivity : LocaleAwareActivity() {
 
             ToastUtils.showToast(
                     this@GifPickerActivity,
-                    R.string.giphy_picker_endless_scroll_network_error,
+                    R.string.gif_picker_endless_scroll_network_error,
                     ToastUtils.Duration.LONG
             )
         })

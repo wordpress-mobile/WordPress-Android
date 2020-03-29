@@ -22,7 +22,7 @@ import org.wordpress.android.viewmodel.gif.GifMediaViewModel
  * This is meant to show a single animated gif.
  *
  * This ViewHolder references a readonly [GifMediaViewModel]. It should never update the [GifMediaViewModel]. That
- * behavior is handled by the [GiphyPickerViewModel]. This is designed this way so that [GiphyPickerViewModel]
+ * behavior is handled by the [GifPickerViewModel]. This is designed this way so that [GifPickerViewModel]
  * encapsulates all the logic of managing selected items as well as keeping their selection numbers continuous.
  */
 class GifMediaViewHolder(

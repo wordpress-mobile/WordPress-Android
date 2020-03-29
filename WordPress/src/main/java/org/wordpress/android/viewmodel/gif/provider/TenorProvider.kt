@@ -55,7 +55,7 @@ internal class TenorProvider constructor(
                     onSuccess(gifList, nextPosition)
                 },
                 onFailure = {
-                    val errorMessage = it?.message ?: context.getString(string.gifs_list_search_returned_unknown_error)
+                    val errorMessage = it?.message ?: context.getString(string.gif_list_search_returned_unknown_error)
                     onFailure(GifRequestFailedException(errorMessage))
                 }
         )
@@ -78,7 +78,7 @@ internal class TenorProvider constructor(
     ) = buildSearchCall(query, loadSize, position).apply {
         enqueue(object : Callback<GifsResponse> {
             override fun onResponse(call: Call<GifsResponse>, response: Response<GifsResponse>) {
-                val defaultErrorMessage = context.getString(string.giphy_picker_empty_search_list)
+                val defaultErrorMessage = context.getString(string.gif_picker_empty_search_list)
                 response.body()?.let(onSuccess) ?: onFailure(GifRequestFailedException(defaultErrorMessage))
             }
 
@@ -112,6 +112,8 @@ internal class TenorProvider constructor(
      * Every GIF returned by the Tenor will be available as [Result], to better interface
      * with our app, it will be converted to [MutableGifMediaViewModel] to avoid any external
      * coupling with the Tenor API
+     *
+     * See the [Tenor API docs](https://tenor.com/gifapi/documentation#responseobjects) for more information on what a [Result] object contains.
      */
     private fun Result.toMutableGifMediaViewModel() = MutableGifMediaViewModel(
             id,

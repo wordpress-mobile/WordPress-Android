@@ -51,7 +51,7 @@ class GifPickerDataSource(
     private val failedRangeLoadArguments = mutableListOf<RangeLoadArguments>()
 
     /**
-     * Always the load the first page (startingPosition = 0) from the Giphy API
+     * Always the load the first page (startingPosition = 0) from the Gif API
      *
      * The [GifPickerDataSourceFactory] recreates [GifPickerDataSource] instances whenever a new [searchQuery]
      * is queued. The [LoadInitialParams.requestedStartPosition] may have a value that is only valid for the
@@ -102,7 +102,7 @@ class GifPickerDataSource(
     }
 
     /**
-     * Load a given range of items ([params]) from the Giphy API.
+     * Load a given range of items ([params]) from the Gif API.
      *
      * Errors are dispatched to [rangeLoadErrorEvent]. If successful, previously failed calls of this method are
      * automatically retried using [retryAllFailedRangeLoads].

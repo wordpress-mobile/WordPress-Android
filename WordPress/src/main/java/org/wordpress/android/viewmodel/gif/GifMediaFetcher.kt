@@ -41,7 +41,7 @@ class GifMediaFetcher @Inject constructor(
         gifMediaViewModels: List<GifMediaViewModel>,
         site: SiteModel
     ): List<MediaModel> = coroutineScope {
-        // Execute [fetchAndSave] for all giphyMediaViewModels first so that they are queued and executed in the
+        // Execute [fetchAndSave] for all gifMediaViewModels first so that they are queued and executed in the
         // background. We'll call `await()` once they are queued.
         return@coroutineScope gifMediaViewModels.map {
             fetchAndSave(scope = this, gifMediaViewModel = it, site = site)

@@ -2266,7 +2266,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.GIF_PICKER:
                     if (data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
                         int[] localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
-                        mEditorMedia.addMediaFromGiphyToPostAsync(localIds);
+                        mEditorMedia.addGifMediaToPostAsync(localIds);
                     }
                     break;
                 case RequestCodes.HISTORY_DETAIL:

@@ -52,7 +52,7 @@ class GifPickerViewModelTest {
 
     @Test
     fun `when setting a mediaViewModel as selected, it adds that to the selected list`() {
-        val mediaViewModel = createGiphyMediaViewModel()
+        val mediaViewModel = createGifMediaViewModel()
 
         viewModel.toggleSelected(mediaViewModel)
 
@@ -64,7 +64,7 @@ class GifPickerViewModelTest {
 
     @Test
     fun `when setting a mediaViewModel as selected, it updates the isSelected and selectedNumber`() {
-        val mediaViewModel = createGiphyMediaViewModel()
+        val mediaViewModel = createGifMediaViewModel()
 
         viewModel.toggleSelected(mediaViewModel)
 
@@ -75,7 +75,7 @@ class GifPickerViewModelTest {
     @Test
     fun `when toggling an already selected mediaViewModel, it gets deselected and removed from the selected list`() {
         // Arrange
-        val mediaViewModel = createGiphyMediaViewModel()
+        val mediaViewModel = createGifMediaViewModel()
         viewModel.toggleSelected(mediaViewModel)
 
         // Act
@@ -91,10 +91,10 @@ class GifPickerViewModelTest {
     @Test
     fun `when deselecting a mediaViewModel, it rebuilds the selectedNumbers so they are continuous`() {
         // Arrange
-        val alpha = createGiphyMediaViewModel()
-        val bravo = createGiphyMediaViewModel()
-        val charlie = createGiphyMediaViewModel()
-        val delta = createGiphyMediaViewModel()
+        val alpha = createGifMediaViewModel()
+        val bravo = createGifMediaViewModel()
+        val charlie = createGifMediaViewModel()
+        val delta = createGifMediaViewModel()
 
         listOf(alpha, bravo, charlie, delta).forEach(viewModel::toggleSelected)
 
@@ -121,7 +121,7 @@ class GifPickerViewModelTest {
     @Test
     fun `when the searchQuery is changed, it clears the selected mediaViewModel list`() {
         // Arrange
-        val mediaViewModel = createGiphyMediaViewModel()
+        val mediaViewModel = createGifMediaViewModel()
         viewModel.toggleSelected(mediaViewModel)
 
         // Act
@@ -287,7 +287,7 @@ class GifPickerViewModelTest {
         }
         check(viewModel.state.value == State.FINISHED)
 
-        viewModel.toggleSelected(createGiphyMediaViewModel())
+        viewModel.toggleSelected(createGifMediaViewModel())
 
         // Assert
         assertThat(viewModel.selectedMediaViewModelList.value).isNull()
@@ -316,7 +316,7 @@ class GifPickerViewModelTest {
         id = Random().nextInt()
     }
 
-    private fun createGiphyMediaViewModel() = MutableGifMediaViewModel(
+    private fun createGifMediaViewModel() = MutableGifMediaViewModel(
             id = UUID.randomUUID().toString(),
             thumbnailUri = mock(),
             largeImageUri = mock(),

@@ -8,7 +8,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.gif.GifMediaViewModel
 
 /**
- * An [RecyclerView] adapter to be used with the [PagedList] created by [GiphyPickerViewModel]
+ * An [RecyclerView] adapter to be used with the [PagedList] created by [GifPickerViewModel]
  */
 class GifPickerPagedListAdapter(
     private val imageManager: ImageManager,
@@ -39,7 +39,7 @@ class GifPickerPagedListAdapter(
             /**
              * Always assume that two similar [GifMediaViewModel] objects always have the same content.
              *
-             * It is probably extremely unlikely that GIFs from Giphy will change while the user is performing
+             * It is probably extremely unlikely that GIFs will change while the user is performing
              * a search.
              */
             override fun areContentsTheSame(oldItem: GifMediaViewModel, newItem: GifMediaViewModel): Boolean {

@@ -16,7 +16,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.wordpress.android.viewmodel.gif.GiphyPickerDataSourceFixtures.expectedGifMediaViewModelCollection
+import org.wordpress.android.viewmodel.gif.GifPickerDataSourceFixtures.expectedGifMediaViewModelCollection
 import org.wordpress.android.viewmodel.gif.provider.GifProvider
 import org.wordpress.android.viewmodel.gif.provider.GifProvider.GifRequestFailedException
 
