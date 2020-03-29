@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.giphy
+package org.wordpress.android.ui.gif
 
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +17,7 @@ import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.viewmodel.gif.GifMediaViewModel
 
 /**
- * Represents a single item in the [GiphyPickerActivity]'s grid (RecyclerView).
+ * Represents a single item in the [GifPickerActivity]'s grid (RecyclerView).
  *
  * This is meant to show a single animated gif.
  *
@@ -25,7 +25,7 @@ import org.wordpress.android.viewmodel.gif.GifMediaViewModel
  * behavior is handled by the [GiphyPickerViewModel]. This is designed this way so that [GiphyPickerViewModel]
  * encapsulates all the logic of managing selected items as well as keeping their selection numbers continuous.
  */
-class GiphyMediaViewHolder(
+class GifMediaViewHolder(
     /**
      * The [ImageManager] to use for loading an image in to the ImageView
      */
@@ -76,7 +76,7 @@ class GiphyMediaViewHolder(
      *
      * The [mediaViewModel] is optional because we enable placeholders in the paged list created by
      * [org.wordpress.android.viewmodel.gif.GifPickerViewModel]. This causes null values to be bound to
-     * [GiphyMediaViewHolder] instances.
+     * [GifMediaViewHolder] instances.
      */
     override fun bind(item: GifMediaViewModel?) {
         super.bind(item)
@@ -137,7 +137,7 @@ class GiphyMediaViewHolder(
         private const val THUMBNAIL_SCALE_SELECTED: Float = 0.8f
 
         /**
-         * Create the layout and a new instance of [GiphyMediaViewHolder]
+         * Create the layout and a new instance of [GifMediaViewHolder]
          */
         fun create(
             imageManager: ImageManager,
@@ -145,11 +145,11 @@ class GiphyMediaViewHolder(
             onLongClickListener: (GifMediaViewModel) -> Unit,
             parent: ViewGroup,
             thumbnailViewDimensions: ThumbnailViewDimensions
-        ): GiphyMediaViewHolder {
+        ): GifMediaViewHolder {
             // We are intentionally reusing this layout since the UI is very similar.
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.media_picker_thumbnail, parent, false)
-            return GiphyMediaViewHolder(
+            return GifMediaViewHolder(
                     imageManager = imageManager,
                     onClickListener = onClickListener,
                     onLongClickListener = onLongClickListener,

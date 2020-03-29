@@ -1,23 +1,23 @@
-package org.wordpress.android.ui.giphy
+package org.wordpress.android.ui.gif
 
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
-import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
+import org.wordpress.android.ui.gif.GifMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.gif.GifMediaViewModel
 
 /**
  * An [RecyclerView] adapter to be used with the [PagedList] created by [GiphyPickerViewModel]
  */
-class GiphyPickerPagedListAdapter(
+class GifPickerPagedListAdapter(
     private val imageManager: ImageManager,
     private val thumbnailViewDimensions: ThumbnailViewDimensions,
     private val onMediaViewClickListener: (GifMediaViewModel?) -> Unit,
     private val onMediaViewLongClickListener: (GifMediaViewModel) -> Unit
-) : PagedListAdapter<GifMediaViewModel, GiphyMediaViewHolder>(DIFF_CALLBACK) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GiphyMediaViewHolder {
-        return GiphyMediaViewHolder.create(
+) : PagedListAdapter<GifMediaViewModel, GifMediaViewHolder>(DIFF_CALLBACK) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GifMediaViewHolder {
+        return GifMediaViewHolder.create(
                 imageManager = imageManager,
                 onClickListener = onMediaViewClickListener,
                 onLongClickListener = onMediaViewLongClickListener,
@@ -26,7 +26,7 @@ class GiphyPickerPagedListAdapter(
         )
     }
 
-    override fun onBindViewHolder(holder: GiphyMediaViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: GifMediaViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 

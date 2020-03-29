@@ -25,7 +25,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 /**
- * Holds the data for [org.wordpress.android.ui.giphy.GiphyPickerActivity]
+ * Holds the data for [org.wordpress.android.ui.gif.GifPickerActivity]
  *
  * This creates a [PagedList] which can be bound to by a [PagedListAdapter] and also manages the logic of the
  * selected media. That includes but not limited to keeping the [GifMediaViewModel.selectionNumber] continuous.

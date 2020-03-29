@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.giphy
+package org.wordpress.android.ui.gif
 
 import android.app.Activity
 import android.content.Intent
@@ -19,7 +19,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
-import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
+import org.wordpress.android.ui.gif.GifMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.util.AniUtils
@@ -40,9 +40,9 @@ import javax.inject.Inject
  *
  * Important: Giphy is currently disabled everywhere. We are planning to replace it with a different service provider.
  */
-class GiphyPickerActivity : LocaleAwareActivity() {
+class GifPickerActivity : LocaleAwareActivity() {
     /**
-     * Used for loading images in [GiphyMediaViewHolder]
+     * Used for loading images in [GifMediaViewHolder]
      */
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelFactory
@@ -53,7 +53,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
     private val gridColumnCount: Int by lazy { if (DisplayUtils.isLandscape(this)) 4 else 3 }
 
     /**
-     * Passed to the [GiphyMediaViewHolder] which will be used as its dimensions
+     * Passed to the [GifMediaViewHolder] which will be used as its dimensions
      */
     private val thumbnailViewDimensions: ThumbnailViewDimensions by lazy {
         val width = DisplayUtils.getDisplayPixelWidth(this) / gridColumnCount
@@ -93,10 +93,10 @@ class GiphyPickerActivity : LocaleAwareActivity() {
     }
 
     /**
-     * Configure the RecyclerView to use [GiphyPickerPagedListAdapter] and display the items in a grid
+     * Configure the RecyclerView to use [GifPickerPagedListAdapter] and display the items in a grid
      */
     private fun initializeRecyclerView() {
-        val pagedListAdapter = GiphyPickerPagedListAdapter(
+        val pagedListAdapter = GifPickerPagedListAdapter(
                 imageManager = imageManager,
                 thumbnailViewDimensions = thumbnailViewDimensions,
                 onMediaViewClickListener = { mediaViewModel ->
@@ -112,7 +112,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
         )
 
         recycler.apply {
-            layoutManager = GridLayoutManager(this@GiphyPickerActivity, gridColumnCount)
+            layoutManager = GridLayoutManager(this@GifPickerActivity, gridColumnCount)
             adapter = pagedListAdapter
         }
 
@@ -253,7 +253,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
             event ?: return@Observer
 
             ToastUtils.showToast(
-                    this@GiphyPickerActivity,
+                    this@GifPickerActivity,
                     R.string.giphy_picker_endless_scroll_network_error,
                     ToastUtils.Duration.LONG
             )
@@ -301,7 +301,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
                 finish()
             } else if (result?.errorMessageStringResId != null) {
                 ToastUtils.showToast(
-                        this@GiphyPickerActivity,
+                        this@GifPickerActivity,
                         result.errorMessageStringResId,
                         ToastUtils.Duration.SHORT
                 )
