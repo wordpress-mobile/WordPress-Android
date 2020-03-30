@@ -13,7 +13,7 @@ import org.wordpress.android.util.DateTimeUtils
  * of its host application.
  */
 class LogFileWriter @JvmOverloads constructor(
-    logFileProvider: LogFileProvider,
+    logFileProvider: LogFileProviderInterface,
     fileId: String = DateTimeUtils.iso8601FromDate(Date())
 ) {
     private val file = File(logFileProvider.getLogFileDirectory(), "$fileId.log")

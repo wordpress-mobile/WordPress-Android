@@ -5,7 +5,7 @@ import java.io.File
 /**
  * An interface to retrieve log files
  */
-interface LogFileProvider {
+interface LogFileProviderInterface {
     fun getLogFiles(): List<File>
 
     fun getLogFileDirectory(): File

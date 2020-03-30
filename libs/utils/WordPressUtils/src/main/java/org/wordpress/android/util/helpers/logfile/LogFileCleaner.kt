@@ -9,7 +9,7 @@ package org.wordpress.android.util.helpers.logfile
  * @param logFileProvider: An interface where the log files will be retrieved from
  * @param maxLogFileCount: The number of log files to retain
  */
-class LogFileCleaner(private val logFileProvider: LogFileProvider, private val maxLogFileCount: Int) {
+class LogFileCleaner(private val logFileProvider: LogFileProviderInterface, private val maxLogFileCount: Int) {
     /**
      * Immediately removes all log files known to exist by this instance except for
      * the most recent `maxLogFileCount` items.

@@ -10,6 +10,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import org.wordpress.android.util.helpers.logfile.LogFileCleaner;
+import org.wordpress.android.util.helpers.logfile.LogFileProvider;
 import org.wordpress.android.util.helpers.logfile.LogFileWriter;
 
 import java.io.PrintWriter;
@@ -97,11 +98,12 @@ public class AppLog {
      * @param maxLogCount The maximum number of logs that should be stored
      */
      public static void enableLogFilePersistence(Context context, int maxLogCount) {
-        new LogFileCleaner(context, maxLogCount).clean();
+         LogFileProvider logFileProvider = LogFileProvider.fromContext(context);
+         new LogFileCleaner(logFileProvider, maxLogCount).clean();
 
-        mLogFileWriter = new LogFileWriter(context);
-        mLogFileWriter.write(getAppInfoHeaderText(context) + "\n");
-        mLogFileWriter.write(getDeviceInfoHeaderText(context) + "\n");
+         mLogFileWriter = new LogFileWriter(logFileProvider);
+         mLogFileWriter.write(getAppInfoHeaderText(context) + "\n");
+         mLogFileWriter.write(getDeviceInfoHeaderText(context) + "\n");
     }
 
     private static LogFileWriter mLogFileWriter;
