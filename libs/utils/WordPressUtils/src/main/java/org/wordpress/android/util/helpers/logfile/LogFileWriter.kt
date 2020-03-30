@@ -1,6 +1,5 @@
 package org.wordpress.android.util.helpers.logfile
 
-import android.content.Context
 import org.jetbrains.annotations.TestOnly
 import java.io.File
 import java.io.FileWriter
@@ -13,15 +12,11 @@ import org.wordpress.android.util.DateTimeUtils
  * This class creates and writes to a log file, and will typically persist for the entire lifecycle
  * of its host application.
  */
-class LogFileWriter
-/**
- * General-purpose constructor – given a log file directory, creates and prepares a log file for writing.
- * @param context: The Android [context] object
- */ @JvmOverloads constructor(
-    context: Context,
-    id: String = DateTimeUtils.iso8601FromDate(Date())
+class LogFileWriter @JvmOverloads constructor(
+    logFileProvider: LogFileProvider,
+    fileId: String = DateTimeUtils.iso8601FromDate(Date())
 ) {
-    private val file = File(LogFileHelpers.logFileDirectory(context), "$id.log")
+    private val file = File(logFileProvider.getLogFileDirectory(), "$fileId.log")
     private val fileWriter: FileWriter = FileWriter(file)
 
     /**

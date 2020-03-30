@@ -7,4 +7,6 @@ import java.io.File
  */
 interface LogFileProvider {
     fun getLogFiles(): List<File>
+
+    fun getLogFileDirectory(): File
 }
