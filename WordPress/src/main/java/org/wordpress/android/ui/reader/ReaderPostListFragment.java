@@ -2906,7 +2906,7 @@ public class ReaderPostListFragment extends Fragment
                 ToastUtils.showToast(getActivity(), R.string.reader_no_site_to_reblog);
                 break;
             case 1:
-                ActivityLauncher.openEditorForReblog(getActivity(), getSelectedSite(), this.mPostToReblog);
+                ActivityLauncher.openEditorForReblog(getActivity(), getSelectedSite(), post);
                 break;
             default:
                 this.mPostToReblog = post; // Stores the post to be handled in the onActivityResult after site selection
