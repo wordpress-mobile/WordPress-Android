@@ -172,6 +172,9 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         int clickedPosition = blogHolder.getAdapterPosition();
+                        if (clickedPosition == RecyclerView.NO_POSITION) {
+                            return;
+                        }
                         switch (getBlogType()) {
                             case RECOMMENDED:
                                 mClickListener.onBlogClicked(mRecommendedBlogs.get(clickedPosition));

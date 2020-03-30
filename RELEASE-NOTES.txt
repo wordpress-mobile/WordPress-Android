@@ -1,11 +1,29 @@
+14.6
+-----
+* Block editor: You can now crop, zoom in/out and rotate images that are already inserted in a post.
+* Fix a deeplinking issue that could lead to the app not being open after clicking on some special "wordpress://" URLs.
+
 14.5
 -----
+* Block editor: New block: Latest Posts
+* Block editor: Fix Quote block's left border not being visible in Dark Mode
+* Block editor: Added Starter Page Templates: when you create a new page, we now show you a few templates to get started more quickly.
+* Block editor: Fix crash when pasting HTML content with embeded images on paragraphs
 * Removes sections from post search results
+* Page List: Unsaved changes are automatically backed up on all devices. On page opening, the app will let you choose which version you prefer.
+* Page List: Minor design improvements
+
+* Site Creation: faster site creation, removed intermediate steps. Just select what kind of site you'd like, enter the domain name and the site will be created.
+* Fixed a bug where failed post uploads were sometimes being retried indefinitely
+
+14.4.1
+-----
+* Block Editor: Fix crash when inserting a Button Block.
  
 14.4
 -----
 * Fix an issue where image is sometimes uploaded with a path to local storage
- 
+
 14.3
 -----
 * Added search to set page parent screen
@@ -18,7 +36,7 @@
 * Block editor: Fix issue where adding emojis to the post title added strong HTML elements to the title of the post
 * Block editor: We’ve introduced a new toolbar that floats above the block you’re editing, which makes navigating your blocks easier — especially complex ones.
 * Reader Information Architecture: added tab filtering; added bottom sheet to filter and navigate the followed sites/tags posts.
- 
+
 14.2
 -----
 * Block editor: Long-press Inserter icon to show options to add before/after
@@ -52,7 +70,7 @@
 * Block Editor: Add support for the Preformatted block.
 * Block Editor: Add support for changing Settings in the List Block.
 * Block Editor: Add support for Video block settings.
- 
+
 13.8
 -----
 * Modified Blog Post search to search for posts under all categories.
@@ -69,7 +87,7 @@
 * Fixed time displayed on Post Conflict Detected and Unpublished Revision dialogs
 * Block editor: Fix issue when removing image/page break block crashes the app
 * Fixed a crash on Samsung devices running Android 5 (Lollipop)
- 
+
 * Removed support for Giphy
 
 13.6
@@ -234,4 +252,3 @@
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
-

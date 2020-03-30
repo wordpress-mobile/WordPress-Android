@@ -11,6 +11,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -323,7 +324,8 @@ public class PublicizeListActivity extends AppCompatActivity
             }
         } else {
             if (event.getReasonResId() != null) {
-                showAlertForFailureReason(event.getReasonResId());
+                DialogFragment fragment = PublicizeErrorDialogFragment.newInstance(event.getReasonResId());
+                fragment.show(getSupportFragmentManager(), PublicizeErrorDialogFragment.TAG);
             } else {
                 ToastUtils.showToast(this, R.string.error_generic);
             }
@@ -375,13 +377,5 @@ public class PublicizeListActivity extends AppCompatActivity
                             .addToBackStack(null)
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                             .commit();
-    }
-
-    private void showAlertForFailureReason(int reasonResId) {
-        final AlertDialog.Builder builder =
-                new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog));
-        builder.setMessage(reasonResId);
-        builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
-        builder.show();
     }
 }
