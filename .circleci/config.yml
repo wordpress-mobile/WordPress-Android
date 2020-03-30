@@ -193,10 +193,6 @@ workflows:
               ignore:
                 - develop
                 - /^release.*/
+                - /pull\/[0-9]+/
       - Connected Tests:
           requires: [Hold]
-          filters:
-            branches:
-              ignore:
-                - develop
-                - /^release.*/
