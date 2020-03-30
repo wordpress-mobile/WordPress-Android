@@ -2078,10 +2078,10 @@ public class ReaderPostListFragment extends Fragment
                     context,
                     getPostListType(),
                     mImageManager,
-                    mIsTopLevel,
-                    this
+                    mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);
+            mPostAdapter.setReblogActionListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);

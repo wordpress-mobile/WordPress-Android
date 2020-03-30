@@ -696,8 +696,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Context context,
             ReaderPostListType postListType,
             ImageManager imageManager,
-            boolean isMainReader,
-            ReblogActionListener reblogActionListener
+            boolean isMainReader
     ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -708,7 +707,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = !mAccountStore.hasAccessToken();
         mIsMainReader = isMainReader;
-        mReblogActionListener = reblogActionListener;
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
@@ -736,6 +734,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnFollowListener(OnFollowListener listener) {
         mFollowListener = listener;
+    }
+
+    public void setReblogActionListener(ReblogActionListener reblogActionListener) {
+        mReblogActionListener = reblogActionListener;
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
