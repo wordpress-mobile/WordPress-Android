@@ -277,16 +277,15 @@ public class AppLog {
             return sb.toString();
         }
 
-        @NonNull @Override public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append("[")
-              .append(this.formatLogDate()).append(" ")
-              .append(this.mLogTag.name())
-              .append("] ")
-              .append(this.mLogText)
-              .append("\n");
-
-            return sb.toString();
+        @Override
+        public @NonNull String toString() {
+            return "["
+            + formatLogDate()
+            + " "
+            + mLogTag.name()
+            + "] "
+            + mLogText
+            + "\n";
         }
     }
 
