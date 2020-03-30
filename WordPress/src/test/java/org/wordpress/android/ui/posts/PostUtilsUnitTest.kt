@@ -96,28 +96,35 @@ class PostUtilsUnitTest {
     }
 
     @Test
-    fun `isMediaInGutenberg returns true when the image is found in the post content`() {
+    fun `isMediaInGutenberg returns true when an imageBlock is found in the post content`() {
         val imgId = "999"
         val postContent = "<!-- wp:image {\"id\":$imgId} --> ...... <!-- /wp:image -->"
         assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, imgId)).isTrue()
     }
 
     @Test
-    fun `isMediaInGutenberg returns false when the image with provided id is NOT found in the post content`() {
+    fun `isMediaInGutenberg returns false when an imageBlock with provided id is NOT found in the post content`() {
         val imgId = "123"
         val postContent = "<!-- wp:image {\"id\":$imgId} --> ...... <!-- /wp:image -->"
         assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "999")).isFalse()
     }
 
     @Test
-    fun `isMediaInGutenberg returns false when only part of the id matches`() {
+    fun `isMediaInGutenberg returns false for an imageBlock when only part of the id matches`() {
         val imgId = "12345"
         val postContent = "<!-- wp:image {\"id\":$imgId} --> ...... <!-- /wp:image -->"
         assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "123")).isFalse()
     }
 
     @Test
-    fun `isMediaInGutenberg works when the image tag has multiple attributes`() {
+    fun `isMediaInGutenberg returns false for an Media&Text when only part of the id matches`() {
+        val imgId = "12345"
+        val postContent = "<!-- wp:media-text {\"mediaId\":$imgId} --> ...... <!-- /wp:image -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "123")).isFalse()
+    }
+
+    @Test
+    fun `isMediaInGutenberg works when an imageBlock tag has multiple attributes`() {
         val imgId = "999"
         val postContent = "<!-- wp:image {\"id\":$imgId,\"sizeSlug\":\"large\"} --> ...... <!-- /wp:image -->"
         assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, imgId)).isTrue()

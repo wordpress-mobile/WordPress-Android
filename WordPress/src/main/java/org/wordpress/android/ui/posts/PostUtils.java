@@ -437,7 +437,7 @@ public class PostUtils {
         // Regex for Image and Video blocks
         patterns.add("<!-- wp:(?:image|video){1} \\{[^\\}]*\"id\":%s([^\\d\\}][^\\}]*)*\\} -->");
         // Regex for Media&Text block
-        patterns.add("<!-- wp:media-text \\{[^\\}]*\"mediaId\":%s[^\\}]*\\} -->");
+        patterns.add("<!-- wp:media-text \\{[^\\}]*\"mediaId\":%s([^\\d\\}][^\\}]*)*\\} -->");
         // Regex for Gallery block
         patterns.add("<!-- wp:gallery \\{[^\\}]*\"ids\":\\[(?:\\d*,)*%s(?:,\\d*)*\\][^\\}]*\\} -->");
 
