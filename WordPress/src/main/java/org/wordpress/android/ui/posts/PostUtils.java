@@ -433,9 +433,9 @@ public class PostUtils {
     public static boolean isMediaInGutenbergPostBody(@NonNull String postContent,
                                             String localMediaId) {
         // check if media is in Gutenberg Post
-        String imgBlockHeaderToSearchFor =
-                String.format("<!-- wp:image \\{[^\\}]*\"id\":%s[^\\}]*\\} -->", localMediaId);
-        Pattern pattern = Pattern.compile(imgBlockHeaderToSearchFor);
+        String mediaBlockHeaderToSearchFor =
+                String.format("<!-- wp:(image|video) \\{[^\\}]*\"id\":%s[^\\}]*\\} -->", localMediaId);
+        Pattern pattern = Pattern.compile(mediaBlockHeaderToSearchFor);
         Matcher matcher = pattern.matcher(postContent);
         return matcher.find();
     }
