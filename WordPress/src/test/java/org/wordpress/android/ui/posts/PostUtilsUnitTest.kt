@@ -103,9 +103,44 @@ class PostUtilsUnitTest {
     }
 
     @Test
+    fun `isMediaInGutenberg returns true when a videoBlock is found in the post content`() {
+        val imgId = "999"
+        val postContent = "<!-- wp:video {\"id\":$imgId} --> ...... <!-- /wp:video -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, imgId)).isTrue()
+    }
+
+    @Test
+    fun `isMediaInGutenberg returns true when a Media&Text is found in the post content`() {
+        val imgId = "999"
+        val postContent = "<!-- wp:media-text {\"mediaId\":$imgId} --> ...... <!-- /wp:media-text -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, imgId)).isTrue()
+    }
+
+    @Test
+    fun `isMediaInGutenberg returns true when a galleryBlock is found in the post content`() {
+        val imgId = "999"
+        val postContent = "<!-- wp:gallery {\"ids\":[$imgId]} --> ...... <!-- /wp:gallery -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, imgId)).isTrue()
+    }
+
+    @Test
     fun `isMediaInGutenberg returns false when an imageBlock with provided id is NOT found in the post content`() {
         val imgId = "123"
         val postContent = "<!-- wp:image {\"id\":$imgId} --> ...... <!-- /wp:image -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "999")).isFalse()
+    }
+
+    @Test
+    fun `isMediaInGutenberg returns false when a videoBlock with provided id is NOT found in the post content`() {
+        val imgId = "123"
+        val postContent = "<!-- wp:video {\"id\":$imgId} --> ...... <!-- /wp:video -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "999")).isFalse()
+    }
+
+    @Test
+    fun `isMediaInGutenberg returns false when a Media&Text with provided id is NOT found in the post content`() {
+        val imgId = "123"
+        val postContent = "<!-- wp:media-text {\"mediaId\":$imgId} --> ...... <!-- /wp:media-text -->"
         assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "999")).isFalse()
     }
 
@@ -117,10 +152,24 @@ class PostUtilsUnitTest {
     }
 
     @Test
-    fun `isMediaInGutenberg returns false for an Media&Text when only part of the id matches`() {
+    fun `isMediaInGutenberg returns false for a videoBlock when only part of the id matches`() {
         val imgId = "12345"
-        val postContent = "<!-- wp:media-text {\"mediaId\":$imgId} --> ...... <!-- /wp:image -->"
+        val postContent = "<!-- wp:video {\"id\":$imgId} --> ...... <!-- /wp:video -->"
         assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "123")).isFalse()
+    }
+
+    @Test
+    fun `isMediaInGutenberg returns false for a Media&Text when only part of the id matches`() {
+        val imgId = "12345"
+        val postContent = "<!-- wp:media-text {\"mediaId\":$imgId} --> ...... <!-- /wp:media-text -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "123")).isFalse()
+    }
+
+    @Test
+    fun `isMediaInGutenberg returns false when a galleryBlock with provided id is NOT found in the post content`() {
+        val imgId = "123"
+        val postContent = "<!-- wp:gallery {\"ids\":[$imgId]} --> ...... <!-- /wp:gallery -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "999")).isFalse()
     }
 
     @Test
@@ -128,6 +177,42 @@ class PostUtilsUnitTest {
         val imgId = "999"
         val postContent = "<!-- wp:image {\"id\":$imgId,\"sizeSlug\":\"large\"} --> ...... <!-- /wp:image -->"
         assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, imgId)).isTrue()
+    }
+
+    @Test
+    fun `isMediaInGutenberg works when a videoBlock tag has multiple attributes`() {
+        val imgId = "999"
+        val postContent = "<!-- wp:video {\"id\":$imgId,\"sizeSlug\":\"large\"} --> ...... <!-- /wp:video -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, imgId)).isTrue()
+    }
+
+    @Test
+    fun `isMediaInGutenberg works when a Media&Text tag has multiple attributes`() {
+        val imgId = "999"
+        val postContent = "<!-- wp:media-text {\"mediaId\":$imgId,\"sizeSlug\":\"large\"} -->" +
+                " ...... <!-- /wp:media-text -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, imgId)).isTrue()
+    }
+
+    @Test
+    fun `isMediaInGutenberg works when a galleryBlock tag has multiple attributes`() {
+        val imgId = "999"
+        val postContent = "<!-- wp:gallery {\"ids\":[$imgId],\"sizeSlug\":\"large\"} --> ...... <!-- /wp:gallery -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, imgId)).isTrue()
+    }
+
+    @Test
+    fun `isMediaInGutenberg works when a galleryBlock tag has multiple ids`() {
+        val imgId = "999"
+        val postContent1 = "<!-- wp:gallery {\"ids\":[45,$imgId,123,345],\"sizeSlug\":\"large\"} -->" +
+                " ...... <!-- /wp:gallery -->"
+        val postContent2 = "<!-- wp:gallery {\"ids\":[$imgId,123,345],\"sizeSlug\":\"large\"} -->" +
+                " ...... <!-- /wp:gallery -->"
+        val postContent3 = "<!-- wp:gallery {\"ids\":[45,$imgId],\"sizeSlug\":\"large\"} -->" +
+                " ...... <!-- /wp:gallery -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent1, imgId)).isTrue()
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent2, imgId)).isTrue()
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent3, imgId)).isTrue()
     }
 
     private companion object Fixtures {
