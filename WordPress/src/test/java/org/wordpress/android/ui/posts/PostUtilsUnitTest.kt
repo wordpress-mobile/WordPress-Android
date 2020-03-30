@@ -110,6 +110,13 @@ class PostUtilsUnitTest {
     }
 
     @Test
+    fun `isMediaInGutenberg returns false when only part of the id matches`() {
+        val imgId = "12345"
+        val postContent = "<!-- wp:image {\"id\":$imgId} --> ...... <!-- /wp:image -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "123")).isFalse()
+    }
+
+    @Test
     fun `isMediaInGutenberg works when the image tag has multiple attributes`() {
         val imgId = "999"
         val postContent = "<!-- wp:image {\"id\":$imgId,\"sizeSlug\":\"large\"} --> ...... <!-- /wp:image -->"

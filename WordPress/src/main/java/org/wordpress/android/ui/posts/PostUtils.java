@@ -435,7 +435,7 @@ public class PostUtils {
                                             String localMediaId) {
         List<String> patterns = new ArrayList<>();
         // Regex for Image and Video blocks
-        patterns.add("<!-- wp:(?:image|video){1} \\{[^\\}]*\"id\":%s[^\\}]*\\} -->");
+        patterns.add("<!-- wp:(?:image|video){1} \\{[^\\}]*\"id\":%s([^\\d\\}][^\\}]*)*\\} -->");
         // Regex for Media&Text block
         patterns.add("<!-- wp:media-text \\{[^\\}]*\"mediaId\":%s[^\\}]*\\} -->");
         // Regex for Gallery block
