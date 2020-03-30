@@ -60,7 +60,7 @@ class PostAverageViewsPerDayUseCase(
 
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
-            model != null && model.yearsAverage.isNotEmpty() -> State.Data(model)
+            model != null && model.hasData() -> State.Data(model)
             else -> State.Empty()
         }
     }
@@ -95,6 +95,10 @@ class PostAverageViewsPerDayUseCase(
             )
         }
         return items
+    }
+
+    private fun PostDetailStatsModel?.hasData(): Boolean {
+        return this != null && this.yearsAverage.isNotEmpty() && this.yearsAverage.any { it.value > 0 }
     }
 
     private fun onLinkClick() {
