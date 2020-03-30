@@ -346,7 +346,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
                 new OnAuthHeaderRequestedListener() {
-                    @Override public String onAuthHeaderRequested(String url) {
+                    @Override public Map<String, String> onAuthHeaderRequested(String url) {
                         return mEditorFragmentListener.onAuthHeaderRequested(url);
                     }
                 },
