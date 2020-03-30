@@ -142,6 +142,7 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
+import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
@@ -2663,14 +2664,15 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public String onAuthHeaderRequested(String url) {
-        String authHeader = "";
+    public Map<String, String> onAuthHeaderRequested(String url) {
+        Map<String, String> authHeaders = new HashMap<>();
+
         String token = mAccountStore.getAccessToken();
         if (mSite.isPrivate() && WPUrlUtils.safeToAddWordPressComAuthToken(url)
             && !TextUtils.isEmpty(token)) {
-            authHeader = "Bearer " + token;
+            authHeaders.put(AuthenticationUtils.AUTHORIZATION_HEADER_NAME, "Bearer " + token);
         }
-        return authHeader;
+        return authHeaders;
     }
 
     @Override
