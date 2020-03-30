@@ -1814,8 +1814,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // Use https:// when requesting the auth header, in case the image is incorrectly using http://
                 // If an auth header is returned, force https:// for the actual HTTP request
                 final String imageSrc = metaData.getSrc();
-                String authHeader = mEditorFragmentListener.onAuthHeaderRequested(UrlUtils.makeHttps(imageSrc));
-                if (authHeader.length() > 0) {
+                Map<String, String> authHeaders =
+                        mEditorFragmentListener.onAuthHeaderRequested(UrlUtils.makeHttps(imageSrc));
+                if (authHeaders != null && authHeaders.containsKey("Authorization")) {
                     metaData.setSrc(UrlUtils.makeHttps(imageSrc));
                 }
 
