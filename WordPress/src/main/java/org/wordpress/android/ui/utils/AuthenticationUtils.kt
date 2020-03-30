@@ -37,5 +37,4 @@ class AuthenticationUtils
     companion object {
         const val AUTHORIZATION_HEADER_NAME = "Authorization"
     }
-
 }
