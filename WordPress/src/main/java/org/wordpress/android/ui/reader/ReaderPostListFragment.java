@@ -2901,16 +2901,18 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void reblog(ReaderPost post) {
         List<SiteModel> sites = mSiteStore.getVisibleSites();
+        int selectedSiteId = AppPrefs.getSelectedSite();
+        SiteModel selectedSite = mSiteStore.getSiteByLocalId(selectedSiteId);
         switch (sites.size()) {
             case 0:
                 ToastUtils.showToast(getActivity(), R.string.reader_no_site_to_reblog);
                 break;
             case 1:
-                ActivityLauncher.openEditorForReblog(getActivity(), getSelectedSite(), post);
+                ActivityLauncher.openEditorForReblog(getActivity(), selectedSite, post);
                 break;
             default:
                 this.mPostToReblog = post; // Stores the post to be handled in the onActivityResult after site selection
-                ActivityLauncher.showSitePickerForResult(this, getSelectedSite());
+                ActivityLauncher.showSitePickerForResult(this, selectedSite);
                 break;
         }
     }
