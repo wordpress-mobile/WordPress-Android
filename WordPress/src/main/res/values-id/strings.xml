@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-<<<<<<< HEAD
-Translation-Revision-Date: 2020-02-22 01:54:09+0000
-=======
 Translation-Revision-Date: 2020-03-18 00:55:07+0000
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
-<<<<<<< HEAD
-=======
     <string name="stats_insights_management_activity">Aktivitas</string>
     <string name="stats_insights_management_posts_and_pages">Pos dan Halaman</string>
     <string name="stats_insights_management_general">Umum</string>
@@ -26,7 +20,6 @@ Language: id
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Login ke WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Login ke WordPress.com untuk melihat pos terbaru dari tag yang Anda ikuti</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Login ke WordPress.com untuk melihat pos terbaru dari situs yang Anda ikuti</string>
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_template_preview">Pratinjau Template</string>
     <string name="gutenberg_native_replace_current_block">Ganti Blok Saat Ini</string>
     <string name="gutenberg_native_add_to_end">Tambahkan ke Akhir</string>
@@ -55,7 +48,7 @@ Language: id
     <string name="stats_box_type_high">tinggi</string>
     <string name="stats_box_type_medium">sedang</string>
     <string name="stats_box_type_low">rendah</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Hapus Gambar</string>
     <string name="gutenberg_native_move_image_forward">Pindahkan Gambar ke Depan</string>
@@ -1925,7 +1918,6 @@ Language: id
     <string name="reader_hint_add_tag_or_url">Masukkan sebuah URL atau tag untuk mengikuti</string>
     <string name="reader_page_followed_blogs">Situs yang diikuti</string>
     <string name="reader_page_followed_tags">Tag yang diikuti</string>
-    <string name="reader_title_subs">Tag &amp; Situs</string>
     <string name="reader_title_tag_preview">Tag Pembaca</string>
     <string name="reader_title_blog_preview">Situs Pembaca</string>
     <string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>

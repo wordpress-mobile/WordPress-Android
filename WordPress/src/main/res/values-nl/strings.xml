@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-<<<<<<< HEAD
-Translation-Revision-Date: 2020-02-22 00:54:43+0000
-=======
 Translation-Revision-Date: 2020-03-18 00:55:02+0000
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
-<<<<<<< HEAD
-=======
     <string name="stats_insights_management_activity">Activiteit</string>
     <string name="stats_insights_management_posts_and_pages">Berichten en pagina\'s</string>
     <string name="stats_insights_management_general">Algemeen</string>
@@ -26,7 +20,6 @@ Language: nl
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Inloggen op WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Log in op WordPress.com om de laatste berichten van gevolgde tags te bekijken</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Log in op WordPress.com om de laatste berichten van gevolgde sites te bekijken</string>
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_template_preview">Voorbeeldweergave van sjabloon</string>
     <string name="gutenberg_native_replace_current_block">Huidig blok vervangen</string>
     <string name="gutenberg_native_add_to_end">Toevoegen aan einde</string>
@@ -55,7 +48,7 @@ Language: nl
     <string name="stats_box_type_high">hoog</string>
     <string name="stats_box_type_medium">medium</string>
     <string name="stats_box_type_low">laag</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Afbeelding verwijderen</string>
     <string name="gutenberg_native_move_image_forward">Afbeelding naar voren verplaatsen</string>
@@ -1853,7 +1846,6 @@ Language: nl
     <string name="reader_hint_add_tag_or_url">Voer een tag of URL in om te volgen</string>
     <string name="reader_page_followed_blogs">Gevolgde sites</string>
     <string name="reader_page_followed_tags">Gevolgde tags</string>
-    <string name="reader_title_subs">Tags &amp; sites</string>
     <string name="reader_title_tag_preview">Reader-tag</string>
     <string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
     <string name="ssl_certificate_error">Ongeldig SSL-certificaat</string>

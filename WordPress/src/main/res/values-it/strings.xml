@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-<<<<<<< HEAD
-Translation-Revision-Date: 2020-02-22 10:15:11+0000
-=======
 Translation-Revision-Date: 2020-03-18 00:55:06+0000
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
-<<<<<<< HEAD
-=======
     <string name="stats_insights_management_activity">Attività</string>
     <string name="stats_insights_management_posts_and_pages">Articoli e pagine</string>
     <string name="stats_insights_management_general">Generale</string>
@@ -26,7 +20,6 @@ Language: it
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Accedi a WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Accedi a WordPress.com per vedere gli ultimi articoli dei tag che segui</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Accedi a WordPress.com per vedere gli ultimi articoli dei siti che segui</string>
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_template_preview">Anteprima del modello</string>
     <string name="gutenberg_native_replace_current_block">Sostituisci blocco attuale</string>
     <string name="gutenberg_native_add_to_end">Aggiungi alla fine</string>
@@ -55,7 +48,7 @@ Language: it
     <string name="stats_box_type_high">alta</string>
     <string name="stats_box_type_medium">media</string>
     <string name="stats_box_type_low">bassa</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%3$s, %2$d %1$s</string>
     <string name="gutenberg_native_move_image_forward">Sposta avanti l\'immagine</string>
     <string name="gutenberg_native_move_image_backward">Sposta indietro l\'immagine</string>
@@ -1040,6 +1033,7 @@ Language: it
     <string name="my_site_add_new_site">Aggiungi nuovo sito</string>
     <string name="my_site_create_new_site">Crea un nuovo sito per la tua azienda, rivista o blog personale; in alternativa, connetti un sito WordPress esistente.</string>
     <string name="notifications_jetpack_connection_setup_info">Per ricevere le utili notifiche dal tuo sito WordPress sul tuo dispositivo, sarà necessario installare il plugin di Jetpack. Desideri configurare Jetpack?</string>
+    <string name="site_settings_lazy_load_images">Immagini a caricamento lento</string>
     <string name="stats_jetpack_connection_setup">Installa Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Attiva/Disattiva testo</string>
     <string name="plugin_info_your_version">La tua versione di WordPress</string>
@@ -1950,7 +1944,6 @@ Language: it
     <string name="reader_hint_add_tag_or_url">Inserisci una URL o untag da seguire</string>
     <string name="reader_page_followed_blogs">Siti che segui</string>
     <string name="reader_page_followed_tags">Tag seguiti</string>
-    <string name="reader_title_subs">Tag e siti</string>
     <string name="reader_title_tag_preview">Reader tag</string>
     <string name="reader_title_blog_preview">Reader del sito</string>
     <string name="ssl_certificate_ask_trust">Se in genere ti connetti al sito senza problemi, questo errore potrebbe significare che qualcuno sta tentando di impersonare il sito, pertanto non dovresti continuare. Desideri comunque confermare l\'affidabilità del certificato?</string>

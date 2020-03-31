@@ -1893,14 +1893,6 @@ Language: pl
     <string name="reader_empty_recommended_blogs">Brak polecanych witryn</string>
     <string name="reader_toast_err_get_blog_info">Nie udało się pokazać tej witryny</string>
     <string name="reader_label_followed_blog">Witryna obserwowana</string>
-<<<<<<< HEAD
-    <string name="reader_hint_add_tag_or_url">Wpisz adres lub tag aby obserwować</string>
-    <string name="reader_page_followed_blogs">Obserwowane blogi</string>
-    <string name="reader_page_followed_tags">Obserwowane tagi</string>
-    <string name="reader_title_subs">Tagi i Witryny</string>
-    <string name="reader_title_tag_preview">Tag Czytnika</string>
-=======
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="reader_title_blog_preview">Witryna Czytnika</string>
     <string name="reader_toast_err_already_follow_blog">Już obserwujesz tą witrynę</string>
     <string name="reader_toast_err_unfollow_blog">Nie udało się wyłączyć obserwowania tej witryny</string>

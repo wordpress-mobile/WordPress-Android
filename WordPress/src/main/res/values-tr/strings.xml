@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-<<<<<<< HEAD
-Translation-Revision-Date: 2020-02-18 22:59:16+0000
-=======
 Translation-Revision-Date: 2020-03-17 18:08:43+0000
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
-<<<<<<< HEAD
-=======
     <string name="stats_insights_management_activity">Etkinlik</string>
     <string name="stats_insights_management_posts_and_pages">Yazılar ve sayfalar</string>
     <string name="stats_insights_management_general">Genel</string>
@@ -26,7 +20,6 @@ Language: tr
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com\'da oturum aç</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Takip ettiğiniz etiketlerle ilişkili en son yazıları görmek için WordPress.com\'da oturum açın</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Takip ettiğiniz sitelerdeki en son yazıları görmek için WordPress.com\'da oturum açın</string>
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_template_preview">Şablon ön izlemesi</string>
     <string name="gutenberg_native_replace_current_block">Mevcut bloğu değiştir</string>
     <string name="gutenberg_native_add_to_end">Sona ekle</string>
@@ -55,7 +48,7 @@ Language: tr
     <string name="stats_box_type_high">yüksek</string>
     <string name="stats_box_type_medium">orta</string>
     <string name="stats_box_type_low">düşük</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  ve %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  ve %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Görseli kaldır</string>
     <string name="gutenberg_native_move_image_forward">Görseli öne taşı</string>
@@ -1968,7 +1961,6 @@ Language: tr
     <string name="reader_hint_add_tag_or_url">Takip etmek için etiket veya adres girin</string>
     <string name="reader_page_followed_blogs">Takip edilen siteler</string>
     <string name="reader_page_followed_tags">Takip edilen etiketler</string>
-    <string name="reader_title_subs">Etiketler ve siteler</string>
     <string name="reader_title_tag_preview">Okuyucu etiketi</string>
     <string name="reader_title_blog_preview">Okuyucu sitesi</string>
     <string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>

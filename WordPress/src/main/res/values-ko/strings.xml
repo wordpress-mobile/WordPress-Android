@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-<<<<<<< HEAD
-Translation-Revision-Date: 2020-02-15 00:54:56+0000
-=======
 Translation-Revision-Date: 2020-03-11 13:41:04+0000
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
-<<<<<<< HEAD
-=======
     <string name="reader_self_hosted_select_filter">필터 버튼을 사용하여 특정 주제에 대한 글을 찾습니다.</string>
     <string name="reader_bottom_sheet_content_description">태그 또는 사이트, 팝업 창을 선택합니다.</string>
     <string name="reader_btn_selected_filter_tick_content_description">선택되었습니다.</string>
@@ -33,7 +27,6 @@ Language: ko_KR
     <string name="reader_filter_empty_sites_list">팔로우하고 있는 사이트의 최신 글을 보십시오</string>
     <string name="reader_filter_main_title">팔로우 중</string>
     <string name="reader_filter_cta">필터</string>
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_video_caption_s">비디오 캡션. %s</string>
     <string name="gutenberg_native_edit_video">비디오 편집</string>
     <string name="gutenberg_native_edit_media">미디어 편집</string>
@@ -50,7 +43,7 @@ Language: ko_KR
     <string name="stats_box_type_high">높음</string>
     <string name="stats_box_type_medium">중간</string>
     <string name="stats_box_type_low">낮음</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">이미지 삭제</string>
     <string name="gutenberg_native_move_image_forward">이미지를 앞으로 이동</string>
@@ -1955,10 +1948,6 @@ Language: ko_KR
     <string name="update_verb">업데이트</string>
     <string name="schedule_verb">예약</string>
     <string name="reader_page_followed_tags">팔로우된 태그</string>
-<<<<<<< HEAD
-    <string name="reader_title_subs">태그 및 블로그</string>
-    <string name="reader_title_tag_preview">리더 태그</string>
-=======
     <string name="reader_page_followed_blogs">팔로우된 블로그</string>
     <string name="reader_hint_add_tag_or_url">팔로우할 태그나 URL 입력</string>
     <string name="reader_label_followed_blog">팔로우한 블로그</string>
@@ -1967,7 +1956,6 @@ Language: ko_KR
     <string name="reader_toast_err_follow_blog">이 블로그를 팔로우할 수 없습니다.</string>
     <string name="reader_toast_err_unfollow_blog">이 블로그에 대한 팔로우를 취소할 수 없습니다.</string>
     <string name="reader_empty_recommended_blogs">추천 블로그가 없습니다.</string>
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="reader_title_blog_preview">리더 블로그</string>
     <string name="reader_title_tag_preview">리더 태그</string>
     <string name="help">도우미</string>

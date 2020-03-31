@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-<<<<<<< HEAD
-Translation-Revision-Date: 2020-02-10 01:54:09+0000
-=======
 Translation-Revision-Date: 2020-03-20 00:54:10+0000
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
-<<<<<<< HEAD
-=======
     <string name="stats_insights_management_activity">アクティビティ</string>
     <string name="stats_insights_management_posts_and_pages">投稿とページ</string>
     <string name="stats_insights_management_general">全般</string>
@@ -38,7 +32,6 @@ Language: ja_JP
     <string name="reader_filter_empty_sites_list">フォローしているサイトの最新の投稿を表示</string>
     <string name="reader_filter_main_title">フォロー中</string>
     <string name="reader_filter_cta">フィルター</string>
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_video_caption_s">動画の見出しです。%s</string>
     <string name="gutenberg_native_edit_video">動画を編集</string>
     <string name="gutenberg_native_edit_media">メディアを編集</string>
@@ -55,7 +48,7 @@ Language: ja_JP
     <string name="stats_box_type_high">高い</string>
     <string name="stats_box_type_medium">普通</string>
     <string name="stats_box_type_low">低い</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s、%2$d %3$s</string>
     <string name="gutenberg_native_remove_image">画像を削除</string>
     <string name="gutenberg_native_move_image_forward">画像を前に移動</string>
@@ -1967,16 +1960,8 @@ Language: ja_JP
     <string name="reader_toast_err_already_follow_blog">このサイトをすでにフォローしています</string>
     <string name="reader_toast_err_get_blog_info">このブサイトを表示できません</string>
     <string name="reader_label_followed_blog">サイトをフォローしました</string>
-<<<<<<< HEAD
-    <string name="reader_hint_add_tag_or_url">フォローしたい URL またはタグを入力</string>
-    <string name="reader_page_followed_blogs">フォロー中のサイト</string>
-    <string name="reader_page_followed_tags">フォロー中のタグ</string>
-    <string name="reader_title_subs">タグ・サイト</string>
-    <string name="reader_title_tag_preview">Reader タグ</string>
-=======
     <string name="reader_toast_err_follow_blog">このサイトをフォローできません</string>
     <string name="reader_empty_recommended_blogs">おすすめサイトはありません</string>
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="reader_title_blog_preview">Reader サイト</string>
     <string name="forgot_password">パスワードを忘れた場合</string>
     <string name="help">ヘルプ</string>

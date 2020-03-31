@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-<<<<<<< HEAD
-Translation-Revision-Date: 2020-02-14 00:54:19+0000
-=======
 Translation-Revision-Date: 2020-03-18 00:55:08+0000
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
-<<<<<<< HEAD
-=======
     <string name="stats_insights_management_activity">פעילות</string>
     <string name="stats_insights_management_posts_and_pages">פוסטים ועמודים</string>
     <string name="stats_insights_management_general">כללי</string>
@@ -38,7 +32,6 @@ Language: he_IL
     <string name="reader_filter_empty_sites_list">ניתן לראות את הפוסטים החדשים ביותר מהאתרים שבחרת לעקוב אחריהם</string>
     <string name="reader_filter_main_title">מעקב</string>
     <string name="reader_filter_cta">מסנן</string>
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_video_caption_s">כיתוב לווידאו. %s</string>
     <string name="gutenberg_native_edit_video">לערוך וידאו</string>
     <string name="gutenberg_native_edit_media">לערוך מדיה</string>
@@ -55,7 +48,7 @@ Language: he_IL
     <string name="stats_box_type_high">גבוהים</string>
     <string name="stats_box_type_medium">בינוניים</string>
     <string name="stats_box_type_low">נמוכים</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  ו-%1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  ו-%1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">להסיר את תמונת הרקע</string>
     <string name="gutenberg_native_move_image_forward">להעביר את התמונה קדימה</string>
@@ -1966,7 +1959,6 @@ Language: he_IL
     <string name="reader_hint_add_tag_or_url">הזן תגית או כתובת אתר למעקב</string>
     <string name="reader_page_followed_blogs">אתרים במעקב</string>
     <string name="reader_page_followed_tags">תגיות במעקב</string>
-    <string name="reader_title_subs">תגיות ואתרים</string>
     <string name="reader_title_tag_preview">קורא תגית</string>
     <string name="reader_title_blog_preview">אתר</string>
     <string name="ssl_certificate_ask_trust">אם בדרך כלל אתה מתחבר לאתר זה ללא בעיות, ייתכן ששגיאה זו נובעת מכך שמישהו מנסה להתחזות לאתר ולכן אסור לך להמשיך. האם ברצונך בכל זאת לתת אמון באישור?</string>

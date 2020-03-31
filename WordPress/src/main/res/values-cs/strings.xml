@@ -1455,10 +1455,6 @@ Language: cs_CZ
     <string name="reader_hint_add_tag_or_url">Zadejte URL nebo štítek, který chcete sledovat</string>
     <string name="reader_page_followed_blogs">Stránky které sledujete</string>
     <string name="reader_page_followed_tags">Štítky které sledujete</string>
-<<<<<<< HEAD
-    <string name="reader_title_subs">Štítky a weby</string>
-=======
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="reader_title_tag_preview">Štítek čtenáře</string>
     <string name="reader_title_blog_preview">Web čtenáře</string>
     <string name="ssl_certificate_ask_trust">Pokud se k tomuto webu obvykle připojujete bez problémů, pak tato chyba znamená, že se někdo snaží podvrhnout vaši identitu a neměli byste dále pokračovat. Chcete i přesto důvěřovat tomuto certifikátu?</string>

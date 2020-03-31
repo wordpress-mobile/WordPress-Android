@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-<<<<<<< HEAD
-Translation-Revision-Date: 2020-02-23 21:32:18+0000
-=======
 Translation-Revision-Date: 2020-03-11 17:58:43+0000
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
-<<<<<<< HEAD
-=======
     <string name="stats_insights_management_activity">Actividad</string>
     <string name="stats_insights_management_posts_and_pages">Entradas y páginas</string>
     <string name="stats_insights_management_general">General</string>
@@ -26,7 +20,6 @@ Language: es
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Accede a WordPress.com para ver las últimas entradas de las etiquetas que sigues</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Accede a WordPress.com para ver las últimas entradas de los sitios que sigues</string>
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_template_preview">Vista previa de la plantilla</string>
     <string name="gutenberg_native_replace_current_block">Reemplazar el bloque actual</string>
     <string name="gutenberg_native_add_to_end">Añadir al final</string>
@@ -55,7 +48,7 @@ Language: es
     <string name="stats_box_type_high">altas</string>
     <string name="stats_box_type_medium">medias</string>
     <string name="stats_box_type_low">bajas</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  y %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  y %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Eliminar la imagen</string>
     <string name="gutenberg_native_move_image_forward">Mover la imagen hacia adelante</string>
@@ -392,11 +385,6 @@ Language: es
     <string name="post_list_author_me">Yo</string>
     <string name="error_restoring_post">Ocurrió un error mientras se restauraba la entrada</string>
     <string name="backdated_for">Retroceder a: %s</string>
-<<<<<<< HEAD
-    <string name="stats_insights_management_drag_and_drop_hint">Los elementos que se ven abajo mostrarán tu pestaña de detalles. Arrastra y suelta para personalizarla.</string>
-    <string name="stats_insights_add_insights_header">Añadir detalles</string>
-=======
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="stats_insights_management_title">Solo ves las estadísticas más relevantes. Añade y organiza tus detalles abajo.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estadísticas anuales del sitio</string>
@@ -1820,12 +1808,12 @@ Language: es
     <string name="notifications_no_search_results">Ningún sitio coincide con «%s»</string>
     <string name="search_sites">Buscar sitios</string>
     <string name="notifications_empty_view_reader">Ir al Lector</string>
-    <string name="notifications_empty_action_followers_likes">Recibe avisos: comenta en entradas que has leído</string>
-    <string name="notifications_empty_action_comments">Unirse a una conversación: comentar en entradas de blogs que sigues</string>
-    <string name="notifications_empty_action_unread">Reinicia la conversación: escribe una entrada nueva</string>
-    <string name="notifications_empty_action_all">¡Actívate! Comenta en entradas de blogs que sigues.</string>
+    <string name="notifications_empty_action_followers_likes">Recibe avisos: comenta en entradas que has leído</string>
+    <string name="notifications_empty_action_comments">Unirse a una conversación: comentar en entradas de blogs que sigues</string>
+    <string name="notifications_empty_action_unread">Reinicia la conversación: escribe una entrada nueva</string>
+    <string name="notifications_empty_action_all">¡Actívate! Comenta en entradas de blogs que sigues.</string>
     <string name="notifications_empty_comments">No hay comentarios aún</string>
-    <string name="notifications_empty_unread">¡Te has puesto al día!</string>
+    <string name="notifications_empty_unread">¡Te has puesto al día!</string>
     <string name="reader_short_comment_count_multi">%s Comentarios</string>
     <string name="reader_short_comment_count_one">1 Comentario</string>
     <string name="reader_hint_comment_on_post">Responder a la entrada…</string>
@@ -1973,10 +1961,6 @@ Language: es
     <string name="reader_hint_add_tag_or_url">Introduce la URL o etiqueta que quieras seguir</string>
     <string name="reader_page_followed_blogs">Sitios que sigues</string>
     <string name="reader_page_followed_tags">Etiquetas seguidas</string>
-<<<<<<< HEAD
-    <string name="reader_title_subs">Etiquetas y sitios</string>
-=======
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="reader_title_tag_preview">Etiqueta del lector</string>
     <string name="reader_title_blog_preview">Sitio del lector</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
