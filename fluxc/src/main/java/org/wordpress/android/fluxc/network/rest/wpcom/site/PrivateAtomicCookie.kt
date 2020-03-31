@@ -67,4 +67,8 @@ class PrivateAtomicCookie(private val context: Context) {
         fluxCPreferences.edit().putString(PRIVATE_ATOMIC_COOKIE_PREF_KEY, gson.toJson(siteCookie))
                 .apply()
     }
+
+    fun clearCookie() {
+        fluxCPreferences.edit().remove(PRIVATE_ATOMIC_COOKIE_PREF_KEY).apply()
+    }
 }
