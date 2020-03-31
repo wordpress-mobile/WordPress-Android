@@ -1951,12 +1951,12 @@ public class SiteStore extends Store {
             return;
         }
 
-//        if (siteModel.isWPComAtomic()) {
-        mSiteRestClient.fetchAccessCookie(siteModel);
-//        } else {
-//            AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.GENERIC_ERROR);
-//            handleFetchAccessCookie(new FetchedAccessCookiePayload(siteModel, cookieError));
-//        }
+        if (siteModel.isWPComAtomic()) {
+            mSiteRestClient.fetchAccessCookie(siteModel);
+        } else {
+            AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.GENERIC_ERROR);
+            handleFetchAccessCookie(new FetchedAccessCookiePayload(siteModel, cookieError));
+        }
     }
 
     private void handleFetchAccessCookie(FetchedAccessCookiePayload payload) {

@@ -175,9 +175,9 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new WPComErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        AccessCookieError cookierror = new AccessCookieError(
+                        AccessCookieError cookieError = new AccessCookieError(
                                 AccessCookieErrorType.GENERIC_ERROR);
-                        FetchedAccessCookiePayload payload = new FetchedAccessCookiePayload(site, cookierror);
+                        FetchedAccessCookiePayload payload = new FetchedAccessCookiePayload(site, cookieError);
                         mDispatcher.dispatch(SiteActionBuilder
                                 .newFetchedAccessCookieAction(payload));
                     }
