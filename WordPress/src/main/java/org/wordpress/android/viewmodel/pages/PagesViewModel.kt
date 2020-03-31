@@ -116,8 +116,8 @@ class PagesViewModel
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
 
-    private val _editPage = SingleLiveEvent<Pair<PageModel?, LoadAutoSaveRevision>>()
-    val editPage: LiveData<Pair<PageModel?, LoadAutoSaveRevision>> = _editPage
+    private val _editPage = SingleLiveEvent<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>>()
+    val editPage: LiveData<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>> = _editPage
 
     private val _previewPage = SingleLiveEvent<PostModel?>()
     val previewPage: LiveData<PostModel?> = _previewPage
@@ -491,13 +491,14 @@ class PagesViewModel
     }
 
     fun onItemTapped(pageItem: Page) {
-        val page = pageMap[pageItem.remoteId]!!.post
-        // Then check if an autosave revision is available
-        if (autoSaveConflictResolver.hasUnhandledAutoSave(page)) {
-            pageListDialogHelper.showAutoSaveRevisionDialog(page)
-            return
+        pageMap[pageItem.remoteId]?.let {
+            if (autoSaveConflictResolver.hasUnhandledAutoSave(it.post)) {
+                pageListDialogHelper.showAutoSaveRevisionDialog(it.post)
+                return
+            }
+
+            editPage(RemoteId(it.remoteId))
         }
-        editPage(RemoteId(pageItem.remoteId))
     }
 
     fun onNewPageButtonTapped() {
@@ -747,7 +748,13 @@ class PagesViewModel
     }
 
     private fun editPage(pageId: RemoteId, loadAutoSaveRevision: LoadAutoSaveRevision = false) {
-        _editPage.postValue(Pair(pageMap[pageId.value], loadAutoSaveRevision))
+        val page = pageMap.getValue(pageId.value)
+        val result = if (page.post.isLocalDraft) {
+            postStore.getPostByLocalPostId(page.pageId)
+        } else {
+            postStore.getPostByRemotePostId(page.remoteId, site)
+        }
+        _editPage.postValue(Triple(site, result, loadAutoSaveRevision))
     }
 
     private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&
