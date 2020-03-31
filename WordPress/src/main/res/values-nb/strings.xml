@@ -39,7 +39,7 @@ Language: nb_NO
     <string name="stats_box_type_high">høy</string>
     <string name="stats_box_type_medium">middels</string>
     <string name="stats_box_type_low">lav</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  og %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  og %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Fjern bilde</string>
     <string name="gutenberg_native_move_image_forward">Flytt bilde forover</string>
@@ -1873,7 +1873,6 @@ Language: nb_NO
     <string name="reader_hint_add_tag_or_url">Skriv inn en URL eller et stikkord for å følge</string>
     <string name="reader_page_followed_blogs">Fulgte nettsteder</string>
     <string name="reader_page_followed_tags">Fulgte stikkord</string>
-    <string name="reader_title_subs">Stikkord &amp; nettsteder</string>
     <string name="reader_title_tag_preview">Leser-stikkord</string>
     <string name="reader_title_blog_preview">Leser-nettsted</string>
     <string name="ssl_certificate_ask_trust">Hvis du vanligvis har koblet deg til dette nettstedet uten problemer, kan denne feilen bety at noen prøver å imitere dette nettstedet, og at du ikke bør fortsette. Er du helt sikker på at du vil stole på dette sertifikatet likevel?</string>
