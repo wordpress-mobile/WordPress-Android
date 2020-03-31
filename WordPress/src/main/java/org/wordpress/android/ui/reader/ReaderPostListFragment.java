@@ -2903,14 +2903,15 @@ public class ReaderPostListFragment extends Fragment
      * Handles reblog state changes and triggers reblog actions
      */
     private void handleReblogStateChanges() {
-        mViewModel.getReblogAction().observe(this, event -> {
+        mViewModel.getReblogState().observe(this, event -> {
             event.applyIfNotHandled(state -> {
                 if (state instanceof NoSite) {
                     ReaderActivityLauncher.showNoSiteToReblog(getActivity());
                 } else if (state instanceof SitePicker) {
-                    ActivityLauncher.showSitePickerForResult(this, state.getSite());
+                    ActivityLauncher.showSitePickerForResult(this, ((SitePicker) state).getSite());
                 } else if (state instanceof PostEditor) {
-                    ActivityLauncher.openEditorForReblog(getActivity(), state.getSite(), state.getPost());
+                    PostEditor peState = (PostEditor) state;
+                    ActivityLauncher.openEditorForReblog(getActivity(), peState.getSite(), peState.getPost());
                 } else { // Error
                     ToastUtils.showToast(getActivity(), R.string.reader_reblog_error);
                 }
@@ -2929,7 +2930,7 @@ public class ReaderPostListFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {
             int siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-            mViewModel.selectedSiteToReblog(siteLocalId);
+            mViewModel.onReblogSiteSelected(siteLocalId);
         }
     }
 }

@@ -5,11 +5,8 @@ import org.wordpress.android.models.ReaderPost
 
 /**
  * Represents the Reblog View State
- *
- * @property site the site to reblog to
- * @property post the post to be reblogged
  */
-sealed class ReblogState(val site: SiteModel? = null, val post: ReaderPost? = null)
+sealed class ReblogState
 
 /**
  * Represents the Site Picker View State
@@ -17,7 +14,7 @@ sealed class ReblogState(val site: SiteModel? = null, val post: ReaderPost? = nu
  * @property site the preselected site
  * @property post the post to be reblogged (saved for later)
  */
-class SitePicker(site: SiteModel, post: ReaderPost) : ReblogState(site, post)
+class SitePicker(val site: SiteModel, val post: ReaderPost) : ReblogState()
 
 /**
  * Represents the Post Editor View State
@@ -25,7 +22,7 @@ class SitePicker(site: SiteModel, post: ReaderPost) : ReblogState(site, post)
  * @property site the site to reblog to
  * @property post the post to be reblogged
  */
-class PostEditor(site: SiteModel, post: ReaderPost) : ReblogState(site, post)
+class PostEditor(val site: SiteModel, val post: ReaderPost) : ReblogState()
 
 /**
  * Represents the No Site View State
@@ -33,6 +30,6 @@ class PostEditor(site: SiteModel, post: ReaderPost) : ReblogState(site, post)
 object NoSite : ReblogState()
 
 /**
- * Represents the Error State
+ * Represents the Unknown/Error State
  */
-object ReblogError : ReblogState()
+object Unknown : ReblogState()
