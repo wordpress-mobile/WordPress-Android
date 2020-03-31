@@ -32,7 +32,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-@ExperimentalCoroutinesApi
 @Config(application = TestApplication::class)
 @RunWith(RobolectricTestRunner::class)
 class TenorProviderTest {
