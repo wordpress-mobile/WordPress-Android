@@ -2908,9 +2908,10 @@ public class ReaderPostListFragment extends Fragment
                 if (state instanceof NoSite) {
                     ToastUtils.showToast(getActivity(), R.string.reader_no_site_to_reblog);
                 } else if (state instanceof SitePicker) {
-                    ActivityLauncher.showSitePickerForResult(this, state.getSite());
+                    ActivityLauncher.showSitePickerForResult(this, ((SitePicker) state).getSite());
                 } else if (state instanceof PostEditor) {
-                    ActivityLauncher.openEditorForReblog(getActivity(), state.getSite(), state.getPost());
+                    PostEditor peState = (PostEditor) state;
+                    ActivityLauncher.openEditorForReblog(getActivity(), peState.getSite(), peState.getPost());
                 } else { // Error
                     ToastUtils.showToast(getActivity(), R.string.reader_reblog_error);
                 }

@@ -28,7 +28,7 @@ import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.reblog.NoSite
 import org.wordpress.android.ui.reader.reblog.PostEditor
-import org.wordpress.android.ui.reader.reblog.ReblogError
+import org.wordpress.android.ui.reader.reblog.Unknown
 import org.wordpress.android.ui.reader.reblog.ReblogState
 import org.wordpress.android.ui.reader.reblog.SitePicker
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
@@ -44,6 +44,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.BuildConfig
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -267,12 +268,12 @@ class ReaderPostListViewModel @Inject constructor(
      * @param post post to reblog
      */
     fun onReblogButtonClicked(post: ReaderPost) {
-        val selectedSiteId = appPrefsWrapper.getSelectedSite()
-        val selectedSite: SiteModel = siteStore.getSiteByLocalId(selectedSiteId)
+        val selectedSiteId: Int? = appPrefsWrapper.getSelectedSite()
+        val selectedSite: SiteModel? = selectedSiteId?.let { siteStore.getSiteByLocalId(it) }
         when (siteStore.visibleSites.size) {
             0 -> _reblogState.value = Event(NoSite)
-            1 -> _reblogState.value = Event(PostEditor(selectedSite, post))
-            else -> _reblogState.value = Event(SitePicker(selectedSite, post))
+            1 -> _reblogState.value = selectedSite?.let { Event(PostEditor(it, post)) } ?: Event(Unknown)
+            else -> _reblogState.value = selectedSite?.let { Event(SitePicker(it, post)) } ?: Event(Unknown)
         }
     }
 
@@ -283,12 +284,14 @@ class ReaderPostListViewModel @Inject constructor(
      */
     fun onReblogSiteSelected(siteLocalId: Int) {
         val currentState = _reblogState.value?.peekContent()
-        val selectedPost = currentState?.post
-        if (currentState is SitePicker && selectedPost != null) {
+        if (currentState is SitePicker) {
             val site = siteStore.getSiteByLocalId(siteLocalId)
-            _reblogState.value = Event(PostEditor(site, selectedPost))
+            _reblogState.value = Event(PostEditor(site, currentState.post))
+        } else if (BuildConfig.DEBUG) {
+            throw IllegalStateException("Site Selected without passing the SitePicker state")
         } else {
-            _reblogState.value = Event(ReblogError)
+            AppLog.e(T.READER, "Site Selected without passing the SitePicker state")
+            _reblogState.value = Event(Unknown)
         }
     }
 
