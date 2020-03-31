@@ -28,7 +28,7 @@ import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.reblog.NoSite
 import org.wordpress.android.ui.reader.reblog.PostEditor
-import org.wordpress.android.ui.reader.reblog.ReblogError
+import org.wordpress.android.ui.reader.reblog.Unknown
 import org.wordpress.android.ui.reader.reblog.ReblogState
 import org.wordpress.android.ui.reader.reblog.SitePicker
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
@@ -44,6 +44,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.BuildConfig
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -97,8 +98,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
     val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
 
-    private val _reblogAction = MutableLiveData<Event<ReblogState>>()
-    val reblogAction: LiveData<Event<ReblogState>> = _reblogAction
+    private val _reblogState = MutableLiveData<Event<ReblogState>>()
+    val reblogState: LiveData<Event<ReblogState>> = _reblogState
 
     /**
      * First tag for which the card was shown.
@@ -270,9 +271,9 @@ class ReaderPostListViewModel @Inject constructor(
         val selectedSiteId: Int? = appPrefsWrapper.getSelectedSite()
         val selectedSite: SiteModel? = selectedSiteId?.let { siteStore.getSiteByLocalId(it) }
         when (siteStore.visibleSites.size) {
-            0 -> _reblogAction.value = Event(NoSite)
-            1 -> _reblogAction.value = selectedSite?.let { Event(PostEditor(it, post)) }
-            else -> _reblogAction.value = selectedSite?.let { Event(SitePicker(it, post)) }
+            0 -> _reblogState.value = Event(NoSite)
+            1 -> _reblogState.value = selectedSite?.let { Event(PostEditor(it, post)) } ?: Event(Unknown)
+            else -> _reblogState.value = selectedSite?.let { Event(SitePicker(it, post)) } ?: Event(Unknown)
         }
     }
 
@@ -281,14 +282,16 @@ class ReaderPostListViewModel @Inject constructor(
      *
      * @param site selected site to reblog to
      */
-    fun selectedSiteToReblog(siteLocalId: Int) {
-        val currentState = _reblogAction.value?.peekContent()
-        val selectedPost = currentState?.post
-        if (currentState is SitePicker && selectedPost != null) {
+    fun onReblogSiteSelected(siteLocalId: Int) {
+        val currentState = _reblogState.value?.peekContent()
+        if (currentState is SitePicker) {
             val site = siteStore.getSiteByLocalId(siteLocalId)
-            _reblogAction.value = Event(PostEditor(site, selectedPost))
+            _reblogState.value = Event(PostEditor(site, currentState.post))
+        } else if (BuildConfig.DEBUG) {
+            throw IllegalStateException("Site Selected without passing the SitePicker state")
         } else {
-            _reblogAction.value = Event(ReblogError)
+            AppLog.e(T.READER, "Site Selected without passing the SitePicker state")
+            _reblogState.value = Event(Unknown)
         }
     }
 

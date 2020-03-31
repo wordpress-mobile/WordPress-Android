@@ -11,6 +11,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatIllegalStateException
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -34,7 +35,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.reblog.NoSite
 import org.wordpress.android.ui.reader.reblog.PostEditor
-import org.wordpress.android.ui.reader.reblog.ReblogError
+import org.wordpress.android.ui.reader.reblog.Unknown
 import org.wordpress.android.ui.reader.reblog.SitePicker
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
@@ -47,6 +48,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItemMapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
+import org.wordpress.android.util.BuildConfig
 import org.wordpress.android.util.EventBusWrapper
 import java.util.EnumSet
 
@@ -373,7 +375,7 @@ class ReaderPostListViewModelTest {
 
         viewModel.onReblogButtonClicked(post)
 
-        val state = viewModel.reblogAction.value?.peekContent()
+        val state = viewModel.reblogState.value?.peekContent()
         assertThat(state).isEqualTo(NoSite)
     }
 
@@ -390,10 +392,12 @@ class ReaderPostListViewModelTest {
 
         viewModel.onReblogButtonClicked(post)
 
-        val state = viewModel.reblogAction.value?.peekContent()
-        assert(state is PostEditor)
-        assertThat(state?.site).isEqualTo(site)
-        assertThat(state?.post).isEqualTo(post)
+        val state = viewModel.reblogState.value?.peekContent()
+        assertThat(state).isInstanceOf(PostEditor::class.java)
+
+        val peState = state as? PostEditor
+        assertThat(peState?.site).isEqualTo(site)
+        assertThat(peState?.post).isEqualTo(post)
     }
 
     @Test
@@ -409,10 +413,12 @@ class ReaderPostListViewModelTest {
 
         viewModel.onReblogButtonClicked(post)
 
-        val state = viewModel.reblogAction.value?.peekContent()
-        assert(state is SitePicker)
-        assertThat(state?.site).isEqualTo(site)
-        assertThat(state?.post).isEqualTo(post)
+        val state = viewModel.reblogState.value?.peekContent()
+        assertThat(state).isInstanceOf(SitePicker::class.java)
+
+        val spState = state as? SitePicker
+        assertThat(spState?.site).isEqualTo(site)
+        assertThat(spState?.post).isEqualTo(post)
     }
 
     @Test
@@ -427,21 +433,56 @@ class ReaderPostListViewModelTest {
         whenever(siteStore.visibleSites).thenReturn(visibleSites)
 
         viewModel.onReblogButtonClicked(post)
-        viewModel.selectedSiteToReblog(siteId)
+        viewModel.onReblogSiteSelected(siteId)
 
-        val state = viewModel.reblogAction.value?.peekContent()
-        assert(state is PostEditor)
-        assertThat(state?.site).isEqualTo(site)
-        assertThat(state?.post).isEqualTo(post)
+        val state = viewModel.reblogState.value?.peekContent()
+        assertThat(state).isInstanceOf(PostEditor::class.java)
+
+        val peState = state as? PostEditor
+        assertThat(peState?.site).isEqualTo(site)
+        assertThat(peState?.post).isEqualTo(post)
+    }
+
+    @Test
+    fun `when user has only one site but the selected site is not retrieved an error occurs`() {
+        val site = SiteModel()
+        val post = ReaderPost()
+        val visibleSites = listOf(site) // One site
+
+        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(null) // failure
+        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+
+        viewModel.onReblogButtonClicked(post)
+
+        val state = viewModel.reblogState.value?.peekContent()
+        assertThat(state).isInstanceOf(Unknown::class.java)
+    }
+
+    @Test
+    fun `when user has more than one sites but the selected site is not retrieved an error occurs`() {
+        val site = SiteModel()
+        val post = ReaderPost()
+        val visibleSites = listOf(site, site) // More sites
+
+        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(null) // failure
+        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+
+        viewModel.onReblogButtonClicked(post)
+
+        val state = viewModel.reblogState.value?.peekContent()
+        assertThat(state).isInstanceOf(Unknown::class.java)
     }
 
     @Test
     fun `when user selects a site and no post is selected or the state is unexpected an error is thrown`() {
-        viewModel.selectedSiteToReblog(1)
-
-        val state = viewModel.reblogAction.value?.peekContent()
-        assert(state == null || state !is SitePicker || state.post == null)
-        assert(state is ReblogError)
+        val reblog = { viewModel.onReblogSiteSelected(1) }
+        if (BuildConfig.DEBUG) {
+            assertThatIllegalStateException().isThrownBy(reblog)
+        } else {
+            reblog()
+            val state = viewModel.reblogState.value?.peekContent()
+            assertThat(state).isInstanceOf(Unknown::class.java)
+        }
     }
 
     private fun onClickActionDummy(filter: SubfilterListItem) {
