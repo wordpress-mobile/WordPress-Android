@@ -11,6 +11,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.ObjectAssert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -391,7 +392,7 @@ class ReaderPostListViewModelTest {
         viewModel.onReblogButtonClicked(post)
 
         val state = viewModel.reblogState.value?.peekContent()
-        assert(state is PostEditor)
+        assertThat(state).isInstanceOf(PostEditor::class.java)
         assertThat(state?.site).isEqualTo(site)
         assertThat(state?.post).isEqualTo(post)
     }
@@ -410,7 +411,7 @@ class ReaderPostListViewModelTest {
         viewModel.onReblogButtonClicked(post)
 
         val state = viewModel.reblogState.value?.peekContent()
-        assert(state is SitePicker)
+        assertThat(state).isInstanceOf(SitePicker::class.java)
         assertThat(state?.site).isEqualTo(site)
         assertThat(state?.post).isEqualTo(post)
     }
@@ -430,7 +431,7 @@ class ReaderPostListViewModelTest {
         viewModel.onReblogSiteSelected(siteId)
 
         val state = viewModel.reblogState.value?.peekContent()
-        assert(state is PostEditor)
+        assertThat(state).isInstanceOf(PostEditor::class.java)
         assertThat(state?.site).isEqualTo(site)
         assertThat(state?.post).isEqualTo(post)
     }
@@ -440,8 +441,7 @@ class ReaderPostListViewModelTest {
         viewModel.onReblogSiteSelected(1)
 
         val state = viewModel.reblogState.value?.peekContent()
-        assert(state == null || state !is SitePicker || state.post == null)
-        assert(state is ReblogError)
+        assertThat(state).isInstanceOf(ReblogError::class.java)
     }
 
     private fun onClickActionDummy(filter: SubfilterListItem) {
