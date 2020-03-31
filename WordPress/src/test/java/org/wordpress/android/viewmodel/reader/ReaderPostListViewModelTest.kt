@@ -11,7 +11,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.ObjectAssert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
