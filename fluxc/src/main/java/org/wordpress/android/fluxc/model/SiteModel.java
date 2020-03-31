@@ -656,4 +656,8 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     public void setIsComingSoon(boolean isComingSoon) {
         mIsComingSoon = isComingSoon;
     }
+
+    public boolean isPrivateWPComAtomic() {
+        return isWPComAtomic() && (isPrivate() || isComingSoon());
+    }
 }
