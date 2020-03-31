@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
@@ -263,5 +265,13 @@ public class ReaderPostListActivity extends AppCompatActivity {
             return null;
         }
         return ((ReaderPostListFragment) fragment);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.NO_REBLOG_SITE && resultCode == Activity.RESULT_OK) {
+            finish(); // Finish activity to make My Site page visible
+        }
     }
 }

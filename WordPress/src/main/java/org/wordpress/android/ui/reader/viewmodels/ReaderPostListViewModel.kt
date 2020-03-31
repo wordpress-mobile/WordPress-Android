@@ -11,7 +11,10 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.modules.BG_THREAD
@@ -23,6 +26,11 @@ import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.reblog.NoSite
+import org.wordpress.android.ui.reader.reblog.PostEditor
+import org.wordpress.android.ui.reader.reblog.ReblogError
+import org.wordpress.android.ui.reader.reblog.ReblogState
+import org.wordpress.android.ui.reader.reblog.SitePicker
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
@@ -54,7 +62,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val subfilterListItemMapper: SubfilterListItemMapper,
     private val eventBusWrapper: EventBusWrapper,
     private val accountStore: AccountStore,
-    private val readerTracker: ReaderTracker
+    private val readerTracker: ReaderTracker,
+    private val siteStore: SiteStore
 ) : ScopedViewModel(bgDispatcher) {
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
@@ -87,6 +96,9 @@ class ReaderPostListViewModel @Inject constructor(
 
     private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
     val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
+
+    private val _reblogAction = MutableLiveData<Event<ReblogState>>()
+    val reblogAction: LiveData<Event<ReblogState>> = _reblogAction
 
     /**
      * First tag for which the card was shown.
@@ -247,6 +259,37 @@ class ReaderPostListViewModel @Inject constructor(
                         onClickAction = ::onSubfilterClicked,
                         isSelected = true
                 ))
+    }
+
+    /**
+     * Handles reblog button action
+     *
+     * @param post post to reblog
+     */
+    fun onReblogButtonClicked(post: ReaderPost) {
+        val selectedSiteId: Int? = appPrefsWrapper.getSelectedSite()
+        val selectedSite: SiteModel? = selectedSiteId?.let { siteStore.getSiteByLocalId(it) }
+        when (siteStore.visibleSites.size) {
+            0 -> _reblogAction.value = Event(NoSite)
+            1 -> _reblogAction.value = selectedSite?.let { Event(PostEditor(it, post)) }
+            else -> _reblogAction.value = selectedSite?.let { Event(SitePicker(it, post)) }
+        }
+    }
+
+    /**
+     * Handles site selection
+     *
+     * @param site selected site to reblog to
+     */
+    fun selectedSiteToReblog(siteLocalId: Int) {
+        val currentState = _reblogAction.value?.peekContent()
+        val selectedPost = currentState?.post
+        if (currentState is SitePicker && selectedPost != null) {
+            val site = siteStore.getSiteByLocalId(siteLocalId)
+            _reblogAction.value = Event(PostEditor(site, selectedPost))
+        } else {
+            _reblogAction.value = Event(ReblogError)
+        }
     }
 
     fun onSubFiltersListButtonClicked() {

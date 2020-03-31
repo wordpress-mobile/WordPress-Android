@@ -60,6 +60,7 @@
                 android:contentDescription="@string/reader_view_comments"
                 android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_width="wrap_content"
                 wp:readerIcon="comment" >
             </org.wordpress.android.ui.reader.views.ReaderIconCountView>
