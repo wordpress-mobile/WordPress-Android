@@ -297,6 +297,7 @@ dependencies {
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.5.1'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
 
