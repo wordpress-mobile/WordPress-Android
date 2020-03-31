@@ -373,7 +373,7 @@ class ReaderPostListViewModelTest {
 
         viewModel.onReblogButtonClicked(post)
 
-        val state = viewModel.reblogAction.value?.peekContent()
+        val state = viewModel.reblogState.value?.peekContent()
         assertThat(state).isEqualTo(NoSite)
     }
 
@@ -390,7 +390,7 @@ class ReaderPostListViewModelTest {
 
         viewModel.onReblogButtonClicked(post)
 
-        val state = viewModel.reblogAction.value?.peekContent()
+        val state = viewModel.reblogState.value?.peekContent()
         assert(state is PostEditor)
         assertThat(state?.site).isEqualTo(site)
         assertThat(state?.post).isEqualTo(post)
@@ -409,7 +409,7 @@ class ReaderPostListViewModelTest {
 
         viewModel.onReblogButtonClicked(post)
 
-        val state = viewModel.reblogAction.value?.peekContent()
+        val state = viewModel.reblogState.value?.peekContent()
         assert(state is SitePicker)
         assertThat(state?.site).isEqualTo(site)
         assertThat(state?.post).isEqualTo(post)
@@ -429,7 +429,7 @@ class ReaderPostListViewModelTest {
         viewModel.onReblogButtonClicked(post)
         viewModel.onReblogSiteSelected(siteId)
 
-        val state = viewModel.reblogAction.value?.peekContent()
+        val state = viewModel.reblogState.value?.peekContent()
         assert(state is PostEditor)
         assertThat(state?.site).isEqualTo(site)
         assertThat(state?.post).isEqualTo(post)
@@ -439,7 +439,7 @@ class ReaderPostListViewModelTest {
     fun `when user selects a site and no post is selected or the state is unexpected an error is thrown`() {
         viewModel.onReblogSiteSelected(1)
 
-        val state = viewModel.reblogAction.value?.peekContent()
+        val state = viewModel.reblogState.value?.peekContent()
         assert(state == null || state !is SitePicker || state.post == null)
         assert(state is ReblogError)
     }

@@ -2903,7 +2903,7 @@ public class ReaderPostListFragment extends Fragment
      * Handles reblog state changes and triggers reblog actions
      */
     private void handleReblogStateChanges() {
-        mViewModel.getReblogAction().observe(this, event -> {
+        mViewModel.getReblogState().observe(this, event -> {
             event.applyIfNotHandled(state -> {
                 if (state instanceof NoSite) {
                     ToastUtils.showToast(getActivity(), R.string.reader_no_site_to_reblog);

@@ -97,8 +97,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
     val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
 
-    private val _reblogAction = MutableLiveData<Event<ReblogState>>()
-    val reblogAction: LiveData<Event<ReblogState>> = _reblogAction
+    private val _reblogState = MutableLiveData<Event<ReblogState>>()
+    val reblogState: LiveData<Event<ReblogState>> = _reblogState
 
     /**
      * First tag for which the card was shown.
@@ -270,9 +270,9 @@ class ReaderPostListViewModel @Inject constructor(
         val selectedSiteId = appPrefsWrapper.getSelectedSite()
         val selectedSite: SiteModel = siteStore.getSiteByLocalId(selectedSiteId)
         when (siteStore.visibleSites.size) {
-            0 -> _reblogAction.value = Event(NoSite)
-            1 -> _reblogAction.value = Event(PostEditor(selectedSite, post))
-            else -> _reblogAction.value = Event(SitePicker(selectedSite, post))
+            0 -> _reblogState.value = Event(NoSite)
+            1 -> _reblogState.value = Event(PostEditor(selectedSite, post))
+            else -> _reblogState.value = Event(SitePicker(selectedSite, post))
         }
     }
 
@@ -282,13 +282,13 @@ class ReaderPostListViewModel @Inject constructor(
      * @param site selected site to reblog to
      */
     fun onReblogSiteSelected(siteLocalId: Int) {
-        val currentState = _reblogAction.value?.peekContent()
+        val currentState = _reblogState.value?.peekContent()
         val selectedPost = currentState?.post
         if (currentState is SitePicker && selectedPost != null) {
             val site = siteStore.getSiteByLocalId(siteLocalId)
-            _reblogAction.value = Event(PostEditor(site, selectedPost))
+            _reblogState.value = Event(PostEditor(site, selectedPost))
         } else {
-            _reblogAction.value = Event(ReblogError)
+            _reblogState.value = Event(ReblogError)
         }
     }
 
