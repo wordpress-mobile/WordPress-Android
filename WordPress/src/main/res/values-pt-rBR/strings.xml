@@ -357,7 +357,6 @@ Language: pt_BR
     <string name="domain_registration_contact_form_input_error">Digite um %s válido</string>
     <string name="domains_suggestions_choose_domain">Escolher o domínio</string>
     <string name="stats_management_new">Novo</string>
-    <string name="stats_management_edit">Editar</string>
     <string name="stats_management_dismiss_insights_news_card">Dispensar</string>
     <string name="stats_management_try_it_now">Faça um teste</string>
     <string name="stats_management_news_card_message">Escolha as estatísticas que você deseja ver e foque nos dados mais importantes para você. Clique em %1$s na parte inferior da tela para personalizar suas estatísticas.</string>
@@ -372,8 +371,6 @@ Language: pt_BR
     <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">Ocorreu um erro ao restaurar o post</string>
     <string name="backdated_for">Retroceder para: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Os itens acima serão exibidos em sua aba resumo. Arraste e solte para personalizar.</string>
-    <string name="stats_insights_add_insights_header">Adicionar informações</string>
     <string name="stats_insights_management_title">Ver apenas as estatísticas mais relevantes. Adicione e organize duas informações abaixo.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estatística anual do site</string>

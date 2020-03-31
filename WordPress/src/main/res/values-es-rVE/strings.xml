@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
+<<<<<<< HEAD
 Translation-Revision-Date: 2020-02-15 23:51:30+0000
+=======
+Translation-Revision-Date: 2020-03-11 18:47:00+0000
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es_VE
 -->
 <resources>
+<<<<<<< HEAD
+=======
+    <string name="stats_insights_management_activity">Actividad</string>
+    <string name="stats_insights_management_posts_and_pages">Entradas y páginas</string>
+    <string name="stats_insights_management_general">General</string>
+    <string name="stats_management_screen_title">Añadir una nueva tarjeta</string>
+    <string name="stats_management_add_new_stats_card">Añadir una nueva tarjeta de estadísticas</string>
+    <string name="reader_self_hosted_select_filter">Usa el botón de filtro para encontrar entradas sobre temas específicos</string>
+    <string name="reader_bottom_sheet_content_description">Selecciona una etiqueta o sitio, ventana emergente</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Seleccionado</string>
+    <string name="reader_btn_select_filter_content_description">Selecciona un sitio o etiqueta para filtrar entradas</string>
+    <string name="reader_btn_remove_filter_content_description">Quitar el filtro actual</string>
+    <string name="reader_title_subs">Gestionar etiquetas y sitios</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Accede a WordPress.com para ver las últimas entradas de las etiquetas que sigues</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Accede a WordPress.com para ver las últimas entradas de los sitios que sigues</string>
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_template_preview">Vista previa de la plantilla</string>
     <string name="gutenberg_native_replace_current_block">Reemplazar el bloque actual</string>
     <string name="gutenberg_native_add_to_end">Añadir al final</string>
@@ -337,7 +358,7 @@ Language: es_VE
     <string name="domain_registration_country_picker_dialog_title">Selecciona el país</string>
     <string name="domain_registration_result_continue_button">seguir</string>
     <string name="domain_registration_result_description">tu nuevo dominio &lt;b>%s&lt;/b> se está configurando. ¡Tu sitio está\n    dando saltos mortales de emoción!</string>
-    <string name="domain_registration_result_title">Enhorabuena</string>
+    <string name="domain_registration_result_title">Felicitaciones</string>
     <string name="domain_contact_information_register_domain_button">Registrar dominio</string>
     <string name="domain_contact_information_postal_code_hint">Código postal</string>
     <string name="domain_contact_information_state_hint">Provincia</string>
@@ -357,7 +378,6 @@ Language: es_VE
     <string name="domain_registration_contact_form_input_error">Por favor, introduce un %s válido</string>
     <string name="domains_suggestions_choose_domain">Elegir dominio</string>
     <string name="stats_management_new">Nuevo</string>
-    <string name="stats_management_edit">Editar</string>
     <string name="stats_management_dismiss_insights_news_card">Descartar</string>
     <string name="stats_management_try_it_now">Pruébalo ahora</string>
     <string name="stats_management_news_card_message">Elige qué estadísticas ver, y céntrate en los datos que más te preocupen. Toca en %1$s al fondo de las estadísticas para personalizarlas.</string>
@@ -372,8 +392,6 @@ Language: es_VE
     <string name="post_list_author_me">Yo</string>
     <string name="error_restoring_post">Ocurrió un error mientras se restauraba la entrada</string>
     <string name="backdated_for">Retroceder a: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Los elementos que se ven abajo mostrarán tu pestaña de detalles. Arrastra y suelta para personalizarla.</string>
-    <string name="stats_insights_add_insights_header">Añadir detalles</string>
     <string name="stats_insights_management_title">Solo ves las estadísticas más relevantes. Añade y organiza tus detalles abajo.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estadísticas anuales del sitio</string>
@@ -1321,7 +1339,7 @@ Language: es_VE
     <string name="media_error_http_too_large_video_upload">Vídeo demasiado grande para subir</string>
     <string name="media_error_http_too_large_photo_upload">La imagen es demasiado grande para subirla. Trata de cambiar la optimización de imágenes en los ajustes de la aplicación</string>
     <string name="media_audio">Audio</string>
-    <string name="media_videos">Vídeos</string>
+    <string name="media_videos">Videos</string>
     <string name="media_documents">Documentos</string>
     <string name="media_images">Imágenes</string>
     <string name="media_all">Todos</string>
@@ -1890,9 +1908,22 @@ Language: es_VE
     <string name="reader_empty_posts_in_blog">Este sitio está vacío</string>
     <string name="post_uploading">Subiendo entrada</string>
     <string name="stats_views">Vistas</string>
+<<<<<<< HEAD
     <string name="stats_visitors">Visitantes</string>
     <string name="stats_view_videos">Vídeos</string>
     <string name="stats_followers_a_month">Un mes</string>
+=======
+    <string name="stats_timeframe_years">Años</string>
+    <string name="stats_likes">Me gusta</string>
+    <string name="stats_view_countries">Países</string>
+    <string name="stats_view_followers">Seguidores</string>
+    <string name="stats_view_publicize">Difundir</string>
+    <string name="stats_view_videos">Videos</string>
+    <string name="stats_view_top_posts_and_pages">Entradas y páginas</string>
+    <string name="stats_followers_seconds_ago">hace unos segundos</string>
+    <string name="stats_followers_a_minute_ago">hace un minuto</string>
+    <string name="stats_followers_days">%1$d días</string>
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="stats_followers_a_day">Un día</string>
     <string name="stats_followers_a_year">Un año</string>
     <string name="stats_view_followers">Seguidores</string>

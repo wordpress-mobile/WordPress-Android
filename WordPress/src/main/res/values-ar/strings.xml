@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
+<<<<<<< HEAD
 Translation-Revision-Date: 2020-02-16 12:54:28+0000
+=======
+Translation-Revision-Date: 2020-03-18 00:55:07+0000
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+<<<<<<< HEAD
+=======
+    <string name="stats_insights_management_activity">النشاط</string>
+    <string name="stats_insights_management_posts_and_pages">المقالات والصفحات</string>
+    <string name="stats_insights_management_general">عام</string>
+    <string name="stats_management_screen_title">إضافة بطاقة جديدة</string>
+    <string name="stats_management_add_new_stats_card">إضافة بطاقة إحصاءات جديدة</string>
+    <string name="reader_self_hosted_select_filter">استخدام زر الفلترة للعثور على مقالات في مواضيع معينة</string>
+    <string name="reader_bottom_sheet_content_description">تحديد وسم أو موقع، نافذة منبثقة</string>
+    <string name="reader_btn_selected_filter_tick_content_description">مُحدَّد</string>
+    <string name="reader_btn_select_filter_content_description">تحديد موقع أو وسم لفلترة المقالات</string>
+    <string name="reader_btn_remove_filter_content_description">إزالة الفلتر الحالي</string>
+    <string name="reader_title_subs">إدارة الوسوم والمواقع</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">تسجيل الدخول إلى WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من الوسوم التي تتابعها</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من المواقع التي تتابعها</string>
+    <string name="gutenberg_native_template_preview">معاينة القالب</string>
+    <string name="gutenberg_native_replace_current_block">استبدال المكوِّن الحالي</string>
+    <string name="gutenberg_native_add_to_end">إضافة إلى النهاية</string>
+    <string name="gutenberg_native_add_to_beginning">إضافة إلى البداية</string>
+    <string name="gutenberg_native_add_block_before">إضافة مكوّن قبل</string>
+    <string name="gutenberg_native_add_block_after">إضافة مكوّن بعد</string>
+    <string name="reader_filter_empty_tags_action">إضافة وسم</string>
+    <string name="reader_filter_empty_sites_action">متابعة موقع</string>
+    <string name="reader_filter_empty_tags_list">يمكنك متابعة مقالات حول موضوع معيَّن عن طريق إضافة وسم</string>
+    <string name="reader_filter_empty_sites_list">الاطِّلاع على أحدث المقالات من المواقع التي تتابعها</string>
+    <string name="reader_filter_main_title">المتابعة</string>
+    <string name="reader_filter_cta">عامل التصفية</string>
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_video_caption_s">تسمية الفيديو. %s</string>
     <string name="gutenberg_native_edit_video">تحرير الفيديو</string>
     <string name="gutenberg_native_edit_media">تحرير الوسائط</string>
@@ -345,7 +378,6 @@ Language: ar
     <string name="domain_registration_contact_form_input_error">الرجاء إدخال عنوان %s صالح</string>
     <string name="domains_suggestions_choose_domain">اختيار النطاق</string>
     <string name="stats_management_new">جديد</string>
-    <string name="stats_management_edit">تحرير</string>
     <string name="stats_management_dismiss_insights_news_card">تجاهل</string>
     <string name="stats_management_try_it_now">التجربة الآن</string>
     <string name="stats_management_news_card_message">اختر الإحصائيات التي ستراها، والتركيز على البيانات التي تهمك أكثر. أنقر على %1$s في الجزء السفلي من الإحصائيات لتخصيص إحصائياتك.</string>
@@ -360,8 +392,6 @@ Language: ar
     <string name="post_list_author_me">أنا</string>
     <string name="error_restoring_post">حدث خطأ أثناء استعادة المقالة</string>
     <string name="backdated_for">تاريخ سابق ليوم: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">ستظهر العناصر الموضَّحة أعلاه في علامة تبويب الرؤى الخاصة بك. اسحب وأفلت للتخصيص.</string>
-    <string name="stats_insights_add_insights_header">إضافة رؤى</string>
     <string name="stats_insights_management_title">لن ترى إلا الإحصاءات الأكثر أهمية. أضف الرؤى الخاصة بك ونظِّمها أدناه.</string>
     <string name="stats_insights_social">اجتماعي</string>
     <string name="stats_insights_annual_site_stats">إحصاءات الموقع السنوية</string>

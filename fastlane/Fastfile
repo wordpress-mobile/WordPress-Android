@@ -314,7 +314,8 @@ ENV["HAS_ALPHA_VERSION"]="true"
 ######################################################################## 
   main_strings_path = "./WordPress/src/main/res/values/strings.xml"
   libraries_strings_path = [
-    {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]}
+    {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]},
+    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []}
   ]
 
   desc "Merge libraries strings files into the main app one"

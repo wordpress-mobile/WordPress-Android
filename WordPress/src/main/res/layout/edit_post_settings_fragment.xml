@@ -175,6 +175,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+<<<<<<< HEAD
                         android:text="@string/editor_failed_to_insert_media_tap_to_retry"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_sz_medium" />
@@ -206,6 +207,36 @@
                         android:id="@+id/featured_image_progress_desc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+=======
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="@dimen/post_settings_retry_image_size"
+                            android:layout_height="@dimen/post_settings_retry_image_size"
+                            android:contentDescription="@string/retry"
+                            android:src="@drawable/ic_refresh_white_24dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/editor_failed_to_insert_media_tap_to_retry"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_sz_medium"/>
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/post_featured_image_progress_overlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_above="@+id/post_featured_image_container"
+                        android:layout_alignBottom="@id/post_featured_image_container"
+                        android:layout_alignEnd="@id/post_featured_image_container"
+                        android:layout_alignStart="@id/post_featured_image_container"
+                        android:layout_alignTop="@id/post_featured_image_container"
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
                         android:layout_centerInParent="true"
                         android:gravity="center"
                         android:paddingTop="@dimen/margin_small"

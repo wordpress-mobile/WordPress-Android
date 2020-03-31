@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
+<<<<<<< HEAD
 Translation-Revision-Date: 2020-02-22 10:15:11+0000
+=======
+Translation-Revision-Date: 2020-03-18 00:55:06+0000
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+<<<<<<< HEAD
+=======
+    <string name="stats_insights_management_activity">Attività</string>
+    <string name="stats_insights_management_posts_and_pages">Articoli e pagine</string>
+    <string name="stats_insights_management_general">Generale</string>
+    <string name="stats_management_screen_title">Aggiungi nuova scheda</string>
+    <string name="stats_management_add_new_stats_card">Aggiungi nuova scheda statistiche</string>
+    <string name="reader_self_hosted_select_filter">Utilizza il pulsante di filtro per trovare articoli su argomenti specifici</string>
+    <string name="reader_bottom_sheet_content_description">Seleziona un tag o un sito, finestra pop-up</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Selezionati</string>
+    <string name="reader_btn_select_filter_content_description">Seleziona un sito o un tag per filtrare gli articoli</string>
+    <string name="reader_btn_remove_filter_content_description">Rimuovi filtro attuale</string>
+    <string name="reader_title_subs">Gestisci tag e siti</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Accedi a WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Accedi a WordPress.com per vedere gli ultimi articoli dei tag che segui</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Accedi a WordPress.com per vedere gli ultimi articoli dei siti che segui</string>
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_template_preview">Anteprima del modello</string>
     <string name="gutenberg_native_replace_current_block">Sostituisci blocco attuale</string>
     <string name="gutenberg_native_add_to_end">Aggiungi alla fine</string>
@@ -341,7 +362,6 @@ Language: it
     <string name="domain_registration_contact_form_input_error">Per %s, inserisci un valore valido</string>
     <string name="domains_suggestions_choose_domain">Scegli dominio</string>
     <string name="stats_management_new">Nuovo</string>
-    <string name="stats_management_edit">Modifica</string>
     <string name="stats_management_dismiss_insights_news_card">Chiudi</string>
     <string name="stats_management_try_it_now">Prova ora</string>
     <string name="stats_management_news_card_message">Scegli quali statistiche vedere e concentrati sui dati più importanti per te. Per personalizzare le tue statistiche, tocca %1$s nella parte inferiore di Panoramica.</string>
@@ -356,8 +376,6 @@ Language: it
     <string name="post_list_author_me">Io</string>
     <string name="error_restoring_post">Errore durante il recupero dell\'articolo</string>
     <string name="backdated_for">Retrodatato per: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Gli elementi mostrati sopra compariranno nella scheda Panoramica. Trascina e rilascia per personalizzare.</string>
-    <string name="stats_insights_add_insights_header">Aggiungi Panoramica</string>
     <string name="stats_insights_management_title">Vedi solo le statistiche più rilevanti. Aggiungi e organizza le tue informazioni di seguito.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Statistiche annuali del sito</string>

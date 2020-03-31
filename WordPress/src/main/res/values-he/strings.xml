@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
+<<<<<<< HEAD
 Translation-Revision-Date: 2020-02-14 00:54:19+0000
+=======
+Translation-Revision-Date: 2020-03-18 00:55:08+0000
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+<<<<<<< HEAD
+=======
+    <string name="stats_insights_management_activity">פעילות</string>
+    <string name="stats_insights_management_posts_and_pages">פוסטים ועמודים</string>
+    <string name="stats_insights_management_general">כללי</string>
+    <string name="stats_management_screen_title">להוסיף כרטיס חדש</string>
+    <string name="stats_management_add_new_stats_card">להוסיף כרטיס חדש של נתונים סטטיסטיים</string>
+    <string name="reader_self_hosted_select_filter">להשתמש בכפתור הסינון לחיפוש פוסטים בנושאים מסוימים</string>
+    <string name="reader_bottom_sheet_content_description">לבחור תגית או אתר, חלון קופץ</string>
+    <string name="reader_btn_selected_filter_tick_content_description">נבחר</string>
+    <string name="reader_btn_select_filter_content_description">לבחור אתר או תגית כדי לסנן את הפוסטים</string>
+    <string name="reader_btn_remove_filter_content_description">להסיר את המסנן הנוכחי</string>
+    <string name="reader_title_subs">לנהל תגיות ואתרים</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">התחברות ל-WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">יש להתחבר ל-WordPress.com כדי להציג את הפוסטים האחרונים מתגיות שבמעקב אצלך</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">יש להתחבר ל-WordPress.com כדי להציג את הפוסטים האחרונים מאתרים שבמעקב אצלך</string>
+    <string name="gutenberg_native_template_preview">תצוגה מקדימה של תבנית</string>
+    <string name="gutenberg_native_replace_current_block">יש להחליף את הבלוק הנוכחי</string>
+    <string name="gutenberg_native_add_to_end">הוספה לסוף</string>
+    <string name="gutenberg_native_add_to_beginning">הוספה להתחלה</string>
+    <string name="gutenberg_native_add_block_before">הוספת בלוק לפני</string>
+    <string name="gutenberg_native_add_block_after">הוספת בלוק לאחר</string>
+    <string name="reader_filter_empty_tags_action">הוספת תגית</string>
+    <string name="reader_filter_empty_sites_action">מעקב אחר אתר</string>
+    <string name="reader_filter_empty_tags_list">אפשר לעקוב אחר פוסטים לגבי נושא מסוים על ידי הוספת תגית</string>
+    <string name="reader_filter_empty_sites_list">ניתן לראות את הפוסטים החדשים ביותר מהאתרים שבחרת לעקוב אחריהם</string>
+    <string name="reader_filter_main_title">מעקב</string>
+    <string name="reader_filter_cta">מסנן</string>
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_video_caption_s">כיתוב לווידאו. %s</string>
     <string name="gutenberg_native_edit_video">לערוך וידאו</string>
     <string name="gutenberg_native_edit_media">לערוך מדיה</string>
@@ -345,7 +378,6 @@ Language: he_IL
     <string name="domain_registration_contact_form_input_error">יש להזין נתונים תקפים עבור %s</string>
     <string name="domains_suggestions_choose_domain">בחירת דומיין</string>
     <string name="stats_management_new">חדש</string>
-    <string name="stats_management_edit">עריכה</string>
     <string name="stats_management_dismiss_insights_news_card">ביטול</string>
     <string name="stats_management_try_it_now">כדאי לנסות עכשיו</string>
     <string name="stats_management_news_card_message">לבחור באילו נתונים סטטיסטיים ברצונך לצפות ולהתמקד בנתונים שחשובים לך באמת. יש להקיש על %1$s בתחתית של האזור \'תובנות\' כדי להתאים אישית את הנתונים הסטטיסטיים שלך.</string>
@@ -360,8 +392,6 @@ Language: he_IL
     <string name="post_list_author_me">אני</string>
     <string name="error_restoring_post">אירעה שגיאה בעת שחזור הפוסט</string>
     <string name="backdated_for">עדכון לתאריך הזה בעבר: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">הפריטים שמוצגים לעיל יופיעו בלשונית \'תובנות\'. ניתן לגרור ולשחרר כדי להתאים את הסדר.</string>
-    <string name="stats_insights_add_insights_header">הוספת תובנות</string>
     <string name="stats_insights_management_title">הצגה של הנתונים הסטטיסטיים הרלוונטיים ביותר בלבד. הוספת התובנות שמופיעות למטה וארגונן.</string>
     <string name="stats_insights_social">רשתות חברתיות</string>
     <string name="stats_insights_annual_site_stats">נתונים סטטיסטיים שנתיים של האתר</string>

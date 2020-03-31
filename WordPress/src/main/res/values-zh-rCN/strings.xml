@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
+<<<<<<< HEAD
 Translation-Revision-Date: 2020-02-22 00:54:43+0000
+=======
+Translation-Revision-Date: 2020-03-18 00:55:03+0000
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+<<<<<<< HEAD
+=======
+    <string name="stats_insights_management_activity">活动</string>
+    <string name="stats_insights_management_posts_and_pages">文章和页面</string>
+    <string name="stats_insights_management_general">常规</string>
+    <string name="stats_management_screen_title">添加新卡片</string>
+    <string name="stats_management_add_new_stats_card">添加新统计信息卡片</string>
+    <string name="reader_self_hosted_select_filter">使用“过滤器”按钮查找特定主题的文章</string>
+    <string name="reader_bottom_sheet_content_description">选择标签、站点或弹出窗口</string>
+    <string name="reader_btn_selected_filter_tick_content_description">已选择</string>
+    <string name="reader_btn_select_filter_content_description">选择站点或标签来过滤文章</string>
+    <string name="reader_btn_remove_filter_content_description">删除当前过滤器</string>
+    <string name="reader_title_subs">管理标签和站点</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">登录 WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">登录 WordPress.com 以查看属于您关注的标签的最新文章</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">登录 WordPress.com 以查看您关注的站点的最新文章</string>
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_template_preview">模板预览</string>
     <string name="gutenberg_native_replace_current_block">替换现有区块</string>
     <string name="gutenberg_native_add_to_end">添加到结尾</string>
@@ -313,7 +334,6 @@ Language: zh_CN
     <string name="domain_registration_contact_form_input_error">请输入有效的“%s”</string>
     <string name="domains_suggestions_choose_domain">选择域</string>
     <string name="stats_management_new">新增</string>
-    <string name="stats_management_edit">编辑</string>
     <string name="stats_management_dismiss_insights_news_card">忽略</string>
     <string name="stats_management_try_it_now">立即试用</string>
     <string name="stats_management_news_card_message">选择要查看的统计数据，重点关注您最关心的数据。点按“数据分析”底部的“%1$s”，以自定义您的统计数据。</string>
@@ -328,8 +348,6 @@ Language: zh_CN
     <string name="post_list_author_me">我</string>
     <string name="error_restoring_post">恢复文章时出错</string>
     <string name="backdated_for">倒填日期：%s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">上面显示的项目将显示在您的“见解”选项卡中。拖放以进行自定义设置。</string>
-    <string name="stats_insights_add_insights_header">添加见解</string>
     <string name="stats_insights_management_title">仅查看相关性较大的统计信息。在下面添加和管理您的见解。</string>
     <string name="stats_insights_social">社交</string>
     <string name="stats_insights_annual_site_stats">年度站点统计信息</string>

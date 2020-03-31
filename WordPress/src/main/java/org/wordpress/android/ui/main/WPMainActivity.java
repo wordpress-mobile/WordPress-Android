@@ -385,11 +385,17 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // Setup Observers
         mViewModel.getFabUiState().observe(this, fabUiState -> {
+            String message = getResources().getString(fabUiState.getCreateContentMessageId());
+
+            mFabTooltip.setMessage(message);
+
             if (fabUiState.isFabTooltipVisible()) {
                 mFabTooltip.show();
             } else {
                 mFabTooltip.hide();
             }
+
+            mFloatingActionButton.setContentDescription(message);
 
             if (fabUiState.isFabVisible()) {
                 mFloatingActionButton.show();
@@ -410,22 +416,27 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         mFloatingActionButton.setOnClickListener(v -> {
-            mViewModel.setIsBottomSheetShowing(true);
+            mViewModel.onFabClicked(hasFullAccessToContent());
         });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
             if (v.isHapticFeedbackEnabled()) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
-            mViewModel.onFabLongPressed();
-            Toast.makeText(v.getContext(), R.string.create_post_page_fab_tooltip, Toast.LENGTH_SHORT).show();
+            mViewModel.onFabLongPressed(hasFullAccessToContent());
+
+            int messageId = hasFullAccessToContent()
+                    ? R.string.create_post_page_fab_tooltip
+                    : R.string.create_post_page_fab_tooltip_contributors;
+
+            Toast.makeText(v.getContext(), messageId, Toast.LENGTH_SHORT).show();
             return true;
         });
 
         ViewUtilsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
 
         mFabTooltip.setOnClickListener(v -> {
-            mViewModel.onTooltipTapped();
+            mViewModel.onTooltipTapped(hasFullAccessToContent());
         });
 
         mViewModel.isBottomSheetShowing().observe(this, event -> {
@@ -460,7 +471,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
-        mViewModel.start(mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
+        mViewModel.start(
+                mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
+                hasFullAccessToContent()
+        );
     }
 
     private @Nullable String getAuthToken() {
@@ -691,6 +705,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
 
+        mViewModel.onResume(hasFullAccessToContent());
+
         mFirstResume = false;
     }
 
@@ -754,7 +770,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
         }
 
-        mViewModel.onPageChanged(mSiteStore.hasSite() && pageType == PageType.MY_SITE);
+        mViewModel.onPageChanged(
+                mSiteStore.hasSite() && pageType == PageType.MY_SITE,
+                hasFullAccessToContent()
+        );
     }
 
     // user tapped the new post button in the bottom navbar
@@ -1374,6 +1393,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
             mQuickStartSnackbar.dismiss();
             mQuickStartSnackbar = null;
         }
+    }
+
+    private boolean hasFullAccessToContent() {
+        return SiteUtils.hasFullAccessToContent(getSelectedSite());
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because

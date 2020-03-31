@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
+<<<<<<< HEAD
 Translation-Revision-Date: 2020-02-22 01:54:09+0000
+=======
+Translation-Revision-Date: 2020-03-18 00:55:07+0000
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+<<<<<<< HEAD
+=======
+    <string name="stats_insights_management_activity">Aktivitas</string>
+    <string name="stats_insights_management_posts_and_pages">Pos dan Halaman</string>
+    <string name="stats_insights_management_general">Umum</string>
+    <string name="stats_management_screen_title">Tambahkan Kartu Baru</string>
+    <string name="stats_management_add_new_stats_card">Tambahkan kartu statistik baru</string>
+    <string name="reader_self_hosted_select_filter">Gunakan tombol penyaring untuk menemukan pos pada subjek tertentu</string>
+    <string name="reader_bottom_sheet_content_description">Pilih Tag atau Situs, Jendela Pop Up</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Terpilih</string>
+    <string name="reader_btn_select_filter_content_description">Pilih Situs atau Tag untuk menyaring pos</string>
+    <string name="reader_btn_remove_filter_content_description">Hapus penyaring saat ini</string>
+    <string name="reader_title_subs">Kelola Tag &amp; Situs</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Login ke WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Login ke WordPress.com untuk melihat pos terbaru dari tag yang Anda ikuti</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Login ke WordPress.com untuk melihat pos terbaru dari situs yang Anda ikuti</string>
+>>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     <string name="gutenberg_native_template_preview">Pratinjau Template</string>
     <string name="gutenberg_native_replace_current_block">Ganti Blok Saat Ini</string>
     <string name="gutenberg_native_add_to_end">Tambahkan ke Akhir</string>
@@ -357,7 +378,6 @@ Language: id
     <string name="domain_registration_contact_form_input_error">Masukkan %s yang valid</string>
     <string name="domains_suggestions_choose_domain">Pilih Domain</string>
     <string name="stats_management_new">Baru</string>
-    <string name="stats_management_edit">Sunting</string>
     <string name="stats_management_dismiss_insights_news_card">Tutup</string>
     <string name="stats_management_try_it_now">Coba sekarang</string>
     <string name="stats_management_news_card_message">Pilih statistik apa yang ingin dilihat, dan fokus pada data yang paling Anda perhatikan. Ketuk %1$s di bagian bawah Wawasan untuk menyesuaikan statistik Anda.</string>
@@ -372,8 +392,6 @@ Language: id
     <string name="post_list_author_me">Saya</string>
     <string name="error_restoring_post">Terjadi error saat memulihkan pos</string>
     <string name="backdated_for">Dimundurkan selama: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Item yang ditampilkan di atas akan ditampilkan di tab Wawasan. Seret dan lepas untuk menyesuaikan.</string>
-    <string name="stats_insights_add_insights_header">Tambahkan Wawasan</string>
     <string name="stats_insights_management_title">Hanya lihat statistik yang paling relevan. Tambahkan dan kelola wawasan Anda di bawah ini.</string>
     <string name="stats_insights_social">Sosial</string>
     <string name="stats_insights_annual_site_stats">Statistik Situs Tahunan</string>
