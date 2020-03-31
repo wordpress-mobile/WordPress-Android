@@ -281,7 +281,7 @@ class ReaderPostListViewModel @Inject constructor(
      *
      * @param site selected site to reblog to
      */
-    fun selectedSiteToReblog(siteLocalId: Int) {
+    fun onReblogSiteSelected(siteLocalId: Int) {
         val currentState = _reblogAction.value?.peekContent()
         val selectedPost = currentState?.post
         if (currentState is SitePicker && selectedPost != null) {

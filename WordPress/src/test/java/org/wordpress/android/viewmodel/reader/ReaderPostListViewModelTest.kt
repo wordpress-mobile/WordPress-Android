@@ -427,7 +427,7 @@ class ReaderPostListViewModelTest {
         whenever(siteStore.visibleSites).thenReturn(visibleSites)
 
         viewModel.onReblogButtonClicked(post)
-        viewModel.selectedSiteToReblog(siteId)
+        viewModel.onReblogSiteSelected(siteId)
 
         val state = viewModel.reblogAction.value?.peekContent()
         assert(state is PostEditor)
@@ -437,7 +437,7 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun `when user selects a site and no post is selected or the state is unexpected an error is thrown`() {
-        viewModel.selectedSiteToReblog(1)
+        viewModel.onReblogSiteSelected(1)
 
         val state = viewModel.reblogAction.value?.peekContent()
         assert(state == null || state !is SitePicker || state.post == null)

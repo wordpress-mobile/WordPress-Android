@@ -2928,7 +2928,7 @@ public class ReaderPostListFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {
             int siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-            mViewModel.selectedSiteToReblog(siteLocalId);
+            mViewModel.onReblogSiteSelected(siteLocalId);
         }
     }
 }
