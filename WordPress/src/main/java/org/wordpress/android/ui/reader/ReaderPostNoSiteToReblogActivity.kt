@@ -11,7 +11,7 @@ import org.wordpress.android.R
 /*
  * Serves as an intermediate screen where the user is informed that a site is needed for the reblog action
  */
-class ReaderPostNoSiteToReblog : AppCompatActivity() {
+class ReaderPostNoSiteToReblogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.reader_no_site_to_reblog)

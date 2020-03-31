@@ -19,7 +19,10 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
 import org.wordpress.android.models.news.NewsItem
@@ -29,6 +32,10 @@ import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderSubsActivity
+import org.wordpress.android.ui.reader.reblog.NoSite
+import org.wordpress.android.ui.reader.reblog.PostEditor
+import org.wordpress.android.ui.reader.reblog.ReblogError
+import org.wordpress.android.ui.reader.reblog.SitePicker
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage
@@ -66,6 +73,7 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
     @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var readerTracker: ReaderTracker
+    @Mock private lateinit var siteStore: SiteStore
 
     private lateinit var viewModel: ReaderPostListViewModel
     private val liveData = MutableLiveData<NewsItem>()
@@ -93,7 +101,8 @@ class ReaderPostListViewModelTest {
                 subfilterListItemMapper,
                 eventBusWrapper,
                 accountStore,
-                readerTracker
+                readerTracker,
+                siteStore
         )
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
@@ -349,6 +358,90 @@ class ReaderPostListViewModelTest {
 
         // we didn't call start so noone should have changed the value
         assertThat(viewModel.currentSubFilter.value).isEqualTo(null)
+    }
+
+    @Test
+    fun `when user has no site the no site flow is triggered`() {
+        val siteId = 1
+        val site = SiteModel()
+        val post = ReaderPost()
+        val visibleSites = listOf<SiteModel>() // No sites
+
+        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+
+        viewModel.onReblogButtonClicked(post)
+
+        val state = viewModel.reblogAction.value?.peekContent()
+        assertThat(state).isEqualTo(NoSite)
+    }
+
+    @Test
+    fun `when user has only one site the post editor is triggered`() {
+        val siteId = 1
+        val site = SiteModel()
+        val post = ReaderPost()
+        val visibleSites = listOf(site) // One site
+
+        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+
+        viewModel.onReblogButtonClicked(post)
+
+        val state = viewModel.reblogAction.value?.peekContent()
+        assert(state is PostEditor)
+        assertThat(state?.site).isEqualTo(site)
+        assertThat(state?.post).isEqualTo(post)
+    }
+
+    @Test
+    fun `when user has more than one sites the site picker is triggered`() {
+        val siteId = 1
+        val site = SiteModel()
+        val post = ReaderPost()
+        val visibleSites = listOf(site, site) // More sites
+
+        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+
+        viewModel.onReblogButtonClicked(post)
+
+        val state = viewModel.reblogAction.value?.peekContent()
+        assert(state is SitePicker)
+        assertThat(state?.site).isEqualTo(site)
+        assertThat(state?.post).isEqualTo(post)
+    }
+
+    @Test
+    fun `when user has more than one sites and selects the site to reblog the post editor is triggered`() {
+        val siteId = 1
+        val site = SiteModel()
+        val post = ReaderPost()
+        val visibleSites = listOf(site, site) // More sites
+
+        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+
+        viewModel.onReblogButtonClicked(post)
+        viewModel.selectedSiteToReblog(siteId)
+
+        val state = viewModel.reblogAction.value?.peekContent()
+        assert(state is PostEditor)
+        assertThat(state?.site).isEqualTo(site)
+        assertThat(state?.post).isEqualTo(post)
+    }
+
+    @Test
+    fun `when user selects a site and no post is selected or the state is unexpected an error is thrown`() {
+        viewModel.selectedSiteToReblog(1)
+
+        val state = viewModel.reblogAction.value?.peekContent()
+        assert(state == null || state !is SitePicker || state.post == null)
+        assert(state is ReblogError)
     }
 
     private fun onClickActionDummy(filter: SubfilterListItem) {
