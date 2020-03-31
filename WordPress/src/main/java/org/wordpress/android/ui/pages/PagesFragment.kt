@@ -443,25 +443,12 @@ class PagesFragment : Fragment() {
         }
     }
 
-<<<<<<< HEAD
-    private fun displayDeleteDialog(page: Page) {
-        val dialog = BasicFragmentDialog()
-        dialog.initialize(
-                page.id.toString(),
-                getString(R.string.delete_page),
-                getString(R.string.page_delete_dialog_message, page.title),
-                getString(R.string.delete),
-                getString(R.string.cancel)
-        )
-        dialog.show(requireFragmentManager(), page.id.toString())
-=======
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         viewModel.onPositiveClickedForBasicDialog(instanceTag)
     }
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         viewModel.onNegativeClickedForBasicDialog(instanceTag)
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
     }
 
     override fun onStart() {

@@ -13,11 +13,7 @@ import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-<<<<<<< HEAD
-=======
 import androidx.core.content.ContextCompat
-import androidx.core.widget.CompoundButtonCompat
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
@@ -26,10 +22,7 @@ import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.ui.reader.utils.ReaderUtils
-<<<<<<< HEAD
-=======
 import org.wordpress.android.ui.utils.UiHelpers
->>>>>>> ee55bc2970615d2c618c54a0dc41cc524ca9e28c
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
