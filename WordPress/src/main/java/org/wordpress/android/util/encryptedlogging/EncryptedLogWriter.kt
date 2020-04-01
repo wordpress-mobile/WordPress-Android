@@ -66,7 +66,9 @@ class EncryptedLogWriter(
 
     // An internal convenience function to extract the header writing process.
     private fun writeHeader(key: EncryptedSecretStreamKey, header: ByteArray) {
-        check(SecretStream.Checker.headerCheck(header.size))
+        require(SecretStream.Checker.headerCheck(header.size)) {
+            "The secret stream header must be the correct length"
+        }
 
         val encodedEncryptedKey = base64Encode(key.bytes)
         check(encodedEncryptedKey.length == 108) {

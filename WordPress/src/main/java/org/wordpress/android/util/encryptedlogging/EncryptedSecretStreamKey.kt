@@ -21,7 +21,7 @@ class EncryptedSecretStreamKey(val bytes: ByteArray) {
     }
 
     init {
-        check(bytes.size == size) {
+        require(bytes.size == size) {
             "An Encrypted Secret Stream Key must be exactly $size bytes"
         }
     }
@@ -36,11 +36,11 @@ class EncryptedSecretStreamKey(val bytes: ByteArray) {
         val publicKeyBytes = keyPair.publicKey.asBytes
         val secretKeyBytes = keyPair.secretKey.asBytes
 
-        check(Box.Checker.checkPublicKey(publicKeyBytes.size)) {
+        require(Box.Checker.checkPublicKey(publicKeyBytes.size)) {
             "The public key size is incorrect (should be ${Box.PUBLICKEYBYTES} bytes)"
         }
 
-        check(Box.Checker.checkSecretKey(secretKeyBytes.size)) {
+        require(Box.Checker.checkSecretKey(secretKeyBytes.size)) {
             "The secret key size is incorrect (should be ${Box.SECRETKEYBYTES} bytes)"
         }
 

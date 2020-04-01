@@ -23,7 +23,7 @@ class SecretStreamKey(val bytes: ByteArray) {
     }
 
     init {
-        check(bytes.size == SecretStream.KEYBYTES) {
+        require(bytes.size == SecretStream.KEYBYTES) {
             "A Secret Stream Key must be exactly ${SecretStream.KEYBYTES} bytes"
         }
     }
@@ -33,7 +33,7 @@ class SecretStreamKey(val bytes: ByteArray) {
     fun encrypt(publicKey: Key): EncryptedSecretStreamKey {
         val sodium = EncryptionUtils.sodium
 
-        check(Box.Checker.checkPublicKey(publicKey.asBytes.size)) {
+        require(Box.Checker.checkPublicKey(publicKey.asBytes.size)) {
             "The public key must be the right length"
         }
 

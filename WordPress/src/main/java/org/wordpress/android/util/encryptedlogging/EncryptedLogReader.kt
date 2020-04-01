@@ -47,7 +47,7 @@ class EncryptedLogReader(file: File, keyPair: KeyPair) {
     init {
         val json = JSONObject(file.readText())
 
-        check(json.getString(JSON_KEYED_WITH_KEY) == "v1") {
+        require(json.getString(JSON_KEYED_WITH_KEY) == "v1") {
             "This class can only parse files keyedWith the v1 implementation"
         }
 
