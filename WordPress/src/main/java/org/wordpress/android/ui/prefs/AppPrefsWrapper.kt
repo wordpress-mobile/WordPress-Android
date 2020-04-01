@@ -107,7 +107,7 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.setStatsWidgetHasData(hasData, appWidgetId)
     }
 
-    fun getSelectedSite(): Int? = AppPrefs.getSelectedSite()
+    fun getSelectedSite(): Int = AppPrefs.getSelectedSite()
 
     fun removeAppWidgetHasData(appWidgetId: Int) = AppPrefs.removeStatsWidgetHasData(appWidgetId)
 
