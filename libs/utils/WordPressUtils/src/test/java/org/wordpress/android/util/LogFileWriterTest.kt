@@ -18,7 +18,7 @@ import org.wordpress.android.util.helpers.logfile.LogFileWriter
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
 class LogFileWriterTest {
-    lateinit var testProvider: LogFileProvider
+    private lateinit var testProvider: LogFileProvider
 
     @Before
     fun setup() {
