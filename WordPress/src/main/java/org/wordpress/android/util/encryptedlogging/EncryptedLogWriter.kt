@@ -44,12 +44,14 @@ class EncryptedLogWriter(
     /**
      * Add the closing file tag, and ensure that all buffers are flushed to disk.
      */
-    fun close() {
+    fun close(): EncryptedLog {
         val encryptedClosingTag = encryptMessage("", SecretStream.TAG_FINAL)
         fileWriter.write("\t\t\"$encryptedClosingTag\"\n")
         fileWriter.write("\t]\n")
         fileWriter.write("}")
         fileWriter.flush()
+
+        return EncryptedLog(uuid, file)
     }
 
     /**
