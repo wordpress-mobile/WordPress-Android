@@ -16,6 +16,8 @@ repositories {
     jcenter()
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://giphy.bintray.com/giphy-sdk" }
+    maven { url "https://www.jitpack.io" }
+    maven { url "http://dl.bintray.com/terl/lazysodium-maven" }
 }
 
 apply plugin: 'com.android.application'
@@ -294,6 +296,10 @@ dependencies {
     implementation 'io.sentry:sentry-android:1.7.16'
     implementation 'org.slf4j:slf4j-nop:1.7.25'
 
+    // Encrypted Logging
+    implementation "com.goterl.lazycode:lazysodium-android:4.1.0@aar"
+    implementation "net.java.dev.jna:jna:4.5.1@aar"
+
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.5.1'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
@@ -302,7 +308,6 @@ dependencies {
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 
-    implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:2.0.1'
     implementation "org.jsoup:jsoup:1.10.3"
 }
 
