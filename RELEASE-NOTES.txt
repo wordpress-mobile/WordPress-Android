@@ -2,6 +2,12 @@
 -----
 * Block editor: You can now crop, zoom in/out and rotate images that are already inserted in a post.
 * Fix a deeplinking issue that could lead to the app not being open after clicking on some special "wordpress://" URLs.
+* Block editor: New block: Cover
+* Block editor: Improve icon on the "Take a Video" media option
+* Block editor: Removed the dimming effect on unselected blocks
+* Block editor: Enabled edit button over image block for Android
+* Block editor: Implemented dropdown toolbar for alignment toolbar in Heading, Paragraph, Image, MediaText blocks
+* Block Editor: When editing link settings, tapping the keyboard return button now closes the settings panel as well as closing the keyboard.
 
 14.5
 -----
