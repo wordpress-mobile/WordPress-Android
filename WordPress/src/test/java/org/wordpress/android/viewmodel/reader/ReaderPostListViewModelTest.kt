@@ -445,11 +445,13 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun `when user has only one site but the selected site is not retrieved an error occurs`() {
+        val siteId = -1
         val site = SiteModel()
         val post = ReaderPost()
         val visibleSites = listOf(site) // One site
 
-        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(null) // failure
+        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(null) // failure
         whenever(siteStore.visibleSites).thenReturn(visibleSites)
 
         viewModel.onReblogButtonClicked(post)
@@ -460,11 +462,13 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun `when user has more than one sites but the selected site is not retrieved an error occurs`() {
+        val siteId = -1
         val site = SiteModel()
         val post = ReaderPost()
         val visibleSites = listOf(site, site) // More sites
 
-        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(null) // failure
+        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(null) // failure
         whenever(siteStore.visibleSites).thenReturn(visibleSites)
 
         viewModel.onReblogButtonClicked(post)
@@ -474,7 +478,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `when user selects a site and no post is selected or the state is unexpected an error is thrown`() {
+    fun `when user selects a site and the state is unexpected an error is thrown`() {
         val reblog = { viewModel.onReblogSiteSelected(1) }
         if (BuildConfig.DEBUG) {
             assertThatIllegalStateException().isThrownBy(reblog)
