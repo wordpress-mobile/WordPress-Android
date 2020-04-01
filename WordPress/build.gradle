@@ -15,7 +15,6 @@ repositories {
     google()
     jcenter()
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
-    maven { url "https://giphy.bintray.com/giphy-sdk" }
     maven { url "https://www.jitpack.io" }
     maven { url "http://dl.bintray.com/terl/lazysodium-maven" }
 }
