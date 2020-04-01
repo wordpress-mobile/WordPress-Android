@@ -18,6 +18,12 @@ import java.io.File
  */
 data class EncryptedStream(val key: SecretStreamKey, val header: ByteArray, val messages: List<ByteArray>)
 
+private const val JSON_KEYED_WITH_KEY = "keyedWith"
+private const val JSON_UUID_KEY = "uuid"
+private const val JSON_HEADER_KEY = "header"
+private const val JSON_ENCRYPTED_KEY_KEY = "encryptedKey"
+private const val JSON_MESSAGES_KEY = "messages"
+
 /**
  * EncryptedLogReader allows decrypting encrypted log files.
  *
@@ -41,14 +47,14 @@ class EncryptedLogReader(file: File, keyPair: KeyPair) {
     init {
         val json = JSONObject(file.readText())
 
-        check(json.getString("keyedWith") == "v1") {
+        check(json.getString(JSON_KEYED_WITH_KEY) == "v1") {
             "This class can only parse files keyedWith the v1 implementation"
         }
 
-        this.uuid = json.getString("uuid")
-        val header = json.getString("header").base64Decode()
-        val encryptedKey = EncryptedSecretStreamKey(json.getString("encryptedKey").base64Decode())
-        val messagesJson = json.getJSONArray("messages")
+        this.uuid = json.getString(JSON_UUID_KEY)
+        val header = json.getString(JSON_HEADER_KEY).base64Decode()
+        val encryptedKey = EncryptedSecretStreamKey(json.getString(JSON_ENCRYPTED_KEY_KEY).base64Decode())
+        val messagesJson = json.getJSONArray(JSON_MESSAGES_KEY)
 
         var messages = emptyList<ByteArray>().toMutableList()
         for (i in 0 until messagesJson.length()) {
