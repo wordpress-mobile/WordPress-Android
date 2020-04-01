@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-15 06:58:53+0000
+Translation-Revision-Date: 2020-03-11 15:23:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="stats_insights_management_activity">Aktivitet</string>
+    <string name="stats_insights_management_posts_and_pages">Inlägg och sidor</string>
+    <string name="stats_insights_management_general">Allmänt</string>
+    <string name="stats_management_screen_title">Lägg till nytt kort</string>
+    <string name="stats_management_add_new_stats_card">Lägg till nytt kort med statistik</string>
+    <string name="reader_self_hosted_select_filter">Använd filtreringsknappen för att hitta inlägg om specifika ämnen</string>
+    <string name="reader_bottom_sheet_content_description">Välj en etikett eller en webbplats, popup-fönster</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Valt</string>
+    <string name="reader_btn_select_filter_content_description">Välj en webbplats eller etikett för att filtrera inläggen</string>
+    <string name="reader_btn_remove_filter_content_description">Ta bort befintligt filter</string>
+    <string name="reader_title_subs">Hantera etiketter och webbplatser</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Logga in på WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Logga in på WordPress.com för att se de senaste inläggen från de etiketter du följer</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Logga in på WordPress.com för att se de senaste inläggen från de webbplatser du följer</string>
     <string name="gutenberg_native_template_preview">Förhandsgranska mall</string>
     <string name="gutenberg_native_replace_current_block">Ersätt aktuellt block</string>
     <string name="gutenberg_native_add_to_end">Lägg till sist</string>
@@ -357,7 +371,6 @@ Language: sv_SE
     <string name="domain_registration_contact_form_input_error">Ange en giltig %s</string>
     <string name="domains_suggestions_choose_domain">Välj domän</string>
     <string name="stats_management_new">Nytt</string>
-    <string name="stats_management_edit">Redigera</string>
     <string name="stats_management_dismiss_insights_news_card">Avfärda</string>
     <string name="stats_management_try_it_now">Prova det nu</string>
     <string name="stats_management_news_card_message">Välj vilken statistik du vill se och fokusera på de data du bryr dig mest om. Knacka på %1$s under insikterna för att anpassa visningen av din statistik.</string>
@@ -372,8 +385,6 @@ Language: sv_SE
     <string name="post_list_author_me">Jag</string>
     <string name="error_restoring_post">Ett fel inträffade när inlägget skulle återställas</string>
     <string name="backdated_for">Backdaterad: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Objekt som visas ovan kommer att vara synliga under fliken Insikter. Dra och släpp för att anpassa.</string>
-    <string name="stats_insights_add_insights_header">Lägg till Insikter</string>
     <string name="stats_insights_management_title">Visa endast den mest relevanta statistiken. Lägg till och organisera dina insikter nedan.</string>
     <string name="stats_insights_social">Socialt</string>
     <string name="stats_insights_annual_site_stats">Årlig webbplatsstatistik</string>
@@ -1950,7 +1961,6 @@ Language: sv_SE
     <string name="reader_hint_add_tag_or_url">Ange en URL eller tagg att följa</string>
     <string name="reader_page_followed_blogs">Följda webbplatser</string>
     <string name="reader_page_followed_tags">Följda taggar</string>
-    <string name="reader_title_subs">Etiketter och webbplatser</string>
     <string name="reader_title_tag_preview">Läsare-etikett</string>
     <string name="reader_title_blog_preview">Läsarwebbplats</string>
     <string name="ssl_certificate_ask_trust">Om du vanligtvis kan nå denna webbplats utan problem kan felet betyda att någon försöker efterlikna webbplatsen och du borde inte fortsätta. Vill du lita på certifikatet ändå?</string>

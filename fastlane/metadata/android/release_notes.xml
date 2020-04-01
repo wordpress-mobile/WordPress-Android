@@ -1,152 +1,100 @@
+<ar>
+14.4:
+إصلاح واحد طفيف: يهتم هذا الإصدار بمشكلة تسببت في رفع صور باستخدام عناوين URL بها خلل، الأمر الذي جعل الوصول إليها غير ممكن على موقعك على الويب.
+
+ليغسل الجميع أيديهم وليبقوا في مكان آمن.
+</ar>
 <de-DE>
-14.2:
-Zahlreiche Updates am Block-Editor:
+14.4:
+Eine kleine Korrektur: Diese Version kümmert sich um ein Problem, das dazu führte, dass Bilder mit URLs hochgeladen wurden, die nicht in Ordnung waren, wodurch die Bilder auf deiner Website nicht mehr zugänglich waren.
 
-* Icon zum längeren Drücken hinzugefügt, um Blöcke davor/dahinter einzufügen.
-* Die App versucht, Bilder anzuzeigen, wenn sie nach einer Verbindungsunterbrechung wieder online ist.
-* Problem mit leerem Editor behoben, wenn versucht wird, einen Beitrag mit Bildern oder Links aus einer anderen App zu erstellen.
-* Optionen für Bildgröße zum Galerieblock hinzugefügt.
-* Fehler behoben, der das Zusammenführen von Absatzblöcken verhinderte.
-
+Wascht eure Hände und bleibt alle gesund.
 </de-DE>
 <en-US>
-14.2:
-Lots of updates to the block editor:
+14.4:
+One small fix: this release takes care of an issue that caused images to upload with wonky URLs, which made them inaccessible on your website.
 
-* Added a long-press icon for adding blocks before/after.
-* App will try to display images when coming back online after a disconnection.
-* Resolved issue with blank editor when trying to create a post with images or links from another app.
-* Added image size options to the Gallery block.
-* Fixed a bug that prevented paragraph blocks from merging.
-
+Wash your hands and stay safe, everyone.
 </en-US>
 <es-ES>
-14.2:
-Muchas actualizaciones para el editor de bloques:
+14.4:
+Una pequeña corrección: esta versión se ocupa de un problema que hace que las imágenes se carguen con URL inestables, lo que las hace inaccesibles en tu web.
 
-* Añadido un icono de pulsación larga para añadir bloques antes/después.
-* La aplicación intentará mostrar las imágenes cuando vuelva a estar online después de una desconexión.
-* Resuelto un problema con el editor en blanco al intentar crear una entrada con imágenes o enlaces de otra aplicación.
-* Añadidas opciones de tamaño de imagen al bloque de galería.
-* Corregido un error que impedía la combinación de los bloques de párrafos.
-
+Lávate las manos y mantén a salvo a todos.
 </es-ES>
 <fr-CA>
-14.2 :
-Nombreuses mises à jour de l'éditeur de blocs :
+14.4 :
+Une petite correction : Cette version corrige un problème qui provoquait le téléversement d'images avec des URL bancales, ce qui les rendait inaccessibles sur votre site web.
 
-*Ajout d'une icône à pression longue pour ajouter des blocs avant/après.
-*L'application tentera d'afficher les images lors d'un retour en ligne après une déconnexion.
-*Résolution d'un problème d'éditeur vierge lors de la création d'un article contenant des images ou des liens provenant d'une autre application.
-*Ajout d'options de taille d'image au bloc de galerie.
-*Résolution d'un bug empêchant la fusion des blocs de paragraphe.
-
+Lavez-vous les mains et restez en sécurité, tout le monde.
 </fr-CA>
 <fr-FR>
-14.2 :
-Nombreuses mises à jour de l'éditeur de blocs :
+14.4 :
+Une petite correction : Cette version corrige un problème qui provoquait le téléversement d'images avec des URL bancales, ce qui les rendait inaccessibles sur votre site web.
 
-*Ajout d'une icône à pression longue pour ajouter des blocs avant/après.
-*L'application tentera d'afficher les images lors d'un retour en ligne après une déconnexion.
-*Résolution d'un problème d'éditeur vierge lors de la création d'un article contenant des images ou des liens provenant d'une autre application.
-*Ajout d'options de taille d'image au bloc de galerie.
-*Résolution d'un bug empêchant la fusion des blocs de paragraphe.
-
+Lavez-vous les mains et restez en sécurité, tout le monde.
 </fr-FR>
+<iw-IL>
+14.4:
+תיקון אחד קטן: בגרסה הזאת טיפלנו בבעיה שגרמה להעלאה של תמונות עם כתובות URL מוזרות ולכן, לא היה ניתן לגשת לתמונות האלה באתר שלך.
+
+רחצו ידיים ושמרו על עצמכם.
+</iw-IL>
 <id>
-14.2:
-Banyak pembaruan untuk penyunting blok:
+14.4:
+Satu perbaikan kecil: Rilis ini mengatasi masalah penyebab gambar diunggah dengan URL miring, yang membuat URL tersebut tidak dapat diakses di situs web Anda.
 
-* Menambahkan ikon tekan lama untuk menambahkan blok sebelum/sesudah.
-* Aplikasi akan mencoba menampilkan gambar saat kembali online setelah sambungan terputus.
-* Menyelesaikan masalah dengan penyunting yang kosong saat mencoba membuat pos dengan gambar atau tautan dari aplikasi lain.
-* Menambahkan pilihan ukuran gambar ke blok Galeri.
-* Memperbaiki bug yang mencegah blok paragraf tergabung.
-
+Cuci tangan dan tetap jaga diri semuanya.
 </id>
 <it-IT>
-14.2:
-Molti aggiornamenti per l'editor a blocchi:
+14.4:
+Una piccola correzione: questo rilascio risolve un problema a causa del quale le immagini si caricavano con URL inaffidabili, rendendole inaccessibili sul sito web.
 
-*Aggiunta un'icona a pressione prolungata per aggiungere blocchi prima/dopo.
-*L'app cercherà di visualizzare le immagini quando si ritorna online dopo una disconnessione.
-*Risolto un problema con l'editor vuoto quando si provava a creare un articolo con immagini o link da un'altra app.
-*Aggiunte le opzioni delle dimensioni dell'immagine dal blocco Galleria.
-*Risolto un bug che impediva l'unione dei blocchi Paragrafo.
-
+Lavatevi le mani e state tutti al sicuro.
 </it-IT>
+<ja-JP>
+14.4:
+軽微な修正 :今回のリリースでは、誤った URL で画像がアップロードされ、サイト上でクセスできなくなる問題に対処しています。
+
+手を洗い、身の安全を守りましょう。
+</ja-JP>
 <nl-NL>
-14.2:
-Veel updates voor de blok-editor:
+14.4:
+Eén kleine fix: in deze release is een probleem opgelost dat ervoor zorgde dat afbeeldingen werden geüpload met vreemde URL's, waardoor ze niet toegankelijk waren op je website.
 
-* Pictogram voor iets langer indrukken toegevoegd om vooraf/achteraf blokken toe te voegen.
-* App probeert afbeeldingen weer te geven als je weer online bent nadat de internetverbinding verbroken is geweest.
-* Probleem opgelost met lege editor die een bericht probeert te maken met afbeeldingen of links van een andere app.
-* Beeldformaatopties toegevoegd aan het galerieblok.
-* Probleem opgelost waarbij werd voorkomen dat paragraafblokken werden samengevoegd.
-
+Was je handen en denk aan je veiligheid, allemaal.
 </nl-NL>
 <pt-BR>
-14.2:
-Várias melhorias no editor de blocos:
+14.4:
+Uma pequena correção: essa versão corrige um problema que fazia com que imagens fossem enviadas com URLs estranhas, o que as tornava inacessíveis no site.
 
-* Adicionado um ícone de toque longo para adição de blocos antes e depois.
-* O aplicativo tentará exibir imagens quando ficar online depois de ser desconectado.
-* Solução do problema que mostrava o editor vazio ao tentar criar um post com imagens ou links de outro aplicativo.
-* Agora há opções de tamanho de imagem no bloco de galeria.
-* Solução de um erro que impedia a junção de blocos de paragrafo.
+Lave as mãos e mantenha-se em segurança.
 </pt-BR>
 <ru-RU>
-14.2:
-Уйма обновлений редактора блоков:
-
-* Добавлен значок при длительном нажатии для добавления блоков перед или после.
-* Приложение будет повторно пытаться загрузить изображения после сбоев сетевого подключения.
-* Исправлена проблема с пустым редактором при создании записи с изображеними или ссылками в другом приложении.
-* В блок галереи добавлены варианты размеров изображений.
-* Исправлена ошибка при объединении блоков параграфов.
-
+14.4:
+Небольшое исправление: этот выпуск исправляет проблему с загрузкой изображений и неправильными URL, которые делали изображения недоступными на сайте.
 </ru-RU>
 <sv-SE>
-14.2:
-Många uppdateringar av blockredigeraren:
+14.4:
+En liten rättelse: denna utgåva korrigerar en problem som gjorde att bilder laddades upp med konstiga URL:er, något som sedan gjorde att de inte kunde nås på din webbplats.
 
-* Ny ikon vid långt tryck för att lägga till block före/efter.
-* Appen försöker att visa bilder när förbindelsen återkommer efter ett avbrott.
-* Löst problem med tom redigerare vid försök att skapa ett inlägg med bilder eller länkar från annan app.
-* Lagt till alternativ för bildstorlekar i galleriblocket.
-* Rättat ett fel som inte lät styckeblock kombineras.
-
+Tvätta händerna ofta och var försiktiga.
 </sv-SE>
 <tr-TR>
-14.2:
-Blok düzenleyicide birçok güncelleme:
+14.4:
+Ufak bir düzeltme: bu dağıtım görsellerin garip adreslerle yüklenmesine ve web sitenizde görüntülenmemesine sebep olan bir problemi düzeltiyor.
 
-* Önce / sonra blok eklemek için uzun basın simgesi eklendi.
-* Uygulama, bağlantı kesildikten sonra tekrar çevrimiçi olduğunda görüntüleri göstermeye çalışacaktır.
-* Başka bir uygulamadan resimler veya bağlantılar içeren bir yazı oluşturmaya çalışırken boş düzenleyici ile ilgili sorun çözüldü.
-* Galeri bloğuna görüntü boyutu seçenekleri eklendi.
-* Paragraf bloklarının birleştirilmesini engelleyen bir hata düzeltildi.
+Ellerinizi yıkayın ve güvende kalın.
 </tr-TR>
 <zh-CN>
-14.2：
-对区块编辑器进行了许多更新：
+14.4：
+修复了一个小问题：此版本解决了导致图像通过不可靠 URL 上传，使其在您的网站上无法访问的问题。
 
-* 添加了用于在之前/之后添加区块的长按图标。
-* 断开连接然后重新连接后，应用程序会尝试显示图片。
-* 解决了尝试创建包含图片或其他应用程序链接的文章时出现的空白编辑器问题。
-* 在图库区块中添加了图片大小选项。
-* 修复了阻止段落块合并的错误。
-
+请大家勤洗手，注意安全。
 </zh-CN>
 <zh-TW>
-14.2：
-許多區塊編輯器更新︰
+14.4：
+一個細部修正：此版本解決了以不良網址上傳圖片的問題，此問題可能會導致使用者無法存取網站圖片。
 
-* 新增在之前/之後新增區塊的長按圖示。
-* 應用程式會嘗試在中斷連線又重新上線時顯示圖片。
-* 解決嘗試使用其他應用程式建立包含圖片或連結的文章時的空白編輯器問題。
-* 為「圖庫」區塊新增圖片大小選項。
-* 修正導致段落區塊無法合併的錯誤。
-
+請各位勤加洗手，注意安全。
 </zh-TW>

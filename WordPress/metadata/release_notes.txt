@@ -1,5 +1,4 @@
-- Block editor additions: Added Button and Group blocks, and support for more options in Image and Gallery block settings.
-- Block editor enhancements: Added scroll support inside block picker and block settings, and introduced a floating toolbar to make navigating blocks easier.
-- Block editor fixes: Fixed issues around placeholder images during image upload, emojis in post titles, and text-wrapping in Shortcode blocks.
-- Reader: Added tab filtering for better sites/tag navigation.
-
+Block editor: Added Latest Posts block, fixed crash caused by pasting HTML content with embedded images
+Page Templates: Added a block-based templates for quicker page creation.
+Site Creation: removed a few steps for faster setup — select the kind of site, enter the domain name, done.
+Bug fix: fixed an issue causing failed post uploads to be retried indefinitely.

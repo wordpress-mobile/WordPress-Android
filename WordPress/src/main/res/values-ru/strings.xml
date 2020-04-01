@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-14 23:15:01+0000
+Translation-Revision-Date: 2020-03-11 15:04:22+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="stats_insights_management_activity">Активность</string>
+    <string name="stats_insights_management_posts_and_pages">Записи и страницы</string>
+    <string name="stats_insights_management_general">Общее</string>
+    <string name="stats_management_screen_title">Добавить новую карточку</string>
+    <string name="stats_management_add_new_stats_card">Добавить новую карточку статистики</string>
+    <string name="reader_self_hosted_select_filter">Используйте кнопку фильтра для поиска записей по интересующим темам</string>
+    <string name="reader_bottom_sheet_content_description">Выберите метку или сайт, всплывающее окно</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Выбрано</string>
+    <string name="reader_btn_select_filter_content_description">Выберите сайт или метку для фильтрации записей</string>
+    <string name="reader_btn_remove_filter_content_description">Убрать текущий фильтр</string>
+    <string name="reader_title_subs">Управление метками и сайтами</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Войти на WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Войдите на WordPress.com, чтобы увидеть последние записи по меткам, на которые вы подписаны</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Войдите на WordPress.com, чтобы увидеть последние записи с сайтов, на которые вы подписаны</string>
     <string name="gutenberg_native_template_preview">Предварительный просмотр шаблона</string>
     <string name="gutenberg_native_replace_current_block">Заменить текущий блок</string>
     <string name="gutenberg_native_add_to_end">Добавить в конце</string>
@@ -357,7 +371,6 @@ Language: ru
     <string name="domain_registration_contact_form_input_error">Введите правильный %s</string>
     <string name="domains_suggestions_choose_domain">Выберите домен</string>
     <string name="stats_management_new">Новый</string>
-    <string name="stats_management_edit">Редактировать</string>
     <string name="stats_management_dismiss_insights_news_card">Закрыть</string>
     <string name="stats_management_try_it_now">Попробуйте прямо сейчас!</string>
     <string name="stats_management_news_card_message">Выберите статистику для просмотра, акцентируйте те данные, которые вам наиболее интересны. Нажмите %1$s внизу статистики для её настройки.</string>
@@ -372,8 +385,6 @@ Language: ru
     <string name="post_list_author_me">Моё</string>
     <string name="error_restoring_post">Возникла ошибка при восстановлении записи</string>
     <string name="backdated_for">Датировано задним числом для: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Элементы выше будут показаны на вкладке статистики. Тащите и отпустите для настройки.</string>
-    <string name="stats_insights_add_insights_header">Добавить данные</string>
     <string name="stats_insights_management_title">Смотрите только нужную статистику, добавьте и отсортируйте данные ниже.</string>
     <string name="stats_insights_social">Социальные</string>
     <string name="stats_insights_annual_site_stats">Данные по сайту за год</string>
@@ -1950,7 +1961,6 @@ Language: ru
     <string name="reader_hint_add_tag_or_url">Введите URL или метку для подписки</string>
     <string name="reader_page_followed_blogs">Отслеживаемые сайты</string>
     <string name="reader_page_followed_tags">Отслеживаемые метки</string>
-    <string name="reader_title_subs">Метки и сайты</string>
     <string name="reader_title_tag_preview">Метка из Чтива</string>
     <string name="reader_title_blog_preview">Сайт из Чтива</string>
     <string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто-то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>

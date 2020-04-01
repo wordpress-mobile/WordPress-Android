@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -42,6 +43,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.yalantis.ucrop.UCrop;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,6 +55,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.AztecEditorFragment;
+import org.wordpress.android.editor.EditorEditMediaListener;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
@@ -132,6 +135,7 @@ import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -146,6 +150,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -157,6 +162,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -188,6 +194,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
@@ -198,6 +205,7 @@ public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
         EditorImagePreviewListener,
+        EditorEditMediaListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
         OnRequestPermissionsResultCallback,
@@ -322,6 +330,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject EditorActionsProvider mEditorActionsProvider;
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
 
     private StorePostViewModel mViewModel;
 
@@ -1648,6 +1657,32 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaPreviewActivity.showPreview(this, null, mediaUrl);
     }
 
+    @Override public void onMediaEditorRequested(String mediaUrl) {
+        String imageUrl = UrlUtils.removeQuery(StringUtils.notNullStr(mediaUrl));
+
+        // We're using a separate cache in WPAndroid and RN's Gutenberg editor so we need to reload the image
+        // in the preview screen using WPAndroid's image loader. We create a resized url using Photon service and
+        // device's max width to display a smaller image that can load faster and act as a placeholder.
+        int displayWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getBaseContext()),
+                DisplayUtils.getDisplayPixelHeight(getBaseContext()));
+
+        int margin = getResources().getDimensionPixelSize(R.dimen.preview_image_view_margin);
+        int maxWidth = displayWidth - (margin * 2);
+
+        int reducedSizeWidth = (int) (maxWidth * PREVIEW_IMAGE_REDUCED_SIZE_FACTOR);
+        String resizedImageUrl = mReaderUtilsWrapper.getResizedImageUrl(
+            mediaUrl,
+            reducedSizeWidth,
+            0,
+            !SiteUtils.isPhotonCapable(mSite)
+        );
+
+        String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
+
+        AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN);
+        ActivityLauncher.openImageEditor(this, resizedImageUrl, imageUrl, outputFileExtension);
+    }
+
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
@@ -2234,6 +2269,18 @@ public class EditPostActivity extends AppCompatActivity implements
                                 getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
                     }
                     break;
+                case RequestCodes.IMAGE_EDITOR_EDIT_IMAGE:
+                    if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
+                        Uri imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
+                        if (imageUri != null) {
+                            Map<String, String> properties = new HashMap<>();
+                            properties.put("actions", "crop");
+                            AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, properties);
+
+                            mEditorMedia.addNewMediaToEditorAsync(imageUri, true);
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -2669,6 +2716,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocksList) {
+        // Note that this method is also used to track startup performance
+        // It assumes this is being called when the editor has finished loading
+        // If you need to refactor this, please ensure that the startup_time_ms property
+        // is still reflecting the actual startup time of the editor
         mPostEditorAnalyticsSession.start(unsupportedBlocksList);
     }
 
