@@ -23,10 +23,10 @@ class EncryptedLogWriter(
 ) {
     private val fileWriter: FileWriter = FileWriter(file)
     private val sodium = EncryptionUtils.sodium
-    private var state = SecretStream.State.ByReference()
+    private val state = SecretStream.State.ByReference()
 
     init {
-        var header = ByteArray(SecretStream.HEADERBYTES)
+        val header = ByteArray(SecretStream.HEADERBYTES)
         val key = SecretStreamKey.generate()
         check(sodium.cryptoSecretStreamInitPush(state, header, key.bytes))
         writeHeader(key.encrypt(publicKey), header)

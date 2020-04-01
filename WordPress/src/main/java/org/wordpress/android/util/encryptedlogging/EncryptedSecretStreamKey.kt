@@ -17,7 +17,7 @@ class EncryptedSecretStreamKey(val bytes: ByteArray) {
         /**
          * The expected size (in bytes) of an Encrypted Secret Stream Key.
          */
-        var size: Int = SecretStream.KEYBYTES + Box.SEALBYTES
+        val size: Int = SecretStream.KEYBYTES + Box.SEALBYTES
     }
 
     init {
@@ -44,7 +44,7 @@ class EncryptedSecretStreamKey(val bytes: ByteArray) {
             "The secret key size is incorrect (should be ${Box.SECRETKEYBYTES} bytes)"
         }
 
-        var decryptedBytes = ByteArray(SecretStream.KEYBYTES) // Stores the decrypted bytes
+        val decryptedBytes = ByteArray(SecretStream.KEYBYTES) // Stores the decrypted bytes
         check(sodium.cryptoBoxSealOpen(decryptedBytes, bytes, bytes.size.toLong(), publicKeyBytes, secretKeyBytes)) {
             "The message key couldn't be decrypted – it's likely the wrong key pair is being used for decryption"
         }

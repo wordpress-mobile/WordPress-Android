@@ -28,7 +28,7 @@ class SecretStreamKey(val bytes: ByteArray) {
         }
     }
 
-    var size: Long = bytes.size.toLong()
+    val size: Long = bytes.size.toLong()
 
     fun encrypt(publicKey: Key): EncryptedSecretStreamKey {
         val sodium = EncryptionUtils.sodium
@@ -37,7 +37,7 @@ class SecretStreamKey(val bytes: ByteArray) {
             "The public key must be the right length"
         }
 
-        var encryptedBytes = ByteArray(EncryptedSecretStreamKey.size) // Stores the encrypted bytes
+        val encryptedBytes = ByteArray(EncryptedSecretStreamKey.size) // Stores the encrypted bytes
         check(sodium.cryptoBoxSeal(encryptedBytes, bytes, size, publicKey.asBytes)) {
             "Encrypting the message key must not fail"
         }

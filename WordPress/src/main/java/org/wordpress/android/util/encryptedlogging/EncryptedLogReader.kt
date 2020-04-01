@@ -56,10 +56,7 @@ class EncryptedLogReader(file: File, keyPair: KeyPair) {
         val encryptedKey = EncryptedSecretStreamKey(json.getString(JSON_ENCRYPTED_KEY_KEY).base64Decode())
         val messagesJson = json.getJSONArray(JSON_MESSAGES_KEY)
 
-        var messages = emptyList<ByteArray>().toMutableList()
-        for (i in 0 until messagesJson.length()) {
-            messages.add(messagesJson.getString(i).base64Decode())
-        }
+        val messages = (0 until messagesJson.length()).map { messagesJson.getString(it).base64Decode() }
 
         this.encryptedStream = EncryptedStream(encryptedKey.decrypt(keyPair), header, messages)
         check(sodium.cryptoSecretStreamInitPull(state, encryptedStream.header, encryptedStream.key.bytes))
@@ -72,7 +69,7 @@ class EncryptedLogReader(file: File, keyPair: KeyPair) {
         return encryptedStream.messages.fold("") { accumulated: String, cipherBytes: ByteArray -> String
             val plainBytes = ByteArray(cipherBytes.size - SecretStream.ABYTES)
 
-            var tag = ByteArray(1) // Stores the extracted tag. This implementation doesn't do anything with it.
+            val tag = ByteArray(1) // Stores the extracted tag. This implementation doesn't do anything with it.
             check(sodium.cryptoSecretStreamPull(state, plainBytes, tag, cipherBytes, cipherBytes.size.toLong()))
 
             accumulated + String(plainBytes)
