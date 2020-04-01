@@ -5,6 +5,8 @@ import java.io.File
 import java.io.FileWriter
 import java.util.Date
 import org.wordpress.android.util.DateTimeUtils
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 /**
  * A class that manages writing to a log file.
@@ -20,6 +22,11 @@ class LogFileWriter @JvmOverloads constructor(
     private val fileWriter: FileWriter = FileWriter(file)
 
     /**
+     * An serial executor used to write to the file in a background thread
+     */
+    val queue: ExecutorService = Executors.newSingleThreadExecutor()
+
+    /**
      * A reference to the underlying {@link Java.IO.File} file.
      * Should only be used for testing.
      */
@@ -30,7 +37,9 @@ class LogFileWriter @JvmOverloads constructor(
      * Writes the provided string to the log file synchronously
      */
     fun write(data: String) {
-        fileWriter.write(data)
-        fileWriter.flush()
+        queue.execute {
+            fileWriter.write(data)
+            fileWriter.flush()
+        }
     }
 }
