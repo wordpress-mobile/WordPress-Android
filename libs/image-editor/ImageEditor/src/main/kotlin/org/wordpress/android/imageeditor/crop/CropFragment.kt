@@ -46,7 +46,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_crop_image, container, false)
+    ): View? = inflater.inflate(R.layout.crop_image_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
