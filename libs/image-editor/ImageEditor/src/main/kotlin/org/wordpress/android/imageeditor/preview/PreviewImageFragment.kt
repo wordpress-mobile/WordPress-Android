@@ -10,7 +10,6 @@ import android.widget.ImageView.ScaleType.CENTER
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.layout_retry.*
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
@@ -19,6 +18,7 @@ import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ThumbnailsUiState.ThumbnailsContentUiState
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
@@ -47,12 +47,25 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun initializeViews(nonNullIntent: Intent) {
+        initErrorView(nonNullIntent)
+        initThumbnailsView()
+    }
+
+    private fun initErrorView(nonNullIntent: Intent) {
         errorLayout.setOnClickListener {
             val lowResImageUrl = nonNullIntent.getStringExtra(ARG_LOW_RES_IMAGE_URL)
             val highResImageUrl = nonNullIntent.getStringExtra(ARG_HIGH_RES_IMAGE_URL)
 
             viewModel.onLoadIntoImageViewRetry(lowResImageUrl, highResImageUrl)
         }
+    }
+
+    private fun initThumbnailsView() {
+        val thumbnailsAdapter = PreviewImageThumbnailAdapter(onItemClickListener = { position ->
+//                viewModel.onThumbnailClick(position)
+            }
+        )
+        thumbnailsRecyclerView.adapter = thumbnailsAdapter
     }
 
     private fun initializeViewModels(nonNullIntent: Intent) {
@@ -74,7 +87,13 @@ class PreviewImageFragment : Fragment() {
             UiHelpers.updateVisibility(errorLayout, uiState.retryLayoutVisible)
         })
 
-        viewModel.loadIntoFile.observe(this, Observer { fileState ->
+        viewModel.thumbnailsUiState.observe(this, Observer { state ->
+            if (state is ThumbnailsContentUiState) {
+                (thumbnailsRecyclerView.adapter as PreviewImageThumbnailAdapter).submitList(state.items)
+            }
+        })
+
+        viewModel.loadIntoFileState.observe(this, Observer { fileState ->
             if (fileState is ImageStartLoadingToFileState) {
                 loadIntoFile(fileState.imageUrl)
             }
@@ -119,10 +138,11 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun navigateToCropScreenWithInputFilePath(fileInfo: Pair<String, String?>) {
-        val inputFilePath = fileInfo.first
-        val outputFileExtension = fileInfo.second
-        findNavController().navigate(
-            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
-        )
+        // TODO: temporarily stop navigation to next screen
+//        val inputFilePath = fileInfo.first
+//        val outputFileExtension = fileInfo.second
+//        findNavController().navigate(
+//            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
+//        )
     }
 }

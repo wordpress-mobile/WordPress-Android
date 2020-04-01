@@ -3,6 +3,7 @@
 
     <!-- preview screen -->
     <dimen name="preview_image_view_margin">16dp</dimen>
+    <dimen name="preview_image_thumbnails_recycler_view_margin">16dp</dimen>
     <dimen name="preview_image_thumbnail_size">65dp</dimen>
     <dimen name="preview_image_thumbnail_margin">2dp</dimen>
     <dimen name="border_thickness">4dp</dimen>

@@ -12,22 +12,63 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ThumbnailsUiState.ThumbnailsContentUiState
 
 class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<ImageUiState> = MutableLiveData()
     val uiState: LiveData<ImageUiState> = _uiState
 
-    private val _loadIntoFile = MutableLiveData<ImageLoadToFileState>(ImageLoadToFileIdleState)
-    val loadIntoFile: LiveData<ImageLoadToFileState> = _loadIntoFile
+    private val _thumbnailsUiState = MutableLiveData<ThumbnailsUiState>()
+    val thumbnailsUiState: LiveData<ThumbnailsUiState> = _thumbnailsUiState
+
+    private val _loadIntoFileState = MutableLiveData<ImageLoadToFileState>(ImageLoadToFileIdleState)
+    val loadIntoFileState: LiveData<ImageLoadToFileState> = _loadIntoFileState
 
     private val _navigateToCropScreenWithFileInfo = MutableLiveData<Pair<String, String?>>()
     val navigateToCropScreenWithFileInfo: LiveData<Pair<String, String?>> = _navigateToCropScreenWithFileInfo
 
     private var outputFileExtension: String? = null
+    private var isStarted = false
 
     fun onCreateView(loResImageUrl: String, hiResImageUrl: String, outputFileExtension: String?) {
-        this.outputFileExtension = outputFileExtension
         updateUiState(createImageDataStartLoadingUiState(loResImageUrl, hiResImageUrl))
+
+        if (isStarted) {
+            return
+        }
+
+        this.outputFileExtension = outputFileExtension
+
+        // TODO: Dummy data
+        val imageDataList = mutableListOf(
+            ImageData(
+                lowResImageUrl = "https://testtravel123com.files.wordpress.com/2020/02/pexels-photo-1363876.jpg?w=268",
+                highResImageUrl = "https://testtravel123com.files.wordpress.com/2020/02/pexels-photo-1363876.jpg"
+            ),
+            ImageData(
+                lowResImageUrl = "https://testtravel123com.files.wordpress.com/2020/01/img_0001.jpg?w=268",
+                highResImageUrl = "https://testtravel123com.files.wordpress.com/2020/01/img_0001.jpg"
+            ),
+            ImageData(
+                lowResImageUrl = "https://testtravel123com.files.wordpress.com/2019/11/store-2209526_1920.jpg?w=268",
+                highResImageUrl = "https://testtravel123com.files.wordpress.com/2019/11/store-2209526_1920.jpg"
+            ),
+            ImageData(
+                lowResImageUrl = "https://testtravel123com.files.wordpress.com/2019/11/bangkok-3481970_1920.jpg?w=268",
+                highResImageUrl = "https://testtravel123com.files.wordpress.com/2019/11/bangkok-3481970_1920.jpg"
+            ),
+            ImageData(
+                lowResImageUrl = "https://testtravel123com.files.wordpress.com/2019/11/shop-2607121_1920.jpg?w=268",
+                highResImageUrl = "https://testtravel123com.files.wordpress.com/2019/11/shop-2607121_1920.jpg"
+            ),
+            ImageData(
+                lowResImageUrl = "https://testtravel123com.files.wordpress.com/2019/11/books-1163695_1920.jpg?w=268",
+                highResImageUrl = "https://testtravel123com.files.wordpress.com/2019/11/books-1163695_1920.jpg"
+            )
+        )
+
+        updateThumbnailsUiState(createThumbnailsContentUiState(imageDataList))
+        isStarted = true
     }
 
     fun onLoadIntoImageViewSuccess(currentUrl: String, imageData: ImageData) {
@@ -45,7 +86,7 @@ class PreviewImageViewModel : ViewModel() {
         }
 
         val highResImageJustLoadedIntoView = newState != currentState && newState == ImageInHighResLoadSuccessUiState
-        val imageNotLoadedIntoFile = loadIntoFile.value !is ImageLoadToFileSuccessState
+        val imageNotLoadedIntoFile = loadIntoFileState.value !is ImageLoadToFileSuccessState
         if (highResImageJustLoadedIntoView && imageNotLoadedIntoFile) {
             updateLoadIntoFileState(ImageStartLoadingToFileState(currentUrl))
         }
@@ -83,6 +124,15 @@ class PreviewImageViewModel : ViewModel() {
         updateUiState(createImageDataStartLoadingUiState(loResImageUrl, hiResImageUrl))
     }
 
+    /*fun onThumbnailClick(position: Int) {
+        val thumbnailsContentUiState = (thumbnailsUiState.value as? ThumbnailsContentUiState)
+        val imageDataList = thumbnailsContentUiState?.items?.toMutableList() ?: mutableListOf()
+        imageDataList.forEachIndexed { index, image ->
+            imageDataList[index] = image.copy(isSelected = index == position)
+        }
+        updateThumbnailsUiState(createThumbnailsContentUiState(imageDataList))
+    }*/
+
     private fun createImageDataStartLoadingUiState(
         loResImageUrl: String,
         hiResImageUrl: String
@@ -90,15 +140,27 @@ class PreviewImageViewModel : ViewModel() {
         ImageData(loResImageUrl, hiResImageUrl)
     )
 
+    private fun createThumbnailsContentUiState(
+        imageDataList: MutableList<ImageData>
+    ): ThumbnailsContentUiState = ThumbnailsContentUiState(imageDataList)
+
     private fun updateUiState(uiState: ImageUiState) {
         _uiState.value = uiState
     }
 
-    private fun updateLoadIntoFileState(fileState: ImageLoadToFileState) {
-        _loadIntoFile.value = fileState
+    private fun updateThumbnailsUiState(thumbnailsUiState: ThumbnailsUiState) {
+        _thumbnailsUiState.value = thumbnailsUiState
     }
 
-    data class ImageData(val lowResImageUrl: String, val highResImageUrl: String)
+    private fun updateLoadIntoFileState(fileState: ImageLoadToFileState) {
+        _loadIntoFileState.value = fileState
+    }
+
+    data class ImageData(
+        val lowResImageUrl: String,
+        val highResImageUrl: String,
+        var isSelected: Boolean = false
+    )
 
     sealed class ImageUiState(
         val progressBarVisible: Boolean = false,
@@ -126,6 +188,10 @@ class PreviewImageViewModel : ViewModel() {
             progressBarVisible = false,
             retryLayoutVisible = true
         )
+    }
+
+    sealed class ThumbnailsUiState {
+        data class ThumbnailsContentUiState(val items: List<ImageData>) : ThumbnailsUiState()
     }
 
     sealed class ImageLoadToFileState {

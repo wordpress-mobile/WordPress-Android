@@ -16,6 +16,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ThumbnailsUiState.ThumbnailsContentUiState
 
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
@@ -38,9 +39,15 @@ class PreviewImageViewModelTest {
     }
 
     @Test
-    fun `data loading started on view create`() {
+    fun `image loading started on view create`() {
         initViewModel()
         assertThat(viewModel.uiState.value).isInstanceOf(ImageDataStartLoadingUiState::class.java)
+    }
+
+    @Test
+    fun `thumbnails ui content load triggered on view create`() {
+        initViewModel()
+        assertThat(viewModel.thumbnailsUiState.value).isInstanceOf(ThumbnailsContentUiState::class.java)
     }
 
     @Test
@@ -117,7 +124,7 @@ class PreviewImageViewModelTest {
     fun `high res image file loading started when high res image shown`() {
         initViewModel()
         viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, imageData)
-        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
+        assertThat(viewModel.loadIntoFileState.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
     }
 
     @Test
@@ -125,7 +132,7 @@ class PreviewImageViewModelTest {
         initViewModel()
         viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, imageData)
         viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL, imageData)
-        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
+        assertThat(viewModel.loadIntoFileState.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
     }
 
     @Test
@@ -133,7 +140,7 @@ class PreviewImageViewModelTest {
         initViewModel()
         viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL, imageData)
         viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
-        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageLoadToFileIdleState)
+        assertThat(viewModel.loadIntoFileState.value).isEqualTo(ImageLoadToFileIdleState)
     }
 
     @Test
@@ -141,28 +148,28 @@ class PreviewImageViewModelTest {
         initViewModel()
         viewModel.onLoadIntoImageViewFailed(TEST_LOW_RES_IMAGE_URL)
         viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, imageData)
-        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
+        assertThat(viewModel.loadIntoFileState.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
     }
 
     @Test
     fun `load image to file success state triggered for the loaded image file on image loaded`() {
         initViewModel()
         viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
-        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageLoadToFileSuccessState(TEST_FILE_PATH))
+        assertThat(viewModel.loadIntoFileState.value).isEqualTo(ImageLoadToFileSuccessState(TEST_FILE_PATH))
     }
 
     @Test
     fun `load image to file success state triggered on image load to file success`() {
         initViewModel()
         viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
-        assertThat(viewModel.loadIntoFile.value).isInstanceOf(ImageLoadToFileSuccessState::class.java)
+        assertThat(viewModel.loadIntoFileState.value).isInstanceOf(ImageLoadToFileSuccessState::class.java)
     }
 
     @Test
     fun `load image to file failed state triggered on image load to file failure`() {
         initViewModel()
         viewModel.onLoadIntoFileFailed()
-        assertThat(viewModel.loadIntoFile.value).isInstanceOf(ImageLoadToFileFailedState::class.java)
+        assertThat(viewModel.loadIntoFileState.value).isInstanceOf(ImageLoadToFileFailedState::class.java)
     }
 
     @Test

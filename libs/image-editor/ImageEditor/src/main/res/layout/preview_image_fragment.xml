@@ -12,17 +12,34 @@
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:layout_marginLeft="@dimen/preview_image_view_margin"
-        android:layout_marginRight="@dimen/preview_image_view_margin"
+        android:layout_margin="@dimen/preview_image_view_margin"
+        android:contentDescription="@string/preview_image_description"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/thumbnailsRecyclerView"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/thumbnailsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/preview_image_thumbnails_recycler_view_margin"
+        android:layout_marginEnd="@dimen/preview_image_thumbnails_recycler_view_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:contentDescription="@string/preview_image_description"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     <include
         layout="@layout/layout_retry"
-        tools:visibility="gone"/>
+        tools:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/thumbnailsRecyclerView"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -31,6 +48,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@id/thumbnailsRecyclerView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
