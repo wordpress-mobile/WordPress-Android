@@ -48,16 +48,16 @@ class LogFileCleanerTest {
 
     @Test
     fun testThatCleanerPreservesMostRecentlyCreatedFiles() {
-        LogFileCleaner(logFileProvider, 3).clean()
+        val maxLogFileCount = Random.nextInt(MAX_FILES)
+        LogFileCleaner(logFileProvider, maxLogFileCount).clean()
 
         // Strings are easier to assert against than arrays
-        val remainingFileIds = logFileProvider.getLogFileDirectory().listFiles().joinToString(",") {
+        val remainingFileIds = logFileProvider.getLogFiles().joinToString(",") {
             FileReader(it).readText()
         }
 
-        // This assertion is based on the fact that the initial list (pre-clean) would've
-        // been "0,1,2,3,4,5,6,7,8,9". Retaining the last 3 entries gives the following:
-        assertEquals("7,8,9", remainingFileIds)
+        val expectedValue = (MAX_FILES -1 downTo 0).take(maxLogFileCount).reversed().joinToString(",")
+        assertEquals(expectedValue, remainingFileIds)
     }
 
     @Test
