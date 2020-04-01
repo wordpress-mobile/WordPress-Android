@@ -17,8 +17,10 @@ import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ThumbnailsUiState.ThumbnailsContentUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState.ImageUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState.ImageUiState.ImageDataStartLoadingUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState.ThumbnailsUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState.ThumbnailsUiState.ThumbnailsContentUiState
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
@@ -80,17 +82,8 @@ class PreviewImageFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.uiState.observe(this, Observer { uiState ->
-            if (uiState is ImageDataStartLoadingUiState) {
-                loadIntoImageView(uiState.imageData)
-            }
-            UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
-            UiHelpers.updateVisibility(errorLayout, uiState.retryLayoutVisible)
-        })
-
-        viewModel.thumbnailsUiState.observe(this, Observer { state ->
-            if (state is ThumbnailsContentUiState) {
-                (thumbnailsRecyclerView.adapter as PreviewImageThumbnailAdapter).submitList(state.items)
-            }
+            updatePreviewImageView(uiState.imageUiState)
+            updateThumbnailsView(uiState.thumbnailsUiState)
         })
 
         viewModel.loadIntoFileState.observe(this, Observer { fileState ->
@@ -102,6 +95,20 @@ class PreviewImageFragment : Fragment() {
         viewModel.navigateToCropScreenWithFileInfo.observe(this, Observer { filePath ->
             navigateToCropScreenWithInputFilePath(filePath)
         })
+    }
+
+    private fun updatePreviewImageView(uiState: ImageUiState) {
+        if (uiState is ImageDataStartLoadingUiState) {
+            loadIntoImageView(uiState.imageData)
+        }
+        UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
+        UiHelpers.updateVisibility(errorLayout, uiState.retryLayoutVisible)
+    }
+
+    private fun updateThumbnailsView(uiState: ThumbnailsUiState) {
+        if (uiState is ThumbnailsContentUiState) {
+            (thumbnailsRecyclerView.adapter as PreviewImageThumbnailAdapter).submitList(uiState.items)
+        }
     }
 
     private fun loadIntoImageView(imageData: ImageData) {
