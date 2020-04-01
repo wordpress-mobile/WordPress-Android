@@ -16,24 +16,28 @@ import org.robolectric.annotation.Config
 import org.wordpress.android.util.helpers.logfile.LogFileCleaner
 import org.wordpress.android.util.helpers.logfile.LogFileProvider
 
+/**
+ *  The number of test files to create for each test run
+ */
+private const val MAX_FILES = 10
+
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
 class LogFileCleanerTest {
-    lateinit var logFileProvider: LogFileProvider
-    private val maxFiles = 10
+    private lateinit var logFileProvider: LogFileProvider
 
     @Before
     fun setup() {
         val context: Context = ApplicationProvider.getApplicationContext()
         logFileProvider = LogFileProvider.fromContext(context)
 
-        repeat(maxFiles) {
+        repeat(MAX_FILES) {
             val file = File(logFileProvider.getLogFileDirectory(), "$it.log")
             file.writeText("$it")
-            file.setLastModified((it * 10_000L).toLong())
+            file.setLastModified(it * 10_000L)
         }
 
-        assert(logFileProvider.getLogFileDirectory().listFiles().count() == maxFiles)
+        assert(logFileProvider.getLogFileDirectory().listFiles().count() == MAX_FILES)
     }
 
     @After
@@ -46,9 +50,10 @@ class LogFileCleanerTest {
     fun testThatCleanerPreservesMostRecentlyCreatedFiles() {
         LogFileCleaner(logFileProvider, 3).clean()
 
-        val remainingFileIds = logFileProvider.getLogFileDirectory().listFiles().map {
+        // Strings are easier to assert against than arrays
+        val remainingFileIds = logFileProvider.getLogFileDirectory().listFiles().joinToString(",") {
             FileReader(it).readText()
-        }.joinToString(",") // Strings are easier to assert against than arrays
+        }
 
         // This assertion is based on the fact that the initial list (pre-clean) would've
         // been "0,1,2,3,4,5,6,7,8,9". Retaining the last 3 entries gives the following:
@@ -57,7 +62,7 @@ class LogFileCleanerTest {
 
     @Test
     fun testThatCleanerPreservesCorrectNumberOfFiles() {
-        val numberOfFiles = Random.nextInt(maxFiles)
+        val numberOfFiles = Random.nextInt(MAX_FILES)
         LogFileCleaner(logFileProvider, numberOfFiles).clean()
         assertEquals(numberOfFiles, logFileProvider.getLogFileDirectory().listFiles().count())
     }
