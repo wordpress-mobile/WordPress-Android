@@ -1056,7 +1056,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     public void onPostUploaded(OnPostUploaded event) {
         int siteLocalId = AppPrefs.getSelectedSite();
         SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
-        if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
+        if (site != null && event.post != null) {
             mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     this,
                     findViewById(R.id.coordinator),
