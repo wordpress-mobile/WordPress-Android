@@ -17,7 +17,7 @@ class EncryptedSecretStreamKey(val bytes: ByteArray) {
         /**
          * The expected size (in bytes) of an Encrypted Secret Stream Key.
          */
-        val size: Int = SecretStream.KEYBYTES + Box.SEALBYTES
+        const val size: Int = SecretStream.KEYBYTES + Box.SEALBYTES
     }
 
     init {
