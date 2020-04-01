@@ -34,7 +34,7 @@ class EncryptedLogWriter(
 
     /**
      * Encrypt and write the provided string to the encrypted log file.
-     * @param String: The string to be written to the file.
+     * @param string: The string to be written to the file.
      */
     fun write(string: String) {
         val encryptedString = encryptMessage(string, SecretStream.TAG_MESSAGE)
