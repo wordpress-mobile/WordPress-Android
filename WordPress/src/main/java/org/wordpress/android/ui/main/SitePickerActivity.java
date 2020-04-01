@@ -520,6 +520,7 @@ public class SitePickerActivity extends AppCompatActivity
 
     @Override
     public boolean onSiteLongClick(final SiteRecord siteRecord) {
+        if (mSearchOnlyMode) return false;
         final SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.getLocalId());
         if (site == null) {
             return false;
