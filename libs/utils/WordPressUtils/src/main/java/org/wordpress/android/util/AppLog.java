@@ -101,12 +101,12 @@ public class AppLog {
          LogFileProvider logFileProvider = LogFileProvider.fromContext(context);
          new LogFileCleaner(logFileProvider, maxLogCount).clean();
 
-         mLogFileWriter = new LogFileWriter(logFileProvider);
-         mLogFileWriter.write(getAppInfoHeaderText(context) + "\n");
-         mLogFileWriter.write(getDeviceInfoHeaderText(context) + "\n");
+         sLogFileWriter = new LogFileWriter(logFileProvider);
+         sLogFileWriter.write(getAppInfoHeaderText(context) + "\n");
+         sLogFileWriter.write(getDeviceInfoHeaderText(context) + "\n");
     }
 
-    private static LogFileWriter mLogFileWriter;
+    private static LogFileWriter sLogFileWriter;
 
     /**
      * Sends a VERBOSE log message
@@ -322,8 +322,8 @@ public class AppLog {
             LogEntry entry = new LogEntry(level, text, tag);
             mLogEntries.addEntry(entry);
 
-            if (mLogFileWriter != null) {
-                mLogFileWriter.write(entry.toString());
+            if (sLogFileWriter != null) {
+                sLogFileWriter.write(entry.toString());
             }
         }
     }
