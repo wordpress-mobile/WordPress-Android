@@ -6,22 +6,24 @@ import org.wordpress.android.util.PhotonUtils.Quality;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
+
 
 public class PhotonUtilsTest {
     @Test
     public void getPhotonImageUrlIsEmptyWhenUrlIsNull() {
         String photonUrl = PhotonUtils.getPhotonImageUrl(null, 0, 1);
 
-        assertEquals("", photonUrl);
+        assertThat(photonUrl, equalTo(""));
     }
 
     @Test
     public void getPhotonImageUrlIsEmptyWhenUrlIsEmpty() {
         String photonUrl = PhotonUtils.getPhotonImageUrl("", 0, 1);
 
-        assertEquals("", photonUrl);
+        assertThat(photonUrl, equalTo(""));
     }
 
     @Test
@@ -29,7 +31,7 @@ public class PhotonUtilsTest {
         String imageUrl = "wordpress.com";
         String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, 0, 1);
 
-        assertEquals(imageUrl, photonUrl);
+        assertThat(photonUrl, equalTo(imageUrl));
     }
 
     @Test
@@ -37,7 +39,7 @@ public class PhotonUtilsTest {
         String imageUrl = "http://test.wordpress.com/mshots/test.jpg?query=dummy";
         String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, 0, 1);
 
-        assertEquals("http://test.wordpress.com/mshots/test.jpg?w=0&h=1", photonUrl);
+        assertThat(photonUrl, equalTo("http://test.wordpress.com/mshots/test.jpg?w=0&h=1"));
     }
 
     @Test
@@ -51,7 +53,7 @@ public class PhotonUtilsTest {
 
         for (Quality quality : qualities.keySet()) {
             String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, 0, 1, quality);
-            assertTrue(photonUrl.contains("&quality=" + qualities.get(quality)));
+            assertThat(photonUrl, containsString("&quality=" + qualities.get(quality)));
         }
     }
 
@@ -60,7 +62,7 @@ public class PhotonUtilsTest {
         String imageUrl = "http://test.wordpress.com/test.jpg?query=dummy";
         String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, 2, 1);
 
-        assertEquals("http://test.wordpress.com/test.jpg?strip=info&quality=65&resize=2,1", photonUrl);
+        assertThat(photonUrl, equalTo("http://test.wordpress.com/test.jpg?strip=info&quality=65&resize=2,1"));
     }
 
     @Test
@@ -68,12 +70,12 @@ public class PhotonUtilsTest {
         String imageUrl = "https://i0.wp.com/test.jpg?query=dummy";
         String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, 2, 1);
 
-        assertEquals("https://i0.wp.com/test.jpg?strip=info&quality=65&resize=2,1", photonUrl);
+        assertThat(photonUrl, equalTo("https://i0.wp.com/test.jpg?strip=info&quality=65&resize=2,1"));
 
         imageUrl = "https://i0.wp.com/test.jpg?query=dummy&ssl=1";
         photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, 2, 1);
 
-        assertEquals("https://i0.wp.com/test.jpg?strip=info&quality=65&resize=2,1&ssl=1", photonUrl);
+        assertThat(photonUrl, equalTo("https://i0.wp.com/test.jpg?strip=info&quality=65&resize=2,1&ssl=1"));
     }
 
     @Test
@@ -81,12 +83,12 @@ public class PhotonUtilsTest {
         String imageUrl = "https://test.wordpress.com/test.jpg?query=dummy";
         String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, 2, 1);
 
-        assertEquals("https://test.wordpress.com/test.jpg?strip=info&quality=65&resize=2,1", photonUrl);
+        assertThat(photonUrl, equalTo("https://test.wordpress.com/test.jpg?strip=info&quality=65&resize=2,1"));
 
         imageUrl = "https://test.wordpress.com/test.jpg?query=dummy&ssl=1";
         photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, 2, 1);
 
-        assertEquals("https://test.wordpress.com/test.jpg?strip=info&quality=65&resize=2,1", photonUrl);
+        assertThat(photonUrl, equalTo("https://test.wordpress.com/test.jpg?strip=info&quality=65&resize=2,1"));
     }
 
     @Test
@@ -94,11 +96,11 @@ public class PhotonUtilsTest {
         String imageUrl = "http://mysite.com/test.jpg?query=dummy";
         String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, 2, 1);
 
-        assertEquals("https://i0.wp.com/mysite.com/test.jpg?strip=info&quality=65&resize=2,1", photonUrl);
+        assertThat(photonUrl, equalTo("https://i0.wp.com/mysite.com/test.jpg?strip=info&quality=65&resize=2,1"));
 
         imageUrl = "https://mysite.com/test.jpg?query=dummy&ssl=1";
         photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, 2, 1);
 
-        assertEquals("https://i0.wp.com/mysite.com/test.jpg?strip=info&quality=65&resize=2,1&ssl=1", photonUrl);
+        assertThat(photonUrl, equalTo("https://i0.wp.com/mysite.com/test.jpg?strip=info&quality=65&resize=2,1&ssl=1"));
     }
 }
