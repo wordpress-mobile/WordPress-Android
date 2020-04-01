@@ -56,7 +56,7 @@ class LogFileCleanerTest {
             FileReader(it).readText()
         }
 
-        val expectedValue = (MAX_FILES -1 downTo 0).take(maxLogFileCount).reversed().joinToString(",")
+        val expectedValue = (MAX_FILES - 1 downTo 0).take(maxLogFileCount).reversed().joinToString(",")
         assertEquals(expectedValue, remainingFileIds)
     }
 
