@@ -8,6 +8,7 @@
 * Block editor: Enabled edit button over image block for Android
 * Block editor: Implemented dropdown toolbar for alignment toolbar in Heading, Paragraph, Image, MediaText blocks
 * Block Editor: When editing link settings, tapping the keyboard return button now closes the settings panel as well as closing the keyboard.
+* Page List: Fixed an issue where opening a page would sometimes result in an empty editor.
 
 14.5
 -----
