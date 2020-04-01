@@ -137,7 +137,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         if (BuildConfig.DEBUG) {
             mEmailInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_EMAIL);
         }
-        mEmailInput.addTextChangedListener(this);
+        mEmailInput.post(new Runnable() {
+            @Override public void run() {
+                mEmailInput.addTextChangedListener(LoginEmailFragment.this);
+            }
+        });
+
         mEmailInput.setOnEditorCommitListener(this);
         mEmailInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -393,6 +398,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mEmailInput.setError(null);
         mIsSocialLogin = false;
+        mIsValidEmail = null;
     }
 
     private void showEmailError(int messageId) {
