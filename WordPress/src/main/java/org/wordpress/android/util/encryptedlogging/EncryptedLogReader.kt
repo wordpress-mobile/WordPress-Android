@@ -16,7 +16,7 @@ import java.io.File
  * @param header A `ByteArray` representing the stream header – it's used to initialize the decryption stream.
  * @param messages A `List<ByteArray>` of encrypted messages
  */
-data class EncryptedStream(val key: SecretStreamKey, val header: ByteArray, val messages: List<ByteArray>)
+class EncryptedStream(val key: SecretStreamKey, val header: ByteArray, val messages: List<ByteArray>)
 
 private const val JSON_KEYED_WITH_KEY = "keyedWith"
 private const val JSON_UUID_KEY = "uuid"
