@@ -52,7 +52,9 @@ class EncryptedLogWriter(
         fileWriter.flush()
     }
 
-    // An internal convenience function to push more data into the sodium secret stream.
+    /**
+     * An internal convenience function to push more data into the sodium secret stream.
+     */
     private fun encryptMessage(string: String, tag: Byte): String {
         val plainBytes = string.toByteArray()
 
@@ -64,7 +66,9 @@ class EncryptedLogWriter(
         return base64Encode(encryptedBytes)
     }
 
-    // An internal convenience function to extract the header writing process.
+    /**
+     * An internal convenience function to extract the header writing process.
+     */
     private fun writeHeader(key: EncryptedSecretStreamKey, header: ByteArray) {
         require(SecretStream.Checker.headerCheck(header.size)) {
             "The secret stream header must be the correct length"
