@@ -86,7 +86,6 @@ class EncryptedLogWriter(
         fileWriter.write("\t\"header\": \"$encodedHeader\",\n")
         fileWriter.write("\t\"uuid\": \"$uuid\",\n")
         fileWriter.write("\t\"messages\": [\n")
-        fileWriter.flush()
     }
 
     // On Android base64 has lots of options, so define a helper to make it easier to
