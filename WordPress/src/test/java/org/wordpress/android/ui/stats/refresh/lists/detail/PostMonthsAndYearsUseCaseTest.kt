@@ -16,7 +16,9 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
+import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Day
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Month
+import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Week
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Year
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -26,6 +28,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedYearUiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -206,6 +209,26 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.state).isEqualTo(ERROR)
+    }
+
+    @Test
+    fun `maps list of empty items to empty UI model`() = test {
+        val forced = false
+        whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
+                OnStatsFetched(
+                        model = PostDetailStatsModel(
+                                0,
+                                listOf(Day("1970", 0), Day("1970", 1)),
+                                listOf(Week(listOf(Day("Monday", 10)), 10, 10)),
+                                listOf(Year(2020, listOf(Month(1, 0)), 0)),
+                                listOf(Year(2020, listOf(), 10))
+                        )
+                )
+        )
+
+        val result = loadData(true, forced)
+
+        assertThat(result.state).isEqualTo(EMPTY)
     }
 
     private fun assertTitle(item: BlockListItem) {
