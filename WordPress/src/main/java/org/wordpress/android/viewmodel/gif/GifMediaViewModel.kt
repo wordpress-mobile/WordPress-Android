@@ -13,7 +13,7 @@ import androidx.lifecycle.LiveData
  */
 interface GifMediaViewModel {
     /**
-     * The id from GIF [Media]
+     * The GIF unique id
      */
     val id: String
     /**
