@@ -11,12 +11,12 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoad
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadFailedUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ThumbnailsUiState.ThumbnailsContentUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState.ImageUiState.ImageDataStartLoadingUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState.ImageUiState.ImageInHighResLoadFailedUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState.ImageUiState.ImageInHighResLoadSuccessUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState.ImageUiState.ImageInLowResLoadFailedUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState.ImageUiState.ImageInLowResLoadSuccessUiState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState.ThumbnailsUiState.ThumbnailsContentUiState
 
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
@@ -41,75 +41,81 @@ class PreviewImageViewModelTest {
     @Test
     fun `image loading started on view create`() {
         initViewModel()
-        assertThat(viewModel.uiState.value).isInstanceOf(ImageDataStartLoadingUiState::class.java)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState)
+                .isInstanceOf(ImageDataStartLoadingUiState::class.java)
     }
 
     @Test
     fun `thumbnails ui content load triggered on view create`() {
         initViewModel()
-        assertThat(viewModel.thumbnailsUiState.value).isInstanceOf(ThumbnailsContentUiState::class.java)
+        assertThat(requireNotNull(viewModel.uiState.value).thumbnailsUiState)
+                .isInstanceOf(ThumbnailsContentUiState::class.java)
     }
 
     @Test
     fun `progress bar shown on view create`() {
         initViewModel()
-        assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(true)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState.progressBarVisible).isEqualTo(true)
     }
 
     @Test
     fun `progress bar shown on low res image load success`() {
         initViewModel()
         viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL, imageData)
-        assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(true)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState.progressBarVisible).isEqualTo(true)
     }
 
     @Test
     fun `progress bar shown on low res image load failed`() {
         initViewModel()
         viewModel.onLoadIntoImageViewFailed(TEST_LOW_RES_IMAGE_URL)
-        assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(true)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState.progressBarVisible).isEqualTo(true)
     }
 
     @Test
     fun `low res image success ui shown on low res image load success`() {
         initViewModel()
         viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL, imageData)
-        assertThat(viewModel.uiState.value).isInstanceOf(ImageInLowResLoadSuccessUiState::class.java)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState)
+                .isInstanceOf(ImageInLowResLoadSuccessUiState::class.java)
     }
 
     @Test
     fun `low res image failed ui shown on low res image load failed`() {
         initViewModel()
         viewModel.onLoadIntoImageViewFailed(TEST_LOW_RES_IMAGE_URL)
-        assertThat(viewModel.uiState.value).isInstanceOf(ImageInLowResLoadFailedUiState::class.java)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState)
+                .isInstanceOf(ImageInLowResLoadFailedUiState::class.java)
     }
 
     @Test
     fun `progress bar hidden on high res image load success`() {
         initViewModel()
         viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, imageData)
-        assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(false)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState.progressBarVisible).isEqualTo(false)
     }
 
     @Test
     fun `progress bar hidden on high res image load failed`() {
         initViewModel()
         viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
-        assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(false)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState.progressBarVisible).isEqualTo(false)
     }
 
     @Test
     fun `high res image success ui shown on high res image load success`() {
         initViewModel()
         viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, imageData)
-        assertThat(viewModel.uiState.value).isInstanceOf(ImageInHighResLoadSuccessUiState::class.java)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState)
+                .isInstanceOf(ImageInHighResLoadSuccessUiState::class.java)
     }
 
     @Test
     fun `high res image failed ui shown on high res image load failed`() {
         initViewModel()
         viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
-        assertThat(viewModel.uiState.value).isInstanceOf(ImageInHighResLoadFailedUiState::class.java)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState)
+                .isInstanceOf(ImageInHighResLoadFailedUiState::class.java)
     }
 
     @Test
@@ -117,7 +123,8 @@ class PreviewImageViewModelTest {
         initViewModel()
         viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, imageData)
         viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL, imageData)
-        assertThat(viewModel.uiState.value).isInstanceOf(ImageInHighResLoadSuccessUiState::class.java)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState)
+                .isInstanceOf(ImageInHighResLoadSuccessUiState::class.java)
     }
 
     @Test
@@ -193,7 +200,7 @@ class PreviewImageViewModelTest {
     fun `retry layout shown on high res image load failed`() {
         initViewModel()
         viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
-        assertThat(requireNotNull(viewModel.uiState.value).retryLayoutVisible).isEqualTo(true)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState.retryLayoutVisible).isEqualTo(true)
     }
 
     @Test
@@ -201,7 +208,7 @@ class PreviewImageViewModelTest {
         initViewModel()
         viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL, imageData)
         viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
-        assertThat(requireNotNull(viewModel.uiState.value).retryLayoutVisible).isEqualTo(true)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState.retryLayoutVisible).isEqualTo(true)
     }
 
     @Test
@@ -209,13 +216,15 @@ class PreviewImageViewModelTest {
         initViewModel()
         viewModel.onLoadIntoImageViewFailed(TEST_LOW_RES_IMAGE_URL)
         viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, imageData)
-        assertThat(requireNotNull(viewModel.uiState.value).retryLayoutVisible).isEqualTo(false)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState.retryLayoutVisible).isEqualTo(false)
     }
 
     @Test
     fun `data loading start triggered on retry`() {
+        initViewModel()
         viewModel.onLoadIntoImageViewRetry(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL)
-        assertThat(viewModel.uiState.value).isInstanceOf(ImageDataStartLoadingUiState::class.java)
+        assertThat(requireNotNull(viewModel.uiState.value).imageUiState)
+                .isInstanceOf(ImageDataStartLoadingUiState::class.java)
     }
 
     private fun initViewModel() = viewModel.onCreateView(
