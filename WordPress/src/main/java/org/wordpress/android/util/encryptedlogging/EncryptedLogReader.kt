@@ -13,7 +13,7 @@ import java.io.File
  *  the key decryption from the stream decryption while decoding.
  *
  * @param key An unencrypted SecretStreamKey used to decrypt the remainder of the log.
- * @param header A `ByteArray` representing the stream header – it's used to initalize the decryption stream.
+ * @param header A `ByteArray` representing the stream header – it's used to initialize the decryption stream.
  * @param messages A `List<ByteArray>` of encrypted messages
  */
 data class EncryptedStream(val key: SecretStreamKey, val header: ByteArray, val messages: List<ByteArray>)
