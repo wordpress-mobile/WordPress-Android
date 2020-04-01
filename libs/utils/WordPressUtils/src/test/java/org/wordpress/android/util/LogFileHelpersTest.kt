@@ -17,7 +17,7 @@ import org.wordpress.android.util.helpers.logfile.LogFileProvider
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
 class LogFileHelpersTest {
-    lateinit var testProvider: LogFileProvider
+    private lateinit var testProvider: LogFileProvider
 
     @Before
     fun setup() {
@@ -48,15 +48,15 @@ class LogFileHelpersTest {
     fun testThatLogFilesSortsFilesWithMostRecentFirst() {
         val directory = testProvider.getLogFileDirectory()
 
-        var oldFile = File(directory, UUID.randomUUID().toString())
-        oldFile.createNewFile()
-        oldFile.setLastModified(1_000L)
-        assert(oldFile.lastModified() == 1_000L)
-
-        var newFile = File(directory, UUID.randomUUID().toString())
-        newFile.createNewFile()
-        newFile.setLastModified(1_000_000L)
-        assert(newFile.lastModified() == 1_000_000L)
+        listOf(1_000L, 1_000_000L).shuffled().forEach { modifiedDate ->
+            File(directory, UUID.randomUUID().toString()).also { file ->
+                // Use timestamps in increments of 1000 to avoid issues from the File System's date precision
+                val date = modifiedDate * 1000
+                file.createNewFile()
+                file.setLastModified(date)
+                assert(file.lastModified() == date)
+            }
+        }
 
         val files = testProvider.getLogFiles()
         assert(files.first().lastModified() < files.last().lastModified())
