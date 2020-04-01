@@ -614,11 +614,6 @@ Language: sq_AL
     <string name="stats_no_data_for_period">S’ka të dhëna për këtë periudhë</string>
     <string name="preference_strip_image_location">Hiqe vendndodhjen prej mediash</string>
     <string name="stats_cannot_be_started">S’i hapim dot statistikat tani. Ju lutemi, riprovoni më vonë</string>
-    <string name="gif_powered_by_tenor">Bazuar në Tenor</string>
-    <string name="gif_picker_endless_scroll_network_error">Dështoi ngarkimi për ca media, për shkak të një gabimi rrjeti.</string>
-    <string name="gif_picker_empty_search_list">S’ka media që përputhet me kërkimin tuaj</string>
-    <string name="gif_picker_initial_empty_text">Kërkoni për të gjetur GIF-e që t’i shtoni te Mediateka juaj!</string>
-    <string name="gif_picker_search_hint">Kërkoni në Tenor</string>
     <string name="stats_author_views_label">Parje</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autorë</string>

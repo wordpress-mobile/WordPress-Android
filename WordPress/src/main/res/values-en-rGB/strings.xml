@@ -614,11 +614,6 @@ Language: en_GB
     <string name="stats_no_data_for_period">No data for this period</string>
     <string name="preference_strip_image_location">Remove location from media</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
-    <string name="gif_powered_by_tenor">Powered by TENOR</string>
-    <string name="gif_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
-    <string name="gif_picker_empty_search_list">No media matching your search</string>
-    <string name="gif_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
-    <string name="gif_picker_search_hint">Search Tenor</string>
     <string name="stats_author_views_label">Views</string>
     <string name="stats_author_label">Author</string>
     <string name="stats_authors">Authors</string>

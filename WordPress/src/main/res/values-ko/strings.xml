@@ -553,11 +553,6 @@ Language: ko_KR
     <string name="stats_no_data_for_period">이 기간에 데이터 없음</string>
     <string name="preference_strip_image_location">미디어에서 위치 제거</string>
     <string name="stats_cannot_be_started">지금은 통계를 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
-    <string name="gif_powered_by_tenor">TENOR 제공</string>
-    <string name="gif_picker_endless_scroll_network_error">네트워크 오류로 인해 일부 미디어를 로드하지 못했습니다.</string>
-    <string name="gif_picker_empty_search_list">검색과 일치하는 미디어 없음</string>
-    <string name="gif_picker_initial_empty_text">GIF를 검색하여 미디어 라이브러리에 추가하세요!</string>
-    <string name="gif_picker_search_hint">Tenor 검색</string>
     <string name="stats_author_views_label">조회수</string>
     <string name="stats_author_label">글쓴이</string>
     <string name="stats_authors">글쓴이</string>
