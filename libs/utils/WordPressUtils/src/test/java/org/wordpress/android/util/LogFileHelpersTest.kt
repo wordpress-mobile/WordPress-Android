@@ -12,40 +12,41 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import org.wordpress.android.util.helpers.logfile.LogFileHelpers
+import org.wordpress.android.util.helpers.logfile.LogFileProvider
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
 class LogFileHelpersTest {
-    lateinit var testContext: Context
+    lateinit var testProvider: LogFileProvider
 
     @Before
     fun setup() {
-        testContext = ApplicationProvider.getApplicationContext()
+        val context: Context = ApplicationProvider.getApplicationContext()
+        testProvider = LogFileProvider.fromContext(context)
     }
 
     @After
     fun tearDown() {
         // Delete the test directory after each test
-        LogFileHelpers.logFileDirectory(testContext).deleteRecursively()
+        testProvider.getLogFileDirectory().deleteRecursively()
     }
 
     @Test
     fun testThatLogFileDirectoryIsCreatedIfNotExists() {
-        val directory = LogFileHelpers.logFileDirectory(testContext)
+        val directory = testProvider.getLogFileDirectory()
         assert(directory.exists())
     }
 
     @Test
     fun testThatLogFilesListsAllFiles() {
-        val directory = LogFileHelpers.logFileDirectory(testContext)
+        val directory = testProvider.getLogFileDirectory()
         File(directory, UUID.randomUUID().toString()).createNewFile()
-        Assert.assertEquals(LogFileHelpers.logFiles(testContext).count(), 1)
+        Assert.assertEquals(testProvider.getLogFiles().count(), 1)
     }
 
     @Test
     fun testThatLogFilesSortsFilesWithMostRecentFirst() {
-        val directory = LogFileHelpers.logFileDirectory(testContext)
+        val directory = testProvider.getLogFileDirectory()
 
         var oldFile = File(directory, UUID.randomUUID().toString())
         oldFile.createNewFile()
@@ -57,7 +58,7 @@ class LogFileHelpersTest {
         newFile.setLastModified(1_000_000L)
         assert(newFile.lastModified() == 1_000_000L)
 
-        val files = LogFileHelpers.logFiles(testContext)
+        val files = testProvider.getLogFiles()
         assert(files.first().lastModified() < files.last().lastModified())
     }
 }

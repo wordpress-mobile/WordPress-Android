@@ -14,41 +14,39 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.wordpress.android.util.helpers.logfile.LogFileCleaner
-import org.wordpress.android.util.helpers.logfile.LogFileHelpers
+import org.wordpress.android.util.helpers.logfile.LogFileProvider
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
 class LogFileCleanerTest {
-    lateinit var testContext: Context
-    lateinit var logFileDirectory: File
-
+    lateinit var logFileProvider: LogFileProvider
     private val maxFiles = 10
 
     @Before
     fun setup() {
-        testContext = ApplicationProvider.getApplicationContext()
-        logFileDirectory = LogFileHelpers.logFileDirectory(testContext)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        logFileProvider = LogFileProvider.fromContext(context)
 
         repeat(maxFiles) {
-            val file = File(logFileDirectory, "$it.log")
+            val file = File(logFileProvider.getLogFileDirectory(), "$it.log")
             file.writeText("$it")
             file.setLastModified((it * 10_000L).toLong())
         }
 
-        assert(logFileDirectory.listFiles().count() == maxFiles)
+        assert(logFileProvider.getLogFileDirectory().listFiles().count() == maxFiles)
     }
 
     @After
     fun tearDown() {
         // Delete the test directory after each test
-        logFileDirectory.deleteRecursively()
+        logFileProvider.getLogFileDirectory().deleteRecursively()
     }
 
     @Test
     fun testThatCleanerPreservesMostRecentlyCreatedFiles() {
-        LogFileCleaner(testContext, 3).clean()
+        LogFileCleaner(logFileProvider, 3).clean()
 
-        val remainingFileIds = logFileDirectory.listFiles().map {
+        val remainingFileIds = logFileProvider.getLogFileDirectory().listFiles().map {
             FileReader(it).readText()
         }.joinToString(",") // Strings are easier to assert against than arrays
 
@@ -60,13 +58,13 @@ class LogFileCleanerTest {
     @Test
     fun testThatCleanerPreservesCorrectNumberOfFiles() {
         val numberOfFiles = Random.nextInt(maxFiles)
-        LogFileCleaner(testContext, numberOfFiles).clean()
-        assertEquals(numberOfFiles, logFileDirectory.listFiles().count())
+        LogFileCleaner(logFileProvider, numberOfFiles).clean()
+        assertEquals(numberOfFiles, logFileProvider.getLogFileDirectory().listFiles().count())
     }
 
     @Test
     fun testThatCleanerErasesAllFilesIfGivenZero() {
-        LogFileCleaner(testContext, 0).clean()
-        assert(logFileDirectory.listFiles().isEmpty())
+        LogFileCleaner(logFileProvider, 0).clean()
+        assert(logFileProvider.getLogFileDirectory().listFiles().isEmpty())
     }
 }
