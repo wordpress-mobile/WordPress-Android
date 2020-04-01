@@ -87,10 +87,10 @@ class EncryptedLogWriter(
         fileWriter.write("\t\"uuid\": \"$uuid\",\n")
         fileWriter.write("\t\"messages\": [\n")
     }
+}
 
-    // On Android base64 has lots of options, so define a helper to make it easier to
-    // avoid encoding issues.
-    private fun base64Encode(byteArray: ByteArray): String {
-        return Base64.encodeToString(byteArray, Base64.NO_WRAP)
-    }
+// On Android base64 has lots of options, so define a helper to make it easier to
+// avoid encoding issues.
+private fun base64Encode(byteArray: ByteArray): String {
+    return Base64.encodeToString(byteArray, Base64.NO_WRAP)
 }
