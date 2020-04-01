@@ -22,9 +22,9 @@ class LogFileWriter @JvmOverloads constructor(
     private val fileWriter: FileWriter = FileWriter(file)
 
     /**
-     * An serial executor used to write to the file in a background thread
+     * A serial executor used to write to the file in a background thread
      */
-    val queue: ExecutorService = Executors.newSingleThreadExecutor()
+    private val queue: ExecutorService = Executors.newSingleThreadExecutor()
 
     /**
      * A reference to the underlying {@link Java.IO.File} file.
