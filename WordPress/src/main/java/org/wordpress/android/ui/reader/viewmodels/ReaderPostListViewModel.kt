@@ -268,12 +268,12 @@ class ReaderPostListViewModel @Inject constructor(
      * @param post post to reblog
      */
     fun onReblogButtonClicked(post: ReaderPost) {
-        val selectedSiteId: Int? = appPrefsWrapper.getSelectedSite()
-        val selectedSite: SiteModel? = selectedSiteId?.let { siteStore.getSiteByLocalId(it) }
-        when (siteStore.visibleSites.size) {
-            0 -> _reblogState.value = Event(NoSite)
-            1 -> _reblogState.value = selectedSite?.let { Event(PostEditor(it, post)) } ?: Event(Unknown)
-            else -> _reblogState.value = selectedSite?.let { Event(SitePicker(it, post)) } ?: Event(Unknown)
+        val selectedSiteId: Int = appPrefsWrapper.getSelectedSite()
+        val selectedSite: SiteModel? = siteStore.getSiteByLocalId(selectedSiteId)
+        _reblogState.value = when (siteStore.visibleSites.size) {
+            0 -> Event(NoSite)
+            1 -> if (selectedSite != null) Event(PostEditor(selectedSite, post)) else Event(Unknown)
+            else -> if (selectedSite != null) Event(SitePicker(selectedSite, post)) else Event(Unknown)
         }
     }
 
@@ -283,10 +283,10 @@ class ReaderPostListViewModel @Inject constructor(
      * @param site selected site to reblog to
      */
     fun onReblogSiteSelected(siteLocalId: Int) {
-        val currentState = _reblogState.value?.peekContent()
+        val currentState: ReblogState? = _reblogState.value?.peekContent()
         if (currentState is SitePicker) {
-            val site = siteStore.getSiteByLocalId(siteLocalId)
-            _reblogState.value = Event(PostEditor(site, currentState.post))
+            val site: SiteModel? = siteStore.getSiteByLocalId(siteLocalId)
+            _reblogState.value = if (site != null) Event(PostEditor(site, currentState.post)) else Event(Unknown)
         } else if (BuildConfig.DEBUG) {
             throw IllegalStateException("Site Selected without passing the SitePicker state")
         } else {
