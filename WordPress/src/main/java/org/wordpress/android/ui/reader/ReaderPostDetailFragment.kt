@@ -24,11 +24,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatDrawableManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -94,9 +92,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClick
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
