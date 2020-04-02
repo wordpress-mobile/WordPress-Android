@@ -83,7 +83,7 @@ jobs:
             VERSION_NAME="${PREFIX}-build-${CIRCLE_BUILD_NUM}"
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
 
-            ./gradlew --stacktrace assembleVanillaDebug -PversionName="$VERSION_NAME"
+            ./gradlew --stacktrace assembleVanillaRelease -PversionName="$VERSION_NAME"
       - android/save-gradle-cache
       - run:
           name: Prepare APK

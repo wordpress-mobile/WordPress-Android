@@ -46,58 +46,6 @@ class ActionableEmptyView : LinearLayout {
     }
 
     private fun initView(context: Context, attrs: AttributeSet) {
-        clipChildren = false
-        clipToPadding = false
-        gravity = Gravity.CENTER
-        orientation = VERTICAL
-
-        layout = View.inflate(context, R.layout.actionable_empty_view, this)
-
-        image = layout.findViewById(R.id.image)
-        title = layout.findViewById(R.id.title)
-        subtitle = layout.findViewById(R.id.subtitle)
-        button = layout.findViewById(R.id.button)
-        bottomImage = layout.findViewById(R.id.bottom_image)
-
-        attrs.let {
-            val typedArray = context.obtainStyledAttributes(
-                    it,
-                    R.styleable.ActionableEmptyView,
-                    0,
-                    0
-            )
-
-            val imageResource = typedArray.getResourceId(
-                    R.styleable.ActionableEmptyView_aevImage,
-                    0
-            )
-            val titleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevTitle)
-            val subtitleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevSubtitle)
-            val buttonAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevButton)
-
-            if (imageResource != 0) {
-                image.setImageResource(imageResource)
-                image.visibility = View.VISIBLE
-            }
-
-            if (!titleAttribute.isNullOrEmpty()) {
-                title.text = titleAttribute
-            } else {
-                throw RuntimeException("$context: ActionableEmptyView must have a title (aevTitle)")
-            }
-
-            if (!subtitleAttribute.isNullOrEmpty()) {
-                subtitle.text = subtitleAttribute
-                subtitle.visibility = View.VISIBLE
-            }
-
-            if (!buttonAttribute.isNullOrEmpty()) {
-                button.text = buttonAttribute
-                button.visibility = View.VISIBLE
-            }
-
-            typedArray.recycle()
-        }
     }
 
     /**
