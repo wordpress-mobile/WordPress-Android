@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
@@ -93,6 +94,10 @@ import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClick
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.AppLog.T.MEDIA
+import org.wordpress.android.util.AppLog.T.READER
+import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
@@ -1090,7 +1095,13 @@ class ReaderPostDetailFragment : Fragment(),
         txtError.text = errorMessage
 
         context?.let {
-            val icon: Drawable? = ContextCompat.getDrawable(it, R.drawable.ic_notice_48dp)
+            val icon: Drawable? = try {
+                ContextCompat.getDrawable(it, R.drawable.ic_notice_48dp)
+            } catch (e: Resources.NotFoundException) {
+                AppLog.e(READER, e)
+                CrashLoggingUtils.logException(e, READER, "Drawable not found. See issue #11576")
+                null
+            }
             icon?.let {
                 txtError.setCompoundDrawablesRelativeWithIntrinsicBounds(null, icon, null, null)
             }
