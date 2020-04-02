@@ -14,7 +14,6 @@ import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
-import androidx.core.widget.CompoundButtonCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
@@ -195,10 +194,6 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 radioButton.setOnClickListener {
                     onParentSelected(pageItem)
                 }
-
-                @Suppress("DEPRECATION")
-                CompoundButtonCompat.setButtonTintList(radioButton,
-                        radioButton.resources.getColorStateList(R.color.primary_40_gray_20_gray_40_selector))
             }
         }
     }

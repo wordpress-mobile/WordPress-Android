@@ -17,6 +17,7 @@
 * Block editor: Added Starter Page Templates: when you create a new page, we now show you a few templates to get started more quickly.
 * Block editor: Fix crash when pasting HTML content with embeded images on paragraphs
 * Removes sections from post search results
+* Dark Theme support
 * Page List: Unsaved changes are automatically backed up on all devices. On page opening, the app will let you choose which version you prefer.
 * Page List: Minor design improvements
 

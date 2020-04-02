@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipToPadding="false"
-    android:orientation="vertical"
-    android:minHeight="?android:attr/listPreferredItemHeight"
-    android:gravity="center_vertical"
-    android:paddingTop="@dimen/start_over_preference_margin_large"
-    android:paddingBottom="@dimen/start_over_preference_margin_large"
     android:background="?android:attr/selectableItemBackground"
     android:baselineAligned="false"
+    android:clipToPadding="false"
+    android:gravity="center_vertical"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/start_over_preference_margin_large"
+    android:paddingEnd="@dimen/start_over_preference_margin_large"
     android:paddingStart="@dimen/start_over_preference_margin_large"
-    android:paddingEnd="@dimen/start_over_preference_margin_large">
+    android:paddingTop="@dimen/start_over_preference_margin_large">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,42 +23,41 @@
             android:id="@+id/pref_icon"
             android:layout_width="@dimen/start_over_icon_size"
             android:layout_height="@dimen/start_over_icon_size"
-            android:padding="@dimen/start_over_icon_padding"
-            android:contentDescription="@null"
             android:layout_gravity="center_vertical"
-            android:tint="@color/neutral_60"
-            android:layout_marginEnd="@dimen/start_over_icon_margin_right"/>
+            android:layout_marginEnd="@dimen/start_over_icon_margin_right"
+            android:contentDescription="@null"
+            android:padding="@dimen/start_over_icon_padding"
+            app:tint="?attr/wpColorOnSurfaceMedium" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@android:id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
             android:layout_gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
-            android:paddingStart="@dimen/start_over_title_margin"/>
+            android:paddingStart="@dimen/start_over_title_margin"
+            android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceSubtitle1" />
 
     </LinearLayout>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@android:id/summary"
-        android:layout_marginTop="@dimen/start_over_preference_margin_medium"
-        android:layout_marginBottom="@dimen/start_over_preference_margin_medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:attr/textColorSecondary"
-        android:paddingStart="@dimen/start_over_preference_margin_small"
-        android:layout_marginStart="@dimen/start_over_summary_margin"/>
-
-    <Button
-        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/start_over_summary_margin"
-        android:text="@string/button_more"
-        android:theme="@style/WhiteButton"/>
+        android:layout_marginTop="@dimen/start_over_preference_margin_medium"
+        android:layout_marginBottom="@dimen/start_over_preference_margin_medium"
+        android:paddingStart="@dimen/start_over_preference_margin_small"
+        android:textAppearance="?attr/textAppearanceBody2" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button"
+        style="@style/WordPress.Button.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/start_over_summary_margin"
+        android:text="@string/button_more" />
 
 </LinearLayout>

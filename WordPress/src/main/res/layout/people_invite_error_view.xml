@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.wordpress.android.widgets.WPTextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp"
-    android:textColor="@color/error_50"
-    android:textSize="@dimen/text_sz_small"
-    tools:text="Username 'qwer' is not found"/>
+    android:textAppearance="?attr/textAppearanceCaption"
+    android:textColor="?attr/wpColorError"
+    tools:text="Username 'qwer' is not found" />

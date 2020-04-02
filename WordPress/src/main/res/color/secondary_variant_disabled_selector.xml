@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="?attr/colorSecondaryVariant" android:state_enabled="true" />
+    <item android:alpha="@dimen/primary_button_disabled_alpha" android:color="?attr/colorOnSurface" />
+</selector>
