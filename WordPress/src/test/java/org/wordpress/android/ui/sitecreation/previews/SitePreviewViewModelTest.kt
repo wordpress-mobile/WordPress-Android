@@ -127,7 +127,7 @@ class SitePreviewViewModelTest {
     fun `ProgressUiState's animate field is false only for first emitted event`() = test {
         initViewModel()
         assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).animate).isFalse()
-        for(i in 1..100) {
+        for (i in 1..100) {
             coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).animate).isTrue()
         }
@@ -136,7 +136,7 @@ class SitePreviewViewModelTest {
     @Test
     fun `ProgressUiState's text changes every LOADING_STATE_TEXT_ANIMATION_DELAY seconds`() {
         initViewModel()
-        for(i in 1..100) {
+        for (i in 1..100) {
             val lastTextId = (viewModel.uiState.value as SitePreviewFullscreenProgressUiState).loadingTextResId
             coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).loadingTextResId)
@@ -151,7 +151,7 @@ class SitePreviewViewModelTest {
     }
 
     @Test
-    fun `error shown on start when internet access not available`()  {
+    fun `error shown on start when internet access not available`() {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
         initViewModel()
         coroutineDispatcher.advanceUntilIdle() // skip delays

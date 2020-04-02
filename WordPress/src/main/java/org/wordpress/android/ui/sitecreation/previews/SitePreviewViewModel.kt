@@ -163,7 +163,7 @@ class SitePreviewViewModel @Inject constructor(
 
     private fun showFullscreenErrorWithDelay() {
         showFullscreenProgress()
-        launch (mainDispatcher) {
+        launch(mainDispatcher) {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             tracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR)
@@ -295,7 +295,7 @@ class SitePreviewViewModel @Inject constructor(
         loadingAnimationJob = launch(mainDispatcher) {
             var i = 0
             val listSize = loadingTexts.size
-            while(isActive) {
+            while (isActive) {
                 updateUiState(
                         SitePreviewFullscreenProgressUiState(
                                 animate = i != 0, // the first text should appear without an animation
