@@ -2687,6 +2687,14 @@
     <string name="notification_new_site_creation_title">Create Site</string>
     <string name="notification_new_site_creation_failed">There was a problem</string>
     <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
+
+    <string name="new_site_creation_creating_site_loading_title">Hooray!\nAlmost done</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Your site will be ready shortly</string>
+    <string name="new_site_creation_creating_site_loading_1">Grabbing site URL</string>
+    <string name="new_site_creation_creating_site_loading_2">Adding site features</string>
+    <string name="new_site_creation_creating_site_loading_3">Setting up theme</string>
+    <string name="new_site_creation_creating_site_loading_4">Creating dashboard</string>
+
     <string name="cancel_new_site_wizard_content_description">Cancel Site Creation Wizard</string>
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
