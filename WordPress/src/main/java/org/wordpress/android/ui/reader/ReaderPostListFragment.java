@@ -520,6 +520,10 @@ public class ReaderPostListFragment extends Fragment
                               || (mCurrentBlogId != readerModeInfo.getBlogId())
                               || (mCurrentFeedId != readerModeInfo.getFeedId())
                               || (readerModeInfo.isFirstLoad());
+
+            if (changesDetected && !readerModeInfo.isFirstLoad()) {
+                trackTagLoaded(readerModeInfo.getTag());
+            }
         }
 
         if (onlyOnChanges && !changesDetected) return;

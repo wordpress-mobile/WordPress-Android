@@ -59,6 +59,7 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
@@ -849,6 +850,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (mGapMarkerPosition > -1 && position > mGapMarkerPosition) {
             arrayPos--;
+        }
+
+        if (mPosts.size() <= arrayPos) {
+            AppLog.d(T.READER, "Trying to read an element out of bounds of the posts list");
+            return null;
         }
 
         return mPosts.get(arrayPos);

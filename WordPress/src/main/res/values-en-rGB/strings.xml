@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-14 22:05:28+0000
+Translation-Revision-Date: 2020-03-11 15:49:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="stats_insights_management_activity">Activity</string>
+    <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
+    <string name="stats_insights_management_general">General</string>
+    <string name="stats_management_screen_title">Add New Card</string>
+    <string name="stats_management_add_new_stats_card">Add new stats card</string>
+    <string name="reader_self_hosted_select_filter">Use the filter button to find posts on specific subjects</string>
+    <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Selected</string>
+    <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
+    <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
+    <string name="reader_title_subs">Manage Tags &amp; Sites</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from tags you follow</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Log in to WordPress.com to see the latest posts from sites you follow</string>
     <string name="gutenberg_native_template_preview">Template Preview</string>
     <string name="gutenberg_native_replace_current_block">Replace Current Block</string>
     <string name="gutenberg_native_add_to_end">Add To End</string>
@@ -357,7 +371,6 @@ Language: en_GB
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
     <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="stats_management_new">New</string>
-    <string name="stats_management_edit">Edit</string>
     <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
     <string name="stats_management_try_it_now">Try it now</string>
     <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
@@ -372,8 +385,6 @@ Language: en_GB
     <string name="post_list_author_me">Me</string>
     <string name="error_restoring_post">An error occurred while restoring the post</string>
     <string name="backdated_for">Backdated for: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customise.</string>
-    <string name="stats_insights_add_insights_header">Add Insights</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
@@ -1950,7 +1961,6 @@ Language: en_GB
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_followed_tags">Followed tags</string>
-    <string name="reader_title_subs">Tags &amp; Sites</string>
     <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>

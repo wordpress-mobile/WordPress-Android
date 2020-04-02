@@ -41,6 +41,7 @@ class WPTooltipView @JvmOverloads constructor (
     private var arrowHorizontalOffsetFromEnd = -1
     private var arrowHorizontalOffsetFromStart = -1
     private var animationDuration: Int
+    private var tvMessage: TextView
 
     init {
         attrs?.also {
@@ -69,7 +70,7 @@ class WPTooltipView @JvmOverloads constructor (
 
         inflate(getContext(), position.layout, this)
         val root = findViewById<LinearLayout>(R.id.root_view)
-        val tvMessage = findViewById<TextView>(R.id.tooltip_message)
+        tvMessage = findViewById(R.id.tooltip_message)
         val arrow = findViewById<View>(R.id.tooltip_arrow)
         animationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
 
@@ -116,6 +117,8 @@ class WPTooltipView @JvmOverloads constructor (
     }
 
     fun show() {
+        if (visibility == View.VISIBLE) return
+
         this.postDelayed({
             this.apply {
                 alpha = 0f
@@ -140,5 +143,9 @@ class WPTooltipView @JvmOverloads constructor (
                         }
                     })
         }
+    }
+
+    fun setMessage(message: CharSequence) {
+        tvMessage.text = message
     }
 }

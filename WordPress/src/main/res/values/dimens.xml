@@ -86,6 +86,7 @@
     <dimen name="site_creation_content_margin">@dimen/content_margin_none</dimen>
     <dimen name="post_list_content_margin_standard">@dimen/content_margin_none</dimen>
     <dimen name="post_list_content_margin_compact">@dimen/content_margin_none</dimen>
+    <dimen name="page_list_content_margin">@dimen/content_margin_none</dimen>
 
     <!--
         native reader dimens
@@ -378,6 +379,10 @@
     <dimen name="one_line_list_item_height">48dp</dimen>
     <dimen name="two_line_list_item_height">72dp</dimen>
     <dimen name="page_list_divider_height">40dp</dimen>
+    <dimen name="page_list_row_min_height">80dp</dimen>
+    <dimen name="page_list_featured_image_size">40dp</dimen>
+    <dimen name="page_list_menu_button_size">24dp</dimen>
+
 
     <dimen name="quota_bar_text_minimum_height">36dp</dimen>
 

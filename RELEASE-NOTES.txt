@@ -1,10 +1,25 @@
+14.6
+-----
+* Block editor: You can now crop, zoom in/out and rotate images that are already inserted in a post.
+* Fix a deeplinking issue that could lead to the app not being open after clicking on some special "wordpress://" URLs.
+
 14.5
 -----
+* Block editor: New block: Latest Posts
+* Block editor: Fix Quote block's left border not being visible in Dark Mode
+* Block editor: Added Starter Page Templates: when you create a new page, we now show you a few templates to get started more quickly.
+* Block editor: Fix crash when pasting HTML content with embeded images on paragraphs
 * Removes sections from post search results
 * Dark Theme support
+* Page List: Unsaved changes are automatically backed up on all devices. On page opening, the app will let you choose which version you prefer.
+* Page List: Minor design improvements
 
 * Site Creation: faster site creation, removed intermediate steps. Just select what kind of site you'd like, enter the domain name and the site will be created.
 * Fixed a bug where failed post uploads were sometimes being retried indefinitely
+
+14.4.1
+-----
+* Block Editor: Fix crash when inserting a Button Block.
  
 14.4
 -----

@@ -369,6 +369,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnMediaEditorListener() {
                     @Override public void onMediaEditorClicked(String mediaUrl) {
                         // Show Media Editor
+                        mEditorEditMediaListener.onMediaEditorRequested(mediaUrl);
                     }
                 },
                 new OnLogGutenbergUserEventListener() {
@@ -604,6 +605,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mEditorImagePreviewListener = (EditorImagePreviewListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EditorImagePreviewListener");
+        }
+
+        try {
+            mEditorEditMediaListener = (EditorEditMediaListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement EditorEditMediaListener");
         }
     }
 

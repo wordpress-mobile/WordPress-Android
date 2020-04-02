@@ -1542,7 +1542,6 @@ Language: es_CL
     <string name="reader_hint_add_tag_or_url">Introduce la URL o etiqueta que quieras seguir</string>
     <string name="reader_page_followed_blogs">Sitios que sigues</string>
     <string name="reader_page_followed_tags">Etiquetas que se siguen</string>
-    <string name="reader_title_subs">Etiquetas y Sitios</string>
     <string name="reader_title_tag_preview">Etiqueta del lector</string>
     <string name="reader_title_blog_preview">Lector del Sitio</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
