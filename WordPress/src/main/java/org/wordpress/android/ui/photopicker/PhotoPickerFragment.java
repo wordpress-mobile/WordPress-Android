@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -300,11 +301,13 @@ public class PhotoPickerFragment extends Fragment {
                 }
             });
 
-            MenuItem itemGif = popup.getMenu().add(R.string.photo_picker_gif);
-            itemGif.setOnMenuItemClickListener(item -> {
-                doIconClicked(PhotoPickerIcon.GIF);
-                return true;
-            });
+            if (BuildConfig.TENOR_AVAILABLE) {
+                MenuItem itemGif = popup.getMenu().add(R.string.photo_picker_gif);
+                itemGif.setOnMenuItemClickListener(item -> {
+                    doIconClicked(PhotoPickerIcon.GIF);
+                    return true;
+                });
+            }
         }
 
         popup.show();
