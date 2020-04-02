@@ -86,13 +86,16 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.MainToolbarFragment;
+import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -103,6 +106,9 @@ import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
+import org.wordpress.android.ui.reader.reblog.NoSite;
+import org.wordpress.android.ui.reader.reblog.PostEditor;
+import org.wordpress.android.ui.reader.reblog.SitePicker;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
@@ -154,7 +160,8 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
-        MainToolbarFragment {
+        MainToolbarFragment,
+        ReblogActionListener {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
     private static final int NO_POSITION = -1;
@@ -495,6 +502,8 @@ public class ReaderPostListFragment extends Fragment
                 mRecyclerView.setToolbarScrollFlags(0);
             }
         });
+
+        handleReblogStateChanges();
 
         mViewModel.start(
                 mCurrentTag,
@@ -2073,6 +2082,7 @@ public class ReaderPostListFragment extends Fragment
                     mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);
+            mPostAdapter.setReblogActionListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
@@ -2886,6 +2896,40 @@ public class ReaderPostListFragment extends Fragment
                 //noinspection unchecked
                 mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
             }
+        }
+    }
+
+    /**
+     * Handles reblog state changes and triggers reblog actions
+     */
+    private void handleReblogStateChanges() {
+        mViewModel.getReblogState().observe(this, event -> {
+            event.applyIfNotHandled(state -> {
+                if (state instanceof NoSite) {
+                    ToastUtils.showToast(getActivity(), R.string.reader_no_site_to_reblog);
+                } else if (state instanceof SitePicker) {
+                    ActivityLauncher.showSitePickerForResult(this, ((SitePicker) state).getSite());
+                } else if (state instanceof PostEditor) {
+                    PostEditor peState = (PostEditor) state;
+                    ActivityLauncher.openEditorForReblog(getActivity(), peState.getSite(), peState.getPost());
+                } else { // Error
+                    ToastUtils.showToast(getActivity(), R.string.reader_reblog_error);
+                }
+                return null;
+            });
+        });
+    }
+
+    @Override
+    public void reblog(ReaderPost post) {
+        mViewModel.onReblogButtonClicked(post);
+    }
+
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {
+            int siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+            mViewModel.onReblogSiteSelected(siteLocalId);
         }
     }
 }

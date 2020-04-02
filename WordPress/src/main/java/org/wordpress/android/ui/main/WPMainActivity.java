@@ -1250,7 +1250,7 @@ public class WPMainActivity extends AppCompatActivity implements
         // it's visible. For more info see https://github.com/wordpress-mobile/WordPress-Android/issues/9604
         if (getLifecycle().getCurrentState().isAtLeast(STARTED)) {
             SiteModel site = getSelectedSite();
-            if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
+            if (site != null && event.post != null) {
                 mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         this,
                         findViewById(R.id.coordinator),
