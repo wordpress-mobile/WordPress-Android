@@ -48,7 +48,7 @@ Language: tr
     <string name="stats_box_type_high">yüksek</string>
     <string name="stats_box_type_medium">orta</string>
     <string name="stats_box_type_low">düşük</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  ve %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  ve %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Görseli kaldır</string>
     <string name="gutenberg_native_move_image_forward">Görseli öne taşı</string>

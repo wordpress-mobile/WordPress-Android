@@ -39,7 +39,7 @@ Language: nb_NO
     <string name="stats_box_type_high">høy</string>
     <string name="stats_box_type_medium">middels</string>
     <string name="stats_box_type_low">lav</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  og %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  og %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Fjern bilde</string>
     <string name="gutenberg_native_move_image_forward">Flytt bilde forover</string>

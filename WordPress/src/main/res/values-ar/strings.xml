@@ -48,7 +48,7 @@ Language: ar
     <string name="stats_box_type_high">مرتفع</string>
     <string name="stats_box_type_medium">متوسط</string>
     <string name="stats_box_type_low">منخفض</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s، %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">إزالة الصورة</string>
     <string name="gutenberg_native_move_image_forward">تحريك الصورة إلى الأمام</string>

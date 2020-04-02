@@ -43,7 +43,7 @@ Language: ko_KR
     <string name="stats_box_type_high">높음</string>
     <string name="stats_box_type_medium">중간</string>
     <string name="stats_box_type_low">낮음</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">이미지 삭제</string>
     <string name="gutenberg_native_move_image_forward">이미지를 앞으로 이동</string>

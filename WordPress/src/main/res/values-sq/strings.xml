@@ -43,7 +43,7 @@ Language: sq_AL
     <string name="stats_box_type_high">i lartë</string>
     <string name="stats_box_type_medium">mesatar</string>
     <string name="stats_box_type_low">i ulët</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_posting_activity_label_content_description">Veprimtari Postimi për %1$s</string>
     <string name="stats_posting_activity_content_description">Ditët me %1$s parje për %2$s janë : %2$s %3$s.Prekeni për më tepër.</string>
     <string name="stats_posting_activity_empty_description">S’ka statistika në këtë periudhë.</string>

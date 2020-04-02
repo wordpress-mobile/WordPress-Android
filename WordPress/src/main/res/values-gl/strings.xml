@@ -658,7 +658,6 @@ Language: gl_ES
     <string name="reader_empty_recommended_blogs">Sen blogues recomendados</string>
     <string name="reader_title_blog_preview">Blogue da Guía de Lectura</string>
     <string name="reader_title_tag_preview">Etiqueta da Guía de Lectura</string>
-    <string name="reader_title_subs">Etiquetas e blogues</string>
     <string name="reader_label_followed_blog">Blogue en seguimento</string>
     <string name="forgot_password">Perdiches o contrasinal?</string>
     <string name="help">Axuda</string>

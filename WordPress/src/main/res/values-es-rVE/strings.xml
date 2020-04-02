@@ -48,7 +48,7 @@ Language: es_VE
     <string name="stats_box_type_high">altas</string>
     <string name="stats_box_type_medium">medias</string>
     <string name="stats_box_type_low">bajas</string>
-    <string name="stats_bar_chart_accessibility_overlapping_entry">  y %1$d %2$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  y %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_remove_image">Eliminar la imagen</string>
     <string name="gutenberg_native_move_image_forward">Mover la imagen hacia adelante</string>
@@ -1808,12 +1808,12 @@ Language: es_VE
     <string name="notifications_no_search_results">Ningún sitio coincide con «%s»</string>
     <string name="search_sites">Buscar sitios</string>
     <string name="notifications_empty_view_reader">Ir al Lector</string>
-    <string name="notifications_empty_action_followers_likes">Recibe avisos: comenta en entradas que has leído</string>
-    <string name="notifications_empty_action_comments">Unirse a una conversación: comentar en entradas de blogs que sigues</string>
-    <string name="notifications_empty_action_unread">Reinicia la conversación: escribe una entrada nueva</string>
-    <string name="notifications_empty_action_all">¡Actívate! Comenta en entradas de blogs que sigues.</string>
+    <string name="notifications_empty_action_followers_likes">Recibe avisos: comenta en entradas que has leído</string>
+    <string name="notifications_empty_action_comments">Unirse a una conversación: comentar en entradas de blogs que sigues</string>
+    <string name="notifications_empty_action_unread">Reinicia la conversación: escribe una entrada nueva</string>
+    <string name="notifications_empty_action_all">¡Actívate! Comenta en entradas de blogs que sigues.</string>
     <string name="notifications_empty_comments">No hay comentarios aún</string>
-    <string name="notifications_empty_unread">¡Te has puesto al día!</string>
+    <string name="notifications_empty_unread">¡Te has puesto al día!</string>
     <string name="reader_short_comment_count_multi">%s Comentarios</string>
     <string name="reader_short_comment_count_one">1 Comentario</string>
     <string name="reader_hint_comment_on_post">Responder a la entrada…</string>
