@@ -9,6 +9,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.util.helpers.logfile.LogFileCleaner;
+import org.wordpress.android.util.helpers.logfile.LogFileProvider;
+import org.wordpress.android.util.helpers.logfile.LogFileWriter;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -87,6 +91,22 @@ public class AppLog {
     public interface AppLogListener {
         void onLog(T tag, LogLevel logLevel, String message);
     }
+
+    /**
+     * Add a LogFileWriter that will persist logs to disk
+     * @param context The current application context
+     * @param maxLogCount The maximum number of logs that should be stored
+     */
+     public static void enableLogFilePersistence(Context context, int maxLogCount) {
+         LogFileProvider logFileProvider = LogFileProvider.fromContext(context);
+         new LogFileCleaner(logFileProvider, maxLogCount).clean();
+
+         sLogFileWriter = new LogFileWriter(logFileProvider);
+         sLogFileWriter.write(getAppInfoHeaderText(context) + "\n");
+         sLogFileWriter.write(getDeviceInfoHeaderText(context) + "\n");
+    }
+
+    private static LogFileWriter sLogFileWriter;
 
     /**
      * Sends a VERBOSE log message
@@ -256,6 +276,17 @@ public class AppLog {
             sb.append("</font>");
             return sb.toString();
         }
+
+        @Override
+        public @NonNull String toString() {
+            return "["
+            + formatLogDate()
+            + " "
+            + mLogTag.name()
+            + "] "
+            + mLogText
+            + "\n";
+        }
     }
 
     private static class LogEntryList extends ArrayList<LogEntry> {
@@ -290,6 +321,10 @@ public class AppLog {
         if (mEnableRecording) {
             LogEntry entry = new LogEntry(level, text, tag);
             mLogEntries.addEntry(entry);
+
+            if (sLogFileWriter != null) {
+                sLogFileWriter.write(entry.toString());
+            }
         }
     }
 
@@ -357,12 +392,7 @@ public class AppLog {
         while (it.hasNext()) {
             LogEntry entry = it.next();
             sb.append(format(Locale.US, "%02d - ", lineNum))
-              .append("[")
-              .append(entry.formatLogDate()).append(" ")
-              .append(entry.mLogTag.name())
-              .append("] ")
-              .append(entry.mLogText)
-              .append("\n");
+              .append(entry.toString());
             lineNum++;
         }
         return sb.toString();

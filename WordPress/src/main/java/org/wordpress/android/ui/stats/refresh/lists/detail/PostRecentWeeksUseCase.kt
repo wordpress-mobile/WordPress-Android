@@ -60,7 +60,7 @@ class PostRecentWeeksUseCase(
 
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
-            model != null && model.weekViews.isNotEmpty() -> State.Data(model)
+            model != null && model.hasData() -> State.Data(model)
             else -> State.Empty()
         }
     }
@@ -103,6 +103,10 @@ class PostRecentWeeksUseCase(
 
     override fun buildLoadingItem(): List<BlockListItem> {
         return listOf(Title(R.string.stats_detail_recent_weeks))
+    }
+
+    private fun PostDetailStatsModel?.hasData(): Boolean {
+        return this != null && this.weekViews.isNotEmpty() && this.weekViews.any { it.total > 0 }
     }
 
     class PostRecentWeeksUseCaseFactory
