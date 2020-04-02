@@ -53,16 +53,20 @@ class PagesActivity : LocaleAwareActivity(),
     }
 
     override fun onPositiveClicked(instanceTag: String) {
-        passDeleteConfirmation(instanceTag.toLong())
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (fragment is PagesFragment) {
+            fragment.onPositiveClickedForBasicDialog(instanceTag)
+        } else {
+            throw IllegalStateException("PagesFragment is required to consume this event.")
+        }
     }
 
     override fun onNegativeClicked(instanceTag: String) {
-    }
-
-    private fun passDeleteConfirmation(remoteId: Long) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is PagesFragment) {
-            fragment.onPageDeleteConfirmed(remoteId)
+            fragment.onNegativeClickedForBasicDialog(instanceTag)
+        } else {
+            throw IllegalStateException("PagesFragment is required to consume this event.")
         }
     }
 }

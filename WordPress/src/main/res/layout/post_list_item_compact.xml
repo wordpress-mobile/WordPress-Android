@@ -44,10 +44,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/page_item_horizontal_padding"
             android:layout_marginTop="@dimen/margin_extra_small"
-            android:alpha="0.6"
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
             app:layout_constraintBottom_toTopOf="@+id/statuses_label"
             app:layout_constraintEnd_toStartOf="@+id/image_featured"
             app:layout_constraintHorizontal_bias="0.0"
@@ -78,12 +78,12 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/more"
             android:src="@drawable/ic_ellipsis_vertical_white_24dp"
-            app:tint="?attr/wpColorOnSurfaceMedium"
             app:layout_constraintBottom_toBottomOf="@+id/image_featured"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/image_featured" />
+            app:layout_constraintTop_toTopOf="@+id/image_featured"
+            app:tint="?attr/wpColorOnSurfaceMedium" />
 
         <FrameLayout
             android:id="@+id/disabled_overlay"

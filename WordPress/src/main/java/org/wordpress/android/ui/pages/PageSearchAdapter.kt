@@ -7,16 +7,18 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
+import org.wordpress.android.ui.utils.UiHelpers
 
 class PageSearchAdapter(
     private val onMenuAction: (PageItem.Action, Page) -> Boolean,
-    private val onItemTapped: (Page) -> Unit
+    private val onItemTapped: (Page) -> Unit,
+    private val uiHelper: UiHelpers
 ) : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
         return when (viewType) {
-            PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped)
+            PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped, uiHelper = uiHelper)
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent) { }
             else -> throw Throwable("Unexpected view type")

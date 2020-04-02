@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-17 19:46:43+0000
+Translation-Revision-Date: 2020-03-12 18:36:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="stats_insights_management_activity">Aktivitet</string>
+    <string name="stats_insights_management_posts_and_pages">Innlegg og sider</string>
+    <string name="stats_insights_management_general">Generelt</string>
+    <string name="stats_management_screen_title">Legg til nytt kort</string>
+    <string name="stats_management_add_new_stats_card">Legg til nytt statistikkort</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Valgt</string>
+    <string name="reader_btn_select_filter_content_description">Velg nettsted eller nøkkelord for å filtrere innlegg</string>
+    <string name="reader_btn_remove_filter_content_description">Fjern nåværende filter</string>
+    <string name="reader_title_subs">Behandle nøkkelord og nettsteder</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Logge inn på WordPress.com?</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Logg inn på WordPress.com for å se de siste innleggene fra nøkkelord du følger</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Logg inn på WordPress.com for å se siste innlegg fra nettsteder du følger</string>
     <string name="gutenberg_native_template_preview">Forhåndsvisning av mal</string>
     <string name="gutenberg_native_replace_current_block">Erstatt nåværende blokk</string>
     <string name="gutenberg_native_add_to_end">Legg til på slutten</string>
@@ -14,6 +26,8 @@ Language: nb_NO
     <string name="gutenberg_native_add_block_after">Legg til blokk etter</string>
     <string name="reader_filter_empty_tags_action">Legg til et stikkord</string>
     <string name="reader_filter_empty_sites_action">Følg et nettsted</string>
+    <string name="reader_filter_empty_tags_list">Du kan følge innlegg om et spesifikt emne ved å legge til et nøkkelord</string>
+    <string name="reader_filter_empty_sites_list">Se de siste innleggene fra nettsteder du følger</string>
     <string name="reader_filter_main_title">Følger</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_edit_video">Rediger video</string>
@@ -48,6 +62,7 @@ Language: nb_NO
     <string name="dialog_confirm_scheduled_post_sync_yes">Synkroniser nå</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Dette innlegget vil synkroniseres straks.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Klar til å synkronisere?</string>
+    <string name="new_site_creation_unavailable_domain">Dette domenet er ikke tilgengelig</string>
     <string name="login_promo_viewpager_content_description">Introduksjon</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Vi klarte ikke å få tilgang til nettstedet ditt. Du må kontakte din nettvert for å løse dette.</string>
@@ -295,7 +310,6 @@ Language: nb_NO
     <string name="domain_registration_contact_form_input_error">Vennligst oppi en gyldig %s</string>
     <string name="domains_suggestions_choose_domain">Velg domene</string>
     <string name="stats_management_new">Ny</string>
-    <string name="stats_management_edit">Rediger</string>
     <string name="stats_management_dismiss_insights_news_card">Avvis</string>
     <string name="stats_management_try_it_now">Prøv det nå</string>
     <string name="stats_management_news_card_message">Vekg hvilken statistikk å se og fokuser på de data du bryr deg mest om. Trykk %1$s i bunnen av innsikter for å tilpasse din statistikk.</string>
@@ -310,8 +324,6 @@ Language: nb_NO
     <string name="post_list_author_me">Meg</string>
     <string name="error_restoring_post">Det oppsto en feil ved gjenoppretting av innlegget</string>
     <string name="backdated_for">Tilbakedatert til: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Elementer som vises på din fane for innsikter. Dra og slipp for å tilpasse.</string>
-    <string name="stats_insights_add_insights_header">Legg til innsikter</string>
     <string name="stats_insights_management_title">Se bare den mest relevante statistikken. Legg til og organiser innsikter nedenfor.</string>
     <string name="stats_insights_social">Sosialt</string>
     <string name="stats_insights_annual_site_stats">Årlig nettstedsstatistikk</string>
@@ -1861,7 +1873,6 @@ Language: nb_NO
     <string name="reader_hint_add_tag_or_url">Skriv inn en URL eller et stikkord for å følge</string>
     <string name="reader_page_followed_blogs">Fulgte nettsteder</string>
     <string name="reader_page_followed_tags">Fulgte stikkord</string>
-    <string name="reader_title_subs">Stikkord &amp; nettsteder</string>
     <string name="reader_title_tag_preview">Leser-stikkord</string>
     <string name="reader_title_blog_preview">Leser-nettsted</string>
     <string name="ssl_certificate_ask_trust">Hvis du vanligvis har koblet deg til dette nettstedet uten problemer, kan denne feilen bety at noen prøver å imitere dette nettstedet, og at du ikke bør fortsette. Er du helt sikker på at du vil stole på dette sertifikatet likevel?</string>
