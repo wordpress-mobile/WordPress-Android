@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Html
@@ -22,8 +23,11 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatDrawableManager
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -1084,6 +1088,14 @@ class ReaderPostDetailFragment : Fragment(),
 
         val txtError = view!!.findViewById<TextView>(R.id.text_error)
         txtError.text = errorMessage
+
+        context?.let {
+            val icon: Drawable? = ContextCompat.getDrawable(it, R.drawable.ic_notice_48dp)
+            icon?.let {
+                txtError.setCompoundDrawablesRelativeWithIntrinsicBounds(null, icon, null, null)
+            }
+        }
+
         if (errorMessage == null) {
             txtError.visibility = View.GONE
         } else if (txtError.visibility != View.VISIBLE) {
