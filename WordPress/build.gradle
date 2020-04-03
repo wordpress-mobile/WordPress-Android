@@ -83,9 +83,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "14.5-rc-2"
+                versionName "14.5"
             }
-            versionCode 843
+            versionCode 845
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
