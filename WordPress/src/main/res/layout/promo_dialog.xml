@@ -1,115 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:color/white"
-    android:layout_gravity="center"
+    android:layout_width="@dimen/default_dialog_width"
     android:layout_height="wrap_content"
-    android:layout_width="@dimen/default_dialog_width" >
+    android:layout_gravity="center">
 
     <LinearLayout
         android:id="@+id/promo_dialog_image_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:background="@color/neutral_0" >
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/promo_dialog_image"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/neutral_0"
             android:contentDescription="@null"
-            android:src="@drawable/img_promo_editor" >
-        </ImageView>
+            android:src="@drawable/img_promo_editor" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/promo_dialog_text"
-        android:layout_below="@+id/promo_dialog_image_container"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/promo_dialog_image_container"
         android:orientation="vertical"
-        android:padding="@dimen/margin_dialog" >
+        android:padding="@dimen/margin_dialog">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/promo_dialog_title"
-            tools:text="Promotional Feature"
-            style="@style/PromoDialogTitle" >
-        </org.wordpress.android.widgets.WPTextView>
+            style="@style/PromoDialogTitle"
+            tools:text="Promotional Feature" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/promo_dialog_description"
-            tools:text="This is a short description about the promotional feature."
-            style="@style/PromoDialogDescription" >
-        </org.wordpress.android.widgets.WPTextView>
+            style="@style/PromoDialogDescription"
+            tools:text="This is a short description about the promotional feature." />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/promo_dialog_link"
+            style="@style/PromoDialogLink"
             android:clickable="true"
             android:focusable="true"
-            tools:text="Link"
-            style="@style/PromoDialogLink" >
-        </org.wordpress.android.widgets.WPTextView>
+            tools:text="Link" />
 
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_below="@+id/promo_dialog_text"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:padding="@dimen/margin_large" >
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/promo_dialog_text"
+        android:padding="@dimen/margin_large">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/promo_dialog_button_positive"
-            android:ellipsize="end"
+            style="@style/PromoDialogButton"
             android:layout_alignParentEnd="true"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:minHeight="@dimen/default_dialog_button_height"
-            android:minWidth="@dimen/min_touch_target_sz"
-            android:textAllCaps="true"
-            android:textColor="@color/primary_40"
-            tools:text="Yes"
-            style="@style/Widget.AppCompat.Button.Borderless" >
-        </androidx.appcompat.widget.AppCompatButton>
+            tools:text="Yes" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/promo_dialog_button_negative"
-            android:ellipsize="end"
-            android:layout_height="wrap_content"
+            style="@style/PromoDialogButton"
             android:layout_toStartOf="@+id/promo_dialog_button_positive"
-            android:layout_width="wrap_content"
-            android:minHeight="@dimen/default_dialog_button_height"
-            android:minWidth="@dimen/min_touch_target_sz"
-            android:textAllCaps="true"
-            android:textColor="@color/primary_40"
             android:visibility="gone"
             tools:text="No"
-            tools:visibility="visible"
-            style="@style/Widget.AppCompat.Button.Borderless" >
-        </androidx.appcompat.widget.AppCompatButton>
+            tools:visibility="visible" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/promo_dialog_button_neutral"
-            android:ellipsize="end"
+            style="@style/PromoDialogButton"
             android:layout_alignParentStart="true"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:minHeight="@dimen/default_dialog_button_height"
-            android:minWidth="@dimen/min_touch_target_sz"
-            android:textAllCaps="true"
-            android:textColor="@color/primary_40"
+            android:letterSpacing="-0.005"
             android:visibility="gone"
             tools:text="Maybe"
-            tools:visibility="visible"
-            style="@style/Widget.AppCompat.Button.Borderless" >
-        </androidx.appcompat.widget.AppCompatButton>
+            tools:visibility="visible" />
 
     </RelativeLayout>
 

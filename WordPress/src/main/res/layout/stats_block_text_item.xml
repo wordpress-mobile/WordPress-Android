@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             style="@style/StatsBlockLine"
-             android:id="@+id/container"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:minHeight="@dimen/one_line_list_item_height"
-             android:paddingStart="@dimen/margin_extra_large"
-             android:paddingEnd="@dimen/margin_extra_large">
+    android:id="@+id/container"
+    style="@style/StatsBlockLine"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/one_line_list_item_height"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
         style="@style/StatsBlockText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="@string/unknown"/>
+        android:text="@string/unknown" />
 
 </FrameLayout>
