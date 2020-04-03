@@ -1,4 +1,0 @@
-14.4:
-One small fix: this release takes care of an issue that caused images to upload with wonky URLs, which made them inaccessible on your website.
-
-Wash your hands and stay safe, everyone.
