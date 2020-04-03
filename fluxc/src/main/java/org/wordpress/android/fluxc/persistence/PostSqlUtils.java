@@ -39,7 +39,7 @@ public class PostSqlUtils {
     public PostSqlUtils() {
     }
 
-    public int insertOrUpdatePost(PostModel post, boolean overwriteLocalChanges) {
+    public synchronized int insertOrUpdatePost(PostModel post, boolean overwriteLocalChanges) {
         if (post == null) {
             return 0;
         }
