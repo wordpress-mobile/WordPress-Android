@@ -2679,7 +2679,7 @@
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_10_street_road" tools:ignore="UnusedResources">10 Street Road</string>
     <!-- translators: sample content for "Contact" page template -->
-    <string name="gutenberg_native_555_555_1234" tools:ignore="UnusedResources">(555)555-1234</string>
+    <string name="gutenberg_native_555_555_1234" tools:ignore="UnusedResources">(555)555–1234</string>
     <!-- translators: Preserve \n markers for line breaks -->
     <string name="gutenberg_native_a_block_is_the_abstract_term_used_to_describe_units_of_markup_th" tools:ignore="UnusedResources">// A \"block\" is the abstract term used\n// to describe units of markup that\n// when composed together, form the\n// content or layout of a page.\nregisterBlockType( name, settings );</string>
     <string name="gutenberg_native_a_block_that_groups_other_blocks" tools:ignore="UnusedResources">A block that groups other blocks.</string>
