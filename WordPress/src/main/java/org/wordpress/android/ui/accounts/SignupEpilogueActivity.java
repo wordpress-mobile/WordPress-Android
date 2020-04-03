@@ -1,22 +1,20 @@
 package org.wordpress.android.ui.accounts;
 
-import android.content.Context;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueListener;
-import org.wordpress.android.util.LocaleManager;
 
 import javax.inject.Inject;
 
-public class SignupEpilogueActivity extends AppCompatActivity implements SignupEpilogueListener {
+public class SignupEpilogueActivity extends LocaleAwareActivity implements SignupEpilogueListener {
     public static final String EXTRA_SIGNUP_DISPLAY_NAME = "EXTRA_SIGNUP_DISPLAY_NAME";
     public static final String EXTRA_SIGNUP_EMAIL_ADDRESS = "EXTRA_SIGNUP_EMAIL_ADDRESS";
     public static final String EXTRA_SIGNUP_IS_EMAIL = "EXTRA_SIGNUP_IS_EMAIL";
@@ -26,11 +24,6 @@ public class SignupEpilogueActivity extends AppCompatActivity implements SignupE
     public static final String MAGIC_SIGNUP_VALUE = "1";
 
     @Inject SiteStore mSiteStore;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

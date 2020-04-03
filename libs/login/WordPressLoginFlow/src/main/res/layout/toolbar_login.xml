@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toolbar"
+    android:id="@+id/appbar_main"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:background="@color/login_toolbar_color"
-    android:elevation="@dimen/appbar_elevation"
-    app:contentInsetLeft="@dimen/toolbar_content_offset"
-    app:contentInsetStart="@dimen/toolbar_content_offset"
-    app:contentInsetRight="@dimen/toolbar_content_offset_end"
-    app:contentInsetEnd="@dimen/toolbar_content_offset_end"
-    app:theme="@style/LoginTheme.Toolbar"
-    tools:targetApi="LOLLIPOP">
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_gravity="center"
-        android:contentDescription="@null"
-        app:srcCompat="@drawable/login_toolbar_icon"/>
-</androidx.appcompat.widget.Toolbar>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:theme="@style/LoginTheme.ActionBar">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/login_toolbar_icon" />
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+</com.google.android.material.appbar.AppBarLayout>

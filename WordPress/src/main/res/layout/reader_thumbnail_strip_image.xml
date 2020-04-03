@@ -5,6 +5,6 @@
     android:layout_height="@dimen/reader_thumbnail_strip_image_height"
     android:layout_margin="1dp"
     android:layout_weight="1"
-    android:background="@drawable/reader_image_border"
+    android:background="?android:attr/listDivider"
     android:contentDescription="@string/reader_gallery_images_desc"
     android:padding="1dp" />

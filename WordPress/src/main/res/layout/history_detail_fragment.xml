@@ -1,66 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@android:color/white"
-    android:fillViewport="true"
-    android:layout_alignParentTop="true"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorSurface"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <org.wordpress.android.widgets.DiffView
                 android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@null"
                 android:clickable="false"
                 android:fontFamily="serif"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 android:lineSpacingExtra="@dimen/spacing_extra_title"
                 android:padding="@dimen/margin_extra_large"
-                android:textColor="?attr/wpColorText"
+                android:textAppearance="?textAppearanceHeadline5"
                 android:textIsSelectable="true"
-                android:textSize="@dimen/aztec_title_size"
-                android:textStyle="bold" >
-            </org.wordpress.android.widgets.DiffView>
+                android:textStyle="bold"
+                tools:text="Title" />
 
         </RelativeLayout>
 
         <View
-            android:layout_height="@dimen/format_bar_horizontal_divider_height"
-            android:layout_marginEnd="@dimen/sourceview_side_margin"
+            android:background="?android:attr/listDivider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_size"
             android:layout_marginStart="@dimen/sourceview_side_margin"
-            android:layout_width="fill_parent"
-            style="@style/DividerSourceView" >
-        </View>
+            android:layout_marginEnd="@dimen/sourceview_side_margin" />
 
         <FrameLayout
-            android:layout_height="match_parent"
-            android:layout_width="match_parent" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <org.wordpress.android.widgets.DiffView
                 android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:clickable="false"
                 android:fontFamily="serif"
                 android:gravity="top|start"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingTop="@dimen/margin_extra_large"
+                android:paddingEnd="@dimen/margin_extra_large"
                 android:scrollbars="vertical"
-                android:textColor="?attr/wpColorText"
-                android:textIsSelectable="true"
-                android:textSize="@dimen/text_sz_post_content" >
-            </org.wordpress.android.widgets.DiffView>
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textIsSelectable="true" />
 
         </FrameLayout>
 

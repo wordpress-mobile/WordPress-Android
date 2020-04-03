@@ -5,13 +5,12 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:foreground="?selectableItemBackground"
+    android:background="?selectableItemBackground"
     android:minHeight="@dimen/one_line_list_item_height"
     android:paddingStart="@dimen/margin_large"
     tools:ignore="RtlSymmetry">
 
-    <androidx.appcompat.widget.AppCompatRadioButton
+    <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/domain_suggestion_radio_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,15 +21,13 @@
         android:paddingTop="@dimen/margin_medium"
         android:paddingBottom="@dimen/margin_medium"
         android:textAlignment="viewStart"
-        android:textColor="@color/neutral_80"
-        android:textSize="@dimen/text_sz_large"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/domain_suggestion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlSymmetry" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/domain_suggestion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -38,24 +35,24 @@
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingBottom="@dimen/margin_medium"
         android:textAlignment="viewStart"
-        android:textColor="@color/neutral_80"
-        android:textSize="@dimen/text_sz_large"
-        app:layout_constraintStart_toEndOf="@+id/domain_suggestion_radio_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toTopOf="@+id/domain_unavailability"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/domain_suggestion_radio_button"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="johndoe.wordpress.com" />
-    <TextView
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/domain_unavailability"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/margin_medium"
         android:textAlignment="viewStart"
-        android:textColor="@color/gray_40"
-        android:textSize="@dimen/text_sz_medium"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/wpColorOnSurfaceMedium"
         android:visibility="visible"
-        app:layout_constraintStart_toStartOf="@+id/domain_suggestion"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/domain_suggestion"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/domain_suggestion"
+        app:layout_constraintTop_toBottomOf="@+id/domain_suggestion" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
@@ -30,8 +31,8 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
     private ConnectButton mConnectBtn;
     private RecyclerView mRecycler;
-    private View mConnectionsCardView;
-    private ViewGroup mServiceCardView;
+    private View mConnectionsContainer;
+    private ViewGroup mServiceContainer;
 
     @Inject AccountStore mAccountStore;
 
@@ -68,7 +69,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putString(PublicizeConstants.ARG_SERVICE_ID, mServiceId);
@@ -78,10 +79,10 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_detail_fragment, container, false);
 
-        mConnectionsCardView = rootView.findViewById(R.id.card_view_connections);
-        mServiceCardView = (ViewGroup) rootView.findViewById(R.id.card_view_service);
-        mConnectBtn = (ConnectButton) mServiceCardView.findViewById(R.id.button_connect);
-        mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mConnectionsContainer = rootView.findViewById(R.id.connections_container);
+        mServiceContainer = rootView.findViewById(R.id.service_container);
+        mConnectBtn = mServiceContainer.findViewById(R.id.button_connect);
+        mRecycler = rootView.findViewById(R.id.recycler_view);
 
         return rootView;
     }
@@ -108,14 +109,14 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
         // disable the ability to add another G+ connection
         if (isGooglePlus()) {
-            mServiceCardView.setVisibility(View.GONE);
+            mServiceContainer.setVisibility(View.GONE);
         } else {
             String serviceLabel = String.format(getString(R.string.connection_service_label), mService.getLabel());
-            TextView txtService = (TextView) mServiceCardView.findViewById(R.id.text_service);
+            TextView txtService = mServiceContainer.findViewById(R.id.text_service);
             txtService.setText(serviceLabel);
 
             String description = String.format(getString(R.string.connection_service_description), mService.getLabel());
-            TextView txtDescription = (TextView) mServiceCardView.findViewById(R.id.text_description);
+            TextView txtDescription = mServiceContainer.findViewById(R.id.text_description);
             txtDescription.setText(description);
         }
 
@@ -150,7 +151,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
             return;
         }
 
-        mConnectionsCardView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mConnectionsContainer.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
 
         if (hasOnPublicizeActionListener()) {
             if (isEmpty) {
@@ -158,12 +159,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
             } else {
                 mConnectBtn.setAction(ConnectAction.CONNECT_ANOTHER_ACCOUNT);
             }
-            mConnectBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getOnPublicizeActionListener().onRequestConnect(mService);
-                }
-            });
+            mConnectBtn.setOnClickListener(v -> getOnPublicizeActionListener().onRequestConnect(mService));
         }
     }
 }

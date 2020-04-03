@@ -1,173 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    app:theme="@style/LoginTheme" >
+    android:layout_height="match_parent">
 
     <ScrollView
-        android:fillViewport="true"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/bottom_buttons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent" >
+        android:layout_above="@+id/bottom_buttons"
+        android:layout_alignParentTop="true"
+        android:fillViewport="true">
 
         <LinearLayout
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingTop="@dimen/margin_extra_large" >
+            android:paddingTop="@dimen/margin_extra_large">
 
             <org.wordpress.android.widgets.WPTextView
+                style="@style/LoginTheme.Heading"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_medium"
-                android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_width="match_parent"
-                android:text="@string/signup_epilogue_heading"
-                style="@style/LoginTheme.Heading" >
-            </org.wordpress.android.widgets.WPTextView>
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:text="@string/signup_epilogue_heading" />
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/user_details_card"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_extra_medium_large"
-                android:layout_marginEnd="@dimen/margin_large"
-                android:layout_marginStart="@dimen/margin_large"
+                style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="match_parent"
-                app:cardBackgroundColor="@android:color/white"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_extra_medium_large"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation"
-                app:cardUseCompatPadding="true" >
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
-                    android:gravity="center_horizontal"
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:paddingEnd="@dimen/margin_extra_large"
-                    android:paddingStart="@dimen/margin_extra_large" >
+                    android:paddingStart="@dimen/margin_extra_large"
+                    android:paddingEnd="@dimen/margin_extra_large">
 
                     <RelativeLayout
                         android:id="@+id/signup_epilogue_header_avatar_layout"
+                        android:layout_width="@dimen/avatar_sz_login_epilogue"
+                        android:layout_height="@dimen/avatar_sz_login_epilogue"
+                        android:layout_marginTop="@dimen/margin_extra_medium_large"
+                        android:layout_marginBottom="@dimen/margin_medium"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:clickable="true"
-                        android:focusable="true"
-                        android:layout_height="@dimen/avatar_sz_login_epilogue"
-                        android:layout_marginBottom="@dimen/margin_medium"
-                        android:layout_marginTop="@dimen/margin_extra_medium_large"
                         android:contentDescription="@string/content_description_add_avatar"
-                        android:layout_width="@dimen/avatar_sz_login_epilogue">
+                        android:focusable="true">
 
                         <ImageView
                             android:id="@+id/signup_epilogue_header_avatar"
-                            android:layout_height="match_parent"
                             android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_user_circle_white_24dp"
-                            android:tint="@color/neutral_20"/>
+                            app:tint="?attr/wpColorOnSurfaceMedium" />
 
                         <ImageButton
                             android:id="@+id/signup_epilogue_header_avatar_add"
-                            android:background="@drawable/bg_oval_white"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_height="@dimen/add_avatar_button_size"
                             android:layout_width="@dimen/add_avatar_button_size"
-                            android:tint="@color/neutral_20"
+                            android:layout_height="@dimen/add_avatar_button_size"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:background="@drawable/bg_oval_white"
                             android:importantForAccessibility="no"
-                            android:visibility="gone"
                             android:src="@drawable/ic_add_white_24dp"
-                            tools:visibility="visible" >
-                        </ImageButton>
+                            app:tint="?attr/wpColorOnSurfaceMedium"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
 
                     </RelativeLayout>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/signup_epilogue_header_display"
+                        style="@style/LoginTheme.Subhead"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        tools:text="Pamela Nguyen"
-                        style="@style/LoginTheme.Subhead" >
-                    </org.wordpress.android.widgets.WPTextView>
+                        tools:text="Pamela Nguyen" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/signup_epilogue_header_email"
+                        style="@style/LoginTheme.Username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_extra_medium_large"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
                         android:gravity="center_horizontal"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_extra_medium_large"
-                        android:layout_width="match_parent"
-                        tools:text="pamelanguyen@gmail.com"
-                        style="@style/LoginTheme.Username" >
-                    </org.wordpress.android.widgets.WPTextView>
+                        tools:text="pamelanguyen@gmail.com" />
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <org.wordpress.android.login.widgets.WPLoginInputRow
                 android:id="@+id/signup_epilogue_input_display"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/signup_epilogue_hint_display"
                 android:imeOptions="actionDone"
                 android:inputType="textPersonName"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 android:paddingStart="@dimen/margin_extra_large"
-                android:paddingEnd="@dimen/margin_extra_large"
-                app:wpIconDrawable="@drawable/ic_user_white_24dp"
-                app:wpIconDrawableTint="@color/neutral_30" >
-            </org.wordpress.android.login.widgets.WPLoginInputRow>
+                android:paddingEnd="@dimen/margin_extra_large" />
 
             <org.wordpress.android.login.widgets.WPLoginInputRow
                 android:id="@+id/signup_epilogue_input_username"
-                android:hint="@string/signup_epilogue_hint_username"
-                android:inputType="none"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                android:layout_width="match_parent"
+                android:hint="@string/signup_epilogue_hint_username"
+                android:inputType="none"
                 android:paddingStart="@dimen/margin_extra_large"
-                android:paddingEnd="@dimen/margin_extra_large"
-                app:wpIconDrawable="@drawable/ic_mention_white_24dp"
-                app:wpIconDrawableTint="@color/neutral_30" >
-            </org.wordpress.android.login.widgets.WPLoginInputRow>
+                android:paddingEnd="@dimen/margin_extra_large" />
 
             <org.wordpress.android.login.widgets.WPLoginInputRow
                 android:id="@+id/signup_epilogue_input_password"
-                android:hint="@string/signup_epilogue_hint_password"
-                android:inputType="textPassword"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                android:layout_width="match_parent"
+                android:hint="@string/signup_epilogue_hint_password"
+                android:inputType="textPassword"
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:visibility="gone"
                 app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@color/neutral_30"
-                app:wpIconDrawable="@drawable/ic_lock_white_24dp"
-                app:wpIconDrawableTint="@color/neutral_30"
-                tools:visibility="visible" >
-            </org.wordpress.android.login.widgets.WPLoginInputRow>
+                tools:visibility="visible" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/signup_epilogue_input_password_detail"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_extra_large"
-                android:layout_marginTop="@dimen/margin_small"
                 android:layout_width="match_parent"
-                android:paddingEnd="@dimen/margin_large"
-                android:paddingStart="@dimen/padding_input_row_start"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingEnd="@dimen/margin_extra_large"
                 android:text="@string/signup_epilogue_hint_password_detail"
+                android:textAppearance="?attr/textAppearanceCaption"
                 android:visibility="gone"
                 app:fixWidowWords="true"
-                tools:visibility="visible" >
-            </org.wordpress.android.widgets.WPTextView>
+                tools:visibility="visible" />
 
         </LinearLayout>
 
@@ -175,29 +159,34 @@
 
     <View
         android:id="@+id/bottom_shadow"
-        android:background="@drawable/login_shadow"
-        android:layout_above="@+id/bottom_buttons"
-        android:layout_height="@dimen/button_container_shadow_height"
-        android:layout_width="match_parent" >
-    </View>
-
-    <RelativeLayout
-        android:id="@+id/bottom_buttons"
-        android:background="@android:color/white"
-        android:clipToPadding="false"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:padding="@dimen/margin_large" >
+        android:layout_height="@dimen/button_container_shadow_height"
+        android:layout_above="@+id/bottom_buttons"
+        android:background="@drawable/login_shadow" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/primary_button"
-            android:layout_height="wrap_content"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/bottom_buttons"
+        style="@style/LoginTheme.BottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="@dimen/appbar_elevation">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:text="@string/login_continue"
-            style="@style/WordPress.Button.Primary" >
-        </androidx.appcompat.widget.AppCompatButton>
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:padding="@dimen/margin_large">
 
-    </RelativeLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/primary_button"
+                style="@style/LoginTheme.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login_continue" />
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </RelativeLayout>

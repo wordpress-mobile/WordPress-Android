@@ -1,67 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/neutral_0">
+    android:layout_marginBottom="@dimen/margin_large"
+    android:background="?android:attr/colorBackground"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_extra_large">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stateListAnimator="@anim/pressed_card"
-        card_view:cardBackgroundColor="@android:color/white"
-        card_view:cardCornerRadius="@dimen/default_cardview_radius"
-        card_view:cardElevation="@dimen/card_elevation">
+        android:hint="@string/tag_name_hint"
+        android:importantForAccessibility="no">
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:background="@android:color/white"
-            android:orientation="vertical"
-            android:padding="@dimen/margin_extra_large">
+            android:gravity="start"
+            android:hint="@string/tag_name_hint"
+            android:inputType="textCapSentences|textAutoCorrect"
+            android:textAlignment="viewStart"
+            android:textColorHint="@android:color/transparent"
+            tools:text="edit_name" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/tag_name_hint"
-                android:importantForAccessibility="no">
+    </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/tag_name_hint"
-                    android:textColorHint="@android:color/transparent"
-                    android:inputType="textCapSentences|textAutoCorrect"
-                    android:textAlignment="viewStart"
-                    android:gravity="start"
-                    tools:text="edit_name" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:hint="@string/tag_description_hint"
+        android:importantForAccessibility="no">
 
-            </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|start"
+            android:hint="@string/tag_description_hint"
+            android:inputType="textCapSentences|textAutoCorrect"
+            android:lines="3"
+            android:textAlignment="viewStart"
+            android:textColorHint="@android:color/transparent"
+            tools:text="edit_description" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:importantForAccessibility="no"
-                android:hint="@string/tag_description_hint"
-                android:layout_marginTop="@dimen/margin_medium">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top|start"
-                    android:hint="@string/tag_description_hint"
-                    android:textColorHint="@android:color/transparent"
-                    android:inputType="textCapSentences|textAutoCorrect"
-                    android:lines="3"
-                    android:textAlignment="viewStart"
-                    tools:text="edit_description" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</FrameLayout>
+    </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>

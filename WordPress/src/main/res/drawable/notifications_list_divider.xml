@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
     android:insetLeft="@dimen/margin_extra_large"
-    android:insetRight="@dimen/margin_extra_large">
-    <shape android:shape="rectangle">
+    android:insetRight="@dimen/margin_extra_large"
+    android:drawable="?android:attr/listDivider">
 
-        <solid android:color="@color/neutral_0" />
-
-    </shape>
 </inset>
