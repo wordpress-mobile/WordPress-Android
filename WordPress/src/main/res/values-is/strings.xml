@@ -569,8 +569,6 @@ Language: is
     <string name="saving_changes">Vista breytingar</string>
     <string name="hint_comment_content">Athugasemd</string>
     <string name="trash">Rusl</string>
-    <string name="trash_no">Ekki henda í ruslatunnu</string>
-    <string name="trash_yes">Rusl</string>
     <string name="dlg_confirm_trash_comments">Henda í ruslatunnu?</string>
     <string name="dlg_trashing_comments">Hendi í ruslatunnu</string>
     <string name="dlg_spamming_comments">Merki sem amapóst</string>

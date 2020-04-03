@@ -210,7 +210,6 @@ Language: en_CA
     <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
     <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">The Facebook connection could not be made because this account does not have access to any pages. Facebook supports sharing connections to Facebook Pages, but not to Facebook Profiles.</string>
     <string name="stats_post_views_label">Views</string>
     <string name="stats_post_label">Post</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -307,8 +306,6 @@ Language: en_CA
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="post_uploading_draft">Uploading draft</string>
-    <string name="post_list_drafts">Drafts</string>
-    <string name="post_list_published">Published</string>
     <string name="post_list_author_everyone">Everyone</string>
     <string name="post_list_author_me">Me</string>
     <string name="error_restoring_post">An error occurred while restoring the post</string>
@@ -453,15 +450,7 @@ Language: en_CA
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
-    <string name="new_site_creation_button_skip">Skip</string>
-    <string name="new_site_creation_tag_line_description">The tagline is a short line of text shown right below the title.</string>
-    <string name="new_site_creation_tag_line_hint">Tagline</string>
-    <string name="new_site_creation_site_title_hint">Site Title</string>
-    <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating.</string>
-    <string name="new_site_creation_site_info_header_title">Basic Information</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="site_creation_segments_title">Tell us what kind of site you’d like to make</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
@@ -667,7 +656,6 @@ Language: en_CA
     <string name="people_empty_list_filtered_email_followers">No email followers yet</string>
     <string name="people_empty_list_filtered_followers">No followers yet</string>
     <string name="people_empty_list_filtered_users">No users yet</string>
-    <string name="connection_service_facebook_notice">As of August 1, 2018, Facebook no longer allows direct sharing of posts to Facebook Profiles. Connections to Facebook Pages remain unchanged.</string>
     <string name="reader_empty_posts_liked_description">Posts that you like will appear here</string>
     <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
     <string name="reader_empty_followed_blogs_button_followed">Go to following</string>
@@ -1223,8 +1211,6 @@ Language: en_CA
     <string name="editor_dropped_text_error">Error occurred while dropping text</string>
     <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
     <string name="editor_content_hint">Share your story here…</string>
-    <string name="post_list_trashed">Trashed</string>
-    <string name="post_list_scheduled">Scheduled</string>
     <string name="post_status_post_private">Private</string>
     <string name="post_status_draft">Draft</string>
     <string name="post_status_pending_review">Pending review</string>
@@ -1245,7 +1231,6 @@ Language: en_CA
     <string name="post_settings_more_options">More Options</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Unread</string>
     <string name="notifications_tab_title_all">All</string>
     <string name="top_level_category_name">Top level</string>
     <string name="category_parent">Parent category (optional):</string>
@@ -1943,8 +1928,6 @@ Language: en_CA
     <string name="saving_changes">Saving changes</string>
     <string name="hint_comment_content">Comment</string>
     <string name="trash">Trash</string>
-    <string name="trash_no">Don\'t trash</string>
-    <string name="trash_yes">Trash</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
     <string name="dlg_trashing_comments">Sending to trash</string>
     <string name="dlg_spamming_comments">Marking as spam</string>
