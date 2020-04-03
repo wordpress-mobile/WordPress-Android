@@ -367,8 +367,6 @@ Language: eu_ES
     <string name="saving_changes">Aldaketak gordetzen</string>
     <string name="hint_comment_content">Iruzkina</string>
     <string name="trash">Zakarrontzia</string>
-    <string name="trash_no">Ez bidali zakarrontzira</string>
-    <string name="trash_yes">Zakarrontzira bidali</string>
     <string name="dlg_confirm_trash_comments">Zakarrontzira bidali?</string>
     <string name="dlg_trashing_comments">Zakarrontzira bidaltzen</string>
     <string name="dlg_spamming_comments">Spam bezala markatzen</string>

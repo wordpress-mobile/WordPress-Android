@@ -213,8 +213,6 @@ Language: da_DK
     <string name="saving_changes">Gemmer ændringer</string>
     <string name="hint_comment_content">Kommentar</string>
     <string name="trash">Papirkurv</string>
-    <string name="trash_no">Slet ikke</string>
-    <string name="trash_yes">Slet</string>
     <string name="mnu_comment_trash">Slet</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unapprove">Fjern godkendelse</string>

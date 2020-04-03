@@ -112,8 +112,6 @@ Language: mk
     <string name="dlg_approving_comments">Одобрување</string>
     <string name="dlg_spamming_comments">Обележување како спам</string>
     <string name="dlg_trashing_comments">Испраќање во отпадок</string>
-    <string name="trash_yes">Отпадок</string>
-    <string name="trash_no">Не исфрлај</string>
     <string name="trash">Отпадок</string>
     <string name="view_in_browser">Види во прелистувач</string>
     <string name="local_changes">Локални промени</string>

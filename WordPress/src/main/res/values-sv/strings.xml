@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-11 15:23:58+0000
+Translation-Revision-Date: 2020-03-25 02:19:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">Skapa ett inlägg</string>
+    <string name="post_list_tab_trashed_posts">Borttagna</string>
+    <string name="post_list_tab_scheduled_posts">Tidsinställda</string>
+    <string name="post_list_tab_published_posts">Publicerade</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook-kopplingen hittar inga sidor. Publicize kan inte kopplas till Facebook-profiler, utan endast till publicerade sidor.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Inte ansluten</string>
+    <string name="my_site_select_domains_page_title">Webbplatsadress</string>
+    <string name="notifications_tab_title_likes">Gillamarkeringar</string>
+    <string name="notifications_tab_title_follows">Följer</string>
+    <string name="notifications_tab_title_comments">Kommentarer</string>
+    <string name="notifications_tab_title_unread_notifications">Olästa</string>
+    <string name="dlg_cancel_action_dont_trash">Kasta inte</string>
+    <string name="dlg_confirm_action_trash">Ta bort</string>
     <string name="stats_insights_management_activity">Aktivitet</string>
     <string name="stats_insights_management_posts_and_pages">Inlägg och sidor</string>
     <string name="stats_insights_management_general">Allmänt</string>
@@ -282,7 +295,6 @@ Language: sv_SE
     <string name="enter_wordpress_site">Webbplatsen på den angivna adressen använder inte WordPress. För att vi ska kunna ansluta till webbplatsen måste WordPress vara installerat.</string>
     <string name="login_invalid_site_url">Skriv in den fullständiga adressen till en webbplats, såsom example.com.</string>
     <string name="enter_email_for_site">Logga in med WordPress.com för ansluta till %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">Det gick inte att koppla till Facebook eftersom detta konto inte verkar ha åtkomst till någon sida. Facebook stöder delningskopplingar till Facebook-sidor, men inte till Facebook-profiler.</string>
     <string name="stats_post_views_label">Visningar</string>
     <string name="stats_post_label">Inlägg</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -379,8 +391,7 @@ Language: sv_SE
     <string name="editor_failed_to_insert_media_tap_to_retry">Det gick inte att lägga in media.\nKnacka här för att försöka igen.</string>
     <string name="editor_uploading_draft">Ditt utkast laddas upp</string>
     <string name="post_uploading_draft">Laddar upp utkast</string>
-    <string name="post_list_drafts">Utkast</string>
-    <string name="post_list_published">Publicerat</string>
+    <string name="post_list_tab_drafts">Utkast</string>
     <string name="post_list_author_everyone">Alla</string>
     <string name="post_list_author_me">Jag</string>
     <string name="error_restoring_post">Ett fel inträffade när inlägget skulle återställas</string>
@@ -525,15 +536,7 @@ Language: sv_SE
     <string name="new_site_creation_empty_domain_list_message">Det inns ingen adress som matchar din sökning</string>
     <string name="site_creation_error_generic_subtitle">Kommunikationen med servern fungerar inte. Försök igen</string>
     <string name="site_creation_error_generic_title">Ett fel har inträffat</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Anpassad kategori</string>
-    <string name="new_site_creation_button_skip">Hoppa över</string>
-    <string name="new_site_creation_tag_line_description">Webbplatsens slogan är en kort textrad som visas direkt under webbplatsens namn.</string>
-    <string name="new_site_creation_tag_line_hint">Slogan</string>
-    <string name="new_site_creation_site_title_hint">Webbplatsnamn</string>
-    <string name="new_site_creation_site_info_header_subtitle">Berätta lite mer om webbplatsen du håller på att skapa.</string>
-    <string name="new_site_creation_site_info_header_title">Grundläggande information</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Ett fel har inträffat</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Ingen förbindelse</string>
     <string name="site_creation_segments_subtitle">Detta hjälper oss att ge dig rekommentationer. Men du är aldrig låst till detta – alla webbplatser fortsätter att utvecklas!</string>
     <string name="site_creation_segments_title">Berätta vilken typ av webbplats du vill skapa</string>
     <string name="new_site_creation_preview_title">Din webbplats har skapats!</string>
@@ -739,7 +742,6 @@ Language: sv_SE
     <string name="people_empty_list_filtered_email_followers">Inga e-postföljare än</string>
     <string name="people_empty_list_filtered_followers">Inga följare än</string>
     <string name="people_empty_list_filtered_users">Inga användare än</string>
-    <string name="connection_service_facebook_notice">Sedan 1 augusti tillåter Facebook inte längre automatisk delning av inlägg till en profil på Facebook. Kopplingar till Facebook-sidor fungerar fortfarande.</string>
     <string name="reader_empty_posts_liked_description">Inlägg som du gillar kommer att visas här</string>
     <string name="reader_empty_posts_liked_title">Ingenting gillat än</string>
     <string name="reader_empty_followed_blogs_button_followed">Gå till följda webbplatser</string>
@@ -1296,8 +1298,6 @@ Language: sv_SE
     <string name="editor_dropped_text_error">Ett fel inträffade när text skulle dras in</string>
     <string name="editor_dropped_html_images_not_allowed">Det är inte tillåtet att dra in bilder när du befinner dig i HTML-läge</string>
     <string name="editor_content_hint">Berätta din historia här …</string>
-    <string name="post_list_trashed">I papperskorgen</string>
-    <string name="post_list_scheduled">Schemalagt</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Utkast</string>
     <string name="post_status_pending_review">Väntar på granskning</string>
@@ -1318,7 +1318,6 @@ Language: sv_SE
     <string name="post_settings_more_options">Ytterligare alternativ</string>
     <string name="post_settings_categories_and_tags">Kategorier och etiketter</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Oläst</string>
     <string name="notifications_tab_title_all">Allt</string>
     <string name="top_level_category_name">Högsta nivån</string>
     <string name="category_parent">Överordnad kategori (valfritt)</string>
@@ -2016,8 +2015,6 @@ Language: sv_SE
     <string name="saving_changes">Spara ändringarna</string>
     <string name="hint_comment_content">Kommentar</string>
     <string name="trash">Kasta bort</string>
-    <string name="trash_no">Kasta inte</string>
-    <string name="trash_yes">Kasta</string>
     <string name="dlg_confirm_trash_comments">Kasta?</string>
     <string name="dlg_trashing_comments">Skicka till papperskorg</string>
     <string name="dlg_spamming_comments">Markera som skräppost</string>

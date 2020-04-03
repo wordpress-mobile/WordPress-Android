@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-11 15:04:22+0000
+Translation-Revision-Date: 2020-03-25 05:20:03+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">Создать запись</string>
+    <string name="post_list_tab_trashed_posts">В корзине</string>
+    <string name="post_list_tab_scheduled_posts">Запланированные</string>
+    <string name="post_list_tab_published_posts">Опубликованные</string>
+    <string name="sharing_facebook_account_must_have_pages">Подключение к Facebook не может обнаружить страниц, Publicize не может использовать профили Facebook, только страницы.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Нет подключения</string>
+    <string name="my_site_select_domains_page_title">Адрес сайта</string>
+    <string name="notifications_tab_title_likes">Отметки \"Нравится\"</string>
+    <string name="notifications_tab_title_follows">Подписки</string>
+    <string name="notifications_tab_title_comments">Комментарии</string>
+    <string name="notifications_tab_title_unread_notifications">Непрочитанные</string>
+    <string name="dlg_cancel_action_dont_trash">Не удалять</string>
+    <string name="dlg_confirm_action_trash">В корзину</string>
     <string name="stats_insights_management_activity">Активность</string>
     <string name="stats_insights_management_posts_and_pages">Записи и страницы</string>
     <string name="stats_insights_management_general">Общее</string>
@@ -282,7 +295,6 @@ Language: ru
     <string name="enter_wordpress_site">Сайт по этому адресу не является сайтом на WordPress. Мы не можем подключиться к нему.</string>
     <string name="login_invalid_site_url">Введите полный адрес вебсайта, например example.com.</string>
     <string name="enter_email_for_site">Войдите на WordPress.com, чтобы подключиться к %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">Подключение к Facebook неудачно, потому что учетная запись не имеет доступа к каким-либо страницам. Facebook поддерживает возможность поделиться на страницы, но не в профили.</string>
     <string name="stats_post_views_label">Просмотры</string>
     <string name="stats_post_label">Запись</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -379,8 +391,7 @@ Language: ru
     <string name="editor_failed_to_insert_media_tap_to_retry">Ошибка вставки медиафайла.\nНажмите для повтора.</string>
     <string name="editor_uploading_draft">Выполняется загрузка черновика</string>
     <string name="post_uploading_draft">Загрузка черновика</string>
-    <string name="post_list_drafts">Черновики</string>
-    <string name="post_list_published">Опубликовано</string>
+    <string name="post_list_tab_drafts">Черновики</string>
     <string name="post_list_author_everyone">Все</string>
     <string name="post_list_author_me">Моё</string>
     <string name="error_restoring_post">Возникла ошибка при восстановлении записи</string>
@@ -525,15 +536,7 @@ Language: ru
     <string name="new_site_creation_empty_domain_list_message">Нет доступных адресов по критериям поиска</string>
     <string name="site_creation_error_generic_subtitle">Ошибка подключения к серверу, пожалуйста попробуйте еще раз</string>
     <string name="site_creation_error_generic_title">Возникла проблема</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Пользовательская категория</string>
-    <string name="new_site_creation_button_skip">Пропустить</string>
-    <string name="new_site_creation_tag_line_description">Слоган - короткая строка текста сразу под заголовком.</string>
-    <string name="new_site_creation_tag_line_hint">Слоган</string>
-    <string name="new_site_creation_site_title_hint">Заголовок сайта</string>
-    <string name="new_site_creation_site_info_header_subtitle">Расскажите больше о создаваемом сайте.</string>
-    <string name="new_site_creation_site_info_header_title">Основная информация</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Возникла проблема</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Нет подключения</string>
     <string name="site_creation_segments_subtitle">Это поможет нам делать вам рекомендации. Но вы не ограничены этим, все сайты развиваются.</string>
     <string name="site_creation_segments_title">Расскажите какого типа сайт вы хотите создать</string>
     <string name="new_site_creation_preview_title">Ваш новый сайт создан!</string>
@@ -739,7 +742,6 @@ Language: ru
     <string name="people_empty_list_filtered_email_followers">Ещё нет подписчиков по эл.почте</string>
     <string name="people_empty_list_filtered_followers">Ещё нет подписчиков</string>
     <string name="people_empty_list_filtered_users">Ещё нет пользователей</string>
-    <string name="connection_service_facebook_notice">C 01.08.2018 Facebook более не разрешает напрямую делиться записями в профили Facebook. Связи со страницами FB останутся неизмененными.</string>
     <string name="reader_empty_posts_liked_description">Записи, которые вам понравились будут здесь</string>
     <string name="reader_empty_posts_liked_title">Нет отметок \"нравится\"</string>
     <string name="reader_empty_followed_blogs_button_followed">Перейти к подпискам</string>
@@ -1296,8 +1298,6 @@ Language: ru
     <string name="editor_dropped_text_error">При перетаскивании текста произошла ошибка.</string>
     <string name="editor_dropped_html_images_not_allowed">Перетаскивание изображений в режиме HTML не разрешено.</string>
     <string name="editor_content_hint">Поделитесь своей историей здесь…</string>
-    <string name="post_list_trashed">Удалено</string>
-    <string name="post_list_scheduled">Запланировано</string>
     <string name="post_status_post_private">Личная</string>
     <string name="post_status_draft">Черновик</string>
     <string name="post_status_pending_review">Ожидает проверки</string>
@@ -1318,7 +1318,6 @@ Language: ru
     <string name="post_settings_more_options">Дополнительные параметры</string>
     <string name="post_settings_categories_and_tags">Рубрики и метки</string>
     <string name="post_settings_status">Статус</string>
-    <string name="notifications_tab_title_unread">Непрочитанные</string>
     <string name="notifications_tab_title_all">Все</string>
     <string name="top_level_category_name">Верхний уровень</string>
     <string name="category_parent">Родительская рубрика (необязательно):</string>
@@ -2016,8 +2015,6 @@ Language: ru
     <string name="saving_changes">Сохранить изменения</string>
     <string name="hint_comment_content">Комментировать</string>
     <string name="trash">Удалённые</string>
-    <string name="trash_no">Не удалять</string>
-    <string name="trash_yes">Да</string>
     <string name="dlg_confirm_trash_comments">Удалить?</string>
     <string name="dlg_trashing_comments">Удалить</string>
     <string name="dlg_spamming_comments">Отметить как спам</string>

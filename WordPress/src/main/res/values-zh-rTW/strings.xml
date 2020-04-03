@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-20 01:54:10+0000
+Translation-Revision-Date: 2020-04-01 00:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">建立文章</string>
+    <string name="post_list_tab_trashed_posts">已移至垃圾桶</string>
+    <string name="post_list_tab_scheduled_posts">已排程</string>
+    <string name="post_list_tab_published_posts">已發佈</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook 連結找不到任何頁面。Publicize 無法連結至 Facebook 個人檔案，只能連結至已發表的頁面。</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">未連線</string>
+    <string name="my_site_select_domains_page_title">網站位址</string>
+    <string name="notifications_tab_title_likes">按讚數</string>
+    <string name="notifications_tab_title_follows">關注者</string>
+    <string name="notifications_tab_title_comments">留言</string>
+    <string name="notifications_tab_title_unread_notifications">未讀</string>
+    <string name="dlg_cancel_action_dont_trash">不要移至垃圾桶</string>
+    <string name="dlg_confirm_action_trash">垃圾桶</string>
     <string name="stats_insights_management_activity">活動</string>
     <string name="stats_insights_management_posts_and_pages">文章與頁面</string>
     <string name="stats_insights_management_general">一般</string>
@@ -280,7 +293,6 @@ Language: zh_TW
     <string name="enter_wordpress_site">此地址的網站不是 WordPress 網站。為協助我們連結網站，網站必須安裝 WordPress。</string>
     <string name="login_invalid_site_url">請輸入完整的網站位址，例如 example.com。</string>
     <string name="enter_email_for_site">透過 WordPress.com 登入以連結至 %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">由於此帳號沒有任何粉絲專頁的存取權限，因此無法建立 Facebook 連結。Facebook 支援分享連結到 Facebook 粉絲專頁的功能，但不支援連結到 Facebook 個人檔案。</string>
     <string name="stats_post_views_label">瀏覽次數</string>
     <string name="stats_post_label">文章</string>
     <string name="stats_list_item_description">%1$s：%2$s，%3$s：%4$s</string>
@@ -377,8 +389,6 @@ Language: zh_TW
     <string name="editor_failed_to_insert_media_tap_to_retry">無法插入媒體。\n請點選以重試。</string>
     <string name="editor_uploading_draft">你的草稿正在上傳中…</string>
     <string name="post_uploading_draft">正在上傳草稿</string>
-    <string name="post_list_drafts">草稿</string>
-    <string name="post_list_published">已發佈</string>
     <string name="post_list_author_everyone">所有人</string>
     <string name="post_list_author_me">我</string>
     <string name="error_restoring_post">還原文章時發生錯誤</string>
@@ -516,15 +526,7 @@ Language: zh_TW
     <string name="new_site_creation_empty_domain_list_message">找不到你搜尋的網址</string>
     <string name="site_creation_error_generic_subtitle">與伺服器通訊時發生錯誤，請再試一次</string>
     <string name="site_creation_error_generic_title">發生問題</string>
-    <string name="new_site_creation_verticals_custom_subtitle">自訂類別</string>
-    <string name="new_site_creation_button_skip">略過</string>
-    <string name="new_site_creation_tag_line_description">標語為顯示在標題正下方的一小段文字。</string>
-    <string name="new_site_creation_tag_line_hint">標語</string>
-    <string name="new_site_creation_site_title_hint">網站標題</string>
-    <string name="new_site_creation_site_info_header_subtitle">請告訴我們更多資訊，以便瞭解你正在建立的網站。</string>
-    <string name="new_site_creation_site_info_header_title">基本資訊</string>
     <string name="site_creation_fetch_suggestions_error_unknown">發生問題</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">沒有連線</string>
     <string name="site_creation_segments_subtitle">這會協助我們向你推薦相關選項。但你不應裹足不前，所有網站都會不斷進步！</string>
     <string name="site_creation_segments_title">告訴我們你希望建立什麼類型的網站</string>
     <string name="new_site_creation_preview_title">你的網站已建立！</string>
@@ -729,7 +731,6 @@ Language: zh_TW
     <string name="people_empty_list_filtered_email_followers">尚未有電子郵件關注者</string>
     <string name="people_empty_list_filtered_followers">尚未有關注者</string>
     <string name="people_empty_list_filtered_users">尚未有使用者</string>
-    <string name="connection_service_facebook_notice">Facebook 自 2018 年 8 月 1 日起將禁止直接將文章分享至 Facebook 個人檔案。與 Facebook 粉絲專頁的連結將不受影響。</string>
     <string name="reader_empty_posts_liked_description">這裡會顯示你按讚的文章</string>
     <string name="reader_empty_posts_liked_title">尚未有按讚的文章</string>
     <string name="reader_empty_followed_blogs_button_followed">前往關注</string>
@@ -1303,7 +1304,6 @@ Language: zh_TW
     <string name="post_settings_more_options">更多選項</string>
     <string name="post_settings_categories_and_tags">分類與標籤</string>
     <string name="post_settings_status">狀態</string>
-    <string name="notifications_tab_title_unread">未讀</string>
     <string name="notifications_tab_title_all">全部</string>
     <string name="top_level_category_name">最上層</string>
     <string name="category_parent">上層類別 (選填)：</string>
@@ -1993,8 +1993,6 @@ Language: zh_TW
     <string name="saving_changes">正在儲存變更</string>
     <string name="hint_comment_content">回應</string>
     <string name="trash">垃圾桶</string>
-    <string name="trash_no">不要移至垃圾桶</string>
-    <string name="trash_yes">垃圾桶</string>
     <string name="dlg_confirm_trash_comments">移至垃圾桶？</string>
     <string name="dlg_trashing_comments">正在移至垃圾桶</string>
     <string name="dlg_spamming_comments">標記為垃圾</string>

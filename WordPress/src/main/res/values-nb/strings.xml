@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-12 18:36:32+0000
+Translation-Revision-Date: 2020-03-25 11:41:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">Opprett et innlegg</string>
+    <string name="post_list_tab_trashed_posts">Kastet</string>
+    <string name="post_list_tab_scheduled_posts">Planlagt</string>
+    <string name="post_list_tab_published_posts">Publisert</string>
+    <string name="my_site_select_domains_page_title">Nettstedsadresse</string>
+    <string name="notifications_tab_title_follows">Følger</string>
+    <string name="notifications_tab_title_comments">Kommentarer</string>
+    <string name="notifications_tab_title_unread_notifications">Ulest</string>
+    <string name="dlg_cancel_action_dont_trash">Ikke kast</string>
+    <string name="dlg_confirm_action_trash">Kast</string>
     <string name="stats_insights_management_activity">Aktivitet</string>
     <string name="stats_insights_management_posts_and_pages">Innlegg og sider</string>
     <string name="stats_insights_management_general">Generelt</string>
@@ -223,7 +233,6 @@ Language: nb_NO
     <string name="enter_wordpress_site">Nettstedet på denne adressen er ikke et WordPress-nettsted. For at vi skal kunne koble til det må det ha WordPress installert.</string>
     <string name="login_invalid_site_url">Vennligst oppgi en fullstendig nettstedsadresse, f.eks example.com.</string>
     <string name="enter_email_for_site">Logg inn med WordPress.com for å koble til %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">Tilkoblingen til Facebook kunne ikke opprettes fordi denne kontoen ikke har tilgang til noen sider. Facebook støtter deling til Facebook-sider, men ikke til Facebook-profiler.</string>
     <string name="stats_post_views_label">Visninger</string>
     <string name="stats_post_label">Innlegg</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -318,8 +327,7 @@ Language: nb_NO
     <string name="editor_failed_to_insert_media_tap_to_retry">Mislyktes i å sette inn media.\nVennligst trykk for å prøve igjen.</string>
     <string name="editor_uploading_draft">Din kladd lastes opp</string>
     <string name="post_uploading_draft">Laster opp kladd</string>
-    <string name="post_list_drafts">Kladder</string>
-    <string name="post_list_published">Publiserte</string>
+    <string name="post_list_tab_drafts">Kladder</string>
     <string name="post_list_author_everyone">Alle</string>
     <string name="post_list_author_me">Meg</string>
     <string name="error_restoring_post">Det oppsto en feil ved gjenoppretting av innlegget</string>
@@ -462,15 +470,7 @@ Language: nb_NO
     <string name="new_site_creation_empty_domain_list_message">Ingen tilgjengelige adresser passet til ditt søk</string>
     <string name="site_creation_error_generic_subtitle">Feil ved kommunkasjonen med server, vennligst prøv igjen</string>
     <string name="site_creation_error_generic_title">Det oppsto et problem</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Tilpasset kategori</string>
-    <string name="new_site_creation_button_skip">Hopp over</string>
-    <string name="new_site_creation_tag_line_description">Slagordet er en kort tekst som vises rett under nettstedtittelen</string>
-    <string name="new_site_creation_tag_line_hint">Slagord</string>
-    <string name="new_site_creation_site_title_hint">Tittel på nettstedet</string>
-    <string name="new_site_creation_site_info_header_subtitle">Fortell oss mer om nettstedet du lager.</string>
-    <string name="new_site_creation_site_info_header_title">Grunnleggende informasjon</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Det oppsto et problem</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Ingen forbindelse</string>
     <string name="site_creation_segments_subtitle">Dette hjelper oss å komme med anbefalinger, men du er blir aldri låst — alle nettsteder utvikler seg!</string>
     <string name="site_creation_segments_title">Fortell oss hva slags nettsted du ønsker å lage</string>
     <string name="new_site_creation_preview_title">Ditt nettsted er laget!</string>
@@ -1208,8 +1208,6 @@ Language: nb_NO
     <string name="editor_dropped_text_error">En feil oppstod under slipping av tekst</string>
     <string name="editor_dropped_html_images_not_allowed">Å slippe bilder når du er i HTML-modus, er ikke tillatt</string>
     <string name="editor_content_hint">Del historien din her …</string>
-    <string name="post_list_trashed">Kastet</string>
-    <string name="post_list_scheduled">Planlagt</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Utkast</string>
     <string name="post_status_pending_review">Avventer gjennomgang</string>
@@ -1230,7 +1228,6 @@ Language: nb_NO
     <string name="post_settings_more_options">Flere innstillinger</string>
     <string name="post_settings_categories_and_tags">Kategorier og stikkord</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Ulest</string>
     <string name="notifications_tab_title_all">Alle</string>
     <string name="top_level_category_name">Toppnivå</string>
     <string name="category_parent">Overkategori (valgfritt):</string>
@@ -1928,8 +1925,6 @@ Language: nb_NO
     <string name="saving_changes">Lagrer endringer</string>
     <string name="hint_comment_content">Kommentar</string>
     <string name="trash">Papirkurv</string>
-    <string name="trash_no">Ikke slett</string>
-    <string name="trash_yes">Slett</string>
     <string name="dlg_confirm_trash_comments">Send til papirkurv?</string>
     <string name="dlg_trashing_comments">Sender til papirkurven</string>
     <string name="dlg_spamming_comments">Marker som useriøs</string>

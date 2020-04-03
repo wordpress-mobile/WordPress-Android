@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-12 02:28:08+0000
+Translation-Revision-Date: 2020-03-26 14:35:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es_MX
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">Crear una entrada</string>
+    <string name="post_list_tab_trashed_posts">En la papelera</string>
+    <string name="post_list_tab_scheduled_posts">Programada</string>
+    <string name="post_list_tab_published_posts">Publicada</string>
+    <string name="sharing_facebook_account_must_have_pages">La conexión de Facebook no puede encontrar ninguna página. «Divulgar» no se puede conectar con los perfiles de Facebook, solo con las páginas publicadas.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">No conectado</string>
+    <string name="my_site_select_domains_page_title">Dirección del sitio</string>
+    <string name="notifications_tab_title_likes">Me gusta</string>
+    <string name="notifications_tab_title_follows">Seguimientos</string>
+    <string name="notifications_tab_title_comments">Comentarios</string>
+    <string name="notifications_tab_title_unread_notifications">No leído</string>
+    <string name="dlg_cancel_action_dont_trash">No enviar a la papelera</string>
+    <string name="dlg_confirm_action_trash">Papelera</string>
     <string name="stats_insights_management_activity">Actividad</string>
     <string name="stats_insights_management_posts_and_pages">Entradas y páginas</string>
     <string name="stats_insights_management_general">General</string>
@@ -282,7 +295,6 @@ Language: es_MX
     <string name="enter_wordpress_site">El sitio web en esa dirección no es un sitio WordPress. Para conectarnos a él, el sitio debe tener instalado WordPress.</string>
     <string name="login_invalid_site_url">Por favor, introduce una dirección completa de un sitio web, como example.com.</string>
     <string name="enter_email_for_site">Inicia sesión con WordPress.com para conectar con %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">La conexión con Facebook no se pudo realizar debido a que esta cuenta no tiene acceso a las páginas. Facebook es compatible con compartir conexiones con páginas de Facebook, pero no con perfiles de Facebook.</string>
     <string name="stats_post_views_label">Visitas</string>
     <string name="stats_post_label">Entrada</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -379,8 +391,7 @@ Language: es_MX
     <string name="editor_failed_to_insert_media_tap_to_retry">Fallo al insertar los medios.\nPor favor, toca para volver a intentarlo.</string>
     <string name="editor_uploading_draft">Tu borrador se está subiendo</string>
     <string name="post_uploading_draft">Subiendo borrador</string>
-    <string name="post_list_drafts">Borradores</string>
-    <string name="post_list_published">Publicados</string>
+    <string name="post_list_tab_drafts">Borradores</string>
     <string name="post_list_author_everyone">Todos</string>
     <string name="post_list_author_me">Yo</string>
     <string name="error_restoring_post">Ocurrió un error mientras se restauraba la entrada</string>
@@ -525,15 +536,7 @@ Language: es_MX
     <string name="new_site_creation_empty_domain_list_message">No hay direcciones disponibles que coincidan con tu búsqueda</string>
     <string name="site_creation_error_generic_subtitle">Error al comunicarse con el servidor, por favor inténtalo de nuevo</string>
     <string name="site_creation_error_generic_title">Hubo un problema</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Categoría personalizada</string>
-    <string name="new_site_creation_button_skip">Saltar</string>
-    <string name="new_site_creation_tag_line_description">El lema es una breve línea de texto mostrada justo debajo del título.</string>
-    <string name="new_site_creation_tag_line_hint">Lema</string>
-    <string name="new_site_creation_site_title_hint">Título del Sitio</string>
-    <string name="new_site_creation_site_info_header_subtitle">Cuéntanos más sobre el sitio que estás creando.</string>
-    <string name="new_site_creation_site_info_header_title">Información Básica</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Hubo un problema</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Sin conexión</string>
     <string name="site_creation_segments_subtitle">Esto nos ayuda a hacer recomendaciones. Pero nunca estar siempre ahí — ¡todos los sitios evolucionan!</string>
     <string name="site_creation_segments_title">Cuéntanos qué tipo de sitio te gustaría crear</string>
     <string name="new_site_creation_preview_title">¡Tu sitio ha sido creado!</string>
@@ -739,7 +742,6 @@ Language: es_MX
     <string name="people_empty_list_filtered_email_followers">No hay seguidores por correo electrónico aún</string>
     <string name="people_empty_list_filtered_followers">No hay seguidores aún</string>
     <string name="people_empty_list_filtered_users">No hay usuarios aún</string>
-    <string name="connection_service_facebook_notice">A partir del 1 de agosto de 2018 Facebook ya no permite compartir directamente entradas a perfiles de Facebook. Las conexiones a las páginas de Facebook seguirán sin cambios.</string>
     <string name="reader_empty_posts_liked_description">Las entradas que te gusten aparecerán aquí</string>
     <string name="reader_empty_posts_liked_title">Nada que te gustó aún</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir a los siguientes</string>
@@ -1296,8 +1298,6 @@ Language: es_MX
     <string name="editor_dropped_text_error">Ocurrió un error al arrastrar texto</string>
     <string name="editor_dropped_html_images_not_allowed">No está permitido arrastrar imágenes en el modo HTML</string>
     <string name="editor_content_hint">Comparte tu historia aquí…</string>
-    <string name="post_list_trashed">En la papelera</string>
-    <string name="post_list_scheduled">Programada</string>
     <string name="post_status_post_private">Privada</string>
     <string name="post_status_draft">Borrador</string>
     <string name="post_status_pending_review">Pendiente de revisión</string>
@@ -1318,7 +1318,6 @@ Language: es_MX
     <string name="post_settings_more_options">Más opciones</string>
     <string name="post_settings_categories_and_tags">Categorías y etiquetas</string>
     <string name="post_settings_status">Estado</string>
-    <string name="notifications_tab_title_unread">Sin leer</string>
     <string name="notifications_tab_title_all">Todos</string>
     <string name="top_level_category_name">Nivel superior</string>
     <string name="category_parent">Categoría superior (opcional):</string>
@@ -2016,8 +2015,6 @@ Language: es_MX
     <string name="saving_changes">Guardando cambios</string>
     <string name="hint_comment_content">Comentario</string>
     <string name="trash">Papelera</string>
-    <string name="trash_no">No enviar a la papelera</string>
-    <string name="trash_yes">Enviar a la papelera</string>
     <string name="dlg_confirm_trash_comments">¿Enviar a la papelera?</string>
     <string name="dlg_trashing_comments">Enviando a la papelera</string>
     <string name="dlg_spamming_comments">Marcando como spam</string>

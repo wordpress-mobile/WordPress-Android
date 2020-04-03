@@ -578,8 +578,6 @@ Language: vi_VN
     <string name="dlg_spamming_comments">Đánh dấu là spam</string>
     <string name="dlg_trashing_comments">Đưa vào thùng rác</string>
     <string name="dlg_confirm_trash_comments">Đưa vào thùng rác?</string>
-    <string name="trash_yes">Thùng rác</string>
-    <string name="trash_no">Không đưa vào thùng rác </string>
     <string name="delete_page">Xóa trang?</string>
     <string name="delete_post">Xóa bài viết?</string>
     <string name="error_refresh_media">Đa phương tiện không thể được làm mới tại thời điểm này</string>

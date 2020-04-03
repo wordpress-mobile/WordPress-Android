@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-18 00:55:06+0000
+Translation-Revision-Date: 2020-04-02 00:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">Crea un articolo</string>
+    <string name="post_list_tab_trashed_posts">Spostato nel cestino</string>
+    <string name="post_list_tab_scheduled_posts">Programmato</string>
+    <string name="post_list_tab_published_posts">Pubblicato</string>
+    <string name="sharing_facebook_account_must_have_pages">La connessione a Facebook non riesce a trovare alcuna pagina. Pubblicizza non può connettersi ai profili Facebook, bensì solo alle pagine pubblicate.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Non collegato</string>
+    <string name="my_site_select_domains_page_title">Indirizzo sito</string>
+    <string name="notifications_tab_title_likes">Mi piace</string>
+    <string name="notifications_tab_title_follows">Segue</string>
+    <string name="notifications_tab_title_comments">Commenti</string>
+    <string name="notifications_tab_title_unread_notifications">Non lette</string>
+    <string name="dlg_cancel_action_dont_trash">Non spostare nel cestino</string>
+    <string name="dlg_confirm_action_trash">Cestino</string>
     <string name="stats_insights_management_activity">Attività</string>
     <string name="stats_insights_management_posts_and_pages">Articoli e pagine</string>
     <string name="stats_insights_management_general">Generale</string>
@@ -266,7 +279,6 @@ Language: it
     <string name="enter_wordpress_site">Il sito web su questo indirizzo non è un sito WordPress. Per poterci collegare a esso, il sito deve avere WordPress installato.</string>
     <string name="login_invalid_site_url">Inserisci un indirizzo di sito Web completo, come esempio.com.</string>
     <string name="enter_email_for_site">Accedi con WordPress.com per collegarti a %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">Impossibile stabilire la connessione a Facebook perché questo account non ha accesso a nessuna pagina. Facebook supporta la condivisione delle connessioni alle pagine di Facebook, ma non ai profili di Facebook.</string>
     <string name="stats_post_views_label">Visualizzazioni</string>
     <string name="stats_post_label">Articolo</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -363,8 +375,6 @@ Language: it
     <string name="editor_failed_to_insert_media_tap_to_retry">Inserimento file multimediali non riuscito.\nTocca per riprovare.</string>
     <string name="editor_uploading_draft">La tua bozza è in caricamento</string>
     <string name="post_uploading_draft">Caricamento della bozza</string>
-    <string name="post_list_drafts">Bozze</string>
-    <string name="post_list_published">Pubblicato</string>
     <string name="post_list_author_everyone">Tutti</string>
     <string name="post_list_author_me">Io</string>
     <string name="error_restoring_post">Errore durante il recupero dell\'articolo</string>
@@ -509,15 +519,7 @@ Language: it
     <string name="new_site_creation_empty_domain_list_message">Nessun indirizzo corrispondente alla ricerca</string>
     <string name="site_creation_error_generic_subtitle">Errore di comunicazione con il server, prova di nuovo</string>
     <string name="site_creation_error_generic_title">Si è verificato un problema</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Categoria personalizzata</string>
-    <string name="new_site_creation_button_skip">Salta</string>
-    <string name="new_site_creation_tag_line_description">La tagline è una breve linea di testo mostrata proprio sotto il titolo.</string>
-    <string name="new_site_creation_tag_line_hint">Tagline</string>
-    <string name="new_site_creation_site_title_hint">Titolo sito</string>
-    <string name="new_site_creation_site_info_header_subtitle">Raccontaci di più sul sito che stai creando.</string>
-    <string name="new_site_creation_site_info_header_title">Informazioni di base</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Si è verificato un problema</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Nessuna connessione</string>
     <string name="site_creation_segments_subtitle">Questo ci aiuta a dare consigli. Non rimani mai bloccato però. Tutti i siti si evolvono.</string>
     <string name="site_creation_segments_title">Descrivici il tipo di sito che vorresti creare</string>
     <string name="new_site_creation_preview_title">Il sito è stato creato.</string>
@@ -723,7 +725,6 @@ Language: it
     <string name="people_empty_list_filtered_email_followers">Ancora nessun follower tramite email</string>
     <string name="people_empty_list_filtered_followers">Ancora nessun follower</string>
     <string name="people_empty_list_filtered_users">Ancora nessun utente</string>
-    <string name="connection_service_facebook_notice">A partire dal 1 agosto 2018, Facebook non consente più la condivisione diretta degli articoli sui profili di Facebook. Le connessioni alle pagine di Facebook restano invariate.</string>
     <string name="reader_empty_posts_liked_description">Gli articoli che ti piacciono vengono visualizzati qui</string>
     <string name="reader_empty_posts_liked_title">Ancora nessun contenuto collegato</string>
     <string name="reader_empty_followed_blogs_button_followed">Vai al seguente</string>
@@ -1279,8 +1280,6 @@ Language: it
     <string name="editor_dropped_text_error">Si è verificato un errore durante il rilascio del testo</string>
     <string name="editor_dropped_html_images_not_allowed">Non è consentito rilasciare immagini quando si è in modalità HTML</string>
     <string name="editor_content_hint">Condividi la tua storia qui…</string>
-    <string name="post_list_trashed">Cestino</string>
-    <string name="post_list_scheduled">Programmati</string>
     <string name="post_status_post_private">Privato</string>
     <string name="post_status_draft">Bozza</string>
     <string name="post_status_pending_review">In attesa di revisione</string>
@@ -1301,7 +1300,6 @@ Language: it
     <string name="post_settings_more_options">Altre opzioni</string>
     <string name="post_settings_categories_and_tags">Categorie e tag</string>
     <string name="post_settings_status">Stato</string>
-    <string name="notifications_tab_title_unread">Non lette</string>
     <string name="notifications_tab_title_all">Tutto</string>
     <string name="top_level_category_name">Primo livello</string>
     <string name="category_parent">Categoria madre (facoltativa):</string>
@@ -1999,8 +1997,6 @@ Language: it
     <string name="saving_changes">Salvataggio delle modifiche in corso</string>
     <string name="hint_comment_content">Commento</string>
     <string name="trash">Elimina</string>
-    <string name="trash_no">Non cestinare</string>
-    <string name="trash_yes">Elimina</string>
     <string name="dlg_confirm_trash_comments">Inviare al cestino?</string>
     <string name="dlg_trashing_comments">Invio al cestino in corso</string>
     <string name="dlg_spamming_comments">Contrassegno come spam in corso</string>
