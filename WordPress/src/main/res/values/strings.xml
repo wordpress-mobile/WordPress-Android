@@ -2728,7 +2728,7 @@
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_10_street_road" tools:ignore="UnusedResources">10 Street Road</string>
     <!-- translators: sample content for "Contact" page template -->
-    <string name="gutenberg_native_555_555_1234" tools:ignore="UnusedResources">(555)555-1234</string>
+    <string name="gutenberg_native_555_555_1234" tools:ignore="UnusedResources">(555)555–1234</string>
     <!-- translators: sample content for "Portfolio" page template -->
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented" tools:ignore="UnusedResources">A description of the project and the works presented.</string>
     <!-- translators: sample content for "Contact" page template -->
