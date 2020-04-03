@@ -8,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.graphics.ColorUtils;
 import androidx.core.text.BidiFormatter;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,10 +25,12 @@ import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
+import org.wordpress.android.widgets.BadgedImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +40,6 @@ import javax.inject.Inject;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
     private final int mAvatarSz;
-    private final int mColorRead;
     private final int mColorUnread;
     private final int mTextIndentSize;
 
@@ -100,8 +101,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         setHasStableIds(false);
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
-        mColorRead = context.getResources().getColor(android.R.color.white);
-        mColorUnread = context.getResources().getColor(R.color.background_notification_unread);
+        mColorUnread = ColorUtils
+                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface),
+                        context.getResources().getInteger(R.integer.selected_list_item_opacity));
         mTextIndentSize = context.getResources().getDimensionPixelSize(R.dimen.notifications_text_indent_sz);
     }
 
@@ -219,8 +221,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         if (previousTimeGroup != null && previousTimeGroup == timeGroup) {
             noteViewHolder.mHeaderText.setVisibility(View.GONE);
+            noteViewHolder.mHeaderDivider.setVisibility(View.GONE);
         } else {
             noteViewHolder.mHeaderText.setVisibility(View.VISIBLE);
+            noteViewHolder.mHeaderDivider.setVisibility(View.VISIBLE);
 
             if (timeGroup == Note.NoteTimeGroup.GROUP_TODAY) {
                 noteViewHolder.mHeaderText.setText(R.string.stats_timeframe_today);
@@ -294,19 +298,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         boolean isUnread = note.isUnread();
 
         int gridicon = mNoticonUtils.noticonToGridicon(note.getNoticonCharacter());
-        mImageManager.load(noteViewHolder.mNoteIcon, gridicon);
+        noteViewHolder.mImgAvatar.setBadgeIcon(gridicon);
         if (commentStatus == CommentStatus.UNAPPROVED) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning_stroke_white);
+            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_warning_dark);
         } else if (isUnread) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_40_stroke_notification_unread);
+            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_primary);
         } else {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_20_stroke_white);
+            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_neutral_20);
         }
 
         if (isUnread) {
-            noteViewHolder.itemView.setBackgroundColor(mColorUnread);
+            noteViewHolder.mContentView.setBackgroundColor(mColorUnread);
         } else {
-            noteViewHolder.itemView.setBackgroundColor(mColorRead);
+            noteViewHolder.mContentView.setBackgroundColor(0);
         }
 
         // request to load more comments when we near the end
@@ -356,21 +360,21 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     class NoteViewHolder extends RecyclerView.ViewHolder {
         private final View mContentView;
         private final TextView mHeaderText;
+        private final View mHeaderDivider;
         private final TextView mTxtSubject;
         private final TextView mTxtSubjectNoticon;
         private final TextView mTxtDetail;
-        private final ImageView mImgAvatar;
-        private final ImageView mNoteIcon;
+        private final BadgedImageView mImgAvatar;
 
         NoteViewHolder(View view) {
             super(view);
             mContentView = view.findViewById(R.id.note_content_container);
             mHeaderText = view.findViewById(R.id.header_text);
+            mHeaderDivider = view.findViewById(R.id.header_divider);
             mTxtSubject = view.findViewById(R.id.note_subject);
             mTxtSubjectNoticon = view.findViewById(R.id.note_subject_noticon);
             mTxtDetail = view.findViewById(R.id.note_detail);
             mImgAvatar = view.findViewById(R.id.note_avatar);
-            mNoteIcon = view.findViewById(R.id.note_icon);
 
             mContentView.setOnClickListener(mOnClickListener);
         }

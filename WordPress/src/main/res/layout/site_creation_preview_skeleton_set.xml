@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <View
         style="@style/SitePreviewSkeletonView"
-        android:layout_height="@dimen/margin_extra_extra_medium_large"/>
+        android:layout_height="@dimen/margin_extra_extra_medium_large" />
 
     <View
         style="@style/SitePreviewSkeletonView"
         android:layout_height="@dimen/margin_extra_large"
-        android:layout_marginEnd="@dimen/margin_extra_large"/>
+        android:layout_marginEnd="@dimen/margin_extra_large" />
 
     <View
         style="@style/SitePreviewSkeletonView"
-        android:layout_height="@dimen/margin_extra_large"/>
+        android:layout_height="@dimen/margin_extra_large" />
 
     <View
         style="@style/SitePreviewSkeletonView"
         android:layout_height="@dimen/margin_extra_large"
-        android:layout_marginEnd="@dimen/margin_extra_extra_large"/>
+        android:layout_marginEnd="@dimen/margin_extra_extra_large" />
 
     <View
         android:layout_width="@dimen/site_creation_preview_skeleton_mid_size_width"
-        android:layout_height="@dimen/margin_extra_large"/>
-   
+        android:layout_height="@dimen/margin_extra_large" />
+
     <View
         style="@style/SitePreviewSkeletonView"
-        android:layout_height="@dimen/site_creation_preview_skeleton_large_block_height"/>
+        android:layout_height="@dimen/site_creation_preview_skeleton_large_block_height" />
 </LinearLayout>

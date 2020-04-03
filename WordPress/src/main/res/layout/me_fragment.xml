@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_main"/>
+    <include layout="@layout/toolbar_main" />
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -18,14 +17,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_avatar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginEnd="@dimen/content_margin"
                 android:layout_marginStart="@dimen/content_margin"
-                android:layout_marginTop="@dimen/margin_large">
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/content_margin"
+                android:layout_marginBottom="@dimen/margin_large">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -50,12 +49,11 @@
                                 android:id="@+id/me_avatar"
                                 android:layout_width="@dimen/avatar_sz_inner_circle"
                                 android:layout_height="@dimen/avatar_sz_inner_circle"
-                                android:contentDescription="@string/reader_avatar_desc"/>
+                                android:contentDescription="@string/reader_avatar_desc" />
                         </FrameLayout>
 
                         <ProgressBar
                             android:id="@+id/avatar_progress"
-                            style="@android:style/Widget.Holo.ProgressBar"
                             android:layout_width="@dimen/avatar_sz_inner_circle"
                             android:layout_height="@dimen/avatar_sz_inner_circle"
                             android:layout_gravity="center"
@@ -65,7 +63,7 @@
                             android:indeterminate="true"
                             android:padding="@dimen/margin_large"
                             android:visibility="gone"
-                            tools:visibility="visible"/>
+                            tools:visibility="visible" />
                     </FrameLayout>
 
                     <org.wordpress.android.widgets.WPTextView
@@ -80,10 +78,10 @@
                         android:padding="8dp"
                         android:text="@string/change_photo"
                         android:textAllCaps="true"
-                        android:textColor="@color/primary_50"
-                        android:textSize="10sp"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="?attr/colorPrimary"
                         tools:ignore="SmallSp"
-                        tools:text="Change photo"/>
+                        tools:text="Change photo" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/me_display_name"
@@ -93,12 +91,9 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="8dp"
                         android:ellipsize="end"
-                        android:fontFamily="sans-serif-light"
                         android:maxLines="1"
-                        android:textColor="?attr/wpColorText"
-                        android:textSize="@dimen/text_sz_large"
-                        android:textStyle="bold"
-                        tools:text="Full Name"/>
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        tools:text="Full Name" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/me_username"
@@ -108,12 +103,12 @@
                         android:layout_centerHorizontal="true"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="?attr/wpColorTextSubtle"
-                        android:textSize="@dimen/text_sz_medium"
-                        tools:text="username"/>
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?attr/wpColorOnSurfaceMedium"
+                        tools:text="username" />
                 </RelativeLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:id="@+id/row_my_profile"
@@ -123,16 +118,16 @@
                     android:id="@+id/me_my_profile_icon"
                     style="@style/MeListRowIcon"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_user_white_24dp"/>
+                    android:src="@drawable/ic_user_white_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/me_my_profile_text_view"
                     style="@style/MeListRowTextView"
-                    android:text="@string/my_profile"/>
+                    android:text="@string/my_profile" />
 
             </LinearLayout>
 
-            <View style="@style/MeListSectionDividerView"/>
+            <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
                 android:id="@+id/row_account_settings"
@@ -142,16 +137,16 @@
                     android:id="@+id/me_account_settings_icon"
                     style="@style/MeListRowIcon"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_cog_white_24dp"/>
+                    android:src="@drawable/ic_cog_white_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/me_account_settings_text_view"
                     style="@style/MeListRowTextView"
-                    android:text="@string/account_settings"/>
+                    android:text="@string/account_settings" />
 
             </LinearLayout>
 
-            <View style="@style/MeListSectionDividerView"/>
+            <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
                 android:id="@+id/row_app_settings"
@@ -161,16 +156,16 @@
                     android:id="@+id/me_app_settings_icon"
                     style="@style/MeListRowIcon"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_phone_white_24dp"/>
+                    android:src="@drawable/ic_phone_white_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/me_app_settings_text_view"
                     style="@style/MeListRowTextView"
-                    android:text="@string/me_btn_app_settings"/>
+                    android:text="@string/me_btn_app_settings" />
 
             </LinearLayout>
 
-            <View style="@style/MeListSectionDividerView"/>
+            <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
                 android:id="@+id/row_support"
@@ -180,16 +175,16 @@
                     android:id="@+id/me_support_icon"
                     style="@style/MeListRowIcon"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_help_white_24dp"/>
+                    android:src="@drawable/ic_help_white_24dp" />
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
                     android:id="@+id/me_support_text_view"
                     style="@style/MeListRowTextView"
-                    android:text="@string/me_btn_support"/>
+                    android:text="@string/me_btn_support" />
 
             </LinearLayout>
 
-            <View style="@style/MeListSectionDividerView"/>
+            <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
                 android:id="@+id/row_logout"
@@ -199,16 +194,16 @@
                     android:id="@+id/me_login_logout_icon"
                     style="@style/MeListRowIcon"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_sign_out_white_24dp"/>
+                    android:src="@drawable/ic_sign_out_white_24dp" />
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
                     android:id="@+id/me_login_logout_text_view"
                     style="@style/MeListRowTextView"
-                    tools:text="@string/me_btn_login_logout"/>
+                    tools:text="@string/me_btn_login_logout" />
 
             </LinearLayout>
 
-            <View style="@style/MeListSectionDividerView"/>
+            <View style="@style/MeListSectionDividerView" />
 
         </LinearLayout>
     </ScrollView>
