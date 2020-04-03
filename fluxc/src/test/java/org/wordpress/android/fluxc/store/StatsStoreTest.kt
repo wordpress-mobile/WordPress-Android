@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers.Unconfined
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -25,6 +24,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.store.StatsStore.ManagementType
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.FILE_DOWNLOADS
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
@@ -41,7 +41,7 @@ class StatsStoreTest {
     @Before
     fun setUp() {
         store = StatsStore(
-                Unconfined,
+                initCoroutineEngine(),
                 insightTypesSqlUtils,
                 preferenceUtilsWrapper,
                 statsSqlUtils

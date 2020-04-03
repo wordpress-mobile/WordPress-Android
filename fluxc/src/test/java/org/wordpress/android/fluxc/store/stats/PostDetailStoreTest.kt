@@ -3,8 +3,7 @@ package org.wordpress.android.fluxc.store.stats
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,6 +19,7 @@ import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -37,7 +37,7 @@ class PostDetailStoreTest {
         store = PostDetailStore(
                 restClient,
                 sqlUtils,
-                Dispatchers.Unconfined,
+                initCoroutineEngine(),
                 mapper
         )
     }
@@ -54,7 +54,7 @@ class PostDetailStoreTest {
 
         val responseModel = store.fetchPostDetail(site, postId, forced)
 
-        Assertions.assertThat(responseModel.model).isEqualTo(model)
+        assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, POST_STATS_RESPONSE, postId = postId)
     }
 
@@ -72,5 +72,16 @@ class PostDetailStoreTest {
         val error = responseModel.error!!
         assertEquals(type, error.type)
         assertEquals(message, error.message)
+    }
+
+    @Test
+    fun `returns post detail from DB`() = test {
+        whenever(sqlUtils.select(site, postId)).thenReturn(POST_STATS_RESPONSE)
+        val model = mock<PostDetailStatsModel>()
+        whenever(mapper.map(POST_STATS_RESPONSE)).thenReturn(model)
+
+        val dbModel = store.getPostDetail(site, postId)
+
+        assertThat(dbModel).isEqualTo(model)
     }
 }
