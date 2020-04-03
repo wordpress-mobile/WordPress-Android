@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 99
+        return 100
     }
 
     override fun getDbName(): String {
@@ -1061,6 +1061,9 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCProductModel ADD DATE_ON_SALE_TO_GMT TEXT")
                 }
                 98 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS PostSummaryModel")
+                }
+                99 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD IS_WPCOM_ATOMIC BOOLEAN")
                     db.execSQL("ALTER TABLE SiteModel ADD IS_COMING_SOON BOOLEAN")
                 }

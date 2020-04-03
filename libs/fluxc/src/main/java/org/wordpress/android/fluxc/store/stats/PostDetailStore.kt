@@ -1,36 +1,35 @@
 package org.wordpress.android.fluxc.store.stats
 
-import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsMapper
-import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.DetailedPostStatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class PostDetailStore
 @Inject constructor(
     private val restClient: LatestPostInsightsRestClient,
     private val sqlUtils: DetailedPostStatsSqlUtils,
-    private val coroutineContext: CoroutineContext,
+    private val coroutineEngine: CoroutineEngine,
     private val mapper: PostDetailStatsMapper
 ) {
     suspend fun fetchPostDetail(
         site: SiteModel,
         postId: Long,
         forced: Boolean = false
-    ) = withContext(coroutineContext) {
+    ) = coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "fetchPostDetail") {
         if (!forced && sqlUtils.hasFreshRequest(site, postId = postId)) {
-            return@withContext OnStatsFetched(getPostDetail(site, postId), cached = true)
+            return@withDefaultContext OnStatsFetched(getPostDetail(site, postId), cached = true)
         }
         val payload = restClient.fetchPostStats(site, postId, forced)
-        return@withContext when {
+        return@withDefaultContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, postId = postId)
@@ -40,7 +39,7 @@ class PostDetailStore
         }
     }
 
-    fun getPostDetail(site: SiteModel, postId: Long): PostDetailStatsModel? {
-        return sqlUtils.select(site, postId)?.let { mapper.map(it) }
+    fun getPostDetail(site: SiteModel, postId: Long) = coroutineEngine.run(AppLog.T.STATS, this, "getPostDetail") {
+        sqlUtils.select(site, postId)?.let { mapper.map(it) }
     }
 }
