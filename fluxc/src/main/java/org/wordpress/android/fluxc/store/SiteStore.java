@@ -1946,17 +1946,17 @@ public class SiteStore extends Store {
     }
 
     private void fetchAccessCookie(SiteModel siteModel) {
+        if (!siteModel.isWPComAtomic()) {
+            AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.GENERIC_ERROR);
+            handleFetchAccessCookie(new FetchedAccessCookiePayload(siteModel, cookieError));
+        }
+
         if (mPrivateAtomicCookie.exists() && !mPrivateAtomicCookie.isExpired()) {
             emitChange(new OnAccessCookieFetched(siteModel, true, null));
             return;
         }
 
-        if (siteModel.isWPComAtomic()) {
-            mSiteRestClient.fetchAccessCookie(siteModel);
-        } else {
-            AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.GENERIC_ERROR);
-            handleFetchAccessCookie(new FetchedAccessCookiePayload(siteModel, cookieError));
-        }
+        mSiteRestClient.fetchAccessCookie(siteModel);
     }
 
     private void handleFetchAccessCookie(FetchedAccessCookiePayload payload) {
