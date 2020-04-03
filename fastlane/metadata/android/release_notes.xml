@@ -7,7 +7,7 @@
 </ar>
 <de-DE>
 14.5:
-Block-Editor: „Neueste Beiträge“-Block hinzugefügt und Absturz behoben, der durch das Einfügen von HTML-Inhalten mit eingebetteten Bildern verursacht wurde.
+Block-Editor: „Neueste Beiträge“-Block hinzugefügt
 Seiten-Templates: Block basierte Templates zur schnelleren Seitenerstellung hinzugefügt.
 Website-Erstellung: Einige Schritte wurden zugunsten einer schnelleren Einrichtung entfernt – Art der Website auswählen, Domainnamen eingeben, fertig.
 Fehlerbehebung: Ein Problem wurde behoben, das dazu führte, dass fehlgeschlagene Uploads von Beiträgen auf unbestimmte Zeit wiederholt wurden.
@@ -21,21 +21,21 @@ Bug fix: fixed an issue causing failed post uploads to be retried indefinitely.
 </en-US>
 <es-ES>
 14.5:
-Editor de bloques: Añadido el bloque «Últimas entradas», corregido el conflicto causado por pegar contenido HTML con imágenes incrustadas
+Editor de bloques: Añadido el bloque «Últimas entradas»
 Plantillas de página: Añadidas plantillas basadas en bloques para una creación de páginas más rápida.
 Creación del sitio: Eliminados algunos pasos para una configuración más rápida — seleccionar el tipo de sitio, introducir el nombre de dominio y listo.
 Correción de fallos: Corregido un problema que causaba que las subidas de entradas fallidas se volvieran a intentar indefinidamente.
 </es-ES>
 <fr-CA>
 14.5 :
-Éditeur de blocs : Ajout d’un bloc « Derniers articles », correction d’un crash causé en collant un contenu HTML avec des images embarquées.
+Éditeur de blocs : Ajout d’un bloc « Derniers articles »
 Modèles de pages :  Ajout de modèles basé sur les blocs pour une création de page plus rapide.
 Création de site : suppression de quelques étapes pour une configuration plus rapide. Sélectionnez le type de site, saisissez le domaine et voilà !
 Correction de bug : correction d’une problème qui causait un échec de téléversement d’article qui recommençait indéfiniment.
 </fr-CA>
 <fr-FR>
 14.5 :
-Éditeur de blocs : Ajout d’un bloc « Derniers articles », correction d’un crash causé en collant un contenu HTML avec des images embarquées.
+Éditeur de blocs : Ajout d’un bloc « Derniers articles »
 Modèles de pages :  Ajout de modèles basé sur les blocs pour une création de page plus rapide.
 Création de site : suppression de quelques étapes pour une configuration plus rapide. Sélectionnez le type de site, saisissez le domaine et voilà !
 Correction de bug : correction d’une problème qui causait un échec de téléversement d’article qui recommençait indéfiniment.
@@ -56,7 +56,7 @@ Perbaikan bug: memperbaiki masalah penyebab unggahan pos yang gagal dicoba ulang
 </id>
 <it-IT>
 14.5:
-Editor a blocchi: aggiunto il blocco Ultimi articoli, risolto un arresto anomalo che causava l'incollaggio dei contenuti HTML con immagini incorporate.
+Editor a blocchi: aggiunto il blocco Ultimi articoli
 Modelli di pagina: aggiunti modelli basati su un blocco per la creazione più rapida delle pagine.
 Creazione del sito: rimosse alcuni fasi per un'impostazione più veloce: selezione del tipo di sito, inserimento del nome di dominio, completamento dell'operazione.
 Correzione di bug: risolto un problema che impediva di ritentare indefinitamente i caricamenti non riusciti degli articoli.
