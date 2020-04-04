@@ -9,7 +9,6 @@ import com.tenor.android.core.model.impl.Result
 import com.tenor.android.core.network.ApiClient
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.impl.GifsResponse
-import org.wordpress.android.R.string
 import org.wordpress.android.viewmodel.gif.GifMediaViewModel
 import org.wordpress.android.viewmodel.gif.MutableGifMediaViewModel
 import org.wordpress.android.viewmodel.gif.provider.GifProvider.GifRequestFailedException
@@ -78,8 +77,8 @@ internal class TenorProvider constructor(
     ) = buildSearchCall(query, loadSize, position).apply {
         enqueue(object : Callback<GifsResponse> {
             override fun onResponse(call: Call<GifsResponse>, response: Response<GifsResponse>) {
-                val defaultErrorMessage = context.getString(string.gif_picker_empty_search_list)
-                response.body()?.let(onSuccess) ?: onFailure(GifRequestFailedException(defaultErrorMessage))
+                response.body()?.let(onSuccess) ?: onFailure(GifRequestFailedException(
+                        SEARCH_FOUND_NOTHING_EXCEPTION_MESSAGE))
             }
 
             override fun onFailure(call: Call<GifsResponse>, throwable: Throwable) {
@@ -145,6 +144,11 @@ internal class TenorProvider constructor(
          * To better refers to the Tenor API maximum GIF limit per request
          */
         private const val MAXIMUM_ALLOWED_LOAD_SIZE = 50
-        private const val DEFAULT_EXCEPTION_MESSAGE = "Sorry, there was a problem"
+
+        /**
+         * Exception messages the ones that TenorProvider can create
+         */
+        private const val DEFAULT_EXCEPTION_MESSAGE = "There was a problem handling the request"
+        private const val SEARCH_FOUND_NOTHING_EXCEPTION_MESSAGE = "No media found for this search query"
     }
 }
