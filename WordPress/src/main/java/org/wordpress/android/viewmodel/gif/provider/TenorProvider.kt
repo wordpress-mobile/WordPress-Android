@@ -55,7 +55,7 @@ internal class TenorProvider constructor(
                     onSuccess(gifList, nextPosition)
                 },
                 onFailure = {
-                    val errorMessage = it?.message ?: context.getString(string.gif_list_search_returned_unknown_error)
+                    val errorMessage = it?.message ?: DEFAULT_EXCEPTION_MESSAGE
                     onFailure(GifRequestFailedException(errorMessage))
                 }
         )
@@ -145,5 +145,6 @@ internal class TenorProvider constructor(
          * To better refers to the Tenor API maximum GIF limit per request
          */
         private const val MAXIMUM_ALLOWED_LOAD_SIZE = 50
+        private const val DEFAULT_EXCEPTION_MESSAGE = "Sorry, there was a problem"
     }
 }
