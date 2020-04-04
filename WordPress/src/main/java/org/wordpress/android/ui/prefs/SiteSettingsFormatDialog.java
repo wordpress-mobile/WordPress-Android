@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -9,17 +8,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.core.widget.CompoundButtonCompat;
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.radiobutton.MaterialRadioButton;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -104,15 +104,14 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
                 ? R.string.site_settings_date_format_title : R.string.site_settings_time_format_title;
         txtTitle.setText(titleRes);
 
-        txtHelp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.openUrlExternal(v.getContext(), Constants.URL_DATETIME_FORMAT_HELP);
-            }
-        });
+        txtHelp.setOnClickListener(
+                v -> ActivityLauncher.openUrlExternal(v.getContext(), Constants.URL_DATETIME_FORMAT_HELP));
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        int topOffset = getResources().getDimensionPixelOffset(R.dimen.settings_fragment_dialog_vertical_inset);
+
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity())
+                .setBackgroundInsetTop(topOffset)
+                .setBackgroundInsetBottom(topOffset);
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
         builder.setView(view);
@@ -125,9 +124,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         int margin = getResources().getDimensionPixelSize(R.dimen.margin_small);
 
         for (int i = 0; i < mEntries.length; i++) {
-            RadioButton radio = new RadioButton(getActivity());
-            CompoundButtonCompat.setButtonTintList(radio,
-                    getResources().getColorStateList(R.color.primary_40_gray_20_gray_40_selector));
+            MaterialRadioButton radio = new MaterialRadioButton(getActivity());
             radio.setText(mEntries[i]);
             radio.setId(i);
             mRadioGroup.addView(radio);
@@ -143,12 +140,8 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
             }
         }
 
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                mEditCustomFormat.setEnabled(isCustomFormatEntry(mEntries[checkedId]));
-            }
-        });
+        mRadioGroup.setOnCheckedChangeListener(
+                (group, checkedId) -> mEditCustomFormat.setEnabled(isCustomFormatEntry(mEntries[checkedId])));
     }
 
     @Override

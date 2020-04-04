@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/tags_list_row_container"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tags_list_row_height"
-                android:background="?android:selectableItemBackground"
-                android:orientation="vertical">
+    android:id="@+id/tags_list_row_container"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/tags_list_row_height"
+    android:background="?android:selectableItemBackground"
+    android:orientation="vertical">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tag_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,14 +14,13 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:padding="@dimen/margin_medium"
-        android:textColor="?attr/wpColorText"
-        android:textSize="@dimen/text_sz_medium"/>
+        android:textAppearance="?attr/textAppearanceBody2" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider_size"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="@dimen/margin_medium"
-        android:background="@color/neutral_10"/>
+        android:background="?android:attr/listDivider" />
 
 </RelativeLayout>

@@ -576,10 +576,13 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void editPageForResult(@NonNull Fragment fragment, @NonNull PageModel page,
-                                         boolean loadAutoSaveRevision) {
+    public static void editPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
+                                         int pageLocalId, boolean loadAutoSaveRevision) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        editPageForResult(intent, fragment, page.getSite(), page.getPageId(), loadAutoSaveRevision);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, pageLocalId);
+        intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
+        fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void editPageForResult(Intent intent, @NonNull Fragment fragment, @NonNull SiteModel site,

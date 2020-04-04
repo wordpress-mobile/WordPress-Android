@@ -18,6 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
+import org.wordpress.android.util.getColorFromAttribute
 
 class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
@@ -32,12 +33,25 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             // Loading the v42 of the Google Charts API, since the latest stable version has a problem with
             // the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
             // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
-            val colorLow = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent_5) and 0xffffff)
-            val colorHigh = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent) and 0xffffff)
+            val colorLow = Integer.toHexString(
+                    ContextCompat.getColor(
+                            itemView.context,
+                            R.color.stats_map_activity_low
+                    ) and 0xffffff
+            )
+            val colorHigh = Integer.toHexString(
+                    ContextCompat.getColor(
+                            itemView.context,
+                            R.color.stats_map_activity_high
+                    ) and 0xffffff
+            )
+            val backgroundColor = Integer.toHexString(
+                    itemView.context.getColorFromAttribute(R.attr.colorSurface) and 0xffffff
+            )
             val emptyColor = Integer.toHexString(
                     ContextCompat.getColor(
                             itemView.context,
-                            R.color.neutral_5
+                            R.color.stats_map_activity_empty
                     ) and 0xffffff
             )
             val htmlPage = ("<html>" +
@@ -54,6 +68,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     " var options = {keepAspectRatio: true, region: 'world', " +
                     " colorAxis: { colors: [ '#$colorLow', '#$colorHigh' ] }," +
                     " datalessRegionColor: '#$emptyColor'," +
+                    " backgroundColor: '#$backgroundColor'," +
                     " legend: 'none'," +
                     " enableRegionInteractivity: false};" +
                     " var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
@@ -61,7 +76,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     " }" +
                     "</script>" +
                     "</head>" +
-                    "<body>" +
+                    "<body style=\"margin: 0px;\">" +
                     "<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>" +
                     "</body>" +
                     "</html>")
@@ -92,7 +107,11 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                         itemView.visibility = View.GONE
                     }
 
-                    override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                    override fun onReceivedSslError(
+                        view: WebView?,
+                        handler: SslErrorHandler?,
+                        error: SslError?
+                    ) {
                         super.onReceivedSslError(view, handler, error)
                         itemView.visibility = View.GONE
                     }

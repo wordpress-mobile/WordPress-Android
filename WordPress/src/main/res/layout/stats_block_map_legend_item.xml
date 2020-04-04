@@ -1,36 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/StatsBlockLine"
     android:layout_width="match_parent"
-    android:importantForAccessibility="no"
     android:gravity="center_vertical"
+    android:importantForAccessibility="no"
     android:orientation="horizontal">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/start_legend"
         style="@style/StatsMapLegend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        tools:text="154"/>
+        tools:text="154" />
 
     <View
         android:id="@+id/legend_gradient"
         android:layout_width="@dimen/stats_map_legend_width"
         android:layout_height="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_medium"
-        android:background="@drawable/bg_rectangle_gradient_accent_5_accent"/>
+        android:background="@drawable/bg_rectangle_stats_map_legend_gradient" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/end_legend"
         style="@style/StatsMapLegend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:gravity="center"
-        tools:text="15,213"/>
+        tools:text="15,213" />
 
 </LinearLayout>

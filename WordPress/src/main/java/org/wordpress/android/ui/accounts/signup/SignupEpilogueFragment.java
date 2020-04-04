@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -651,7 +651,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             }
         };
 
-        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+        AlertDialog dialog = new MaterialAlertDialogBuilder(getActivity())
                 .setMessage(message)
                 .setNeutralButton(R.string.login_error_button, dialogListener)
                 .setNegativeButton(R.string.signup_epilogue_error_button_negative, dialogListener)
@@ -661,7 +661,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected void showErrorDialogWithCloseButton(String message) {
-        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+        AlertDialog dialog = new MaterialAlertDialogBuilder(getActivity())
                 .setMessage(message)
                 .setPositiveButton(R.string.login_error_button, null)
                 .create();

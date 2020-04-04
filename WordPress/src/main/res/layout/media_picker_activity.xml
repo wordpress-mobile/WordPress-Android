@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
         android:elevation="@dimen/appbar_elevation"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -20,8 +19,8 @@
             android:imeOptions="flagNoExtractUi"
             app:iconifiedByDefault="false"
             app:queryHint="@string/stock_media_picker_search_hint"
-            app:searchIcon="@null"/>
-    </androidx.appcompat.widget.Toolbar>
+            app:searchIcon="@null" />
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -35,25 +34,24 @@
             android:fadeScrollbars="true"
             android:contentDescription="@string/stock_media_picker_list_content_description"
             android:scrollbars="vertical"
-            tools:listitem="@layout/media_picker_thumbnail"/>
+            tools:listitem="@layout/media_picker_thumbnail" />
 
         <org.wordpress.android.ui.ActionableEmptyView
             android:id="@+id/actionable_empty_view"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone"
             app:aevTitle="@string/media_empty_search_list"
             tools:layout_height="wrap_content"
             tools:layout_marginTop="@dimen/margin_extra_extra_large"
-            tools:visibility="visible" >
-        </org.wordpress.android.ui.ActionableEmptyView>
+            tools:visibility="visible" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container_selection_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/white"
+            android:background="?attr/colorSurface"
             android:elevation="@dimen/message_bar_elevation"
             android:visibility="gone"
             tools:visibility="visible">
@@ -62,45 +60,39 @@
                 android:id="@+id/text_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/container_selection_bar"
                 android:background="?android:selectableItemBackground"
                 android:minHeight="@dimen/min_touch_target_sz"
                 android:padding="@dimen/margin_large"
                 android:text="@string/button_preview"
-                android:textAllCaps="true"
-                android:textColor="@color/primary_50"
-                android:textSize="@dimen/text_sz_large"
-                android:textStyle="bold"/>
+                android:textAppearance="?attr/textAppearanceButton"
+                android:textColor="?attr/colorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
 
             <TextView
                 android:id="@+id/text_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/container_selection_bar"
                 android:background="?android:selectableItemBackground"
                 android:minHeight="@dimen/min_touch_target_sz"
                 android:padding="@dimen/margin_large"
                 android:text="@string/add_count"
-                android:textAllCaps="true"
-                android:textColor="@color/primary_50"
-                android:textSize="@dimen/text_sz_large"
-                android:textStyle="bold"/>
+                android:textAppearance="?attr/textAppearanceButton"
+                android:textColor="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
 
             <ProgressBar
                 android:id="@+id/upload_progress"
                 android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:indeterminate="true"
-
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/text_add"
-                app:layout_constraintEnd_toEndOf="@id/text_add"
-
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/text_add"
+                app:layout_constraintStart_toStartOf="@id/text_add"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -111,7 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
     </RelativeLayout>
 
 </RelativeLayout>
