@@ -17,7 +17,9 @@ import javax.inject.Inject
  * 2. The [LivePagedListBuilder] will create a new [GifPickerDataSource] by calling [create]
  * 3. The new [GifPickerDataSource] will start another paged API request
  */
-class GifPickerDataSourceFactory @Inject constructor(private val gifProvider: GifProvider) : Factory<Int, GifMediaViewModel>() {
+class GifPickerDataSourceFactory @Inject constructor(
+    private val gifProvider: GifProvider
+) : Factory<Int, GifMediaViewModel>() {
     /**
      * The active search query.
      *

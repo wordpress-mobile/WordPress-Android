@@ -88,7 +88,7 @@ class GifPickerDataSourceTest {
     }
 
     @Test
-    fun `loadInitial should call onResult with correct position when search is successful but next position is incorrect`() {
+    fun `loadInitial should call onResult with position when search is successful but next position is incorrect`() {
         var onResultWasCalled = false
 
         val params = LoadInitialParams(0, 20, 5, false)
@@ -195,7 +195,7 @@ class GifPickerDataSourceTest {
         var onResultWasCalled = false
 
         val params = LoadRangeParams(0, 20)
-        val dataSourceCallback = object: LoadRangeCallback<GifMediaViewModel>() {
+        val dataSourceCallback = object : LoadRangeCallback<GifMediaViewModel>() {
             override fun onResult(data: MutableList<GifMediaViewModel>) {
                 onResultWasCalled = true
                 assertThat(data).isEqualTo(expectedGifMediaViewModelCollection)
@@ -214,7 +214,7 @@ class GifPickerDataSourceTest {
         val spiedDataSource = spy(pickerDataSourceUnderTest)
 
         val params = LoadRangeParams(0, 20)
-        val dataSourceCallback = object: LoadRangeCallback<GifMediaViewModel>() {
+        val dataSourceCallback = object : LoadRangeCallback<GifMediaViewModel>() {
             override fun onResult(data: MutableList<GifMediaViewModel>) {}
         }
         spiedDataSource.loadRange(params, dataSourceCallback)

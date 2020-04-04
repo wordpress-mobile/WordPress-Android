@@ -11,7 +11,6 @@ import com.tenor.android.core.network.ApiClient
 import com.tenor.android.core.network.ApiService.Builder
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.impl.GifsResponse
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.fail
 import org.junit.Before
