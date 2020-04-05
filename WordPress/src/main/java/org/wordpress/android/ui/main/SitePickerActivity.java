@@ -77,10 +77,11 @@ public class SitePickerActivity extends AppCompatActivity
         SearchView.OnQueryTextListener {
     public static final String KEY_LOCAL_ID = "local_id";
     public static final String KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched";
+    public static final String KEY_ONLY_SEARCH_MODE = "only_search";
+
     private static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
     private static final String KEY_LAST_SEARCH = "last_search";
     private static final String KEY_REFRESHING = "refreshing_sites";
-    public static final String KEY_ONLY_SEARCH_MODE = "only_search";
 
     private ActionableEmptyView mActionableEmptyView;
     private SitePickerAdapter mAdapter;
