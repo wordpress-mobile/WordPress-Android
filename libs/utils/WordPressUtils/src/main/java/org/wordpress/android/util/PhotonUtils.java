@@ -2,6 +2,9 @@ package org.wordpress.android.util;
 
 import android.text.TextUtils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * routines related to the Photon API
  * http://developer.wordpress.com/docs/photon/
@@ -32,7 +35,16 @@ public class PhotonUtils {
         return getPhotonImageUrl(imageUrl, width, height, Quality.MEDIUM);
     }
 
+    public static String getPhotonImageUrl(String imageUrl, int width, int height, boolean isPrivateAtomicSite) {
+        return getPhotonImageUrl(imageUrl, width, height, Quality.MEDIUM, isPrivateAtomicSite);
+    }
+
     public static String getPhotonImageUrl(String imageUrl, int width, int height, Quality quality) {
+        return getPhotonImageUrl(imageUrl, width, height, quality, false);
+    }
+
+    public static String getPhotonImageUrl(String imageUrl, int width, int height, Quality quality,
+                                           boolean isPrivateAtomicSite) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }
@@ -81,6 +93,19 @@ public class PhotonUtils {
             query += "&w=" + width;
         } else if (height > 0) {
             query += "&h=" + height;
+        }
+
+        if (isPrivateAtomicSite) {
+            try {
+                URL url = new URL(imageUrl);
+                String slug = url.getHost();
+                String path = url.getPath();
+                return "https://public-api.wordpress.com/wpcom/v2/sites/" + slug + "/atomic-auth-proxy/file?path="
+                       + path + "&" + query;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return "";
+            }
         }
 
         // return passed url+query if it's already a photon url
