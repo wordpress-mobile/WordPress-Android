@@ -18,7 +18,7 @@ public class MediaUploadCompletionProcessor {
      * @param siteUrl The site url - used to generate the attachmentPage url
      */
     public MediaUploadCompletionProcessor(String localId, MediaFile mediaFile, String siteUrl) {
-        mBlockProcessorFactory = new BlockProcessorFactory()
+        mBlockProcessorFactory = new BlockProcessorFactory(this)
                 .init(localId, mediaFile, siteUrl);
     }
 
