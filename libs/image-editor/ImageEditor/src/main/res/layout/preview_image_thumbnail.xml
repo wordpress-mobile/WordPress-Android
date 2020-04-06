@@ -4,9 +4,6 @@
     android:id="@+id/thumbnailLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/preview_image_thumbnail_margin"
-    android:clickable="true"
-    android:focusable="true"
     android:foreground="@drawable/preview_image_thumbnail_selector">
 
     <ImageView
