@@ -89,7 +89,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
             // use max of width/height so image is cached the same regardless of orientation
             Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
             int hiResWidth = Math.max(pt.x, pt.y);
-            mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate, mPhotoViewListener);
+            mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate, false, mPhotoViewListener);
         }
     }
 }

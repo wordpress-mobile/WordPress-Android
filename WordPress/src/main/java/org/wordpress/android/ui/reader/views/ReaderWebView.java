@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
@@ -70,6 +71,7 @@ public class ReaderWebView extends WebView {
 
     private boolean mIsDestroyed;
     @Inject AccountStore mAccountStore;
+    @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
 
     public ReaderWebView(Context context) {
         super(context);
@@ -101,7 +103,12 @@ public class ReaderWebView extends WebView {
 
             // Enable third-party cookies since they are disabled by default;
             // we need third-party cookies to support authenticated images
+            CookieManager cookieManager = CookieManager.getInstance();
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
+            if (mPrivateAtomicCookie.exists()) {
+                CookieManager.getInstance().setCookie(mPrivateAtomicCookie.getDomain(),
+                        mPrivateAtomicCookie.getName() + "=" + mPrivateAtomicCookie.getValue());
+            }
             this.setDownloadListener(
                     (url, userAgent, contentDisposition, mimetype, contentLength) -> {
                         if (hasUrlClickListener()) {
