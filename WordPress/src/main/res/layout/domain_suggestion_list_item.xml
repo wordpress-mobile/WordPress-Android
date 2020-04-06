@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/domain_suggestions_container"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="?android:selectableItemBackground"
-              android:gravity="center_vertical"
-              android:minHeight="@dimen/min_touch_target_sz"
-              android:orientation="horizontal">
+    android:id="@+id/domain_suggestions_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/min_touch_target_sz"
+    android:orientation="horizontal">
 
-    <RadioButton
+    <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/domain_selection_radio_button"
-        android:buttonTint="@color/neutral_10_primary_40_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_small_medium"
         android:layout_marginStart="@dimen/margin_medium_large"
-        android:clickable="false"/>
+        android:layout_marginEnd="@dimen/margin_small_medium"
+        android:clickable="false" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/domain_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_extra_medium_large"
-        android:textColor="?attr/wpColorText"
-        android:textSize="@dimen/text_sz_large"/>
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
 
 </LinearLayout>

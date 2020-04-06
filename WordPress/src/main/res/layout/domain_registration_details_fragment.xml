@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -22,84 +22,81 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background"
                 android:orientation="vertical"
-                android:paddingEnd="@dimen/margin_extra_large"
-                android:paddingStart="@dimen/margin_extra_large">
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingEnd="@dimen/margin_extra_large">
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/DomainRegistrationFormTitle"
-                    android:paddingBottom="@dimen/margin_medium"
                     android:paddingTop="@dimen/margin_large"
-                    android:text="@string/domain_registration_privacy_protection_title"/>
+                    android:paddingBottom="@dimen/margin_medium"
+                    android:text="@string/domain_registration_privacy_protection_title" />
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/DomainRegistrationFormSubTitle"
-                    android:text="@string/domain_registration_privacy_protection_description"/>
+                    android:text="@string/domain_registration_privacy_protection_description" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/tos_explanation"
                     style="@style/DomainRegistrationFormSubTitle"
-                    tools:text="@string/domain_registration_privacy_protection_tos"/>
+                    tools:text="@string/domain_registration_privacy_protection_tos" />
 
                 <RadioGroup
                     android:id="@+id/domain_privacy_options_radiogroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_large"
+                    android:layout_marginBottom="@dimen/margin_medium"
                     android:checkedButton="@+id/domain_privacy_on_radio_button"
                     tools:ignore="UnusedAttribute">
 
-                    <RadioButton
+                    <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/domain_privacy_on_radio_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/margin_medium"
                         android:paddingTop="@dimen/margin_medium"
+                        android:paddingBottom="@dimen/margin_medium"
                         android:text="@string/domain_privacy_option_on_title"
-                        android:textColor="?attr/wpColorText"
-                        android:textSize="@dimen/text_sz_large"
-                        tools:checked="true">
-                    </RadioButton>
+                        tools:checked="true" />
 
-                    <RadioButton
+                    <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/domain_privacy_off_radio_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/margin_extra_large"
                         android:paddingTop="@dimen/margin_medium"
-                        android:text="@string/domain_privacy_option_off_title"
-                        android:textColor="?attr/wpColorText"
-                        android:textSize="@dimen/text_sz_large">
-                    </RadioButton>
+                        android:paddingBottom="@dimen/margin_medium"
+                        android:text="@string/domain_privacy_option_off_title" />
                 </RadioGroup>
             </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_size"
+                android:layout_marginTop="@dimen/margin_small_medium"
+                android:layout_marginBottom="@dimen/margin_small_medium"
+                android:background="?android:attr/listDivider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
                 android:animateLayoutChanges="true"
-                android:background="@color/background"
                 android:orientation="vertical"
-                android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large"
+                android:paddingEnd="@dimen/margin_extra_large"
                 tools:ignore="UselessParent">
-
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/DomainRegistrationFormTitle"
-                    android:paddingBottom="@dimen/margin_medium"
                     android:paddingTop="@dimen/margin_large"
-                    android:text="@string/domain_contact_information_title"/>
+                    android:paddingBottom="@dimen/margin_medium"
+                    android:text="@string/domain_contact_information_title" />
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/DomainRegistrationFormSubTitle"
                     android:layout_marginBottom="@dimen/margin_medium"
-                    android:text="@string/domain_contact_information_description"/>
+                    android:text="@string/domain_contact_information_description" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/DomainRegistrationDetailsFormTextInputLayout">
+                <com.google.android.material.textfield.TextInputLayout style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/first_name_input"
@@ -109,11 +106,10 @@
                         android:imeOptions="actionNext"
                         android:inputType="textPersonName"
                         tools:ignore="HardcodedText"
-                        tools:text="John"/>
+                        tools:text="John" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/DomainRegistrationDetailsFormTextInputLayout">
+                <com.google.android.material.textfield.TextInputLayout style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/last_name_input"
@@ -122,11 +118,10 @@
                         android:hint="@string/last_name"
                         android:imeOptions="actionNext"
                         android:inputType="textPersonName"
-                        tools:text="Smith"/>
+                        tools:text="Smith" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/DomainRegistrationDetailsFormTextInputLayout">
+                <com.google.android.material.textfield.TextInputLayout style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/organization_input"
@@ -134,11 +129,10 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/domain_contact_information_organization_hint"
                         android:imeOptions="actionNext"
-                        android:inputType="text"/>
+                        android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/DomainRegistrationDetailsFormTextInputLayout">
+                <com.google.android.material.textfield.TextInputLayout style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/email_input"
@@ -147,11 +141,10 @@
                         android:hint="@string/email"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
-                        tools:text="email@wordpress.com"/>
+                        tools:text="email@wordpress.com" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/DomainRegistrationDetailsFormTextInputLayout">
+                <com.google.android.material.textfield.TextInputLayout style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/country_code_input"
@@ -161,12 +154,11 @@
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="3"
-                        tools:text="44"/>
+                        tools:text="44" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/DomainRegistrationDetailsFormTextInputLayout">
+                <com.google.android.material.textfield.TextInputLayout style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/phone_number_input"
@@ -175,12 +167,11 @@
                         android:hint="@string/domain_contact_information_phone_number_hint"
                         android:imeOptions="actionNext"
                         android:inputType="number"
-                        tools:text="3127924444"/>
+                        tools:text="3127924444" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/DomainRegistrationDetailsFormTextInputLayout">
+                <com.google.android.material.textfield.TextInputLayout style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/country_input"
@@ -188,12 +179,11 @@
                         android:layout_height="wrap_content"
                         android:focusable="false"
                         android:hint="@string/domain_contact_information_country_hint"
-                        android:inputType="none"/>
+                        android:inputType="none" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/DomainRegistrationDetailsFormTextInputLayout">
+                <com.google.android.material.textfield.TextInputLayout style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/address_first_line_input"
@@ -201,12 +191,11 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/domain_contact_information_address_hint"
                         android:imeOptions="actionNext"
-                        android:inputType="textPostalAddress"/>
+                        android:inputType="textPostalAddress" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/DomainRegistrationDetailsFormTextInputLayout">
+                <com.google.android.material.textfield.TextInputLayout style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/address_second_line_input"
@@ -214,12 +203,11 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/domain_contact_information_address_hint_two"
                         android:imeOptions="actionNext"
-                        android:inputType="textPostalAddress"/>
+                        android:inputType="textPostalAddress" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/DomainRegistrationDetailsFormTextInputLayout">
+                <com.google.android.material.textfield.TextInputLayout style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/city_input"
@@ -227,7 +215,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/domain_contact_information_city_hint"
                         android:imeOptions="actionNext"
-                        android:inputType="textPostalAddress"/>
+                        android:inputType="textPostalAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RelativeLayout
@@ -245,7 +233,7 @@
                             android:layout_height="wrap_content"
                             android:focusable="false"
                             android:hint="@string/domain_contact_information_state_hint"
-                            android:inputType="none"/>
+                            android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <ProgressBar
@@ -253,12 +241,11 @@
                         style="?android:attr/progressBarStyle"
                         android:layout_width="@dimen/progress_spinner_small"
                         android:layout_height="@dimen/progress_spinner_small"
+                        android:layout_alignTop="@+id/state_input_container"
                         android:layout_alignBottom="@+id/state_input_container"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignTop="@+id/state_input_container"
                         android:layout_centerInParent="true"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone" />
                 </RelativeLayout>
 
 
@@ -272,7 +259,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/domain_contact_information_postal_code_hint"
                         android:imeOptions="actionNext"
-                        android:inputType="textPostalAddress"/>
+                        android:inputType="textPostalAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -281,37 +268,29 @@
 
     </ScrollView>
 
-    <View
-        android:id="@+id/shadow_divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_container_shadow_height"
-        android:layout_above="@+id/register_domain_button_container"
-        android:background="@drawable/login_shadow"/>
-
-    <RelativeLayout
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/register_domain_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
-        android:clipToPadding="false"
-        android:padding="@dimen/margin_large">
+        app:cardCornerRadius="0dp">
 
-
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/register_domain_button"
             style="@style/WordPress.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/domain_contact_information_register_domain_button">
-        </androidx.appcompat.widget.AppCompatButton>
-    </RelativeLayout>
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:text="@string/domain_contact_information_register_domain_button" />
+    </com.google.android.material.card.MaterialCardView>
 
     <RelativeLayout
         android:id="@+id/form_progress_indicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_default"
         android:visibility="gone"
         tools:visibility="gone">
 
@@ -319,6 +298,6 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true" />
     </RelativeLayout>
 </RelativeLayout>

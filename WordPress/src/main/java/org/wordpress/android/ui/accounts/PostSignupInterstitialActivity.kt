@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -9,6 +8,7 @@ import kotlinx.android.synthetic.main.post_signup_interstitial_default.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.DISMISS
@@ -16,7 +16,7 @@ import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.START_SITE_CREATION_FLOW
 import javax.inject.Inject
 
-class PostSignupInterstitialActivity : AppCompatActivity() {
+class PostSignupInterstitialActivity : LocaleAwareActivity() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PostSignupInterstitialViewModel
 

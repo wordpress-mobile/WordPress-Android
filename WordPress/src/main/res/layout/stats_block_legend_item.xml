@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/legend"
     style="@style/StatsLegend"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:importantForAccessibility="no"
-    android:text="@string/stats_visitors"/>
+    android:text="@string/stats_visitors" />

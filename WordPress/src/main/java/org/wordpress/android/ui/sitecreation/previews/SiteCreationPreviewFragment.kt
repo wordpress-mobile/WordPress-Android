@@ -79,7 +79,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private var okButtonContainer: View? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is SitePreviewScreenListener) {
             throw IllegalStateException("Parent activity must implement SitePreviewScreenListener.")

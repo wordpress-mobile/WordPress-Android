@@ -11,9 +11,9 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
+import org.wordpress.android.util.getColorFromAttribute
 
 class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
@@ -22,7 +22,8 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     private val text = itemView.findViewById<TextView>(R.id.text)
     fun bind(textItem: Text) {
         val loadedText = textItem.text
-                ?: textItem.textResource?.let { text.resources.getString(textItem.textResource) } ?: ""
+                ?: textItem.textResource?.let { text.resources.getString(textItem.textResource) }
+                ?: ""
         val spannableString = SpannableString(loadedText)
         textItem.links?.forEach { link ->
             spannableString.withClickableSpan(text.context, link.link) {
@@ -48,10 +49,7 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             }
 
             override fun updateDrawState(ds: TextPaint?) {
-                ds?.color = ContextCompat.getColor(
-                        context,
-                        R.color.primary_50
-                )
+                ds?.color = context.getColorFromAttribute(R.attr.colorPrimary)
                 ds?.typeface = Typeface.create(
                         Typeface.DEFAULT_BOLD,
                         Typeface.NORMAL

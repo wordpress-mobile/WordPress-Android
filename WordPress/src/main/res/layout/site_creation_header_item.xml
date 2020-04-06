@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/SiteCreationHeaderLinearLayoutStyle"
-    android:paddingBottom="@dimen/site_creation_segments_content_padding_vertical"
-    android:paddingEnd="@dimen/site_creation_segments_content_padding_horizontal"
     android:paddingStart="@dimen/site_creation_segments_content_padding_horizontal"
-    android:paddingTop="@dimen/site_creation_segments_content_padding_vertical">
+    android:paddingTop="@dimen/site_creation_segments_content_padding_vertical"
+    android:paddingEnd="@dimen/site_creation_segments_content_padding_horizontal"
+    android:paddingBottom="@dimen/site_creation_segments_content_padding_vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title"
         style="@style/SiteCreationHeaderTitle"
         app:fixWidowWords="true"
-        tools:text="What's the focus of your business?"/>
+        tools:text="What's the focus of your business?" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/subtitle"
         style="@style/SiteCreationHeaderSubtitle"
         app:fixWidowWords="true"
-        tools:text="We’ll use your answer to add sections to your website."/>
+        tools:text="We’ll use your answer to add sections to your website." />
 </LinearLayout>
