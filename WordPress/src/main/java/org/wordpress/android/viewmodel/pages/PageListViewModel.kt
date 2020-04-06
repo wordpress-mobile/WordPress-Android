@@ -59,8 +59,8 @@ class PageListViewModel @Inject constructor(
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val pages: LiveData<Pair<List<PageItem>, Boolean>> = Transformations.map(_pages) {
-        Pair(it, isSitePhotonCapable)
+    val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
+        Triple(it, isSitePhotonCapable, isSitePrivateAt)
     }
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
@@ -76,6 +76,10 @@ class PageListViewModel @Inject constructor(
 
     private val isSitePhotonCapable: Boolean by lazy {
         SiteUtils.isPhotonCapable(pagesViewModel.site)
+    }
+
+    private val isSitePrivateAt: Boolean by lazy {
+        pagesViewModel.site.isPrivateWPComAtomic
     }
 
     enum class PageListType(val pageStatuses: List<PageStatus>) {
