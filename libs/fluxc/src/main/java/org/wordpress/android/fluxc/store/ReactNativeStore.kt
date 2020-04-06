@@ -16,6 +16,8 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.Unknown
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.FailedRequest
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +34,8 @@ class ReactNativeStore
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
     private val coroutineEngine: CoroutineEngine,
     private val nonceMap: MutableMap<SiteModel, Nonce> = mutableMapOf(),
-    private val currentTimeMillis: () -> Long
+    private val currentTimeMillis: () -> Long,
+    private val sitePersistanceFunction: (site: SiteModel) -> Int
 ) {
     @Inject constructor(
         wpComRestClient: ReactNativeWPComRestClient,
@@ -45,7 +48,8 @@ class ReactNativeStore
             discoveryWPAPIRestClient,
             coroutineEngine,
             mutableMapOf(),
-            System::currentTimeMillis
+            System::currentTimeMillis,
+            SiteSqlUtils::insertOrUpdateSite
     )
 
     private val WPCOM_ENDPOINT = "https://public-api.wordpress.com"
@@ -84,6 +88,7 @@ class ReactNativeStore
         if (!usingSavedRestUrl) {
             site.wpApiRestUrl = discoveryWPAPIRestClient.discoverWPAPIBaseURL(site.url) // discover rest api endpoint
                     ?: slashJoin(site.url, "wp-json/") // fallback to ".../wp-json/" default if discovery fails
+            persistSiteSafely(site)
         }
         val fullRestUrl = slashJoin(site.wpApiRestUrl, path)
 
@@ -119,6 +124,7 @@ class ReactNativeStore
                 404 -> {
                     // call failed with 'not found' so clear the (failing) rest url
                     site.wpApiRestUrl = null
+                    persistSiteSafely(site)
 
                     if (usingSavedRestUrl) {
                         // If we did the previous call with a saved rest url, try again by making
@@ -163,6 +169,16 @@ class ReactNativeStore
             name to uri.getQueryParameter(name)
         }.toMap()
         return Pair(uri.path, paramMap)
+    }
+
+    private fun persistSiteSafely(site: SiteModel) {
+        try {
+            sitePersistanceFunction.invoke(site)
+        } catch (e: DuplicateSiteException) {
+            // persistance failed, which is not a big deal because it just means we may need to re-discover the
+            // rest url later.
+            AppLog.d(AppLog.T.DB, "Error when persisting site: $e")
+        }
     }
 
     companion object {
