@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.util.WPUrlUtils
+import java.net.URL
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,7 +22,7 @@ class AuthenticationUtils
         val headers = mutableMapOf<String, String>()
         headers["User-Agent"] = userAgent.userAgent
 
-        if (privateAtomicCookie.exists()) {
+        if (privateAtomicCookie.exists() && WPUrlUtils.safeToAddPrivateAtCookie(url, privateAtomicCookie.getDomain())) {
             headers[COOKIE_HEADER_NAME] = privateAtomicCookie.getName() + "=" + privateAtomicCookie.getValue()
         }
 
