@@ -27,10 +27,10 @@ public class MediaUploadCompletionProcessorPatterns {
             .toString(), Pattern.DOTALL);
 
     /**
-     * A {@link Pattern} to match headers for Gutenberg media-containing blocks with a capture group for the block type
+     * A pattern template to match the block boundaries of a specific Gutenberg block type with a capture group to
+     * identify the match as either the beginning or end of a block: group(1) == "/" for the end of a block
      */
     public static final String PATTERN_TEMPLATE_BLOCK_BOUNDARY = "<!-- (/?)wp:%1$s.*? -->\n?";
-
 
     /**
      * A {@link Pattern} to match Gutenberg media-containing blocks with a capture group for the block type
