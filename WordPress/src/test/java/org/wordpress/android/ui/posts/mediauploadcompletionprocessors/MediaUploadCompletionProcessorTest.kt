@@ -49,4 +49,31 @@ class MediaUploadCompletionProcessorTest {
         val blocks = processor.processPost(TestContent.oldPostGallery)
         Assertions.assertThat(blocks).isEqualTo(TestContent.newPostGallery)
     }
+
+    @Test
+    fun `processPost splices id and url for a cover block`() {
+        val blocks = processor.processPost(TestContent.oldPostCover)
+        Assertions.assertThat(blocks).isEqualTo(TestContent.newPostCover)
+    }
+
+    @Test
+    fun `processPost works for nested inner cover blocks`() {
+        val blocks = processor.processPost(TestContent.oldCoverBlockWithNestedCoverBlockInner)
+        Assertions.assertThat(blocks).isEqualTo(TestContent.newCoverBlockWithNestedCoverBlockInner)
+    }
+
+    @Test
+    fun `processPost works for nested outer cover blocks`() {
+        whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId2)
+        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl2)
+        processor = MediaUploadCompletionProcessor(TestContent.localMediaId2, mediaFile, TestContent.siteUrl)
+        val blocks = processor.processPost(TestContent.oldCoverBlockWithNestedCoverBlockOuter)
+        Assertions.assertThat(blocks).isEqualTo(TestContent.newCoverBlockWithNestedCoverBlockOuter)
+    }
+
+    @Test
+    fun `processPost works for image blocks nested within a cover block`() {
+        val processedBlock = processor.processPost(TestContent.oldImageBlockNestedInCoverBlock)
+        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newImageBlockNestedInCoverBlock)
+    }
 }
