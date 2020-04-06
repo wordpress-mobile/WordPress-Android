@@ -3,8 +3,11 @@ package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK;
+import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK_HEADER;
+import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_TEMPLATE_BLOCK_BOUNDARY;
 
 public class MediaUploadCompletionProcessor {
     private final BlockProcessorFactory mBlockProcessorFactory;
@@ -30,22 +33,36 @@ public class MediaUploadCompletionProcessor {
      * @return A string containing the processed post, or the original content if no match was found
      */
     public String processPost(String postContent) {
-        Matcher matcher = PATTERN_BLOCK.matcher(postContent);
-        StringBuilder result = new StringBuilder();
+        Matcher headerMatcher = PATTERN_BLOCK_HEADER.matcher(postContent);
 
-        int position = 0;
+        int positionBlockStart, positionBlockEnd = 0;
 
-        while (matcher.find()) {
-            result.append(postContent.substring(position, matcher.start()));
-            result.append(processBlock(matcher.group()));
-            position = matcher.end();
+        if (headerMatcher.find()) {
+            positionBlockStart = headerMatcher.start();
+            String blockType = headerMatcher.group(1);
+            Matcher blockBoundaryMatcher = Pattern.compile(String.format(PATTERN_TEMPLATE_BLOCK_BOUNDARY, blockType),
+                    Pattern.DOTALL).matcher(postContent.substring(headerMatcher.end()));
+
+            int nestLevel = 1;
+
+            while (0 < nestLevel && blockBoundaryMatcher.find()) {
+                if (blockBoundaryMatcher.group(1).equals("/")) {
+                    positionBlockEnd = headerMatcher.end() + blockBoundaryMatcher.end();
+                    nestLevel--;
+                } else {
+                    nestLevel++;
+                }
+            }
+
+            return new StringBuilder()
+                    .append(postContent.substring(0, positionBlockStart))
+                    .append(processBlock(postContent.substring(positionBlockStart, positionBlockEnd)))
+                    .append(processPost(postContent.substring(positionBlockEnd)))
+                    .toString();
+        } else {
+            return postContent;
         }
-
-        result.append(postContent.substring(position));
-
-        return result.toString();
     }
-
 
     /**
      * Processes a media block returning a raw content replacement string
