@@ -12,7 +12,8 @@ enum MediaBlockType {
     IMAGE("image"),
     VIDEO("video"),
     MEDIA_TEXT("media-text"),
-    GALLERY("gallery");
+    GALLERY("gallery"),
+    COVER("cover");
 
     private final String mName;
 
