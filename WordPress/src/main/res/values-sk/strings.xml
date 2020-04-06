@@ -37,15 +37,7 @@ Language: sk
     <string name="new_site_creation_create_site_button">Vytvoriť webovú stránku</string>
     <string name="site_creation_error_generic_subtitle">Chyba pri komunikácii so serverom, prosím skúste to znova</string>
     <string name="site_creation_error_generic_title">Nastal problém</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Vlastná kategória</string>
-    <string name="new_site_creation_button_skip">Preskočiť</string>
-    <string name="new_site_creation_tag_line_description">Slogan je krátky text, ktorý sa zobrazuje vpravo od názvu.</string>
-    <string name="new_site_creation_tag_line_hint">Slogan</string>
-    <string name="new_site_creation_site_title_hint">Názov webovej stránky</string>
-    <string name="new_site_creation_site_info_header_subtitle">Povedzte nám viac o webovej stránke, ktorú vytvárate.</string>
-    <string name="new_site_creation_site_info_header_title">Základné informácie</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Nastal problém</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Žiadne spojenie</string>
     <string name="new_site_creation_preview_title">Vaša webová stránka bola vytvorená!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
     <string name="new_site_creation_screen_title_general">Vytvoriť webovú stránku</string>
@@ -213,7 +205,6 @@ Language: sk
     <string name="people_empty_list_filtered_email_followers">Zatiaľ žiadni odberatelia e-mailov</string>
     <string name="people_empty_list_filtered_followers">Zatiaľ žiadni odberatelia</string>
     <string name="people_empty_list_filtered_users">Zatiaľ žiadni používatelia</string>
-    <string name="connection_service_facebook_notice">Od 1. augusta 2018 spoločnosť Facebook už neumožňuje priame zdieľanie príspevkov na profily služby Facebook. Pripojenia na stránky Facebooku zostávajú nezmenené.</string>
     <string name="reader_empty_posts_liked_description">Zobrazia sa tu príspevky, ktoré sa vám páčia</string>
     <string name="reader_empty_posts_liked_title">Zatiaľ nebolo nič označené Páči sa mi to</string>
     <string name="reader_empty_followed_blogs_button_followed">Prejdite na sledovanie</string>
@@ -769,8 +760,6 @@ Language: sk
     <string name="editor_dropped_text_error">Vyskytla sa chyba pri odovzdávaní textu.</string>
     <string name="editor_dropped_html_images_not_allowed">Odovzdávanie obrázkov zatiaľ čo HTML ich nepodporuje.</string>
     <string name="editor_content_hint">Zdieľajte svoj príbeh…</string>
-    <string name="post_list_trashed">Zahodené</string>
-    <string name="post_list_scheduled">Naplánované</string>
     <string name="post_status_post_private">Súkromné</string>
     <string name="post_status_draft">Koncept</string>
     <string name="post_status_pending_review">Nepotvrdená recenzia</string>
@@ -791,7 +780,6 @@ Language: sk
     <string name="post_settings_more_options">Viac možností</string>
     <string name="post_settings_categories_and_tags">Kategórie a značky</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Neprečítané</string>
     <string name="notifications_tab_title_all">Všetky</string>
     <string name="top_level_category_name">Najvyššia úroveň</string>
     <string name="category_parent">Nadradená kategória (nepovinné):</string>
@@ -1486,8 +1474,6 @@ Language: sk
     <string name="saving_changes">Ukladajú sa zmeny</string>
     <string name="hint_comment_content">Komentár</string>
     <string name="trash">Kôš</string>
-    <string name="trash_no">Nevymazávať</string>
-    <string name="trash_yes">Kôš</string>
     <string name="dlg_confirm_trash_comments">Odstrániť?</string>
     <string name="dlg_trashing_comments">Vymazáva sa</string>
     <string name="dlg_spamming_comments">Označené ako spam</string>
