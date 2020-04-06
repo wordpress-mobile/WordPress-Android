@@ -284,8 +284,6 @@ Language: th
     <string name="add_new_category">เพิ่มหมวดหมู่ใหม่</string>
     <string name="category_name">ชื่อหมวดหมู่</string>
     <string name="dlg_confirm_trash_comments">ต้องการส่งไปถังขยะ?</string>
-    <string name="trash_yes">ถังขยะ</string>
-    <string name="trash_no">เอาออกจากถังขยะ</string>
     <string name="trash">ถังขยะ</string>
     <string name="hint_comment_content">ความเห็น</string>
     <string name="saving_changes">บันทึกการเปลี่ยนแปลง</string>

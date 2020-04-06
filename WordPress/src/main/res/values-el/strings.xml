@@ -37,8 +37,6 @@ Language: el_GR
     <string name="gutenberg_native_link_inserted">Έγινε εισαγωγή συνδέσμου</string>
     <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
     <string name="gutenberg_native_content">Περιεχόμενο…</string>
-    <string name="post_list_drafts">Προσχέδια</string>
-    <string name="post_list_published">Δημοσιευμένα</string>
     <string name="post_list_author_everyone">Όλοι</string>
     <string name="post_list_author_me">Εγώ</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
@@ -53,12 +51,7 @@ Language: el_GR
     <string name="notification_new_site_creation_title">Δημιουργία ιστότοπου</string>
     <string name="new_site_creation_create_site_button">Δημιουργία ιστότοπου</string>
     <string name="site_creation_error_generic_title">Παρουσιάστηκε ένα πρόβλημα</string>
-    <string name="new_site_creation_button_skip">Παράλειψη</string>
-    <string name="new_site_creation_tag_line_hint">Υπότιτλος</string>
-    <string name="new_site_creation_site_title_hint">Τίτλος Ιστότοπου</string>
-    <string name="new_site_creation_site_info_header_title">Βασικές πληροφορίες</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Παρουσιάστηκε ένα πρόβλημα</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Δεν υπάρχει σύνδεση</string>
     <string name="new_site_creation_screen_title_step_count">%1$d από %2$d</string>
     <string name="new_site_creation_screen_title_general">Δημιουργία ιστότοπου</string>
     <string name="snackbar_conflict_undo">Αναίρεση</string>
@@ -484,8 +477,6 @@ Language: el_GR
     <string name="menu_redo">Επανάληψη</string>
     <string name="menu_undo">Αναίρεση</string>
     <string name="editor_content_hint">Μοιραστείτε την ιστορία σας εδώ…</string>
-    <string name="post_list_trashed">Διαγραμμένα</string>
-    <string name="post_list_scheduled">Προγραμματισμένο</string>
     <string name="post_status_post_private">Ιδιωτικό</string>
     <string name="post_status_draft">Προσχέδιο</string>
     <string name="post_status_pending_review">Εκκρεμής αναθεώρηση</string>
@@ -502,7 +493,6 @@ Language: el_GR
     <string name="post_settings_more_options">Περισσότερες Επιλογές</string>
     <string name="post_settings_categories_and_tags">Κατηγορίες και Ετικέτες</string>
     <string name="post_settings_status">Κατάσταση</string>
-    <string name="notifications_tab_title_unread">Αδιάβαστο</string>
     <string name="notifications_tab_title_all">Όλα</string>
     <string name="category_parent">Γονική κατηγορία (προαιρετική):</string>
     <string name="media_error_http_too_large_video_upload">Το βίντεο είναι πολύ μεγάλο για μεταφόρτωση</string>
@@ -1164,8 +1154,6 @@ Language: el_GR
     <string name="saving_changes">Αποθήκευση αλλαγών</string>
     <string name="hint_comment_content">Σχόλιο</string>
     <string name="trash">Διαγραφή</string>
-    <string name="trash_no">Να μη διαγραφεί</string>
-    <string name="trash_yes">Διεγραμμένα</string>
     <string name="dlg_confirm_trash_comments">Αποστολή στα σκουπίδια;</string>
     <string name="dlg_trashing_comments">Αποστολή στα διαγραμμένα</string>
     <string name="dlg_spamming_comments">Σήμανση ως spam</string>

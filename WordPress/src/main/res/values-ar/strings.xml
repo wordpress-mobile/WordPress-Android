@@ -1,11 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-18 00:55:07+0000
+Translation-Revision-Date: 2020-04-05 10:19:41+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">ماذا يقول الناس</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">نوفِّر مجموعة من الخدمات لمساعدتك على تحقيق النتائج التي تسعى إليها. ألستَ متأكِّدًا مما تحتاج إليه؟، أو كم تبلغ تكلفته؟ يمكننا توضيح الخدمات المناسبة لك، وإبلاغك بالمزيد عن الرسوم التي نطلبها. ابق على اتصال من خلال المعلومات الواردة ادناه.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">نحن فريق صغير من الاحترافيين الموهوبين الذين يتمتعون بمجموعة كبيرة من المهارات والخبرات. نحب ما نفعله ونقوم به بشغف. نتطلع إلى العمل معك.</string>
+    <string name="gutenberg_native_warning_message">رسالة التحذير</string>
+    <string name="gutenberg_native_want_to_work_with_us">ترغب بالعمل معنا؟</string>
+    <string name="gutenberg_native_walt_disney">والت ديزني</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">سيرغب الزائرون في معرفة الموجودين على الجانب الآخر من الصفحة. استخدم هذه المساحة للكتابة عن نفسك أو موقعك أو شركتك أو أي شيء تريده. استعن بالتوصيات الواردة أدناه للاقتباس من الآخرين الذين يتحدثون حول الأمر نفسه بأسلوبهم الخاص.</string>
+    <string name="gutenberg_native_usa">USA</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">هذا هو محتوى النموذج المُضمَّن مع القالب لتوضيح ميزاته. يمكنك إزالته أو استبدال كلماتك ووسائطك الخاصة به.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">طريقة البدء هي التوقف عن الحديث والبدء في القيام به.</string>
+    <string name="gutenberg_native_team">الفريق</string>
+    <string name="gutenberg_native_success_message">رسالة النجاح</string>
+    <string name="gutenberg_native_strategy">الإستراتيجية</string>
+    <string name="gutenberg_native_show_post_content">إظهار محتوى المقالة</string>
+    <string name="gutenberg_native_services">الخدمات</string>
+    <string name="gutenberg_native_samuel_the_dog">القطّ فروزن</string>
+    <string name="gutenberg_native_sally_smith">سالي سميث</string>
+    <string name="gutenberg_native_project_name">اسم المشروع</string>
+    <string name="gutenberg_native_position_or_job_title">المنصب أو المسمى الوظيفي</string>
+    <string name="gutenberg_native_portfolio">معرض أعمال</string>
+    <string name="gutenberg_native_only_show_excerpt">إظهار المقتطف فقط</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">يعرض معرض أعمالي المشاريع المختلفة التي تم إنشاؤها طوال مسيرتي المهنية. شاهد معلومات الاتصال الخاصة بي أدناه لنبق على تواصل.</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">أدنى ارتفاع بالبكسل</string>
+    <string name="gutenberg_native_link_to">رابط لـ</string>
+    <string name="gutenberg_native_link_settings">إعدادات الرابط</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">فلنتحدث 👋 لا تتردد في التواصل باستخدام معلومات الاتصال أدناه، أو إرسال رسالة باستخدام النموذج.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">دعونا نبني شيئًا معًا.</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">دعونا نبني شيئًا معًا</string>
+    <string name="gutenberg_native_let_s_build_something_together">دعونا نبني شيئًا معًا</string>
+    <string name="gutenberg_native_juan_p_rez">خوان بيريز</string>
+    <string name="gutenberg_native_j_k_rowling">ج.ك. رولينج</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">هاري، إن اختياراتنا هي التي تظهر ما نحن عليه بالفعل، أكثر بكثير من قدراتنا.</string>
+    <string name="gutenberg_native_inspiration">الإلهام</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">ابق على اتصال!</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">ابق على اتصال!</string>
+    <string name="gutenberg_native_get_in_touch">ابق على اتصال</string>
+    <string name="gutenberg_native_excerpt_length_words">طول المقتطف (كلمات)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">راسلني عبر البريد: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">تحرير غلاف الوسائط</string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">لا تبكي لأنه انتهى، ابتسم لأنه حدث.</string>
+    <string name="gutenberg_native_customize">تخصيص</string>
+    <string name="gutenberg_native_city_10100">المدينة، 10100</string>
+    <string name="gutenberg_native_button_link_url">رابط الزر URL</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">إعدادات لون الزر، قريبًا.</string>
+    <string name="gutenberg_native_border_settings">إعدادات الحدود</string>
+    <string name="gutenberg_native_border_radius">زوايا الحدود</string>
+    <string name="gutenberg_native_background_opacity">شفافية الخلفية</string>
+    <string name="gutenberg_native_add_paragraph_block">إضافة مكوّن فقرة</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">وصف موجز للخدمات التي تقدمها.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">سيرة ذاتية قصيرة مع التاريخ الشخصي والإنجازات الرئيسية، أو حقيقة مثيرة للاهتمام.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">وصف المشروع والأعمال المقدَّمة.</string>
+    <string name="gutenberg_native_555_555_1234">+96692000000</string>
+    <string name="gutenberg_native_10_street_road">شارع 10 العام</string>
+    <string name="create_post_page_fab_tooltip_contributors">إنشاء مقالة</string>
+    <string name="post_list_tab_trashed_posts">محذوف</string>
+    <string name="post_list_tab_scheduled_posts">مجدول</string>
+    <string name="post_list_tab_published_posts">منشور</string>
+    <string name="sharing_facebook_account_must_have_pages">يتعذر الاتصال بـ Facebook العثور على أي صفحات. لا يمكن لآلية النشر الاتصال بملفات تعريف Facebook الشخصية، فقط للصفحات المنشورة.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">غير متصل</string>
+    <string name="my_site_select_domains_page_title">رابط الموقع</string>
+    <string name="notifications_tab_title_likes">الإعجابات</string>
+    <string name="notifications_tab_title_follows">متابعات</string>
+    <string name="notifications_tab_title_comments">تعليقات</string>
+    <string name="notifications_tab_title_unread_notifications">غير مقروء</string>
+    <string name="dlg_cancel_action_dont_trash">عدم الوضع بسلة المهملات</string>
+    <string name="dlg_confirm_action_trash">سلة المهملات</string>
     <string name="stats_insights_management_activity">النشاط</string>
     <string name="stats_insights_management_posts_and_pages">المقالات والصفحات</string>
     <string name="stats_insights_management_general">عام</string>
@@ -37,7 +105,7 @@ Language: ar
     <string name="gutenberg_native_edit_media">تحرير الوسائط</string>
     <string name="gutenberg_native_double_tap_to_select_layout">انقر نقرًا مزدوجًا لتحديد المخطط</string>
     <string name="gutenberg_native_add_a_shortcode">إضافة كود قصير…</string>
-    <string name="post_list_author">نشر الكاتب</string>
+    <string name="post_list_author">كاتب المقالة</string>
     <string name="fab_create_desc">إنشاء مقالة</string>
     <string name="stats_posting_activity_end_description">لقد استمعت إلى جميع الإحصاءت لهذه الفترة.\n بالنقر مرة أخرى سيجرى إعادة التشغيل من البداية.</string>
     <string name="stats_posting_activity_empty_description">لا توجد إحصاءات في هذه الفترة.</string>
@@ -282,7 +350,6 @@ Language: ar
     <string name="enter_wordpress_site">موقع الويب على هذا العنوان ليس موقع ووردبريس. بالنسبة لنا للاتصال به، يجب أن يكون الموقع مُنصّبًا ووردبريس.</string>
     <string name="login_invalid_site_url">يرجى إدخال عنوان موقع ويب كامل، مثل example.com.</string>
     <string name="enter_email_for_site">تسجيل الدخول باستخدام WordPress.com للاتصال بـ %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">يتعذر إجراء اتصال بالفيسبوك نظرًا لأن هذا الحساب لا يملك حق الوصول إلى أي صفحات. يدعم فيسبوك مشاركة الاتصالات بصفحات الفيسبوك، وليس بملفات تعريف الفيسبوك الشخصية.</string>
     <string name="stats_post_views_label">المشاهدات</string>
     <string name="stats_post_label">المقالة</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -379,8 +446,7 @@ Language: ar
     <string name="editor_failed_to_insert_media_tap_to_retry">فشلت عملية إدراج وسائط.\nيرجى النقر على إعادة المحاولة.</string>
     <string name="editor_uploading_draft">جاري رفع مسودّتك</string>
     <string name="post_uploading_draft">رفع المسودّة</string>
-    <string name="post_list_drafts">المسودات</string>
-    <string name="post_list_published">منشور</string>
+    <string name="post_list_tab_drafts">المسودات</string>
     <string name="post_list_author_everyone">الجميع</string>
     <string name="post_list_author_me">أنا</string>
     <string name="error_restoring_post">حدث خطأ أثناء استعادة المقالة</string>
@@ -525,15 +591,7 @@ Language: ar
     <string name="new_site_creation_empty_domain_list_message">لا توجد عناوين متاحة مطابقة لبحثك</string>
     <string name="site_creation_error_generic_subtitle">حدث خطأ أثناء الاتصال بالخادم، يرجى المحاولة مجددًا</string>
     <string name="site_creation_error_generic_title">حدثت مشكلة</string>
-    <string name="new_site_creation_verticals_custom_subtitle">تصنيف مخصص</string>
-    <string name="new_site_creation_button_skip">تخطي</string>
-    <string name="new_site_creation_tag_line_description">الشعار عبارة عن سطر قصير من النص يظهر جهة اليمين أسفل العنوان.</string>
-    <string name="new_site_creation_tag_line_hint">الشعار</string>
-    <string name="new_site_creation_site_title_hint">عنوان الموقع</string>
-    <string name="new_site_creation_site_info_header_subtitle">أخبرنا بالمزيد حول الموقع الذي تقوم بإنشائه.</string>
-    <string name="new_site_creation_site_info_header_title">المعلومات الأساسية</string>
     <string name="site_creation_fetch_suggestions_error_unknown">حدثت مشكلة</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">لا يوجد اتصال</string>
     <string name="site_creation_segments_subtitle">يساعدنا هذا على إجراء توصيات. لكن هذا الأمر لا يتوقف أبدًا — فجميع المواقع تتطور!</string>
     <string name="site_creation_segments_title">أخبرنا بنوع الموقع الذي ترغب في إنشائه</string>
     <string name="new_site_creation_preview_title">تم إنشاء موقعك!</string>
@@ -660,7 +718,7 @@ Language: ar
     <string name="pages_publish_now">النشر الآن</string>
     <string name="pages_set_parent">تعيين الأصل</string>
     <string name="pages_view">عرض</string>
-    <string name="pages_trashed">أُضيف إلى سلة المهملات</string>
+    <string name="pages_trashed">محذوف</string>
     <string name="pages_scheduled">مجدول</string>
     <string name="pages_drafts">المسودات</string>
     <string name="pages_published">منشور</string>
@@ -739,7 +797,6 @@ Language: ar
     <string name="people_empty_list_filtered_email_followers">لا يوجد متابعون للبريد الإلكتروني حتى الآن</string>
     <string name="people_empty_list_filtered_followers">لا متابِعون حتى الآن</string>
     <string name="people_empty_list_filtered_users">لا يوجد مستخدمين حتى الآن</string>
-    <string name="connection_service_facebook_notice">اعتبارًا من 1 أغسطس 2018، لن يسمح فيسبوك بعد الآن بالمشاركة المباشرة للمقالات على ملفات تعريف الفيسبوك. تبقى الاتصالات بصفحات الفيسبوك كما هي.</string>
     <string name="reader_empty_posts_liked_description">ستظهر المقالات التي نالت إعجابك هنا</string>
     <string name="reader_empty_posts_liked_title">لا توجد إعجابات حتى الآن</string>
     <string name="reader_empty_followed_blogs_button_followed">الذهاب للمتابعة</string>
@@ -1296,8 +1353,6 @@ Language: ar
     <string name="editor_dropped_text_error">حدث خطأ أثناء إسقاط النص</string>
     <string name="editor_dropped_html_images_not_allowed">لا يُسمح بإسقاط الصور في وضع HTML</string>
     <string name="editor_content_hint">شارك قصتك هنا…</string>
-    <string name="post_list_trashed">تم النقل إلى سلة المهملات</string>
-    <string name="post_list_scheduled">مجدول</string>
     <string name="post_status_post_private">خاص</string>
     <string name="post_status_draft">مسودة</string>
     <string name="post_status_pending_review">في انتظار المراجعة</string>
@@ -1318,7 +1373,6 @@ Language: ar
     <string name="post_settings_more_options">المزيد من الخيارات</string>
     <string name="post_settings_categories_and_tags">الفئات والوسوم</string>
     <string name="post_settings_status">الحالة</string>
-    <string name="notifications_tab_title_unread">غير مقروء</string>
     <string name="notifications_tab_title_all">الكل</string>
     <string name="top_level_category_name">أعلى مستوى</string>
     <string name="category_parent">التصنيف الأب (اختياري):</string>
@@ -2016,8 +2070,6 @@ Language: ar
     <string name="saving_changes">يتم حفظ التغييرات</string>
     <string name="hint_comment_content">تعليق</string>
     <string name="trash">سلة المهملات</string>
-    <string name="trash_no">عدم الوضع بسلة المهملات</string>
-    <string name="trash_yes">سلة المهملات</string>
     <string name="dlg_confirm_trash_comments">إرسال إلى سلة المهملات؟</string>
     <string name="dlg_trashing_comments">إرسال إلى سلة المهملات</string>
     <string name="dlg_spamming_comments">تحديد كمزعج</string>
@@ -2028,7 +2080,7 @@ Language: ar
     <string name="mnu_comment_unapprove">غير موافق</string>
     <string name="mnu_comment_approve">موافق</string>
     <string name="edit_comment">تعديل التعليق</string>
-    <string name="comment_status_trash">تم حذفه</string>
+    <string name="comment_status_trash">محذوف</string>
     <string name="comment_status_spam">مزعج</string>
     <string name="comment_status_unapproved">معلق</string>
     <string name="comment_status_approved">تمت الموافقة</string>
