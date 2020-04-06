@@ -5,10 +5,10 @@
     android:layout_height="match_parent">
 
     <include
-        layout="@layout/toolbar"
+        layout="@layout/toolbar_main"
         android:id="@+id/toolbar" />
 
-    <WebView
+    <org.wordpress.android.ui.WPWebView
         android:id="@+id/webView"
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"

@@ -26,8 +26,8 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.utils.trackWithWidgetType
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.merge
 import javax.inject.Inject
@@ -46,7 +46,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
     private lateinit var widgetType: WidgetType
 
-    override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+    override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
         activity?.let {
             val styledAttributes = it.obtainStyledAttributes(attrs, R.styleable.statsWidget)
@@ -102,13 +102,16 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
 
         siteSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetSiteSelectionDialogFragment().show(fragmentManager, "stats_site_selection_fragment")
+                StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
             }
         })
 
         colorSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetColorSelectionDialogFragment().show(fragmentManager, "stats_view_mode_selection_fragment")
+                StatsWidgetColorSelectionDialogFragment().show(
+                        requireFragmentManager(),
+                        "stats_view_mode_selection_fragment"
+                )
             }
         })
 

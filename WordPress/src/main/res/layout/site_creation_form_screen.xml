@@ -2,12 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/neutral_0">
+                android:layout_height="match_parent">
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar"/>
+        layout="@layout/toolbar_main"/>
 
     <ViewStub
         android:id="@+id/site_creation_form_content_stub"
@@ -34,7 +33,6 @@
         android:paddingTop="@dimen/margin_medium_large"
         android:paddingBottom="@dimen/margin_medium_large"
         android:layout_alignParentBottom="true"
-        android:background="@color/neutral_0"
         android:clipToPadding="false"
         android:visibility="gone"
         tools:visibility="visible">

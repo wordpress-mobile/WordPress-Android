@@ -1,66 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_default">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <include layout="@layout/toolbar_main" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/contactUsButton"
-            style="@style/HelpActivitySingleText"
-            android:text="@string/contact_us"/>
-
-        <TextView
-            android:id="@+id/faqButton"
-            style="@style/HelpActivitySingleText"
-            android:text="@string/browse_our_faq_button"/>
-
-        <TextView
-            android:id="@+id/myTicketsButton"
-            style="@style/HelpActivitySingleText"
-            android:text="@string/my_tickets"/>
-
-        <TextView
-            android:id="@+id/applicationLogButton"
-            style="@style/HelpActivitySingleText"
-            android:text="@string/application_log_button"/>
-
-        <TextView
-            android:id="@+id/applicationVersion"
-            style="@style/HelpActivitySingleText"
-            android:textColor="@color/neutral_40"/>
-
-        <View style="@style/HelpActivityDivider"/>
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/contactEmailContainer"
-            android:background="?android:attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/margin_extra_large">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/support_contact_email"
-                android:textColor="?attr/wpColorText"
-                android:textSize="@dimen/text_sz_large"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/contact_us_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/contact_us" />
 
-            <TextView
-                android:id="@+id/contactEmailAddress"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/faq_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/browse_our_faq_button" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/my_tickets_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/my_tickets" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/application_log_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/application_log_button" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/applicationVersion"
+                style="@style/HelpActivitySingleText"
+                android:textColor="?attr/wpColorOnSurfaceMedium" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:id="@+id/contactEmailContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/support_contact_email_not_set"
-                android:textColor="@color/neutral_40"
-                android:textSize="@dimen/text_sz_medium"/>
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_extra_large">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/support_contact_email"
+                    android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/contactEmailAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/support_contact_email_not_set"
+                    android:textAppearance="?attr/textAppearanceCaption" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:background="?android:attr/listDivider" />
+
         </LinearLayout>
-
-        <View style="@style/HelpActivityDivider"/>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

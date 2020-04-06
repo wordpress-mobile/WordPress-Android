@@ -1,92 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_content_container"
-    android:background="@android:color/white"
-    android:clickable="true"
-    android:focusable="true"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:minHeight="?attr/listPreferredItemHeight"
-    tools:layout_height="?attr/listPreferredItemHeightLarge" >
+    tools:layout_height="?attr/listPreferredItemHeightLarge">
 
-    <RelativeLayout
-        android:background="?attr/selectableItemBackground"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" >
+    <ImageView
+        android:id="@+id/action_icon"
+        android:layout_width="@dimen/activity_log_icon_size"
+        android:layout_height="@dimen/activity_log_icon_size"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/activity_log_icon_margin"
+        android:contentDescription="@string/activity_log_icon"
+        android:padding="@dimen/margin_medium"
+        tools:background="@drawable/bg_oval_neutral_30"
+        tools:src="@drawable/ic_comment_white_24dp" />
 
-        <ImageView
-            android:id="@+id/action_icon"
-            android:contentDescription="@string/activity_log_icon"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_height="@dimen/activity_log_icon_size"
-            android:layout_margin="@dimen/activity_log_icon_margin"
-            android:layout_width="@dimen/activity_log_icon_size"
-            android:padding="@dimen/margin_medium"
-            tools:background="@drawable/bg_oval_neutral_30"
-            tools:src="@drawable/ic_comment_white_24dp" >
-        </ImageView>
+    <ImageButton
+        android:id="@+id/action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/activity_log_button"
+        android:padding="@dimen/activity_log_icon_margin"
+        android:src="@drawable/ic_history_white_24dp"
+        app:tint="?attr/colorPrimary" />
 
-        <ImageButton
-            android:id="@+id/action_button"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/activity_log_button"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/activity_log_icon_margin"
+        android:layout_toStartOf="@id/action_button"
+        android:layout_toEndOf="@id/action_icon"
+        android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/action_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="Comment by oguzkocer on Android Studio 3.1 Configuration Issue: I think the bigger problem for me was the lack of make option, so hopefully at least that'll work." />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/action_summary"
             android:layout_width="wrap_content"
-            android:padding="@dimen/activity_log_icon_margin"
-            android:src="@drawable/ic_history_white_24dp"
-            android:tint="@color/primary_50" >
-        </ImageButton>
-
-        <LinearLayout
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_log_icon_margin"
-            android:layout_toEndOf="@id/action_icon"
-            android:layout_toStartOf="@id/action_button"
-            android:layout_width="fill_parent"
-            android:orientation="vertical" >
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceCaption"
+            tools:text="Comment posted" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/action_text"
-                android:ellipsize="end"
-                android:gravity="start"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:singleLine="true"
-                android:textAlignment="viewStart"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="?attr/wpColorText"
-                tools:text="Comment by oguzkocer on Android Studio 3.1 Configuration Issue: I think the bigger problem for me was the lack of make option, so hopefully at least that'll work." >
-            </org.wordpress.android.widgets.WPTextView>
+    </LinearLayout>
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/action_summary"
-                android:ellipsize="end"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:singleLine="true"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/neutral_40"
-                tools:text="Comment posted" >
-            </org.wordpress.android.widgets.WPTextView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_alignParentBottom="true"
+        android:background="?android:attr/listDivider" />
 
-        </LinearLayout>
-
-        <View
-            android:background="@drawable/notifications_list_divider_full_width"
-            android:layout_alignParentBottom="true"
-            android:layout_height="@dimen/list_divider_height"
-            android:layout_width="match_parent" >
-        </View>
-
-    </RelativeLayout>
-
-</FrameLayout>
+</RelativeLayout>
