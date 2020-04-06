@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,7 +33,6 @@ import androidx.fragment.app.DialogFragment;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -322,7 +322,8 @@ public class ImageSettingsDialogFragment extends DialogFragment {
      * Displays a dialog asking the user to confirm that they want to exit, discarding unsaved changes.
      */
     private void showDiscardChangesDialog() {
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(getString(R.string.image_settings_dismiss_dialog_title));
         builder.setPositiveButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

@@ -10,32 +10,27 @@
     <item
         android:id="@+id/menu_approve"
         android:icon="@drawable/ic_thumbs_up_white_24dp"
-        android:title="@string/mnu_comment_approve"
-        app:iconTint="?attr/wpColorActionModeIcon"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:title="@string/mnu_comment_approve" />
     <item
         android:id="@+id/menu_unapprove"
         android:icon="@drawable/ic_thumbs_down_white_24dp"
-        android:title="@string/mnu_comment_unapprove"
-        app:iconTint="?attr/wpColorActionModeIcon"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:title="@string/mnu_comment_unapprove" />
     <item
         android:id="@+id/menu_spam"
         android:icon="@drawable/ic_spam_white_24dp"
-        android:title="@string/mnu_comment_spam"
-        app:iconTint="?attr/wpColorActionModeIcon"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:title="@string/mnu_comment_spam" />
     <item
         android:id="@+id/menu_unspam"
         android:icon="@drawable/ic_spam_white_24dp"
-        android:title="@string/mnu_comment_unspam"
-        app:iconTint="?attr/wpColorActionModeIcon"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:title="@string/mnu_comment_unspam" />
     <item
         android:id="@+id/menu_trash"
         android:icon="@drawable/ic_trash_white_24dp"
-        android:title="@string/mnu_comment_trash"
-        app:iconTint="?attr/wpColorActionModeIcon"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:title="@string/mnu_comment_trash" />
 
 </menu>

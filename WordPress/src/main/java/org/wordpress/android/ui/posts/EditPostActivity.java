@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,13 +22,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
@@ -39,7 +42,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.yalantis.ucrop.UCrop;
 
@@ -97,7 +99,6 @@ import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
@@ -200,7 +201,7 @@ import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KE
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
-public class EditPostActivity extends LocaleAwareActivity implements
+public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
         EditorImagePreviewListener,
@@ -341,6 +342,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                   != RestartEditorOptions.NO_RESTART;
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
     private void newPostSetup() {
         mIsNewPost = true;
 
@@ -406,14 +412,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
             View overlay = findViewById(R.id.view_overlay);
-            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) overlay.getLayoutParams();
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) overlay.getLayoutParams();
             layoutParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.aztec_format_bar_height);
             overlay.setLayoutParams(layoutParams);
         }
 
         // Set up the action bar.
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -549,12 +553,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
-        setupViewPager();
-
-        ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
-    }
-
-    private void setupViewPager() {
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -582,6 +580,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             }
         });
+
+        ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
     private void startObserving() {
@@ -1800,7 +1800,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
                                     account.getEmail());
 
-            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
                    .setMessage(message)
                    .setPositiveButton(android.R.string.ok,
@@ -2549,7 +2550,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
-            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             builder.setTitle(getString(R.string.cannot_retry_deleted_media_item));
             builder.setPositiveButton(R.string.yes, (dialog, id) -> {
                 runOnUiThread(() -> mEditorFragment.removeMedia(mediaId));

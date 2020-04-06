@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/page_item"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/page_list_content_margin"
-    android:layout_marginStart="@dimen/page_list_content_margin">
+    android:layout_marginStart="@dimen/page_list_content_margin"
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/page_layout"
@@ -28,8 +28,9 @@
             android:ellipsize="end"
             android:fontFamily="serif"
             android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textAlignment="textStart"
+            android:textColor="@color/neutral_80"
+            android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/time_posted"
             app:layout_constraintEnd_toStartOf="@+id/featured_image"
@@ -48,8 +49,8 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/wpColorOnSurfaceMedium"
+            android:textColor="?attr/wpColorTextSubtle"
+            android:textSize="@dimen/text_sz_medium"
             app:layout_goneMarginBottom="@dimen/margin_large"
             app:layout_constraintBottom_toTopOf="@+id/labels"
             app:layout_constraintEnd_toStartOf="@+id/featured_image"
@@ -80,7 +81,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/more"
             android:src="@drawable/ic_ellipsis_vertical_white_24dp"
-            app:tint="?attr/wpColorOnSurfaceMedium"
+            android:tint="@color/neutral_60"
             app:layout_constraintBottom_toBottomOf="@+id/featured_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -130,11 +131,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
-
-</LinearLayout>
-
+</FrameLayout>

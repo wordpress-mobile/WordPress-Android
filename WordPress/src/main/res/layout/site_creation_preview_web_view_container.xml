@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardCornerRadius="0dp"
+    app:cardBackgroundColor="@android:color/white"
     app:cardElevation="@dimen/card_elevation">
 
     <LinearLayout
@@ -13,59 +13,59 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="@dimen/appbar_elevation">
+            android:background="@android:color/white"
+            android:elevation="@dimen/card_elevation">
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_medium"
                 android:background="@drawable/bg_rectangle_neutral_0_radius_margin_extra_large"
-                android:paddingStart="@dimen/margin_extra_large"
-                android:paddingTop="@dimen/margin_medium"
+                android:paddingBottom="@dimen/margin_medium"
                 android:paddingEnd="@dimen/margin_extra_large"
-                android:paddingBottom="@dimen/margin_medium">
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_medium">
 
-                <com.google.android.material.textview.MaterialTextView
+                <TextView
                     android:id="@+id/sitePreviewWebUrlTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?attr/wpColorOnSurfaceMedium"
-                    tools:text="example.wordpress.com" />
+                    android:textColor="?attr/wpColorTextSubtle"
+                    android:textSize="@dimen/text_sz_medium"
+                    tools:text="example.wordpress.com"/>
             </FrameLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
 
-        <org.wordpress.android.ui.WPWebView
+        <WebView
             android:id="@+id/sitePreviewWebView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbarStyle="insideInset"
-            tools:visibility="gone" />
+            tools:visibility="gone"/>
 
         <org.wordpress.android.ui.ActionableEmptyView
             android:id="@+id/sitePreviewWebError"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/background_default"
             android:visibility="gone"
             app:aevImage="@drawable/img_illustration_cloud_off_152dp"
             app:aevTitle="@string/error_browser_no_network"
-            tools:visibility="visible" />
+            tools:visibility="visible">
+        </org.wordpress.android.ui.ActionableEmptyView>
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/sitePreviewWebViewShimmerLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:shimmer_base_alpha="@dimen/skeleton_shimmer_base_alpha"
-            app:shimmer_highlight_alpha="@dimen/skeleton_shimmer_highlight_alpha">
+            android:background="@color/neutral_5">
 
-            <include layout="@layout/site_creation_preview_skeleton" />
+            <include layout="@layout/site_creation_preview_skeleton"/>
         </com.facebook.shimmer.ShimmerFrameLayout>
     </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+</androidx.cardview.widget.CardView>

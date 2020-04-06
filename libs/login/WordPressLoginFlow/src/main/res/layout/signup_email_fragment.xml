@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_extra_large"
+    android:layout_width="match_parent"
     android:orientation="vertical"
-    android:paddingStart="@dimen/margin_extra_large"
-    android:paddingLeft="@dimen/margin_extra_large"
     android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingRight="@dimen/margin_extra_large">
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large" >
 
-    <com.google.android.material.textview.MaterialTextView
+    <TextView
         android:id="@+id/label"
-        style="@style/LoginTheme.TextLabel"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_extra_large"
-        tools:text="@string/signup_email_header" />
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_width="match_parent"
+        tools:text="@string/signup_email_header"
+        style="@style/LoginTheme.TextLabel" >
+    </TextView>
 
     <org.wordpress.android.login.widgets.WPLoginInputRow
         android:id="@+id/login_email_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:hint="@string/email_address"
         android:imeOptions="actionNext"
         android:importantForAutofill="noExcludeDescendants"
         android:inputType="textEmailAddress"
-        tools:ignore="UnusedAttribute" />
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:wpIconDrawable="@drawable/ic_user_grey_24dp"
+        tools:ignore="UnusedAttribute" >
+    </org.wordpress.android.login.widgets.WPLoginInputRow>
 
 </LinearLayout>

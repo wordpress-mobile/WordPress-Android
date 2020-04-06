@@ -8,12 +8,12 @@ import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
-import com.google.android.material.textfield.TextInputEditText;
+import androidx.appcompat.widget.AppCompatEditText;
 
 /**
  * Used to handle backspace in People Management username field
  */
-public class MultiUsernameEditText extends TextInputEditText {
+public class MultiUsernameEditText extends AppCompatEditText {
     private OnBackspacePressedListener mOnBackspacePressedListener;
 
 

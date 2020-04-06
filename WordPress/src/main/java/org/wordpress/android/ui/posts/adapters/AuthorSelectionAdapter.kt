@@ -8,15 +8,13 @@ import android.widget.BaseAdapter
 import androidx.annotation.CallSuper
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.graphics.ColorUtils
-import com.google.android.material.elevation.ElevationOverlayProvider
+import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.GravatarUtils
-import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.NO_PLACEHOLDER
 import javax.inject.Inject
@@ -95,11 +93,7 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
         protected val image: AppCompatImageView = itemView.findViewById(R.id.post_list_author_selection_image)
 
         @CallSuper
-        open fun bind(
-            state: AuthorFilterListItemUIState,
-            imageManager: ImageManager,
-            uiHelpers: UiHelpers
-        ) {
+        open fun bind(state: AuthorFilterListItemUIState, imageManager: ImageManager, uiHelpers: UiHelpers) {
             /**
              * We can't use error/placeholder drawables as it causes an issue described here
              * https://github.com/wordpress-mobile/WordPress-Android/issues/9745.
@@ -128,33 +122,11 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
     private class DropdownViewHolder(itemView: View) : NormalViewHolder(itemView) {
         private val text: AppCompatTextView = itemView.findViewById(R.id.post_list_author_selection_text)
 
-        override fun bind(
-            state: AuthorFilterListItemUIState,
-            imageManager: ImageManager,
-            uiHelpers: UiHelpers
-        ) {
+        override fun bind(state: AuthorFilterListItemUIState, imageManager: ImageManager, uiHelpers: UiHelpers) {
             super.bind(state, imageManager, uiHelpers)
             val context = itemView.context
-
-            // Because it's a custom popup list we need to manage colors of list items manually
-            val elevationOverlayProvider = ElevationOverlayProvider(context)
-            val appbarElevation = context.resources.getDimension(R.dimen.appbar_elevation)
-            val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
-                    appbarElevation
-            )
-
-            val selectedColor = ColorUtils
-                    .setAlphaComponent(
-                            context.getColorFromAttribute(R.attr.colorOnSurface),
-                            context.resources.getInteger(R.integer.custom_popup_selected_list_item_opacity_dec)
-                    )
-
             text.text = uiHelpers.getTextOfUiString(context, state.text)
-            if (state.isSelected) {
-                itemView.setBackgroundColor(selectedColor)
-            } else {
-                itemView.setBackgroundColor(elevatedSurfaceColor)
-            }
+            itemView.setBackgroundColor(ContextCompat.getColor(context, state.dropDownBackground))
         }
     }
 }

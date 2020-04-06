@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,7 +23,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
@@ -40,9 +41,9 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
@@ -52,7 +53,6 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListener;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
@@ -70,6 +70,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
@@ -91,7 +92,7 @@ import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SE
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_START;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
-public class ReaderCommentListActivity extends LocaleAwareActivity {
+public class ReaderCommentListActivity extends AppCompatActivity {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
 
@@ -124,6 +125,11 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     @Inject AccountStore mAccountStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private ReaderCommentListViewModel mViewModel;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onBackPressed() {
@@ -161,9 +167,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                 }
             }
         });
-
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

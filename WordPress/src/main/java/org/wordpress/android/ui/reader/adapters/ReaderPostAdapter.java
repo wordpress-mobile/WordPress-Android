@@ -18,7 +18,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -133,6 +133,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * cross-post
      */
     private class ReaderXPostViewHolder extends RecyclerView.ViewHolder {
+        private final CardView mCardView;
         private final ImageView mImgAvatar;
         private final ImageView mImgBlavatar;
         private final TextView mTxtTitle;
@@ -140,13 +141,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         ReaderXPostViewHolder(View itemView) {
             super(itemView);
-            View postContainer = itemView.findViewById(R.id.post_container);
+            mCardView = itemView.findViewById(R.id.card_view);
             mImgAvatar = itemView.findViewById(R.id.image_avatar);
             mImgBlavatar = itemView.findViewById(R.id.image_blavatar);
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtSubtitle = itemView.findViewById(R.id.text_subtitle);
 
-            postContainer.setOnClickListener(new View.OnClickListener() {
+            mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
@@ -160,7 +161,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private class ReaderRemovedPostViewHolder extends RecyclerView.ViewHolder {
-        final View mPostContainer;
+        final CardView mCardView;
 
         private final ViewGroup mRemovedPostContainer;
         private final TextView mTxtRemovedPostTitle;
@@ -168,18 +169,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         ReaderRemovedPostViewHolder(View itemView) {
             super(itemView);
-            mPostContainer = itemView.findViewById(R.id.post_container);
+            mCardView = itemView.findViewById(R.id.card_view);
             mTxtRemovedPostTitle = itemView.findViewById(R.id.removed_post_title);
             mRemovedPostContainer = itemView.findViewById(R.id.removed_item_container);
             mUndoRemoveAction = itemView.findViewById(R.id.undo_remove);
         }
     }
-
     /*
      * full post
      */
     private class ReaderPostViewHolder extends RecyclerView.ViewHolder {
-        final View mPostContainer;
+        final CardView mCardView;
 
         private final TextView mTxtTitle;
         private final TextView mTxtText;
@@ -212,7 +212,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderPostViewHolder(View itemView) {
             super(itemView);
 
-            mPostContainer = itemView.findViewById(R.id.post_container);
+            mCardView = itemView.findViewById(R.id.card_view);
 
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtText = itemView.findViewById(R.id.text_excerpt);
@@ -262,7 +262,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // show author/blog link as disabled if we're previewing a blog, otherwise show
             // blog preview when the post header is clicked
             if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
-                int color = ContextExtensionsKt.getColorFromAttribute(itemView.getContext(), R.attr.colorOnSurface);
+                int color = ContextExtensionsKt.getColorFromAttribute(itemView.getContext(), R.attr.wpColorText);
                 mTxtAuthorAndBlogName.setTextColor(color);
                 // remove the ripple background
                 postHeaderView.setBackground(null);
@@ -429,10 +429,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
         Drawable drawable =
-                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
-                        ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
+                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp, R.color.primary_40);
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-        holder.mPostContainer.setOnClickListener(new View.OnClickListener() {
+        holder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 undoPostUnbookmarked(post, position);
@@ -461,14 +460,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzMedium);
             mImageManager.loadIntoCircle(holder.mImgAvatarOrBlavatar,
                     ImageType.AVATAR, imageUrl);
-            holder.mImgAvatarOrBlavatar.setBackgroundColor(0);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else if (post.hasBlogImageUrl()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzMedium);
             mImageManager.load(holder.mImgAvatarOrBlavatar, ImageType.BLAVATAR, imageUrl);
-            holder.mImgAvatarOrBlavatar
-                    .setBackgroundColor(
-                            ContextCompat.getColor(holder.mImgAvatarOrBlavatar.getContext(), android.R.color.white));
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else {
             mImageManager.cancelRequestAndClearImageView(holder.mImgAvatarOrBlavatar);
@@ -597,7 +592,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mLayoutDiscover.setVisibility(View.GONE);
         }
 
-        holder.mPostContainer.setOnClickListener(new OnClickListener() {
+        holder.mCardView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mPostSelectedListener != null) {
@@ -925,7 +920,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mLikeCount.setCount(post.numLikes);
             holder.mLikeCount.setSelected(post.isLikedByCurrentUser);
             holder.mLikeCount.setVisibility(View.VISIBLE);
-            holder.mLikeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.mPostContainer.getContext(),
+            holder.mLikeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.mCardView.getContext(),
                     post.numLikes,
                     post.isLikedByCurrentUser));
             // can't like when logged out

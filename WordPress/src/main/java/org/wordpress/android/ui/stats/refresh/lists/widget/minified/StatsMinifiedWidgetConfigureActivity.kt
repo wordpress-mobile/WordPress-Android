@@ -1,22 +1,28 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.minified
 
+import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.toolbar_main.*
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.util.LocaleManager
 
-class StatsMinifiedWidgetConfigureActivity : LocaleAwareActivity() {
+class StatsMinifiedWidgetConfigureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.stats_minified_widget_configure_activity)
 
-        setSupportActionBar(toolbar_main)
+        setSupportActionBar(toolbar)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

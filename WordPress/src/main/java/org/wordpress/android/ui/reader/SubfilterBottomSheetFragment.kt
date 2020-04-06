@@ -28,6 +28,8 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ReaderPostListViewModel
 
+    override fun getTheme() = R.style.Handled_BottomSheetDialogStyle
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,7 +62,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             }
         })
 
-        dialog?.setOnShowListener { dialogInterface ->
+        dialog.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
 
             val bottomSheet = sheetDialog?.findViewById<View>(
@@ -75,12 +77,12 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    override fun onAttach(context: Context) {
+    override fun onAttach(context: Context?) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    override fun onCancel(dialog: DialogInterface) {
+    override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)
         viewModel.onBottomSheetCancelled()
     }

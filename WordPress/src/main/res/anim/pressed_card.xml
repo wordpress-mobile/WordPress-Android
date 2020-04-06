@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:state_enabled="true"
+        android:state_pressed="true">
+        <objectAnimator
+            android:duration="@android:integer/config_shortAnimTime"
+            android:propertyName="translationZ"
+            android:valueTo="@dimen/card_elevation_pressed"
+            android:valueType="floatType" />
+    </item>
+    <item>
+        <objectAnimator
+            android:duration="@android:integer/config_shortAnimTime"
+            android:propertyName="translationZ"
+            android:valueTo="0"
+            android:valueType="floatType" />
+    </item>
+</selector>

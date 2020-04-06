@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -11,15 +12,15 @@
         android:id="@+id/activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp" />
+        />
 
-    <com.google.android.material.textview.MaterialTextView
+    <TextView
         android:id="@+id/label"
         style="@style/StatsBlockPostingActivityLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        tools:text="Jan" />
-
+        tools:text="Jan"/>
 </LinearLayout>

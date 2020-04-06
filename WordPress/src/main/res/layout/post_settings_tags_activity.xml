@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_main" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/tags_edit_text_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_large"
-        android:hint="@string/tags_separate_with_commas">
+        android:layout_alignParentTop="true"
+        android:layout_margin="@dimen/margin_medium"
+        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardCornerRadius="@dimen/default_cardview_radius"
+        card_view:cardElevation="@dimen/card_elevation">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/tags_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:hint="@string/tags_separate_with_commas"
             android:inputType="textMultiLine"
-            android:textSize="@dimen/text_sz_large" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+            android:textSize="@dimen/text_sz_large"/>
+    </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tags_suggestion_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/margin_medium" />
+        android:layout_below="@+id/tags_edit_text_card_view"
+        android:layout_marginStart="@dimen/margin_medium"/>
 
-</LinearLayout>
+</RelativeLayout>

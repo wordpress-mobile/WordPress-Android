@@ -1,9 +1,0 @@
-14.2:
-Banyak pembaruan untuk penyunting blok:
-
-* Menambahkan ikon tekan lama untuk menambahkan blok sebelum/sesudah.
-* Aplikasi akan mencoba menampilkan gambar saat kembali online setelah sambungan terputus.
-* Menyelesaikan masalah dengan penyunting yang kosong saat mencoba membuat pos dengan gambar atau tautan dari aplikasi lain.
-* Menambahkan pilihan ukuran gambar ke blok Galeri.
-* Memperbaiki bug yang mencegah blok paragraf tergabung.
-

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.utils;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,14 +18,13 @@ import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.android.volley.VolleyError;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
@@ -436,7 +436,8 @@ public class NotificationsUtils {
             return;
         }
 
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(context, R.style.Calypso_Dialog_Alert));
         builder.setTitle(title).setMessage(message);
 
         builder.setPositiveButton(R.string.mnu_comment_approve, new DialogInterface.OnClickListener() {

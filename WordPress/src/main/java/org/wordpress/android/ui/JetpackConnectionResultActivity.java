@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import org.wordpress.android.R;
@@ -34,7 +35,7 @@ import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
  * <p>
  * Redirects users to the stats activity if the jetpack connection was succesful
  */
-public class JetpackConnectionResultActivity extends LocaleAwareActivity {
+public class JetpackConnectionResultActivity extends AppCompatActivity {
     private static final String ALREADY_CONNECTED = "already-connected";
     private static final String REASON_PARAM = "reason";
     private static final String SOURCE_PARAM = "source";
@@ -54,7 +55,7 @@ public class JetpackConnectionResultActivity extends LocaleAwareActivity {
         setContentView(R.layout.stats_loading_activity);
 
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();

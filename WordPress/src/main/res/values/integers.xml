@@ -2,12 +2,7 @@
 
 <resources>
 
-    <integer name="full_screen_dialog_animation_duration">
-        @android:integer/config_mediumAnimTime
-    </integer>
-    <integer name="custom_popup_selected_list_item_opacity_dec">50</integer>
-
-    <integer name="selected_list_item_opacity">20</integer>
+    <integer name="full_screen_dialog_animation_duration">@android:integer/config_mediumAnimTime</integer>
 
     <!-- max #chars user can type when adding a new topic to the reader -->
     <integer name="max_length_reader_topic_name">96</integer>

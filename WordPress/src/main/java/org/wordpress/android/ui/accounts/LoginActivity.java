@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -47,7 +49,6 @@ import org.wordpress.android.support.ZendeskExtraTags;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
@@ -63,6 +64,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashLoggingUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
@@ -82,7 +84,7 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
+public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener, SignupSheetListener,
         HasSupportFragmentInjector, BasicDialogPositiveClickInterface {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
@@ -114,6 +116,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject protected SiteStore mSiteStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

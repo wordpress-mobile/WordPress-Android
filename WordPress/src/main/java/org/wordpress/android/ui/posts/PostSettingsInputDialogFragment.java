@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -13,9 +14,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.ActivityUtils;
@@ -81,25 +79,23 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         //noinspection InflateParams
         View dialogView = layoutInflater.inflate(R.layout.post_settings_input_dialog, null);
         builder.setView(dialogView);
-        final EditText editText = dialogView.findViewById(R.id.post_settings_input_dialog_edit_text);
+        final EditText editText = (EditText) dialogView.findViewById(R.id.post_settings_input_dialog_edit_text);
         if (!TextUtils.isEmpty(mCurrentInput)) {
             editText.setText(mCurrentInput);
             // move the cursor to the end
             editText.setSelection(mCurrentInput.length());
         }
         editText.addTextChangedListener(this);
-
-        TextInputLayout textInputLayout = dialogView.findViewById(R.id.post_settings_input_dialog_input_layout);
-        textInputLayout.setHint(mTitle);
-
-        TextView hintTextView = dialogView.findViewById(R.id.post_settings_input_dialog_hint);
+        TextView hintTextView = (TextView) dialogView.findViewById(R.id.post_settings_input_dialog_hint);
         hintTextView.setText(mHint);
 
+        builder.setTitle(mTitle);
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override

@@ -6,21 +6,17 @@ import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.text.style.StrikethroughSpan
 import android.util.AttributeSet
-import com.google.android.material.textview.MaterialTextView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.revisions.Diff
 import org.wordpress.android.fluxc.model.revisions.DiffOperations.ADD
 import org.wordpress.android.fluxc.model.revisions.DiffOperations.DELETE
-import org.wordpress.android.util.getColorFromAttribute
 
-class DiffView : MaterialTextView {
+class DiffView : AppCompatTextView {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
-            context,
-            attrs,
-            defStyleAttr
-    )
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     fun showDiffs(diffs: List<Diff>, trimNewline: Boolean = false) {
         text = null
@@ -37,29 +33,36 @@ class DiffView : MaterialTextView {
             if (diff.operation == ADD) {
                 diffContent.setSpan(
                         ColorUnderlineSpan(
-                                context.getColorFromAttribute(R.attr.colorPrimary)
+                                ContextCompat.getColor(
+                                        context,
+                                        R.color.primary
+                                )
                         ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 diffContent.setSpan(
                         BackgroundColorSpan(
-                                context.getColorFromAttribute(R.attr.colorSurface)
+                                ContextCompat.getColor(
+                                        context,
+                                        R.color.primary_0
+                                )
                         ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             } else if (diff.operation == DELETE) {
-                diffContent.setSpan(
-                        StrikethroughSpan(),
-                        0,
-                        diffContent.length,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
+                diffContent.setSpan(StrikethroughSpan(), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 diffContent.setSpan(
                         ColorUnderlineSpan(
-                                context.getColorFromAttribute(R.attr.wpColorError)
+                                ContextCompat.getColor(
+                                        context,
+                                        R.color.error
+                                )
                         ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 diffContent.setSpan(
                         BackgroundColorSpan(
-                                context.getColorFromAttribute(R.attr.colorSurface)
+                                ContextCompat.getColor(
+                                        context,
+                                        R.color.error_0
+                                )
                         ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }

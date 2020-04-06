@@ -1,91 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" >
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_with_search"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height"
             android:focusableInTouchMode="true"
-            app:theme="@style/WordPress.ActionBar" />
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_width="match_parent"
+            style="@style/Toolbar.Primary" >
+        </androidx.appcompat.widget.Toolbar>
+
+        <org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView
+            android:id="@+id/master_switch"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            app:masterTitleOn="@string/notification_settings_master_status_on"
+            app:masterTitleOff="@string/notification_settings_master_status_off"
+            app:masterHintOn="@string/notification_settings_master_hint_on"
+            app:masterHintOff="@string/notification_settings_master_hint_off"
+            app:masterContentDescription="@string/notification_settings_switch_desc">
+        </org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView
-        android:id="@+id/master_switch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/app_bar_layout"
-        app:masterContentDescription="@string/notification_settings_switch_desc"
-        app:masterHintOff="@string/notification_settings_master_hint_off"
-        app:masterHintOn="@string/notification_settings_master_hint_on"
-        app:masterTitleOff="@string/notification_settings_master_status_off"
-        app:masterTitleOn="@string/notification_settings_master_status_on" />
-
     <LinearLayout
         android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
+        android:layout_below="@id/app_bar_layout"
         android:layout_height="match_parent"
-        android:layout_below="@id/master_switch"
-        android:orientation="vertical" />
+        android:layout_width="match_parent"
+        android:orientation="vertical" >
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/notification_settings_disabled_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/master_switch"
         android:clickable="true"
         android:focusable="true"
-        android:orientation="vertical">
+        android:layout_below="@id/app_bar_layout"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical" >
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Subhead"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_medium_large"
-            android:paddingStart="@dimen/toolbar_content_offset"
+            android:layout_width="match_parent"
             android:paddingEnd="@dimen/margin_extra_large"
-            android:text="@string/notification_settings_master_off_title" />
+            android:paddingStart="@dimen/toolbar_content_offset"
+            android:text="@string/notification_settings_master_off_title"
+            style="@style/TextAppearance.AppCompat.Subhead" >
+        </TextView>
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Body1"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_marginBottom="@dimen/margin_extra_large"
-            android:paddingStart="@dimen/toolbar_content_offset"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_width="match_parent"
             android:paddingEnd="@dimen/margin_extra_large"
-            android:text="@string/notification_settings_master_off_message" />
+            android:paddingStart="@dimen/toolbar_content_offset"
+            android:text="@string/notification_settings_master_off_message"
+            style="@style/TextAppearance.AppCompat.Body1" >
+        </TextView>
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/notifications_settings_message_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:background="@color/background_default"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="invisible">
+        tools:visibility="invisible" >
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/notifications_settings_message"
-            style="@style/WordPress.EmptyList.Title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             app:fixWidowWords="true"
-            tools:text="Loading..." />
+            tools:text="Loading..."
+            style="@style/WordPress.EmptyList.Title" >
+        </org.wordpress.android.widgets.WPTextView>
 
     </LinearLayout>
 

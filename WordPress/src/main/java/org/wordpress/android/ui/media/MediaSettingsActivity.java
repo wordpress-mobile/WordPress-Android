@@ -2,12 +2,14 @@ package org.wordpress.android.ui.media;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -19,10 +21,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.view.ContextThemeWrapper;
 import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -40,15 +44,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.greenrobot.eventbus.EventBus;
@@ -66,18 +68,17 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity.MediaPreviewSwiped;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -102,7 +103,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
 
-public class MediaSettingsActivity extends LocaleAwareActivity
+public class MediaSettingsActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_ID_LIST = "id_list";
@@ -207,13 +208,18 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_settings_activity);
 
-        setSupportActionBar(findViewById(R.id.toolbar));
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
@@ -263,19 +269,6 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         // only show title when toolbar is collapsed
         final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        collapsingToolbar.setCollapsedTitleTextColor(
-                AppCompatResources.getColorStateList(this,
-                        ContextExtensionsKt.getColorResIdFromAttribute(this, R.attr.colorOnPrimarySurface)));
-
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
-
-        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
-        int elevatedColor = elevationOverlayProvider
-                .compositeOverlayIfNeeded(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar),
-                        appbarElevation);
-
-        collapsingToolbar.setContentScrimColor(elevatedColor);
-
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             int mScrollRange = -1;
 
@@ -312,17 +305,24 @@ public class MediaSettingsActivity extends LocaleAwareActivity
 
         // tap to show full screen view (not supported for documents)
         if (!isDocument()) {
-            View.OnClickListener listener = v -> showFullScreen();
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showFullScreen();
+                }
+            };
             mImageView.setOnClickListener(listener);
             mImagePlay.setOnClickListener(listener);
             mFabView.setOnClickListener(listener);
-            mFabView.setOnLongClickListener(view -> {
-                if (view.isHapticFeedbackEnabled()) {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                }
+            mFabView.setOnLongClickListener(new OnLongClickListener() {
+                @Override public boolean onLongClick(View view) {
+                    if (view.isHapticFeedbackEnabled()) {
+                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    }
 
-                Toast.makeText(view.getContext(), R.string.button_preview, Toast.LENGTH_SHORT).show();
-                return true;
+                    Toast.makeText(view.getContext(), R.string.button_preview, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
             });
             ViewUtilsKt.redirectContextClickToLongPressListener(mFabView);
         }
@@ -414,9 +414,12 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         super.onResume();
 
         long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-        new Handler().postDelayed(() -> {
-            if (!isFinishing() && shouldShowFab()) {
-                showFab();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing() && shouldShowFab()) {
+                    showFab();
+                }
             }
         }, delayMs);
 
@@ -427,7 +430,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
         outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
@@ -475,7 +478,12 @@ public class MediaSettingsActivity extends LocaleAwareActivity
 
     private void delayedFinishWithError() {
         ToastUtils.showToast(this, R.string.error_media_not_found);
-        new Handler().postDelayed(this::finish, 1500);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 1500);
     }
 
     @Override
@@ -592,7 +600,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         } else {
             mDescriptionView.setText(mMedia.getDescription());
 
-            findViewById(R.id.media_customisation_options).setVisibility(View.GONE);
+            findViewById(R.id.card1).setVisibility(View.GONE);
             findViewById(R.id.edit_link_container).setVisibility(View.GONE);
         }
 
@@ -643,7 +651,12 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         View txtCopyUrl = findViewById(R.id.text_copy_url);
         txtCopyUrl.setVisibility(hasUrl ? View.VISIBLE : View.GONE);
         if (hasUrl) {
-            txtCopyUrl.setOnClickListener(v -> copyMediaUrlToClipboard());
+            txtCopyUrl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    copyMediaUrlToClipboard();
+                }
+            });
         }
     }
 
@@ -788,10 +801,13 @@ public class MediaSettingsActivity extends LocaleAwareActivity
                 int width = DisplayUtils.getDisplayPixelWidth(MediaSettingsActivity.this);
                 final Bitmap thumb = ImageUtils.getVideoFrameFromVideo(mMedia.getUrl(), width);
                 if (thumb != null) {
-                    runOnUiThread(() -> {
-                        if (!isFinishing()) {
-                            WordPress.getBitmapCache().put(mMedia.getUrl(), thumb);
-                            mImageView.setImageBitmap(thumb);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isFinishing()) {
+                                WordPress.getBitmapCache().put(mMedia.getUrl(), thumb);
+                                mImageView.setImageBitmap(thumb);
+                            }
                         }
                     });
                 }
@@ -804,11 +820,14 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         hideFab();
 
         // show fullscreen preview after a brief delay so fab & actionBar animations don't stutter
-        new Handler().postDelayed(() -> {
-            if (isMediaFromEditor()) {
-                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mEditorImageMetaData.getSrc());
-            } else {
-                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia, mMediaIdList);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isMediaFromEditor()) {
+                    MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mEditorImageMetaData.getSrc());
+                } else {
+                    MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia, mMediaIdList);
+                }
             }
         }, 200);
     }
@@ -1036,14 +1055,18 @@ public class MediaSettingsActivity extends LocaleAwareActivity
             resId = R.string.confirm_delete_media_image;
         }
 
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert))
                 .setMessage(resId)
                 .setCancelable(true).setPositiveButton(
-                        isMediaFromEditor() ? R.string.remove : R.string.delete, (dialog, which) -> {
-                            if (isMediaFromEditor()) {
-                                removeMediaFromPost();
-                            } else {
-                                deleteMedia();
+                        isMediaFromEditor() ? R.string.remove : R.string.delete, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (isMediaFromEditor()) {
+                                    removeMediaFromPost();
+                                } else {
+                                    deleteMedia();
+                                }
                             }
                         }).setNegativeButton(R.string.cancel, null);
 

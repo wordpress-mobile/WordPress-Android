@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true"
@@ -17,7 +16,7 @@
         android:layout_margin="@dimen/margin_extra_large"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_history_white_24dp"
-        app:tint="@color/neutral_60" />
+        android:tint="@color/neutral_60" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_suggestion"
@@ -41,5 +40,5 @@
         android:background="?android:selectableItemBackground"
         android:contentDescription="@string/reader_list_item_suggestion_remove_desc"
         android:src="@drawable/ic_cross_white_24dp"
-        app:tint="@color/neutral_60" />
+        android:tint="@color/neutral_60" />
 </LinearLayout>

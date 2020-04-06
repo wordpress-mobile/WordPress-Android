@@ -16,52 +16,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-8dp"
-        android:background="@android:color/transparent"
-        android:elevation="0dp"
-        android:importantForAccessibility="noHideDescendants"
         app:tabBackground="@drawable/indicator_selector"
         app:tabGravity="center"
-        app:tabIndicatorHeight="0dp" />
+        app:tabIndicatorHeight="0dp"
+        android:importantForAccessibility="noHideDescendants" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_container_shadow_height"
-        android:layout_above="@+id/bottom_buttons"
-        android:background="@drawable/login_shadow" />
+        android:background="@drawable/login_shadow"
+        android:layout_above="@+id/bottom_buttons"/>
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:id="@+id/bottom_buttons"
-        style="@style/LoginTheme.BottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="@dimen/appbar_elevation">
+        android:background="@color/neutral_0"
+        android:orientation="horizontal"
+        android:clipToPadding="false"
+        android:padding="@dimen/margin_large">
 
-        <LinearLayout
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/create_site_button"
+            android:theme="@style/WordPress.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:padding="@dimen/margin_large">
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:text="@string/sign_up"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/create_site_button"
-                style="@style/LoginTheme.Button.SignUp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_medium"
-                android:layout_weight="1"
-                android:text="@string/sign_up" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/login_button"
-                style="@style/LoginTheme.Button.Primary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:layout_weight="1"
-                android:text="@string/log_in" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login_button"
+            android:theme="@style/WordPress.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:text="@string/log_in"/>
+    </LinearLayout>
 </RelativeLayout>

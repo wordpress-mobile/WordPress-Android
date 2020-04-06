@@ -1,17 +1,22 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,18 +25,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -43,7 +44,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActionableEmptyView;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -54,12 +54,13 @@ import org.wordpress.android.util.ViewUtilsKt;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
 
-public class SiteSettingsTagListActivity extends LocaleAwareActivity
+public class SiteSettingsTagListActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener,
         SiteSettingsTagDetailFragment.OnTagDetailListener {
     @Inject Dispatcher mDispatcher;
@@ -97,10 +98,6 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.site_settings_tag_list_activity);
-
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
@@ -121,14 +118,21 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         }
 
         mFabView = findViewById(R.id.fab_button);
-        mFabView.setOnClickListener(view -> showDetailFragment(null));
-        mFabView.setOnLongClickListener(view -> {
-            if (view.isHapticFeedbackEnabled()) {
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+        mFabView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDetailFragment(null);
             }
+        });
+        mFabView.setOnLongClickListener(new OnLongClickListener() {
+            @Override public boolean onLongClick(View view) {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
 
-            Toast.makeText(view.getContext(), R.string.site_settings_tags_empty_button, Toast.LENGTH_SHORT).show();
-            return true;
+                Toast.makeText(view.getContext(), R.string.site_settings_tags_empty_button, Toast.LENGTH_SHORT).show();
+                return true;
+            }
         });
         ViewUtilsKt.redirectContextClickToLongPressListener(mFabView);
 
@@ -138,7 +142,11 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         }
 
         mActionableEmptyView = findViewById(R.id.actionable_empty_view);
-        mActionableEmptyView.button.setOnClickListener(view -> showDetailFragment(null));
+        mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                showDetailFragment(null);
+            }
+        });
 
         mRecycler = findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
@@ -180,7 +188,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putBoolean(KEY_IS_SEARCHING, mIsSearching);
@@ -242,9 +250,12 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     private void showFabIfHidden() {
         // redisplay hidden fab after a short delay
         long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-        new Handler().postDelayed(() -> {
-            if (!isFinishing() && mFabView.getVisibility() != View.VISIBLE) {
-                AniUtils.scaleIn(mFabView, AniUtils.Duration.MEDIUM);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing() && mFabView.getVisibility() != View.VISIBLE) {
+                    AniUtils.scaleIn(mFabView, AniUtils.Duration.MEDIUM);
+                }
             }
         }, delayMs);
     }
@@ -253,10 +264,13 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         // scale in the fab after a brief delay if it's not already showing
         if (mFabView.getVisibility() != View.VISIBLE) {
             long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-            new Handler().postDelayed(() -> {
-                if (!mIsSearching && !isDetailFragmentShowing()
-                    && mActionableEmptyView.getVisibility() != View.VISIBLE) {
-                    showFabIfHidden();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mIsSearching && !isDetailFragmentShowing()
+                        && mActionableEmptyView.getVisibility() != View.VISIBLE) {
+                        showFabIfHidden();
+                    }
                 }
             }, delayMs);
         }
@@ -293,7 +307,11 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
 
     private void loadTags() {
         List<TermModel> tags = mTaxonomyStore.getTagsForSite(mSite);
-        Collections.sort(tags, (t1, t2) -> StringUtils.compareIgnoreCase(t1.getName(), t2.getName()));
+        Collections.sort(tags, new Comparator<TermModel>() {
+            public int compare(TermModel t1, TermModel t2) {
+                return StringUtils.compareIgnoreCase(t1.getName(), t2.getName());
+            }
+        });
         mAdapter = new TagListAdapter(tags);
         mRecycler.setAdapter(mAdapter);
     }
@@ -403,15 +421,18 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
 
     private void confirmDeleteTag(@NonNull final TermModel term) {
         String message = String.format(getString(R.string.dlg_confirm_delete_tag), term.getName());
-        AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog_Alert));
         dialogBuilder.setMessage(message);
         dialogBuilder.setPositiveButton(
                 getResources().getText(R.string.delete_yes),
-                (dialog, whichButton) -> {
-                    showProgressDialog(R.string.dlg_deleting_tag);
-                    Action action = TaxonomyActionBuilder.newDeleteTermAction(
-                            new TaxonomyStore.RemoteTermPayload(term, mSite));
-                    mDispatcher.dispatch(action);
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        showProgressDialog(R.string.dlg_deleting_tag);
+                        Action action = TaxonomyActionBuilder.newDeleteTermAction(
+                                new TaxonomyStore.RemoteTermPayload(term, mSite));
+                        mDispatcher.dispatch(action);
+                    }
                 });
         dialogBuilder.setNegativeButton(R.string.cancel, null);
         dialogBuilder.setCancelable(true);
@@ -498,10 +519,13 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
                 super(view);
                 mTxtTag = view.findViewById(R.id.text_tag);
                 mTxtCount = view.findViewById(R.id.text_count);
-                view.setOnClickListener(view1 -> {
-                    if (!isDetailFragmentShowing()) {
-                        int position = getAdapterPosition();
-                        showDetailFragment(mFilteredTags.get(position));
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!isDetailFragmentShowing()) {
+                            int position = getAdapterPosition();
+                            showDetailFragment(mFilteredTags.get(position));
+                        }
                     }
                 });
             }

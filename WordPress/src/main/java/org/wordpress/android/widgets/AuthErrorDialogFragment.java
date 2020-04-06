@@ -3,11 +3,10 @@ package org.wordpress.android.widgets;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -48,7 +47,8 @@ public class AuthErrorDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder b = new MaterialAlertDialogBuilder(getActivity());
+        AlertDialog.Builder b = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         b.setTitle(mTitleId);
         b.setMessage(mMessageId);
         b.setCancelable(true);

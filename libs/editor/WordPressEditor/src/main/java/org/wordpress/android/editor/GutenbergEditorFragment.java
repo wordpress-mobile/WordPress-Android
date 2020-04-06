@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,7 +32,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -42,9 +42,9 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
+import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
-import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
@@ -222,11 +222,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             GutenbergContainerFragment gutenbergContainerFragment =
-                    GutenbergContainerFragment.newInstance(postType,
-                            isNewPost,
-                            localeSlug,
-                            getTranslations(),
-                            isDarkMode());
+                    GutenbergContainerFragment.newInstance(postType, isNewPost, localeSlug, this.getTranslations());
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
@@ -386,7 +382,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                 break;
                         }
                     }
-                }, isDarkMode());
+                });
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {
@@ -415,13 +411,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         return view;
-    }
-
-    private boolean isDarkMode() {
-        Configuration configuration = getActivity().getResources().getConfiguration();
-        int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
-
-        return currentNightMode == Configuration.UI_MODE_NIGHT_YES;
     }
 
     private ArrayList<MediaOption> initOtherMediaImageOptions() {
@@ -517,7 +506,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void showCancelMediaUploadDialog(final int localMediaId) {
         // Display 'cancel upload' dialog
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(getString(R.string.stop_upload_dialog_title));
         builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
                 new DialogInterface.OnClickListener() {
@@ -547,7 +537,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void showRetryMediaUploadDialog(final int mediaId) {
         // Display 'retry upload' dialog
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(getString(R.string.retry_failed_upload_title));
         builder.setPositiveButton(R.string.retry_failed_upload_yes,
                 new DialogInterface.OnClickListener() {
