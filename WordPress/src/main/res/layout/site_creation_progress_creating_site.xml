@@ -5,17 +5,16 @@
     android:id="@+id/progress_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_default"
     android:orientation="vertical">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
         android:gravity="center_horizontal"
         android:text="@string/new_site_creation_creating_site_loading_title"
-        android:textColor="@color/neutral_100"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/text_sz_extra_extra_large"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/subtitle"
@@ -25,14 +24,14 @@
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="Hooray! Almost done!" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:gravity="center"
         android:text="@string/new_site_creation_creating_site_loading_subtitle"
-        android:textColor="@color/neutral_100"
+        android:textColor="?attr/wpColorOnSurfaceMedium"
         android:textSize="@dimen/text_sz_extra_large"
         app:layout_constraintBottom_toTopOf="@+id/img_illustration"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,12 +71,12 @@
             android:src="@drawable/ic_checkmark_white_24dp"
             android:tint="@color/success" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/progress_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
-            android:textColor="@color/neutral_100"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
             android:textSize="@dimen/text_sz_extra_large"
             tools:text="Setting up theme!" />
     </LinearLayout>
