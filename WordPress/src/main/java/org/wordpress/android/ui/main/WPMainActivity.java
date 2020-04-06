@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.RemoteInput;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -44,6 +45,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -55,6 +57,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnAccessCookieFetched;
 import org.wordpress.android.fluxc.store.SiteStore.OnAllSitesMobileEditorChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -73,6 +76,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.WPTooltipView;
@@ -191,6 +195,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject GCMMessageHandler mGCMMessageHandler;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -714,6 +719,25 @@ public class WPMainActivity extends AppCompatActivity implements
         mViewModel.onResume(hasFullAccessToContent());
 
         mFirstResume = false;
+        checkCookie();
+    }
+
+    private void checkCookie() {
+        if (getSelectedSite() != null && getSelectedSite().isPrivateWPComAtomic() && mPrivateAtomicCookie.isExpired()) {
+            new PrivateAtCookieRefreshProgressDialog()
+                    .show(getSupportFragmentManager(), PrivateAtCookieRefreshProgressDialog.TAG);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchAccessCookieAction(getSelectedSite()));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccessCookieFetched(OnAccessCookieFetched event) {
+       Fragment prev = getSupportFragmentManager().findFragmentByTag(PrivateAtCookieRefreshProgressDialog.TAG);
+        if (prev != null) {
+            DialogFragment df = (DialogFragment) prev;
+            df.dismiss();
+        }
     }
 
     private void checkQuickStartNotificationStatus() {
@@ -923,6 +947,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
                 setSite(data);
                 showQuickStartDialog();
+                mPrivateAtomicCookie.clearCookie();
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -950,6 +975,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
                         AppPrefs.setQuickStartNoticeRequired(false);
+                        mPrivateAtomicCookie.clearCookie();
                     }
 
                     setSite(data);
@@ -957,6 +983,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                         showQuickStartDialog();
                     }
+                    checkCookie();
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:
