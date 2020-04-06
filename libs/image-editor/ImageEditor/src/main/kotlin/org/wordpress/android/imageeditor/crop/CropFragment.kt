@@ -97,10 +97,10 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.menu_crop_fragment, menu)
-        doneMenu = menu?.findItem(R.id.menu_done)
+        inflater.inflate(R.menu.menu_crop_fragment, menu)
+        doneMenu = menu.findItem(R.id.menu_done)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {

@@ -174,7 +174,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.preference:preference:1.0.0'
+    implementation "androidx.preference:preference:$materialVersion"
     implementation "androidx.work:work-runtime:$androidx_work_version"
     implementation "androidx.work:work-runtime-ktx:$androidx_work_version"
 
