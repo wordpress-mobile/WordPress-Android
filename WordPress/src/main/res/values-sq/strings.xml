@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-25 12:20:55+0000
+Translation-Revision-Date: 2020-04-03 19:48:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">Ç’thonë Njerëzit</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Ofrojmë një gamë shërbimesh për t’ju ndihmuar të arrini përfundimet që kërkoni. S’jeni i sigurt se ç’ju nevojitet, ose sa kushton? Mund t’ju shpjegojmë cilat shërbime ju bëjnë punë dhe t’ju tregojmë më tepër rreth tarifave tona. Lidhuni me ne, nga më poshtë.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Jemi një ekip i vogël profesionistësh me një gamë të gjerë aftësish dhe përvoje. E duam atë që bëjmë dhe e bëjmë me pasion. Presim të punojmë me ju.</string>
+    <string name="gutenberg_native_warning_message">Mesazh Sinjalizimi</string>
+    <string name="gutenberg_native_want_to_work_with_us">Doni të punoni me ne?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Vizitorët do të duan të njohin cili është në anën tjetër të faqes. Përdoreni këtë hapësirë për të shkruar diçka mbi veten, sajtin tuaj, biznesin, ç’të doni. Përdorini përshtypjet më poshtë për të cituar të tjerët, që flasin për të njëjtën gjë – me fjalët e tyre.</string>
+    <string name="gutenberg_native_usa">ShBA</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Ky është një shembull lënde, i përfshirë me gjedhen për ilustrim të veçorive të saj. Hiqeni ose zëvendësojeni me fjalët dhe median tuaj.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">Rruga se si t’ia fillohet është të lihen llafet dhe t’i hyhet punës.</string>
+    <string name="gutenberg_native_team">Ekip</string>
+    <string name="gutenberg_native_success_message">Mesazh Suksesi</string>
+    <string name="gutenberg_native_strategy">Strategji</string>
+    <string name="gutenberg_native_show_post_content">Shfaq lëndë postimi</string>
+    <string name="gutenberg_native_services">Shërbime</string>
+    <string name="gutenberg_native_samuel_the_dog">Qeni Samuel</string>
+    <string name="gutenberg_native_sally_smith">Sally Smith</string>
+    <string name="gutenberg_native_project_name">Emër Projekti</string>
+    <string name="gutenberg_native_position_or_job_title">Pozicion ose Emër Vendi Pune</string>
+    <string name="gutenberg_native_portfolio">Portofol</string>
+    <string name="gutenberg_native_only_show_excerpt">Shfaq vetëm copëz</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portofoli im paraqet projekte të ndryshme të krijuar përgjatë karrierës time. Shihni të dhëna kontakti më poshtë dhe lidhuni me mua.</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">Lartësi minimum në piksel</string>
+    <string name="gutenberg_native_link_to">Lidhje Te</string>
+    <string name="gutenberg_native_link_settings">Rregullime Lidhjesh</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Ta bisedojmë 👋 Mos ngurroni të lidheni me ne përmes të dhënave të kontaktit më poshtë, ose dërgoni një mesazh duke përdorur formularin.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Le të ngremë diçka bashkë</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Le të Ngremë Diçka Bashkë</string>
+    <string name="gutenberg_native_let_s_build_something_together">Le të ngremë diçka bashkë</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Harri, janë zgjedhjet tona ato që tregojnë vërtet se ç’jemi, shumë më tepër se aftësitë tona.</string>
+    <string name="gutenberg_native_inspiration">Frymëzim</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">Lidhuni!</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">Lidhuni!</string>
+    <string name="gutenberg_native_get_in_touch">Lidhuni</string>
+    <string name="gutenberg_native_excerpt_length_words">Gjatësi copëzash (fjalë)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Dërgomëni email: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">Përpunoni media mbulesë</string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Mos qa pse mbaroi, qesh pse ndodhi.</string>
+    <string name="gutenberg_native_customize">PËRSHTATENI</string>
+    <string name="gutenberg_native_city_10100">Qytet, 10100</string>
+    <string name="gutenberg_native_button_link_url">URL Lidhjeje Butoni</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">Rregullimet për ngjyrë butoni vijnë së shpejti.</string>
+    <string name="gutenberg_native_border_settings">Rregullime Anësh</string>
+    <string name="gutenberg_native_border_radius">Rreze Anësh</string>
+    <string name="gutenberg_native_background_opacity">Patejdukshmëri Sfondi</string>
+    <string name="gutenberg_native_add_paragraph_block">Shtoni bllok paragraf</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Një përshkrim i shkurtër i shërbimeve që ofroni.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Një jetëshkrim i shkurtër me historik personal, arritjet kryesore, ose një fakt interesant.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Një përshkrim i projektit dhe punët e paraqitura.</string>
+    <string name="gutenberg_native_555_555_1234">(555)555–1234</string>
+    <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">Krijoni një postim</string>
     <string name="post_list_tab_trashed_posts">Shpënë te hedhurinat</string>
     <string name="post_list_tab_scheduled_posts">Vënë në plan</string>
