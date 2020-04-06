@@ -532,8 +532,6 @@ Language: cy_GB
     <string name="saving_changes">Cadw\'r newidiadau</string>
     <string name="hint_comment_content">Sylw</string>
     <string name="trash">Sbwriel</string>
-    <string name="trash_no">Peidiwch â\'u hanfon i\'r sbwriel</string>
-    <string name="trash_yes">Sbwriel</string>
     <string name="dlg_confirm_trash_comments">Anfon i\'r sbwriel?</string>
     <string name="dlg_trashing_comments">Anfon i\'r sbwriel</string>
     <string name="dlg_spamming_comments">Marcio fel sbam</string>
