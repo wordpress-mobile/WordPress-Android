@@ -27,7 +27,7 @@ class ReactNativeWPAPIRestClient @VisibleForTesting constructor(
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     private val wpApiEncodedBodyRequestBuilder: WPAPIEncodedBodyRequestBuilder,
     dispatcher: Dispatcher,
-    @Named("regular") requestQueue: RequestQueue,
+    requestQueue: RequestQueue,
     userAgent: UserAgent,
     private val currentTimeMillis: () -> Long
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
@@ -35,7 +35,7 @@ class ReactNativeWPAPIRestClient @VisibleForTesting constructor(
         wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
         wpApiEncodedBodyRequestBuilder: WPAPIEncodedBodyRequestBuilder,
         dispatcher: Dispatcher,
-        @Named("regular") requestQueue: RequestQueue,
+        @Named("custom-ssl") requestQueue: RequestQueue,
         userAgent: UserAgent
     ) : this(
             wpApiGsonRequestBuilder,
