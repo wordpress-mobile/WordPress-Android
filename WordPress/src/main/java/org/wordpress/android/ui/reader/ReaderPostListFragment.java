@@ -63,6 +63,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.ReaderActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -74,6 +75,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnAccessCookieFetched;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
@@ -556,7 +558,16 @@ public class ReaderPostListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        checkPostAdapter();
+        SiteModel selectedSite = getSelectedSite();
+        if (selectedSite != null) {
+            if (selectedSite.isPrivateWPComAtomic()) {
+                mDispatcher.dispatch(SiteActionBuilder.newFetchAccessCookieAction(selectedSite));
+            } else {
+                checkPostAdapter();
+            }
+        } else {
+            checkPostAdapter();
+        }
 
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
@@ -743,6 +754,12 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void setTitle(@NonNull String title) {
         // Do nothing - no title for this toolbar
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccessCookieFetched(OnAccessCookieFetched event) {
+        checkPostAdapter();
     }
 
     @SuppressWarnings("unused")
