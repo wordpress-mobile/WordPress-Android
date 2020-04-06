@@ -6,20 +6,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER
+import android.widget.ImageView.ScaleType.CENTER_CROP
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.layout_retry.*
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
+import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
-import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
 class PreviewImageFragment : Fragment() {
@@ -36,23 +37,26 @@ class PreviewImageFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(layout.preview_image_fragment, container, false)
+    ): View? = inflater.inflate(R.layout.preview_image_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullIntent = checkNotNull(requireActivity().intent)
         initializeViewModels(nonNullIntent)
-        initializeViews(nonNullIntent)
+        initializeViews()
     }
 
-    private fun initializeViews(nonNullIntent: Intent) {
-        errorLayout.setOnClickListener {
-            val lowResImageUrl = nonNullIntent.getStringExtra(ARG_LOW_RES_IMAGE_URL)
-            val highResImageUrl = nonNullIntent.getStringExtra(ARG_HIGH_RES_IMAGE_URL)
+    private fun initializeViews() {
+        initializeViewPager()
+    }
 
-            viewModel.onLoadIntoImageViewRetry(lowResImageUrl, highResImageUrl)
-        }
+    private fun initializeViewPager() {
+        viewPager.adapter = PreviewImageAdapter(
+            loadIntoImageViewWithResultListener = { imageData, imageView ->
+                loadIntoImageViewWithResultListener(imageData, imageView)
+            }
+        )
     }
 
     private fun initializeViewModels(nonNullIntent: Intent) {
@@ -66,12 +70,29 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(this, Observer { uiState ->
-            if (uiState is ImageDataStartLoadingUiState) {
-                loadIntoImageView(uiState.imageData)
-            }
-            UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
-            UiHelpers.updateVisibility(errorLayout, uiState.retryLayoutVisible)
+//        viewModel.uiState.observe(this, Observer { uiState ->
+//            if (uiState is ImageDataStartLoadingUiState) {
+//                loadIntoImageView(uiState.imageData)
+//            }
+//            UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
+//            UiHelpers.updateVisibility(errorLayout, uiState.retryLayoutVisible)
+//        })
+
+        viewModel.uiState.observe(this, Observer { state ->
+            val tabLayoutMediator = TabLayoutMediator(
+                tabLayout,
+                    viewPager,
+                    true,
+                    TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+                        val customView = LayoutInflater.from(context).inflate(layout.preview_image_thumbnail, null)
+                        val imageView = customView.findViewById<ImageView>(R.id.thumbnailImageView)
+                        val imageUiState = state.viewPagerItemsUiState.items[position] as ImageDataStartLoadingUiState
+                        loadIntoImageView(imageUiState.imageData.lowResImageUrl, imageView)
+                        tab.customView = customView
+                    }
+            )
+            tabLayoutMediator.attach()
+            (viewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsUiState.items)
         })
 
         viewModel.loadIntoFile.observe(this, Observer { fileState ->
@@ -85,10 +106,14 @@ class PreviewImageFragment : Fragment() {
         })
     }
 
-    private fun loadIntoImageView(imageData: ImageData) {
+    private fun loadIntoImageView(url: String, imageView: ImageView) {
+        ImageEditor.instance.loadIntoImageView(url, imageView, CENTER_CROP)
+    }
+
+    private fun loadIntoImageViewWithResultListener(imageData: ImageData, imageView: ImageView) {
         ImageEditor.instance.loadIntoImageViewWithResultListener(
             imageData.highResImageUrl,
-            previewImageView,
+            imageView,
             CENTER,
             imageData.lowResImageUrl,
             object : RequestListener<Drawable> {
@@ -119,10 +144,11 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun navigateToCropScreenWithInputFilePath(fileInfo: Pair<String, String?>) {
-        val inputFilePath = fileInfo.first
-        val outputFileExtension = fileInfo.second
-        findNavController().navigate(
-            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
-        )
+        // TODO: temporarily stop navigation to next screen
+//        val inputFilePath = fileInfo.first
+//        val outputFileExtension = fileInfo.second
+//        findNavController().navigate(
+//            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
+//        )
     }
 }
