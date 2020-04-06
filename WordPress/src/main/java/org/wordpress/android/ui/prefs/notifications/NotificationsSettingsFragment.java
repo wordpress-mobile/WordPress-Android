@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff.Mode;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,12 +18,10 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
 
-import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -59,7 +58,7 @@ import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.Prefer
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel.ClickHandler;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ColorUtils;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -138,10 +137,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             PreferenceScreen preferenceScreen =
                     (PreferenceScreen) findPreference(getActivity().getString(R.string.wp_pref_notifications_root));
 
-            PreferenceCategory categorySightsAndSounds =
-                    (PreferenceCategory) preferenceScreen.findPreference(getActivity()
-                    .getString(
-                            R.string.pref_notification_sights_sounds));
+            PreferenceCategory categorySightsAndSounds = (PreferenceCategory) preferenceScreen
+                    .findPreference(getActivity().getString(R.string.pref_notification_sights_sounds));
             preferenceScreen.removePreference(categorySightsAndSounds);
         }
     }
@@ -192,7 +189,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         mSearchMenuItem = menu.findItem(R.id.menu_notifications_settings_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setQueryHint(getString(R.string.search_sites));
-        setSearchViewHintColor(mSearchView, R.color.wordpress_blue_5);
         mBlogsCategory = (PreferenceCategory) findPreference(
                 getString(R.string.pref_notification_blogs));
         mFollowedBlogsCategory = (PreferenceCategory) findPreference(
@@ -241,14 +237,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (!TextUtils.isEmpty(mRestoredQuery)) {
             mSearchMenuItem.expandActionView();
             mSearchView.setQuery(mRestoredQuery, true);
-        }
-    }
-
-    private static void setSearchViewHintColor(@NonNull SearchView searchView, @ColorRes int colorResId) {
-        final Context context = searchView.getContext();
-        if (context != null) {
-            ((EditText) searchView.findViewById(androidx.appcompat.R.id.search_src_text))
-                    .setHintTextColor(ContextCompat.getColor(context, colorResId));
         }
     }
 
@@ -693,7 +681,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         PreferenceCategory rootCategory = new PreferenceCategory(context);
-        rootCategory.setLayoutResource(R.layout.wp_preference_category);
         rootCategory.setTitle(R.string.notification_types);
         preferenceScreen.addPreference(rootCategory);
 
@@ -702,8 +689,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 mOnSettingsChangedListener
         );
 
-        timelinePreference.setIcon(ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_bell_white_24dp,
-                R.color.neutral_60));
+        setPreferenceIcon(timelinePreference, R.drawable.ic_bell_white_24dp);
         timelinePreference.setTitle(R.string.notifications_tab);
         timelinePreference.setDialogTitle(R.string.notifications_tab);
         timelinePreference.setSummary(R.string.notifications_tab_summary);
@@ -714,8 +700,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 mOnSettingsChangedListener
         );
 
-        emailPreference.setIcon(ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_mail_white_24dp,
-                R.color.neutral_60));
+        setPreferenceIcon(emailPreference, R.drawable.ic_mail_white_24dp);
         emailPreference.setTitle(R.string.email);
         emailPreference.setDialogTitle(R.string.email);
         emailPreference.setSummary(R.string.notifications_email_summary);
@@ -728,9 +713,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                     context, null, channel, NotificationsSettings.Type.DEVICE, blogId, mNotificationsSettings,
                     mOnSettingsChangedListener
             );
-
-            devicePreference.setIcon(ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_phone_white_24dp,
-                    R.color.neutral_60));
+            setPreferenceIcon(devicePreference, R.drawable.ic_phone_white_24dp);
             devicePreference.setTitle(R.string.app_notifications);
             devicePreference.setDialogTitle(R.string.app_notifications);
             devicePreference.setSummary(R.string.notifications_push_summary);
@@ -741,6 +724,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         mTypePreferenceCategories.add(rootCategory);
     }
 
+    private void setPreferenceIcon(NotificationsSettingsDialogPreference preference, @DrawableRes int drawableRes) {
+        preference.setIcon(drawableRes);
+        preference.getIcon().setTintMode(Mode.SRC_IN);
+        preference.getIcon().setTintList(ContextExtensionsKt
+                .getColorStateListFromAttribute(preference.getContext(), R.attr.wpColorOnSurfaceMedium));
+    }
+
     private void addSitesForViewAllSitesScreen(PreferenceScreen preferenceScreen, boolean isFollowed) {
         Context context = getActivity();
         if (context == null) {
@@ -748,7 +738,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         PreferenceCategory rootCategory = new PreferenceCategory(context);
-        rootCategory.setLayoutResource(R.layout.wp_preference_category);
         rootCategory.setTitle(isFollowed ? R.string.notification_settings_category_followed_sites
                 : R.string.notification_settings_category_your_sites);
         preferenceScreen.addPreference(rootCategory);

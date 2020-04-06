@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.wordpress.android.widgets.WPTextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/header_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:clickable="false"
     android:gravity="center_vertical"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:paddingBottom="@dimen/margin_large"
-    android:paddingEnd="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_large"
-    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-    android:textColor="?attr/wpColorTextSubtle"
-    tools:text="Today" >
-</org.wordpress.android.widgets.WPTextView>
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingBottom="@dimen/margin_large"
+    android:textAppearance="?attr/textAppearanceSubtitle2"
+    android:textColor="?attr/wpColorOnSurfaceMedium"
+    tools:text="Today" />

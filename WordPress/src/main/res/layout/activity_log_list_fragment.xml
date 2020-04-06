@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
         app:aevImage="@drawable/img_illustration_empty_results_216dp"
         app:aevSubtitle="@string/activity_log_empty_subtitle"
@@ -18,14 +17,14 @@
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
-        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent">
+        android:layout_below="@id/toolbar_main">
 
         <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
             android:id="@+id/log_list_view"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scrollbars="vertical" />
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>

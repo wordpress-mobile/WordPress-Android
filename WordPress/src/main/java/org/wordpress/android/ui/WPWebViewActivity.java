@@ -4,8 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -35,6 +34,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.elevation.ElevationOverlayProvider;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -46,6 +47,8 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ConfigurationExtensionsKt;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -133,6 +136,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private ViewGroup mFullScreenProgressLayout;
     private WPWebViewViewModel mViewModel;
     private ListPopupWindow mPreviewModeSelector;
+    private ElevationOverlayProvider mElevationOverlayProvider;
     private View mNavBarContainer;
     private LinearLayout mNavBar;
     private View mNavigateForwardButton;
@@ -152,9 +156,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private void setLightStatusBar() {
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
             Window window = getWindow();
-            window.setStatusBarColor(getColor(R.color.white));
-            window.getDecorView().setSystemUiVisibility(
-                    window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(this, R.attr.colorSurface));
+
+            if (!ConfigurationExtensionsKt.isDarkTheme(getResources().getConfiguration())) {
+                window.getDecorView().setSystemUiVisibility(
+                        window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
         }
     }
 
@@ -173,6 +180,15 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         initViewModel(webViewUsageCategory);
 
         mNavBarContainer = findViewById(R.id.navbar_container);
+
+        mElevationOverlayProvider = new ElevationOverlayProvider(WPWebViewActivity.this);
+
+        int elevatedAppbarColor =
+                mElevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
+                        getResources().getDimension(R.dimen.appbar_elevation));
+
+        mNavBarContainer.setBackgroundColor(elevatedAppbarColor);
+
         mNavBar = findViewById(R.id.navbar);
 
         mNavigateBackButton = findViewById(R.id.back_button);
@@ -241,12 +257,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 showSubtitle(actionBar);
                 actionBar.setDisplayShowTitleEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
-
-                Drawable upIcon = toolbar.getNavigationIcon();
-                if (upIcon != null) {
-                    upIcon.setColorFilter(getResources().getColor(R.color.gray_60), PorterDuff.Mode.SRC_ATOP);
-                }
-
                 if (isActionableDirectUsage()) {
                     String title = getIntent().getStringExtra(ACTION_BAR_TITLE);
                     if (title != null) {
@@ -362,9 +372,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             }
         });
 
-        mViewModel.getOpenExternalBrowser().observe(this,
-                unit -> ReaderActivityLauncher.openUrl(WPWebViewActivity.this, getExternalBrowserUrl(),
-                        ReaderActivityLauncher.OpenUrlType.EXTERNAL));
+        mViewModel.getOpenExternalBrowser().observe(this, new Observer<Unit>() {
+            @Override
+            public void onChanged(@Nullable Unit unit) {
+                ReaderActivityLauncher.openUrl(WPWebViewActivity.this, mWebView.getUrl(),
+                        ReaderActivityLauncher.OpenUrlType.EXTERNAL);
+            }
+        });
 
         mViewModel.getPreviewModeSelector().observe(this, new Observer<PreviewModeSelectorStatus>() {
             @Override
@@ -391,6 +405,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                             mPreviewModeSelector.setHorizontalOffset(-popupOffset);
                             mPreviewModeSelector.setVerticalOffset(popupOffset);
                             mPreviewModeSelector.setModal(true);
+
+                            int elevatedPopupBackgroundColor =
+                                    mElevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
+                                            getResources().getDimension(R.dimen.popup_over_toolbar_elevation));
+                            mPreviewModeSelector.setBackgroundDrawable(new ColorDrawable(elevatedPopupBackgroundColor));
+
                             mPreviewModeSelector.setOnDismissListener(new OnDismissListener() {
                                 @Override public void onDismiss() {
                                     mViewModel.togglePreviewModeSelectorVisibility(false);
@@ -520,7 +540,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             Context context,
             WPWebViewUsageCategory directUsageCategory,
             String postTitle
-                                                      ) {
+    ) {
         Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, directUsageCategory.getValue());
         intent.putExtra(WPWebViewActivity.ACTION_BAR_TITLE, postTitle);
@@ -596,7 +616,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             String shareSubject,
             boolean allowPreviewModeSelection,
             boolean startPreviewForResult
-                                    ) {
+    ) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -790,7 +810,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                     URLEncoder.encode(StringUtils.notNullStr(username), ENCODING_UTF8),
                     URLEncoder.encode(StringUtils.notNullStr(password), ENCODING_UTF8),
                     URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8)
-                                           );
+            );
 
             // Add token authorization when signing in to WP.com
             if (WPUrlUtils.safeToAddWordPressComAuthToken(authenticationUrl)
@@ -804,27 +824,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         return "";
-    }
-
-    /**
-     * This function is necessary because we want the external browser to use a link with a primary domain without
-     * preview parameters.
-     *
-     * 1. Within the loadContent function at line 734, the primary domain is being removed for authentication reasons.
-     * 2. For posts on all site types, the shareable url will be available which doesn't have any preview parameters.
-     * 3. In any other case we just fallback to the WebView's current URL.
-     * @return external url
-     */
-    public String getExternalBrowserUrl() {
-        final Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String shareableUrl = extras.getString(SHAREABLE_URL, null);
-            if (!TextUtils.isEmpty(shareableUrl)) {
-                return shareableUrl;
-            }
-        }
-
-        return mWebView.getUrl();
     }
 
     /**

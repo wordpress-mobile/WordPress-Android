@@ -8,14 +8,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_title"
-            style="@style/Base.TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:padding="@dimen/margin_extra_large"
-            android:text="@string/site_settings_date_format_title" />
+            android:text="@string/site_settings_date_format_title"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
 
         <RadioGroup
             android:id="@+id/radio_group"
@@ -23,36 +23,33 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="@dimen/margin_extra_large"
-            android:paddingEnd="@dimen/margin_extra_large"/>
+            android:paddingEnd="@dimen/margin_extra_large" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_custom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_extra_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:hint="@string/site_settings_format_hint_custom"
             android:imeOptions="flagNoExtractUi"
-            android:textSize="@dimen/text_sz_medium"
-            android:paddingStart="@dimen/margin_small"
-            android:textAlignment="viewStart"
-            android:gravity="start"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:paddingStart="@dimen/margin_small" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_help"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_extra_large"
             android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginBottom="@dimen/margin_extra_large"
             android:background="?android:selectableItemBackground"
             android:gravity="center_vertical|start"
+            android:paddingStart="@dimen/margin_small"
             android:text="@string/site_settings_format_help"
-            android:textColor="@color/primary"
-            android:textSize="@dimen/text_sz_small"
             android:textAlignment="viewStart"
-            android:paddingStart="@dimen/margin_small"/>
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="?attr/colorPrimary" />
     </LinearLayout>
 
 </ScrollView>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RadioGroup
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/data_types"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,36 +9,36 @@
     android:paddingTop="@dimen/margin_extra_large"
     android:scrollbars="vertical">
 
-    <androidx.appcompat.widget.AppCompatRadioButton
+    <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/stats_widget_views"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_extra_extra_large"
         android:checked="true"
-        android:paddingStart="@dimen/stats_widget_color_selector_padding"
         android:paddingEnd="@dimen/stats_widget_color_selector_padding"
-        android:text="@string/stats_views"/>
+        android:paddingStart="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/stats_views" />
 
-    <androidx.appcompat.widget.AppCompatRadioButton
+    <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/stats_widget_visitors"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_extra_extra_large"
-        android:paddingStart="@dimen/stats_widget_color_selector_padding"
         android:paddingEnd="@dimen/stats_widget_color_selector_padding"
-        android:text="@string/stats_visitors"/>
+        android:paddingStart="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/stats_visitors" />
 
-    <androidx.appcompat.widget.AppCompatRadioButton
+    <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/stats_widget_comments"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_extra_extra_large"
-        android:paddingStart="@dimen/stats_widget_color_selector_padding"
         android:paddingEnd="@dimen/stats_widget_color_selector_padding"
-        android:text="@string/stats_comments"/>
+        android:paddingStart="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/stats_comments" />
 
-    <androidx.appcompat.widget.AppCompatRadioButton
+    <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/stats_widget_likes"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_extra_extra_large"
-        android:paddingStart="@dimen/stats_widget_color_selector_padding"
         android:paddingEnd="@dimen/stats_widget_color_selector_padding"
-        android:text="@string/stats_likes"/>
+        android:paddingStart="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/stats_likes" />
 </RadioGroup>
