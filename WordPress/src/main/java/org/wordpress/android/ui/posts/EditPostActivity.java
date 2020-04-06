@@ -2676,7 +2676,8 @@ public class EditPostActivity extends AppCompatActivity implements
             authHeaders.put(AuthenticationUtils.AUTHORIZATION_HEADER_NAME, "Bearer " + token);
         }
 
-        if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.exists()) {
+        if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.exists() && WPUrlUtils
+                .safeToAddPrivateAtCookie(url, mPrivateAtomicCookie.getDomain())) {
             authHeaders.put(AuthenticationUtils.COOKIE_HEADER_NAME,
                     mPrivateAtomicCookie.getName() + '=' + mPrivateAtomicCookie.getValue());
         }
