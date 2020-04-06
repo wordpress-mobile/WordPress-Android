@@ -43,6 +43,9 @@ class ReactNativeStoreWPAPITest {
     private lateinit var store: ReactNativeStore
     private lateinit var site: SiteModel
 
+    private interface SitePersister : (SiteModel) -> Int
+    private lateinit var sitePersistenceMock: SitePersister
+
     @Before
     fun setup() {
         site = SiteModel().apply {
@@ -57,13 +60,15 @@ class ReactNativeStoreWPAPITest {
         if (nonce != null) {
             nonceMap[site] = nonce
         }
+        sitePersistenceMock = mock()
         store = ReactNativeStore(
                 mock(),
                 wpApiRestClient,
                 discoveryWPAPIRestClient,
                 initCoroutineEngine(),
                 nonceMap,
-                { currentTime }
+                { currentTime },
+                sitePersistenceMock
         )
     }
 
@@ -91,8 +96,9 @@ class ReactNativeStoreWPAPITest {
         val actualResponse = store.executeRequest(site, restPathWithParams)
         assertEquals(callWithSuccess, actualResponse)
         assertEquals(restUrl, site.wpApiRestUrl, "site should be updated with rest endpoint used for successful call")
-        inOrder(discoveryWPAPIRestClient, wpApiRestClient) {
+        inOrder(discoveryWPAPIRestClient, sitePersistenceMock, wpApiRestClient) {
             verify(discoveryWPAPIRestClient).discoverWPAPIBaseURL(site.url)
+            verify(sitePersistenceMock)(site) // persist site after discovering wpApiRestUrl
             verify(wpApiRestClient).requestNonce(site)
             verify(wpApiRestClient).fetch(fetchUrl, nonce.value)
         }
@@ -110,6 +116,7 @@ class ReactNativeStoreWPAPITest {
         val actualResponse = store.executeRequest(site, restPathWithParams)
         assertEquals(initialResponseWithSuccess, actualResponse)
         verify(wpApiRestClient).fetch(fetchUrl)
+        verify(sitePersistenceMock, never())(any()) // no wpApiRestUrl updates, so no persistence
         verify(discoveryWPAPIRestClient, never()).discoverWPAPIBaseURL(any())
     }
 
@@ -132,8 +139,9 @@ class ReactNativeStoreWPAPITest {
         val actualResponse = store.executeRequest(site, restPathWithParams)
         assertEquals(initialResponseWithSuccess, actualResponse)
         assertEquals(restUrl, site.wpApiRestUrl, "site should be updated with rest endpoint used for successful call")
-        inOrder(discoveryWPAPIRestClient, wpApiRestClient) {
+        inOrder(discoveryWPAPIRestClient, sitePersistenceMock, wpApiRestClient) {
             verify(discoveryWPAPIRestClient).discoverWPAPIBaseURL(site.url)
+            verify(sitePersistenceMock)(site) // persist site after discovering wpApiRestUrl
             verify(wpApiRestClient).fetch(fetchUrl)
         }
     }
@@ -158,8 +166,9 @@ class ReactNativeStoreWPAPITest {
         assertEquals(successfulResponse, actualResponse)
         assertEquals(fallbackRestUrl, site.wpApiRestUrl,
                 "site should be updated with rest endpoint used for successful call")
-        inOrder(discoveryWPAPIRestClient, wpApiRestClient) {
+        inOrder(discoveryWPAPIRestClient, sitePersistenceMock, wpApiRestClient) {
             verify(discoveryWPAPIRestClient).discoverWPAPIBaseURL(site.url)
+            verify(sitePersistenceMock)(site) // persist default endpoint after failed discovery
             verify(wpApiRestClient).fetch(fetchUrl)
         }
     }
@@ -190,9 +199,11 @@ class ReactNativeStoreWPAPITest {
         val actualResponse = store.executeRequest(site, restPathWithParams)
         assertEquals(secondResponseWithSuccess, actualResponse)
         assertEquals(restUrl, site.wpApiRestUrl, "should save rest endpoint used for successful call")
-        inOrder(discoveryWPAPIRestClient, wpApiRestClient) {
+        inOrder(discoveryWPAPIRestClient, sitePersistenceMock, wpApiRestClient) {
             verify(wpApiRestClient).fetch(incorrectUrl)
+            verify(sitePersistenceMock)(site) // persist site after clearing wpApiRestUrl that resulted in 404 failure
             verify(discoveryWPAPIRestClient).discoverWPAPIBaseURL(site.url)
+            verify(sitePersistenceMock)(site) // persist site after discovering wpApiRestUrl
             verify(wpApiRestClient).fetch(correctUrl)
         }
     }
@@ -217,9 +228,11 @@ class ReactNativeStoreWPAPITest {
         val actualResponse = store.executeRequest(site, restPathWithParams)
         assertEquals(responseWithNotFoundError, actualResponse)
         assertNull(site.wpApiRestUrl, "should not update site wpApiRestEndpoint when call fails")
-        inOrder(discoveryWPAPIRestClient, wpApiRestClient) {
+        inOrder(discoveryWPAPIRestClient, sitePersistenceMock, wpApiRestClient) {
             verify(discoveryWPAPIRestClient).discoverWPAPIBaseURL(site.url)
+            verify(sitePersistenceMock)(site) // persist site after discovering wpApiRestUrl
             verify(wpApiRestClient).fetch(fetchUrl)
+            verify(sitePersistenceMock)(site) // persist site after clearing wpApiRestUrl that resulted in 404 failure
         }
     }
 
