@@ -37,8 +37,10 @@ import androidx.lifecycle.ViewModelProviders;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -126,6 +128,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @Inject SiteStore mSiteStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject UiHelpers mUiHelpers;
+    @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
 
     private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mFullScreenProgressLayout;
@@ -630,7 +633,11 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
         CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.setAcceptThirdPartyCookies(mWebView, true);
+        CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView, true);
+        if (mPrivateAtomicCookie.exists()) {
+            CookieManager.getInstance().setCookie(mPrivateAtomicCookie.getDomain(),
+                    mPrivateAtomicCookie.getName() + "=" + mPrivateAtomicCookie.getValue());
+        }
 
         final Bundle extras = getIntent().getExtras();
 
