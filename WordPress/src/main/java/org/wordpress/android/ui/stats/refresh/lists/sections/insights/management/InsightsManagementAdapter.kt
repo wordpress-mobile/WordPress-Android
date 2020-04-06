@@ -35,7 +35,10 @@ class InsightsManagementAdapter : Adapter<InsightsManagementViewHolder>() {
     ) {
         val item = items[position]
         when (holder) {
-            is HeaderViewHolder -> holder.bind(item as Header)
+            is HeaderViewHolder -> holder.bind(
+                    item as Header,
+                    position == 0
+            )
             is InsightViewHolder -> holder.bind(
                     item as InsightModel,
                     payloads.firstOrNull() as? Payload

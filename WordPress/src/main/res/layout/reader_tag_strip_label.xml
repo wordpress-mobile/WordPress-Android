@@ -9,6 +9,6 @@
     android:background="?android:selectableItemBackground"
     android:ellipsize="end"
     android:maxLines="1"
-    android:textColor="@color/primary_40"
-    android:textSize="@dimen/text_sz_large"
+    android:textAppearance="?attr/textAppearanceSubtitle1"
+    android:textColor="?attr/colorPrimary"
     tools:text="tagName" />

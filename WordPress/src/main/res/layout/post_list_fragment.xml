@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/root_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
@@ -22,19 +21,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical" />
 
             <org.wordpress.android.ui.ActionableEmptyView
                 android:id="@+id/actionable_empty_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/background_default"
                 android:visibility="gone"
                 app:aevButton="@string/posts_empty_list_button"
                 app:aevImage="@drawable/img_illustration_posts_75dp"
                 app:aevTitle="@string/posts_empty_list"
-                tools:visibility="visible">
-            </org.wordpress.android.ui.ActionableEmptyView>
+                tools:visibility="visible" />
 
         </RelativeLayout>
 
@@ -49,6 +46,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_large"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 </RelativeLayout>

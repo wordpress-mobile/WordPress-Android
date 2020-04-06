@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/post_list_content_margin_compact"
     android:layout_marginStart="@dimen/post_list_content_margin_compact"
-    android:background="@color/white">
+    android:layout_marginEnd="@dimen/post_list_content_margin_compact">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="@dimen/posts_list_compact_row_height"
-        android:background="?selectableItemBackground">
+        android:background="?attr/selectableItemBackground"
+        android:minHeight="@dimen/posts_list_compact_row_height">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginEnd="@dimen/margin_medium"
             android:layout_marginStart="@dimen/page_item_horizontal_padding"
             android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:ellipsize="end"
             android:fontFamily="serif"
             android:maxLines="1"
             android:textAlignment="textStart"
-            android:textColor="@color/neutral_80"
-            android:textSize="@dimen/text_sz_large"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/date_and_author"
             app:layout_constraintEnd_toStartOf="@+id/image_featured"
@@ -39,7 +36,7 @@
             app:layout_constraintTop_toBottomOf="@+id/disabled_overlay"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            tools:text="Porro totam quia architecto ducimus laudantium minus autem"/>
+            tools:text="Porro totam quia architecto ducimus laudantium minus autem" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/date_and_author"
@@ -49,15 +46,15 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="?attr/wpColorTextSubtle"
-            android:textSize="@dimen/text_sz_medium"
-            app:layout_goneMarginBottom="@dimen/margin_large"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
             app:layout_constraintBottom_toTopOf="@+id/statuses_label"
             app:layout_constraintEnd_toStartOf="@+id/image_featured"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title"
-            tools:text="99 days ago • Eulah Kuvalis"/>
+            app:layout_goneMarginBottom="@dimen/margin_large"
+            tools:text="99 days ago • Eulah Kuvalis" />
 
         <ImageView
             android:id="@+id/image_featured"
@@ -71,7 +68,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/title"
-            tools:srcCompat="@tools:sample/avatars"/>
+            tools:srcCompat="@tools:sample/avatars" />
 
         <ImageButton
             android:id="@+id/more_button"
@@ -81,12 +78,12 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/more"
             android:src="@drawable/ic_ellipsis_vertical_white_24dp"
-            android:tint="@color/neutral_60"
             app:layout_constraintBottom_toBottomOf="@+id/image_featured"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/image_featured"/>
+            app:layout_constraintTop_toTopOf="@+id/image_featured"
+            app:tint="?attr/wpColorOnSurfaceMedium" />
 
         <FrameLayout
             android:id="@+id/disabled_overlay"
@@ -99,24 +96,24 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/statuses_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAlignment="textStart"
-            android:textColor="@color/warning_50"
-            android:maxLines="3"
-            android:ellipsize="end"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_large"
-            app:layout_constraintStart_toStartOf="@+id/title"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textAlignment="textStart"
+            android:textColor="?attr/wpColorWarningDark"
+            app:layout_constraintBottom_toTopOf="@+id/upload_progress"
             app:layout_constraintEnd_toEndOf="@+id/title"
             app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintTop_toBottomOf="@+id/date_and_author"
-            app:layout_constraintBottom_toTopOf="@+id/upload_progress"
-            tools:text="Facere molestiae est maxime. Laborum nihil voluptatem qui est aut ut. Nisi eveniet id sit voluptatem. Id doloribus itaque sequi eum molestias id repellendus."/>
+            tools:text="Facere molestiae est maxime. Laborum nihil voluptatem qui est aut ut. Nisi eveniet id sit voluptatem. Id doloribus itaque sequi eum molestias id repellendus." />
 
         <ProgressBar
             android:id="@+id/upload_progress"
@@ -128,8 +125,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"/>
+            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
 </FrameLayout>
