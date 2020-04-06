@@ -82,6 +82,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -332,6 +333,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
+    @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
 
     private StorePostViewModel mViewModel;
 
@@ -1672,10 +1674,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
         int reducedSizeWidth = (int) (maxWidth * PREVIEW_IMAGE_REDUCED_SIZE_FACTOR);
         String resizedImageUrl = mReaderUtilsWrapper.getResizedImageUrl(
-            mediaUrl,
-            reducedSizeWidth,
-            0,
-            !SiteUtils.isPhotonCapable(mSite)
+                mediaUrl,
+                reducedSizeWidth,
+                0,
+                !SiteUtils.isPhotonCapable(mSite),
+                mSite.isWPComAtomic()
         );
 
         String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
@@ -2671,6 +2674,11 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mSite.isPrivate() && WPUrlUtils.safeToAddWordPressComAuthToken(url)
             && !TextUtils.isEmpty(token)) {
             authHeaders.put(AuthenticationUtils.AUTHORIZATION_HEADER_NAME, "Bearer " + token);
+        }
+
+        if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.exists()) {
+            authHeaders.put(AuthenticationUtils.COOKIE_HEADER_NAME,
+                    mPrivateAtomicCookie.getName() + '=' + mPrivateAtomicCookie.getValue());
         }
         return authHeaders;
     }
