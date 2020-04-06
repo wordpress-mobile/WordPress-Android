@@ -86,6 +86,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -217,11 +218,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleManager.setLocale(base));
-    }
-
-    @Override
     public void onCreate() {
         super.onCreate();
         mContext = this;
@@ -245,8 +241,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         sOAuthAuthenticator = mOAuthAuthenticator;
 
         ProfilingUtils.start("App Startup");
+
         // Enable log recording
         AppLog.enableRecording(true);
+        AppLog.enableLogFilePersistence(this.getBaseContext(), 3);
         AppLog.addListener(new AppLogListener() {
             @Override
             public void onLog(T tag, LogLevel logLevel, String message) {
@@ -296,6 +294,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // with memory usage and the use of Configuration). More information: http://bit.ly/2H1KTQo
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        AppThemeUtils.Companion.setAppTheme(this);
 
         // verify media is sanitized
         sanitizeMediaUploadStateForSite();

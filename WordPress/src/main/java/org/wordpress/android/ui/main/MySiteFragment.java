@@ -10,9 +10,7 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,7 +21,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -212,8 +209,6 @@ public class MySiteFragment extends Fragment implements
 
         updateSiteSettingsIfNecessary();
 
-        reattachQuickStartFragmentListeners();
-
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(getSelectedSite());
 
@@ -237,18 +232,6 @@ public class MySiteFragment extends Fragment implements
         showQuickStartNoticeIfNecessary();
     }
 
-    private void reattachQuickStartFragmentListeners() {
-        if (getFragmentManager() != null) {
-            for (Fragment fragment : getFragmentManager().getFragments()) {
-                if (fragment instanceof FullScreenDialogFragment) {
-                    FullScreenDialogFragment targetFragment = (FullScreenDialogFragment) fragment;
-                    targetFragment.setOnConfirmListener(this);
-                    targetFragment.setOnDismissListener(this);
-                }
-            }
-        }
-    }
-
     private void showQuickStartNoticeIfNecessary() {
         if (!QuickStartUtils.isQuickStartInProgress(mQuickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
             return;
@@ -259,54 +242,43 @@ public class MySiteFragment extends Fragment implements
 
         if (taskToPrompt != null) {
             mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
-            mQuickStartSnackBarHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isAdded() || getView() == null || !(getActivity() instanceof WPMainActivity)) {
-                        return;
-                    }
-
-                    QuickStartNoticeDetails noticeDetails = QuickStartNoticeDetails.getNoticeForTask(taskToPrompt);
-                    if (noticeDetails == null) {
-                        return;
-                    }
-
-                    String noticeTitle = getString(noticeDetails.getTitleResId());
-                    String noticeMessage = getString(noticeDetails.getMessageResId());
-
-                    WPDialogSnackbar quickStartNoticeSnackBar =
-                            WPDialogSnackbar.make(
-                                    requireActivity().findViewById(R.id.coordinator),
-                                    noticeMessage,
-                                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
-
-                    quickStartNoticeSnackBar.setTitle(noticeTitle);
-
-                    quickStartNoticeSnackBar.setPositiveButton(
-                            getString(R.string.quick_start_button_positive), new OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED);
-                                    mActiveTutorialPrompt =
-                                            QuickStartMySitePrompts.getPromptDetailsForTask(taskToPrompt);
-                                    showActiveQuickStartTutorial();
-                                }
-                            });
-
-                    quickStartNoticeSnackBar
-                            .setNegativeButton(getString(R.string.quick_start_button_negative),
-                                    new OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED);
-                                        }
-                                    });
-
-                    ((WPMainActivity) requireActivity()).showQuickStartSnackBar(quickStartNoticeSnackBar);
-
-                    AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_VIEWED);
-                    AppPrefs.setQuickStartNoticeRequired(false);
+            mQuickStartSnackBarHandler.postDelayed(() -> {
+                if (!isAdded() || getView() == null || !(getActivity() instanceof WPMainActivity)) {
+                    return;
                 }
+
+                QuickStartNoticeDetails noticeDetails = QuickStartNoticeDetails.getNoticeForTask(taskToPrompt);
+                if (noticeDetails == null) {
+                    return;
+                }
+
+                String noticeTitle = getString(noticeDetails.getTitleResId());
+                String noticeMessage = getString(noticeDetails.getMessageResId());
+
+                WPDialogSnackbar quickStartNoticeSnackBar =
+                        WPDialogSnackbar.make(
+                                requireActivity().findViewById(R.id.coordinator),
+                                noticeMessage,
+                                getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
+
+                quickStartNoticeSnackBar.setTitle(noticeTitle);
+
+                quickStartNoticeSnackBar.setPositiveButton(
+                        getString(R.string.quick_start_button_positive), v -> {
+                            AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED);
+                            mActiveTutorialPrompt =
+                                    QuickStartMySitePrompts.getPromptDetailsForTask(taskToPrompt);
+                            showActiveQuickStartTutorial();
+                        });
+
+                quickStartNoticeSnackBar
+                        .setNegativeButton(getString(R.string.quick_start_button_negative),
+                                v -> AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED));
+
+                ((WPMainActivity) requireActivity()).showQuickStartSnackBar(quickStartNoticeSnackBar);
+
+                AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_VIEWED);
+                AppPrefs.setQuickStartNoticeRequired(false);
             }, AUTO_QUICK_START_SNACKBAR_DELAY_MS);
         }
     }
@@ -399,199 +371,89 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void setupClickListeners(View rootView) {
-        rootView.findViewById(R.id.site_info_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewSite();
-            }
+        rootView.findViewById(R.id.site_info_container).setOnClickListener(view -> viewSite());
+
+        rootView.findViewById(R.id.switch_site).setOnClickListener(v -> showSitePicker());
+
+        rootView.findViewById(R.id.row_view_site).setOnClickListener(v -> viewSite());
+
+        rootView.findViewById(R.id.row_register_domain).setOnClickListener(v -> registerDomain());
+
+        rootView.findViewById(R.id.quick_action_stats_button).setOnClickListener(v -> {
+            AnalyticsTracker.track(Stat.QUICK_ACTION_STATS_TAPPED);
+            viewStats();
         });
 
-        rootView.findViewById(R.id.switch_site).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSitePicker();
-            }
+        rootView.findViewById(R.id.row_stats).setOnClickListener(v -> viewStats());
+
+        mBlavatarImageView.setOnClickListener(v -> updateBlavatar());
+
+        mPlanContainer.setOnClickListener(v -> {
+            completeQuickStarTask(QuickStartTask.EXPLORE_PLANS);
+            ActivityLauncher.viewBlogPlans(getActivity(), getSelectedSite());
         });
 
-        rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewSite();
-            }
+        rootView.findViewById(R.id.quick_action_posts_button).setOnClickListener(v -> {
+            AnalyticsTracker.track(Stat.QUICK_ACTION_POSTS_TAPPED);
+            viewPosts();
         });
 
-        rootView.findViewById(R.id.row_register_domain).setOnClickListener(new OnClickListener() {
-            @Override public void onClick(View v) {
-                registerDomain();
-            }
+        rootView.findViewById(R.id.row_blog_posts).setOnClickListener(v -> viewPosts());
+
+        rootView.findViewById(R.id.quick_action_media_button).setOnClickListener(v -> {
+            AnalyticsTracker.track(Stat.QUICK_ACTION_MEDIA_TAPPED);
+            viewMedia();
         });
 
-        rootView.findViewById(R.id.quick_action_stats_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AnalyticsTracker.track(Stat.QUICK_ACTION_STATS_TAPPED);
-                viewStats();
-            }
+        rootView.findViewById(R.id.row_media).setOnClickListener(v -> viewMedia());
+
+        rootView.findViewById(R.id.quick_action_pages_button).setOnClickListener(v -> {
+            AnalyticsTracker.track(Stat.QUICK_ACTION_PAGES_TAPPED);
+            viewPages();
         });
 
-        rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewStats();
+        mPageView.setOnClickListener(v -> viewPages());
+
+        rootView.findViewById(R.id.row_comments).setOnClickListener(
+                v -> ActivityLauncher.viewCurrentBlogComments(getActivity(), getSelectedSite()));
+
+        mThemesContainer.setOnClickListener(v -> {
+            completeQuickStarTask(QuickStartTask.CHOOSE_THEME);
+            if (isQuickStartTaskActive(QuickStartTask.CUSTOMIZE_SITE)) {
+                requestNextStepOfActiveQuickStartTask();
             }
+            ActivityLauncher.viewCurrentBlogThemes(getActivity(), getSelectedSite());
         });
 
-        mBlavatarImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateBlavatar();
+        mPeopleView.setOnClickListener(v -> ActivityLauncher.viewCurrentBlogPeople(getActivity(), getSelectedSite()));
+
+        mPluginsContainer.setOnClickListener(
+                view -> ActivityLauncher.viewPluginBrowser(getActivity(), getSelectedSite()));
+
+        mActivityLogContainer.setOnClickListener(
+                view -> ActivityLauncher.viewActivityLogList(getActivity(), getSelectedSite()));
+
+        mSettingsView.setOnClickListener(
+                v -> ActivityLauncher.viewBlogSettingsForResult(getActivity(), getSelectedSite()));
+
+        mSharingView.setOnClickListener(v -> {
+            if (isQuickStartTaskActive(QuickStartTask.ENABLE_POST_SHARING)) {
+                requestNextStepOfActiveQuickStartTask();
             }
+            ActivityLauncher.viewBlogSharing(getActivity(), getSelectedSite());
         });
 
-        mPlanContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                completeQuickStarTask(QuickStartTask.EXPLORE_PLANS);
-                ActivityLauncher.viewBlogPlans(getActivity(), getSelectedSite());
-            }
-        });
+        rootView.findViewById(R.id.row_admin).setOnClickListener(
+                v -> ActivityLauncher.viewBlogAdmin(getActivity(), getSelectedSite()));
 
-        rootView.findViewById(R.id.quick_action_posts_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AnalyticsTracker.track(Stat.QUICK_ACTION_POSTS_TAPPED);
-                viewPosts();
-            }
-        });
+        mActionableEmptyView.button.setOnClickListener(
+                v -> SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken()));
 
-        rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPosts();
-            }
-        });
+        mQuickStartCustomizeView.setOnClickListener(v -> showQuickStartList(CUSTOMIZE));
 
-        rootView.findViewById(R.id.quick_action_media_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AnalyticsTracker.track(Stat.QUICK_ACTION_MEDIA_TAPPED);
-                viewMedia();
-            }
-        });
+        mQuickStartGrowView.setOnClickListener(v -> showQuickStartList(GROW));
 
-        rootView.findViewById(R.id.row_media).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewMedia();
-            }
-        });
-
-        rootView.findViewById(R.id.quick_action_pages_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AnalyticsTracker.track(Stat.QUICK_ACTION_PAGES_TAPPED);
-                viewPages();
-            }
-        });
-
-        mPageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPages();
-            }
-        });
-
-        rootView.findViewById(R.id.row_comments).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogComments(getActivity(), getSelectedSite());
-            }
-        });
-
-        mThemesContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                completeQuickStarTask(QuickStartTask.CHOOSE_THEME);
-                if (isQuickStartTaskActive(QuickStartTask.CUSTOMIZE_SITE)) {
-                    requestNextStepOfActiveQuickStartTask();
-                }
-                ActivityLauncher.viewCurrentBlogThemes(getActivity(), getSelectedSite());
-            }
-        });
-
-        mPeopleView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPeople(getActivity(), getSelectedSite());
-            }
-        });
-
-        mPluginsContainer.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ActivityLauncher.viewPluginBrowser(getActivity(), getSelectedSite());
-            }
-        });
-
-        mActivityLogContainer.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ActivityLauncher.viewActivityLogList(getActivity(), getSelectedSite());
-            }
-        });
-
-        mSettingsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewBlogSettingsForResult(getActivity(), getSelectedSite());
-            }
-        });
-
-        mSharingView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isQuickStartTaskActive(QuickStartTask.ENABLE_POST_SHARING)) {
-                    requestNextStepOfActiveQuickStartTask();
-                }
-                ActivityLauncher.viewBlogSharing(getActivity(), getSelectedSite());
-            }
-        });
-
-        rootView.findViewById(R.id.row_admin).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewBlogAdmin(getActivity(), getSelectedSite());
-            }
-        });
-
-        mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken(),
-                        mAccountStore.getAccount().getUserName());
-            }
-        });
-
-        mQuickStartCustomizeView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showQuickStartList(CUSTOMIZE);
-            }
-        });
-
-        mQuickStartGrowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showQuickStartList(GROW);
-            }
-        });
-
-        mQuickStartMenuButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showQuickStartCardMenu();
-            }
-        });
+        mQuickStartMenuButton.setOnClickListener(v -> showQuickStartCardMenu());
     }
 
     private void registerDomain() {
@@ -725,15 +587,12 @@ public class MySiteFragment extends Fragment implements
 
     private void showQuickStartCardMenu() {
         PopupMenu quickStartPopupMenu = new PopupMenu(requireContext(), mQuickStartMenuButton);
-        quickStartPopupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.quick_start_card_menu_remove) {
-                    showRemoveNextStepsDialog();
-                    return true;
-                }
-                return false;
+        quickStartPopupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.quick_start_card_menu_remove) {
+                showRemoveNextStepsDialog();
+                return true;
             }
+            return false;
         });
         quickStartPopupMenu.inflate(R.menu.quick_start_card_menu);
         quickStartPopupMenu.show();
@@ -867,12 +726,9 @@ public class MySiteFragment extends Fragment implements
                         Uri imageUri = Uri.parse(strMediaUri);
                         if (imageUri != null) {
                             boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
-                                    new WPMediaUtils.MediaFetchDoNext() {
-                                        @Override
-                                        public void doNext(Uri uri) {
-                                            showSiteIconProgressBar(true);
-                                            startCropActivity(uri);
-                                        }
+                                    uri -> {
+                                        showSiteIconProgressBar(true);
+                                        startCropActivity(uri);
                                     });
 
                             if (!didGoWell) {
@@ -886,13 +742,8 @@ public class MySiteFragment extends Fragment implements
                 if (resultCode == Activity.RESULT_OK) {
                     AnalyticsTracker.track(Stat.MY_SITE_ICON_CROPPED);
                     WPMediaUtils.fetchMediaAndDoNext(getActivity(), UCrop.getOutput(data),
-                            new WPMediaUtils.MediaFetchDoNext() {
-                                @Override
-                                public void doNext(Uri uri) {
-                                    startSiteIconUpload(
-                                            MediaUtils.getRealPathFromURI(getActivity(), uri));
-                                }
-                            });
+                            uri -> startSiteIconUpload(
+                                    MediaUtils.getRealPathFromURI(getActivity(), uri)));
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(AppLog.T.MAIN, "Image cropping failed!", UCrop.getError(data));
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
@@ -1293,14 +1144,12 @@ public class MySiteFragment extends Fragment implements
 
     @Override
     public void onNeutralClicked(@NonNull String instanceTag) {
-        switch (instanceTag) {
-            case TAG_QUICK_START_DIALOG:
-                AppPrefs.setQuickStartDisabled(true);
-                AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED);
-                break;
-            default:
-                AppLog.e(T.EDITOR, "Dialog instanceTag '" + instanceTag + "' is not recognized");
-                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
+        if (TAG_QUICK_START_DIALOG.equals(instanceTag)) {
+            AppPrefs.setQuickStartDisabled(true);
+            AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED);
+        } else {
+            AppLog.e(T.EDITOR, "Dialog instanceTag '" + instanceTag + "' is not recognized");
+            throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
         }
     }
 
@@ -1357,6 +1206,7 @@ public class MySiteFragment extends Fragment implements
         mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site));
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlansFetched(OnPlansFetched event) {
         if (AppPrefs.getSelectedSite() != event.site.getId()) {
@@ -1409,12 +1259,7 @@ public class MySiteFragment extends Fragment implements
 
             // highlight MySite row and scroll to it
             if (!QuickStartMySitePrompts.isTargetingBottomNavBar(mActiveTutorialPrompt.getTask())) {
-                mScrollView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mScrollView.smoothScrollTo(0, quickStartTarget.getTop());
-                    }
-                });
+                mScrollView.post(() -> mScrollView.smoothScrollTo(0, quickStartTarget.getTop()));
             }
         }
     };
@@ -1431,10 +1276,10 @@ public class MySiteFragment extends Fragment implements
             return;
         }
         getView().removeCallbacks(mAddQuickStartFocusPointTask);
-        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) requireActivity().findViewById(R.id.root_view_main));
+        QuickStartUtils.removeQuickStartFocusPoint(requireActivity().findViewById(R.id.root_view_main));
     }
 
-    public boolean isQuickStartTaskActive(QuickStartTask task) {
+    boolean isQuickStartTaskActive(QuickStartTask task) {
         return hasActiveQuickStartTask() && mActiveTutorialPrompt.getTask() == task;
     }
 
@@ -1475,7 +1320,7 @@ public class MySiteFragment extends Fragment implements
         mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
     }
 
-    public void requestNextStepOfActiveQuickStartTask() {
+    void requestNextStepOfActiveQuickStartTask() {
         if (!hasActiveQuickStartTask()) {
             return;
         }

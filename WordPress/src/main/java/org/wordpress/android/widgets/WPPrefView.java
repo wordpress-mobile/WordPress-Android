@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.SparseBooleanArray;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.StringUtils;
@@ -73,7 +73,6 @@ public class WPPrefView extends LinearLayout implements
     private PrefType mPrefType = PrefType.TEXT;
     private final PrefListItems mListItems = new PrefListItems();
 
-    private ViewGroup mContainer;
     private TextView mHeadingTextView;
     private TextView mTitleTextView;
     private TextView mSummaryTextView;
@@ -175,8 +174,8 @@ public class WPPrefView extends LinearLayout implements
     }
 
     /*
-    * Wrapper that will allow us to preserve type of PrefListItems when serializing it
-    */
+     * Wrapper that will allow us to preserve type of PrefListItems when serializing it
+     */
     public static class PrefListItemsWrapper implements Serializable {
         private PrefListItems mList;
 
@@ -212,13 +211,13 @@ public class WPPrefView extends LinearLayout implements
     private void initView(Context context, AttributeSet attrs) {
         ViewGroup view = (ViewGroup) inflate(context, R.layout.wppref_view, this);
 
-        mContainer = (ViewGroup) view.findViewById(R.id.container);
-        mHeadingTextView = (TextView) view.findViewById(R.id.text_heading);
-        mTitleTextView = (TextView) view.findViewById(R.id.text_title);
-        mSummaryTextView = (TextView) view.findViewById(R.id.text_summary);
-        mToggleSwitch = (SwitchCompat) view.findViewById(R.id.switch_view);
+        ViewGroup container = view.findViewById(R.id.container);
+        mHeadingTextView = view.findViewById(R.id.text_heading);
+        mTitleTextView = view.findViewById(R.id.text_title);
+        mSummaryTextView = view.findViewById(R.id.text_summary);
+        mToggleSwitch = view.findViewById(R.id.switch_view);
 
-        mContainer.setOnClickListener(this);
+        container.setOnClickListener(this);
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -340,13 +339,6 @@ public class WPPrefView extends LinearLayout implements
         mToggleSwitch.setChecked(checked);
     }
 
-    /*
-     * the list of data when the PrefType is CHECKLIST or RADIOLIST
-     */
-    public @NonNull PrefListItems getListItems() {
-        return mListItems;
-    }
-
     public void setListItems(@NonNull PrefListItems items) {
         mListItems.clear();
         mListItems.addAll(items);
@@ -395,26 +387,22 @@ public class WPPrefView extends LinearLayout implements
         LayoutInflater inflater = LayoutInflater.from(getContext());
         //noinspection InflateParams
         ViewGroup customView = (ViewGroup) inflater.inflate(R.layout.wppref_text_dialog, null);
-        final EditText editText = (EditText) customView.findViewById(R.id.edit);
+        final EditText editText = customView.findViewById(R.id.edit);
         editText.setText(mSummaryTextView.getText());
-        TextView txtSubtitle = (TextView) customView.findViewById(R.id.text_subtitle);
+        TextView txtSubtitle = customView.findViewById(R.id.text_subtitle);
         if (!TextUtils.isEmpty(mTextDialogSubtitle)) {
             txtSubtitle.setText(mTextDialogSubtitle);
         } else {
             txtSubtitle.setVisibility(GONE);
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog_Alert))
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getContext())
                 .setTitle(mTitleTextView.getText())
                 .setView(customView)
                 .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        setTextEntry(editText.getText().toString());
-                        doPrefChanged();
-                    }
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    setTextEntry(editText.getText().toString());
+                    doPrefChanged();
                 });
         return builder.create();
     }
@@ -431,18 +419,14 @@ public class WPPrefView extends LinearLayout implements
             checkedItems[i] = mListItems.get(i).mIsChecked;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog_Alert))
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getContext())
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SparseBooleanArray checkedItems =
-                                ((AlertDialog) dialog).getListView().getCheckedItemPositions();
-                        mListItems.setCheckedItems(checkedItems);
-                        doPrefChanged();
-                    }
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    SparseBooleanArray userCheckedItems =
+                            ((AlertDialog) dialog).getListView().getCheckedItemPositions();
+                    mListItems.setCheckedItems(userCheckedItems);
+                    doPrefChanged();
                 })
                 .setMultiChoiceItems(items, checkedItems, null);
         return builder.create();
@@ -462,20 +446,16 @@ public class WPPrefView extends LinearLayout implements
             }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog_Alert))
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getContext())
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SparseBooleanArray checkedItems =
-                                ((AlertDialog) dialog).getListView().getCheckedItemPositions();
-                        mListItems.setCheckedItems(checkedItems);
-                        PrefListItem item = mListItems.getFirstSelectedItem();
-                        setSummary(item != null ? item.mItemName : "");
-                        doPrefChanged();
-                    }
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    SparseBooleanArray checkedItems =
+                            ((AlertDialog) dialog).getListView().getCheckedItemPositions();
+                    mListItems.setCheckedItems(checkedItems);
+                    PrefListItem item = mListItems.getFirstSelectedItem();
+                    setSummary(item != null ? item.mItemName : "");
+                    doPrefChanged();
                 })
                 .setSingleChoiceItems(items, selectedPos, null);
         return builder.create();

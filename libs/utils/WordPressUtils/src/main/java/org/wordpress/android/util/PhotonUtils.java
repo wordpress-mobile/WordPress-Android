@@ -15,8 +15,8 @@ public class PhotonUtils {
     }
 
     /*
-    * returns true if the passed url is an obvious "mshots" url
-    */
+     * returns true if the passed url is an obvious "mshots" url
+     */
     public static boolean isMshotsUrl(final String imageUrl) {
         return (imageUrl != null && imageUrl.contains("/mshots/"));
     }
@@ -61,6 +61,8 @@ public class PhotonUtils {
         if (fragmentPos > 0) {
             imageUrl = imageUrl.substring(0, fragmentPos);
         }
+
+        String urlCopy = imageUrl;
 
         // remove existing query string since it may contain params that conflict with the passed ones
         imageUrl = UrlUtils.removeQuery(imageUrl);
@@ -111,6 +113,12 @@ public class PhotonUtils {
         // return passed url+query if it's already a photon url
         if (imageUrl.contains(".wp.com")) {
             if (imageUrl.contains("i0.wp.com") || imageUrl.contains("i1.wp.com") || imageUrl.contains("i2.wp.com")) {
+                boolean useSsl = urlCopy.indexOf("?") > 0 && urlCopy.contains("ssl=1");
+
+                if (useSsl) {
+                    query += "&ssl=1";
+                }
+
                 return imageUrl + query;
             }
         }
@@ -121,11 +129,12 @@ public class PhotonUtils {
             return imageUrl + query;
         }
 
-        // must use https for https image urls
-        if (UrlUtils.isHttps(imageUrl)) {
-            return "https://i0.wp.com/" + imageUrl.substring(schemePos + 3, imageUrl.length()) + query;
-        } else {
-            return "http://i0.wp.com/" + imageUrl.substring(schemePos + 3, imageUrl.length()) + query;
+        // must use ssl=1 parameter for https image urls
+        boolean useSSl = UrlUtils.isHttps(imageUrl);
+        if (useSSl) {
+            query += "&ssl=1";
         }
+
+        return "https://i0.wp.com/" + imageUrl.substring(schemePos + 3, imageUrl.length()) + query;
     }
 }

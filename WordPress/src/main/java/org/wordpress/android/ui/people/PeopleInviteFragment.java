@@ -18,6 +18,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -72,6 +75,10 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
+
+    private int mNormalUsernameColor;
+    private int mAddedUsernameColor;
+    private int mErrorUsernameColor;
 
     public static PeopleInviteFragment newInstance(SiteModel site) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -144,7 +151,22 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.people_invite_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.people_invite_fragment, container, false);
+
+        Toolbar toolbar = rootView.findViewById(R.id.toolbar_main);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.people);
+        }
+
+        mNormalUsernameColor = ContextExtensionsKt.getColorResIdFromAttribute(getActivity(), R.attr.colorOnSurface);
+        mAddedUsernameColor = ContextExtensionsKt.getColorResIdFromAttribute(getActivity(), R.attr.colorPrimary);
+        mErrorUsernameColor = ContextExtensionsKt.getColorResIdFromAttribute(getActivity(), R.attr.wpColorError);
+
+        return rootView;
     }
 
     @Override
@@ -333,11 +355,11 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
     private void updateRemainingCharsView(TextView remainingCharsTextView, String currentString, int limit) {
         remainingCharsTextView.setText(StringUtils.getQuantityString(getActivity(),
-                                                                     R.string.invite_message_remaining_zero,
-                                                                     R.string.invite_message_remaining_one,
-                                                                     R.string.invite_message_remaining_other,
-                                                                     limit - (currentString == null ? 0
-                                                                             : currentString.length())));
+                R.string.invite_message_remaining_zero,
+                R.string.invite_message_remaining_one,
+                R.string.invite_message_remaining_other,
+                limit - (currentString == null ? 0
+                        : currentString.length())));
     }
 
     private void populateUsernameButtons(Collection<String> usernames) {
@@ -467,39 +489,39 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         if (usernamesToCheck.size() > 0) {
             long wpcomBlogId = mSite.getSiteId();
             PeopleUtils.validateUsernames(usernamesToCheck, mCurrentRole, wpcomBlogId,
-                                          new PeopleUtils.ValidateUsernameCallback() {
-                                              @Override
-                                              public void onUsernameValidation(String username,
-                                                                               ValidationResult validationResult) {
-                                                  if (!isAdded()) {
-                                                      return;
-                                                  }
+                    new PeopleUtils.ValidateUsernameCallback() {
+                        @Override
+                        public void onUsernameValidation(String username,
+                                                         ValidationResult validationResult) {
+                            if (!isAdded()) {
+                                return;
+                            }
 
-                                                  if (!isUserInInvitees(username)) {
-                                                      // user is removed from invitees before validation
-                                                      return;
-                                                  }
+                            if (!isUserInInvitees(username)) {
+                                // user is removed from invitees before validation
+                                return;
+                            }
 
-                                                  final String usernameResultString =
-                                                          getValidationErrorString(username, validationResult);
-                                                  mUsernameResults.put(username, usernameResultString);
+                            final String usernameResultString =
+                                    getValidationErrorString(username, validationResult);
+                            mUsernameResults.put(username, usernameResultString);
 
-                                                  styleButton(username, usernameResultString);
-                                                  updateUsernameError(username, usernameResultString);
-                                              }
+                            styleButton(username, usernameResultString);
+                            updateUsernameError(username, usernameResultString);
+                        }
 
-                                              @Override
-                                              public void onValidationFinished() {
-                                                  if (validationEndListener != null) {
-                                                      validationEndListener.onValidationEnd();
-                                                  }
-                                              }
+                        @Override
+                        public void onValidationFinished() {
+                            if (validationEndListener != null) {
+                                validationEndListener.onValidationEnd();
+                            }
+                        }
 
-                                              @Override
-                                              public void onError() {
-                                                  // properly style the button
-                                              }
-                                          });
+                        @Override
+                        public void onError() {
+                            // properly style the button
+                        }
+                    });
         } else {
             if (validationEndListener != null) {
                 validationEndListener.onValidationEnd();
@@ -512,11 +534,10 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             return;
         }
 
-        TextView textView = (TextView) mUsernameButtons.get(username).findViewById(R.id.username);
+        TextView textView = mUsernameButtons.get(username).findViewById(R.id.username);
         textView.setTextColor(ContextCompat.getColor(getActivity(),
-                validationResultMessage == null ? ContextExtensionsKt
-                        .getColorResIdFromAttribute(getActivity(), R.attr.wpColorText)
-                        : (validationResultMessage.equals(FLAG_SUCCESS) ? R.color.primary_50 : R.color.error_50)));
+                validationResultMessage == null ? mNormalUsernameColor
+                        : (validationResultMessage.equals(FLAG_SUCCESS) ? mAddedUsernameColor : mErrorUsernameColor)));
     }
 
     private
@@ -566,7 +587,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
             usernameErrorTextView = (TextView) LayoutInflater.from(getActivity())
                                                              .inflate(R.layout.people_invite_error_view,
-                                                                      usernameErrorsContainer, false);
+                                                                     usernameErrorsContainer, false);
 
             usernameErrorsContainer.addView(usernameErrorTextView);
 
@@ -618,8 +639,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     /*
-    * returns true if send is attempted, false if validation failed
-    * */
+     * returns true if send is attempted, false if validation failed
+     * */
     private boolean checkAndSend() {
         if (!isAdded()) {
             return false;
@@ -643,10 +664,10 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         if (invalidCount > 0) {
             ToastUtils.showToast(getActivity(),
-                                 StringUtils.getQuantityString(getActivity(), 0,
-                                                               R.string.invite_error_invalid_usernames_one,
-                                                               R.string.invite_error_invalid_usernames_multiple,
-                                                               invalidCount));
+                    StringUtils.getQuantityString(getActivity(), 0,
+                            R.string.invite_error_invalid_usernames_one,
+                            R.string.invite_error_invalid_usernames_multiple,
+                            invalidCount));
             return false;
         }
 
@@ -672,7 +693,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                                 final String username = error.getKey();
                                 final String errorMessage = error.getValue();
                                 mUsernameResults.put(username, getString(R.string.invite_error_for_username,
-                                                                         username, errorMessage));
+                                        username, errorMessage));
                             }
 
                             populateUsernameButtons(failedUsernameErrors.keySet());

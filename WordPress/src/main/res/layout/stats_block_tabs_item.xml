@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,17 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
+        android:background="?attr/colorSurface"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/primary"
+        app:tabIndicatorColor="?attr/colorPrimary"
         app:tabMode="scrollable"
         app:tabPaddingEnd="@dimen/margin_extra_large"
         app:tabPaddingStart="@dimen/margin_extra_large"
-        app:tabSelectedTextColor="@color/primary"
-        app:tabTextColor="?attr/wpColorTextSubtle"
-        app:theme="@style/Base.Widget.Design.TabLayout"/>
+        app:tabTextColor="?attr/colorPrimary" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/neutral_0"/>
+        android:layout_height="@dimen/divider_size"
+        android:background="?android:attr/listDivider" />
+
 </LinearLayout>

@@ -3,16 +3,16 @@ package org.wordpress.android.ui.pages
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 
 const val EXTRA_PAGE_REMOTE_ID_KEY = "extra_page_remote_id_key"
 const val EXTRA_PAGE_PARENT_ID_KEY = "extra_page_parent_id_key"
 
-class PagesActivity : AppCompatActivity(),
+class PagesActivity : LocaleAwareActivity(),
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
