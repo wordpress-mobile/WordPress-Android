@@ -451,7 +451,7 @@
             android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".ui.reader.ReaderPostNoSiteToReblogActivity"
+            android:name=".ui.reader.NoSiteToReblogActivity"
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.AppLogViewerActivity"

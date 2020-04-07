@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/no_site_to_reblog_view"
+        android:id="@+id/noSiteToReblogView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/toolbar_height"

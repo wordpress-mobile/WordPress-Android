@@ -188,7 +188,7 @@ public class ReaderActivityLauncher {
      * @param activity the calling activity
      */
     public static void showNoSiteToReblog(Activity activity) {
-        Intent intent = new Intent(activity, ReaderPostNoSiteToReblogActivity.class);
+        Intent intent = new Intent(activity, NoSiteToReblogActivity.class);
         activity.startActivityForResult(intent, RequestCodes.NO_REBLOG_SITE);
     }
 
