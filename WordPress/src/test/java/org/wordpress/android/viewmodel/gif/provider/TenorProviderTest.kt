@@ -142,7 +142,7 @@ class TenorProviderTest {
                 onFailure = { throwable ->
                     onFailureWasCalled = true
                     assertThat(throwable).isInstanceOf(GifRequestFailedException::class.java)
-                    assertThat(throwable.message).isEqualTo("No media found for this search query")
+                    assertThat(throwable.message).isEqualTo("No media matching your search")
                 })
 
         verify(gifSearchCall, times(1)).enqueue(callbackCaptor.capture())

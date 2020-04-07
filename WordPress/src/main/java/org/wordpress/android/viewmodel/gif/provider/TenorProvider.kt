@@ -9,6 +9,7 @@ import com.tenor.android.core.model.impl.Result
 import com.tenor.android.core.network.ApiClient
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.impl.GifsResponse
+import org.wordpress.android.R
 import org.wordpress.android.viewmodel.gif.GifMediaViewModel
 import org.wordpress.android.viewmodel.gif.MutableGifMediaViewModel
 import org.wordpress.android.viewmodel.gif.provider.GifProvider.GifRequestFailedException
@@ -54,7 +55,8 @@ internal class TenorProvider constructor(
                     onSuccess(gifList, nextPosition)
                 },
                 onFailure = {
-                    val errorMessage = it?.message ?: DEFAULT_EXCEPTION_MESSAGE
+                    val errorMessage = it?.message
+                            ?: context.getString(R.string.gif_list_search_returned_unknown_error)
                     onFailure(GifRequestFailedException(errorMessage))
                 }
         )
@@ -77,8 +79,8 @@ internal class TenorProvider constructor(
     ) = buildSearchCall(query, loadSize, position).apply {
         enqueue(object : Callback<GifsResponse> {
             override fun onResponse(call: Call<GifsResponse>, response: Response<GifsResponse>) {
-                response.body()?.let(onSuccess) ?: onFailure(GifRequestFailedException(
-                        SEARCH_FOUND_NOTHING_EXCEPTION_MESSAGE))
+                val errorMessage = context.getString(R.string.gif_picker_empty_search_list)
+                response.body()?.let(onSuccess) ?: onFailure(GifRequestFailedException(errorMessage))
             }
 
             override fun onFailure(call: Call<GifsResponse>, throwable: Throwable) {
@@ -144,11 +146,5 @@ internal class TenorProvider constructor(
          * To better refers to the Tenor API maximum GIF limit per request
          */
         private const val MAXIMUM_ALLOWED_LOAD_SIZE = 50
-
-        /**
-         * Exception messages the ones that TenorProvider can create
-         */
-        private const val DEFAULT_EXCEPTION_MESSAGE = "There was a problem handling the request"
-        private const val SEARCH_FOUND_NOTHING_EXCEPTION_MESSAGE = "No media found for this search query"
     }
 }
