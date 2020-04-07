@@ -3,6 +3,8 @@ package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +17,14 @@ enum MediaBlockType {
     GALLERY("gallery"),
     COVER("cover");
 
+    private static final Map<String, MediaBlockType> MAP = new HashMap<>();
+
+    static {
+        for (MediaBlockType type : values()) {
+            MAP.put(type.mName, type);
+        }
+    }
+
     private final String mName;
 
     MediaBlockType(String name) {
@@ -26,12 +36,7 @@ enum MediaBlockType {
     }
 
     static MediaBlockType fromString(String blockType) {
-        for (MediaBlockType mediaBlockType : MediaBlockType.values()) {
-            if (mediaBlockType.mName.equals(blockType)) {
-                return mediaBlockType;
-            }
-        }
-        return null;
+        return MAP.get(blockType);
     }
 
     /**
