@@ -4,12 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
+import org.wordpress.android.imageeditor.utils.UiHelpers
 
 class PreviewImageViewHolder(
     val view: View,
@@ -17,6 +18,8 @@ class PreviewImageViewHolder(
 ) : RecyclerView.ViewHolder(view) {
     private val container = itemView.findViewById<ConstraintLayout>(R.id.container)
     private val previewImageView = itemView.findViewById<ImageView>(R.id.previewImageView)
+    private val progressBar = itemView.findViewById<ProgressBar>(R.id.progressBar)
+    private val errorLayout = itemView.findViewById<ConstraintLayout>(R.id.errorLayout)
     private var onItemClicked: (() -> Unit)? = null
 
     init {
@@ -26,10 +29,9 @@ class PreviewImageViewHolder(
     }
 
     fun onBind(uiState: ImageUiState) {
-        onItemClicked = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
-        if (uiState is ImageDataStartLoadingUiState) {
-            loadIntoImageViewWithResultListener.invoke(uiState.imageData, previewImageView)
-        }
+        loadIntoImageViewWithResultListener.invoke(uiState.data, previewImageView)
+        UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
+        UiHelpers.updateVisibility(errorLayout, uiState.retryLayoutVisible)
     }
 
     companion object {
