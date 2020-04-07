@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER
 import android.widget.ImageView.ScaleType.CENTER_CROP
@@ -20,11 +21,12 @@ import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 import java.io.File
 
 class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
+    private lateinit var tabLayoutMediator: TabLayoutMediator
+    private lateinit var pagerAdapterObserver: PagerAdapterObserver
 
     companion object {
         const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
@@ -52,11 +54,33 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun initializeViewPager() {
-        viewPager.adapter = PreviewImageAdapter(
+        val previewImageAdapter = PreviewImageAdapter(
             loadIntoImageViewWithResultListener = { imageData, imageView ->
                 loadIntoImageViewWithResultListener(imageData, imageView)
             }
         )
+        viewPager.adapter = previewImageAdapter
+
+        val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+            if (tab.customView == null) {
+                val customView = LayoutInflater.from(context).inflate(layout.preview_image_thumbnail, null)
+                tab.customView = customView
+            }
+            val imageView = (tab.customView as FrameLayout).findViewById<ImageView>(R.id.thumbnailImageView)
+            val imageData = (viewPager.adapter as PreviewImageAdapter).currentList[position].data
+            loadIntoImageView(imageData.lowResImageUrl, imageView)
+        }
+
+        tabLayoutMediator = TabLayoutMediator(tabLayout, viewPager, false, tabConfigurationStrategy)
+        tabLayoutMediator.attach()
+
+        pagerAdapterObserver = PagerAdapterObserver(tabLayout, viewPager, tabConfigurationStrategy)
+        viewPager.adapter?.registerAdapterDataObserver(pagerAdapterObserver)
+
+        // Setting page transformer explicitly sets internal RecyclerView's itemAnimator to null
+        // to fix this issue: https://issuetracker.google.com/issues/37034191
+        viewPager.setPageTransformer { _, _ ->
+        }
     }
 
     private fun initializeViewModels(nonNullIntent: Intent) {
@@ -79,19 +103,6 @@ class PreviewImageFragment : Fragment() {
 //        })
 
         viewModel.uiState.observe(this, Observer { state ->
-            val tabLayoutMediator = TabLayoutMediator(
-                tabLayout,
-                    viewPager,
-                    true,
-                    TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                        val customView = LayoutInflater.from(context).inflate(layout.preview_image_thumbnail, null)
-                        val imageView = customView.findViewById<ImageView>(R.id.thumbnailImageView)
-                        val imageUiState = state.viewPagerItemsUiState.items[position] as ImageDataStartLoadingUiState
-                        loadIntoImageView(imageUiState.imageData.lowResImageUrl, imageView)
-                        tab.customView = customView
-                    }
-            )
-            tabLayoutMediator.attach()
             (viewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsUiState.items)
         })
 
@@ -150,5 +161,11 @@ class PreviewImageFragment : Fragment() {
 //        findNavController().navigate(
 //            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
 //        )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewPager.adapter?.unregisterAdapterDataObserver(pagerAdapterObserver)
+        tabLayoutMediator.detach()
     }
 }

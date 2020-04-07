@@ -22,7 +22,7 @@ class PreviewImageViewModel : ViewModel() {
     private var outputFileExtension: String? = null
 
     // TODO: Dummy data
-    private val imageDataList = mutableListOf(
+    private val imageDataList = listOf(
         ImageData(
             lowResImageUrl = "https://testtravel123com.files.wordpress.com/2020/02/pexels-photo-1363876.jpg?w=268",
             highResImageUrl = "https://testtravel123com.files.wordpress.com/2020/02/pexels-photo-1363876.jpg"
@@ -157,29 +157,35 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     sealed class ImageUiState(
+        val data: ImageData,
         val progressBarVisible: Boolean = false,
         val retryLayoutVisible: Boolean
     ) {
         var onItemTapped: (() -> Unit)? = null
         data class ImageDataStartLoadingUiState(val imageData: ImageData) : ImageUiState(
+            data = imageData,
             progressBarVisible = true,
             retryLayoutVisible = false
         )
         // Continue displaying progress bar on low res image load success
-        object ImageInLowResLoadSuccessUiState : ImageUiState(
+        data class ImageInLowResLoadSuccessUiState(val imageData: ImageData) : ImageUiState(
+            data = imageData,
             progressBarVisible = true,
             retryLayoutVisible = false
         )
-        object ImageInLowResLoadFailedUiState : ImageUiState(
+        data class ImageInLowResLoadFailedUiState(val imageData: ImageData) : ImageUiState(
+            data = imageData,
             progressBarVisible = true,
             retryLayoutVisible = false
         )
-        object ImageInHighResLoadSuccessUiState : ImageUiState(
+        data class ImageInHighResLoadSuccessUiState(val imageData: ImageData) : ImageUiState(
+            data = imageData,
             progressBarVisible = false,
             retryLayoutVisible = false
         )
         // Display retry only when high res image load failed
-        object ImageInHighResLoadFailedUiState : ImageUiState(
+        data class ImageInHighResLoadFailedUiState(val imageData: ImageData) : ImageUiState(
+            data = imageData,
             progressBarVisible = false,
             retryLayoutVisible = true
         )
