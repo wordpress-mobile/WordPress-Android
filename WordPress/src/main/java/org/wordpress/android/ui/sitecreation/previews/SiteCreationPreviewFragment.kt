@@ -235,7 +235,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private fun updateLoadingTextWithFadeAnimation(newText: String) {
         val animationDuration = AniUtils.Duration.SHORT
-        val animations = ArrayList<Animator>()
         val fadeOut = AniUtils.getFadeOutAnim(loadingTextLayout, animationDuration, View.VISIBLE)
         val fadeIn = AniUtils.getFadeInAnim(loadingTextLayout, animationDuration)
 
@@ -254,11 +253,10 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         // Start the fadein animation right after the view fades out
         fadeIn.startDelay = animationDuration.toMillis(loadingTextLayout.context)
 
-        val animatorSet = AnimatorSet()
-        animations.add(fadeOut)
-        animations.add(fadeIn)
-        animatorSet.playSequentially(animations)
-        animatorSet.start()
+        AnimatorSet().apply {
+            playSequentially(fadeOut, fadeIn)
+            start()
+        }
     }
 
     private fun updateErrorLayout(errorUiStateState: SitePreviewFullscreenErrorUiState) {
