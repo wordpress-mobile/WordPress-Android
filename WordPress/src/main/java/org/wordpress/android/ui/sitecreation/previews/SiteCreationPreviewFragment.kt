@@ -45,7 +45,6 @@ import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
 import org.wordpress.android.util.getColorFromAttribute
-import java.util.ArrayList
 import javax.inject.Inject
 
 private const val ARG_DATA = "arg_site_creation_data"
