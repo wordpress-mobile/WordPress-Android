@@ -46,6 +46,7 @@ import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.main.utils.MeGravatarLoader;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
@@ -53,7 +54,6 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FluxCUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -94,6 +94,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
     @Inject ImageManager mImageManager;
     @Inject AppPrefsWrapper mAppPrefsWrapper;
     @Inject PostStore mPostStore;
+    @Inject MeGravatarLoader mMeGravatarLoader;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -235,8 +236,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
             mAvatarCard.setVisibility(View.VISIBLE);
             mMyProfileView.setVisibility(View.VISIBLE);
 
-            final String avatarUrl = constructGravatarUrl(mAccountStore.getAccount());
-            loadAvatar(avatarUrl, null);
+            loadAvatar(null);
 
             mUsernameTextView.setText(getString(R.string.at_username, defaultAccount.getUserName()));
             mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
@@ -263,57 +263,46 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         mIsUpdatingGravatar = isUpdating;
     }
 
-    private String constructGravatarUrl(AccountModel account) {
-        int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-        return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
-    }
-
-    private void loadAvatar(final String avatarUrl, String injectFilePath) {
+    private void loadAvatar(String injectFilePath) {
         final boolean newAvatarUploaded = injectFilePath != null && !injectFilePath.isEmpty();
-        if (newAvatarUploaded) {
-            // invalidate the specific gravatar entry from the bitmap cache. It will be updated via the injected
-            // request cache.
-            WordPress.getBitmapCache().removeSimilar(avatarUrl);
-            // Changing the signature invalidates Glide's cache
-            mAppPrefsWrapper.setAvatarVersion(mAppPrefsWrapper.getAvatarVersion() + 1);
-        }
+        final String rawAvatarUrl = mAccountStore.getAccount().getAvatarUrl();
 
-        Bitmap bitmap = WordPress.getBitmapCache().get(avatarUrl);
-        // Avatar's API doesn't synchronously update the image at avatarUrl. There is a replication lag
-        // (cca 5s), before the old avatar is replaced with the new avatar. Therefore we need to use this workaround,
-        // which temporary saves the new image into a local bitmap cache.
-        if (bitmap != null) {
-            mImageManager.load(mAvatarImageView, bitmap);
-        } else {
-            mImageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR_WITHOUT_BACKGROUND,
-                    newAvatarUploaded ? injectFilePath : avatarUrl, new RequestListener<Drawable>() {
-                        @Override
-                        public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
-                            final String appLogMessage = "onLoadFailed while loading Gravatar image!";
-                            if (e == null) {
-                                AppLog.e(T.MAIN, appLogMessage + " e == null");
-                            } else {
-                                AppLog.e(T.MAIN, appLogMessage, e);
-                            }
-
-                            // For some reason, the Activity can be null so, guard for it. See #8590.
-                            if (getActivity() != null) {
-                                ToastUtils.showToast(getActivity(), R.string.error_refreshing_gravatar,
-                                        ToastUtils.Duration.SHORT);
-                            }
+        mMeGravatarLoader.load(
+                newAvatarUploaded,
+                rawAvatarUrl,
+                injectFilePath,
+                mAvatarImageView,
+                ImageType.AVATAR_WITHOUT_BACKGROUND,
+                new RequestListener<Drawable>() {
+                    @Override
+                    public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                        final String appLogMessage = "onLoadFailed while loading Gravatar image!";
+                        if (e == null) {
+                            AppLog.e(T.MAIN, appLogMessage + " e == null");
+                        } else {
+                            AppLog.e(T.MAIN, appLogMessage, e);
                         }
 
-                        @Override
-                        public void onResourceReady(@NotNull Drawable resource, @Nullable Object model) {
-                            if (newAvatarUploaded && resource instanceof BitmapDrawable) {
-                                Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
-                                // create a copy since the original bitmap may by automatically recycled
-                                bitmap = bitmap.copy(bitmap.getConfig(), true);
-                                WordPress.getBitmapCache().put(avatarUrl, bitmap);
-                            }
+                        // For some reason, the Activity can be null so, guard for it. See #8590.
+                        if (getActivity() != null) {
+                            ToastUtils.showToast(getActivity(), R.string.error_refreshing_gravatar,
+                                    ToastUtils.Duration.SHORT);
                         }
-                    }, mAppPrefsWrapper.getAvatarVersion());
-        }
+                    }
+
+                    @Override
+                    public void onResourceReady(@NotNull Drawable resource, @Nullable Object model) {
+                        if (newAvatarUploaded && resource instanceof BitmapDrawable) {
+                            Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                            // create a copy since the original bitmap may by automatically recycled
+                            bitmap = bitmap.copy(bitmap.getConfig(), true);
+                            WordPress.getBitmapCache().put(
+                                    mMeGravatarLoader.constructGravatarUrl(rawAvatarUrl),
+                                    bitmap
+                            );
+                        }
+                    }
+                });
     }
 
     private void signOutWordPressComWithConfirmation() {
@@ -462,8 +451,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         showGravatarProgressBar(false);
         if (event.success) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED);
-            final String avatarUrl = constructGravatarUrl(mAccountStore.getAccount());
-            loadAvatar(avatarUrl, event.filePath);
+            loadAvatar(event.filePath);
         } else {
             ToastUtils.showToast(getActivity(), R.string.error_updating_gravatar, ToastUtils.Duration.SHORT);
         }
