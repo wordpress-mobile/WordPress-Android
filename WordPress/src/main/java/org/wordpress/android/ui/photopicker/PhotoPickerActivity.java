@@ -332,6 +332,9 @@ public class PhotoPickerActivity extends AppCompatActivity
             case ANDROID_CHOOSE_PHOTO:
                 launchPictureLibrary();
                 break;
+            case ANDROID_CAPTURE_VIDEO:
+                // TODO launch default app for taking video
+                break;
             case WP_MEDIA:
                 launchWPMediaLibrary();
                 break;

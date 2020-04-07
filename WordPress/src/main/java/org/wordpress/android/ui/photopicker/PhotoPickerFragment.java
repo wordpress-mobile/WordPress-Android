@@ -35,6 +35,7 @@ import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -164,10 +165,15 @@ public class PhotoPickerFragment extends Fragment {
             mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mBrowserType.isSingleImagePicker()) {
-                        doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
-                    } else {
+                    if (mBrowserType.isImagePicker() && mBrowserType.isVideoPicker()) {
                         showCameraPopupMenu(v);
+                    } else if (mBrowserType.isImagePicker()) {
+                        doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+                    } else if (mBrowserType.isVideoPicker()) {
+                        doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
+                    } else {
+                        AppLog.e(T.MEDIA, "This could should be unreachable. If you see this message one of "
+                                          + "the MediaBrowserTypes isn't setup correctly.");
                     }
                 }
             });
@@ -178,14 +184,14 @@ public class PhotoPickerFragment extends Fragment {
                         || mBrowserType == MediaBrowserType.SITE_ICON_PICKER) {
                         doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
                     } else {
-                        showPickerPopupMenu(v);
+                        performActionOrShowPopup(v);
                     }
                 }
             });
 
-            // choosing from WP media requires a site
+            // choosing from WP media requires a site and should be hidden in gutenberg picker
             View wpMedia = mBottomBar.findViewById(R.id.icon_wpmedia);
-            if (mSite == null) {
+            if (mSite == null || mBrowserType.isGutenbergPicker()) {
                 wpMedia.setVisibility(View.GONE);
             } else {
                 wpMedia.setOnClickListener(new View.OnClickListener() {
@@ -266,19 +272,21 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
-    public void showPickerPopupMenu(@NonNull View view) {
+    public void performActionOrShowPopup(@NonNull View view) {
         PopupMenu popup = new PopupMenu(getActivity(), view);
 
-        MenuItem itemPhoto = popup.getMenu().add(R.string.photo_picker_choose_photo);
-        itemPhoto.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
-                return true;
-            }
-        });
+        if (mBrowserType.isImagePicker()) {
+            MenuItem itemPhoto = popup.getMenu().add(R.string.photo_picker_choose_photo);
+            itemPhoto.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+                    return true;
+                }
+            });
+        }
 
-        if (!mBrowserType.isSingleImagePicker()) {
+        if (mBrowserType.isVideoPicker()) {
             MenuItem itemVideo = popup.getMenu().add(R.string.photo_picker_choose_video);
             itemVideo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
@@ -289,7 +297,7 @@ public class PhotoPickerFragment extends Fragment {
             });
         }
 
-        if (mSite != null) {
+        if (mSite != null && !mBrowserType.isGutenbergPicker()) {
             MenuItem itemStock = popup.getMenu().add(R.string.photo_picker_stock_media);
             itemStock.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
@@ -300,7 +308,12 @@ public class PhotoPickerFragment extends Fragment {
             });
         }
 
-        popup.show();
+        // if the menu has a single item, perform the action right away
+        if (popup.getMenu().size() == 1) {
+            popup.getMenu().performIdentifierAction(popup.getMenu().getItem(0).getItemId(), 0);
+        } else {
+            popup.show();
+        }
     }
 
     public void showCameraPopupMenu(@NonNull View view) {
