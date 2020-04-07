@@ -213,11 +213,11 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
     }
 
     private class LearnMoreClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView webView, String url) {
-            // prevent loading clicked links
-            return !mUrl.equals(url) && !SUPPORT_CONTENT_JS.equals(url) && !CONTENT_PADDING_JS.equals(url);
-        }
+//        @Override
+//        public boolean shouldOverrideUrlLoading(WebView webView, String url) {
+//            // prevent loading clicked links
+//            return !mUrl.equals(url) && !SUPPORT_CONTENT_JS.equals(url) && !CONTENT_PADDING_JS.equals(url);
+//        }
 
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
