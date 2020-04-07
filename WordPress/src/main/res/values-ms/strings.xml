@@ -194,7 +194,6 @@ Language: ms
     <string name="post_settings_not_set">Tidak Ditetapkan</string>
     <string name="notifications_tab_title_all">Semua</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Belum dibaca</string>
     <string name="category_parent">Kategori induk (pilihan):</string>
     <string name="top_level_category_name">Paras Atas</string>
     <string name="media_empty_audio_list">Anda tidak mempunyai audio</string>
@@ -843,7 +842,6 @@ Language: ms
     <string name="dlg_unapproving_comments">Tidak meluluskan</string>
     <string name="dlg_trashing_comments">Hantar ke sampah</string>
     <string name="dlg_confirm_trash_comments">Hantar ke sampah?</string>
-    <string name="trash_yes">Sampah</string>
     <string name="trash">Sampah</string>
     <string name="saving_changes">Simpan perubahan</string>
     <string name="comment_status_approved">Diluluskan</string>
@@ -877,7 +875,6 @@ Language: ms
     <string name="hint_comment_content">Ulasan</string>
     <string name="toast_comment_unedited">Ulasan tidak berubah</string>
     <string name="content_required">Ulasan diwajibkan</string>
-    <string name="trash_no">Jangan sampahkan</string>
     <string name="edit_comment">Sunting ulasan</string>
     <string name="learn_more">Pelajari selanjutnya</string>
     <string name="dlg_spamming_comments">Ditanda sebagai spam</string>

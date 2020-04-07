@@ -23,8 +23,8 @@
     </org.wordpress.android.widgets.WPTextView>
 
     <View
-        android:background="@color/divider"
-        android:layout_height="@dimen/list_divider_height"
+        android:background="?android:attr/listDivider"
+        android:layout_height="@dimen/divider_size"
         android:layout_width="match_parent" >
     </View>
 

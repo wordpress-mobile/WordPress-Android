@@ -2,7 +2,6 @@ package org.wordpress.android.ui.sitecreation.segments
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -24,8 +23,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-private const val KEY_LIST_STATE = "list_state"
-
 class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var recyclerView: RecyclerView
@@ -42,7 +39,7 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
     private lateinit var helpClickedListener: OnHelpClickedListener
     private lateinit var segmentsScreenListener: SegmentsScreenListener
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is OnHelpClickedListener) {
             throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
@@ -131,18 +128,6 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity!!.application as WordPress).component().inject(this)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable(KEY_LIST_STATE, linearLayoutManager.onSaveInstanceState())
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
-            linearLayoutManager.onRestoreInstanceState(it)
-        }
     }
 
     private fun updateContentLayout(segments: SegmentsContentUiState) {

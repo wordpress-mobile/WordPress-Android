@@ -9,6 +9,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.util.helpers.logfile.LogFileCleaner;
+import org.wordpress.android.util.helpers.logfile.LogFileProvider;
+import org.wordpress.android.util.helpers.logfile.LogFileWriter;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -87,6 +91,22 @@ public class AppLog {
     public interface AppLogListener {
         void onLog(T tag, LogLevel logLevel, String message);
     }
+
+    /**
+     * Add a LogFileWriter that will persist logs to disk
+     * @param context The current application context
+     * @param maxLogCount The maximum number of logs that should be stored
+     */
+     public static void enableLogFilePersistence(Context context, int maxLogCount) {
+         LogFileProvider logFileProvider = LogFileProvider.fromContext(context);
+         new LogFileCleaner(logFileProvider, maxLogCount).clean();
+
+         sLogFileWriter = new LogFileWriter(logFileProvider);
+         sLogFileWriter.write(getAppInfoHeaderText(context) + "\n");
+         sLogFileWriter.write(getDeviceInfoHeaderText(context) + "\n");
+    }
+
+    private static LogFileWriter sLogFileWriter;
 
     /**
      * Sends a VERBOSE log message
@@ -201,22 +221,6 @@ public class AppLog {
 
     public enum LogLevel {
         v, d, i, w, e;
-
-        private String toHtmlColor() {
-            switch (this) {
-                case v:
-                    return "grey";
-                case i:
-                    return "black";
-                case w:
-                    return "purple";
-                case e:
-                    return "red";
-                case d:
-                default:
-                    return "teal";
-            }
-        }
     }
 
     private static class LogEntry {
@@ -244,17 +248,24 @@ public class AppLog {
 
         private String toHtml() {
             StringBuilder sb = new StringBuilder();
-            sb.append("<font color=\"");
-            sb.append(mLogLevel.toHtmlColor());
-            sb.append("\">");
             sb.append("[");
             sb.append(formatLogDate()).append(" ");
             sb.append(mLogTag.name()).append(" ");
             sb.append(mLogLevel.name());
             sb.append("] ");
             sb.append(TextUtils.htmlEncode(mLogText).replace("\n", "<br />"));
-            sb.append("</font>");
             return sb.toString();
+        }
+
+        @Override
+        public @NonNull String toString() {
+            return "["
+            + formatLogDate()
+            + " "
+            + mLogTag.name()
+            + "] "
+            + mLogText
+            + "\n";
         }
     }
 
@@ -290,6 +301,10 @@ public class AppLog {
         if (mEnableRecording) {
             LogEntry entry = new LogEntry(level, text, tag);
             mLogEntries.addEntry(entry);
+
+            if (sLogFileWriter != null) {
+                sLogFileWriter.write(entry.toString());
+            }
         }
     }
 
@@ -357,12 +372,7 @@ public class AppLog {
         while (it.hasNext()) {
             LogEntry entry = it.next();
             sb.append(format(Locale.US, "%02d - ", lineNum))
-              .append("[")
-              .append(entry.formatLogDate()).append(" ")
-              .append(entry.mLogTag.name())
-              .append("] ")
-              .append(entry.mLogText)
-              .append("\n");
+              .append(entry.toString());
             lineNum++;
         }
         return sb.toString();

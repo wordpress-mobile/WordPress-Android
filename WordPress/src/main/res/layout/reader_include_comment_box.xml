@@ -4,20 +4,19 @@
     comment box at bottom of comment detail and reader comment list
 -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:visibility="gone"
     tools:visibility="visible">
 
     <View
         android:id="@+id/divider_comment"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/neutral_10" />
+        android:layout_height="@dimen/divider_size"
+        android:background="?android:listDivider" />
 
     <LinearLayout
         android:id="@+id/reply_box"
@@ -29,17 +28,15 @@
             android:id="@+id/button_expand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_oval_color_control_highlight_ripple_20dp"
-            android:contentDescription="@string/description_expand"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/margin_small"
+            android:background="@drawable/bg_oval_color_control_highlight_ripple_20dp"
+            android:contentDescription="@string/description_expand"
             android:padding="@dimen/margin_large"
             android:src="@drawable/ic_chevron_up_white_24dp"
-            android:tint="?attr/colorControlNormal" />
+            app:tint="?attr/wpColorOnSurfaceMedium" />
 
         <org.wordpress.android.widgets.SuggestionAutoCompleteText
-            android:textAlignment="viewStart"
-            android:gravity="start|center_vertical"
             android:id="@+id/edit_comment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -47,15 +44,16 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:clipToPadding="false"
+            android:focusableInTouchMode="false"
+            android:gravity="start|center_vertical"
             android:hint="@string/reader_hint_comment_on_post"
             android:imeOptions="actionSend"
-            android:focusableInTouchMode="false"
             android:inputType="text|textCapSentences|textMultiLine"
             android:maxLines="4"
             android:minLines="2"
-            android:paddingBottom="@dimen/margin_extra_small"
             android:paddingTop="@dimen/margin_extra_small"
-            android:textColorHint="@color/neutral_40"
+            android:paddingBottom="@dimen/margin_extra_small"
+            android:textAlignment="viewStart"
             android:textSize="@dimen/text_sz_large" />
 
         <ImageView
@@ -63,21 +61,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/content_margin"
             android:background="@drawable/bg_oval_color_control_highlight_ripple_20dp"
             android:contentDescription="@string/send"
             android:enabled="false"
             android:padding="@dimen/margin_medium"
-            android:src="@drawable/ic_send_accent_neutral_30_24dp"
-            android:layout_marginEnd="@dimen/content_margin"/>
+            app:tint="@color/accent_neutral_30_selector"
+            android:src="@drawable/ic_send_white_24dp" />
     </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progress_submit_comment"
         android:layout_width="@dimen/min_touch_target_sz"
         android:layout_height="@dimen/min_touch_target_sz"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:layout_alignParentEnd="true"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
@@ -21,7 +20,7 @@
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/pagesPager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
@@ -30,8 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -39,29 +38,23 @@
             android:animateLayoutChanges="true"
             android:fitsSystemWindows="true">
 
-            <androidx.appcompat.widget.Toolbar
+            <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
-            </androidx.appcompat.widget.Toolbar>
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="start"
-                android:background="@color/primary"
                 app:tabContentStart="72dp"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@android:color/white"
-                app:tabMode="scrollable"
-                app:tabSelectedTextColor="@android:color/white"
-                app:tabTextColor="@android:color/white"
-                app:theme="@style/Base.Widget.Design.TabLayout"/>
+                app:tabMode="scrollable" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -70,12 +63,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
+            android:layout_marginEnd="@dimen/fab_margin"
             android:layout_marginBottom="@dimen/fab_margin"
-            android:src="@drawable/ic_create_white_24dp"
             android:contentDescription="@string/fab_create_desc"
-            app:borderWidth="0dp"
+            android:src="@drawable/ic_create_white_24dp"
             android:visibility="gone"
-            android:layout_marginEnd="@dimen/fab_margin"/>
+            app:borderWidth="0dp" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
