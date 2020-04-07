@@ -181,6 +181,7 @@ public class PhotoPickerActivity extends AppCompatActivity
         switch (requestCode) {
             // user chose a photo from the device library
             case RequestCodes.PICTURE_LIBRARY:
+            case RequestCodes.VIDEO_LIBRARY:
                 if (data != null) {
                     Uri imageUri = data.getData();
                     if (imageUri != null) {
@@ -235,6 +236,10 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     private void launchPictureLibrary() {
         WPMediaUtils.launchPictureLibrary(this, false);
+    }
+
+    private void launchVideoLibrary() {
+        WPMediaUtils.launchVideoLibrary(this, false);
     }
 
     private void launchWPMediaLibrary() {
@@ -339,6 +344,9 @@ public class PhotoPickerActivity extends AppCompatActivity
                 break;
             case ANDROID_CAPTURE_VIDEO:
                 launchCameraForVideo();
+                break;
+            case ANDROID_CHOOSE_VIDEO:
+                launchVideoLibrary();
                 break;
             case WP_MEDIA:
                 launchWPMediaLibrary();
