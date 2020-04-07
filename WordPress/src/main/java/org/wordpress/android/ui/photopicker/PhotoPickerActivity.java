@@ -52,6 +52,7 @@ public class PhotoPickerActivity extends AppCompatActivity
     public static final String EXTRA_MEDIA_URIS = "media_uris";
     public static final String EXTRA_MEDIA_ID = "media_id";
     public static final String EXTRA_MEDIA_QUEUED = "media_queued";
+    public static final String CHILD_REQUEST_CODE = "child_request_code";
 
     // the enum name of the source will be returned as a string in EXTRA_MEDIA_SOURCE
     public static final String EXTRA_MEDIA_SOURCE = "media_source";
@@ -188,6 +189,11 @@ public class PhotoPickerActivity extends AppCompatActivity
                 }
                 break;
             // user took a photo with the device camera
+            case RequestCodes.TAKE_VIDEO:
+                data.putExtra(CHILD_REQUEST_CODE, RequestCodes.TAKE_VIDEO);
+                setResult(RESULT_OK, data);
+                finish();
+                break;
             case RequestCodes.TAKE_PHOTO:
                 try {
                     WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
@@ -218,14 +224,13 @@ public class PhotoPickerActivity extends AppCompatActivity
         }
     }
 
-    private void launchCamera() {
+    private void launchCameraForImage() {
         WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
-                                  new WPMediaUtils.LaunchCameraCallback() {
-                                      @Override
-                                      public void onMediaCapturePathReady(String mediaCapturePath) {
-                                          mMediaCapturePath = mediaCapturePath;
-                                      }
-                                  });
+                mediaCapturePath -> mMediaCapturePath = mediaCapturePath);
+    }
+
+    private void launchCameraForVideo() {
+        WPMediaUtils.launchVideoCamera(this);
     }
 
     private void launchPictureLibrary() {
@@ -327,13 +332,13 @@ public class PhotoPickerActivity extends AppCompatActivity
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerFragment.PhotoPickerIcon icon, boolean multiple) {
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
-                launchCamera();
+                launchCameraForImage();
                 break;
             case ANDROID_CHOOSE_PHOTO:
                 launchPictureLibrary();
                 break;
             case ANDROID_CAPTURE_VIDEO:
-                // TODO launch default app for taking video
+                launchCameraForVideo();
                 break;
             case WP_MEDIA:
                 launchWPMediaLibrary();
