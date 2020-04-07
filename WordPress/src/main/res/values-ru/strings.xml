@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-25 05:20:03+0000
+Translation-Revision-Date: 2020-04-03 17:00:52+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">Люди говорят</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Мы предлагаем спектр услуг для достижения ваших результатов. Пока  не знаете что именно вам нужно и чего это будет стоить? Мы можем проконсультировать вас! Свяжитесь с нами ниже.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Мы небольшая команда талантливых профессионалов с широким спектром навыков и опытом. Мы страстно любим свое дело. Мы стремимся начать работать с вами.</string>
+    <string name="gutenberg_native_warning_message">Предупреждающее сообщение</string>
+    <string name="gutenberg_native_want_to_work_with_us">Хотите работать с нами?</string>
+    <string name="gutenberg_native_walt_disney">Уолт Дисней</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Посетителям интересно узнать кто за той стороной экрана. Используйте это место для того, чтобы написать о себе, о сайте, о своем бизнесе или чём угодно еще. Используйте отзывы ниже для цитат, на одну тему, своими словами.</string>
+    <string name="gutenberg_native_usa">СССР</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Это шаблонное содержимое для иллюстрации возможностей. Удалите или замените его своим.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">Чтобы начать, нужно перестать говорить и начать делать.</string>
+    <string name="gutenberg_native_team">Команда</string>
+    <string name="gutenberg_native_success_message">Сообщение об успехе</string>
+    <string name="gutenberg_native_strategy">Стратегия</string>
+    <string name="gutenberg_native_show_post_content">Показать содержимое записи</string>
+    <string name="gutenberg_native_services">Услуги</string>
+    <string name="gutenberg_native_samuel_the_dog">котёнок Гав</string>
+    <string name="gutenberg_native_sally_smith">Елена Васина</string>
+    <string name="gutenberg_native_project_name">Имя проекта</string>
+    <string name="gutenberg_native_position_or_job_title">Должность</string>
+    <string name="gutenberg_native_portfolio">Портфолио</string>
+    <string name="gutenberg_native_only_show_excerpt">Показывать только отрывок</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Мое портфолио демонстрирует различные проекты созданные в течении моей карьеры. Информация для договора представлена ниже, свяжитесь со мной.</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">Минимальная высота в пикселях</string>
+    <string name="gutenberg_native_link_to">Ссылка на</string>
+    <string name="gutenberg_native_link_settings">Настройки ссылки</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Давайте общаться 👋 Не стесняйтесь воспользоваться контактной информацией ниже или послать сообщение через форму.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Давайте сотворим что-нибудь вместе.</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Давайте сотворим что-нибудь вместе</string>
+    <string name="gutenberg_native_let_s_build_something_together">Давайте сотворим что-нибудь вместе</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">Дж. К. Роулинг</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Именно наш выбор, Гарри, определяет, что мы есть на самом деле, куда в большей степени, чем наши способности.</string>
+    <string name="gutenberg_native_inspiration">Вдохновение</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">Присоединяйтесь!</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">Присоединяйтесь!</string>
+    <string name="gutenberg_native_get_in_touch">Присоединяйтесь</string>
+    <string name="gutenberg_native_excerpt_length_words">Длина отрывка (слов)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Напишите мне: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">Редактировать изображение обложки</string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Don’t cry because it’s over, smile because it happened.</string>
+    <string name="gutenberg_native_customize">НАСТРОИТЬ</string>
+    <string name="gutenberg_native_city_10100">Воронеж, 394077</string>
+    <string name="gutenberg_native_button_link_url">URL ссылки кнопки</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">Настройки цветов кнопок будут позже.</string>
+    <string name="gutenberg_native_border_settings">Настройки границы</string>
+    <string name="gutenberg_native_border_radius">Радиус границ</string>
+    <string name="gutenberg_native_background_opacity">Непрозрачность фона</string>
+    <string name="gutenberg_native_add_paragraph_block">Добавить блок параграфа</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Краткое описание предлагаемых услуг.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Короткая биография, ключевые достижения или интересные факты.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Описание проекта и представляемых работ.</string>
+    <string name="gutenberg_native_555_555_1234">(555)555–1234</string>
+    <string name="gutenberg_native_10_street_road">улица Лизюкова 2</string>
     <string name="create_post_page_fab_tooltip_contributors">Создать запись</string>
     <string name="post_list_tab_trashed_posts">В корзине</string>
     <string name="post_list_tab_scheduled_posts">Запланированные</string>

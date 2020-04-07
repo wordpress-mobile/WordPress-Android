@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-01 17:07:07+0000
+Translation-Revision-Date: 2020-04-06 07:01:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">Ce que disent les gens</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Nous offrons une gamme de services pour vous aider à obtenir les résultats que vous recherchez. Vous ne savez pas ce dont vous avez besoin, ou ce que cela coûte ? Nous pouvons vous expliquer quels services sont bons pour vous et vous en dire plus à propos de nos tarifs. Contactez-nous ci-dessous.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Nous sommes une petite équipe de professionnels talentueux avec un large éventail de compétences et d’expérience. Nous aimons ce que nous faisons et nous le faisons avec passion. Nous sommes impatients de travailler avec vous.</string>
+    <string name="gutenberg_native_warning_message">Message d’avertissement</string>
+    <string name="gutenberg_native_want_to_work_with_us">Vous voulez travailler avec nous ?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Les visiteurs veulent savoir qui est de l’autre côté de la page. Servez-vous de cet espace pour écrire à propos de vous, de votre site, de votre entreprise ou de ce que vous voulez. Utilisez les témoignages ci-dessous pour citer les autres, en parlant de la même chose, avec leurs propres mots.</string>
+    <string name="gutenberg_native_usa">États-Unis</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Ceci est du contenu exemple inclus dans le modèle pour illustrer ses fonctionnalités. Retirez-les ou remplacez-les par vos propres mots et médias.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">La meilleure manière de commencer est d’arrêter de discuter et de commencer à faire.</string>
+    <string name="gutenberg_native_team">Équipe</string>
+    <string name="gutenberg_native_success_message">Message envoyé</string>
+    <string name="gutenberg_native_strategy">Stratégie</string>
+    <string name="gutenberg_native_show_post_content">Afficher le contenu de l’article</string>
+    <string name="gutenberg_native_services">Services</string>
+    <string name="gutenberg_native_samuel_the_dog">Samuel le chien</string>
+    <string name="gutenberg_native_sally_smith">Sally Smith</string>
+    <string name="gutenberg_native_project_name">Nom du projet</string>
+    <string name="gutenberg_native_position_or_job_title">Titre du poste ou intitulé</string>
+    <string name="gutenberg_native_portfolio">Portfolio</string>
+    <string name="gutenberg_native_only_show_excerpt">N’afficher que l’extrait</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Mon portfolio présente des projets variés créés tout au long de ma carrière. Mes coordonnées sont plus bas. Contactez-moi !</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">Hauteur minimale en pixels</string>
+    <string name="gutenberg_native_link_to">Lier à</string>
+    <string name="gutenberg_native_link_settings">Réglages de lien</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Parlons-en ! 👋 N’hésitez pas à communiquer en utilisant les coordonnées ci-dessous ou utiliser le formulaire.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Construisons quelque chose ensemble !</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Construisons quelque chose ensemble !</string>
+    <string name="gutenberg_native_let_s_build_something_together">Construisons quelque chose ensemble !</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Ce sont nos choix, Harry, qui montrent ce que nous sommes vraiment, bien plus que nos capacités.</string>
+    <string name="gutenberg_native_inspiration">Inspiration</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">Contactez-nous !</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">Contactez-nous !</string>
+    <string name="gutenberg_native_get_in_touch">Contactez-nous !</string>
+    <string name="gutenberg_native_excerpt_length_words">Longueur de l’extrait (mots)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Écrivez-nous : &lt;a href=\"mailto:mail@example.com\">mail@exemple.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">Modifier l\'image de couverture</string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Ne pleurez pas parce que c’est fini, souriez parce que c’est arrivé.</string>
+    <string name="gutenberg_native_customize">PERSONNALISER</string>
+    <string name="gutenberg_native_city_10100">Bordeaux, 33000</string>
+    <string name="gutenberg_native_button_link_url">URL du lien du bouton</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">Les réglages de couleur de bouton arrivent bientôt.</string>
+    <string name="gutenberg_native_border_settings">Réglages de la bordure</string>
+    <string name="gutenberg_native_border_radius">Arrondit de bordure</string>
+    <string name="gutenberg_native_background_opacity">Opacité de l’arrière-plan</string>
+    <string name="gutenberg_native_add_paragraph_block">Ajouter un bloc paragraphe</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Une courte description des services que vous offrez.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Une courte bio avec votre histoire personnelle, vos principales réalisations ou d’autres choses intéressantes.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Une description de votre projet ou des travaux présentés.</string>
+    <string name="gutenberg_native_555_555_1234">05 01 02 03 04</string>
+    <string name="gutenberg_native_10_street_road">1 rue Sainte Catherine</string>
     <string name="create_post_page_fab_tooltip_contributors">Créer un article</string>
     <string name="post_list_tab_trashed_posts">Mis à la corbeille</string>
     <string name="post_list_tab_scheduled_posts">Planifié</string>

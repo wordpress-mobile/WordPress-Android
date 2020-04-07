@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.pages
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -14,6 +15,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
 import org.wordpress.android.TEST_SCOPE
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
@@ -25,7 +27,9 @@ import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.SortedMap
 
@@ -37,6 +41,10 @@ class SearchListViewModelTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var pagesViewModel: PagesViewModel
+    @Mock lateinit var createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase
+    @Mock lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
+    @Mock lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
+    @Mock lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
 
     private lateinit var searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>>
     private lateinit var viewModel: SearchListViewModel
@@ -45,10 +53,34 @@ class SearchListViewModelTest {
 
     @Before
     fun setUp() {
-        page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
-        viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE)
+        page = PageModel(PostModel(), site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
+        viewModel = SearchListViewModel(
+                createPageListItemLabelsUseCase,
+                createUploadStateUseCase,
+                pageListItemActionsUseCase,
+                pageItemProgressUiStateUseCase,
+                resourceProvider,
+                TEST_SCOPE
+        )
         searchPages = MutableLiveData()
+
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
+                Pair(
+                        ProgressBarUiState.Hidden,
+                        false
+                )
+        )
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
+        whenever(pagesViewModel.site).thenReturn(site)
+        whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
+        whenever(createPageListItemLabelsUseCase.createLabels(any(), any())).thenReturn(
+                Pair(
+                        mock(), 0
+                )
+        )
+        whenever(createUploadStateUseCase.createUploadUiState(any(), any(), any())).thenReturn(
+                PostUploadUiState.NothingToUpload
+        )
         viewModel.start(pagesViewModel)
     }
 
@@ -98,7 +130,7 @@ class SearchListViewModelTest {
         }
         assertThat(searchResult[1]).isInstanceOf(PublishedPage::class.java)
         (searchResult[1] as PublishedPage).apply {
-            assertThat(this.id).isEqualTo(publishedPageRemoteId)
+            assertThat(this.remoteId).isEqualTo(publishedPageRemoteId)
         }
         assertThat(searchResult[2]).isInstanceOf(Divider::class.java)
         (searchResult[2] as Divider).apply {
@@ -106,13 +138,26 @@ class SearchListViewModelTest {
         }
         assertThat(searchResult[3]).isInstanceOf(DraftPage::class.java)
         (searchResult[3] as DraftPage).apply {
-            assertThat(this.id).isEqualTo(draftPageRemoteId)
+            assertThat(this.remoteId).isEqualTo(draftPageRemoteId)
         }
     }
 
     @Test
     fun `passes action to page view model on menu action`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null, false)
+        val clickedPage = PageItem.PublishedPage(
+                1,
+                1,
+                "title",
+                Date(),
+                listOf(),
+                0,
+                0,
+                null,
+                mock(),
+                false,
+                ProgressBarUiState.Hidden,
+                false
+        )
         val action = VIEW_PAGE
 
         viewModel.onMenuAction(action, clickedPage)
@@ -122,7 +167,20 @@ class SearchListViewModelTest {
 
     @Test
     fun `passes page to page view model on item tapped`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null, false)
+        val clickedPage = PageItem.PublishedPage(
+                1,
+                1,
+                "title",
+                Date(),
+                listOf(),
+                0,
+                0,
+                null,
+                mock(),
+                false,
+                ProgressBarUiState.Hidden,
+                false
+        )
 
         viewModel.onItemTapped(clickedPage)
 

@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.people;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,7 +16,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.google.android.material.appbar.AppBarLayout;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
@@ -40,6 +45,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -102,20 +108,26 @@ public class PeopleListFragment extends Fragment {
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
+        Toolbar toolbar = rootView.findViewById(R.id.toolbar_main);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.people);
+        }
+
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         final boolean isPrivate = mSite != null && mSite.isPrivate();
 
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view);
         mFilteredRecyclerView = rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView
-                .addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
+                .addItemDecoration(new PeopleItemDecoration(getActivity()));
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
         mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
 
         // the following will change the look and feel of the toolbar to match the current design
-        mFilteredRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.primary_40));
-        mFilteredRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
-        mFilteredRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
         mFilteredRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
                 getResources().getDimensionPixelSize(R.dimen.margin_none));
@@ -165,7 +177,7 @@ public class PeopleListFragment extends Fragment {
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
                 mActionableEmptyView.setVisibility(View.GONE);
                 mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                        | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                                                            | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
 
                 switch (emptyViewMsgType) {
                     case LOADING:
@@ -292,7 +304,7 @@ public class PeopleListFragment extends Fragment {
             // if the list is not empty, don't show any message
             mFilteredRecyclerView.hideEmptyView();
             mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                                                        | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
             mActionableEmptyView.setVisibility(View.GONE);
         } else if (!isFetching) {
             // if we are not fetching and list is empty, show no content message
@@ -468,15 +480,26 @@ public class PeopleListFragment extends Fragment {
 
     // Taken from http://stackoverflow.com/a/27037230
     private class PeopleItemDecoration extends RecyclerView.ItemDecoration {
-        private Drawable mDivider;
+        private InsetDrawable mDivider;
 
         // use a custom drawable
-        PeopleItemDecoration(Context context, int resId) {
-            mDivider = ContextCompat.getDrawable(context, resId);
+        PeopleItemDecoration(Context context) {
+            int[] attrs = {android.R.attr.listDivider};
+            TypedArray ta = context.obtainStyledAttributes(attrs);
+            Drawable drawable = ta.getDrawable(0);
+            ta.recycle();
+
+            int inset = context.getResources().getDimensionPixelOffset(R.dimen.people_list_divider_left_margin);
+
+            if (RtlUtils.isRtl(context)) {
+                mDivider = new InsetDrawable(drawable, 0, 0, inset, 0);
+            } else {
+                mDivider = new InsetDrawable(drawable, inset, 0, 0, 0);
+            }
         }
 
         @Override
-        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+        public void onDraw(@NotNull Canvas c, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
             int left = ViewCompat.getPaddingStart(parent);
             int right = parent.getWidth() - ViewCompat.getPaddingEnd(parent);
 

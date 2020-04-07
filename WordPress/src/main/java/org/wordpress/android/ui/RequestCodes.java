@@ -48,4 +48,8 @@ public class RequestCodes {
 
     // Domain Registration
     public static final int DOMAIN_REGISTRATION = 5000;
+
+
+    // ImageEditor
+    public static final int IMAGE_EDITOR_EDIT_IMAGE = 6000;
 }

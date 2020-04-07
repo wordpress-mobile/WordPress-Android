@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-25 02:19:24+0000
+Translation-Revision-Date: 2020-04-03 17:31:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">Så här säger andra personer</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Vi erbjuder en rad tjänster som hjälper dig att uppnå dina mål. Vet du inte vad du behöver, eller undrar du hur mycket det kostar? Vi förklarar gärna mer om våra tjänster och berättar om våra priser. Hör av dig till oss här nedan.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Vi är ett litet team med proffsiga specialister och täcker många olika områden och erfarenheter. Vi älskar vårt jobb och arbetar därför passionerat. Vi ser fram emot att arbeta även med dig.</string>
+    <string name="gutenberg_native_warning_message">Varningsmeddelande</string>
+    <string name="gutenberg_native_want_to_work_with_us">Vill du arbeta hos oss?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Dina besökare vill veta mer om vem som står bakom webbplatsen. Här kan du berätta om dig själv, din webbplats, ditt företag eller om vad som helst. Med hjälp av recensionerna nedan kan du citera andra, som berättar om samma sak med sina egna ord.</string>
+    <string name="gutenberg_native_usa">USA</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Detta är exempelinnehåll som medföljer mallen för att visa upp dess olika funktioner. Ta bort innehållet eller ersätt det med din egen text och dina egna mediafiler.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">För att komma igång måste man sluta prata och börja göra något.</string>
+    <string name="gutenberg_native_team">Team</string>
+    <string name="gutenberg_native_success_message">Framgångsmeddelande</string>
+    <string name="gutenberg_native_strategy">Strategi</string>
+    <string name="gutenberg_native_show_post_content">Visa inläggsinnehåll</string>
+    <string name="gutenberg_native_services">Tjänster</string>
+    <string name="gutenberg_native_samuel_the_dog">Samuel the Dog</string>
+    <string name="gutenberg_native_sally_smith">Sally Smith</string>
+    <string name="gutenberg_native_project_name">Projektnamn</string>
+    <string name="gutenberg_native_position_or_job_title">Titel</string>
+    <string name="gutenberg_native_portfolio">Portfölj</string>
+    <string name="gutenberg_native_only_show_excerpt">Visa endast utdrag</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Min portfölj demonstrerar olika projekt jag skapat under min karriär. Mina kontaktuppgifter finns här nedan. Hör av dig.</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">Minsta höjd i pixlar</string>
+    <string name="gutenberg_native_link_to">Länk till</string>
+    <string name="gutenberg_native_link_settings">Länkalternativ</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Låt oss prata 👋 Hör görna av dig med hjälp av nedanstående kontaktuppgifter eller skicka ett meddelande med hjälp av formuläret.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Låt oss skapa något tillsammans.</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Låt oss skapa något tillsammans</string>
+    <string name="gutenberg_native_let_s_build_something_together">Låt oss skapa något tillsammans</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Harry, det är dina val som visar vilka vi egentligen är, i långt högre grad än våra förmågor.</string>
+    <string name="gutenberg_native_inspiration">Inspiration</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">Hör av dig!</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">Hör av dig!</string>
+    <string name="gutenberg_native_get_in_touch">Hör av dig</string>
+    <string name="gutenberg_native_excerpt_length_words">Utdragets längd (antal ord)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Skicka e-post: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">Redigera omslagsmedia</string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Gråt inte över att det är slut. Le för att du var med om det.</string>
+    <string name="gutenberg_native_customize">ANPASSA</string>
+    <string name="gutenberg_native_city_10100">Staden, 10100</string>
+    <string name="gutenberg_native_button_link_url">URL för knapp-länk</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">Inställningar för knappfärger kommer att läggas till snart.</string>
+    <string name="gutenberg_native_border_settings">Kantinställningar</string>
+    <string name="gutenberg_native_border_radius">Kantradie</string>
+    <string name="gutenberg_native_background_opacity">Bakgrundens opacitet</string>
+    <string name="gutenberg_native_add_paragraph_block">Lägg till ett block med ett textstycke</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">En kort beskrivning av de tjänster du erbjuder.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">En kort biografi med din personliga berättelse, största framgångar eller intressant information.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">En beskrivning av projektet och dess slutresultat.</string>
+    <string name="gutenberg_native_555_555_1234">+1&#8211;(555)555&#8211;1234</string>
+    <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">Skapa ett inlägg</string>
     <string name="post_list_tab_trashed_posts">Borttagna</string>
     <string name="post_list_tab_scheduled_posts">Tidsinställda</string>

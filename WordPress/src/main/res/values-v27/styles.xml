@@ -5,19 +5,4 @@
         <item name="android:windowLightNavigationBar">true</item>
     </style>
 
-    <style name="LoginTheme.BottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">?android:attr/colorBackground</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:fitsSystemWindows">true</item>
-        <item name="bottomSheetStyle">@style/Widget.Design.BottomSheet.Modal</item>
-    </style>
-    
-    <style name="Handled.BottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">?android:attr/colorBackground</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:fitsSystemWindows">true</item>
-        <item name="bottomSheetStyle">@style/BottomSheetStyleContainer</item>
-    </style>    
 </resources>

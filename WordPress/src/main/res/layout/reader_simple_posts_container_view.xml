@@ -8,19 +8,16 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider" />
+        android:layout_height="@dimen/divider_size"
+        android:background="?android:attr/listDivider" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_related_posts_label"
+        style="@style/ReaderTextView.MetaHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
-        android:textAllCaps="true"
-        android:textColor="@color/neutral_40"
-        android:textSize="@dimen/text_sz_medium"
-        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/margin_extra_large"
         tools:text="@string/reader_label_global_related_posts" />
 
     <LinearLayout

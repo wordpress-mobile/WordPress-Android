@@ -8,22 +8,21 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.utils.UiHelpers;
-import org.wordpress.android.util.ContextExtensionsKt;
 
 import java.util.Locale;
 
@@ -64,20 +63,6 @@ public class DetailListPreference extends ListPreference
     }
 
     @Override
-    protected void onBindView(@NonNull View view) {
-        super.onBindView(view);
-
-        setupView((TextView) view.findViewById(android.R.id.title),
-                R.dimen.text_sz_large,
-                ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorText),
-                R.color.neutral_20);
-        setupView((TextView) view.findViewById(android.R.id.summary),
-                R.dimen.text_sz_medium,
-                ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorTextSubtle),
-                R.color.neutral_20);
-    }
-
-    @Override
     public CharSequence getEntry() {
         int index = findIndexOfValue(getValue());
         CharSequence[] entries = getEntries();
@@ -92,7 +77,11 @@ public class DetailListPreference extends ListPreference
     protected void showDialog(Bundle state) {
         Context context = getContext();
         Resources res = context.getResources();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_Dialog_Alert);
+        int topOffset = res.getDimensionPixelOffset(R.dimen.settings_fragment_dialog_vertical_inset);
+
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(context)
+                .setBackgroundInsetTop(topOffset)
+                .setBackgroundInsetBottom(topOffset);
 
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
         builder.setPositiveButton(android.R.string.ok, this);
@@ -107,16 +96,12 @@ public class DetailListPreference extends ListPreference
         mSelectedIndex = findIndexOfValue(mStartingValue);
 
         builder.setSingleChoiceItems(mListAdapter, mSelectedIndex,
-                                     new DialogInterface.OnClickListener() {
-                                         public void onClick(DialogInterface dialog, int which) {
-                                             mSelectedIndex = which;
-                                         }
-                                     });
+                (dialog, which) -> mSelectedIndex = which);
 
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
 
         if (titleView != null) {
-            TextView titleText = (TextView) titleView.findViewById(R.id.title);
+            TextView titleText = titleView.findViewById(R.id.title);
             if (titleText != null) {
                 titleText.setText(getTitle());
             }
@@ -126,9 +111,7 @@ public class DetailListPreference extends ListPreference
             builder.setTitle(getTitle());
         }
 
-        if ((mDialog = builder.create()) == null) {
-            return;
-        }
+        mDialog = builder.create();
 
         if (state != null) {
             mDialog.onRestoreInstanceState(state);
@@ -137,23 +120,11 @@ public class DetailListPreference extends ListPreference
         mDialog.show();
 
         ListView listView = mDialog.getListView();
-        Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
 
         if (listView != null) {
             listView.setDividerHeight(0);
             listView.setClipToPadding(true);
             listView.setPadding(0, 0, 0, res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
-        }
-
-        if (positive != null) {
-            //noinspection deprecation
-            positive.setTextColor(res.getColor(R.color.primary_40));
-        }
-
-        if (negative != null) {
-            //noinspection deprecation
-            negative.setTextColor(res.getColor(R.color.primary_40));
         }
 
         UiHelpers.Companion.adjustDialogSize(mDialog);
@@ -215,32 +186,21 @@ public class DetailListPreference extends ListPreference
         refreshAdapter();
     }
 
-    /**
-     * Helper method to style the Preference screen view
-     */
-    private void setupView(TextView view, int sizeRes, int enabledColorRes, int disabledColorRes) {
-        if (view != null) {
-            Resources res = getContext().getResources();
-            view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
-            //noinspection deprecation
-            view.setTextColor(res.getColor(isEnabled() ? enabledColorRes : disabledColorRes));
-        }
-    }
-
     private class DetailListAdapter extends ArrayAdapter<String> {
         DetailListAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
         }
 
+        @NotNull
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, @NotNull ViewGroup parent) {
             if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.detail_list_preference, null);
             }
 
-            final RadioButton radioButton = (RadioButton) convertView.findViewById(R.id.radio);
-            TextView mainText = (TextView) convertView.findViewById(R.id.main_text);
-            TextView detailText = (TextView) convertView.findViewById(R.id.detail_text);
+            final RadioButton radioButton = convertView.findViewById(R.id.radio);
+            TextView mainText = convertView.findViewById(R.id.main_text);
+            TextView detailText = convertView.findViewById(R.id.detail_text);
 
             if (mainText != null && getEntries() != null && position < getEntries().length) {
                 mainText.setText(getEntries()[position]);
@@ -259,12 +219,7 @@ public class DetailListPreference extends ListPreference
                 radioButton.setChecked(mSelectedIndex == position);
             }
 
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    changeSelection(position);
-                }
-            });
+            convertView.setOnClickListener(v -> changeSelection(position));
 
             return convertView;
         }
