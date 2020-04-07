@@ -25,14 +25,15 @@ public class MediaUploadCompletionProcessor {
     }
 
     /**
-     * Processes a post to replace the local ids and local urls of media with remote ids and remote urls. This matches
-     * media-containing blocks and delegates further processing to {@link #processBlock(String)}
+     * Processes content to replace the local ids and local urls of media with remote ids and remote urls. This method
+     * delineates block boundaries for media-containing blocks and delegates further processing via itself and / or
+     * {@link #processBlock(String)}, via direct and mutual recursion, respectively.
      *
-     * @param postContent The post content to be processed
-     * @return A string containing the processed post, or the original content if no match was found
+     * @param content The content to be processed
+     * @return A string containing the processed content, or the original content if no match was found
      */
-    public String processPost(String postContent) {
-        Matcher headerMatcher = PATTERN_BLOCK_HEADER.matcher(postContent);
+    public String processContent(String content) {
+        Matcher headerMatcher = PATTERN_BLOCK_HEADER.matcher(content);
 
         int positionBlockStart, positionBlockEnd = 0;
 
@@ -40,7 +41,7 @@ public class MediaUploadCompletionProcessor {
             positionBlockStart = headerMatcher.start();
             String blockType = headerMatcher.group(1);
             Matcher blockBoundaryMatcher = Pattern.compile(String.format(PATTERN_TEMPLATE_BLOCK_BOUNDARY, blockType),
-                    Pattern.DOTALL).matcher(postContent.substring(headerMatcher.end()));
+                    Pattern.DOTALL).matcher(content.substring(headerMatcher.end()));
 
             int nestLevel = 1;
 
@@ -54,12 +55,12 @@ public class MediaUploadCompletionProcessor {
             }
 
             return new StringBuilder()
-                    .append(postContent.substring(0, positionBlockStart))
-                    .append(processBlock(postContent.substring(positionBlockStart, positionBlockEnd)))
-                    .append(processPost(postContent.substring(positionBlockEnd)))
+                    .append(content.substring(0, positionBlockStart))
+                    .append(processBlock(content.substring(positionBlockStart, positionBlockEnd)))
+                    .append(processContent(content.substring(positionBlockEnd)))
                     .toString();
         } else {
-            return postContent;
+            return content;
         }
     }
 

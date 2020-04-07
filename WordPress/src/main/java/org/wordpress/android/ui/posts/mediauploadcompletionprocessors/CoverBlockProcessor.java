@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -15,9 +13,10 @@ public class CoverBlockProcessor extends BlockProcessor {
     /**
      * Template pattern used to match and splice cover inner blocks
      */
-    private static final Pattern PATTERN_COVER_INNER = Pattern.compile("(^.*?<div class=\"wp-block-cover__inner-container\">\\s*)"
-                                                           + "(.*)" // inner block contents
-                                                           + "(\\s*</div>\\s*</div>\\s*<!-- /wp:cover -->.*)", Pattern.DOTALL);
+    private static final Pattern PATTERN_COVER_INNER = Pattern.compile(new StringBuilder()
+                    .append("(^.*?<div class=\"wp-block-cover__inner-container\">\\s*)")
+                    .append("(.*)") // inner block contents
+                    .append("(\\s*</div>\\s*</div>\\s*<!-- /wp:cover -->.*)").toString(), Pattern.DOTALL);
 
     /**
      * Pattern to match background-image url in cover block html content
@@ -38,7 +37,7 @@ public class CoverBlockProcessor extends BlockProcessor {
 
         // process inner contents recursively
         if (innerCapturesFound) {
-            String innerProcessed = mMediaUploadCompletionProcessor.processPost(innerMatcher.group(2)); //
+            String innerProcessed = mMediaUploadCompletionProcessor.processContent(innerMatcher.group(2)); //
             return new StringBuilder()
                     .append(innerMatcher.group(1))
                     .append(innerProcessed)

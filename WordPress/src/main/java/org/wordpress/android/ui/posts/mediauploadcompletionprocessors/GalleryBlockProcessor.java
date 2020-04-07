@@ -9,9 +9,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class GalleryBlockProcessor extends BlockProcessor {
     private String mAttachmentPageUrl;
     private String mLinkTo;

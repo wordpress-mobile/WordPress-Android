@@ -10,7 +10,6 @@ import org.wordpress.android.editor.Utils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK_CAPTURES;
 
@@ -34,7 +33,7 @@ abstract class BlockProcessor {
 
     private String mBlockName;
     private JsonObject mJsonAttributes;
-    private Document mBlockContentDocument ;
+    private Document mBlockContentDocument;
     private String mClosingComment;
 
 
@@ -103,7 +102,7 @@ abstract class BlockProcessor {
                             .toString();
                 }
             } else {
-                return processInnerBlock(block);
+                return processInnerBlock(block); // delegate to inner blocks if needed
             }
         }
         // leave block unchanged
@@ -122,8 +121,31 @@ abstract class BlockProcessor {
      */
     abstract boolean processBlockContentDocument(Document document);
 
+    /**
+     * All concrete implementations must implement this method for the particular block type. The jsonAttributes object
+     * is a {@link JsonObject} parsed from the block header attributes. This object can be used to check for a match,
+     * and can be directly mutated if necessary.<br>
+     * <br>
+     * This method should return true to indicate success. Returning false will result in the block contents being
+     * unmodified.
+     *
+     * @param jsonAttributes the attributes object used to check for a match with the local id, and mutated if necessary
+     * @return
+     */
     abstract boolean processBlockJsonAttributes(JsonObject jsonAttributes);
 
+    /**
+     * This method can be optionally overriden by concrete implementations to delegate further processing via recursion
+     * when {@link BlockProcessor#processBlockJsonAttributes(JsonObject)} returns false (i.e. the block did not match
+     * the local id being replaced). This is useful for implementing mutual recursion with
+     * {@link MediaUploadCompletionProcessor#processContent(String)} for block types that have media-containing blocks
+     * within their inner content.<br>
+     * <br>
+     * The default implementation provided is a NOOP that leaves the content of the block unchanged.
+     *
+     * @param block The raw block contents
+     * @return A string containing content with ids and urls replaced
+     */
     String processInnerBlock(String block) {
         return block;
     }

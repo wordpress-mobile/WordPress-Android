@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Test
 import org.junit.Before
-import org.junit.Ignore
 
 import org.wordpress.android.util.helpers.MediaFile
 
@@ -36,7 +35,7 @@ class CoverBlockProcessorTest {
 
     @Test
     fun `processBlock does not process inner nested cover blocks`() {
-        whenever(mediaUploadCompletionProcessor.processPost(any())).thenReturn(TestContent.oldCoverBlock + "\n  ")
+        whenever(mediaUploadCompletionProcessor.processContent(any())).thenReturn(TestContent.oldCoverBlock + "\n  ")
         val processedBlock = processor.processBlock(TestContent.oldCoverBlockWithNestedCoverBlockInner)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.oldCoverBlockWithNestedCoverBlockInner)
     }
