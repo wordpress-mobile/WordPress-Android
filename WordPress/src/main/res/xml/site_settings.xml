@@ -363,7 +363,7 @@
                     app:caption="@string/site_settings_learn_more_caption"
                     app:layout="@layout/learn_more_pref_old"
                     app:openInDialog="true"
-                    app:url="https://en.support.wordpress.com/settings/discussion-settings/#default-article-settings"
+                    app:url="https://wordpress.com/support/settings/discussion-settings/#default-article-settings"
                     app:useCustomJsFormatting="true" />
 
             </PreferenceCategory>
