@@ -171,7 +171,7 @@ public class PhotoPickerFragment extends Fragment {
                     } else if (mBrowserType.isVideoPicker()) {
                         doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
                     } else {
-                        AppLog.e(T.MEDIA, "This could should be unreachable. If you see this message one of "
+                        AppLog.e(T.MEDIA, "This code should be unreachable. If you see this message one of "
                                           + "the MediaBrowserTypes isn't setup correctly.");
                     }
                 }
