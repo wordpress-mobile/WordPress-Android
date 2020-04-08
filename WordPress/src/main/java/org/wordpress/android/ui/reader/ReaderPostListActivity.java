@@ -309,34 +309,47 @@ public class ReaderPostListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK
-            && data != null && !isFinishing()) {
-            int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
-            final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
-            final PostModel post = mPostStore.getPostByLocalPostId(localId);
+        switch (requestCode) {
+            case RequestCodes.NO_REBLOG_SITE:
+                if (resultCode == Activity.RESULT_OK) {
+                    finish(); // Finish activity to make My Site page visible
+                }
+                break;
+            case RequestCodes.EDIT_POST:
+                if (resultCode == Activity.RESULT_OK && data != null && !isFinishing()) {
+                    int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
+                    final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
+                    final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
-            if (EditPostActivity.checkToRestart(data)) {
-                ActivityLauncher.editPostOrPageForResult(data, ReaderPostListActivity.this, site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
-                // a restart will happen so, no need to continue here
-                return;
-            }
+                    if (EditPostActivity.checkToRestart(data)) {
+                        ActivityLauncher.editPostOrPageForResult(data, ReaderPostListActivity.this, site,
+                                data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+                        // a restart will happen so, no need to continue here
+                        return;
+                    }
 
-            if (site != null && post != null) {
-                mUploadUtilsWrapper.handleEditPostResultSnackbars(
-                        this,
-                        findViewById(R.id.coordinator),
-                        data,
-                        post,
-                        site,
-                        mUploadActionUseCase.getUploadAction(post),
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                UploadUtils.publishPost(ReaderPostListActivity.this, post, site, mDispatcher);
-                            }
-                        });
-            }
+                    if (site != null && post != null) {
+                        mUploadUtilsWrapper.handleEditPostResultSnackbars(
+                                this,
+                                findViewById(R.id.coordinator),
+                                data,
+                                post,
+                                site,
+                                mUploadActionUseCase.getUploadAction(post),
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        UploadUtils.publishPost(
+                                                ReaderPostListActivity.this,
+                                                post,
+                                                site,
+                                                mDispatcher
+                                        );
+                                    }
+                                });
+                    }
+                }
+                break;
         }
     }
 

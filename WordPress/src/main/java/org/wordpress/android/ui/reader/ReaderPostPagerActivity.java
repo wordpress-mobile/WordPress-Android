@@ -1035,6 +1035,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                     mBackFromLogin = true;
                 }
                 break;
+            case RequestCodes.NO_REBLOG_SITE:
+                if (resultCode == Activity.RESULT_OK) {
+                    finish(); // Finish activity to make My Site page visible
+                }
+                break;
         }
     }
 

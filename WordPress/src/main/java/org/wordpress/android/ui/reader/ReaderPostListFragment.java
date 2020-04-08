@@ -2906,7 +2906,7 @@ public class ReaderPostListFragment extends Fragment
         mViewModel.getReblogState().observe(this, event -> {
             event.applyIfNotHandled(state -> {
                 if (state instanceof NoSite) {
-                    ToastUtils.showToast(getActivity(), R.string.reader_no_site_to_reblog);
+                    ReaderActivityLauncher.showNoSiteToReblog(getActivity());
                 } else if (state instanceof SitePicker) {
                     ActivityLauncher.showSitePickerForResult(this, ((SitePicker) state).getSite());
                 } else if (state instanceof PostEditor) {
@@ -2925,7 +2925,8 @@ public class ReaderPostListFragment extends Fragment
         mViewModel.onReblogButtonClicked(post);
     }
 
-    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {
             int siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);

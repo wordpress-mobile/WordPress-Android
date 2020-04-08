@@ -862,7 +862,7 @@ class ReaderPostDetailFragment : Fragment(),
             reblogButton.setOnClickListener {
                 val sites = mSiteStore.visibleSites
                 when (sites.size) {
-                    0 -> ToastUtils.showToast(activity, R.string.reader_no_site_to_reblog)
+                    0 -> ReaderActivityLauncher.showNoSiteToReblog(activity)
                     1 -> ActivityLauncher.openEditorForReblog(activity, sites.first(), this.post)
                     else -> {
                         val siteLocalId = AppPrefs.getSelectedSite()

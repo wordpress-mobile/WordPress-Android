@@ -212,4 +212,10 @@ public class ReaderEvents {
 
     public static class DoSignIn {
     }
+
+    /**
+     * Shows the Site Manager (My site page)
+     */
+    public static class SiteManagerTriggered {
+    }
 }
