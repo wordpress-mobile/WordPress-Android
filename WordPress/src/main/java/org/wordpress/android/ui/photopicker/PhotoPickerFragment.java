@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -60,7 +61,8 @@ public class PhotoPickerFragment extends Fragment {
         ANDROID_CAPTURE_VIDEO(true),
         ANDROID_CHOOSE_PHOTO_OR_VIDEO(true),
         WP_MEDIA(false),
-        STOCK_MEDIA(true);
+        STOCK_MEDIA(true),
+        GIF(true);
 
         private boolean mRequiresUploadPermission;
 
@@ -257,6 +259,7 @@ public class PhotoPickerFragment extends Fragment {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA);
                 break;
             case STOCK_MEDIA:
+            case GIF:
                 break;
         }
 
@@ -297,6 +300,14 @@ public class PhotoPickerFragment extends Fragment {
                     return true;
                 }
             });
+
+            if (BuildConfig.TENOR_AVAILABLE) {
+                MenuItem itemGif = popup.getMenu().add(R.string.photo_picker_gif);
+                itemGif.setOnMenuItemClickListener(item -> {
+                    doIconClicked(PhotoPickerIcon.GIF);
+                    return true;
+                });
+            }
         }
 
         popup.show();

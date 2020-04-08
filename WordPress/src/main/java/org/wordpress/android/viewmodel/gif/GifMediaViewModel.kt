@@ -1,23 +1,19 @@
-package org.wordpress.android.viewmodel.giphy
+package org.wordpress.android.viewmodel.gif
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
 
 /**
- * A data-representation of [GiphyMediaViewHolder]
+ * A data-representation of [GifMediaViewHolder]
  *
- * The values of this class comes from Giphy's [Media] model. The [Media] object is big so we use this class to
- * only keep a minimal amount of memory. This also hides the complexity of navigating the values of [Media].
+ * The values of this class comes from [GifProvider] as a list.
  *
- * This class also houses the selection status. The [GiphyMediaViewHolder] observes the [isSelected] and
+ * This class also houses the selection status. The [GifMediaViewHolder] observes the [isSelected] and
  * [selectionNumber] properties to update itself.
- *
- * See the [Giphy API docs](https://developers.giphy.com/docs/) for more information on what a [Media] object contains.
- * Search for "The GIF Object" section.
  */
-interface GiphyMediaViewModel {
+interface GifMediaViewModel {
     /**
-     * The id from Giphy's [Media]
+     * The GIF unique id
      */
     val id: String
     /**
@@ -37,7 +33,7 @@ interface GiphyMediaViewModel {
      */
     val largeImageUri: Uri
     /**
-     * The title that appears on giphy.com
+     * The title that appears on the GIF
      */
     val title: String
     /**
