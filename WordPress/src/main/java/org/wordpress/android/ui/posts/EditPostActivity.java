@@ -1958,6 +1958,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
                         return GutenbergEditorFragment.newInstance("",
                                 "",
+                                AppPrefs.isGutenbergUseBytecode(),
                                 postType,
                                 mIsNewPost,
                                 wpcomLocaleSlug,

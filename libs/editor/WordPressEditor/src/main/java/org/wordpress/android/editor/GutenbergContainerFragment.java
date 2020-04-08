@@ -23,24 +23,28 @@ import java.util.ArrayList;
 public class GutenbergContainerFragment extends Fragment {
     public static final String TAG = "gutenberg_container_fragment_tag";
 
+    private static final String ARG_USE_BYTECODE = "param_use_bytecode";
     private static final String ARG_POST_TYPE = "param_post_type";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_LOCALE = "param_locale";
     private static final String ARG_TRANSLATIONS = "param_translations";
     private static final String ARG_PREFERRED_COLOR_SCHEME = "param_preferred_color_scheme";
 
+    private boolean mUseBytecode;
     private boolean mHtmlModeEnabled;
     private boolean mHasReceivedAnyContent;
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
 
-    public static GutenbergContainerFragment newInstance(String postType,
+    public static GutenbergContainerFragment newInstance(boolean userBytecode,
+                                                         String postType,
                                                          boolean isNewPost,
                                                          String localeString,
                                                          Bundle translations,
                                                          boolean isDarkMode) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
         Bundle args = new Bundle();
+        args.putBoolean(ARG_USE_BYTECODE, userBytecode);
         args.putString(ARG_POST_TYPE, postType);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putString(ARG_LOCALE, localeString);
@@ -82,6 +86,7 @@ public class GutenbergContainerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        boolean userBytecode = getArguments() != null && getArguments().getBoolean(ARG_USE_BYTECODE);
         String postType = getArguments().getString(ARG_POST_TYPE);
         boolean isNewPost = getArguments() != null && getArguments().getBoolean(ARG_IS_NEW_POST);
         String localeString = getArguments().getString(ARG_LOCALE);
@@ -92,6 +97,7 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.onCreate(getContext());
         mWPAndroidGlueCode.onCreateView(
                 getContext(),
+                userBytecode,
                 mHtmlModeEnabled,
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,

@@ -65,6 +65,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private DetailListPreference mVideoEncorderBitratePref;
     private PreferenceScreen mPrivacySettings;
     private WPSwitchPreference mStripImageLocation;
+    private WPSwitchPreference mGutenbergBytecode;
 
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
@@ -164,6 +165,14 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
+        }
+
+        if (BuildConfig.OFFER_GUTENBERG_TEXT_JS_BUNDLE_SETTING) {
+            mGutenbergBytecode = new WPSwitchPreference(getPreferenceScreen().getContext(), null);
+            mGutenbergBytecode.setTitle("Use bytecode JS Gutenberg bundle");
+            mGutenbergBytecode.setOnPreferenceChangeListener(this);
+            mGutenbergBytecode.setChecked(AppPrefs.isGutenbergUseBytecode());
+            getPreferenceScreen().addPreference(mGutenbergBytecode);
         }
     }
 
@@ -306,6 +315,8 @@ public class AppSettingsFragment extends PreferenceFragment
             AppThemeUtils.Companion.setAppTheme(getActivity(), (String) newValue);
             // restart activity to make sure changes are applied to PreferenceScreen
             getActivity().recreate();
+        } else if (preference == mGutenbergBytecode) {
+            AppPrefs.setGutenbergUseBytecode((Boolean) newValue);
         }
         return true;
     }

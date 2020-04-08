@@ -113,6 +113,7 @@ android {
         debug {
             minifyEnabled false
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+            buildConfigField "boolean", "OFFER_GUTENBERG_TEXT_JS_BUNDLE_SETTING", (rootProject.ext.has("offerGutenbergTextJsBundle") ? rootProject.ext.offerGutenbergTextJsBundle : false).toString()
         }
     }
 

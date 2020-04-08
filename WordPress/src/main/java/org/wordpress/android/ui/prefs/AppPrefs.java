@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -123,6 +124,9 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
+
+        // Debugging facility
+        GUTENBERG_USE_BYTECODE,
 
         IS_QUICK_START_NOTICE_REQUIRED,
 
@@ -798,6 +802,14 @@ public class AppPrefs {
         SharedPreferences.Editor editor = prefs().edit();
         editor.putStringSet(DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name(), newUrls);
         editor.apply();
+    }
+
+    public static boolean isGutenbergUseBytecode() {
+        return BuildConfig.OFFER_GUTENBERG_TEXT_JS_BUNDLE_SETTING && getBoolean(DeletablePrefKey.GUTENBERG_USE_BYTECODE, false);
+    }
+
+    public static void setGutenbergUseBytecode(boolean useBytecode) {
+        setBoolean(DeletablePrefKey.GUTENBERG_USE_BYTECODE, useBytecode);
     }
 
     public static void setVideoOptimizeWidth(int width) {

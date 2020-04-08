@@ -25,6 +25,7 @@ plugins {
 apply plugin: 'com.automattic.android.fetchstyle'
 
 project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
+project.ext.offerGutenbergTextJsBundle = project.properties.getOrDefault('wp.OFFER_GUTENBERG_TEXT_JS_BUNDLE', false).toBoolean()
 
 allprojects {
     apply plugin: 'checkstyle'

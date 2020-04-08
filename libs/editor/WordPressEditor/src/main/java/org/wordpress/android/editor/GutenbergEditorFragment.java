@@ -72,6 +72,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
+    private static final String ARG_USE_BYTECODE = "param_use_bytecode";
     private static final String ARG_POST_TYPE = "param_post_type";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
@@ -107,6 +108,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
+                                                      boolean useBytecode,
                                                       String postType,
                                                       boolean isNewPost,
                                                       String localeSlug,
@@ -115,6 +117,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
         args.putString(ARG_PARAM_CONTENT, content);
+        args.putBoolean(ARG_USE_BYTECODE, useBytecode);
         args.putString(ARG_POST_TYPE, postType);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putString(ARG_LOCALE_SLUG, localeSlug);
@@ -215,6 +218,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         super.onCreate(savedInstanceState);
 
         if (getGutenbergContainerFragment() == null) {
+            boolean useBytecode = getArguments().getBoolean(ARG_USE_BYTECODE);
             String postType = getArguments().getString(ARG_POST_TYPE);
             boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
             String localeSlug = getArguments().getString(ARG_LOCALE_SLUG);
@@ -222,7 +226,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             GutenbergContainerFragment gutenbergContainerFragment =
-                    GutenbergContainerFragment.newInstance(postType,
+                    GutenbergContainerFragment.newInstance(useBytecode,
+                            postType,
                             isNewPost,
                             localeSlug,
                             getTranslations(),
