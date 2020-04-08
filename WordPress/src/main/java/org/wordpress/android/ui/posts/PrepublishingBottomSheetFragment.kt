@@ -10,10 +10,11 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
-class PrepublishingBottomSheetFragment : BottomSheetDialogFragment() {
+class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
 
