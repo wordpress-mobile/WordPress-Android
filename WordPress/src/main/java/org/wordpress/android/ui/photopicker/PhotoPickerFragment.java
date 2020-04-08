@@ -268,7 +268,7 @@ public class PhotoPickerFragment extends Fragment {
         }
 
         if (mListener != null) {
-            mListener.onPhotoPickerIconClicked(icon, false);
+            mListener.onPhotoPickerIconClicked(icon, mBrowserType.canMultiselect());
         }
     }
 

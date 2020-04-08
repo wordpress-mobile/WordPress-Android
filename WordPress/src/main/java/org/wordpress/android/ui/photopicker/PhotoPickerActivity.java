@@ -183,10 +183,7 @@ public class PhotoPickerActivity extends AppCompatActivity
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
                 if (data != null) {
-                    Uri imageUri = data.getData();
-                    if (imageUri != null) {
-                        doMediaUrisSelected(Collections.singletonList(imageUri), PhotoPickerMediaSource.ANDROID_PICKER);
-                    }
+                    doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), PhotoPickerMediaSource.ANDROID_PICKER);
                 }
                 break;
             // user took a photo with the device camera
@@ -234,12 +231,12 @@ public class PhotoPickerActivity extends AppCompatActivity
         WPMediaUtils.launchVideoCamera(this);
     }
 
-    private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this, false);
+    private void launchPictureLibrary(boolean multiSelect) {
+        WPMediaUtils.launchPictureLibrary(this, multiSelect);
     }
 
-    private void launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this, false);
+    private void launchVideoLibrary(boolean multiSelect) {
+        WPMediaUtils.launchVideoLibrary(this, multiSelect);
     }
 
     private void launchWPMediaLibrary() {
@@ -340,13 +337,13 @@ public class PhotoPickerActivity extends AppCompatActivity
                 launchCameraForImage();
                 break;
             case ANDROID_CHOOSE_PHOTO:
-                launchPictureLibrary();
+                launchPictureLibrary(multiple);
                 break;
             case ANDROID_CAPTURE_VIDEO:
                 launchCameraForVideo();
                 break;
             case ANDROID_CHOOSE_VIDEO:
-                launchVideoLibrary();
+                launchVideoLibrary(multiple);
                 break;
             case WP_MEDIA:
                 launchWPMediaLibrary();
