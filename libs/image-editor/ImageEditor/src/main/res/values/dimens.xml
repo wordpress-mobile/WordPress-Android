@@ -5,6 +5,7 @@
     <dimen name="preview_image_view_margin">16dp</dimen>
     <dimen name="preview_image_thumbnail_size">65dp</dimen>
     <dimen name="preview_image_thumbnail_margin">2dp</dimen>
+    <dimen name="preview_image_thumbnails_tab_layout_margin">@dimen/preview_image_view_margin</dimen>
     <dimen name="border_thickness">4dp</dimen>
 
     <dimen name="retry_image_size">60dp</dimen>

@@ -43,10 +43,10 @@ class PagerAdapterObserver(
         viewPager.adapter?.let {
             val adapterCount = it.itemCount
             for (i in 0 until adapterCount) {
-                val isExistingTab = tabLayout.getTabAt(i)
-                val tab = isExistingTab ?: tabLayout.newTab()
+                val existingTab = tabLayout.getTabAt(i)
+                val tab = existingTab ?: tabLayout.newTab()
                 tabConfigurationStrategy.onConfigureTab(tab, i)
-                if (isExistingTab == null) {
+                if (existingTab == null) {
                     tabLayout.addTab(tab, false)
                 }
             }
