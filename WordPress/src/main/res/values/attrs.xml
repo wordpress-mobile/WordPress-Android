@@ -7,8 +7,13 @@
     <attr name="wpColorText" format="reference|color" />
     <attr name="wpColorTextSubtle" format="reference|color" />
     <attr name="wpColorError" format="reference|color" />
+    <attr name="wpColorSuccess" format="reference|color" />
+    <attr name="wpColorAppBar" format="reference|color" />
+    <attr name="wpColorOnSurfaceMedium" format="reference|color" />
 
     <attr name="wpColorWarningDark" format="reference|color" />
+    <attr name="wpColorWarningLight" format="reference|color" />
+    <attr name="wpColorActionModeIcon" format="reference|color" />
 
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
@@ -16,12 +21,9 @@
         <attr name="maxSummaryLines" format="integer" />
         <attr name="longClickHint" />
         <attr name="dialogMessage" format="string" />
-        <attr name="iconTint" format="color" />
+        <attr name="iconTint" format="color|reference" />
         <attr name="switchThumbTint" format="integer" />
-        <attr name="switchTrackTint" format="integer" />
-        <attr name="preferenceTextColor" format="color" />
-        <attr name="backgroundColorChecked" format="color" />
-        <attr name="backgroundColorUnchecked" format="color" />
+        <attr name="startOffset" format="dimension|reference" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->
@@ -205,5 +207,16 @@
             <enum name="highlighted" value="0" />
             <enum name="normal" value="1" />
         </attr>
+    </declare-styleable>
+
+    <!-- BadgedImageView attributes -->
+    <declare-styleable name="BadgedImageView">
+        <attr name="badgeBackground" format="reference" />
+        <attr name="badgeBackgroundSize" format="dimension" />
+        <attr name="badgeBackgroundBorderWidth" format="dimension" />
+        <attr name="badgeIcon" format="reference" />
+        <attr name="badgeIconSize" format="dimension" />
+        <attr name="badgeHorizontalOffset" format="dimension" />
+        <attr name="badgeVerticalOffset" format="dimension" />
     </declare-styleable>
 </resources>

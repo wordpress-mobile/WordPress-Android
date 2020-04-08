@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginStart="@dimen/margin_extra_large"
-             android:layout_marginTop="@dimen/margin_extra_large">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_extra_large"
+    android:layout_marginTop="@dimen/margin_extra_large">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tag"
         style="@style/StatsTag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_rectangle_red_50_radius_2dp"
-        android:paddingBottom="@dimen/margin_extra_small"
-        android:paddingEnd="@dimen/margin_medium"
         android:paddingStart="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_extra_small"
-        android:text="@string/stats_management_new"/>
+        android:paddingEnd="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_extra_small"
+        android:text="@string/stats_management_new" />
 
 </FrameLayout>

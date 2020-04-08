@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Html
@@ -22,7 +24,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -89,6 +93,8 @@ import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClick
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.AppLog.T.READER
+import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
@@ -246,6 +252,14 @@ class ReaderPostDetailFragment : Fragment(),
         scrollView.setScrollDirectionListener(this)
 
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
+
+        val elevationOverlayProvider = ElevationOverlayProvider(layoutFooter.context)
+        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
+        val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
+                appbarElevation
+        )
+        layoutFooter.setBackgroundColor(elevatedSurfaceColor)
+
         likingUsersView = view.findViewById(R.id.layout_liking_users_view)
         likingUsersDivider = view.findViewById(R.id.layout_liking_users_divider)
         likingUsersLabel = view.findViewById(R.id.text_liking_users_label)
@@ -292,10 +306,10 @@ class ReaderPostDetailFragment : Fragment(),
         return post != null
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        menu!!.clear()
-        inflater!!.inflate(R.menu.reader_detail, menu)
+        menu.clear()
+        inflater.inflate(R.menu.reader_detail, menu)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -362,7 +376,8 @@ class ReaderPostDetailFragment : Fragment(),
                 hasTrackedLocalRelatedPosts
         )
 
-        outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE,
+        outState.putSerializable(
+                ReaderConstants.ARG_POST_LIST_TYPE,
                 this.postListType
         )
 
@@ -1084,6 +1099,20 @@ class ReaderPostDetailFragment : Fragment(),
 
         val txtError = view!!.findViewById<TextView>(R.id.text_error)
         txtError.text = errorMessage
+
+        context?.let {
+            val icon: Drawable? = try {
+                ContextCompat.getDrawable(it, R.drawable.ic_notice_48dp)
+            } catch (e: Resources.NotFoundException) {
+                AppLog.e(READER, e)
+                CrashLoggingUtils.logException(e, READER, "Drawable not found. See issue #11576")
+                null
+            }
+            icon?.let {
+                txtError.setCompoundDrawablesRelativeWithIntrinsicBounds(null, icon, null, null)
+            }
+        }
+
         if (errorMessage == null) {
             txtError.visibility = View.GONE
         } else if (txtError.visibility != View.VISIBLE) {
@@ -1183,7 +1212,8 @@ class ReaderPostDetailFragment : Fragment(),
                         activity?.overridePendingTransition(0, 0)
                         return
                     }
-                    POST_LIKE -> { }
+                    POST_LIKE -> {
+                    }
                 }
                 // Liking needs to be handled "later" after the post has been updated from the server so,
                 // nothing special to do here

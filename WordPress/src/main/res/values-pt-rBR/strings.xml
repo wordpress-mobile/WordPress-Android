@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-17 13:37:26+0000
+Translation-Revision-Date: 2020-03-28 20:10:19+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">Criar um post</string>
+    <string name="post_list_tab_trashed_posts">Na lixeira</string>
+    <string name="post_list_tab_scheduled_posts">Agendado</string>
+    <string name="post_list_tab_published_posts">Publicado</string>
+    <string name="sharing_facebook_account_must_have_pages">A conexão com o Facebook não encontrou nenhuma página. O Publicize não consegue se conectar a perfis do Facebook, apenas a páginas públicas.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Não conectado</string>
+    <string name="my_site_select_domains_page_title">Endereço do site</string>
+    <string name="notifications_tab_title_likes">Curtidas</string>
+    <string name="notifications_tab_title_follows">Seguindo</string>
+    <string name="notifications_tab_title_comments">Comentários</string>
+    <string name="notifications_tab_title_unread_notifications">Não lido</string>
+    <string name="dlg_cancel_action_dont_trash">Não descartar</string>
+    <string name="dlg_confirm_action_trash">Descartar</string>
+    <string name="stats_insights_management_activity">Atividade</string>
+    <string name="stats_insights_management_posts_and_pages">Posts e páginas</string>
+    <string name="stats_insights_management_general">Geral</string>
+    <string name="stats_management_screen_title">Adicionar novo cartão</string>
+    <string name="stats_management_add_new_stats_card">Adicionar novo cartão de estatísticas</string>
+    <string name="reader_self_hosted_select_filter">Use o botão de filtro para encontrar posts de assuntos específicos</string>
+    <string name="reader_bottom_sheet_content_description">Selecione um site ou tag para filtrar posts, janela popup</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Selecionado</string>
+    <string name="reader_btn_select_filter_content_description">Selecione um site ou tag para filtrar posts</string>
+    <string name="reader_btn_remove_filter_content_description">Remover o filtro atual</string>
+    <string name="reader_title_subs">Gerenciar tags e sites</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Acessar o WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Acesse com o WordPress.com para ver os posts mais recentes das tags que você segue</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Acesse com o WordPress.com para ver os posts mais recentes dos sites que você segue</string>
     <string name="gutenberg_native_template_preview">Visualizar modelo</string>
     <string name="gutenberg_native_replace_current_block">Substituir o bloco atual</string>
     <string name="gutenberg_native_add_to_end">Adicionar ao final</string>
@@ -268,7 +295,6 @@ Language: pt_BR
     <string name="enter_wordpress_site">O site neste endereço não é um site do WordPress. Para que possamos nos conectar a ele, o site precisa ter o WordPress instalado.</string>
     <string name="login_invalid_site_url">Digite o endereço completo do site, tal como exemplo.com.</string>
     <string name="enter_email_for_site">Acesse com o WordPress.com para se conectar ao %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">Não foi possível conectar-se ao Facebook por que essa conta não tem acesso a nenhuma página. O Facebook suporta conexões para compartilhamento somente com páginas e não com perfis.</string>
     <string name="stats_post_views_label">Visualizações</string>
     <string name="stats_post_label">Post</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -365,8 +391,7 @@ Language: pt_BR
     <string name="editor_failed_to_insert_media_tap_to_retry">Falha ao inserir a mídia.\nClique para ver tentar novamente.</string>
     <string name="editor_uploading_draft">Seu rascunho está sendo enviado para o site</string>
     <string name="post_uploading_draft">Enviando rascunho</string>
-    <string name="post_list_drafts">Rascunhos</string>
-    <string name="post_list_published">Publicado</string>
+    <string name="post_list_tab_drafts">Rascunhos</string>
     <string name="post_list_author_everyone">Todos</string>
     <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">Ocorreu um erro ao restaurar o post</string>
@@ -511,15 +536,7 @@ Language: pt_BR
     <string name="new_site_creation_empty_domain_list_message">Nenhum endereço disponível corresponde à sua pesquisa</string>
     <string name="site_creation_error_generic_subtitle">Erro de comunicação com o servidor. Tente novamente.</string>
     <string name="site_creation_error_generic_title">Ocorreu um problema</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Categoria personalizada</string>
-    <string name="new_site_creation_button_skip">Pular</string>
-    <string name="new_site_creation_tag_line_description">A descrição é uma linha de texto exibida logo abaixo do título.</string>
-    <string name="new_site_creation_tag_line_hint">Descrição</string>
-    <string name="new_site_creation_site_title_hint">Título do site</string>
-    <string name="new_site_creation_site_info_header_subtitle">Nos conte mais sobre o site que você está criando.</string>
-    <string name="new_site_creation_site_info_header_title">Informação básica</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Ocorreu um problema</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Sem conexão</string>
     <string name="site_creation_segments_subtitle">Isso nos ajuda a fazer recomendações mas você não está preso a isso. Todos os sites evoluem!</string>
     <string name="site_creation_segments_title">Nos conte que tipo de site você gostaria de fazer</string>
     <string name="new_site_creation_preview_title">Seu site foi criado!</string>
@@ -542,11 +559,6 @@ Language: pt_BR
     <string name="stats_no_data_for_period">Nenhum dado para esse período</string>
     <string name="preference_strip_image_location">Remover localização de mídia</string>
     <string name="stats_cannot_be_started">Não conseguimos abrir as estatísticas agora. Tente novamente mais tarde.</string>
-    <string name="giphy_powered_by_giphy">Oferecido pelo GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Alguns arquivos não puderam ser carregados devido a problemas com a conexão.</string>
-    <string name="giphy_picker_empty_search_list">Nenhuma mídia corresponde à sua pesquisa</string>
-    <string name="giphy_picker_initial_empty_text">Pesquise para encontrar gifs para adicionar à sua biblioteca de mídias.</string>
-    <string name="giphy_picker_search_hint">Pesquisar no Giphy</string>
     <string name="stats_author_views_label">Visualizações</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>
@@ -725,7 +737,6 @@ Language: pt_BR
     <string name="people_empty_list_filtered_email_followers">Ainda não há seguidores por e-mail</string>
     <string name="people_empty_list_filtered_followers">Ainda não há seguidores</string>
     <string name="people_empty_list_filtered_users">Ainda não há usuários</string>
-    <string name="connection_service_facebook_notice">A partir de 1º de agosto de 2018, o Facebook não permite mais o compartilhamento direto de posts em perfis do Facebook. As conexões para as páginas do Facebook permanecem inalteradas.</string>
     <string name="reader_empty_posts_liked_description">Os posts que você gosta aparecerão aqui</string>
     <string name="reader_empty_posts_liked_title">Nada foi curtido ainda</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir para sites seguidos</string>
@@ -1282,8 +1293,6 @@ Language: pt_BR
     <string name="editor_dropped_text_error">Ocorreu um erro ao soltar texto</string>
     <string name="editor_dropped_html_images_not_allowed">Soltar imagens no modo HTML não é permitido</string>
     <string name="editor_content_hint">Compartihe sua história aqui…</string>
-    <string name="post_list_trashed">Enviado para a lixeira</string>
-    <string name="post_list_scheduled">Agendado</string>
     <string name="post_status_post_private">Privado</string>
     <string name="post_status_draft">Rascunho</string>
     <string name="post_status_pending_review">Revisão pendente</string>
@@ -1304,7 +1313,6 @@ Language: pt_BR
     <string name="post_settings_more_options">Mais opções</string>
     <string name="post_settings_categories_and_tags">Categorias e tags</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Não lidas</string>
     <string name="notifications_tab_title_all">Todas</string>
     <string name="top_level_category_name">Primeiro nível</string>
     <string name="category_parent">Categoria ascendente (opcional):</string>
@@ -2002,8 +2010,6 @@ Language: pt_BR
     <string name="saving_changes">Salvando alterações</string>
     <string name="hint_comment_content">Comentário</string>
     <string name="trash">Lixeira</string>
-    <string name="trash_no">Não é lixo</string>
-    <string name="trash_yes">Lixeira</string>
     <string name="dlg_confirm_trash_comments">Enviar para a lixeira?</string>
     <string name="dlg_trashing_comments">Enviando para a lixeira</string>
     <string name="dlg_spamming_comments">Marcando como spam</string>

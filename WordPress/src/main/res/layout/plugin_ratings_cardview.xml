@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/PluginCardView"
-    card_view:cardBackgroundColor="@android:color/white"
-    card_view:cardCornerRadius="@dimen/default_cardview_radius">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/PluginCardView">
 
     <RelativeLayout
         android:id="@+id/plugin_ratings_section_container"
@@ -13,24 +10,35 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_extra_large">
 
-        <RatingBar
-            android:id="@+id/rating_bar"
-            style="@style/WPRatingBar.Small"
+        <LinearLayout
+            android:id="@+id/rating_bar_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:isIndicator="true"
-            android:numStars="5"
-            tools:rating="3" />
+            android:layout_alignTop="@+id/read_reviews_container"
+            android:layout_alignBottom="@+id/read_reviews_container"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <RatingBar
+                android:id="@+id/rating_bar"
+                style="@style/WPRatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="true"
+                android:numStars="5"
+                tools:rating="3" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/read_reviews_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toStartOf="@+id/plugin_ratings_container"
+            android:layout_toEndOf="@+id/rating_bar_container"
             android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal"
-            android:layout_alignParentEnd="true">
+            android:gravity="end"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -39,16 +47,17 @@
                 android:padding="@dimen/margin_medium"
                 android:text="@string/plugin_read_reviews"
                 android:textAllCaps="true"
-                android:textColor="@color/primary_40"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="@dimen/text_sz_medium" />
 
             <ImageView
                 style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
                 android:layout_gravity="center_vertical"
-                android:tint="@color/primary_40"
                 android:contentDescription="@string/open_external_link_desc"
-                android:src="@drawable/ic_external_white_24dp" />
+                android:src="@drawable/ic_external_white_24dp"
+                app:tint="?attr/colorPrimary" />
         </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/plugin_ratings_container"
@@ -63,14 +72,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:text="@string/plugin_five_stars"
-                    android:textColor="?attr/wpColorTextSubtle"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:layout_marginEnd="@dimen/margin_large"/>
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textSize="@dimen/text_sz_medium" />
 
                 <ProgressBar
                     android:id="@+id/progress5"
@@ -80,8 +89,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="75"
-                    android:progressTint="@color/primary_40"
-                    tools:ignore="UnusedAttribute"/>
+                    tools:ignore="UnusedAttribute" />
 
             </LinearLayout>
 
@@ -91,14 +99,14 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:text="@string/plugin_four_stars"
-                    android:textColor="?attr/wpColorTextSubtle"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:layout_marginEnd="@dimen/margin_large"/>
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textSize="@dimen/text_sz_medium" />
 
                 <ProgressBar
                     android:id="@+id/progress4"
@@ -107,8 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:progress="25"
-                    android:progressTint="@color/primary_40" />
+                    android:progress="25" />
 
             </LinearLayout>
 
@@ -118,14 +125,14 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:text="@string/plugin_three_stars"
-                    android:textColor="?attr/wpColorTextSubtle"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:layout_marginEnd="@dimen/margin_large"/>
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textSize="@dimen/text_sz_medium" />
 
                 <ProgressBar
                     android:id="@+id/progress3"
@@ -134,8 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:progress="10"
-                    android:progressTint="@color/primary_40" />
+                    android:progress="10" />
 
             </LinearLayout>
 
@@ -145,14 +151,14 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:text="@string/plugin_two_stars"
-                    android:textColor="?attr/wpColorTextSubtle"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:layout_marginEnd="@dimen/margin_large"/>
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textSize="@dimen/text_sz_medium" />
 
                 <ProgressBar
                     android:id="@+id/progress2"
@@ -161,8 +167,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:progress="10"
-                    android:progressTint="@color/primary_40" />
+                    android:progress="10" />
 
             </LinearLayout>
 
@@ -172,14 +177,14 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:text="@string/plugin_one_stars"
-                    android:textColor="?attr/wpColorTextSubtle"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:layout_marginEnd="@dimen/margin_large"/>
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textSize="@dimen/text_sz_medium" />
 
                 <ProgressBar
                     android:id="@+id/progress1"
@@ -188,8 +193,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:progress="0"
-                    android:progressTint="@color/primary_40" />
+                    android:progress="0" />
 
             </LinearLayout>
         </LinearLayout>
@@ -200,25 +204,26 @@
             android:layout_below="@+id/plugin_ratings_container"
             android:layout_marginTop="@dimen/margin_large">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_num_ratings"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textColor="?attr/wpColorTextSubtle"
+                android:layout_toStartOf="@+id/text_num_downloads"
+                android:textAppearance="?attr/textAppearanceCaption"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_num_ratings" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_num_downloads"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_gravity="center_vertical"
-                android:textColor="?attr/wpColorTextSubtle"
+                android:textAppearance="?attr/textAppearanceCaption"
                 android:textSize="@dimen/text_sz_medium"
-                tools:text="text_num_downloads"
-                android:layout_alignParentEnd="true"/>
+                tools:text="text_num_downloads" />
 
         </RelativeLayout>
     </RelativeLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

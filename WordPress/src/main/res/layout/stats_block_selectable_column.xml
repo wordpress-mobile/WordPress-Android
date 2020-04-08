@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/key"
         style="@style/StatsBlockColumnSmallHeader"
         android:layout_width="match_parent"
@@ -15,32 +14,32 @@
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:lines="1"
-        android:paddingEnd="4dp"
         android:paddingStart="4dp"
         android:paddingTop="9dp"
+        android:paddingEnd="4dp"
         android:text="@string/stats_views"
-        android:textAllCaps="true"/>
+        android:textAllCaps="true" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/value"
         style="@style/StatsBlockColumnSmallValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:paddingBottom="7dp"
-        android:paddingEnd="4dp"
         android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="7dp"
         app:autoSizeMaxTextSize="@dimen/text_sz_larger"
         app:autoSizeMinTextSize="@dimen/text_sz_small"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
-        tools:text="0"/>
+        tools:text="0" />
 
     <View
         android:id="@+id/selector"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/primary"
-        android:visibility="gone"/>
+        android:background="?attr/colorPrimary"
+        android:visibility="gone" />
 
 </LinearLayout>

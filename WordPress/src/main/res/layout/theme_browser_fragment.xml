@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- used to host quick start focus view - must be RelativeLayout or FrameLayout -->
+<?xml version="1.0" encoding="utf-8"?><!-- used to host quick start focus view - must be RelativeLayout or FrameLayout -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/root_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
@@ -14,8 +13,7 @@
         android:layout_marginTop="@dimen/margin_theme_browser_top"
         android:visibility="gone"
         app:aevTitle="@string/themes_empty_list"
-        tools:visibility="visible">
-    </org.wordpress.android.ui.ActionableEmptyView>
+        tools:visibility="visible" />
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
@@ -31,8 +29,7 @@
             android:horizontalSpacing="@dimen/margin_none"
             android:numColumns="auto_fit"
             android:scrollbarStyle="outsideOverlay"
-            android:stretchMode="columnWidth">
-        </org.wordpress.android.widgets.HeaderGridView>
+            android:stretchMode="columnWidth" />
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <RelativeLayout
@@ -50,7 +47,7 @@
             android:layout_centerHorizontal="true"
             android:adjustViewBounds="true"
             android:contentDescription="@string/theme_no_search_result_found"
-            android:src="@drawable/drake_empty_results_400dp"/>
+            android:src="@drawable/drake_empty_results_400dp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_empty"
@@ -60,7 +57,7 @@
             android:layout_below="@id/drake_empty_results"
             android:layout_centerHorizontal="true"
             android:text="@string/themes_fetching"
-            app:fixWidowWords="true"/>
+            app:fixWidowWords="true" />
     </RelativeLayout>
 
 </RelativeLayout>

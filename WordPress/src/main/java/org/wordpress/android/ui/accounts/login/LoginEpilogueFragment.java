@@ -24,7 +24,6 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ViewUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 
@@ -170,16 +169,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
                                 if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
                                     mBottomShadow.setVisibility(View.VISIBLE);
-                                    mBottomButtonsContainer.setBackgroundResource(android.R.color.white);
-                                    ViewUtils.setButtonBackgroundColor(getContext(), mConnectMore,
-                                                                       R.style.WordPress_Button_Grey,
-                                                                       R.attr.colorButtonNormal);
                                 } else {
                                     mBottomShadow.setVisibility(View.GONE);
-                                    mBottomButtonsContainer.setBackground(null);
-                                    ViewUtils.setButtonBackgroundColor(getContext(), mConnectMore,
-                                                                       R.style.WordPress_Button,
-                                                                       R.attr.colorButtonNormal);
                                 }
                             }
                         });

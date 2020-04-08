@@ -1,80 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:gravity="center_vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:animateLayoutChanges="true"
+    android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/input"
-        style="@style/Theme.AppCompat.Light"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toStartOf="@+id/clear_all_layout"
-        android:background="@android:color/white"
-        android:drawablePadding="@dimen/site_creation_verticals_search_input_text_padding"
-        android:imeOptions="actionSearch"
-        android:importantForAutofill="noExcludeDescendants"
-        android:inputType="text"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_large"
-        android:singleLine="true"
-        android:textAlignment="viewStart"
-        android:textColor="?attr/wpColorText"
-        android:textColorHint="@color/neutral_30"
-        tools:drawableStart="@drawable/ic_search_white_24dp"
-        tools:drawableTint="@color/neutral_30"
-        tools:hint="Type a keyword for more ideas"
-        tools:ignore="RtlSymmetry"
-        tools:targetApi="o">
-    </EditText>
+        app:hintEnabled="false"
+        app:startIconDrawable="@drawable/ic_search_white_24dp"
+        app:startIconTint="?attr/wpColorOnSurfaceMedium">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:imeOptions="actionSearch"
+            android:importantForAutofill="noExcludeDescendants"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            tools:hint="Type a keyword for more ideas"
+            tools:ignore="RtlSymmetry"
+            tools:targetApi="o" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <FrameLayout
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:background="@android:color/white"
+        android:background="?attr/colorSurface"
         tools:visibility="invisible">
 
         <ProgressBar
             android:layout_width="@dimen/site_creation_verticals_search_progress_size"
             android:layout_height="@dimen/site_creation_verticals_search_progress_size"
-            android:layout_marginStart="@dimen/margin_extra_large"/>
+            android:layout_marginStart="@dimen/margin_extra_large" />
     </FrameLayout>
 
     <LinearLayout
         android:id="@+id/clear_all_layout"
         android:layout_width="@dimen/site_creation_verticals_clear_search_clickable_area_width"
         android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/input"
+        android:layout_alignTop="@+id/input_container"
+        android:layout_alignBottom="@+id/input_container"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/input"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center">
 
-        <View
-            android:id="@+id/clear_all_btn"
+        <ImageView
             android:layout_width="@dimen/site_creation_verticals_clear_search_icon_size"
             android:layout_height="@dimen/site_creation_verticals_clear_search_icon_size"
-            android:background="@drawable/ic_close_white_24dp"
+            android:src="@drawable/ic_close_white_24dp"
             android:contentDescription="@string/new_site_creation_clear_all_content_description"
-            tools:backgroundTint="@color/neutral_30"/>
+            app:tint="?attr/wpColorOnSurfaceMedium" />
 
     </LinearLayout>
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignBottom="@+id/input"
-        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_height="@dimen/divider_size"
+        android:layout_alignBottom="@+id/input_container"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:background="@color/neutral_0"
-        android:visibility="gone"/>
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:background="?android:attr/listDivider"
+        android:visibility="gone" />
 </RelativeLayout>

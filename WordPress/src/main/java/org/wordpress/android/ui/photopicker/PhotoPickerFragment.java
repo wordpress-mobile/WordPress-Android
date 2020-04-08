@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -37,7 +38,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -61,7 +61,8 @@ public class PhotoPickerFragment extends Fragment {
         ANDROID_CAPTURE_VIDEO(true),
         ANDROID_CHOOSE_PHOTO_OR_VIDEO(true),
         WP_MEDIA(false),
-        STOCK_MEDIA(true);
+        STOCK_MEDIA(true),
+        GIF(true);
 
         private boolean mRequiresUploadPermission;
 
@@ -258,6 +259,7 @@ public class PhotoPickerFragment extends Fragment {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA);
                 break;
             case STOCK_MEDIA:
+            case GIF:
                 break;
         }
 
@@ -298,6 +300,14 @@ public class PhotoPickerFragment extends Fragment {
                     return true;
                 }
             });
+
+            if (BuildConfig.TENOR_AVAILABLE) {
+                MenuItem itemGif = popup.getMenu().add(R.string.photo_picker_gif);
+                itemGif.setOnMenuItemClickListener(item -> {
+                    doIconClicked(PhotoPickerIcon.GIF);
+                    return true;
+                });
+            }
         }
 
         popup.show();
@@ -458,7 +468,6 @@ public class PhotoPickerFragment extends Fragment {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
-            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.neutral_60);
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.photo_picker_action_mode, menu);
             hideBottomBar();
@@ -484,7 +493,6 @@ public class PhotoPickerFragment extends Fragment {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.status_bar);
             mActionMode = null;
             showBottomBar();
             getAdapter().clearSelection();

@@ -15,7 +15,8 @@ repositories {
     google()
     jcenter()
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
-    maven { url "https://giphy.bintray.com/giphy-sdk" }
+    maven { url "https://www.jitpack.io" }
+    maven { url "http://dl.bintray.com/terl/lazysodium-maven" }
 }
 
 apply plugin: 'com.android.application'
@@ -54,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-214"
+            versionName "alpha-215"
         }
-        versionCode 844
+        versionCode 847
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -66,6 +67,7 @@ android {
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
+        buildConfigField "boolean", "TENOR_AVAILABLE", "true"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -82,10 +84,11 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "14.5-rc-2"
+                versionName "14.6-rc-1"
             }
-            versionCode 843
+            versionCode 846
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
+            buildConfigField "boolean", "TENOR_AVAILABLE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
@@ -167,10 +170,10 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'androidx.media:media:1.0.1'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.preference:preference:1.0.0'
     implementation "androidx.work:work-runtime:$androidx_work_version"
@@ -223,6 +226,7 @@ dependencies {
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
     testImplementation "org.assertj:assertj-core:$assertJVersion"
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1'
+    testImplementation 'androidx.test:core:1.2.0'
 
     androidTestImplementation 'org.mockito:mockito-android:2.27.0'
     androidTestImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
@@ -288,21 +292,27 @@ dependencies {
         exclude group: 'com.google.dagger'
     }
 
+    implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'
+
     lintChecks 'org.wordpress:lint:1.0.1'
 
     // Sentry
     implementation 'io.sentry:sentry-android:1.7.16'
     implementation 'org.slf4j:slf4j-nop:1.7.25'
 
+    // Encrypted Logging
+    implementation "com.goterl.lazycode:lazysodium-android:4.1.0@aar"
+    implementation "net.java.dev.jna:jna:4.5.1@aar"
+
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.5.1'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 
-    implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:2.0.1'
     implementation "org.jsoup:jsoup:1.10.3"
 }
 
