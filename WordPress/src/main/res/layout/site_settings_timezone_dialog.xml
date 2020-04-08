@@ -18,20 +18,20 @@
         android:orientation="vertical"
         android:padding="@dimen/margin_extra_large">
 
-        <TextView
-            style="@style/Base.TextAppearance.AppCompat.Title"
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="@string/site_settings_timezone_title" />
+            android:text="@string/site_settings_timezone_title"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
 
-        <TextView
-            style="@style/Base.TextAppearance.AppCompat.Small"
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"
             android:gravity="center_vertical"
-            android:text="@string/site_settings_timezone_subtitle" />
+            android:text="@string/site_settings_timezone_subtitle"
+            android:textAppearance="?attr/textAppearanceCaption" />
 
         <ListView
             android:id="@+id/list"
@@ -49,7 +49,6 @@
         android:text="@string/empty_list_default"
         android:visibility="gone"
         tools:visibility="visible" />
-
 
     <ProgressBar
         android:id="@+id/progress_view"

@@ -1,35 +1,50 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/editor_activity"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/editor_activity"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar_container"
+        layout="@layout/toolbar_main" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.wordpress.android.widgets.WPViewPager
+                android:id="@+id/pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_above="@+id/photo_fragment_container"
+                android:importantForAccessibility="no"
+                tools:context=".ui.posts.EditPostActivity" />
 
-    <org.wordpress.android.widgets.WPViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:importantForAccessibility="no"
-        android:layout_above="@+id/photo_fragment_container"
-        tools:context=".ui.posts.EditPostActivity"/>
+            <View
+                android:id="@+id/view_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/photo_fragment_container"
+                android:layout_marginBottom="@dimen/format_bar_height"
+                android:background="@color/black_translucent_40"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone" />
 
-    <View
-        android:id="@+id/view_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/photo_fragment_container"
-        android:layout_marginBottom="@dimen/format_bar_height"
-        android:background="@color/black_translucent_40"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone"/>
+            <FrameLayout
+                android:id="@+id/photo_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"
+                tools:context=".ui.photopicker.PhotoPickerFragment"
+                tools:visibility="visible" />
 
-    <FrameLayout
-        android:id="@+id/photo_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        tools:context=".ui.photopicker.PhotoPickerFragment"
-        tools:visibility="visible"/>
-
-</RelativeLayout>
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

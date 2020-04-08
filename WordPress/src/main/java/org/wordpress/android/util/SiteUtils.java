@@ -268,6 +268,11 @@ public class SiteUtils {
                 if (index > 0) {
                     jetpackVersion = jetpackVersion.substring(0, index);
                 }
+                // Jetpack version field is sometimes "false" instead of a number on self-hosted sites that are no
+                // longer active.
+                if (jetpackVersion.equals("false")) {
+                    return false;
+                }
                 Version siteJetpackVersion = new Version(jetpackVersion);
                 Version minVersion = new Version(limitVersion);
                 return siteJetpackVersion.compareTo(minVersion) >= 0;
@@ -275,7 +280,7 @@ public class SiteUtils {
                 String errorStr = "Invalid site jetpack version " + jetpackVersion + ", expected " + limitVersion;
                 AppLog.e(AppLog.T.UTILS, errorStr, e);
                 CrashLoggingUtils.logException(e, AppLog.T.UTILS, errorStr);
-                return true;
+                return false;
             }
         }
         return false;

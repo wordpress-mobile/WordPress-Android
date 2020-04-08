@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.lifecycle.Observer
@@ -20,6 +19,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.util.AniUtils
@@ -39,7 +39,7 @@ import javax.inject.Inject
  *
  * Important: Giphy is currently disabled everywhere. We are planning to replace it with a different service provider.
  */
-class GiphyPickerActivity : AppCompatActivity() {
+class GiphyPickerActivity : LocaleAwareActivity() {
     /**
      * Used for loading images in [GiphyMediaViewHolder]
      */

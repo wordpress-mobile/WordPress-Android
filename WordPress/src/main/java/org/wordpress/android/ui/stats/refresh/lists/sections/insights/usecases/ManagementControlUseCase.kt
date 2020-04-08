@@ -41,6 +41,7 @@ class ManagementControlUseCase
                         icon = R.drawable.ic_plus_white_24dp,
                         textResource = R.string.stats_management_add_new_stats_card,
                         navigationAction = Companion.create(this::onClick),
+                        showDivider = false,
                         contentDescription = resourceProvider.getString(R.string.stats_management_add_new_stats_card)
                 )
         )

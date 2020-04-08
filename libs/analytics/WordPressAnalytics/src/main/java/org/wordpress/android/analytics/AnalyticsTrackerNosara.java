@@ -1690,6 +1690,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_action_tapped";
             case AUTO_UPLOAD_POST_INVOKED:
                 return "auto_upload_post_invoked";
+            case AUTO_UPLOAD_PAGE_INVOKED:
+                return "auto_upload_page_invoked";
             case UNPUBLISHED_REVISION_DIALOG_SHOWN:
                 return "unpublished_revision_dialog_shown";
             case UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED:
@@ -1713,6 +1715,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "featured_image_upload_retry_clicked_post_settings";
             case FEATURED_IMAGE_REMOVE_CLICKED_POST_SETTINGS:
                 return "featured_image_remove_clicked_post_settings";
+            case MEDIA_EDITOR_SHOWN:
+                return "media_editor_shown";
+            case MEDIA_EDITOR_USED:
+                return "media_editor_used";
         }
         return null;
     }

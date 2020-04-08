@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-18 00:55:03+0000
+Translation-Revision-Date: 2020-04-02 00:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">撰写文章</string>
+    <string name="post_list_tab_trashed_posts">已放入回收站</string>
+    <string name="post_list_tab_scheduled_posts">预发布</string>
+    <string name="post_list_tab_published_posts">已发布</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook 连接无法找到任何页面。Publicize 无法连接到 Facebook 个人资料，只能连接到已发布的页面。</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">未连接</string>
+    <string name="my_site_select_domains_page_title">站点地址</string>
+    <string name="notifications_tab_title_likes">赞</string>
+    <string name="notifications_tab_title_follows">关注</string>
+    <string name="notifications_tab_title_comments">评论</string>
+    <string name="notifications_tab_title_unread_notifications">未读</string>
+    <string name="dlg_cancel_action_dont_trash">不要删除</string>
+    <string name="dlg_confirm_action_trash">回收站</string>
     <string name="stats_insights_management_activity">活动</string>
     <string name="stats_insights_management_posts_and_pages">文章和页面</string>
     <string name="stats_insights_management_general">常规</string>
@@ -335,8 +348,6 @@ Language: zh_CN
     <string name="editor_failed_to_insert_media_tap_to_retry">无法插入媒体。\n请轻点以重试。</string>
     <string name="editor_uploading_draft">正在上传您的草稿</string>
     <string name="post_uploading_draft">正在上传草稿</string>
-    <string name="post_list_drafts">草稿</string>
-    <string name="post_list_published">已发布</string>
     <string name="post_list_author_everyone">所有人</string>
     <string name="post_list_author_me">我</string>
     <string name="error_restoring_post">恢复文章时出错</string>
@@ -468,15 +479,7 @@ Language: zh_CN
     <string name="new_site_creation_empty_domain_list_message">没有与您的搜索内容相匹配的地址</string>
     <string name="site_creation_error_generic_subtitle">与服务器通信时出错，请重试</string>
     <string name="site_creation_error_generic_title">出现问题</string>
-    <string name="new_site_creation_verticals_custom_subtitle">自定义类别</string>
-    <string name="new_site_creation_button_skip">跳过</string>
-    <string name="new_site_creation_tag_line_description">标语是标题正下方显示的一行简短的文字。</string>
-    <string name="new_site_creation_tag_line_hint">标语</string>
-    <string name="new_site_creation_site_title_hint">站点标题</string>
-    <string name="new_site_creation_site_info_header_subtitle">详细说明您要创建的站点。</string>
-    <string name="new_site_creation_site_info_header_title">基本信息</string>
     <string name="site_creation_fetch_suggestions_error_unknown">出现问题</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">没有连接</string>
     <string name="site_creation_segments_subtitle">这帮助我们提出建议。但您永远不会被锁定 – 所有站点都在不断发展！</string>
     <string name="site_creation_segments_title">告诉我们您想创建何种站点</string>
     <string name="new_site_creation_preview_title">您的站点已创建！</string>
@@ -674,7 +677,6 @@ Language: zh_CN
     <string name="people_empty_list_filtered_email_followers">尚无电子邮件粉丝</string>
     <string name="people_empty_list_filtered_followers">尚无粉丝</string>
     <string name="people_empty_list_filtered_users">尚无用户</string>
-    <string name="connection_service_facebook_notice">截至 2018 年 8 月 1 日，Facebook 不再允许直接将文章共享到 Facebook 个人资料。与 Facebook 页面的连接保持不变。</string>
     <string name="reader_empty_posts_liked_description">您点赞的文章将在此处显示</string>
     <string name="reader_empty_posts_liked_title">尚无点赞内容</string>
     <string name="reader_empty_followed_blogs_button_followed">去关注</string>
@@ -1243,7 +1245,6 @@ Language: zh_CN
     <string name="post_settings_more_options">更多选项</string>
     <string name="post_settings_categories_and_tags">分类 &amp; 标签</string>
     <string name="post_settings_status">状态</string>
-    <string name="notifications_tab_title_unread">未读</string>
     <string name="notifications_tab_title_all">全部</string>
     <string name="top_level_category_name">顶级</string>
     <string name="category_parent">父级分类 (可选):</string>
@@ -1938,8 +1939,6 @@ Language: zh_CN
     <string name="saving_changes">正在保存更改</string>
     <string name="hint_comment_content">评论</string>
     <string name="trash">删除</string>
-    <string name="trash_no">不要删除</string>
-    <string name="trash_yes">删除</string>
     <string name="dlg_confirm_trash_comments">确定删除？</string>
     <string name="dlg_trashing_comments">正在删除</string>
     <string name="dlg_spamming_comments">正在标记为垃圾评论</string>

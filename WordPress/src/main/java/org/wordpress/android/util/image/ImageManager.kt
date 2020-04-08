@@ -17,18 +17,22 @@ import android.widget.ImageView.ScaleType.FIT_XY
 import android.widget.ImageView.ScaleType.MATRIX
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bumptech.glide.request.target.BaseTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
+import com.bumptech.glide.request.transition.Transition
 import com.bumptech.glide.signature.ObjectKey
 import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.util.AppLog
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -204,6 +208,31 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     }
 
     /**
+     * Loads a File from the Glide's disk cache for the provided imgUrl using asFile().
+     *
+     * We can use asFile() asynchronously on the ui thread or synchronously on a background thread.
+     * This function uses the asynchronous api which takes a Target argument to invoke asFile().
+     */
+    fun loadIntoFileWithResultListener(
+        imgUrl: String,
+        requestListener: RequestListener<File>
+    ) {
+        val context = WordPress.getContext()
+        if (!context.isAvailable()) return
+        GlideApp.with(context)
+            .asFile()
+            .load(imgUrl)
+            .attachRequestListener(requestListener)
+            .into(
+                // Used just to invoke asFile() and ignored thereafter.
+                object : CustomTarget<File>() {
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                    override fun onResourceReady(resource: File, transition: Transition<in File>?) {}
+                }
+            )
+    }
+
+    /**
      * Loads the Bitmap into the ImageView.
      */
     @JvmOverloads
@@ -239,7 +268,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
         val context = imageView.context
         if (!context.isAvailable()) return
         GlideApp.with(context)
-                .load(resourceId)
+                .load(ContextCompat.getDrawable(context, resourceId))
                 .applyScaleType(scaleType)
                 .into(imageView)
                 .clearOnDetach()

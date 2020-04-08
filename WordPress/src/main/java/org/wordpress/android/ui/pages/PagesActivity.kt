@@ -3,16 +3,16 @@ package org.wordpress.android.ui.pages
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 
 const val EXTRA_PAGE_REMOTE_ID_KEY = "extra_page_remote_id_key"
 const val EXTRA_PAGE_PARENT_ID_KEY = "extra_page_parent_id_key"
 
-class PagesActivity : AppCompatActivity(),
+class PagesActivity : LocaleAwareActivity(),
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,16 +53,20 @@ class PagesActivity : AppCompatActivity(),
     }
 
     override fun onPositiveClicked(instanceTag: String) {
-        passDeleteConfirmation(instanceTag.toLong())
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (fragment is PagesFragment) {
+            fragment.onPositiveClickedForBasicDialog(instanceTag)
+        } else {
+            throw IllegalStateException("PagesFragment is required to consume this event.")
+        }
     }
 
     override fun onNegativeClicked(instanceTag: String) {
-    }
-
-    private fun passDeleteConfirmation(remoteId: Long) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is PagesFragment) {
-            fragment.onPageDeleteConfirmed(remoteId)
+            fragment.onNegativeClickedForBasicDialog(instanceTag)
+        } else {
+            throw IllegalStateException("PagesFragment is required to consume this event.")
         }
     }
 }

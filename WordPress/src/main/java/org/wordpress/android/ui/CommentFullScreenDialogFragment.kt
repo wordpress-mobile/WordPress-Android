@@ -16,6 +16,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.CollapseFullScreenDialogContent
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.CollapseFullScreenDialogController
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
@@ -23,7 +24,6 @@ import org.wordpress.android.ui.suggestion.util.SuggestionUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
-import org.wordpress.android.fluxc.store.SiteStore
 
 class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogContent {
     @Inject lateinit var viewModel: CommentFullScreenDialogViewModel
@@ -114,7 +114,7 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
         dialogController = controller
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
     }

@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.posts;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +82,6 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
 
     public static InsertMediaDialog newInstance(@NonNull InsertMediaCallback callback, @NonNull SiteModel site) {
         InsertMediaDialog dialog = new InsertMediaDialog();
-        dialog.setStyle(AppCompatDialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog);
         dialog.setCallback(callback);
         Bundle args = new Bundle();
         args.putSerializable(WordPress.SITE, site);
@@ -108,9 +105,7 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().setTitle(R.string.media_insert_title);
 
-        Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
-        LayoutInflater localInflater = inflater.cloneInContext(themer);
-        View view = localInflater.inflate(R.layout.insert_media_dialog, container, false);
+        View view = inflater.inflate(R.layout.insert_media_dialog, container, false);
 
         mInsertRadioGroup = (RadioGroup) view.findViewById(R.id.radio_group_insert_type);
         mGalleryRadioGroup = (RadioGroup) view.findViewById(R.id.radio_group_gallery_type);

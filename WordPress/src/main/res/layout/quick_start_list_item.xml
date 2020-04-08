@@ -1,55 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    style="@style/QuickStartListCard" >
+    style="@style/QuickStartLayout">
 
-    <RelativeLayout
-        style="@style/QuickStartLayout" >
+    <View
+        android:id="@+id/popup_anchor"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_extra_large" />
 
-        <View
-            android:id="@+id/popup_anchor"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_height="1dp"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_width="1dp" >
-        </View>
+    <ImageView
+        android:id="@+id/icon"
+        style="@style/QuickStartIcon"
+        android:importantForAccessibility="no"
+        tools:src="@drawable/ic_plus_white_24dp" />
 
-        <ImageView
-            android:id="@+id/icon"
-            android:importantForAccessibility="no"
-            tools:src="@drawable/ic_plus_white_24dp"
-            style="@style/QuickStartIcon" >
-        </ImageView>
+    <TextView
+        android:id="@+id/title"
+        style="@style/QuickStartTitle"
+        android:layout_toEndOf="@+id/icon"
+        tools:text="@string/quick_start_list_create_site_title" />
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_toEndOf="@+id/icon"
-            tools:text="@string/quick_start_list_create_site_title"
-            style="@style/QuickStartTitle" >
-        </TextView>
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/subtitle"
+        style="@style/QuickStartSubtitle"
+        android:layout_below="@+id/title"
+        android:layout_toEndOf="@+id/icon"
+        app:fixWidowWords="true"
+        tools:text="@string/quick_start_list_create_site_subtitle" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/subtitle"
-            android:layout_below="@+id/title"
-            android:layout_toEndOf="@+id/icon"
-            app:fixWidowWords="true"
-            tools:text="@string/quick_start_list_create_site_subtitle"
-            style="@style/QuickStartSubtitle" >
-        </org.wordpress.android.widgets.WPTextView>
+    <View
+        android:id="@+id/divider"
+        style="@style/QuickStartDivider"
+        android:layout_below="@+id/subtitle"
+        android:layout_alignStart="@+id/title" />
 
-        <View
-            android:id="@+id/divider"
-            android:layout_alignStart="@+id/title"
-            android:layout_below="@+id/subtitle"
-            style="@style/QuickStartDivider" >
-        </View>
-
-    </RelativeLayout>
-
-</androidx.cardview.widget.CardView>
+</RelativeLayout>

@@ -62,7 +62,7 @@ class PostDayViewsUseCase
                 selectedDateProvider.onDateLoadingFailed(DETAIL)
                 State.Error(error.message ?: error.type.name)
             }
-            model != null && model.dayViews.isNotEmpty() -> {
+            model != null && model.hasData() -> {
                 selectedDateProvider.onDateLoadingSucceeded(DETAIL)
                 State.Data(model)
             }
@@ -77,7 +77,7 @@ class PostDayViewsUseCase
         val items = mutableListOf<BlockListItem>()
         val visibleBarCount = uiState.visibleBarCount ?: domainModel.dayViews.size
 
-        if (domainModel.dayViews.isNotEmpty() && visibleBarCount > 0) {
+        if (domainModel.hasData() && visibleBarCount > 0) {
             val periodFromProvider = selectedDateProvider.getSelectedDate(DETAIL)
             val availablePeriods = domainModel.dayViews.takeLast(visibleBarCount)
             val availableDates = availablePeriods.map { statsDateFormatter.parseStatsDate(DAYS, it.period) }
@@ -136,6 +136,10 @@ class PostDayViewsUseCase
 
     private fun onBarChartDrawn(visibleBarCount: Int) {
         updateUiState { it.copy(visibleBarCount = visibleBarCount) }
+    }
+
+    private fun PostDetailStatsModel?.hasData(): Boolean {
+        return this != null && this.dayViews.isNotEmpty() && this.dayViews.any { it.count > 0 }
     }
 
     data class UiState(val visibleBarCount: Int? = null)
