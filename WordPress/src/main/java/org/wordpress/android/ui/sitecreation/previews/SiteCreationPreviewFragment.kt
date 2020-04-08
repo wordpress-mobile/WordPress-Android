@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.sitecreation.previews
 
 import android.animation.Animator
-import android.animation.Animator.AnimatorListener
+import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
@@ -238,13 +238,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         val fadeIn = AniUtils.getFadeInAnim(loadingTextLayout, animationDuration)
 
         // update the text when the view isn't visible
-        fadeIn.addListener(object : AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {}
-
-            override fun onAnimationEnd(animation: Animator?) {}
-
-            override fun onAnimationCancel(animation: Animator?) {}
-
+        fadeIn.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationStart(animation: Animator) {
                 loadingTextView.text = newText
             }
