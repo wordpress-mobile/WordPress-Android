@@ -44,6 +44,7 @@ class PrepublishingBottomSheetFragment : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
 
+        @JvmStatic
         fun newInstance(
         ): PrepublishingBottomSheetFragment {
             val fragment = PrepublishingBottomSheetFragment()
