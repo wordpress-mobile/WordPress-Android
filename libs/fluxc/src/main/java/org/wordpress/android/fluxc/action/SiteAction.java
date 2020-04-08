@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayloa
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchAccessCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedAccessCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
@@ -88,7 +89,7 @@ public enum SiteAction implements IAction {
     COMPLETE_QUICK_START,
     @Action(payloadType = DesignatePrimaryDomainPayload.class)
     DESIGNATE_PRIMARY_DOMAIN,
-    @Action(payloadType = SiteModel.class)
+    @Action(payloadType = FetchAccessCookiePayload.class)
     FETCH_ACCESS_COOKIE,
 
     // Remote responses

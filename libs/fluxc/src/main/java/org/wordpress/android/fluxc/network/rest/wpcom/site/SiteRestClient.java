@@ -165,10 +165,9 @@ public class SiteRestClient extends BaseWPComRestClient {
                             AppLog.e(T.API, "Failed to fetch access cookie.");
 
                             AccessCookieError error = new AccessCookieError(
-                                    AccessCookieErrorType.GENERIC_ERROR);
+                                    AccessCookieErrorType.GENERIC_ERROR, "Empty response");
                             FetchedAccessCookiePayload payload = new FetchedAccessCookiePayload(site, error);
-                            mDispatcher.dispatch(SiteActionBuilder
-                                    .newFetchedAccessCookieAction(payload));
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedAccessCookieAction(payload));
                         }
                     }
                 },
@@ -176,7 +175,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AccessCookieError cookieError = new AccessCookieError(
-                                AccessCookieErrorType.GENERIC_ERROR);
+                                AccessCookieErrorType.GENERIC_ERROR, error.message);
                         FetchedAccessCookiePayload payload = new FetchedAccessCookiePayload(site, cookieError);
                         mDispatcher.dispatch(SiteActionBuilder
                                 .newFetchedAccessCookieAction(payload));
