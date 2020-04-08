@@ -33,7 +33,7 @@ class PrivateAtomicCookie(private val context: Context) {
     }
 
     fun isExpired(): Boolean {
-        if(!exists()){
+        if (!exists()) {
             return true
         }
         val cookieExpiration: Long = cookie!!.expires.toLong()

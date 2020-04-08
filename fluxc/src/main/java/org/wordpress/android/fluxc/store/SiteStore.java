@@ -194,6 +194,14 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class FetchAccessCookiePayload {
+        public long siteId;
+
+        public FetchAccessCookiePayload(long siteId) {
+            this.siteId = siteId;
+        }
+    }
+
     public static class SuggestDomainsPayload extends Payload<BaseNetworkError> {
         @NonNull public String query;
         @Nullable public Boolean onlyWordpressCom;
@@ -786,13 +794,9 @@ public class SiteStore extends Store {
         @NonNull public AccessCookieErrorType type;
         @Nullable public String message;
 
-        public AccessCookieError(@Nullable String type, @Nullable String message) {
-            this.type = AccessCookieErrorType.GENERIC_ERROR;
-            this.message = message;
-        }
-
-        public AccessCookieError(@NonNull AccessCookieErrorType type) {
+        public AccessCookieError(@NonNull AccessCookieErrorType type, @NonNull String message) {
             this.type = type;
+            this.message = message;
         }
     }
 
@@ -945,7 +949,9 @@ public class SiteStore extends Store {
     }
 
     public enum AccessCookieErrorType {
-        GENERIC_ERROR
+        GENERIC_ERROR,
+        SITE_MISSING_FROM_STORE,
+        NON_PRIVATE_AT_SITE
     }
 
     public enum UserRolesErrorType {
@@ -1561,7 +1567,7 @@ public class SiteStore extends Store {
                 handleDesignatedPrimaryDomain((DesignatedPrimaryDomainPayload) action.getPayload());
                 break;
             case FETCH_ACCESS_COOKIE:
-                fetchAccessCookie((SiteModel) action.getPayload());
+                fetchAccessCookie((FetchAccessCookiePayload) action.getPayload());
                 break;
             case FETCHED_ACCESS_COOKIE:
                 handleFetchAccessCookie((FetchedAccessCookiePayload) action.getPayload());
@@ -1945,18 +1951,29 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void fetchAccessCookie(SiteModel siteModel) {
-        if (!siteModel.isWPComAtomic()) {
-            AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.GENERIC_ERROR);
-            handleFetchAccessCookie(new FetchedAccessCookiePayload(siteModel, cookieError));
-        }
+    private void fetchAccessCookie(FetchAccessCookiePayload payload) {
+        SiteModel site = getSiteBySiteId(payload.siteId);
 
-        if (mPrivateAtomicCookie.exists() && !mPrivateAtomicCookie.isExpired()) {
-            emitChange(new OnAccessCookieFetched(siteModel, true, null));
+        if (site == null) {
+            AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.SITE_MISSING_FROM_STORE,
+                    "Requested site is missing from the store.");
+            emitChange(new OnAccessCookieFetched(site, false, cookieError));
             return;
         }
 
-        mSiteRestClient.fetchAccessCookie(siteModel);
+        if (!site.isWPComAtomic()) {
+            AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.NON_PRIVATE_AT_SITE,
+                    "Cookie can only be requested for private atomic site.");
+            emitChange(new OnAccessCookieFetched(site, false, cookieError));
+            return;
+        }
+
+        if (mPrivateAtomicCookie.exists() && !mPrivateAtomicCookie.isExpired()) {
+            emitChange(new OnAccessCookieFetched(site, true, null));
+            return;
+        }
+
+        mSiteRestClient.fetchAccessCookie(site);
     }
 
     private void handleFetchAccessCookie(FetchedAccessCookiePayload payload) {
