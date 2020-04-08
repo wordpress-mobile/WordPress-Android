@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +40,19 @@ class PrepublishingBottomSheetFragment : BottomSheetDialogFragment() {
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingViewModel::class.java)
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        removeContentFragmentBeforeDismissal()
+    }
+
+    private fun removeContentFragmentBeforeDismissal() {
+        activity?.supportFragmentManager?.let { fragmentManager ->
+            fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.also { fragment ->
+                fragmentManager.beginTransaction().remove(fragment).commit()
+            }
+        }
     }
 
     companion object {
