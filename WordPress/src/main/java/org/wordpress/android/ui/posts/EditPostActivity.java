@@ -1245,7 +1245,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 uploadPost(false);
                 return true;
             case PUBLISH_NOW:
-                showPublishConfirmationDialogAndPublishPost();
+                showPrepublishingNudgeBottomSheetBeforePostUpload();
                 return true;
             case NONE:
                 throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
@@ -1370,7 +1370,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 showUpdateConfirmationDialogAndUploadPost();
                 return;
             case PUBLISH_NOW:
-                showPublishConfirmationDialogAndPublishPost();
+                showPrepublishingNudgeBottomSheetBeforePostUpload();
                 return;
             // In other cases, we'll upload the post without changing its status
             case SCHEDULE:
@@ -1793,6 +1793,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         i.putExtra(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
         i.putExtra(EXTRA_IS_NEW_POST, mIsNewPost);
         setResult(RESULT_OK, i);
+    }
+
+    private void showPrepublishingNudgeBottomSheetBeforePostUpload() {
+        PrepublishingBottomSheetFragment prepublishingFragment = PrepublishingBottomSheetFragment.newInstance();
+        prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
     }
 
     private void uploadPost(final boolean publishPost) {
