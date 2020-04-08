@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.net.CookieManager;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -20,7 +21,9 @@ import javax.net.ssl.TrustManager;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.Multibinds;
+import okhttp3.CookieJar;
 import okhttp3.Interceptor;
+import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 
 @Module
@@ -29,12 +32,15 @@ public abstract class DebugOkHttpClientModule {
     @Multibinds abstract @Named("interceptors") Set<Interceptor> interceptorSet();
     @Multibinds abstract @Named("network-interceptors") Set<Interceptor> networkInterceptorSet();
 
+    private static CookieJar mCookieJar = new JavaNetCookieJar(new CookieManager());
+
     @Provides
     @Named("regular")
     public static OkHttpClient.Builder provideOkHttpClientBuilder(
             @Named("interceptors") Set<Interceptor> interceptors,
             @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.cookieJar(mCookieJar);
         for (Interceptor interceptor : interceptors) {
             builder.addInterceptor(interceptor);
         }
@@ -51,6 +57,7 @@ public abstract class DebugOkHttpClientModule {
             @Named("interceptors") Set<Interceptor> interceptors,
             @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.cookieJar(mCookieJar);
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{memorizingTrustManager}, new SecureRandom());
