@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.net.CookieManager;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -18,20 +19,27 @@ import javax.net.ssl.TrustManager;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.CookieJar;
+import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 
 @Module
 public class ReleaseOkHttpClientModule {
+    private static CookieJar mCookieJar = new JavaNetCookieJar(new CookieManager());
+
     @Provides
     @Named("regular")
     public OkHttpClient.Builder provideOkHttpClientBuilder() {
-        return new OkHttpClient.Builder();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.cookieJar(mCookieJar);
+        return builder;
     }
 
     @Provides
     @Named("custom-ssl")
     public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(MemorizingTrustManager memorizingTrustManager) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.cookieJar(mCookieJar);
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{memorizingTrustManager}, new SecureRandom());
