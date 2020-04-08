@@ -679,6 +679,14 @@
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
     <string name="site_settings_optimize_video_summary">Enable to resize and compress videos</string>
 
+    <string name="weekday_sunday">Sunday</string>
+    <string name="weekday_monday">Monday</string>
+    <string name="weekday_tuesday">Tuesday</string>
+    <string name="weekday_wednesday">Wednesday</string>
+    <string name="weekday_thursday">Thursday</string>
+    <string name="weekday_friday">Friday</string>
+    <string name="weekday_saturday">Saturday</string>
+
     <string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
     <string name="detail_approve_auto_if_previously_approved">Automatically approve if the user has a previously approved comment</string>
     <string name="detail_approve_auto">Automatically approve everyone\'s comments.</string>
