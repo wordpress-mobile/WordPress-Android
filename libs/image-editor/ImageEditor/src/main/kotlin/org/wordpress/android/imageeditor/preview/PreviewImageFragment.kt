@@ -55,8 +55,8 @@ class PreviewImageFragment : Fragment() {
 
     private fun initializeViewPager() {
         val previewImageAdapter = PreviewImageAdapter(
-            loadIntoImageViewWithResultListener = { imageData, imageView ->
-                loadIntoImageViewWithResultListener(imageData, imageView)
+            loadIntoImageViewWithResultListener = { imageData, imageView, position ->
+                loadIntoImageViewWithResultListener(imageData, imageView, position)
             }
         )
         viewPager.adapter = previewImageAdapter
@@ -94,14 +94,6 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun setupObservers() {
-//        viewModel.uiState.observe(this, Observer { uiState ->
-//            if (uiState is ImageDataStartLoadingUiState) {
-//                loadIntoImageView(uiState.imageData)
-//            }
-//            UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
-//            UiHelpers.updateVisibility(errorLayout, uiState.retryLayoutVisible)
-//        })
-
         viewModel.uiState.observe(this, Observer { state ->
             (viewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsUiState.items)
         })
@@ -121,7 +113,7 @@ class PreviewImageFragment : Fragment() {
         ImageEditor.instance.loadIntoImageView(url, imageView, CENTER_CROP)
     }
 
-    private fun loadIntoImageViewWithResultListener(imageData: ImageData, imageView: ImageView) {
+    private fun loadIntoImageViewWithResultListener(imageData: ImageData, imageView: ImageView, position: Int) {
         ImageEditor.instance.loadIntoImageViewWithResultListener(
             imageData.highResImageUrl,
             imageView,
@@ -129,11 +121,11 @@ class PreviewImageFragment : Fragment() {
             imageData.lowResImageUrl,
             object : RequestListener<Drawable> {
                 override fun onResourceReady(resource: Drawable, url: String) {
-                    viewModel.onLoadIntoImageViewSuccess(url, imageData)
+                    viewModel.onLoadIntoImageViewSuccess(url, position)
                 }
 
                 override fun onLoadFailed(e: Exception?, url: String) {
-                    viewModel.onLoadIntoImageViewFailed(url)
+                    viewModel.onLoadIntoImageViewFailed(url, position)
                 }
             }
         )
