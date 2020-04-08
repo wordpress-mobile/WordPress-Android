@@ -77,7 +77,16 @@ public class SitePickerActivity extends AppCompatActivity
         SearchView.OnQueryTextListener {
     public static final String KEY_LOCAL_ID = "local_id";
     public static final String KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched";
-    public static final String KEY_ONLY_SEARCH_MODE = "only_search";
+
+    public static final String SITE_PICKER_MODE = "site_picker_mode";
+
+    /**
+     * Represents the available modes to start SitePicker
+     */
+    public enum SitePickerMode {
+        NORMAL,
+        REBLOG
+    }
 
     private static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
     private static final String KEY_LAST_SEARCH = "last_search";
@@ -93,7 +102,7 @@ public class SitePickerActivity extends AppCompatActivity
     private MenuItem mMenuSearch;
     private SearchView mSearchView;
     private int mCurrentLocalId;
-    private boolean mSearchOnlyMode;
+    private SitePickerMode mSitePickerMode;
     private Debouncer mDebouncer = new Debouncer();
 
     @Inject AccountStore mAccountStore;
@@ -135,7 +144,7 @@ public class SitePickerActivity extends AppCompatActivity
         outState.putBoolean(KEY_IS_IN_SEARCH_MODE, getAdapter().getIsInSearchMode());
         outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
         outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
-        outState.putBoolean(KEY_ONLY_SEARCH_MODE, mSearchOnlyMode);
+        outState.putSerializable(SITE_PICKER_MODE, mSitePickerMode);
         super.onSaveInstanceState(outState);
     }
 
@@ -162,7 +171,7 @@ public class SitePickerActivity extends AppCompatActivity
             return;
         }
 
-        if (getAdapter().getIsInSearchMode() || mSearchOnlyMode) {
+        if (getAdapter().getIsInSearchMode() || mSitePickerMode == SitePickerMode.REBLOG) {
             mMenuEdit.setVisible(false);
             mMenuAdd.setVisible(false);
         } else {
@@ -317,10 +326,10 @@ public class SitePickerActivity extends AppCompatActivity
             mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
             isInSearchMode = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
             lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
-            mSearchOnlyMode = savedInstanceState.getBoolean(KEY_ONLY_SEARCH_MODE);
+            mSitePickerMode = (SitePickerMode) savedInstanceState.getSerializable(SITE_PICKER_MODE);
         } else if (getIntent() != null) {
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
-            mSearchOnlyMode = getIntent().getBooleanExtra(KEY_ONLY_SEARCH_MODE, false);
+            mSitePickerMode = (SitePickerMode) getIntent().getSerializableExtra(SITE_PICKER_MODE);
         }
 
         setNewAdapter(lastSearch, isInSearchMode);
@@ -521,7 +530,7 @@ public class SitePickerActivity extends AppCompatActivity
 
     @Override
     public boolean onSiteLongClick(final SiteRecord siteRecord) {
-        if (mSearchOnlyMode) return false;
+        if (mSitePickerMode == SitePickerMode.REBLOG) return false;
         final SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.getLocalId());
         if (site == null) {
             return false;

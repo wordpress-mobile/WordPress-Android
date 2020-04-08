@@ -91,6 +91,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.main.SitePickerActivity.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -2909,7 +2910,7 @@ public class ReaderPostListFragment extends Fragment
                     ReaderActivityLauncher.showNoSiteToReblog(getActivity());
                 } else if (state instanceof SitePicker) {
                     SitePicker spState = (SitePicker) state;
-                    ActivityLauncher.showSitePickerForResult(this, spState.getSite(), true);
+                    ActivityLauncher.showSitePickerForResult(this, spState.getSite(), SitePickerMode.REBLOG);
                 } else if (state instanceof PostEditor) {
                     PostEditor peState = (PostEditor) state;
                     ActivityLauncher.openEditorForReblog(getActivity(), peState.getSite(), peState.getPost());
