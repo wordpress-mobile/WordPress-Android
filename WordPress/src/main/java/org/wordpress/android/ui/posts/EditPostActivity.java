@@ -3,8 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
