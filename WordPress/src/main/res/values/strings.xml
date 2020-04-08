@@ -827,7 +827,7 @@
     <string name="app_theme_entry_value_dark" translatable="false">dark</string>
     <string name="app_theme_entry_value_default" translatable="false">default</string>
     <string name="app_theme_entry_value_default_key" translatable="false">@string/app_theme_entry_value_light</string>
-    <string-array name="app_theme_entries" tools:ignore="InconsistentArrays">
+    <string-array name="app_theme_entries" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/app_theme_light</item>
         <item>@string/app_theme_dark</item>
     </string-array>
@@ -1486,7 +1486,7 @@
     <!-- Remote Post&Page has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
     <string name="local_post_autosave_revision_available">You\'ve made unsaved changes to this post</string>
-    <string name="local_page_is_conflicted">@string/local_post_is_conflicted</string>
+    <string name="local_page_is_conflicted" translatable="false">@string/local_post_is_conflicted</string>
     <string name="local_page_autosave_revision_available">You\'ve made unsaved changes to this page</string>
 
     <!-- Post Remote Preview -->
