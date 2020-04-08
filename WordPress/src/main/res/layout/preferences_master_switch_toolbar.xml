@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
-    <androidx.appcompat.widget.Toolbar
+
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar_with_switch"
-        android:focusableInTouchMode="true"
-        android:layout_height="@dimen/toolbar_height"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        style="@style/Toolbar.Secondary">
-    </androidx.appcompat.widget.Toolbar>
+        android:layout_height="@dimen/toolbar_height"
+        android:focusableInTouchMode="true"
+        android:visibility="gone" />
 </merge>

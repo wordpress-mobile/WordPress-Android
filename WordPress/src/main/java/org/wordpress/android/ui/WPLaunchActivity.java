@@ -1,29 +1,20 @@
 package org.wordpress.android.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 
-public class WPLaunchActivity extends AppCompatActivity {
+public class WPLaunchActivity extends LocaleAwareActivity {
     /*
      * this the main (default) activity, which does nothing more than launch the
      * previously active activity on startup - note that it's defined in the
      * manifest to have no UI
      */
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

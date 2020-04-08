@@ -1,5 +1,6 @@
 package org.wordpress.android.util
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -44,5 +45,73 @@ class SiteUtilsTest {
 
         site.url = "https://***.wordpress.com"
         assertFalse(SiteUtils.hasCustomDomain(site))
+    }
+
+    @Test
+    fun `checkMinimalJetpackVersion doesnt fail when Jetpack version is false`() {
+        val site = SiteModel()
+        site.jetpackVersion = "false"
+
+        val hasMinimalJetpackVersion = SiteUtils.checkMinimalJetpackVersion(site, "0")
+
+        assertThat(hasMinimalJetpackVersion).isFalse()
+    }
+
+    @Test
+    fun `checkMinimalJetpackVersion returns true when version higher than input`() {
+        val site = SiteModel()
+        site.jetpackVersion = "5.8"
+        site.origin = 1
+        site.setIsJetpackConnected(true)
+
+        val hasMinimalJetpackVersion = SiteUtils.checkMinimalJetpackVersion(site, "5.6")
+
+        assertThat(hasMinimalJetpackVersion).isTrue()
+    }
+
+    @Test
+    fun `checkMinimalJetpackVersion returns true when version is equal to input`() {
+        val site = SiteModel()
+        site.jetpackVersion = "5.8"
+        site.origin = 1
+        site.setIsJetpackConnected(true)
+
+        val hasMinimalJetpackVersion = SiteUtils.checkMinimalJetpackVersion(site, "5.8")
+
+        assertThat(hasMinimalJetpackVersion).isTrue()
+    }
+
+    @Test
+    fun `checkMinimalJetpackVersion returns false when version is lower than input`() {
+        val site = SiteModel()
+        site.jetpackVersion = "5.8"
+        site.origin = 1
+        site.setIsJetpackConnected(true)
+
+        val hasMinimalJetpackVersion = SiteUtils.checkMinimalJetpackVersion(site, "5.9")
+
+        assertThat(hasMinimalJetpackVersion).isFalse()
+    }
+
+    @Test
+    fun `checkMinimalJetpackVersion returns false when origin not WPCOM`() {
+        val site = SiteModel()
+        site.jetpackVersion = "5.8"
+        site.origin = 0
+
+        val hasMinimalJetpackVersion = SiteUtils.checkMinimalJetpackVersion(site, "5.6")
+
+        assertThat(hasMinimalJetpackVersion).isFalse()
+    }
+
+    @Test
+    fun `checkMinimalJetpackVersion returns false when isWpCom is false`() {
+        val site = SiteModel()
+        site.jetpackVersion = "5.8"
+        site.setIsWPCom(false)
+
+        val hasMinimalJetpackVersion = SiteUtils.checkMinimalJetpackVersion(site, "5.6")
+
+        assertThat(hasMinimalJetpackVersion).isFalse()
     }
 }

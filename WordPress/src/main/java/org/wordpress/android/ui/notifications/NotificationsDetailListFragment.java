@@ -66,7 +66,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private ViewGroup mFooterView;
 
     private String mRestoredNoteId;
-    private int mBackgroundColor;
     private int mCommentListPosition = ListView.INVALID_POSITION;
 
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
@@ -107,8 +106,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-
-        mBackgroundColor = getResources().getColor(android.R.color.white);
 
         ListView listView = getListView();
         listView.setDivider(null);
@@ -416,7 +413,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         // Badge notifications apply different colors and formatting
                         if (isAdded() && noteBlock.containsBadgeMediaType()) {
                             mIsBadgeView = true;
-                            mBackgroundColor = getActivity().getResources().getColor(android.R.color.transparent);
                         }
 
                         if (mIsBadgeView) {
@@ -504,7 +500,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             if (!hasNoteBlockAdapter()) {
-                mNoteBlockAdapter = new NoteBlockAdapter(getActivity(), noteList, mBackgroundColor);
+                mNoteBlockAdapter = new NoteBlockAdapter(getActivity(), noteList);
                 setListAdapter(mNoteBlockAdapter);
             } else {
                 mNoteBlockAdapter.setNoteList(noteList);

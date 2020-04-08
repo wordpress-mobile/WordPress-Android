@@ -332,7 +332,6 @@ Language: hr
     <string name="category_name">Ime kategorije</string>
     <string name="trash">Smeće</string>
     <string name="hint_comment_content">Komentar</string>
-    <string name="trash_yes">Smeće</string>
     <string name="mnu_comment_trash">Smeće</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="reader_title_applog">Aplikacijski zapisnik</string>
@@ -362,7 +361,6 @@ Language: hr
     <string name="dlg_spamming_comments">Označavanje kao spam</string>
     <string name="dlg_trashing_comments">Slanje u smeće</string>
     <string name="dlg_confirm_trash_comments">Poslati u smeće?</string>
-    <string name="trash_no">Ne poslati u smeće</string>
     <string name="saving_changes">Snimanje promjena</string>
     <string name="sure_to_cancel_edit_comment">Otkazati uređivanje komentara?</string>
     <string name="content_required">Komentar je obavezan</string>

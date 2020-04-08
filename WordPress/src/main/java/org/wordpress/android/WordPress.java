@@ -76,6 +76,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.posts.editor.ImageEditorInitializer;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
@@ -85,6 +86,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -100,6 +102,7 @@ import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.io.File;
@@ -153,6 +156,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject StatsStore mStatsStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject ReaderTracker mReaderTracker;
+    @Inject ImageManager mImageManager;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -214,11 +218,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleManager.setLocale(base));
-    }
-
-    @Override
     public void onCreate() {
         super.onCreate();
         mContext = this;
@@ -242,8 +241,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         sOAuthAuthenticator = mOAuthAuthenticator;
 
         ProfilingUtils.start("App Startup");
+
         // Enable log recording
         AppLog.enableRecording(true);
+        AppLog.enableLogFilePersistence(this.getBaseContext(), 3);
         AppLog.addListener(new AppLogListener() {
             @Override
             public void onLog(T tag, LogLevel logLevel, String message) {
@@ -293,6 +294,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // with memory usage and the use of Configuration). More information: http://bit.ly/2H1KTQo
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        AppThemeUtils.Companion.setAppTheme(this);
 
         // verify media is sanitized
         sanitizeMediaUploadStateForSite();
@@ -322,6 +324,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
 
         mSystemNotificationsTracker.checkSystemNotificationsState();
+        ImageEditorInitializer.Companion.init(mImageManager);
     }
 
     protected void initWorkManager() {
