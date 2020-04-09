@@ -48,7 +48,6 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -69,15 +68,12 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRAS
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
 
 private const val ACTION_DELAY = 100L
 private const val SEARCH_DELAY = 200L
 private const val SCROLL_DELAY = 200L
 private const val SNACKBAR_DELAY = 500L
 private const val SEARCH_COLLAPSE_DELAY = 500L
-private const val PAGE_UPLOAD_TIMEOUT = 5000L
 
 typealias LoadAutoSaveRevision = Boolean
 

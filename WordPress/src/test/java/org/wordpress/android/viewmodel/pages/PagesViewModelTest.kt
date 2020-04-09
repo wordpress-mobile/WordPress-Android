@@ -164,41 +164,6 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun `when a page is being uploaded, page actions are disabled`() = test {
-        // Arrange
-        val page = createPostModel()
-
-        setUpPageStoreWithEmptyPages()
-        viewModel.start(site)
-
-        assertThat(viewModel.arePageActionsEnabled).isTrue()
-
-        // Act
-        viewModel.postUploadStarted(RemoteId(page.remotePostId))
-
-        // Assert
-        assertThat(viewModel.arePageActionsEnabled).isFalse()
-    }
-
-    @Test
-    fun `when a page upload is completed, page actions are re-enabled`() = test {
-        // Given
-        val page = createPostModel()
-
-        setUpPageStoreWithEmptyPages()
-        viewModel.start(site)
-
-        viewModel.postUploadStarted(RemoteId(page.remotePostId))
-        assertThat(viewModel.arePageActionsEnabled).isFalse()
-
-        // When
-        viewModel.handlePageUpdated(RemoteId(page.remotePostId))
-
-        // Then
-        assertThat(viewModel.arePageActionsEnabled).isTrue()
-    }
-
-    @Test
     fun `Auto-upload is initiated when the user enters the screen`() = test {
         // Given
         setUpPageStoreWithEmptyPages()
@@ -280,13 +245,5 @@ class PagesViewModelTest {
         )
 
         return pageModel
-    }
-
-    private companion object Fixtures {
-        fun createPostModel() = PostModel().apply {
-            setId(1_001)
-            setRemotePostId(2_034)
-            setIsPage(true)
-        }
     }
 }
