@@ -36,7 +36,7 @@ class JetpackStore
         val actionType = action.type as? JetpackAction ?: return
         when (actionType) {
             INSTALL_JETPACK -> {
-                coroutineEngine.launchInGlobalScope(T.SETTINGS, this, "JetpackAction.INSTALL_JETPACK") {
+                coroutineEngine.launch(T.SETTINGS, this, "JetpackAction.INSTALL_JETPACK") {
                     install(
                             action.payload as SiteModel,
                             actionType
@@ -74,7 +74,7 @@ class JetpackStore
     private suspend fun reloadSite(site: SiteModel) = suspendCancellableCoroutine<Unit> { cont ->
         siteStore.onAction(SiteActionBuilder.newFetchSiteAction(site))
         siteContinuation = cont
-        val job = coroutineEngine.launchInGlobalScope(T.SETTINGS, this, "reloadSite") {
+        val job = coroutineEngine.launch(T.SETTINGS, this, "reloadSite") {
             delay(5000)
             if (siteContinuation != null && siteContinuation == cont) {
                 siteContinuation?.resume(Unit)
