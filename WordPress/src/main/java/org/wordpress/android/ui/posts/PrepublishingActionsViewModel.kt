@@ -19,8 +19,8 @@ class PrepublishingActionsViewModel @Inject constructor(
     private val _prepublishingActionsUiState = MutableLiveData<List<PrepublishingActionItemUiState>>()
     val prepublishingActionsUiState: LiveData<List<PrepublishingActionItemUiState>> = _prepublishingActionsUiState
 
-    private val _prepublishingAction = SingleLiveEvent<ActionType>()
-    val prepublishingAction: LiveData<ActionType> = _prepublishingAction
+    private val _prepublishingActionType = SingleLiveEvent<ActionType>()
+    val prepublishingActionType: LiveData<ActionType> = _prepublishingActionType
 
     fun start() {
         if (isStarted) return
@@ -52,6 +52,6 @@ class PrepublishingActionsViewModel @Inject constructor(
     }
 
     private fun onActionClicked(actionType: ActionType) {
-        _prepublishingAction.postValue(actionType)
+        _prepublishingActionType.postValue(actionType)
     }
 }
