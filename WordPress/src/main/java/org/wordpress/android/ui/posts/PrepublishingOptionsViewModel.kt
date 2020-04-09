@@ -3,9 +3,11 @@ package org.wordpress.android.ui.posts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.ui.posts.ActionType.PUBLISH
-import org.wordpress.android.ui.posts.ActionType.TAGS
-import org.wordpress.android.ui.posts.ActionType.VISIBILITY
+import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.PUBLISH
+import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.TAGS
+import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.VISIBILITY
+import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingActionUiState
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
@@ -13,8 +15,8 @@ class PrepublishingOptionsViewModel @Inject constructor(
 ) : ViewModel() {
     private var isStarted = false
 
-    private val _prepublishingActions = MutableLiveData<List<PrepublishingActionListItem>>()
-    val prepublishingActions: LiveData<List<PrepublishingActionListItem>> = _prepublishingActions
+    private val _prepublishingActionsUiState = MutableLiveData<List<PrepublishingActionItemUiState>>()
+    val prepublishingActionsUiState: LiveData<List<PrepublishingActionItemUiState>> = _prepublishingActionsUiState
 
     private val _prepublishingAction = SingleLiveEvent<ActionType>()
     val prepublishingAction: LiveData<ActionType> = _prepublishingAction
@@ -22,17 +24,17 @@ class PrepublishingOptionsViewModel @Inject constructor(
     fun start() {
         if (isStarted) return
         isStarted = true
-        loadActions()
+        loadActionsUiState()
     }
 
-    private fun loadActions() {
-        val prepublishingActionsList = arrayListOf<PrepublishingActionListItem>().apply {
-            add(PrepublishingActionListItem(actionType = PUBLISH, onActionClicked = ::onActionClicked))
-            add(PrepublishingActionListItem(actionType = VISIBILITY, onActionClicked = ::onActionClicked))
-            add(PrepublishingActionListItem(actionType = TAGS, onActionClicked = ::onActionClicked))
+    private fun loadActionsUiState() {
+        val prepublishingActionsUiStateList = arrayListOf<PrepublishingActionUiState>().apply {
+            add(PrepublishingActionUiState(actionType = PUBLISH, onActionClicked = ::onActionClicked))
+            add(PrepublishingActionUiState(actionType = VISIBILITY, onActionClicked = ::onActionClicked))
+            add(PrepublishingActionUiState(actionType = TAGS, onActionClicked = ::onActionClicked))
         }
 
-        _prepublishingActions.postValue(prepublishingActionsList)
+        _prepublishingActionsUiState.postValue(prepublishingActionsUiStateList)
     }
 
     private fun onActionClicked(actionType: ActionType) {

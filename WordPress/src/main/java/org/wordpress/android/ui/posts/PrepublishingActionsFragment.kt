@@ -14,9 +14,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import javax.inject.Inject
 
-/**
- * A simple [Fragment] subclass.
- */
 class PrepublishingActionsFragment : Fragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingOptionsViewModel
@@ -46,8 +43,8 @@ class PrepublishingActionsFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingOptionsViewModel::class.java)
 
-        viewModel.prepublishingActions.observe(this, Observer {
-            (actions_recycler_view.adapter as PrepublishingActionsAdapter).update(it)
+        viewModel.prepublishingActionsUiState.observe(this, Observer { uiState ->
+            (actions_recycler_view.adapter as PrepublishingActionsAdapter).update(uiState)
         })
 
         viewModel.start()

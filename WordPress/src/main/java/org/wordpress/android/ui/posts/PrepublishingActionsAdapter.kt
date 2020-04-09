@@ -9,7 +9,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
 class PrepublishingActionsAdapter(context: Context) : RecyclerView.Adapter<PrepublishingActionsListItemViewHolder>() {
-    private var actionItems: List<PrepublishingActionListItem> = listOf()
+    private var items: List<PrepublishingActionItemUiState> = listOf()
     @Inject lateinit var uiHelpers: UiHelpers
 
     init {
@@ -20,21 +20,21 @@ class PrepublishingActionsAdapter(context: Context) : RecyclerView.Adapter<Prepu
         return PrepublishingActionsListItemViewHolder(parent, uiHelpers)
     }
 
-    fun update(newActionItems: List<PrepublishingActionListItem>) {
+    fun update(newItems: List<PrepublishingActionItemUiState>) {
         val diffResult = DiffUtil.calculateDiff(
                 PrepublishingActionsDiffCallback(
-                        this.actionItems,
-                        newActionItems
+                        this.items,
+                        newItems
                 )
         )
-        this.actionItems = newActionItems
+        this.items = newItems
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun getItemCount(): Int = actionItems.size
+    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: PrepublishingActionsListItemViewHolder, position: Int) {
-        val item = actionItems[position]
+        val item = items[position]
         holder.bind(item)
     }
 }
