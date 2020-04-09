@@ -178,7 +178,6 @@ class PagesViewModel
         get() = _lastSearchQuery
 
     private var searchJob: Job? = null
-    private var pageUpdateContinuations: MutableMap<Long, Continuation<Unit>> = mutableMapOf()
     private var currentPageType = PUBLISHED
 
     private lateinit var pageListEventListener: PageListEventListener
@@ -209,10 +208,8 @@ class PagesViewModel
                 postStore = postStore,
                 eventBusWrapper = eventBusWrapper,
                 site = site,
-                handlePageUpdated = this::handlePageUpdated,
                 invalidateUploadStatus = this::handleInvalidateUploadStatus,
                 handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
-                handlePostUploadedStarted = this::postUploadStarted,
                 handlePostUploadFinished = this::postUploadedFinished
         )
     }
@@ -267,14 +264,6 @@ class PagesViewModel
                 }
             }
         }
-    }
-
-    private suspend fun waitForPageUpdate(remotePageId: Long) {
-        _arePageActionsEnabled = false
-        suspendCoroutineWithTimeout<Unit>(PAGE_UPLOAD_TIMEOUT) { cont ->
-            pageUpdateContinuations[remotePageId] = cont
-        }
-        _arePageActionsEnabled = true
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -763,18 +752,6 @@ class PagesViewModel
     private fun hasRemoteAutoSavePreviewError() = _previewState.value != null &&
             _previewState.value == PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
 
-    fun handlePageUpdated(remotePostId: RemoteId) {
-        var id = 0L
-        if (!pageUpdateContinuations.contains(id)) {
-            id = remotePostId.value
-        }
-
-        pageUpdateContinuations[id]?.let { cont ->
-            pageUpdateContinuations.remove(id)
-            cont.resume(Unit)
-        }
-    }
-
     private fun handleRemoveAutoSaveEvent(pageId: LocalId, isError: Boolean) {
         val post = postStore.getPostByLocalPostId(pageId.value)
 
@@ -787,14 +764,6 @@ class PagesViewModel
         launch {
             _invalidateUploadStatus.value = ids
             refreshPages()
-        }
-    }
-
-    fun postUploadStarted(remoteId: RemoteId) {
-        launch {
-            performIfNetworkAvailableAsync {
-                waitForPageUpdate(remoteId.value)
-            }
         }
     }
 
