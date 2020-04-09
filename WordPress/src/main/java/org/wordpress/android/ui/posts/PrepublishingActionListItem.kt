@@ -5,10 +5,9 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 
 data class PrepublishingActionListItem(
-    val label: UiString,
-    val content: UiString?,
-    val onActionClicked: (actionType: ActionType) -> Unit,
-    val actionType: ActionType
+    val actionType: ActionType,
+    var actionResult: UiString? = null,
+    val onActionClicked: (actionType: ActionType) -> Unit
 )
 
 enum class ActionType(@StringRes val textRes: Int) {
