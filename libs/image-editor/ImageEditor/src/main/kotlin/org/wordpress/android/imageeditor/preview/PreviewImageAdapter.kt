@@ -14,12 +14,7 @@ class PreviewImageAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): RecyclerView.ViewHolder {
-        return PreviewImageViewHolder.create(
-                parent,
-                loadIntoImageViewWithResultListener
-        )
-    }
+    ): RecyclerView.ViewHolder = PreviewImageViewHolder(parent, loadIntoImageViewWithResultListener)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val uiState = getItem(position)
