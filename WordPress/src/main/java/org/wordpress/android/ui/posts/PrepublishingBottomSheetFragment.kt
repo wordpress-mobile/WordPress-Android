@@ -16,7 +16,6 @@ import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject internal lateinit var uiHelpers: UiHelpers
 
     private lateinit var viewModel: PrepublishingViewModel
 
