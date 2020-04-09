@@ -6,8 +6,6 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.PagedList.BoundaryCallback
 import com.yarolegovich.wellsql.WellSql
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -35,6 +33,7 @@ import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInter
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
@@ -55,6 +54,7 @@ class ListStore @Inject constructor(
     private val listSqlUtils: ListSqlUtils,
     private val listItemSqlUtils: ListItemSqlUtils,
     private val coroutineContext: CoroutineContext,
+    private val coroutineEngine: CoroutineEngine,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -129,7 +129,7 @@ class ListStore @Inject constructor(
         val boundaryCallback = object : BoundaryCallback<LIST_ITEM>() {
             override fun onItemAtEndLoaded(itemAtEnd: LIST_ITEM) {
                 // Load more items if we are near the end of list
-                GlobalScope.launch(coroutineContext) {
+                coroutineEngine.launch(AppLog.T.API, this, "ListStore: Loading next page") {
                     handleFetchList(listDescriptor, loadMore = true) { offset ->
                         dataSource.fetchList(listDescriptor, offset)
                     }
