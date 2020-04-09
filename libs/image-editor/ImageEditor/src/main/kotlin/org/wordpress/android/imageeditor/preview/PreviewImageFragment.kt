@@ -67,8 +67,7 @@ class PreviewImageFragment : Fragment() {
                 tab.customView = customView
             }
             val imageView = (tab.customView as FrameLayout).findViewById<ImageView>(R.id.thumbnailImageView)
-            val pagerAdapter = previewImageViewPager.adapter as PreviewImageAdapter
-            val imageData = pagerAdapter.currentList[position].data
+            val imageData = previewImageAdapter.currentList[position].data
             loadIntoImageView(imageData.lowResImageUrl, imageView)
         }
 
