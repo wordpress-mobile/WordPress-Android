@@ -63,7 +63,8 @@ class PreviewImageFragment : Fragment() {
 
         val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
             if (tab.customView == null) {
-                val customView = LayoutInflater.from(context).inflate(layout.preview_image_thumbnail, null)
+                val customView = LayoutInflater.from(context)
+                        .inflate(layout.preview_image_thumbnail, thumbnailsTabLayout, false)
                 tab.customView = customView
             }
             val imageView = (tab.customView as FrameLayout).findViewById<ImageView>(R.id.thumbnailImageView)
