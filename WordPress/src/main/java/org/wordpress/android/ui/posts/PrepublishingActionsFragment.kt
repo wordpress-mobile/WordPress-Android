@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +20,6 @@ import javax.inject.Inject
  */
 class PrepublishingActionsFragment : Fragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: PrepublishingOptionsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,13 +37,21 @@ class PrepublishingActionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
         actions_recycler_view.layoutManager = LinearLayoutManager(requireActivity())
         actions_recycler_view.adapter = PrepublishingActionsAdapter(requireActivity())
+
+        initViewModel()
+        setupViewModelObservers()
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingOptionsViewModel::class.java)
+    }
+
+    private fun setupViewModelObservers() {
+        viewModel.prepublishingActions.observe(this, Observer {
+            (actions_recycler_view.adapter as? PrepublishingActionsAdapter)?.update(it)
+        })
     }
 }
