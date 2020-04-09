@@ -16,7 +16,11 @@ class PrepublishingActionsListItemViewHolder(internal val parent: ViewGroup, val
     fun bind(uiState: PrepublishingActionItemUiState) {
         uiState as PrepublishingActionUiState
         val actionType: TextView = this.itemView.findViewById(R.id.action_type)
+        val actionResult: TextView = this.itemView.findViewById(R.id.action_result)
 
         actionType.text = uiHelpers.getTextOfUiString(itemView.context, uiState.actionType.textRes)
+        uiState.actionResult?.let { resultText ->
+            actionResult.text = uiHelpers.getTextOfUiString(itemView.context, resultText)
+        }
     }
 }

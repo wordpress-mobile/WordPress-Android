@@ -8,6 +8,7 @@ import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingActionUiState
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
@@ -27,10 +28,23 @@ class PrepublishingOptionsViewModel @Inject constructor(
         loadActionsUiState()
     }
 
+    // TODO remove hardcoded Immediately & Public with live data from the EditPostRepository / user changes.
     private fun loadActionsUiState() {
         val prepublishingActionsUiStateList = arrayListOf<PrepublishingActionUiState>().apply {
-            add(PrepublishingActionUiState(actionType = PUBLISH, onActionClicked = ::onActionClicked))
-            add(PrepublishingActionUiState(actionType = VISIBILITY, onActionClicked = ::onActionClicked))
+            add(
+                    PrepublishingActionUiState(
+                            actionType = PUBLISH,
+                            actionResult = UiStringText("Immediately"),
+                            onActionClicked = ::onActionClicked
+                    )
+            )
+            add(
+                    PrepublishingActionUiState(
+                            actionType = VISIBILITY,
+                            actionResult = UiStringText("Public"),
+                            onActionClicked = ::onActionClicked
+                    )
+            )
             add(PrepublishingActionUiState(actionType = TAGS, onActionClicked = ::onActionClicked))
         }
 

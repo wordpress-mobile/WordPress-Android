@@ -25,9 +25,25 @@
         android:textAlignment="viewStart"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/action_result"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/top_divider"
-        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_chainStyle="spread"
         tools:text="Yeah" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/action_result"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:textAlignment="viewEnd"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="?attr/wpColorOnSurfaceMedium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/action_type"
+        app:layout_constraintTop_toBottomOf="@id/top_divider"
+        tools:text="Action result" />
 </androidx.constraintlayout.widget.ConstraintLayout>
