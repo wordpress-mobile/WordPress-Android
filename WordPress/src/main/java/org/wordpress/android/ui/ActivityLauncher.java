@@ -43,6 +43,7 @@ import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.main.SitePickerActivity.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -126,7 +127,7 @@ public class ActivityLauncher {
      * @param site     the preselected site
      */
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
-        Intent intent = createSitePickerIntent(activity, site);
+        Intent intent = createSitePickerIntent(activity, site, SitePickerMode.NORMAL);
         activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
@@ -135,9 +136,10 @@ public class ActivityLauncher {
      *
      * @param fragment the fragment that starts the site picker and expects the result
      * @param site     the preselected site
+     * @param mode     site picker mode
      */
-    public static void showSitePickerForResult(Fragment fragment, SiteModel site) {
-        Intent intent = createSitePickerIntent(fragment.getContext(), site);
+    public static void showSitePickerForResult(Fragment fragment, SiteModel site, SitePickerMode mode) {
+        Intent intent = createSitePickerIntent(fragment.getContext(), site, mode);
         fragment.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
@@ -146,11 +148,13 @@ public class ActivityLauncher {
      *
      * @param context the context to use for the intent creation
      * @param site    the preselected site
+     * @param mode    site picker mode
      * @return the site picker intent
      */
-    private static Intent createSitePickerIntent(Context context, SiteModel site) {
+    private static Intent createSitePickerIntent(Context context, SiteModel site, SitePickerMode mode) {
         Intent intent = new Intent(context, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        intent.putExtra(SitePickerActivity.SITE_PICKER_MODE, mode);
         return intent;
     }
 
