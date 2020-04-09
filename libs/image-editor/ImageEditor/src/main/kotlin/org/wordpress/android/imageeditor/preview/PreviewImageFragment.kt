@@ -26,7 +26,7 @@ import java.io.File
 class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
-    private lateinit var pagerAdapterObserver: PagerAdapterObserver
+    private var pagerAdapterObserver: PagerAdapterObserver? = null
 
     companion object {
         const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
@@ -85,7 +85,7 @@ class PreviewImageFragment : Fragment() {
             previewImageViewPager,
             tabConfigurationStrategy
         )
-        previewImageViewPager.adapter?.registerAdapterDataObserver(pagerAdapterObserver)
+        previewImageAdapter.registerAdapterDataObserver(pagerAdapterObserver as PagerAdapterObserver)
 
         // Setting page transformer explicitly sets internal RecyclerView's itemAnimator to null
         // to fix this issue: https://issuetracker.google.com/issues/37034191
@@ -167,7 +167,10 @@ class PreviewImageFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        previewImageViewPager.adapter?.unregisterAdapterDataObserver(pagerAdapterObserver)
+        pagerAdapterObserver?.let {
+            previewImageViewPager.adapter?.unregisterAdapterDataObserver(it)
+        }
+        pagerAdapterObserver = null
         tabLayoutMediator.detach()
     }
 }
