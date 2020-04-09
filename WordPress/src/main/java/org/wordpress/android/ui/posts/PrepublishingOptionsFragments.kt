@@ -18,8 +18,4 @@ class PrepublishingOptionsFragments : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.post_prepublishing_options_fragment, container, false)
     }
-
-    companion object {
-        const val TAG ="prepublishing_options_fragment_tag"
-    }
 }
