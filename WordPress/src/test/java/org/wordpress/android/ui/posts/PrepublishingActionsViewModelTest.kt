@@ -37,7 +37,7 @@ class PrepublishingActionsViewModelTest {
     }
 
     @Test
-    fun `verify that when publish action is clicked the right action type is propagated to prepublishingActionType`() {
+    fun `verify that publish action type is propagated to prepublishingActionType`() {
         // arrange
         val expectedActionType = PUBLISH
 
@@ -50,7 +50,7 @@ class PrepublishingActionsViewModelTest {
     }
 
     @Test
-    fun `verify that when visibility action is clicked the right action type is propagated to prepublishingActionType`() {
+    fun `verify that visibility action type is propagated to prepublishingActionType`() {
         // arrange
         val expectedActionType = VISIBILITY
 
@@ -63,7 +63,7 @@ class PrepublishingActionsViewModelTest {
     }
 
     @Test
-    fun `verify that when tags action is clicked the right action type is propagated to prepublishingActionType`() {
+    fun `verify that tags action type is propagated to prepublishingActionType`() {
         // arrange
         val expectedActionType = VISIBILITY
 
@@ -76,7 +76,8 @@ class PrepublishingActionsViewModelTest {
     }
 
     private fun getActionUiState(actionType: ActionType): PrepublishingActionUiState {
-        val actions = viewModel.prepublishingActionsUiState.value?.filterIsInstance(PrepublishingActionUiState::class.java)
+        val actions = viewModel.prepublishingActionsUiState.value
+                ?.filterIsInstance(PrepublishingActionUiState::class.java)
         return actions?.find { it.actionType == actionType }!!
     }
 }

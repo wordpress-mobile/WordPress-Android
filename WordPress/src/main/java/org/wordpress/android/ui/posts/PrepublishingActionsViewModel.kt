@@ -12,8 +12,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
-class PrepublishingActionsViewModel @Inject constructor(
-) : ViewModel() {
+class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
     private var isStarted = false
 
     private val _prepublishingActionsUiState = MutableLiveData<List<PrepublishingActionItemUiState>>()

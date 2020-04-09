@@ -72,8 +72,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
 
         @JvmStatic
-        fun newInstance(
-        ): PrepublishingBottomSheetFragment {
+        fun newInstance(): PrepublishingBottomSheetFragment {
             val fragment = PrepublishingBottomSheetFragment()
             val bundle = Bundle()
             fragment.arguments = bundle
