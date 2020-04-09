@@ -512,8 +512,6 @@ Language: nl
     <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
     <string name="preference_strip_image_location">Locatie van media verwijderen</string>
     <string name="stats_cannot_be_started">We kunnen de statistieken momenteel niet openen. Probeer het later opnieuw</string>
-    <string name="giphy_powered_by_giphy">Mogelijk gemaakt door GIPHY</string>
-    <string name="giphy_picker_search_hint">Zoek op Giphy</string>
     <string name="stats_author_label">Auteur</string>
     <string name="stats_authors">Auteurs</string>
     <string name="stats_search_terms_label">Zoekterm</string>
