@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.post_prepublishing_actions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.utils.UiHelpers
@@ -15,7 +17,7 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class PrepublishingOptionsFragment : Fragment() {
+class PrepublishingActionsFragment : Fragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: PrepublishingOptionsViewModel
@@ -30,12 +32,14 @@ class PrepublishingOptionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.post_prepublishing_options_fragment, container, false)
+        return inflater.inflate(R.layout.post_prepublishing_actions_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
+        actions_recycler_view.layoutManager = LinearLayoutManager(requireActivity())
+        actions_recycler_view.adapter = PrepublishingActionsAdapter(requireActivity())
     }
 
     private fun initViewModel() {
