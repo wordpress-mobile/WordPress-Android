@@ -73,10 +73,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
 
         @JvmStatic
         fun newInstance(): PrepublishingBottomSheetFragment {
-            val fragment = PrepublishingBottomSheetFragment()
-            val bundle = Bundle()
-            fragment.arguments = bundle
-            return fragment
+            return PrepublishingBottomSheetFragment()
         }
     }
 }
