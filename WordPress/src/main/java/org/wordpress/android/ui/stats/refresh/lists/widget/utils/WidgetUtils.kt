@@ -9,8 +9,8 @@ import android.view.View
 import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.RemoteViews
 import com.bumptech.glide.request.target.AppWidgetTarget
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -37,6 +37,7 @@ private const val ICON_MAX_DIMENSION = 100
 
 class WidgetUtils
 @Inject constructor(val imageManager: ImageManager) {
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
     fun isWidgetWiderThanLimit(
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,
@@ -61,7 +62,7 @@ class WidgetUtils
         appWidgetId: Int
     ) {
         views.setViewVisibility(R.id.widget_site_icon, View.VISIBLE)
-        GlobalScope.launch(Dispatchers.Main) {
+        coroutineScope.launch {
             val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
             imageManager.load(
                     awt,

@@ -5,9 +5,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.view.View
 import android.widget.RemoteViews
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
@@ -46,6 +46,7 @@ class MinifiedWidgetUpdater
     private val widgetUtils: WidgetUtils,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : WidgetUpdater {
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
     override fun updateAppWidget(
         context: Context,
         appWidgetId: Int,
@@ -96,10 +97,8 @@ class MinifiedWidgetUpdater
         isWideView: Boolean
     ) {
         loadValue(appWidgetManager, appWidgetId, site, views, dataType, isWideView)
-        GlobalScope.launch {
-            runBlocking {
-                todayInsightsStore.fetchTodayInsights(site)
-            }
+        coroutineScope.launch {
+            todayInsightsStore.fetchTodayInsights(site)
             loadValue(appWidgetManager, appWidgetId, site, views, dataType, isWideView)
         }
     }

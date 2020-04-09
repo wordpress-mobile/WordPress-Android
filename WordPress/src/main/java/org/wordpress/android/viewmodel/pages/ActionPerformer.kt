@@ -1,5 +1,7 @@
 package org.wordpress.android.viewmodel.pages
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
@@ -8,17 +10,23 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPDATE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 class ActionPerformer
-@Inject constructor(private val dispatcher: Dispatcher) {
+@Inject constructor(
+    private val dispatcher: Dispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+) {
+    private val coroutineScope = CoroutineScope(bgDispatcher)
     private var continuations: MutableMap<Pair<Long, EventType>, Continuation<Pair<Boolean, Long>>> = mutableMapOf()
 
     companion object {
@@ -36,7 +44,7 @@ class ActionPerformer
     suspend fun performAction(action: PageAction) {
         val result = suspendCoroutineWithTimeout<Pair<Boolean, Long>>(ACTION_TIMEOUT) { continuation ->
             continuations[action.remoteId to action.event] = continuation
-            GlobalScope.launch { action.perform() }
+            coroutineScope.launch { action.perform() }
         }
         continuations.remove(action.remoteId to action.event)
 

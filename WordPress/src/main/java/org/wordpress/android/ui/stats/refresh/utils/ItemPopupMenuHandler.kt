@@ -5,6 +5,7 @@ import androidx.appcompat.widget.ListPopupWindow
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,11 +36,12 @@ class ItemPopupMenuHandler
     private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
+    private val coroutineScope = CoroutineScope(bgDispatcher)
     private val mutableTypeMoved = MutableLiveData<Event<StatsType>>()
     val typeMoved: LiveData<Event<StatsType>> = mutableTypeMoved
 
     fun onMenuClick(view: View, statsType: StatsType) {
-        GlobalScope.launch(bgDispatcher) {
+        coroutineScope.launch {
             val type = statsType as InsightType
             val insights = statsStore.getAddedInsights(statsSiteProvider.siteModel)
 
@@ -61,13 +63,13 @@ class ItemPopupMenuHandler
                                     Stat.STATS_INSIGHTS_TYPE_MOVED_UP,
                                     statsType
                             )
-                            GlobalScope.launch(bgDispatcher) {
+                            launch(bgDispatcher) {
                                 statsStore.moveTypeUp(statsSiteProvider.siteModel, type)
                                 mutableTypeMoved.postValue(Event(type))
                             }
                         }
                         DOWN -> {
-                            GlobalScope.launch(bgDispatcher) {
+                            launch(bgDispatcher) {
                                 analyticsTrackerWrapper.trackWithType(
                                         Stat.STATS_INSIGHTS_TYPE_MOVED_DOWN,
                                         statsType
@@ -77,7 +79,7 @@ class ItemPopupMenuHandler
                             }
                         }
                         REMOVE -> {
-                            GlobalScope.launch(bgDispatcher) {
+                            launch(bgDispatcher) {
                                 analyticsTrackerWrapper.trackWithType(
                                         Stat.STATS_INSIGHTS_TYPE_REMOVED,
                                         statsType
