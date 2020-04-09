@@ -12,7 +12,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
-class PrepublishingOptionsViewModel @Inject constructor(
+class PrepublishingActionsViewModel @Inject constructor(
 ) : ViewModel() {
     private var isStarted = false
 

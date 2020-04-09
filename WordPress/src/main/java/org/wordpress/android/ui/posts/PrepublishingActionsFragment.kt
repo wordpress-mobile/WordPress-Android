@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class PrepublishingActionsFragment : Fragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: PrepublishingOptionsViewModel
+    private lateinit var viewModel: PrepublishingActionsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +41,7 @@ class PrepublishingActionsFragment : Fragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(PrepublishingOptionsViewModel::class.java)
+                .get(PrepublishingActionsViewModel::class.java)
 
         viewModel.prepublishingActionsUiState.observe(this, Observer { uiState ->
             (actions_recycler_view.adapter as PrepublishingActionsAdapter).update(uiState)
