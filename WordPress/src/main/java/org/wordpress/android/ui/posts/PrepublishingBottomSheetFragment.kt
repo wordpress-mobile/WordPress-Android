@@ -63,7 +63,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
     private fun removeContentFragmentBeforeDismissal() {
         activity?.supportFragmentManager?.let { fragmentManager ->
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.also { fragment ->
-                fragmentManager.beginTransaction().remove(fragment).commit()
+                fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
             }
         }
     }
