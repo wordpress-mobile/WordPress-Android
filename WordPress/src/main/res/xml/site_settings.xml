@@ -141,8 +141,8 @@
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_week_starts"
-            android:entries="@array/site_settings_weekdays"
-            android:entryValues="@array/site_settings_weekday_values"
+            android:entries="@array/weekdays"
+            android:entryValues="@array/weekday_values"
             android:key="@string/pref_key_site_week_start"
             android:title="@string/site_settings_week_start_title" />
 

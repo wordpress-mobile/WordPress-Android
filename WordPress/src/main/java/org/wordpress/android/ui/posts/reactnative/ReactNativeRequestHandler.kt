@@ -19,6 +19,7 @@ import javax.inject.Named
 
 class ReactNativeRequestHandler @Inject constructor(
     private val reactNativeStore: ReactNativeStore,
+    private val urlUtil: ReactNativeUrlUtil,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     override val coroutineContext = bgDispatcher + Job()
@@ -30,8 +31,11 @@ class ReactNativeRequestHandler @Inject constructor(
         onError: Consumer<Bundle>
     ) {
         launch {
-            val response = reactNativeStore.executeRequest(mSite, pathWithParams)
-            handleResponse(response, onSuccess::accept, onError::accept)
+            if (mSite.isUsingWpComRestApi) {
+                performGetRequestForWPComSite(pathWithParams, mSite.siteId, onSuccess::accept, onError::accept)
+            } else {
+                performGetRequestForSelfHostedSite(pathWithParams, mSite.url, onSuccess::accept, onError::accept)
+            }
         }
     }
 
@@ -43,6 +47,30 @@ class ReactNativeRequestHandler @Inject constructor(
      */
     fun destroy() {
         coroutineContext[Job]!!.cancel()
+    }
+
+    private suspend fun performGetRequestForWPComSite(
+        pathWithParams: String,
+        wpComSiteId: Long,
+        onSuccess: (String) -> Unit,
+        onError: (Bundle) -> Unit
+    ) {
+        urlUtil.parseUrlAndParamsForWPCom(pathWithParams, wpComSiteId)?.let { (url, params) ->
+            val response = reactNativeStore.performWPComRequest(url, params)
+            handleResponse(response, onSuccess, onError)
+        }
+    }
+
+    private suspend fun performGetRequestForSelfHostedSite(
+        pathWithParams: String,
+        siteUrl: String,
+        onSuccess: (String) -> Unit,
+        onError: (Bundle) -> Unit
+    ) {
+        urlUtil.parseUrlAndParamsForWPOrg(pathWithParams, siteUrl)?.let { (url, params) ->
+            val response = reactNativeStore.performWPAPIRequest(url, params)
+            handleResponse(response, onSuccess, onError)
+        }
     }
 
     private fun handleResponse(

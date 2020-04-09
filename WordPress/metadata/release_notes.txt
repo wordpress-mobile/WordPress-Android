@@ -1,5 +1,4 @@
-Block editor enhancements: Added Cover block. Enabled crop, zoom, and rotate for images in posts. Tweaked “Take a Video” icon to differentiate from “Take a Photo.” Removed dimming effect on unselected blocks. Added toolbar for alignment options in Heading, Paragraph, Image, and MediaText blocks.
-
-Fixes: Issue where “wordpress://” links in a browser didn’t open the app, issue where opening a page opened an empty editor.
-
-General improvements: Dark Theme support.
+Block editor: Added Latest Posts block, fixed crash caused by pasting HTML content with embedded images
+Page Templates: Added a block-based templates for quicker page creation.
+Site Creation: removed a few steps for faster setup — select the kind of site, enter the domain name, done.
+Bug fix: fixed an issue causing failed post uploads to be retried indefinitely.

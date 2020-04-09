@@ -192,7 +192,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onMediaDeleted(String mediaId);
         void onUndoMediaCheck(String undoedContent);
         void onVideoPressInfoRequested(String videoId);
-        Map<String, String> onAuthHeaderRequested(String url);
+        String onAuthHeaderRequested(String url);
         void onTrackableEvent(TrackableEvent event);
         void onHtmlModeToggledInToolbar();
         void onAddStockMediaClicked(boolean allowMultipleSelection);

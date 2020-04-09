@@ -148,8 +148,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String TEMP_VIDEO_UPLOADING_CLASS = "data-temp-aztec-video";
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
 
-    private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
-
     private static final int MIN_BITMAP_DIMENSION_DP = 48;
     public static final int DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP = 196;
 
@@ -1824,9 +1822,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // Use https:// when requesting the auth header, in case the image is incorrectly using http://
                 // If an auth header is returned, force https:// for the actual HTTP request
                 final String imageSrc = metaData.getSrc();
-                Map<String, String> authHeaders =
-                        mEditorFragmentListener.onAuthHeaderRequested(UrlUtils.makeHttps(imageSrc));
-                if (authHeaders != null && authHeaders.containsKey(AUTHORIZATION_HEADER_NAME)) {
+                String authHeader = mEditorFragmentListener.onAuthHeaderRequested(UrlUtils.makeHttps(imageSrc));
+                if (authHeader.length() > 0) {
                     metaData.setSrc(UrlUtils.makeHttps(imageSrc));
                 }
 
