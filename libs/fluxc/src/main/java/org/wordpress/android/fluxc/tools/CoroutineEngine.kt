@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.tools
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -11,7 +10,14 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 class CoroutineEngine
-@Inject constructor(private val coroutineContext: CoroutineContext, private val appLog: AppLogWrapper) {
+@Inject constructor(
+    private val context: CoroutineContext,
+    private val appLog: AppLogWrapper
+) : CoroutineScope {
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + context
+
     suspend fun <RESULT_TYPE> withDefaultContext(
         tag: AppLog.T,
         caller: Any,
@@ -27,15 +33,15 @@ class CoroutineEngine
         return block()
     }
 
-    fun <RESULT_TYPE> launchInGlobalScope(
+    fun <RESULT_TYPE> launch(
         tag: AppLog.T,
         caller: Any,
         loggedMessage: String,
         block: suspend CoroutineScope.() -> RESULT_TYPE
     ): Job {
         appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage")
-        return GlobalScope.launch(coroutineContext) {
-            block.invoke(this)
+        return launch(coroutineContext) {
+            block(this)
         }
     }
 }

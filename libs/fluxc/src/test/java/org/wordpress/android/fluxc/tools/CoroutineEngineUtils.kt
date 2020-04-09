@@ -33,7 +33,7 @@ fun initCoroutineEngine() = runBlocking {
             it.getArgument<(suspend CoroutineScope.() -> Any)>(3).invoke(this)
         }
         return@doAnswer mock<Job>()
-    }.whenever(coroutineEngine).launchInGlobalScope(
+    }.whenever(coroutineEngine).launch(
             any(),
             any(),
             any(),
