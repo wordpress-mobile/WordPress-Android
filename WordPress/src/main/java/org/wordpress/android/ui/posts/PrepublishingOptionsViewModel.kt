@@ -11,6 +11,8 @@ import javax.inject.Inject
 
 class PrepublishingOptionsViewModel @Inject constructor(
 ) : ViewModel() {
+    private var isStarted = false
+
     private val _prepublishingActions = MutableLiveData<List<PrepublishingActionListItem>>()
     val prepublishingActions: LiveData<List<PrepublishingActionListItem>> = _prepublishingActions
 
@@ -18,6 +20,8 @@ class PrepublishingOptionsViewModel @Inject constructor(
     val prepublishingAction: LiveData<ActionType> = _prepublishingAction
 
     fun start() {
+        if (isStarted) return
+        isStarted = true
         loadActions()
     }
 

@@ -93,6 +93,7 @@ import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment
 import org.wordpress.android.ui.posts.PostSettingsTagsActivity;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.PrepublishingActionsAdapter;
 import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment;
 import org.wordpress.android.ui.posts.PrepublishingActionsFragment;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
@@ -493,6 +494,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PrepublishingBottomSheetFragment object);
 
     void inject(PrepublishingActionsFragment object);
+
+    void inject(PrepublishingActionsAdapter object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
