@@ -10,8 +10,8 @@
         tools:visibility="gone" />
 
     <include
-        layout="@layout/progress_layout"
-        tools:visibility="gone" />
+        layout="@layout/site_creation_progress_creating_site"
+        tools:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/content_layout"
