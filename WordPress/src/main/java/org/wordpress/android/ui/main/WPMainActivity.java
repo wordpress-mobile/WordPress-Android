@@ -194,7 +194,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject GCMMessageHandler mGCMMessageHandler;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
+    @Inject PrivateAtomicCookie mPrivateAtomicCookie;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -713,15 +713,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.onResume(hasFullAccessToContent());
 
         mFirstResume = false;
-        checkCookie();
-    }
-
-    private void checkCookie() {
-        if (getSelectedSite() != null && getSelectedSite().isPrivateWPComAtomic() && mPrivateAtomicCookie.isExpired()) {
-            new PrivateAtCookieRefreshProgressDialog()
-                    .show(getSupportFragmentManager(), PrivateAtCookieRefreshProgressDialog.TAG);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchAccessCookieAction(getSelectedSite()));
-        }
     }
 
     @SuppressWarnings("unused")
@@ -977,7 +968,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                         showQuickStartDialog();
                     }
-                    checkCookie();
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:
