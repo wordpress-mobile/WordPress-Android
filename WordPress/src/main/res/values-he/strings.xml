@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-18 00:55:08+0000
+Translation-Revision-Date: 2020-04-02 00:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">ליצור פוסט</string>
+    <string name="post_list_tab_trashed_posts">הועבר לפח</string>
+    <string name="post_list_tab_scheduled_posts">מתוזמן לפרסום</string>
+    <string name="post_list_tab_published_posts">פורסם</string>
+    <string name="sharing_facebook_account_must_have_pages">החיבור עם פייסבוק לא הצליח למצוא דפים. השיתוף האוטומטי לא יכול להתחבר אל פרופילים בפייסבוק, רק לדפים שפורסמו.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">לא מחובר</string>
+    <string name="my_site_select_domains_page_title">כתובת האתר</string>
+    <string name="notifications_tab_title_likes">לייקים</string>
+    <string name="notifications_tab_title_follows">עוקבים</string>
+    <string name="notifications_tab_title_comments">תגובות</string>
+    <string name="notifications_tab_title_unread_notifications">לא נקרא</string>
+    <string name="dlg_cancel_action_dont_trash">לא להעביר לפח</string>
+    <string name="dlg_confirm_action_trash">פח</string>
     <string name="stats_insights_management_activity">פעילות</string>
     <string name="stats_insights_management_posts_and_pages">פוסטים ועמודים</string>
     <string name="stats_insights_management_general">כללי</string>
@@ -282,7 +295,6 @@ Language: he_IL
     <string name="enter_wordpress_site">האתר בכתובת זו אינו אתר של WordPress. כדי שנוכל להתחבר לאתר, השירות של WordPress חייב להיות מותקן באתר.</string>
     <string name="login_invalid_site_url">יש להזין את כתובת האתר המלאה, לדוגמה example.com.</string>
     <string name="enter_email_for_site">עליך להתחבר אל WordPress.com כדי להתחבר אל %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">החשבון לא קושר לפייסבוק כיוון שלא הוגדרה גישה מחשבון זה לדפי פייסבוק. פלטפורמת פייסבוק תומכת בשיתוף אוטומטי של חשבונות שמקושרים לדפים בפייסבוק בלבד, לא לפרופילים בפייסבוק.</string>
     <string name="stats_post_views_label">צפיות</string>
     <string name="stats_post_label">פוסט</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -379,8 +391,6 @@ Language: he_IL
     <string name="editor_failed_to_insert_media_tap_to_retry">שילוב פירטי המדיה נכשל.\nיש להקיש כדי לנסות שוב.</string>
     <string name="editor_uploading_draft">אנחנו מעלים את הטיוטה שלך</string>
     <string name="post_uploading_draft">מעלה את הטיוטה</string>
-    <string name="post_list_drafts">טיוטות</string>
-    <string name="post_list_published">פורסם</string>
     <string name="post_list_author_everyone">כולם</string>
     <string name="post_list_author_me">אני</string>
     <string name="error_restoring_post">אירעה שגיאה בעת שחזור הפוסט</string>
@@ -524,15 +534,7 @@ Language: he_IL
     <string name="new_site_creation_empty_domain_list_message">לא נמצאו כתובות זמינות שתואמות לחיפוש שלך</string>
     <string name="site_creation_error_generic_subtitle">שגיאה בתקשורת עם השרת, יש לנסות שוב</string>
     <string name="site_creation_error_generic_title">הייתה בעיה</string>
-    <string name="new_site_creation_verticals_custom_subtitle">קטגוריה מותאמת אישית</string>
-    <string name="new_site_creation_button_skip">דילוג</string>
-    <string name="new_site_creation_tag_line_description">תיאור האתר הוא שורה קצרה של מלל שמוצגת ישירות מתחת לכותרת.</string>
-    <string name="new_site_creation_tag_line_hint">תיאור האתר</string>
-    <string name="new_site_creation_site_title_hint">שם האתר</string>
-    <string name="new_site_creation_site_info_header_subtitle">יש לספק פרטים על האתר שאותו ברצונך ליצור.</string>
-    <string name="new_site_creation_site_info_header_title">מידע בסיסי</string>
     <string name="site_creation_fetch_suggestions_error_unknown">הייתה בעיה</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">אין חיבור</string>
     <string name="site_creation_segments_subtitle">המידע יעזור לנו לתת לך המלצות. אבל תמיד יש מקום לצמוח - כל האתרים מתפתחים!</string>
     <string name="site_creation_segments_title">נשמח לשמוע איזה סוג של אתר ברצונך ליצור</string>
     <string name="new_site_creation_preview_title">האתר שלך נוצר!</string>
@@ -555,11 +557,6 @@ Language: he_IL
     <string name="stats_no_data_for_period">אין נתונים לתקופה זו</string>
     <string name="preference_strip_image_location">הסרת מיקום ממדיה</string>
     <string name="stats_cannot_be_started">אין לנו אפשרות לפתוח את הנתונים הסטטיסטיים כעת. יש לנסות שוב מאוחר יותר</string>
-    <string name="giphy_powered_by_giphy">מופעל באמצעות GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">הטעינה של חלק מקובצי המדיה נכשלה עקב שגיאת רשת.</string>
-    <string name="giphy_picker_empty_search_list">לא נמצאו פרטי מדיה שמתאימים לחיפוש שלך</string>
-    <string name="giphy_picker_initial_empty_text">חיפוש קובצי GIF שניתן להוסיף לספריית מדיה שלך!</string>
-    <string name="giphy_picker_search_hint">חיפוש ב-Giphy</string>
     <string name="stats_author_views_label">צפיות</string>
     <string name="stats_author_label">מחבר</string>
     <string name="stats_authors">מחברים</string>
@@ -738,7 +735,6 @@ Language: he_IL
     <string name="people_empty_list_filtered_email_followers">עדיין אין עוקבי אימייל</string>
     <string name="people_empty_list_filtered_followers">עדיין אין עוקבים</string>
     <string name="people_empty_list_filtered_users">עדיין אין משתמשים</string>
-    <string name="connection_service_facebook_notice">החל מ-1 באוגוסט 2018, פלטפורמת פייסבוק לא תאפשר עוד שיתוף ישיר של פוסטים לפרופילים בפייסבוק. החשבונות המקושרים לעמודים בפייסבוק לא ישתנו.</string>
     <string name="reader_empty_posts_liked_description">כאן יופיעו פוסטים שסימנת ב\'לייק\'</string>
     <string name="reader_empty_posts_liked_title">עדיין אין לייקים</string>
     <string name="reader_empty_followed_blogs_button_followed">מעבר לבא</string>
@@ -1295,8 +1291,6 @@ Language: he_IL
     <string name="editor_dropped_text_error">אירעה שגיאה בעת הוספת הטקסט</string>
     <string name="editor_dropped_html_images_not_allowed">אין אפשרות להוסיף תמונות כשהעורך במצב של HTML</string>
     <string name="editor_content_hint">כאן המקום לשתף את הסיפור שלך…</string>
-    <string name="post_list_trashed">הועבר לפח</string>
-    <string name="post_list_scheduled">מתוזמן לפרסום</string>
     <string name="post_status_post_private">פרטי</string>
     <string name="post_status_draft">טיוטה</string>
     <string name="post_status_pending_review">ממתין לתצוגה מקדימה</string>
@@ -1317,7 +1311,6 @@ Language: he_IL
     <string name="post_settings_more_options">אפשרויות נוספות</string>
     <string name="post_settings_categories_and_tags">קטגוריות ותגיות</string>
     <string name="post_settings_status">מצב</string>
-    <string name="notifications_tab_title_unread">לא נקרא</string>
     <string name="notifications_tab_title_all">הכל</string>
     <string name="top_level_category_name">קטגוריה עליונה</string>
     <string name="category_parent">קטגוריית אב (אופציונלי):</string>
@@ -2014,8 +2007,6 @@ Language: he_IL
     <string name="saving_changes">שומר שינויים</string>
     <string name="hint_comment_content">תגובה</string>
     <string name="trash">אשפה</string>
-    <string name="trash_no">לא לשלוח לאשפה</string>
-    <string name="trash_yes">אשפה</string>
     <string name="dlg_confirm_trash_comments">לשלוח לאשפה?</string>
     <string name="dlg_trashing_comments">שולח לאשפה</string>
     <string name="dlg_spamming_comments">מסמן כתגובת זבל</string>

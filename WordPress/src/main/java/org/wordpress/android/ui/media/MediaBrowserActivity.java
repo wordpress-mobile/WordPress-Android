@@ -63,6 +63,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
@@ -134,7 +135,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         ITEM_CAPTURE_VIDEO,
         ITEM_CHOOSE_PHOTO,
         ITEM_CHOOSE_VIDEO,
-        ITEM_CHOOSE_STOCK_MEDIA
+        ITEM_CHOOSE_STOCK_MEDIA,
+        ITEM_CHOOSE_GIF
     }
 
     @Override
@@ -464,6 +466,19 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
                 if (resultCode == RESULT_OK) {
                     reloadMediaGrid();
+                }
+                break;
+            case RequestCodes.GIF_PICKER:
+                if (resultCode == RESULT_OK
+                    && data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                    int[] mediaLocalIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+
+                    ArrayList<MediaModel> mediaModels = new ArrayList<>();
+                    for (int localId : mediaLocalIds) {
+                        mediaModels.add(mMediaStore.getMediaWithLocalId(localId));
+                    }
+
+                    addMediaToUploadService(mediaModels);
                 }
                 break;
         }
@@ -872,6 +887,14 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     });
         }
 
+        if (mBrowserType.isBrowser() && BuildConfig.TENOR_AVAILABLE) {
+            popup.getMenu().add(R.string.photo_picker_gif).setOnMenuItemClickListener(
+                    item -> {
+                        doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_GIF);
+                        return true;
+                    });
+        }
+
         popup.show();
     }
 
@@ -908,6 +931,9 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             case ITEM_CHOOSE_STOCK_MEDIA:
                 ActivityLauncher.showStockMediaPickerForResult(this,
                         mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
+                break;
+            case ITEM_CHOOSE_GIF:
+                ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER);
                 break;
         }
     }
