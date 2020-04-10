@@ -105,7 +105,7 @@ class PreviewImageFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.uiState.observe(this, Observer { state ->
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsUiState.items)
+            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
         })
 
         viewModel.loadIntoFile.observe(this, Observer { fileState ->
