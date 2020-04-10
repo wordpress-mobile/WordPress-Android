@@ -29,23 +29,17 @@ class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
 
     // TODO remove hardcoded Immediately & Public with live data from the EditPostRepository / user changes.
     private fun loadActionsUiState() {
-        val prepublishingActionsUiStateList = arrayListOf<PrepublishingActionUiState>().apply {
-            add(
-                    PrepublishingActionUiState(
-                            actionType = PUBLISH,
-                            actionResult = UiStringText("Immediately"),
-                            onActionClicked = ::onActionClicked
-                    )
-            )
-            add(
-                    PrepublishingActionUiState(
-                            actionType = VISIBILITY,
-                            actionResult = UiStringText("Public"),
-                            onActionClicked = ::onActionClicked
-                    )
-            )
-            add(PrepublishingActionUiState(actionType = TAGS, onActionClicked = ::onActionClicked))
-        }
+        val prepublishingActionsUiStateList = listOf(
+                PrepublishingActionUiState(
+                        actionType = PUBLISH,
+                        actionResult = UiStringText("Immediately"),
+                        onActionClicked = ::onActionClicked
+                ), PrepublishingActionUiState(
+                actionType = VISIBILITY,
+                actionResult = UiStringText("Public"),
+                onActionClicked = ::onActionClicked
+        ), PrepublishingActionUiState(actionType = TAGS, onActionClicked = ::onActionClicked)
+        )
 
         _prepublishingActionsUiState.postValue(prepublishingActionsUiStateList)
     }
