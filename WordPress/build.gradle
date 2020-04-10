@@ -101,6 +101,11 @@ android {
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
         }
+
+        jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
+            applicationId "org.wordpress.android.prealpha"
+            dimension "buildType"
+        }
     }
 
     buildTypes {
