@@ -505,7 +505,7 @@ public class ActivityLauncher {
             } else {
                 // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
                 // connected through REST API.
-                WPWebViewActivity.openURL(context, siteUrl, true);
+                WPWebViewActivity.openURL(context, siteUrl, true, site.getSiteId());
             }
         }
     }
