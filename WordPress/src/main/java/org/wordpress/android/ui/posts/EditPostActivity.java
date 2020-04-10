@@ -71,6 +71,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
@@ -94,12 +95,15 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.FetchAccessCookiePayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnAccessCookieFetched;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -552,9 +556,21 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
-        setupViewPager();
-
+        if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.isExpired()) {
+            PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary(fragmentManager);
+            mDispatcher.dispatch(
+                    SiteActionBuilder.newFetchAccessCookieAction(new FetchAccessCookiePayload(mSite.getSiteId())));
+        } else {
+            setupViewPager();
+        }
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccessCookieFetched(OnAccessCookieFetched event) {
+        PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
+        setupViewPager();
     }
 
     private void setupViewPager() {

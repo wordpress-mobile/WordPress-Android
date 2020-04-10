@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Html
@@ -23,13 +25,14 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -62,6 +65,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnAccessCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -96,6 +100,8 @@ import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClick
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.AppLog.T.READER
+import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
@@ -287,8 +293,9 @@ class ReaderPostDetailFragment : Fragment(),
 
         readerBookmarkButton = view.findViewById(R.id.bookmark_button)
 
+        val progress = view.findViewById<ProgressBar>(R.id.progress_loading)
         if (postSlugsResolutionUnderway) {
-            showProgress()
+            progress.visibility = View.VISIBLE
         }
 
         showPost()
@@ -1001,13 +1008,15 @@ class ReaderPostDetailFragment : Fragment(),
      * called when the post doesn't exist in local db, need to get it from server
      */
     private fun requestPost() {
-        showProgress()
+        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
+        progress.visibility = View.VISIBLE
+        progress.bringToFront()
 
         val listener = object : ReaderActions.OnRequestListener {
             override fun onSuccess() {
                 hasAlreadyRequestedPost = true
                 if (isAdded) {
-                    hideProgress()
+                    progress.visibility = View.GONE
                     showPost()
                     EventBus.getDefault().post(ReaderEvents.SinglePostDownloaded())
                 }
@@ -1016,7 +1025,7 @@ class ReaderPostDetailFragment : Fragment(),
             override fun onFailure(statusCode: Int) {
                 hasAlreadyRequestedPost = true
                 if (isAdded) {
-                    hideProgress()
+                    progress.visibility = View.GONE
                     onRequestFailure(statusCode)
                 }
             }
@@ -1040,7 +1049,8 @@ class ReaderPostDetailFragment : Fragment(),
             return
         }
 
-        hideProgress()
+        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
+        progress.visibility = View.GONE
 
         if (event.statusCode == 200) {
             replacePost(event.blogId, event.postId, false)
@@ -1119,20 +1129,9 @@ class ReaderPostDetailFragment : Fragment(),
         ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
-    private fun showProgress() {
-        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
-        progress.visibility = View.VISIBLE
-        progress.bringToFront()
-    }
-
-    private fun hideProgress() {
-        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
-        progress.visibility = View.GONE
-    }
-
-    @Subscribe(threadMode = MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccessCookieFetched(event: OnAccessCookieFetched?) {
-        hideProgress()
+       PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(fragmentManager)
         if (!event!!.isError) {
             CookieManager.getInstance().setCookie(
                     privateAtomicCookie.getDomain(),
@@ -1260,9 +1259,10 @@ class ReaderPostDetailFragment : Fragment(),
 
             // if the post if from private atomic site postpone render until we have a special access cookie
             if (post!!.isPrivate && post!!.isPrivate) {
-                showProgress()
+                PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager)
                 dispatcher.dispatch(
-                    SiteActionBuilder.newFetchAccessCookieAction( FetchAccessCookiePayload(post!!.blogId)));
+                        SiteActionBuilder.newFetchAccessCookieAction(FetchAccessCookiePayload(post!!.blogId))
+                )
             } else {
                 renderer!!.beginRender()
             }

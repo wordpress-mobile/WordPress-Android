@@ -743,6 +743,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         long privateAtSiteId = extras.getLong(PRIVATE_AT_SITE_ID);
 
         if (privateAtSiteId > 0) {
+            PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary(getSupportFragmentManager());
             mDispatcher.dispatch(
                     SiteActionBuilder.newFetchAccessCookieAction(new FetchAccessCookiePayload(privateAtSiteId)));
             return;
@@ -946,6 +947,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccessCookieFetched(OnAccessCookieFetched event) {
+        PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
         if (!event.isError()) {
             CookieManager.getInstance().setCookie(mPrivateAtomicCookie.getDomain(),
                     mPrivateAtomicCookie.getName() + "=" + mPrivateAtomicCookie.getValue());
