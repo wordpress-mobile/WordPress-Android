@@ -43,7 +43,7 @@ class PrepublishingActionsViewModelTest {
 
         // act
         val publishAction = getActionUiState(expectedActionType)
-        publishAction.onActionClicked.invoke(expectedActionType)
+        publishAction?.onActionClicked?.invoke(expectedActionType)
 
         // assert
         assertThat(viewModel.prepublishingActionType.value).isEqualTo(expectedActionType)
@@ -56,7 +56,7 @@ class PrepublishingActionsViewModelTest {
 
         // act
         val visibilityAction = getActionUiState(expectedActionType)
-        visibilityAction.onActionClicked.invoke(expectedActionType)
+        visibilityAction?.onActionClicked?.invoke(expectedActionType)
 
         // assert
         assertThat(viewModel.prepublishingActionType.value).isEqualTo(expectedActionType)
@@ -69,15 +69,15 @@ class PrepublishingActionsViewModelTest {
 
         // act
         val tagsAction = getActionUiState(expectedActionType)
-        tagsAction.onActionClicked.invoke(expectedActionType)
+        tagsAction?.onActionClicked?.invoke(expectedActionType)
 
         // assert
         assertThat(viewModel.prepublishingActionType.value).isEqualTo(expectedActionType)
     }
 
-    private fun getActionUiState(actionType: ActionType): PrepublishingActionUiState {
+    private fun getActionUiState(actionType: ActionType): PrepublishingActionUiState? {
         val actions = viewModel.prepublishingActionsUiState.value
                 ?.filterIsInstance(PrepublishingActionUiState::class.java)
-        return actions?.find { it.actionType == actionType }!!
+        return actions?.find { it.actionType == actionType }
     }
 }
