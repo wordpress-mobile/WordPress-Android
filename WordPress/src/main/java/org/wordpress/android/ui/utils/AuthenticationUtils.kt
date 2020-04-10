@@ -41,7 +41,7 @@ class AuthenticationUtils
         return headers
     }
 
-    companion object{
+    companion object {
         const val AUTHORIZATION_HEADER_NAME = "Authorization"
         const val COOKIE_HEADER_NAME = "Cookie"
     }

@@ -6,12 +6,10 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import org.wordpress.android.R
-import org.wordpress.android.ui.posts.PostTimePickerDialogFragment
 
 class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialogMessage = activity?.getString(R.string.media_accessing_progress);
-
+        val dialogMessage = activity?.getString(R.string.media_accessing_progress)
         return ProgressDialog.show(
                 activity, "", dialogMessage, true, true
         )
@@ -27,7 +25,8 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
         fun showIfNecessary(fragmentManager: FragmentManager?) {
             fragmentManager.let {
                 val thisFragment = fragmentManager!!.findFragmentByTag(TAG)
-                if (thisFragment == null || (thisFragment is PrivateAtCookieRefreshProgressDialog && !thisFragment.isDialogVisible())) {
+                if (thisFragment == null ||
+                        (thisFragment is PrivateAtCookieRefreshProgressDialog && !thisFragment.isDialogVisible())) {
                     PrivateAtCookieRefreshProgressDialog().show(fragmentManager, TAG)
                 }
             }

@@ -6,9 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.graphics.Rect
-import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Html
@@ -25,8 +23,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
@@ -100,8 +96,6 @@ import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClick
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
@@ -1131,7 +1125,7 @@ class ReaderPostDetailFragment : Fragment(),
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccessCookieFetched(event: OnAccessCookieFetched?) {
-       PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(fragmentManager)
+        PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(fragmentManager)
         if (!event!!.isError) {
             CookieManager.getInstance().setCookie(
                     privateAtomicCookie.getDomain(),

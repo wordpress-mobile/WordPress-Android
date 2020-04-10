@@ -149,7 +149,9 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 imageManager?.cancelRequestAndClearImageView(featuredImage)
             } else if (imageUrl.startsWith("http")) {
                 featuredImage.visibility = View.VISIBLE
-                val photonUrl = ReaderUtils.getResizedImageUrl(imageUrl, imageSize, imageSize, !isSitePhotonCapable, isPrivateAtSite)
+                val photonUrl = ReaderUtils.getResizedImageUrl(
+                        imageUrl, imageSize, imageSize, !isSitePhotonCapable, isPrivateAtSite
+                )
                 imageManager?.load(featuredImage, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
             } else {
                 val bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(featuredImage.context, imageUrl, imageSize)
