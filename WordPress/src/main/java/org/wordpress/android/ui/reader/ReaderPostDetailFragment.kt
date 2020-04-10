@@ -17,6 +17,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.CookieManager
 import android.webkit.WebView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -28,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -48,11 +50,15 @@ import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.FetchAccessCookiePayload
+import org.wordpress.android.fluxc.store.SiteStore.OnAccessCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
@@ -164,6 +170,7 @@ class ReaderPostDetailFragment : Fragment(),
     @Inject internal lateinit var dispatcher: Dispatcher
     @Inject internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
+    @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -280,9 +287,8 @@ class ReaderPostDetailFragment : Fragment(),
 
         readerBookmarkButton = view.findViewById(R.id.bookmark_button)
 
-        val progress = view.findViewById<ProgressBar>(R.id.progress_loading)
         if (postSlugsResolutionUnderway) {
-            progress.visibility = View.VISIBLE
+            showProgress()
         }
 
         showPost()
@@ -995,15 +1001,13 @@ class ReaderPostDetailFragment : Fragment(),
      * called when the post doesn't exist in local db, need to get it from server
      */
     private fun requestPost() {
-        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
-        progress.visibility = View.VISIBLE
-        progress.bringToFront()
+        showProgress()
 
         val listener = object : ReaderActions.OnRequestListener {
             override fun onSuccess() {
                 hasAlreadyRequestedPost = true
                 if (isAdded) {
-                    progress.visibility = View.GONE
+                    hideProgress()
                     showPost()
                     EventBus.getDefault().post(ReaderEvents.SinglePostDownloaded())
                 }
@@ -1012,7 +1016,7 @@ class ReaderPostDetailFragment : Fragment(),
             override fun onFailure(statusCode: Int) {
                 hasAlreadyRequestedPost = true
                 if (isAdded) {
-                    progress.visibility = View.GONE
+                    hideProgress()
                     onRequestFailure(statusCode)
                 }
             }
@@ -1036,8 +1040,7 @@ class ReaderPostDetailFragment : Fragment(),
             return
         }
 
-        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
-        progress.visibility = View.GONE
+        hideProgress()
 
         if (event.statusCode == 200) {
             replacePost(event.blogId, event.postId, false)
@@ -1114,6 +1117,31 @@ class ReaderPostDetailFragment : Fragment(),
         }
 
         ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+    }
+
+    private fun showProgress() {
+        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
+        progress.visibility = View.VISIBLE
+        progress.bringToFront()
+    }
+
+    private fun hideProgress() {
+        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
+        progress.visibility = View.GONE
+    }
+
+    @Subscribe(threadMode = MAIN)
+    fun onAccessCookieFetched(event: OnAccessCookieFetched?) {
+        hideProgress()
+        if (!event!!.isError) {
+            CookieManager.getInstance().setCookie(
+                    privateAtomicCookie.getDomain(),
+                    privateAtomicCookie.getName() + "=" + privateAtomicCookie.getValue()
+            )
+        }
+        if (renderer != null) {
+            renderer!!.beginRender()
+        }
     }
 
     // TODO replace this inner async task with a coroutine
@@ -1229,7 +1257,15 @@ class ReaderPostDetailFragment : Fragment(),
 
             // render the post in the webView
             renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils)
-            renderer!!.beginRender()
+
+            // if the post if from private atomic site postpone render until we have a special access cookie
+            if (post!!.isPrivate && post!!.isPrivate) {
+                showProgress()
+                dispatcher.dispatch(
+                    SiteActionBuilder.newFetchAccessCookieAction( FetchAccessCookiePayload(post!!.blogId)));
+            } else {
+                renderer!!.beginRender()
+            }
 
             // if we're showing just the excerpt, also show a footer which links to the full post
             if (post!!.shouldShowExcerpt()) {
