@@ -57,6 +57,7 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
+import org.wordpress.android.ui.main.utils.MeGravatarLoader;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
@@ -128,6 +129,7 @@ public class MySiteFragment extends Fragment implements
     public static final String KEY_DOMAIN_CREDIT_CHECKED = "KEY_DOMAIN_CREDIT_CHECKED";
 
     private ImageView mBlavatarImageView;
+    private ImageView mAvatarImageView;
     private ProgressBar mBlavatarProgressBar;
     private WPTextView mBlogTitleTextView;
     private WPTextView mBlogSubtitleTextView;
@@ -177,6 +179,7 @@ public class MySiteFragment extends Fragment implements
     @Inject QuickStartStore mQuickStartStore;
     @Inject ImageManager mImageManager;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject MeGravatarLoader mMeGravatarLoader;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -203,6 +206,19 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
+    private void refreshMeGravatar() {
+        String rawGravatarUrl = mMeGravatarLoader.constructGravatarUrl(mAccountStore.getAccount().getAvatarUrl());
+
+        mMeGravatarLoader.load(
+                false,
+                rawGravatarUrl,
+                null,
+                mAvatarImageView,
+                ImageType.USER,
+                null
+        );
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -211,6 +227,8 @@ public class MySiteFragment extends Fragment implements
 
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(getSelectedSite());
+
+        refreshMeGravatar();
 
         SiteModel site = getSelectedSite();
         if (site != null) {
@@ -358,13 +376,12 @@ public class MySiteFragment extends Fragment implements
 
         mToolbar = rootView.findViewById(R.id.toolbar_main);
         mToolbar.setTitle(mToolbarTitle);
+
         mToolbar.inflateMenu(R.menu.my_site_menu);
-        mToolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.me_item) {
+        View actionView = mToolbar.getMenu().findItem(R.id.me_item).getActionView();
+        mAvatarImageView = actionView.findViewById(R.id.avatar);
+        actionView.setOnClickListener(item -> {
                 ActivityLauncher.viewMeActivityForResult(getActivity());
-                return true;
-            }
-            return false;
         });
 
         return rootView;

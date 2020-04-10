@@ -185,9 +185,7 @@ Language: sr_RS
     <string name="saving_changes">Чувам измене</string>
     <string name="hint_comment_content">Коментар</string>
     <string name="trash">Отпад</string>
-    <string name="trash_no">Не шаљи на отпад</string>
     <string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
-    <string name="trash_yes">Отпад</string>
     <string name="dlg_confirm_trash_comments">Помери на отпад?</string>
     <string name="dlg_trashing_comments">Померам на отпад</string>
     <string name="dlg_unapproving_comments">Поништавам одобрење</string>

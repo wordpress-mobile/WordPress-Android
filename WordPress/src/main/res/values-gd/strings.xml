@@ -177,8 +177,6 @@ Language: gd_GB
     <string name="content_required">Tha feum air beachd</string>
     <string name="toast_comment_unedited">Cha deach am beachd atharrachadh</string>
     <string name="trash">An sgudal</string>
-    <string name="trash_no">Na cuir</string>
-    <string name="trash_yes">Cuir</string>
     <string name="dlg_confirm_trash_comments">Cuir dhan sgudal?</string>
     <string name="dlg_trashing_comments">’Ga chur dhan sgudal</string>
     <string name="dlg_approving_comments">’Ga aontachadh</string>

@@ -1,11 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-11 15:49:05+0000
+Translation-Revision-Date: 2020-04-03 16:38:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">What People Say</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">We offer a range of services to help you achieve the results you\'re after. Not sure what you need, or what it costs? We can explain what services are right for you and tell you more about our fees. Get in touch below.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">We are a small team of talented professionals with a wide range of skills and experience. We love what we do, and we do it with passion. We look forward to working with you.</string>
+    <string name="gutenberg_native_warning_message">Warning Message</string>
+    <string name="gutenberg_native_want_to_work_with_us">Want to work with us?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Visitors will want to know who is on the other side of the page. Use this space to write about yourself, your site, your business, or anything you want. Use the testimonials below to quote others, talking about the same thing - in their own words.</string>
+    <string name="gutenberg_native_usa">USA</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">This is sample content, included with the template to illustrate its features. Remove or replace it with your own words and media.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">The way to get started is to quit talking and begin doing.</string>
+    <string name="gutenberg_native_team">Team</string>
+    <string name="gutenberg_native_success_message">Success Message</string>
+    <string name="gutenberg_native_strategy">Strategy</string>
+    <string name="gutenberg_native_show_post_content">Show post content</string>
+    <string name="gutenberg_native_services">Services</string>
+    <string name="gutenberg_native_samuel_the_dog">Samuel the Dog</string>
+    <string name="gutenberg_native_sally_smith">Sally Smith</string>
+    <string name="gutenberg_native_project_name">Project Name</string>
+    <string name="gutenberg_native_position_or_job_title">Position or Job Title</string>
+    <string name="gutenberg_native_portfolio">Portfolio</string>
+    <string name="gutenberg_native_only_show_excerpt">Only show excerpt</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">My portfolio showcases various projects created throughout my career. See my contact information below and get in touch.</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">Minimum height in pixels</string>
+    <string name="gutenberg_native_link_to">Link To</string>
+    <string name="gutenberg_native_link_settings">Link Settings</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Let\'s talk 👋. Don\'t hesitate to reach out with the contact information below, or send a message using the form.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Let\'s build something together.</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Let’s Build Something Together</string>
+    <string name="gutenberg_native_let_s_build_something_together">Let’s build something together</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">It is our choices, Harry, that show what we truly are, far more than our abilities.</string>
+    <string name="gutenberg_native_inspiration">Inspiration</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">Get in Touch!</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">Get in touch!</string>
+    <string name="gutenberg_native_get_in_touch">Get in Touch</string>
+    <string name="gutenberg_native_excerpt_length_words">Excerpt length (words)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Email me: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">Edit cover media</string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Don’t cry because it’s over, smile because it happened.</string>
+    <string name="gutenberg_native_customize">CUSTOMISE</string>
+    <string name="gutenberg_native_city_10100">City, 10100</string>
+    <string name="gutenberg_native_button_link_url">Button Link URL</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">Button colour settings are coming soon.</string>
+    <string name="gutenberg_native_border_settings">Border Settings</string>
+    <string name="gutenberg_native_border_radius">Border Radius</string>
+    <string name="gutenberg_native_background_opacity">Background Opacity</string>
+    <string name="gutenberg_native_add_paragraph_block">Add Paragraph Block</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">A short description of the services you offer.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">A short bio with personal history, key achievements, or an interesting fact.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">A description of the project and the works presented.</string>
+    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
+    <string name="gutenberg_native_10_street_road">10 Street Road</string>
+    <string name="create_post_page_fab_tooltip_contributors">Create a post</string>
+    <string name="post_list_tab_trashed_posts">Binned</string>
+    <string name="post_list_tab_scheduled_posts">Scheduled</string>
+    <string name="post_list_tab_published_posts">Published</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicise cannot connect to Facebook Profiles, only published Pages.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
+    <string name="my_site_select_domains_page_title">Site Address</string>
+    <string name="notifications_tab_title_likes">Likes</string>
+    <string name="notifications_tab_title_follows">Follows</string>
+    <string name="notifications_tab_title_comments">Comments</string>
+    <string name="notifications_tab_title_unread_notifications">Unread</string>
+    <string name="dlg_cancel_action_dont_trash">Don\'t bin</string>
+    <string name="dlg_confirm_action_trash">Bin</string>
     <string name="stats_insights_management_activity">Activity</string>
     <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
     <string name="stats_insights_management_general">General</string>
@@ -282,7 +350,6 @@ Language: en_GB
     <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
     <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">The Facebook connection could not be made because this account does not have access to any pages. Facebook supports sharing connections to Facebook Pages, but not to Facebook Profiles.</string>
     <string name="stats_post_views_label">Views</string>
     <string name="stats_post_label">Post</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -379,8 +446,7 @@ Language: en_GB
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="post_uploading_draft">Uploading draft</string>
-    <string name="post_list_drafts">Drafts</string>
-    <string name="post_list_published">Published</string>
+    <string name="post_list_tab_drafts">Drafts</string>
     <string name="post_list_author_everyone">Everyone</string>
     <string name="post_list_author_me">Me</string>
     <string name="error_restoring_post">An error occurred while restoring the post</string>
@@ -525,15 +591,7 @@ Language: en_GB
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
-    <string name="new_site_creation_button_skip">Skip</string>
-    <string name="new_site_creation_tag_line_description">The tagline is a short line of text shown right below the title.</string>
-    <string name="new_site_creation_tag_line_hint">Tagline</string>
-    <string name="new_site_creation_site_title_hint">Site Title</string>
-    <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating.</string>
-    <string name="new_site_creation_site_info_header_title">Basic Information</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="site_creation_segments_title">Tell us what kind of site you’d like to make</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
@@ -556,11 +614,6 @@ Language: en_GB
     <string name="stats_no_data_for_period">No data for this period</string>
     <string name="preference_strip_image_location">Remove location from media</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
-    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
-    <string name="giphy_picker_empty_search_list">No media matching your search</string>
-    <string name="giphy_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
-    <string name="giphy_picker_search_hint">Search Giphy</string>
     <string name="stats_author_views_label">Views</string>
     <string name="stats_author_label">Author</string>
     <string name="stats_authors">Authors</string>
@@ -739,7 +792,6 @@ Language: en_GB
     <string name="people_empty_list_filtered_email_followers">No email followers yet</string>
     <string name="people_empty_list_filtered_followers">No followers yet</string>
     <string name="people_empty_list_filtered_users">No users yet</string>
-    <string name="connection_service_facebook_notice">As of August 1, 2018, Facebook no longer allows direct sharing of posts to Facebook Profiles. Connections to Facebook Pages remain unchanged.</string>
     <string name="reader_empty_posts_liked_description">Posts that you like will appear here</string>
     <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
     <string name="reader_empty_followed_blogs_button_followed">Go to following</string>
@@ -1296,8 +1348,6 @@ Language: en_GB
     <string name="editor_dropped_text_error">Error occurred while dropping text</string>
     <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
     <string name="editor_content_hint">Share your story here…</string>
-    <string name="post_list_trashed">Binned</string>
-    <string name="post_list_scheduled">Scheduled</string>
     <string name="post_status_post_private">Private</string>
     <string name="post_status_draft">Draft</string>
     <string name="post_status_pending_review">Pending review</string>
@@ -1318,7 +1368,6 @@ Language: en_GB
     <string name="post_settings_more_options">More Options</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Unread</string>
     <string name="notifications_tab_title_all">All</string>
     <string name="top_level_category_name">Top level</string>
     <string name="category_parent">Parent category (optional):</string>
@@ -2016,8 +2065,6 @@ Language: en_GB
     <string name="saving_changes">Saving changes</string>
     <string name="hint_comment_content">Comment</string>
     <string name="trash">Bin</string>
-    <string name="trash_no">Don\'t bin</string>
-    <string name="trash_yes">Bin</string>
     <string name="dlg_confirm_trash_comments">Send to bin?</string>
     <string name="dlg_trashing_comments">Sending to bin</string>
     <string name="dlg_spamming_comments">Marking as spam</string>

@@ -164,7 +164,6 @@ Language: bg
     <string name="post_settings_slug">Кратко име</string>
     <string name="post_settings_more_options">Повече настройки</string>
     <string name="post_settings_categories_and_tags">Категории и етикети</string>
-    <string name="notifications_tab_title_unread">Непрочетени</string>
     <string name="notifications_tab_title_all">Всички</string>
     <string name="post_settings_status">Състояние</string>
     <string name="category_parent">Родителска категория (не задължително):</string>
@@ -799,8 +798,6 @@ Language: bg
     <string name="dlg_unapproving_comments">Неодобряване</string>
     <string name="dlg_spamming_comments">Отбелязване като спам</string>
     <string name="dlg_confirm_trash_comments">Изпращане в кошчето</string>
-    <string name="trash_yes">Изтриване</string>
-    <string name="trash_no">Да не се изтрива</string>
     <string name="remove_account">Премахване на сайта</string>
     <string name="content_required">Коментарът е задължителен</string>
     <string name="toast_comment_unedited">Коментарът не беше променен</string>
