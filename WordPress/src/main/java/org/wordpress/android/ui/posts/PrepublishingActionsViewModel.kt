@@ -9,7 +9,7 @@ import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingActionUiState
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
@@ -18,8 +18,8 @@ class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
     private val _prepublishingActionsUiState = MutableLiveData<List<PrepublishingActionItemUiState>>()
     val prepublishingActionsUiState: LiveData<List<PrepublishingActionItemUiState>> = _prepublishingActionsUiState
 
-    private val _prepublishingActionType = SingleLiveEvent<ActionType>()
-    val prepublishingActionType: LiveData<ActionType> = _prepublishingActionType
+    private val _prepublishingActionType = MutableLiveData<Event<ActionType>>()
+    val prepublishingActionType: LiveData<Event<ActionType>> = _prepublishingActionType
 
     fun start() {
         if (isStarted) return
@@ -51,6 +51,6 @@ class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun onActionClicked(actionType: ActionType) {
-        _prepublishingActionType.postValue(actionType)
+        _prepublishingActionType.postValue(Event(actionType))
     }
 }
