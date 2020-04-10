@@ -14,12 +14,7 @@ class PreviewImageAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): RecyclerView.ViewHolder {
-        return PreviewImageViewHolder.create(
-                parent,
-                loadIntoImageViewWithResultListener
-        )
-    }
+    ): RecyclerView.ViewHolder = PreviewImageViewHolder(parent, loadIntoImageViewWithResultListener)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val uiState = getItem(position)
@@ -33,9 +28,8 @@ private class PreviewImageDiffCallback : DiffUtil.ItemCallback<ImageUiState>() {
     }
 
     override fun areContentsTheSame(oldItem: ImageUiState, newItem: ImageUiState): Boolean {
-        if (oldItem::class != newItem::class) {
-            return false
-        }
-        return oldItem.data == newItem.data
+        return oldItem.data == newItem.data &&
+            oldItem.progressBarVisible == newItem.progressBarVisible &&
+            oldItem.retryLayoutVisible == newItem.retryLayoutVisible
     }
 }

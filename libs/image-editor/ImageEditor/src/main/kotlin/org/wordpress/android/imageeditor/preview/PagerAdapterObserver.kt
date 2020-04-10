@@ -7,8 +7,8 @@ import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrate
 
 /**
  * Default simplified [RecyclerView.AdapterDataObserver] set on the [ViewPager2] removes all tabs and recreates them
- * every-time, causing flickering. This custom observer watches changes to [RecyclerView.Adapter] set on the
- * [ViewPager2] and creates a new tab on the tabLayout only if it doesn't exist.
+ * every-time the adapter is refreshed, causing flickering. This custom observer watches changes to
+ * [RecyclerView.Adapter] set on the [ViewPager2] and creates a new tab on the tabLayout only if it doesn't exist.
  */
 class PagerAdapterObserver(
     private val tabLayout: TabLayout,
@@ -43,10 +43,10 @@ class PagerAdapterObserver(
         viewPager.adapter?.let {
             val adapterCount = it.itemCount
             for (i in 0 until adapterCount) {
-                val isExistingTab = tabLayout.getTabAt(i)
-                val tab = isExistingTab ?: tabLayout.newTab()
+                val existingTab = tabLayout.getTabAt(i)
+                val tab = existingTab ?: tabLayout.newTab()
                 tabConfigurationStrategy.onConfigureTab(tab, i)
-                if (isExistingTab == null) {
+                if (existingTab == null) {
                     tabLayout.addTab(tab, false)
                 }
             }

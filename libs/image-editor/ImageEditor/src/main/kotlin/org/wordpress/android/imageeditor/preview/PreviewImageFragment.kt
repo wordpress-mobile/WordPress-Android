@@ -26,7 +26,7 @@ import java.io.File
 class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
-    private lateinit var pagerAdapterObserver: PagerAdapterObserver
+    private var pagerAdapterObserver: PagerAdapterObserver? = null
 
     companion object {
         const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
@@ -59,27 +59,37 @@ class PreviewImageFragment : Fragment() {
                 loadIntoImageViewWithResultListener(imageData, imageView, position)
             }
         )
-        viewPager.adapter = previewImageAdapter
+        previewImageViewPager.adapter = previewImageAdapter
 
         val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
             if (tab.customView == null) {
-                val customView = LayoutInflater.from(context).inflate(layout.preview_image_thumbnail, null)
+                val customView = LayoutInflater.from(context)
+                        .inflate(layout.preview_image_thumbnail, thumbnailsTabLayout, false)
                 tab.customView = customView
             }
             val imageView = (tab.customView as FrameLayout).findViewById<ImageView>(R.id.thumbnailImageView)
-            val imageData = (viewPager.adapter as PreviewImageAdapter).currentList[position].data
+            val imageData = previewImageAdapter.currentList[position].data
             loadIntoImageView(imageData.lowResImageUrl, imageView)
         }
 
-        tabLayoutMediator = TabLayoutMediator(tabLayout, viewPager, false, tabConfigurationStrategy)
+        tabLayoutMediator = TabLayoutMediator(
+            thumbnailsTabLayout,
+            previewImageViewPager,
+            false,
+            tabConfigurationStrategy
+        )
         tabLayoutMediator.attach()
 
-        pagerAdapterObserver = PagerAdapterObserver(tabLayout, viewPager, tabConfigurationStrategy)
-        viewPager.adapter?.registerAdapterDataObserver(pagerAdapterObserver)
+        pagerAdapterObserver = PagerAdapterObserver(
+            thumbnailsTabLayout,
+            previewImageViewPager,
+            tabConfigurationStrategy
+        )
+        previewImageAdapter.registerAdapterDataObserver(pagerAdapterObserver as PagerAdapterObserver)
 
         // Setting page transformer explicitly sets internal RecyclerView's itemAnimator to null
         // to fix this issue: https://issuetracker.google.com/issues/37034191
-        viewPager.setPageTransformer { _, _ ->
+        previewImageViewPager.setPageTransformer { _, _ ->
         }
     }
 
@@ -95,7 +105,7 @@ class PreviewImageFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.uiState.observe(this, Observer { state ->
-            (viewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsUiState.items)
+            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
         })
 
         viewModel.loadIntoFile.observe(this, Observer { fileState ->
@@ -157,7 +167,10 @@ class PreviewImageFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewPager.adapter?.unregisterAdapterDataObserver(pagerAdapterObserver)
+        pagerAdapterObserver?.let {
+            previewImageViewPager.adapter?.unregisterAdapterDataObserver(it)
+        }
+        pagerAdapterObserver = null
         tabLayoutMediator.detach()
     }
 }
