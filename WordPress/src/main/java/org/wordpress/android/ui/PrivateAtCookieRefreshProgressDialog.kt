@@ -4,15 +4,42 @@ import android.app.Dialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
+import org.wordpress.android.R
+import org.wordpress.android.ui.posts.PostTimePickerDialogFragment
 
 class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-       return ProgressDialog.show(
-                activity, "", "Establishing access to media files on private site.", true, true
+        val dialogMessage = activity?.getString(R.string.media_accessing_progress);
+
+        return ProgressDialog.show(
+                activity, "", dialogMessage, true, true
         )
+    }
+
+    fun isDialogVisible(): Boolean {
+        return dialog != null && dialog!!.isShowing
     }
 
     companion object {
         const val TAG = "private_at_cookie_progress_dialog"
+
+        fun showIfNecessary(fragmentManager: FragmentManager?) {
+            fragmentManager.let {
+                val thisFragment = fragmentManager!!.findFragmentByTag(TAG)
+                if (thisFragment == null || (thisFragment is PrivateAtCookieRefreshProgressDialog && !thisFragment.isDialogVisible())) {
+                    PrivateAtCookieRefreshProgressDialog().show(fragmentManager, TAG)
+                }
+            }
+        }
+
+        fun dismissIfNecessary(fragmentManager: FragmentManager?) {
+            fragmentManager.let {
+                val thisFragment = fragmentManager!!.findFragmentByTag(TAG)
+                if (thisFragment is PrivateAtCookieRefreshProgressDialog) {
+                    thisFragment.dismiss()
+                }
+            }
+        }
     }
 }
