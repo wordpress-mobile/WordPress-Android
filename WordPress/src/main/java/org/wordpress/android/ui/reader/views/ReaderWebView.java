@@ -73,7 +73,7 @@ public class ReaderWebView extends WPWebView {
 
     private boolean mIsDestroyed;
     @Inject AccountStore mAccountStore;
-    @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
+
 
     public ReaderWebView(Context context) {
         super(context);
@@ -107,10 +107,6 @@ public class ReaderWebView extends WPWebView {
             // we need third-party cookies to support authenticated images
             CookieManager cookieManager = CookieManager.getInstance();
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
-            if (mPrivateAtomicCookie.exists()) {
-                CookieManager.getInstance().setCookie(mPrivateAtomicCookie.getDomain(),
-                        mPrivateAtomicCookie.getName() + "=" + mPrivateAtomicCookie.getValue());
-            }
             this.setDownloadListener(
                     (url, userAgent, contentDisposition, mimetype, contentLength) -> {
                         if (hasUrlClickListener()) {

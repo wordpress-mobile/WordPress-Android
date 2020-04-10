@@ -40,9 +40,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
@@ -64,7 +64,6 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.ReaderActionBuilder;
-import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -561,15 +560,7 @@ public class ReaderPostListFragment extends Fragment
         super.onResume();
 
         SiteModel selectedSite = getSelectedSite();
-        if (selectedSite != null) {
-            if (selectedSite.isPrivateWPComAtomic()) {
-                mDispatcher.dispatch(SiteActionBuilder.newFetchAccessCookieAction(selectedSite));
-            } else {
-                checkPostAdapter();
-            }
-        } else {
-            checkPostAdapter();
-        }
+        checkPostAdapter();
 
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
