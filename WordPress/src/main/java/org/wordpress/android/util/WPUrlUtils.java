@@ -21,7 +21,7 @@ public class WPUrlUtils {
     }
 
     public static boolean safeToAddPrivateAtCookie(String url, String cookieHost) {
-        return UrlUtils.isHttps(url) && (isWordPressCom(url) || UrlUtils.getHost(url).equals(cookieHost));
+        return UrlUtils.getHost(url).equals(cookieHost);
     }
 
     public static boolean isWordPressCom(String url) {
