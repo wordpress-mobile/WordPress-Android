@@ -58,6 +58,7 @@ android {
 
 ext {
     lifecycleVersion = '2.2.0'
+    viewpager2Version = '1.0.0'
 }
 
 dependencies {
@@ -68,6 +69,10 @@ dependencies {
     // UI
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation "androidx.viewpager2:viewpager2:$viewpager2Version"
+
+    // Material
+    implementation "com.google.android.material:material:$materialVersion"
 
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navComponenVersion"

@@ -2,4 +2,6 @@
 <resources>
     <color name="bg_default">@android:color/black</color>
     <color name="dark_grey">#20242F</color>
+
+    <color name="border_blue">#46698B</color>
 </resources>

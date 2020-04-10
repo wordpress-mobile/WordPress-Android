@@ -9,7 +9,8 @@ class ImageEditor private constructor(
     private val loadIntoImageViewWithResultListener: (
         (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
     ),
-    private val loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit)
+    private val loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit),
+    private val loadIntoImageView: ((String, ImageView, ScaleType) -> Unit)
 ) {
     interface RequestListener<T> {
         /**
@@ -46,6 +47,10 @@ class ImageEditor private constructor(
         loadIntoFileWithResultListener.invoke(imageUrl, listener)
     }
 
+    fun loadIntoImageView(imageUrl: String, imageView: ImageView, scaleType: ScaleType) {
+        loadIntoImageView.invoke(imageUrl, imageView, scaleType)
+    }
+
     companion object {
         private lateinit var INSTANCE: ImageEditor
 
@@ -55,11 +60,13 @@ class ImageEditor private constructor(
             loadIntoImageViewWithResultListener: (
                 (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
             ),
-            loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit)
+            loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit),
+            loadIntoImageView: ((String, ImageView, ScaleType) -> Unit)
         ) {
             INSTANCE = ImageEditor(
                 loadIntoImageViewWithResultListener,
-                loadIntoFileWithResultListener
+                loadIntoFileWithResultListener,
+                loadIntoImageView
             )
         }
     }

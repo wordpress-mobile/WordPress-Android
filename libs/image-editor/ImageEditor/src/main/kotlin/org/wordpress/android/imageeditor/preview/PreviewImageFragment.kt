@@ -6,24 +6,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER
+import android.widget.ImageView.ScaleType.CENTER_CROP
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.layout_retry.*
-import kotlinx.android.synthetic.main.fragment_preview_image.*
+import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
+import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
-import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
 class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
+    private lateinit var tabLayoutMediator: TabLayoutMediator
+    private var pagerAdapterObserver: PagerAdapterObserver? = null
 
     companion object {
         const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
@@ -36,22 +39,57 @@ class PreviewImageFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(layout.fragment_preview_image, container, false)
+    ): View? = inflater.inflate(R.layout.preview_image_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullIntent = checkNotNull(requireActivity().intent)
         initializeViewModels(nonNullIntent)
-        initializeViews(nonNullIntent)
+        initializeViews()
     }
 
-    private fun initializeViews(nonNullIntent: Intent) {
-        errorLayout.setOnClickListener {
-            val lowResImageUrl = nonNullIntent.getStringExtra(ARG_LOW_RES_IMAGE_URL)
-            val highResImageUrl = nonNullIntent.getStringExtra(ARG_HIGH_RES_IMAGE_URL)
+    private fun initializeViews() {
+        initializeViewPager()
+    }
 
-            viewModel.onLoadIntoImageViewRetry(lowResImageUrl, highResImageUrl)
+    private fun initializeViewPager() {
+        val previewImageAdapter = PreviewImageAdapter(
+            loadIntoImageViewWithResultListener = { imageData, imageView, position ->
+                loadIntoImageViewWithResultListener(imageData, imageView, position)
+            }
+        )
+        previewImageViewPager.adapter = previewImageAdapter
+
+        val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+            if (tab.customView == null) {
+                val customView = LayoutInflater.from(context)
+                        .inflate(layout.preview_image_thumbnail, thumbnailsTabLayout, false)
+                tab.customView = customView
+            }
+            val imageView = (tab.customView as FrameLayout).findViewById<ImageView>(R.id.thumbnailImageView)
+            val imageData = previewImageAdapter.currentList[position].data
+            loadIntoImageView(imageData.lowResImageUrl, imageView)
+        }
+
+        tabLayoutMediator = TabLayoutMediator(
+            thumbnailsTabLayout,
+            previewImageViewPager,
+            false,
+            tabConfigurationStrategy
+        )
+        tabLayoutMediator.attach()
+
+        pagerAdapterObserver = PagerAdapterObserver(
+            thumbnailsTabLayout,
+            previewImageViewPager,
+            tabConfigurationStrategy
+        )
+        previewImageAdapter.registerAdapterDataObserver(pagerAdapterObserver as PagerAdapterObserver)
+
+        // Setting page transformer explicitly sets internal RecyclerView's itemAnimator to null
+        // to fix this issue: https://issuetracker.google.com/issues/37034191
+        previewImageViewPager.setPageTransformer { _, _ ->
         }
     }
 
@@ -66,12 +104,8 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(this, Observer { uiState ->
-            if (uiState is ImageDataStartLoadingUiState) {
-                loadIntoImageView(uiState.imageData)
-            }
-            UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
-            UiHelpers.updateVisibility(errorLayout, uiState.retryLayoutVisible)
+        viewModel.uiState.observe(this, Observer { state ->
+            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
         })
 
         viewModel.loadIntoFile.observe(this, Observer { fileState ->
@@ -85,19 +119,23 @@ class PreviewImageFragment : Fragment() {
         })
     }
 
-    private fun loadIntoImageView(imageData: ImageData) {
+    private fun loadIntoImageView(url: String, imageView: ImageView) {
+        ImageEditor.instance.loadIntoImageView(url, imageView, CENTER_CROP)
+    }
+
+    private fun loadIntoImageViewWithResultListener(imageData: ImageData, imageView: ImageView, position: Int) {
         ImageEditor.instance.loadIntoImageViewWithResultListener(
             imageData.highResImageUrl,
-            previewImageView,
+            imageView,
             CENTER,
             imageData.lowResImageUrl,
             object : RequestListener<Drawable> {
                 override fun onResourceReady(resource: Drawable, url: String) {
-                    viewModel.onLoadIntoImageViewSuccess(url, imageData)
+                    viewModel.onLoadIntoImageViewSuccess(url, position)
                 }
 
                 override fun onLoadFailed(e: Exception?, url: String) {
-                    viewModel.onLoadIntoImageViewFailed(url)
+                    viewModel.onLoadIntoImageViewFailed(url, position)
                 }
             }
         )
@@ -119,10 +157,20 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun navigateToCropScreenWithInputFilePath(fileInfo: Pair<String, String?>) {
-        val inputFilePath = fileInfo.first
-        val outputFileExtension = fileInfo.second
-        findNavController().navigate(
-            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
-        )
+        // TODO: temporarily stop navigation to next screen
+//        val inputFilePath = fileInfo.first
+//        val outputFileExtension = fileInfo.second
+//        findNavController().navigate(
+//            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
+//        )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        pagerAdapterObserver?.let {
+            previewImageViewPager.adapter?.unregisterAdapterDataObserver(it)
+        }
+        pagerAdapterObserver = null
+        tabLayoutMediator.detach()
     }
 }
