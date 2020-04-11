@@ -25,10 +25,9 @@ public class PostSettingsTagsActivity extends LocaleAwareActivity implements Tag
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String tags = null;
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            tags = getIntent().getStringExtra(KEY_TAGS);
+            mTags = getIntent().getStringExtra(KEY_TAGS);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
