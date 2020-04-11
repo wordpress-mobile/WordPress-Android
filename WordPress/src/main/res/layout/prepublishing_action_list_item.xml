@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/top_divider"
         app:layout_constraintVertical_chainStyle="spread"
-        tools:text="Yeah" />
+        tools:text="Action Type" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/action_result"
