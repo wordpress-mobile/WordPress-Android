@@ -84,7 +84,7 @@ public class PostSettingsTagsActivity extends LocaleAwareActivity implements Tag
     }
 
     private void saveAndFinish() {
-        //ActivityUtils.hideKeyboardForced(mTagsEditText); call fragment here.
+        closeKeyboard();
 
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SELECTED_TAGS, mTags);
@@ -92,6 +92,13 @@ public class PostSettingsTagsActivity extends LocaleAwareActivity implements Tag
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private void closeKeyboard() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(PostSettingsTagsFragment.TAG);
+        if (fragment != null) {
+            ((PostSettingsTagsFragment) fragment).closeKeyboard();
+        }
     }
 
     @Override public void onTagsSelected(@NonNull String selectedTags) {
