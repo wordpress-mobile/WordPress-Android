@@ -50,4 +50,12 @@ class PrepublishingActionsFragment : Fragment() {
 
         viewModel.start()
     }
-}
+
+    companion object {
+        const val TAG = "prepublishing_actions_fragment_tag"
+
+        @JvmStatic
+        fun newInstance(): PrepublishingActionsFragment {
+            return PrepublishingActionsFragment()
+        }
+    }}
