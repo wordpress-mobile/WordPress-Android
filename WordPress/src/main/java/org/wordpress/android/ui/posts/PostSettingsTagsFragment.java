@@ -27,16 +27,11 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ToastUtils.Duration;
 
 import javax.inject.Inject;
 
 import static org.wordpress.android.ui.posts.PostSettingsTagsActivity.KEY_TAGS;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PostSettingsTagsFragment extends Fragment implements TextWatcher, View.OnKeyListener, TagSelectedListener {
     public static final String TAG = "post_settings_tags_fragment_tag";
 
@@ -48,15 +43,15 @@ public class PostSettingsTagsFragment extends Fragment implements TextWatcher, V
     @Inject Dispatcher mDispatcher;
     @Inject TaxonomyStore mTaxonomyStore;
 
-    private String mTags = null;
+    private String mTags;
 
-    private TagsSelectedListener mTagsSelectedListener = null;
+    private TagsSelectedListener mTagsSelectedListener;
 
     public PostSettingsTagsFragment() {
         // Required empty public constructor
     }
 
-    public static PostSettingsTagsFragment newInstance(SiteModel site, String tags) {
+    public static PostSettingsTagsFragment newInstance(@NonNull SiteModel site, @Nullable String tags) {
         Bundle args = new Bundle();
         args.putSerializable(WordPress.SITE, site);
         args.putString(KEY_TAGS, tags);
@@ -73,6 +68,10 @@ public class PostSettingsTagsFragment extends Fragment implements TextWatcher, V
         if (getArguments() != null) {
             mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
             mTags = requireActivity().getIntent().getStringExtra(KEY_TAGS);
+
+            if (mSite == null) {
+                throw new IllegalStateException("Required argument mSite is missing.");
+            }
         }
     }
 
@@ -204,7 +203,7 @@ public class PostSettingsTagsFragment extends Fragment implements TextWatcher, V
         }
     }
 
-    public void closeKeyboard() {
+    void closeKeyboard() {
         ActivityUtils.hideKeyboardForced(mTagsEditText);
     }
 }
