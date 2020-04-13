@@ -179,20 +179,20 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class FetchedAccessCookiePayload extends Payload<AccessCookieError> {
+    public static class FetchedPrivateAtomicCookiePayload extends Payload<PrivateAtomicCookieError> {
         public SiteModel site;
         @Nullable public PrivateAtomicCookieResponse cookie;
 
-        public FetchedAccessCookiePayload(SiteModel site, @Nullable PrivateAtomicCookieResponse cookie) {
+        public FetchedPrivateAtomicCookiePayload(SiteModel site, @Nullable PrivateAtomicCookieResponse cookie) {
             this.site = site;
             this.cookie = cookie;
         }
     }
 
-    public static class FetchAccessCookiePayload {
+    public static class FetchPrivateAtomicCookiePayload {
         public long siteId;
 
-        public FetchAccessCookiePayload(long siteId) {
+        public FetchPrivateAtomicCookiePayload(long siteId) {
             this.siteId = siteId;
         }
     }
@@ -636,12 +636,12 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class OnAccessCookieFetched extends OnChanged<AccessCookieError> {
+    public static class OnPrivateAtomicCookieFetched extends OnChanged<PrivateAtomicCookieError> {
         public SiteModel site;
         public boolean success;
 
-        public OnAccessCookieFetched(@Nullable SiteModel site, boolean success,
-                                     @Nullable AccessCookieError error) {
+        public OnPrivateAtomicCookieFetched(@Nullable SiteModel site, boolean success,
+                                            @Nullable PrivateAtomicCookieError error) {
             this.site = site;
             this.success = success;
             this.error = error;
@@ -785,11 +785,11 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class AccessCookieError implements OnChangedError {
+    public static class PrivateAtomicCookieError implements OnChangedError {
         @NonNull public AccessCookieErrorType type;
         @Nullable public String message;
 
-        public AccessCookieError(@NonNull AccessCookieErrorType type, @NonNull String message) {
+        public PrivateAtomicCookieError(@NonNull AccessCookieErrorType type, @NonNull String message) {
             this.type = type;
             this.message = message;
         }
@@ -1562,11 +1562,11 @@ public class SiteStore extends Store {
             case DESIGNATED_PRIMARY_DOMAIN:
                 handleDesignatedPrimaryDomain((DesignatedPrimaryDomainPayload) action.getPayload());
                 break;
-            case FETCH_ACCESS_COOKIE:
-                fetchAccessCookie((FetchAccessCookiePayload) action.getPayload());
+            case FETCH_PRIVATE_ATOMIC_COOKIE:
+                fetchPrivateAtomicCookie((FetchPrivateAtomicCookiePayload) action.getPayload());
                 break;
-            case FETCHED_ACCESS_COOKIE:
-                handleFetchAccessCookie((FetchedAccessCookiePayload) action.getPayload());
+            case FETCHED_PRIVATE_ATOMIC_COOKIE:
+                handleFetchedPrivateAtomicCookie((FetchedPrivateAtomicCookiePayload) action.getPayload());
                 break;
         }
     }
@@ -1947,36 +1947,38 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void fetchAccessCookie(FetchAccessCookiePayload payload) {
+    private void fetchPrivateAtomicCookie(FetchPrivateAtomicCookiePayload payload) {
         SiteModel site = getSiteBySiteId(payload.siteId);
 
         if (site == null) {
-            AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.SITE_MISSING_FROM_STORE,
+            PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(AccessCookieErrorType.SITE_MISSING_FROM_STORE,
                     "Requested site is missing from the store.");
-            emitChange(new OnAccessCookieFetched(null, false, cookieError));
+            emitChange(new OnPrivateAtomicCookieFetched(null, false, cookieError));
             return;
         }
 
         if (!site.isWPComAtomic()) {
-            AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.NON_PRIVATE_AT_SITE,
+            PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(AccessCookieErrorType.NON_PRIVATE_AT_SITE,
                     "Cookie can only be requested for private atomic site.");
-            emitChange(new OnAccessCookieFetched(site, false, cookieError));
+            emitChange(new OnPrivateAtomicCookieFetched(site, false, cookieError));
             return;
         }
 
         mSiteRestClient.fetchAccessCookie(site);
     }
 
-    private void handleFetchAccessCookie(FetchedAccessCookiePayload payload) {
-        AtomicCookie siteCookie = null;
-
-        if (!payload.isError()) {
-            siteCookie = payload.cookie.getCookies().get(0);
+    private void handleFetchedPrivateAtomicCookie(FetchedPrivateAtomicCookiePayload payload) {
+        if (payload.cookie == null || payload.cookie.getCookies().isEmpty()) {
+            emitChange(new OnPrivateAtomicCookieFetched(payload.site, false,
+                    new PrivateAtomicCookieError(AccessCookieErrorType.INVALID_RESPONSE,
+                            "Cookie is missing from response.")));
+             mPrivateAtomicCookie.set(null);
+            return;
         }
 
+        AtomicCookie siteCookie = payload.cookie.getCookies().get(0);
         mPrivateAtomicCookie.set(siteCookie);
-
-        emitChange(new OnAccessCookieFetched(payload.site, true, payload.error));
+        emitChange(new OnPrivateAtomicCookieFetched(payload.site, true, payload.error));
     }
 
     private void fetchPlans(SiteModel siteModel) {
