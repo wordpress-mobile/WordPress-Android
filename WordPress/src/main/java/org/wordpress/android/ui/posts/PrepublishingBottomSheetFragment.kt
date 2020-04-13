@@ -71,12 +71,11 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
             }
         })
 
-        prepublishingViewModel.currentActionType.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {actionState ->
-                navigateToAction(actionState)
+        prepublishingViewModel.currentActionsState.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { actionState ->
+                navigateToScreen(actionState)
             }
         })
-
 
         var actionsState = arguments?.getParcelable<ActionsState>(KEY_TAGS_ACTION_STATE)
         if (actionsState == null) {
@@ -85,7 +84,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
         prepublishingViewModel.start(actionsState)
     }
 
-    private fun navigateToAction(actionState: ActionsState) {
+    private fun navigateToScreen(actionState: ActionsState) {
         val result = when (actionState.currentScreen) {
             HOME -> Pair(PrepublishingActionsFragment.newInstance(), PrepublishingActionsFragment.TAG)
             PrepublishingScreen.PUBLISH -> TODO()

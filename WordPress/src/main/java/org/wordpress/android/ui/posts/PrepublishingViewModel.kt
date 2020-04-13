@@ -9,6 +9,7 @@ import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.ui.posts.ActionState.TagsActionState
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
+import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -22,7 +23,8 @@ enum class PrepublishingScreen {
 }
 
 @Parcelize
-data class ActionsState(val currentScreen:PrepublishingScreen = HOME, val tagsActionState: TagsActionState) : Parcelable
+data class ActionsState(val currentScreen: PrepublishingScreen = HOME, val tagsActionState: TagsActionState) :
+        Parcelable
 
 sealed class ActionState() : Parcelable {
     @Parcelize
@@ -33,8 +35,8 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     private var isStarted = false
 
     private lateinit var actionsState: ActionsState
-    private val _currentActionType = MutableLiveData<Event<ActionsState>>()
-    val currentActionType: LiveData<Event<ActionsState>> = _currentActionType
+    private val _currentActionsState = MutableLiveData<Event<ActionsState>>()
+    val currentActionsState: LiveData<Event<ActionsState>> = _currentActionsState
 
     fun start(actionsState: ActionsState) {
         if (isStarted) return
@@ -44,11 +46,11 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun updateState() {
-        _currentActionType.postValue(Event(actionsState))
+        _currentActionsState.postValue(Event(actionsState))
     }
 
     fun updateCurrentActionTypeState(actionType: ActionType) {
-        //update state her.
+        actionsState = actionsState.copy(currentScreen = TAGS)
         updateState()
     }
 
