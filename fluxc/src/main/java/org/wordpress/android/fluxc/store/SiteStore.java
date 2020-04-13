@@ -25,8 +25,8 @@ import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteCookie;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteCookieResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AtomicCookie;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookieResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
@@ -181,9 +181,9 @@ public class SiteStore extends Store {
 
     public static class FetchedAccessCookiePayload extends Payload<AccessCookieError> {
         public SiteModel site;
-        @Nullable public SiteCookieResponse cookie;
+        @Nullable public PrivateAtomicCookieResponse cookie;
 
-        public FetchedAccessCookiePayload(SiteModel site, @Nullable SiteCookieResponse cookie) {
+        public FetchedAccessCookiePayload(SiteModel site, @Nullable PrivateAtomicCookieResponse cookie) {
             this.site = site;
             this.cookie = cookie;
         }
@@ -1968,7 +1968,7 @@ public class SiteStore extends Store {
     }
 
     private void handleFetchAccessCookie(FetchedAccessCookiePayload payload) {
-        SiteCookie siteCookie = null;
+        AtomicCookie siteCookie = null;
 
         if (!payload.isError()) {
             siteCookie = payload.cookie.getCookies().get(0);
