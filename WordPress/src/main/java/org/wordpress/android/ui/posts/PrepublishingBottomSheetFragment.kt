@@ -6,19 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import org.apache.commons.lang3.NotImplementedException
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.TAGS
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.VISIBILITY
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
@@ -73,27 +71,28 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
 
     // Create a sealed class to hold the state for all these actions.
     private fun navigateToAction(actionType: ActionType) {
-        val fragment = when (actionType) {
-            TAGS -> PostSettingsTagsFragment.newInstance(null, null)
+        val result: (Pair<Fragment,String>)  = when (actionType) {
+            TAGS -> Pair(PostSettingsTagsFragment.newInstance(null, null),PostSettingsTagsFragment.TAG)
             else -> throw NotImplementedError()
         }
-        }
-        slideInFragment(fragment)
+
+        slideInFragment(result.first, result.second)
     }
 
     private fun slideInFragment(fragment: Fragment, tag: String) {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
-            // add to back stack and animate all screen except of the first one
-            fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                    R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                    R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-            )
+        activity?.supportFragmentManager?.let { fragmentManager ->
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
+                fragmentTransaction.addToBackStack(null).setCustomAnimations(
+                        R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                        R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
+                )
+            }
+            fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
         }
-        fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
+    }
 
-
-        override fun onDismiss(dialog: DialogInterface) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         removeContentFragmentBeforeDismissal()
     }
