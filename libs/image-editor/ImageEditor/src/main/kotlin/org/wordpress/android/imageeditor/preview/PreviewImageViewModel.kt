@@ -1,11 +1,9 @@
 package org.wordpress.android.imageeditor.preview
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
@@ -16,73 +14,20 @@ class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
-    private val _loadIntoFile = MutableLiveData<ImageLoadToFileState>(ImageLoadToFileIdleState)
-    val loadIntoFile: LiveData<ImageLoadToFileState> = _loadIntoFile
+//    private val _loadIntoFile = MutableLiveData<ImageLoadToFileState>(ImageLoadToFileIdleState)
+//    val loadIntoFile: LiveData<ImageLoadToFileState> = _loadIntoFile
 
-    private val _navigateToCropScreenWithFileInfo = MutableLiveData<Pair<String, String?>>()
-    val navigateToCropScreenWithFileInfo: LiveData<Pair<String, String?>> = _navigateToCropScreenWithFileInfo
+//    private val _navigateToCropScreenWithFileInfo = MutableLiveData<Pair<String, String?>>()
+//    val navigateToCropScreenWithFileInfo: LiveData<Pair<String, String?>> = _navigateToCropScreenWithFileInfo
 
-    private var outputFileExtension: String? = null
-
-    // TODO: Dummy data
-    private val imageDataList = listOf(
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/10/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/10/1000/1000.jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/20/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/20/1000/1000.jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/30/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/30/1000/1000.jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/40/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/40/1000/1000.jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/50/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/50/1000/1000.jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/60/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/60/1000/1000.jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/70/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/70/1000/1000.jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/80/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/80/1000/1000.jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/90/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/90/1000/1000.jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/100/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/100/400/400.jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/110/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/110/1000/1000.jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/120/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/120/400/400.jpg"
-        )
-    )
-
-    fun onCreateView(loResImageUrl: String, hiResImageUrl: String, outputFileExtension: String?) {
-        this.outputFileExtension = outputFileExtension
-
-        val newImageUiStates = createViewPagerItemsInitialUiStates(imageDataList)
-        val currentUiState = uiState.value?.copy(viewPagerItemsStates = newImageUiStates) ?: UiState(newImageUiStates)
-
-        updateUiState(currentUiState)
+    fun onCreateView(imageDataList: List<ImageData>) {
+        if (uiState.value == null) {
+            val newImageUiStates = createViewPagerItemsInitialUiStates(imageDataList)
+            val currentUiState = uiState.value?.copy(viewPagerItemsStates = newImageUiStates) ?: UiState(
+                newImageUiStates
+            )
+            updateUiState(currentUiState)
+        }
     }
 
     fun onLoadIntoImageViewSuccess(currentUrl: String, currentPosition: Int) {
@@ -111,7 +56,7 @@ class PreviewImageViewModel : ViewModel() {
         updateUiState(currentUiState.copy(viewPagerItemsStates = newImageUiStates))
     }
 
-    fun onLoadIntoFileSuccess(inputFilePath: String) {
+    /*fun onLoadIntoFileSuccess(inputFilePath: String) {
         updateLoadIntoFileState(ImageLoadToFileSuccessState(inputFilePath))
         _navigateToCropScreenWithFileInfo.value = Pair(inputFilePath, outputFileExtension)
     }
@@ -119,9 +64,10 @@ class PreviewImageViewModel : ViewModel() {
     fun onLoadIntoFileFailed() {
         // TODO: Do we need to display any error message to the user?
         updateLoadIntoFileState(ImageLoadToFileFailedState)
-    }
+    }*/
 
-    fun onLoadIntoImageViewRetry(currentUrl: String, currentPosition: Int) {
+    @VisibleForTesting
+    private fun onLoadIntoImageViewRetry(currentUrl: String, currentPosition: Int) {
         val newImageUiStates = updateViewPagerItemsUiStates(
             currentUrl = currentUrl,
             currentPosition = currentPosition,
@@ -200,11 +146,11 @@ class PreviewImageViewModel : ViewModel() {
         _uiState.value = state
     }
 
-    private fun updateLoadIntoFileState(fileState: ImageLoadToFileState) {
+    /*private fun updateLoadIntoFileState(fileState: ImageLoadToFileState) {
         _loadIntoFile.value = fileState
-    }
+    }*/
 
-    data class ImageData(val lowResImageUrl: String, val highResImageUrl: String)
+    data class ImageData(val lowResImageUrl: String, val highResImageUrl: String, val outputFileExtension: String)
 
     data class UiState(val viewPagerItemsStates: List<ImageUiState>)
 
@@ -243,10 +189,10 @@ class PreviewImageViewModel : ViewModel() {
         )
     }
 
-    sealed class ImageLoadToFileState {
+    /*sealed class ImageLoadToFileState {
         object ImageLoadToFileIdleState : ImageLoadToFileState()
         data class ImageStartLoadingToFileState(val imageUrl: String) : ImageLoadToFileState()
         data class ImageLoadToFileSuccessState(val filePath: String) : ImageLoadToFileState()
         object ImageLoadToFileFailedState : ImageLoadToFileState()
-    }
+    }*/
 }
