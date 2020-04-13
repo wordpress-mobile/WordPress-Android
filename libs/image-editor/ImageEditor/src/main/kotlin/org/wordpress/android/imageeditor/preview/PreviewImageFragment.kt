@@ -18,15 +18,76 @@ import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
-import org.wordpress.android.imageeditor.R.layout
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import java.io.File
 
 class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
     private var pagerAdapterObserver: PagerAdapterObserver? = null
+
+    private val imageDataList = listOf(
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/10/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/10/1000/1000.jpg",
+            outputFileExtension = "jpg"
+        ),
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/20/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/20/1000/1000.jpg",
+            outputFileExtension = "jpg"
+        ),
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/30/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/30/1000/1000.jpg",
+            outputFileExtension = "jpg"
+        ),
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/40/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/40/1000/1000.jpg",
+            outputFileExtension = "jpg"
+        ),
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/50/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/50/1000/1000.jpg",
+            outputFileExtension = "jpg"
+        ),
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/60/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/60/1000/1000.jpg",
+            outputFileExtension = "jpg"
+        ),
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/70/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/70/1000/1000.jpg",
+            outputFileExtension = "jpg"
+        ),
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/80/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/80/1000/1000.jpg",
+            outputFileExtension = "jpg"
+        ),
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/90/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/90/1000/1000.jpg",
+            outputFileExtension = "jpg"
+        ),
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/100/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/100/400/400.jpg",
+            outputFileExtension = "jpg"
+        ),
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/110/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/110/1000/1000.jpg",
+            outputFileExtension = "jpg"
+        ),
+        ImageData(
+            lowResImageUrl = "https://i.picsum.photos/id/120/200/200.jpg",
+            highResImageUrl = "https://i.picsum.photos/id/120/400/400.jpg",
+            outputFileExtension = "jpg"
+        )
+    )
 
     companion object {
         const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
@@ -64,7 +125,7 @@ class PreviewImageFragment : Fragment() {
         val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
             if (tab.customView == null) {
                 val customView = LayoutInflater.from(context)
-                        .inflate(layout.preview_image_thumbnail, thumbnailsTabLayout, false)
+                        .inflate(R.layout.preview_image_thumbnail, thumbnailsTabLayout, false)
                 tab.customView = customView
             }
             val imageView = (tab.customView as FrameLayout).findViewById<ImageView>(R.id.thumbnailImageView)
@@ -91,16 +152,19 @@ class PreviewImageFragment : Fragment() {
         // to fix this issue: https://issuetracker.google.com/issues/37034191
         previewImageViewPager.setPageTransformer { _, _ ->
         }
+
+        // Set adapter data before the ViewPager2.restorePendingState gets called
+        // to avoid manual handling of the ViewPager2 state restoration.
+        viewModel.uiState.value?.let {
+            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.viewPagerItemsStates)
+        }
     }
 
     private fun initializeViewModels(nonNullIntent: Intent) {
-        val lowResImageUrl = nonNullIntent.getStringExtra(ARG_LOW_RES_IMAGE_URL)
-        val highResImageUrl = nonNullIntent.getStringExtra(ARG_HIGH_RES_IMAGE_URL)
-        val outputFileExtension = nonNullIntent.getStringExtra(ARG_OUTPUT_FILE_EXTENSION)
-
         viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
         setupObservers()
-        viewModel.onCreateView(lowResImageUrl, highResImageUrl, outputFileExtension)
+        // TODO: replace dummy list
+        viewModel.onCreateView(imageDataList)
     }
 
     private fun setupObservers() {
@@ -108,7 +172,7 @@ class PreviewImageFragment : Fragment() {
             (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
         })
 
-        viewModel.loadIntoFile.observe(this, Observer { fileState ->
+        /*viewModel.loadIntoFile.observe(this, Observer { fileState ->
             if (fileState is ImageStartLoadingToFileState) {
                 loadIntoFile(fileState.imageUrl)
             }
@@ -116,7 +180,7 @@ class PreviewImageFragment : Fragment() {
 
         viewModel.navigateToCropScreenWithFileInfo.observe(this, Observer { filePath ->
             navigateToCropScreenWithInputFilePath(filePath)
-        })
+        })*/
     }
 
     private fun loadIntoImageView(url: String, imageView: ImageView) {
@@ -146,11 +210,11 @@ class PreviewImageFragment : Fragment() {
             url,
             object : RequestListener<File> {
                 override fun onResourceReady(resource: File, url: String) {
-                    viewModel.onLoadIntoFileSuccess(resource.path)
+//                    viewModel.onLoadIntoFileSuccess(resource.path)
                 }
 
                 override fun onLoadFailed(e: Exception?, url: String) {
-                    viewModel.onLoadIntoFileFailed()
+//                    viewModel.onLoadIntoFileFailed()
                 }
             }
         )

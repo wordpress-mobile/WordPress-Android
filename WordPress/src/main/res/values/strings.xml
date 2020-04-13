@@ -2718,7 +2718,7 @@
     <string name="description_expand">Expand</string>
 
     <string name="preview_image_description">Preview Image</string>
-    <string name="failed_to_insert_image_tap_to_retry">Failed to insert image.\nPlease tap to retry.</string>
+    <string name="failed_to_load_image_tap_to_retry">Failed to load image.\nPlease tap to retry.</string>
     <string name="done">done</string>
     <string name="error_failed_to_crop_and_save_image">Failed to crop and save image, please try again.</string>
 

@@ -4,7 +4,7 @@
     <string name="preview_image_description">Preview Image</string>
     <string name="preview_image_thumbnail_description">Preview Image Thumbnail</string>
     <string name="retry">Retry</string>
-    <string name="failed_to_insert_image_tap_to_retry">Failed to insert image.\nPlease tap to retry.</string>
+    <string name="failed_to_load_image_tap_to_retry">Failed to load image.\nPlease tap to retry.</string>
 
     <!--crop screen-->
     <string name="done">done</string>
