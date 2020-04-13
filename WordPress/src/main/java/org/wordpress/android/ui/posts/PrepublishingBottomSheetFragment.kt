@@ -14,9 +14,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
+import org.wordpress.android.ui.posts.ActionState.TagsActionState
+import org.wordpress.android.ui.posts.CurrentActionTypeState.ActionTypeState
+import org.wordpress.android.ui.posts.CurrentActionTypeState.HomeActionTypeState
+import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.TAGS
+import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.VISIBILITY
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
@@ -24,6 +29,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
 
     private lateinit var prepublishingViewModel: PrepublishingViewModel
     private lateinit var prepublishingActionsViewModel: PrepublishingActionsViewModel
+
+    private lateinit var site: SiteModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,23 +71,46 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
 
         prepublishingActionsViewModel.prepublishingActionType.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { actionType ->
-                navigateToAction(actionType)
+                prepublishingViewModel.updateCurrentActionTypeState(actionType)
             }
         })
+
+        prepublishingViewModel.currentActionType.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { (currentActionType, actionState) ->
+                navigateToAction(currentActionType, actionState)
+            }
+        })
+
+        var currentActionTypeState = arguments?.getParcelable<CurrentActionTypeState>(KEY_CURRENT_ACTION_TYPE_STATE)
+        if (currentActionTypeState == null) {
+            currentActionTypeState = HomeActionTypeState
+        }
+        var actionsState = arguments?.getParcelable<ActionsState>(KEY_TAGS_ACTION_STATE)
+        if (actionsState == null) {
+            actionsState = ActionsState(TagsActionState(tags = null))
+        }
+        prepublishingViewModel.start(currentActionTypeState, actionsState)
     }
 
-    // Create a sealed class to hold the state for all these actions.
-    private fun navigateToAction(actionType: ActionType) {
-        val result: (Pair<Fragment,String>)  = when (actionType) {
-            TAGS -> Pair(PostSettingsTagsFragment.newInstance(null, null),PostSettingsTagsFragment.TAG)
-            else -> throw NotImplementedError()
+    private fun navigateToAction(currentActionTypeState: CurrentActionTypeState, actionState: ActionsState) {
+        val result = when (currentActionTypeState) {
+            HomeActionTypeState -> Pair(PrepublishingActionsFragment.newInstance(), PrepublishingActionsFragment.TAG)
+            is ActionTypeState -> {
+                when (currentActionTypeState.actionType) {
+                    PUBLISH -> TODO()
+                    VISIBILITY -> TODO()
+                    TAGS -> Pair(
+                            PostSettingsTagsFragment.newInstance(site, actionState.tagsActionState.tags),
+                            PostSettingsTagsFragment.TAG
+                    )
+                }
+            }
         }
-
         slideInFragment(result.first, result.second)
     }
 
     private fun slideInFragment(fragment: Fragment, tag: String) {
-        activity?.supportFragmentManager?.let { fragmentManager ->
+        childFragmentManager.let { fragmentManager ->
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
                 fragmentTransaction.addToBackStack(null).setCustomAnimations(
@@ -88,7 +118,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
                         R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
                 )
             }
-            fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
+            fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)
+            fragmentTransaction.commit()
         }
     }
 
