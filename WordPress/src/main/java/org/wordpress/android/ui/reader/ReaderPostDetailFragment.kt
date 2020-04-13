@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -65,6 +66,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -127,7 +129,8 @@ class ReaderPostDetailFragment : Fragment(),
         ReaderInterfaces.OnFollowListener,
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
-        BasicFragmentDialog.BasicDialogPositiveClickInterface {
+        BasicFragmentDialog.BasicDialogPositiveClickInterface,
+        PrivateAtCookieProgressDialogOnDismissListener{
     private var postId: Long = 0
     private var blogId: Long = 0
     private var directOperation: DirectOperation? = null
@@ -1156,6 +1159,20 @@ class ReaderPostDetailFragment : Fragment(),
         }
     }
 
+    override fun onCookieProgressDialogCancelled() {
+        if (!isAdded) return
+
+        WPSnackbar.make(
+                view!!,
+                string.media_accessing_failed,
+                Snackbar.LENGTH_LONG
+        )
+                .show()
+        if (renderer != null) {
+            renderer!!.beginRender()
+        }
+    }
+
     // TODO replace this inner async task with a coroutine
     @SuppressLint("StaticFieldLeak")
     private inner class ShowPostTask : AsyncTask<Void, Void, Boolean>() {
@@ -1271,8 +1288,8 @@ class ReaderPostDetailFragment : Fragment(),
             renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils)
 
             // if the post if from private atomic site postpone render until we have a special access cookie
-            if (post!!.isPrivate && post!!.isPrivate) {
-                PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager)
+            if (post!!.isPrivate && post!!.isAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
+                PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this@ReaderPostDetailFragment)
                 dispatcher.dispatch(
                         SiteActionBuilder.newFetchPrivateAtomicCookieAction(FetchPrivateAtomicCookiePayload(post!!.blogId))
                 )
