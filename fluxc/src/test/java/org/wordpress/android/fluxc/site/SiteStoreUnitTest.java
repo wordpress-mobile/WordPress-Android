@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.WellSqlTestUtils;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
@@ -48,7 +49,7 @@ import static org.wordpress.android.fluxc.site.SiteUtils.generateWPComSite;
 public class SiteStoreUnitTest {
     private PostSqlUtils mPostSqlUtils = new PostSqlUtils();
     private SiteStore mSiteStore = new SiteStore(new Dispatcher(), mPostSqlUtils, Mockito.mock(SiteRestClient.class),
-            Mockito.mock(SiteXMLRPCClient.class));
+            Mockito.mock(SiteXMLRPCClient.class), Mockito.mock(PrivateAtomicCookie.class));
 
     @Before
     public void setUp() {
