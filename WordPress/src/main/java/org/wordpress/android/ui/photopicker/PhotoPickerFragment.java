@@ -364,7 +364,7 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void hideMediaSourceBottomBar() {
-        if (isBottomBarShowing() && canShowMediaSourceBottomBar()) {
+        if (isBottomBarShowing()) {
             AniUtils.animateBottomBar(mMediaSourceBottomBar, false);
         }
     }
