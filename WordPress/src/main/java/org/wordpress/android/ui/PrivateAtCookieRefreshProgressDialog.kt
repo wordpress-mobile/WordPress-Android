@@ -8,7 +8,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import org.wordpress.android.R
-import javax.annotation.Nullable
 
 class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -42,7 +41,7 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
             showIfNecessary(fragmentManager, null)
         }
 
-        fun showIfNecessary(fragmentManager: FragmentManager?, @Nullable targetFragment: Fragment?) {
+        fun showIfNecessary(fragmentManager: FragmentManager?, targetFragment: Fragment?) {
             fragmentManager.let {
                 val thisFragment = fragmentManager!!.findFragmentByTag(TAG)
                 if (thisFragment == null ||

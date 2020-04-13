@@ -130,7 +130,7 @@ class ReaderPostDetailFragment : Fragment(),
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        PrivateAtCookieProgressDialogOnDismissListener{
+        PrivateAtCookieProgressDialogOnDismissListener {
     private var postId: Long = 0
     private var blogId: Long = 0
     private var directOperation: DirectOperation? = null
@@ -1291,7 +1291,9 @@ class ReaderPostDetailFragment : Fragment(),
             if (post!!.isPrivate && post!!.isAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
                 PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this@ReaderPostDetailFragment)
                 dispatcher.dispatch(
-                        SiteActionBuilder.newFetchPrivateAtomicCookieAction(FetchPrivateAtomicCookiePayload(post!!.blogId))
+                        SiteActionBuilder.newFetchPrivateAtomicCookieAction(
+                                FetchPrivateAtomicCookiePayload(post!!.blogId)
+                        )
                 )
             } else {
                 renderer!!.beginRender()
