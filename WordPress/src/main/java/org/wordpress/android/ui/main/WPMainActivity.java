@@ -19,7 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.RemoteInput;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -56,7 +55,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
-import org.wordpress.android.fluxc.store.SiteStore.OnAccessCookieFetched;
 import org.wordpress.android.fluxc.store.SiteStore.OnAllSitesMobileEditorChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -76,7 +74,6 @@ import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
-import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.WPTooltipView;
@@ -713,16 +710,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.onResume(hasFullAccessToContent());
 
         mFirstResume = false;
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAccessCookieFetched(OnAccessCookieFetched event) {
-       Fragment prev = getSupportFragmentManager().findFragmentByTag(PrivateAtCookieRefreshProgressDialog.TAG);
-        if (prev != null) {
-            DialogFragment df = (DialogFragment) prev;
-            df.dismiss();
-        }
     }
 
     private void checkQuickStartNotificationStatus() {

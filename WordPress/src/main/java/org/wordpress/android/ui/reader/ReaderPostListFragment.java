@@ -75,7 +75,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
-import org.wordpress.android.fluxc.store.SiteStore.OnAccessCookieFetched;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
@@ -747,12 +746,6 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void setTitle(@NonNull String title) {
         // Do nothing - no title for this toolbar
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAccessCookieFetched(OnAccessCookieFetched event) {
-        checkPostAdapter();
     }
 
     @SuppressWarnings("unused")

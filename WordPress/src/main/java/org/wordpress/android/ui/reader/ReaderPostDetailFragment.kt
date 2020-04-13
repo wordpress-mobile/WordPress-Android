@@ -56,8 +56,8 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.FetchAccessCookiePayload
-import org.wordpress.android.fluxc.store.SiteStore.OnAccessCookieFetched
+import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload
+import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
@@ -1124,7 +1124,7 @@ class ReaderPostDetailFragment : Fragment(),
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onAccessCookieFetched(event: OnAccessCookieFetched?) {
+    fun onPrivateAtomicCookieFetched(event: OnPrivateAtomicCookieFetched?) {
         PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(fragmentManager)
         if (!event!!.isError) {
             CookieManager.getInstance().setCookie(
@@ -1255,7 +1255,7 @@ class ReaderPostDetailFragment : Fragment(),
             if (post!!.isPrivate && post!!.isPrivate) {
                 PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager)
                 dispatcher.dispatch(
-                        SiteActionBuilder.newFetchAccessCookieAction(FetchAccessCookiePayload(post!!.blogId))
+                        SiteActionBuilder.newFetchPrivateAtomicCookieAction(FetchPrivateAtomicCookiePayload(post!!.blogId))
                 )
             } else {
                 renderer!!.beginRender()

@@ -47,8 +47,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.FetchAccessCookiePayload;
-import org.wordpress.android.fluxc.store.SiteStore.OnAccessCookieFetched;
+import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
@@ -745,7 +745,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (privateAtSiteId > 0) {
             PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary(getSupportFragmentManager());
             mDispatcher.dispatch(
-                    SiteActionBuilder.newFetchAccessCookieAction(new FetchAccessCookiePayload(privateAtSiteId)));
+                    SiteActionBuilder.newFetchPrivateAtomicCookieAction(new FetchPrivateAtomicCookiePayload(privateAtSiteId)));
             return;
         }
 
@@ -946,7 +946,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAccessCookieFetched(OnAccessCookieFetched event) {
+    public void onPrivateAtomicCookieFetched(OnPrivateAtomicCookieFetched event) {
         PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
         if (!event.isError()) {
             CookieManager.getInstance().setCookie(mPrivateAtomicCookie.getDomain(),

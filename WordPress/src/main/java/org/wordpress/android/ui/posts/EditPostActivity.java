@@ -95,8 +95,8 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.FetchAccessCookiePayload;
-import org.wordpress.android.fluxc.store.SiteStore.OnAccessCookieFetched;
+import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
@@ -559,7 +559,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.isExpired()) {
             PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary(fragmentManager);
             mDispatcher.dispatch(
-                    SiteActionBuilder.newFetchAccessCookieAction(new FetchAccessCookiePayload(mSite.getSiteId())));
+                    SiteActionBuilder.newFetchPrivateAtomicCookieAction(
+                            new FetchPrivateAtomicCookiePayload(mSite.getSiteId())));
         } else {
             setupViewPager();
         }
@@ -568,7 +569,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAccessCookieFetched(OnAccessCookieFetched event) {
+    public void onPrivateAtomicCookieFetched(OnPrivateAtomicCookieFetched event) {
         PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
         setupViewPager();
     }
