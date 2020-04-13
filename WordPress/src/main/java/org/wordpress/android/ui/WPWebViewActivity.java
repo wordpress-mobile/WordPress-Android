@@ -35,6 +35,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.elevation.ElevationOverlayProvider;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -49,6 +50,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
@@ -69,6 +71,7 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -114,7 +117,8 @@ import kotlin.Unit;
  * or self-signed certs in place.
  * - REFERRER_URL: url to add as an HTTP referrer header, currently only used for non-authed reader posts
  */
-public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWebViewClientListener {
+public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWebViewClientListener,
+        PrivateAtCookieProgressDialogOnDismissListener {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -664,7 +668,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
         CookieManager cookieManager = CookieManager.getInstance();
-        CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView, true);
+        cookieManager.setAcceptThirdPartyCookies(mWebView, true);
 
         final Bundle extras = getIntent().getExtras();
 
@@ -740,12 +744,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             return;
         }
 
+        // if we load content of private AT site we need to make sure we have a special cookie first
         long privateAtSiteId = extras.getLong(PRIVATE_AT_SITE_ID);
-
-        if (privateAtSiteId > 0) {
+        if (privateAtSiteId > 0 && mPrivateAtomicCookie.isCookieRefreshRequired()) {
             PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary(getSupportFragmentManager());
-            mDispatcher.dispatch(
-                    SiteActionBuilder.newFetchPrivateAtomicCookieAction(new FetchPrivateAtomicCookiePayload(privateAtSiteId)));
+            mDispatcher.dispatch(SiteActionBuilder.newFetchPrivateAtomicCookieAction(
+                    new FetchPrivateAtomicCookiePayload(privateAtSiteId)));
             return;
         }
 
@@ -947,11 +951,23 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrivateAtomicCookieFetched(OnPrivateAtomicCookieFetched event) {
+        // if the dialog is not showing by the time cookie fetched it means that it was dismissed and content was loaded
+        if (PrivateAtCookieRefreshProgressDialog.Companion.isShowing(getSupportFragmentManager())) {
+            loadWebContent();
+        }
+
         PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
+        // we will try to set the cookie even if it arrives after user cancels the dialog
         if (!event.isError()) {
             CookieManager.getInstance().setCookie(mPrivateAtomicCookie.getDomain(),
-                    mPrivateAtomicCookie.getName() + "=" + mPrivateAtomicCookie.getValue());
+                    mPrivateAtomicCookie.getCookieContent());
         }
+    }
+
+    @Override
+    public void onCookieProgressDialogCancelled() {
+        WPSnackbar.make(findViewById(R.id.snackbar_anchor), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+                  .show();
         loadWebContent();
     }
 }
