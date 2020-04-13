@@ -358,35 +358,31 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void showMediaSourceBottomBar() {
-        if (!isBottomBarShowing()) {
+        if (!isBottomBarShowing(mMediaSourceBottomBar)) {
             AniUtils.animateBottomBar(mMediaSourceBottomBar, true);
         }
     }
 
     private void hideMediaSourceBottomBar() {
-        if (isBottomBarShowing()) {
+        if (isBottomBarShowing(mMediaSourceBottomBar)) {
             AniUtils.animateBottomBar(mMediaSourceBottomBar, false);
         }
     }
 
     private void showInsertPreviewBottomBar() {
-        if (!isInsertPreviewBottomBarShowing()) {
+        if (!isBottomBarShowing(mInsertPreviewBottomBar)) {
             AniUtils.animateBottomBar(mInsertPreviewBottomBar, true);
         }
     }
 
     private void hideInsertPreviewBottomBar() {
-        if (isInsertPreviewBottomBarShowing()) {
+        if (isBottomBarShowing(mInsertPreviewBottomBar)) {
             AniUtils.animateBottomBar(mInsertPreviewBottomBar, false);
         }
     }
 
-    private boolean isBottomBarShowing() {
-        return mMediaSourceBottomBar.getVisibility() == View.VISIBLE;
-    }
-
-    private boolean isInsertPreviewBottomBarShowing() {
-        return mInsertPreviewBottomBar.getVisibility() == View.VISIBLE;
+    private boolean isBottomBarShowing(View bottomBar) {
+        return bottomBar.getVisibility() == View.VISIBLE;
     }
 
     private final PhotoPickerAdapterListener mAdapterListener = new PhotoPickerAdapterListener() {
