@@ -90,7 +90,6 @@ class PreviewImageFragment : Fragment() {
     )
 
     companion object {
-        private const val PAGER_CURRENT_ITEM_INDEX = "pager_current_item_index"
         const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
         const val ARG_HIGH_RES_IMAGE_URL = "arg_high_res_image_url"
         const val ARG_OUTPUT_FILE_EXTENSION = "arg_output_file_extension"
@@ -108,14 +107,14 @@ class PreviewImageFragment : Fragment() {
 
         val nonNullIntent = checkNotNull(requireActivity().intent)
         initializeViewModels(nonNullIntent)
-        initializeViews(savedInstanceState)
+        initializeViews()
     }
 
-    private fun initializeViews(savedInstanceState: Bundle?) {
-        initializeViewPager(savedInstanceState)
+    private fun initializeViews() {
+        initializeViewPager()
     }
 
-    private fun initializeViewPager(savedInstanceState: Bundle?) {
+    private fun initializeViewPager() {
         val previewImageAdapter = PreviewImageAdapter(
             loadIntoImageViewWithResultListener = { imageData, imageView, position ->
                 loadIntoImageViewWithResultListener(imageData, imageView, position)
@@ -154,6 +153,8 @@ class PreviewImageFragment : Fragment() {
         previewImageViewPager.setPageTransformer { _, _ ->
         }
 
+        // Set adapter data before the ViewPager2.restorePendingState gets called
+        // to avoid manual handling of the ViewPager2 state restoration.
         viewModel.uiState.value?.let {
             (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.viewPagerItemsStates)
         }
