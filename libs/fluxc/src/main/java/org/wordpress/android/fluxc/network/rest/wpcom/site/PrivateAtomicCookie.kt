@@ -16,14 +16,14 @@ class PrivateAtomicCookie
 
     companion object {
         const val PRIVATE_ATOMIC_COOKIE_PREF_KEY = "PRIVATE_ATOMIC_COOKIE_PREF_KEY"
-        private const val COOKIE_EXPIRATION_THRESHOLD = 6 * 60 * 60  // 6 hours
+        private const val COOKIE_EXPIRATION_THRESHOLD = 6 * 60 * 60 // 6 hours
     }
 
-    private var cookie: SiteCookie? = null
+    private var cookie: AtomicCookie? = null
 
     init {
         val rawCookie = preferenceUtils.getFluxCPreferences().getString(PRIVATE_ATOMIC_COOKIE_PREF_KEY, "")
-        cookie = gson.fromJson(rawCookie, SiteCookie::class.java)
+        cookie = gson.fromJson(rawCookie, AtomicCookie::class.java)
     }
 
     fun isCookieRefreshRequired(): Boolean {
@@ -78,7 +78,7 @@ class PrivateAtomicCookie
         return cookie!!.path
     }
 
-    fun set(siteCookie: SiteCookie?) {
+    fun set(siteCookie: AtomicCookie?) {
         cookie = siteCookie
         preferenceUtils.getFluxCPreferences().edit().putString(PRIVATE_ATOMIC_COOKIE_PREF_KEY, gson.toJson(siteCookie))
                 .apply()
