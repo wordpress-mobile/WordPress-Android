@@ -43,7 +43,7 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
 
     private String mTags;
 
-    protected TagsSelectedListener mTagsSelectedListener;
+    TagsSelectedListener mTagsSelectedListener;
 
     public TagsFragment() {
         // Required empty public constructor
