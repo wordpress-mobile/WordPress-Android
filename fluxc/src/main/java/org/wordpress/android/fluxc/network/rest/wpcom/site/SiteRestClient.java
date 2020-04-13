@@ -162,11 +162,10 @@ public class SiteRestClient extends BaseWPComRestClient {
                             mDispatcher.dispatch(SiteActionBuilder
                                     .newFetchedAccessCookieAction(new FetchedAccessCookiePayload(site, response)));
                         } else {
-                            AppLog.e(T.API, "Failed to fetch access cookie.");
-
-                            AccessCookieError error = new AccessCookieError(
-                                    AccessCookieErrorType.GENERIC_ERROR, "Empty response");
-                            FetchedAccessCookiePayload payload = new FetchedAccessCookiePayload(site, error);
+                            AppLog.e(T.API, "Failed to fetch private atomic cookie for " + site.getUrl());
+                            FetchedAccessCookiePayload payload = new FetchedAccessCookiePayload(site, null);
+                            payload.error =
+                                    new AccessCookieError(AccessCookieErrorType.INVALID_RESPONSE, "Empty response");
                             mDispatcher.dispatch(SiteActionBuilder.newFetchedAccessCookieAction(payload));
                         }
                     }
@@ -176,9 +175,9 @@ public class SiteRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AccessCookieError cookieError = new AccessCookieError(
                                 AccessCookieErrorType.GENERIC_ERROR, error.message);
-                        FetchedAccessCookiePayload payload = new FetchedAccessCookiePayload(site, cookieError);
-                        mDispatcher.dispatch(SiteActionBuilder
-                                .newFetchedAccessCookieAction(payload));
+                        FetchedAccessCookiePayload payload = new FetchedAccessCookiePayload(site, null);
+                        payload.error = cookieError;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedAccessCookieAction(payload));
                     }
                 }
                                                                                              );

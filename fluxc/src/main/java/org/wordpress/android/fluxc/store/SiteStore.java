@@ -187,11 +187,6 @@ public class SiteStore extends Store {
             this.site = site;
             this.cookie = cookie;
         }
-
-        public FetchedAccessCookiePayload(SiteModel site, @NonNull AccessCookieError error) {
-            this.site = site;
-            this.error = error;
-        }
     }
 
     public static class FetchAccessCookiePayload {
@@ -645,7 +640,7 @@ public class SiteStore extends Store {
         public SiteModel site;
         public boolean success;
 
-        public OnAccessCookieFetched(SiteModel site, boolean success,
+        public OnAccessCookieFetched(@Nullable SiteModel site, boolean success,
                                      @Nullable AccessCookieError error) {
             this.site = site;
             this.success = success;
@@ -950,6 +945,7 @@ public class SiteStore extends Store {
 
     public enum AccessCookieErrorType {
         GENERIC_ERROR,
+        INVALID_RESPONSE,
         SITE_MISSING_FROM_STORE,
         NON_PRIVATE_AT_SITE
     }
@@ -1957,7 +1953,7 @@ public class SiteStore extends Store {
         if (site == null) {
             AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.SITE_MISSING_FROM_STORE,
                     "Requested site is missing from the store.");
-            emitChange(new OnAccessCookieFetched(site, false, cookieError));
+            emitChange(new OnAccessCookieFetched(null, false, cookieError));
             return;
         }
 
@@ -1965,11 +1961,6 @@ public class SiteStore extends Store {
             AccessCookieError cookieError = new AccessCookieError(AccessCookieErrorType.NON_PRIVATE_AT_SITE,
                     "Cookie can only be requested for private atomic site.");
             emitChange(new OnAccessCookieFetched(site, false, cookieError));
-            return;
-        }
-
-        if (mPrivateAtomicCookie.exists() && !mPrivateAtomicCookie.isExpired()) {
-            emitChange(new OnAccessCookieFetched(site, true, null));
             return;
         }
 
