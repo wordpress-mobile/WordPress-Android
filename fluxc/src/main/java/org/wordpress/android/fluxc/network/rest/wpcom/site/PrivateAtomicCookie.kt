@@ -15,14 +15,14 @@ class PrivateAtomicCookie
     }
 
     companion object {
-        const val PRIVATE_ATOMIC_COOKIE_PREF_KEY = "PRIVATE_ATOMIC_COOKIE_PREF_KEY"
+        private const val PRIVATE_ATOMIC_COOKIE_PREF_KEY = "PRIVATE_ATOMIC_COOKIE_PREF_KEY"
         private const val COOKIE_EXPIRATION_THRESHOLD = 6 * 60 * 60 // 6 hours
     }
 
     private var cookie: AtomicCookie? = null
 
     init {
-        val rawCookie = preferenceUtils.getFluxCPreferences().getString(PRIVATE_ATOMIC_COOKIE_PREF_KEY, "")
+        val rawCookie = preferenceUtils.getFluxCPreferences().getString(PRIVATE_ATOMIC_COOKIE_PREF_KEY, null)
         cookie = gson.fromJson(rawCookie, AtomicCookie::class.java)
     }
 
