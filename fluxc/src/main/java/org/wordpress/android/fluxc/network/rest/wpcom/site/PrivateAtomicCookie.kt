@@ -1,31 +1,43 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.site
 
-import android.content.Context
-import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import org.wordpress.android.fluxc.utils.PreferenceUtils.getFluxCPreferences
+import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PrivateAtomicCookie(private val context: Context) {
+class PrivateAtomicCookie
+@Inject constructor(private val preferenceUtils: PreferenceUtilsWrapper) {
     private val gson: Gson by lazy {
         val builder = GsonBuilder()
         builder.create()
     }
 
-    private val fluxCPreferences: SharedPreferences
-        get() = getFluxCPreferences(context)
-
     companion object {
-        private const val PRIVATE_ATOMIC_COOKIE_PREF_KEY = "PRIVATE_ATOMIC_COOKIE_PREF_KEY"
+        const val PRIVATE_ATOMIC_COOKIE_PREF_KEY = "PRIVATE_ATOMIC_COOKIE_PREF_KEY"
+        private const val COOKIE_EXPIRATION_THRESHOLD = 6 * 60 * 60  // 6 hours
     }
 
     private var cookie: SiteCookie? = null
 
     init {
-        val rawCookie = fluxCPreferences.getString(PRIVATE_ATOMIC_COOKIE_PREF_KEY, "")
+        val rawCookie = preferenceUtils.getFluxCPreferences().getString(PRIVATE_ATOMIC_COOKIE_PREF_KEY, "")
         cookie = gson.fromJson(rawCookie, SiteCookie::class.java)
+    }
+
+    fun isCookieRefreshRequired(): Boolean {
+        return isExpiringSoon()
+    }
+
+    private fun isExpiringSoon(): Boolean {
+        if (!exists()) {
+            return true
+        }
+        val cookieExpiration: Long = cookie!!.expires.toLong()
+        val currentTime = (System.currentTimeMillis() / 1000)
+
+        return currentTime + COOKIE_EXPIRATION_THRESHOLD >= cookieExpiration
     }
 
     fun exists(): Boolean {
@@ -37,13 +49,17 @@ class PrivateAtomicCookie(private val context: Context) {
             return true
         }
         val cookieExpiration: Long = cookie!!.expires.toLong()
-        val currentTime = System.currentTimeMillis() / 1000
+        val currentTime = (System.currentTimeMillis() / 1000)
 
-        return cookieExpiration <= currentTime
+        return currentTime >= cookieExpiration
     }
 
     fun getExpirationDateEpoch(): String {
         return cookie!!.expires
+    }
+
+    fun getCookieContent(): String {
+        return getName() + "=" + getValue()
     }
 
     fun getName(): String {
@@ -64,12 +80,12 @@ class PrivateAtomicCookie(private val context: Context) {
 
     fun set(siteCookie: SiteCookie?) {
         cookie = siteCookie
-        fluxCPreferences.edit().putString(PRIVATE_ATOMIC_COOKIE_PREF_KEY, gson.toJson(siteCookie))
+        preferenceUtils.getFluxCPreferences().edit().putString(PRIVATE_ATOMIC_COOKIE_PREF_KEY, gson.toJson(siteCookie))
                 .apply()
     }
 
     fun clearCookie() {
         cookie = null
-        fluxCPreferences.edit().remove(PRIVATE_ATOMIC_COOKIE_PREF_KEY).apply()
+        preferenceUtils.getFluxCPreferences().edit().remove(PRIVATE_ATOMIC_COOKIE_PREF_KEY).apply()
     }
 }
