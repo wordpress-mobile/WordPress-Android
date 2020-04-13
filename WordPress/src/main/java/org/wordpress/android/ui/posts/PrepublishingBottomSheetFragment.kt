@@ -116,19 +116,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
         }
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        removeContentFragmentBeforeDismissal()
-    }
-
-    private fun removeContentFragmentBeforeDismissal() {
-        activity?.supportFragmentManager?.let { fragmentManager ->
-            fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.also { fragment ->
-                fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
-            }
-        }
-    }
-
     companion object {
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
         const val SITE = "prepublishing_bottom_sheet_site_model"
