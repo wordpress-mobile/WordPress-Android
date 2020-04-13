@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.site
 
 import android.content.SharedPreferences
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -9,11 +10,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
-import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie.Companion.PRIVATE_ATOMIC_COOKIE_PREF_KEY
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AtomicCookie
 import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 
@@ -42,9 +43,9 @@ class PrivateAtomicCookieTest {
     fun `setting cookie stores it in memory and shared preferences`() {
         privateAtomicCookie.set(testCookie)
 
-        verify(sharedPreferences).edit()
+        verify(sharedPreferences, times(1)).edit()
         Mockito.inOrder(sharedPreferencesEditor).apply {
-            this.verify(sharedPreferencesEditor).putString(PRIVATE_ATOMIC_COOKIE_PREF_KEY, testCookieAsJsonString)
+            this.verify(sharedPreferencesEditor).putString(anyString(), eq(testCookieAsJsonString))
             this.verify(sharedPreferencesEditor).apply()
         }
 
@@ -64,7 +65,7 @@ class PrivateAtomicCookieTest {
 
         verify(sharedPreferences, times(2)).edit()
         Mockito.inOrder(sharedPreferencesEditor).apply {
-            this.verify(sharedPreferencesEditor).remove(PRIVATE_ATOMIC_COOKIE_PREF_KEY)
+            this.verify(sharedPreferencesEditor).remove(anyString())
             this.verify(sharedPreferencesEditor).apply()
         }
 
