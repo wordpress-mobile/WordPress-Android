@@ -277,6 +277,7 @@
     <string name="button_sync">Sync</string>
     <string name="button_view">View</string>
     <string name="button_preview">Preview</string>
+    <string name="button_insert">Insert</string>
     <string name="button_stats">Stats</string>
     <string name="button_trash">Trash</string>
     <string name="button_delete_permanently">Delete Permanently</string>

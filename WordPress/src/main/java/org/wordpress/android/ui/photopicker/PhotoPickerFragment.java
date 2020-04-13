@@ -86,6 +86,7 @@ public class PhotoPickerFragment extends Fragment {
     private EmptyViewRecyclerView mRecycler;
     private PhotoPickerAdapter mAdapter;
     private View mBottomBar;
+    private View mInsertPreviewBottomBar;
     private ActionableEmptyView mSoftAskView;
     private ActionMode mActionMode;
     private GridLayoutManager mGridManager;
@@ -157,6 +158,7 @@ public class PhotoPickerFragment extends Fragment {
         });
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
+        mInsertPreviewBottomBar = view.findViewById(R.id.container_insert_preview_bar);
 
         if (!canShowBottomBar()) {
             mBottomBar.setVisibility(View.GONE);
@@ -202,6 +204,14 @@ public class PhotoPickerFragment extends Fragment {
             }
         }
 
+        if (canShowInsertPreviewBottomBar()) {
+            mInsertPreviewBottomBar.findViewById(R.id.text_preview).setOnClickListener(v -> {
+                // TODO Open ImageEditor
+            });
+
+            mInsertPreviewBottomBar.findViewById(R.id.text_insert).setOnClickListener(v -> performInsertAction());
+        }
+
         mSoftAskView = view.findViewById(R.id.soft_ask_view);
 
         return view;
@@ -215,6 +225,10 @@ public class PhotoPickerFragment extends Fragment {
         }
 
         return true;
+    }
+
+    private boolean canShowInsertPreviewBottomBar() {
+        return mBrowserType.isGutenbergPicker();
     }
 
     @Override
@@ -355,8 +369,24 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
+    private void showInsertPreviewBottomBar() {
+        if (!isInsertPreviewBottomBarShowing() && canShowInsertPreviewBottomBar()) {
+            AniUtils.animateBottomBar(mInsertPreviewBottomBar, true);
+        }
+    }
+
+    private void hideInsertPreviewBottomBar() {
+        if (isInsertPreviewBottomBarShowing()) {
+            AniUtils.animateBottomBar(mInsertPreviewBottomBar, false);
+        }
+    }
+
     private boolean isBottomBarShowing() {
         return mBottomBar.getVisibility() == View.VISIBLE;
+    }
+
+    private boolean isInsertPreviewBottomBarShowing() {
+        return mInsertPreviewBottomBar.getVisibility() == View.VISIBLE;
     }
 
     private final PhotoPickerAdapterListener mAdapterListener = new PhotoPickerAdapterListener() {
@@ -470,8 +500,12 @@ public class PhotoPickerFragment extends Fragment {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
-            MenuInflater inflater = actionMode.getMenuInflater();
-            inflater.inflate(R.menu.photo_picker_action_mode, menu);
+            if (canShowInsertPreviewBottomBar()) {
+                showInsertPreviewBottomBar();
+            } else {
+                MenuInflater inflater = actionMode.getMenuInflater();
+                inflater.inflate(R.menu.photo_picker_action_mode, menu);
+            }
             hideBottomBar();
             return true;
         }
@@ -485,9 +519,7 @@ public class PhotoPickerFragment extends Fragment {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.mnu_confirm_selection && mListener != null) {
-                ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
-                mListener.onPhotoPickerMediaChosen(uriList);
-                trackAddRecentMediaEvent(uriList);
+                performInsertAction();
                 return true;
             }
             return false;
@@ -497,8 +529,15 @@ public class PhotoPickerFragment extends Fragment {
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
             showBottomBar();
+            hideInsertPreviewBottomBar();
             getAdapter().clearSelection();
         }
+    }
+
+    private void performInsertAction() {
+        ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
+        mListener.onPhotoPickerMediaChosen(uriList);
+        trackAddRecentMediaEvent(uriList);
     }
 
     private boolean hasStoragePermission() {
