@@ -1151,12 +1151,8 @@ class ReaderPostDetailFragment : Fragment(),
         if (!isAdded) {
             return
         }
-        PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(fragmentManager)
-        if (!event.isError) {
-            CookieManager.getInstance().setCookie(
-                    privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
-            )
-        } else {
+
+        if (event.isError) {
             AppLog.e(
                     STATS,
                     "Failed to load private AT cookie. $event.error.type - $event.error.message"
@@ -1166,7 +1162,13 @@ class ReaderPostDetailFragment : Fragment(),
                     string.media_accessing_failed,
                     Snackbar.LENGTH_LONG
             ).show()
+        } else {
+            CookieManager.getInstance().setCookie(
+                    privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
+            )
         }
+
+        PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(fragmentManager)
         if (renderer != null) {
             renderer!!.beginRender()
         }

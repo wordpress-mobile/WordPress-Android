@@ -21,8 +21,9 @@ class AuthenticationUtils
         val headers = mutableMapOf<String, String>()
         headers["User-Agent"] = userAgent.userAgent
 
+        // add cookie header to Aztec media requests on private Atomic sites
         if (privateAtomicCookie.exists() && WPUrlUtils.safeToAddPrivateAtCookie(url, privateAtomicCookie.getDomain())) {
-            headers[COOKIE_HEADER_NAME] = privateAtomicCookie.getName() + "=" + privateAtomicCookie.getValue()
+            headers[COOKIE_HEADER_NAME] = privateAtomicCookie.getCookieContent()
         }
 
         if (WPUrlUtils.safeToAddWordPressComAuthToken(url)) {

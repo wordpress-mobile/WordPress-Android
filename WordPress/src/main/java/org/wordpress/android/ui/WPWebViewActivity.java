@@ -951,21 +951,20 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrivateAtomicCookieFetched(OnPrivateAtomicCookieFetched event) {
-        // if the dialog is not showing by the time cookie fetched it means that it was dismissed and content was loaded
-        if (PrivateAtCookieRefreshProgressDialog.Companion.isShowing(getSupportFragmentManager())) {
-            loadWebContent();
-        }
-
-        PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
-        // we will try to set the cookie even if it arrives after user cancels the dialog
-        if (!event.isError()) {
-            CookieManager.getInstance().setCookie(mPrivateAtomicCookie.getDomain(),
-                    mPrivateAtomicCookie.getCookieContent());
-        } else {
+        if (event.isError()) {
             AppLog.e(AppLog.T.STATS,
                     "Failed to load private AT cookie. " + event.error.type + " - " + event.error.message);
             WPSnackbar.make(findViewById(R.id.snackbar_anchor), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
                       .show();
+        } else {
+            CookieManager.getInstance().setCookie(mPrivateAtomicCookie.getDomain(),
+                    mPrivateAtomicCookie.getCookieContent());
+        }
+
+        // if the dialog is not showing by the time cookie fetched it means that it was dismissed and content was loaded
+        if (PrivateAtCookieRefreshProgressDialog.Companion.isShowing(getSupportFragmentManager())) {
+            loadWebContent();
+            PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
         }
     }
 

@@ -214,8 +214,8 @@ public class ReaderPostRenderer {
     }
 
     private String makeImageTag(final String imageUrl, int width, int height, final String imageClass) {
-        String newImageUrl =
-                ReaderUtils.getResizedImageUrl(imageUrl, width, height, mPost.isPrivate, mPost.isAtomic);
+        String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, width, height, mPost.isPrivate,
+                false); // don't use atomic proxy for WebView images
         if (height > 0) {
             return "<img class='" + imageClass + "'"
                    + " src='" + newImageUrl + "'"

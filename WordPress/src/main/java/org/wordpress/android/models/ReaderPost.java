@@ -724,8 +724,8 @@ public class ReaderPost {
             if (!hasFeaturedImage()) {
                 mFeaturedImageForDisplay = "";
             } else {
-                mFeaturedImageForDisplay =
-                        ReaderUtils.getResizedImageUrl(mFeaturedImage, width, height, isPrivate, isPrivate && isAtomic);
+                mFeaturedImageForDisplay = ReaderUtils.getResizedImageUrl(
+                        mFeaturedImage, width, height, isPrivate, isPrivate && isAtomic);
             }
         }
         return mFeaturedImageForDisplay;

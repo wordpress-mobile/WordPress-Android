@@ -576,8 +576,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // if the dialog is not showing by the time cookie fetched it means that it was dismissed and content was loaded
         if (PrivateAtCookieRefreshProgressDialog.Companion.isShowing(getSupportFragmentManager())) {
             setupViewPager();
+            PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
         }
-        PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
         if (event.isError()) {
             AppLog.e(AppLog.T.STATS,
                     "Failed to load private AT cookie. " + event.error.type + " - " + event.error.message);
