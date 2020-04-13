@@ -41,7 +41,7 @@ class PrepublishingActionsFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProviders.of(this.requireParentFragment(), viewModelFactory)
                 .get(PrepublishingActionsViewModel::class.java)
 
         viewModel.prepublishingActionsUiState.observe(this, Observer { uiState ->
@@ -58,4 +58,5 @@ class PrepublishingActionsFragment : Fragment() {
         fun newInstance(): PrepublishingActionsFragment {
             return PrepublishingActionsFragment()
         }
-    }}
+    }
+}
