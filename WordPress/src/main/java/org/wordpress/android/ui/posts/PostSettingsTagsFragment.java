@@ -81,8 +81,6 @@ public class PostSettingsTagsFragment extends Fragment implements TextWatcher, V
 
         if (context instanceof PostSettingsTagsActivity) {
             mTagsSelectedListener = (TagsSelectedListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement TagsSelectedListener");
         }
     }
 
