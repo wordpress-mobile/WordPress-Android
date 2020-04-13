@@ -35,7 +35,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestC
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient;
@@ -378,12 +377,6 @@ public class ReleaseNetworkModule {
     @Provides
     public AccessToken provideAccountToken(Context appContext) {
         return new AccessToken(appContext);
-    }
-
-    @Singleton
-    @Provides
-    public PrivateAtomicCookie providePrivateAtomicCookie(Context appContext) {
-        return new PrivateAtomicCookie(appContext);
     }
 
     @Singleton
