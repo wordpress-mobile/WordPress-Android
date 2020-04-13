@@ -250,6 +250,21 @@ class PreviewImageViewModelTest {
                 .isInstanceOf(ImageDataStartLoadingUiState::class.java)
     }
 
+    @Test
+    fun `progress bar not visible when retry layout is visible and low res image loaded at given item position`() {
+        initViewModel()
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+
+        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition]
+                .retryLayoutVisible).isEqualTo(true)
+
+        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
+
+        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition]
+                .progressBarVisible).isEqualTo(false)
+    }
+
     private fun initViewModel() = viewModel.onCreateView(
         listOf(ImageData(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, TEST_OUTPUT_FILE_EXTENSION))
     )

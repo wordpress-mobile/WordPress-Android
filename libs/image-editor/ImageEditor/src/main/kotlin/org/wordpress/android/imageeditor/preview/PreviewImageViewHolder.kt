@@ -9,11 +9,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadFailedUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
 import org.wordpress.android.imageeditor.utils.UiHelpers
 
 class PreviewImageViewHolder(
@@ -33,17 +28,8 @@ class PreviewImageViewHolder(
     }
 
     fun onBind(uiState: ImageUiState) {
-        when (uiState) {
-            is ImageDataStartLoadingUiState,
-            is ImageInLowResLoadSuccessUiState,
-            is ImageInHighResLoadSuccessUiState -> {
-                loadIntoImageViewWithResultListener.invoke(uiState.data, previewImageView, adapterPosition)
-            }
-            is ImageInLowResLoadFailedUiState,
-            is ImageInHighResLoadFailedUiState -> {
-                onItemClicked = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
-            }
-        }
+        onItemClicked = uiState.onItemTapped
+        loadIntoImageViewWithResultListener.invoke(uiState.data, previewImageView, adapterPosition)
         UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
         UiHelpers.updateVisibility(errorLayout, uiState.retryLayoutVisible)
     }

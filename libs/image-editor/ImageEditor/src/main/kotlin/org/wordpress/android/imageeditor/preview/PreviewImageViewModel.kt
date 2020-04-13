@@ -115,7 +115,8 @@ class PreviewImageViewModel : ViewModel() {
         return if (currentUrl == currentImageData.lowResImageUrl) {
             val isHighResImageAlreadyLoaded = currentImageState is ImageInHighResLoadSuccessUiState
             if (!isHighResImageAlreadyLoaded) {
-                ImageInLowResLoadSuccessUiState(currentImageData)
+                val isRetryShown = currentImageState is ImageInHighResLoadFailedUiState
+                ImageInLowResLoadSuccessUiState(currentImageData, isRetryShown)
             } else {
                 currentImageState
             }
@@ -166,10 +167,11 @@ class PreviewImageViewModel : ViewModel() {
             retryLayoutVisible = false
         )
         // Continue displaying progress bar on low res image load success
-        data class ImageInLowResLoadSuccessUiState(val imageData: ImageData) : ImageUiState(
+        data class ImageInLowResLoadSuccessUiState(val imageData: ImageData, val isRetryShown: Boolean = false)
+            : ImageUiState(
             data = imageData,
-            progressBarVisible = true,
-            retryLayoutVisible = false
+            progressBarVisible = !isRetryShown,
+            retryLayoutVisible = isRetryShown
         )
         data class ImageInLowResLoadFailedUiState(val imageData: ImageData) : ImageUiState(
             data = imageData,
