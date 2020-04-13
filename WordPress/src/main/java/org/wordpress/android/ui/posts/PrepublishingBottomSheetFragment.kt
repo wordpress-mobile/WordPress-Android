@@ -21,7 +21,7 @@ import org.wordpress.android.ui.posts.ActionState.TagsActionState
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import javax.inject.Inject
 
-class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
+class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSelectedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var prepublishingViewModel: PrepublishingViewModel
@@ -137,5 +137,9 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
                 putSerializable(SITE, site)
             }
         }
+    }
+
+    override fun onTagsSelected(selectedTags: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

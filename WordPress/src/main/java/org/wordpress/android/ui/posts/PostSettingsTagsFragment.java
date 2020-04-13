@@ -81,8 +81,11 @@ public class PostSettingsTagsFragment extends Fragment implements TextWatcher, V
 
         if (context instanceof PostSettingsTagsActivity) {
             mTagsSelectedListener = (TagsSelectedListener) context;
+        } else {
+            mTagsSelectedListener = (TagsSelectedListener) getParentFragment();
         }
     }
+
 
     @Override public void onDetach() {
         super.onDetach();
