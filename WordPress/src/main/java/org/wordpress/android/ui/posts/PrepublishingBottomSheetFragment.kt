@@ -17,11 +17,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.ActionState.TagsActionState
-import org.wordpress.android.ui.posts.CurrentActionTypeState.ActionTypeState
-import org.wordpress.android.ui.posts.CurrentActionTypeState.HomeActionTypeState
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.PUBLISH
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.TAGS
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.VISIBILITY
+import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
@@ -76,36 +72,30 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
         })
 
         prepublishingViewModel.currentActionType.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let { (currentActionType, actionState) ->
-                navigateToAction(currentActionType, actionState)
+            event.getContentIfNotHandled()?.let {actionState ->
+                navigateToAction(actionState)
             }
         })
 
-        var currentActionTypeState = arguments?.getParcelable<CurrentActionTypeState>(KEY_CURRENT_ACTION_TYPE_STATE)
-        if (currentActionTypeState == null) {
-            currentActionTypeState = HomeActionTypeState
-        }
+
         var actionsState = arguments?.getParcelable<ActionsState>(KEY_TAGS_ACTION_STATE)
         if (actionsState == null) {
-            actionsState = ActionsState(TagsActionState(tags = null))
+            actionsState = ActionsState(tagsActionState = TagsActionState(tags = null))
         }
-        prepublishingViewModel.start(currentActionTypeState, actionsState)
+        prepublishingViewModel.start(actionsState)
     }
 
-    private fun navigateToAction(currentActionTypeState: CurrentActionTypeState, actionState: ActionsState) {
-        val result = when (currentActionTypeState) {
-            HomeActionTypeState -> Pair(PrepublishingActionsFragment.newInstance(), PrepublishingActionsFragment.TAG)
-            is ActionTypeState -> {
-                when (currentActionTypeState.actionType) {
-                    PUBLISH -> TODO()
-                    VISIBILITY -> TODO()
-                    TAGS -> Pair(
-                            PostSettingsTagsFragment.newInstance(site, actionState.tagsActionState.tags),
-                            PostSettingsTagsFragment.TAG
-                    )
-                }
-            }
+    private fun navigateToAction(actionState: ActionsState) {
+        val result = when (actionState.currentScreen) {
+            HOME -> Pair(PrepublishingActionsFragment.newInstance(), PrepublishingActionsFragment.TAG)
+            PrepublishingScreen.PUBLISH -> TODO()
+            PrepublishingScreen.VISIBILITY -> TODO()
+            PrepublishingScreen.TAGS -> Pair(
+                    PostSettingsTagsFragment.newInstance(site, actionState.tagsActionState.tags),
+                    PostSettingsTagsFragment.TAG
+            )
         }
+
         slideInFragment(result.first, result.second)
     }
 
