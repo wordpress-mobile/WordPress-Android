@@ -1,6 +1,5 @@
 package org.wordpress.android.imageeditor.preview
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -66,7 +65,6 @@ class PreviewImageViewModel : ViewModel() {
         updateLoadIntoFileState(ImageLoadToFileFailedState)
     }*/
 
-    @VisibleForTesting
     private fun onLoadIntoImageViewRetry(currentUrl: String, currentPosition: Int) {
         val newImageUiStates = updateViewPagerItemsUiStates(
             currentUrl = currentUrl,
