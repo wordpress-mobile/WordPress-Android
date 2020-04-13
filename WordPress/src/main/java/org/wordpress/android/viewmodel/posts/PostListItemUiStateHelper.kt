@@ -46,6 +46,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiStat
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD_COMPACT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -89,16 +90,28 @@ class PostListItemUiStateHelper @Inject constructor(
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
         }
-        val buttonTypes = createButtonTypes(
+        val defaultButtonTypes = createButtonTypes(
                 postStatus = postStatus,
                 isLocalDraft = post.isLocalDraft,
                 isLocallyChanged = post.isLocallyChanged,
                 uploadUiState = uploadUiState,
                 siteHasCapabilitiesToPublish = capabilitiesToPublish,
-                statsSupported = statsSupported
+                statsSupported = statsSupported,
+                isCompactActions = false
         )
-        val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
-        val compactActions = createCompactViewActions(buttonTypes, onButtonClicked)
+
+        val compactButtonTypes = createButtonTypes(
+                postStatus = postStatus,
+                isLocalDraft = post.isLocalDraft,
+                isLocallyChanged = post.isLocallyChanged,
+                uploadUiState = uploadUiState,
+                siteHasCapabilitiesToPublish = capabilitiesToPublish,
+                statsSupported = statsSupported,
+                isCompactActions = true
+        )
+
+        val defaultActions = createDefaultViewActions(defaultButtonTypes, onButtonClicked)
+        val compactActions = createCompactViewActions(compactButtonTypes, onButtonClicked)
 
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
         val localPostId = LocalPostId(LocalId(post.id))
@@ -310,7 +323,8 @@ class PostListItemUiStateHelper @Inject constructor(
         isLocallyChanged: Boolean,
         uploadUiState: PostUploadUiState,
         siteHasCapabilitiesToPublish: Boolean,
-        statsSupported: Boolean
+        statsSupported: Boolean,
+        isCompactActions: Boolean
     ): List<PostListButtonType> {
         val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
         val canCancelPendingAutoUpload = (uploadUiState is UploadWaitingForConnection ||
@@ -332,7 +346,11 @@ class PostListItemUiStateHelper @Inject constructor(
         }
 
         if (canCancelPendingAutoUpload) {
-            buttonTypes.add(BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
+            if (isCompactActions) {
+                buttonTypes.add(BUTTON_CANCEL_PENDING_AUTO_UPLOAD_COMPACT)
+            } else {
+                buttonTypes.add(BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
+            }
         }
 
         if (canShowPublishButton) {
