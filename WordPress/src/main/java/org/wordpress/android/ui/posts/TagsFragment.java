@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -44,7 +43,7 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
 
     private String mTags;
 
-    private TagsSelectedListener mTagsSelectedListener;
+    protected TagsSelectedListener mTagsSelectedListener;
 
     public TagsFragment() {
         // Required empty public constructor
@@ -63,16 +62,6 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
             if (mSite == null) {
                 throw new IllegalStateException("Required argument mSite is missing.");
             }
-        }
-    }
-
-    @Override public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        if (context instanceof PostSettingsTagsActivity) {
-            mTagsSelectedListener = (TagsSelectedListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement TagsSelectedListener");
         }
     }
 

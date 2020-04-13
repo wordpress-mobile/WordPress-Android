@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,16 @@ public class PostSettingsTagsFragment extends TagsFragment {
 
     @Override protected int getContentLayout() {
         return R.layout.fragment_post_settings_tags;
+    }
+
+    @Override public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if (context instanceof PostSettingsTagsActivity) {
+            mTagsSelectedListener = (TagsSelectedListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement TagsSelectedListener");
+        }
     }
 }
 
