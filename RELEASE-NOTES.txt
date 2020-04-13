@@ -1,6 +1,8 @@
 14.7
 -----
- 
+* Block editor: Disable ripple effect for Slider control
+* Block editor: New block: Columns
+
 14.6
 -----
 * Block editor: You can now crop, zoom in/out and rotate images that are already inserted in a post.
