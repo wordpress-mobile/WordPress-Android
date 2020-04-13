@@ -1175,7 +1175,7 @@ class ReaderPostDetailFragment : Fragment(),
     }
 
     override fun onCookieProgressDialogCancelled() {
-         if (!isAdded) {
+        if (!isAdded) {
             return
         }
 
