@@ -1951,14 +1951,16 @@ public class SiteStore extends Store {
         SiteModel site = getSiteBySiteId(payload.siteId);
 
         if (site == null) {
-            PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(AccessCookieErrorType.SITE_MISSING_FROM_STORE,
+            PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(
+                    AccessCookieErrorType.SITE_MISSING_FROM_STORE,
                     "Requested site is missing from the store.");
             emitChange(new OnPrivateAtomicCookieFetched(null, false, cookieError));
             return;
         }
 
         if (!site.isWPComAtomic()) {
-            PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(AccessCookieErrorType.NON_PRIVATE_AT_SITE,
+            PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(
+                    AccessCookieErrorType.NON_PRIVATE_AT_SITE,
                     "Cookie can only be requested for private atomic site.");
             emitChange(new OnPrivateAtomicCookieFetched(site, false, cookieError));
             return;
