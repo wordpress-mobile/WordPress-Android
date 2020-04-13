@@ -358,26 +358,30 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void showMediaSourceBottomBar() {
-        if (!isBottomBarShowing(mMediaSourceBottomBar)) {
-            AniUtils.animateBottomBar(mMediaSourceBottomBar, true);
-        }
+        showBottomBar(mMediaSourceBottomBar);
     }
 
     private void hideMediaSourceBottomBar() {
-        if (isBottomBarShowing(mMediaSourceBottomBar)) {
-            AniUtils.animateBottomBar(mMediaSourceBottomBar, false);
-        }
+        hideBottomBar(mMediaSourceBottomBar);
     }
 
     private void showInsertPreviewBottomBar() {
-        if (!isBottomBarShowing(mInsertPreviewBottomBar)) {
-            AniUtils.animateBottomBar(mInsertPreviewBottomBar, true);
-        }
+        showBottomBar(mInsertPreviewBottomBar);
     }
 
     private void hideInsertPreviewBottomBar() {
-        if (isBottomBarShowing(mInsertPreviewBottomBar)) {
-            AniUtils.animateBottomBar(mInsertPreviewBottomBar, false);
+        hideBottomBar(mInsertPreviewBottomBar);
+    }
+
+    private void showBottomBar(View bottomBar) {
+        if (!isBottomBarShowing(bottomBar)) {
+            AniUtils.animateBottomBar(bottomBar, true);
+        }
+    }
+
+    private void hideBottomBar(View bottomBar) {
+        if (isBottomBarShowing(bottomBar)) {
+            AniUtils.animateBottomBar(bottomBar, false);
         }
     }
 
