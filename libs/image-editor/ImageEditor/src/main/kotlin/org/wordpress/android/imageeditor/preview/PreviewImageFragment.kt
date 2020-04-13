@@ -123,12 +123,6 @@ class PreviewImageFragment : Fragment() {
         )
         previewImageViewPager.adapter = previewImageAdapter
 
-        if (savedInstanceState != null) {
-            previewImageViewPager.post{
-                previewImageViewPager.setCurrentItem(savedInstanceState.getInt(PAGER_CURRENT_ITEM_INDEX, 0), false)
-            }
-        }
-
         val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
             if (tab.customView == null) {
                 val customView = LayoutInflater.from(context)
@@ -158,6 +152,10 @@ class PreviewImageFragment : Fragment() {
         // Setting page transformer explicitly sets internal RecyclerView's itemAnimator to null
         // to fix this issue: https://issuetracker.google.com/issues/37034191
         previewImageViewPager.setPageTransformer { _, _ ->
+        }
+
+        viewModel.uiState.value?.let {
+            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.viewPagerItemsStates)
         }
     }
 
@@ -228,11 +226,6 @@ class PreviewImageFragment : Fragment() {
 //        findNavController().navigate(
 //            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
 //        )
-    }
-
-    override fun onSaveInstanceState(bundle: Bundle) {
-        super.onSaveInstanceState(bundle)
-        bundle.putInt(PAGER_CURRENT_ITEM_INDEX, previewImageViewPager.currentItem)
     }
 
     override fun onDestroyView() {
