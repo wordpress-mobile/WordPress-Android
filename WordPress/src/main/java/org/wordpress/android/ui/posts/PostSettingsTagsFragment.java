@@ -120,6 +120,7 @@ public class PostSettingsTagsFragment extends Fragment implements TextWatcher, V
             mTagsEditText.setText(mTags);
             mTagsEditText.setSelection(mTagsEditText.length());
         }
+        filterListForCurrentText();
     }
 
     @Override
