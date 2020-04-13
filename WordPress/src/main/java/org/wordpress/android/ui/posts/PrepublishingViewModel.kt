@@ -39,7 +39,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     private val _currentActionType = MutableLiveData<Event<Pair<CurrentActionTypeState, TagsActionState>>>()
     val mCurrentActionType: LiveData<Event<Pair<CurrentActionTypeState, TagsActionState>>> = _currentActionType
 
-    fun <T : ActionState> start(currentActionTypeState: CurrentActionTypeState, actionsState: ActionsState) {
+    fun start(currentActionTypeState: CurrentActionTypeState, actionsState: ActionsState) {
         if (isStarted) return
         isStarted = true
 
