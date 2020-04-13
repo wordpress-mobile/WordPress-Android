@@ -101,7 +101,7 @@
             android:background="?android:selectableItemBackground"
             android:minHeight="@dimen/min_touch_target_sz"
             android:padding="@dimen/margin_large"
-            android:text="@string/button_preview"
+            android:text="@string/button_edit"
             android:textAppearance="?attr/textAppearanceButton"
             android:textColor="?attr/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
