@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 
@@ -21,6 +22,10 @@ public class PostSettingsTagsFragment extends TagsFragment {
         PostSettingsTagsFragment fragment = new PostSettingsTagsFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override protected int getContentLayout() {
+        return R.layout.fragment_post_settings_tags;
     }
 }
 

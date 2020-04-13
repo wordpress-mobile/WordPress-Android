@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -49,6 +50,8 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
         // Required empty public constructor
     }
 
+    protected abstract @LayoutRes int getContentLayout();
+
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) requireActivity().getApplication()).component().inject(this);
@@ -82,7 +85,7 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_post_settings_tags, container, false);
+        return inflater.inflate(getContentLayout(), container, false);
     }
 
     @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
