@@ -5,8 +5,7 @@ import com.android.volley.Response.Listener
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder.Response.Success
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
@@ -18,25 +17,27 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
         body: Map<String, String>,
         clazz: Class<T>,
         enableCaching: Boolean = false,
-        cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME
-    ) = suspendCancellableCoroutine<Response<T>> { cont ->
+        cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
+        nonce: String? = null
+    ) = suspendCancellableCoroutine<WPAPIResponse<T>> { cont ->
         val request = WPAPIGsonRequest(Method.GET, url, params, body, clazz, Listener {
             response -> cont.resume(Success(response))
         }, BaseErrorListener {
-            error -> cont.resume(Response.Error(error))
+            error -> cont.resume(WPAPIResponse.Error(error))
         })
+
         cont.invokeOnCancellation {
             request.cancel()
         }
+
         if (enableCaching) {
             request.enableCaching(cacheTimeToLive)
         }
 
-        restClient.add(request)
-    }
+        if (nonce != null) {
+            request.addHeader("x-wp-nonce", nonce)
+        }
 
-    sealed class Response<T> {
-        data class Success<T>(val data: T) : Response<T>()
-        data class Error<T>(val error: BaseNetworkError) : Response<T>()
+        restClient.add(request)
     }
 }

@@ -60,6 +60,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private String mUsername;
     @Column private String mPassword;
     @Column(name = "XMLRPC_URL") private String mXmlRpcUrl;
+    @Column private String mWpApiRestUrl;
     @Column private String mSoftwareVersion;
     @Column private boolean mIsSelfHostedAdmin;
 
@@ -206,6 +207,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setXmlRpcUrl(String xmlRpcUrl) {
         mXmlRpcUrl = xmlRpcUrl;
+    }
+
+    public String getWpApiRestUrl() {
+        return mWpApiRestUrl;
+    }
+
+    public void setWpApiRestUrl(String wpApiRestEndpoint) {
+        mWpApiRestUrl = wpApiRestEndpoint;
     }
 
     public long getSelfHostedSiteId() {
