@@ -302,11 +302,6 @@ Language: ku_TR
     <string name="stats_no_data_for_period">Ji bo vê heyamê dane tune</string>
     <string name="preference_strip_image_location">Ji medyayê cih rake</string>
     <string name="stats_cannot_be_started">Rêjejimar vêga nayên vekirin. Paştre dîsa biceribîne.</string>
-    <string name="giphy_powered_by_giphy">Bi piştevaniya GIPHYê</string>
-    <string name="giphy_picker_endless_scroll_network_error">Ji ber çewtiya girêdanê barkirina hinek medyayan biserneket.</string>
-    <string name="giphy_picker_empty_search_list">Lêgerîna te bi ti medyayan re hevber nebû</string>
-    <string name="giphy_picker_initial_empty_text">Ji bo tu GIFan tevlî PirtukxaneyaMedyayê bike, bigere!</string>
-    <string name="giphy_picker_search_hint">Li ser Giphyê bigere</string>
     <string name="stats_author_views_label">Dîtin</string>
     <string name="stats_author_label">Nivîskar</string>
     <string name="stats_authors">Nivîskar</string>

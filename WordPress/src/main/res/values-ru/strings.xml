@@ -614,11 +614,6 @@ Language: ru
     <string name="stats_no_data_for_period">Для указанного периода нет данных</string>
     <string name="preference_strip_image_location">Убрать данные местоположения из медиафайлов</string>
     <string name="stats_cannot_be_started">Извините, статистика в данный момент недоступна, попробуйте позже.</string>
-    <string name="giphy_powered_by_giphy">Работает с GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Некоторые медиафайлы не загрузились из-за ошибки сети.</string>
-    <string name="giphy_picker_empty_search_list">Мультимедиа по критериям поиска не найдены</string>
-    <string name="giphy_picker_initial_empty_text">Найдите GIF изображения и добавьте их в медиатеку!</string>
-    <string name="giphy_picker_search_hint">Поиск в Giphy</string>
     <string name="stats_author_views_label">Просмотры</string>
     <string name="stats_author_label">Автор</string>
     <string name="stats_authors">Авторы</string>

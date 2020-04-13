@@ -38,8 +38,6 @@ class PageListEventListener(
     private val eventBusWrapper: EventBusWrapper,
     private val site: SiteModel,
     private val handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-    private val handlePageUpdated: (RemoteId) -> Unit,
-    private val handlePostUploadedStarted: (RemoteId) -> Unit,
     private val handlePostUploadFinished: (RemoteId, Boolean) -> Unit,
     private val invalidateUploadStatus: (List<LocalId>) -> Unit
 ) : CoroutineScope {
@@ -87,7 +85,6 @@ class PageListEventListener(
                             LocalId((event.causeOfChange as RemoteAutoSavePost).localPostId),
                             event.isError
                     )
-                    handlePageUpdated.invoke(RemoteId((event.causeOfChange as RemoteAutoSavePost).remotePostId))
                 }
 
                 is UpdatePost -> {
@@ -99,7 +96,6 @@ class PageListEventListener(
                         )
                     }
                     uploadStatusChanged(LocalId((event.causeOfChange as UpdatePost).localPostId))
-                    handlePageUpdated.invoke(RemoteId((event.causeOfChange as UpdatePost).remotePostId))
                 }
             }
         }
@@ -138,7 +134,6 @@ class PageListEventListener(
     fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
-            handlePostUploadedStarted(RemoteId(event.post.remotePostId))
         }
     }
 
@@ -182,10 +177,8 @@ class PageListEventListener(
             postStore: PostStore,
             eventBusWrapper: EventBusWrapper,
             site: SiteModel,
-            handlePageUpdated: (RemoteId) -> Unit,
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-            handlePostUploadedStarted: (RemoteId) -> Unit,
             handlePostUploadFinished: (RemoteId, Boolean) -> Unit
         ): PageListEventListener {
             return PageListEventListener(
@@ -194,10 +187,8 @@ class PageListEventListener(
                     postStore = postStore,
                     eventBusWrapper = eventBusWrapper,
                     site = site,
-                    handlePageUpdated = handlePageUpdated,
                     invalidateUploadStatus = invalidateUploadStatus,
                     handleRemoteAutoSave = handleRemoteAutoSave,
-                    handlePostUploadedStarted = handlePostUploadedStarted,
                     handlePostUploadFinished = handlePostUploadFinished
             )
         }
