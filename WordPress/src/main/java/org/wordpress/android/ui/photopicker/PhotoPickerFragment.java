@@ -85,7 +85,7 @@ public class PhotoPickerFragment extends Fragment {
 
     private EmptyViewRecyclerView mRecycler;
     private PhotoPickerAdapter mAdapter;
-    private View mBottomBar;
+    private View mMediaSourceBottomBar;
     private View mInsertPreviewBottomBar;
     private ActionableEmptyView mSoftAskView;
     private ActionMode mActionMode;
@@ -157,13 +157,13 @@ public class PhotoPickerFragment extends Fragment {
             }
         });
 
-        mBottomBar = view.findViewById(R.id.bottom_bar);
+        mMediaSourceBottomBar = view.findViewById(R.id.container_media_source_bar);
         mInsertPreviewBottomBar = view.findViewById(R.id.container_insert_preview_bar);
 
-        if (!canShowBottomBar()) {
-            mBottomBar.setVisibility(View.GONE);
+        if (!canShowMediaSourceBottomBar()) {
+            mMediaSourceBottomBar.setVisibility(View.GONE);
         } else {
-            mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
+            mMediaSourceBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mBrowserType.isImagePicker() && mBrowserType.isVideoPicker()) {
@@ -178,7 +178,7 @@ public class PhotoPickerFragment extends Fragment {
                     }
                 }
             });
-            mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
+            mMediaSourceBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mBrowserType == MediaBrowserType.GRAVATAR_IMAGE_PICKER
@@ -191,7 +191,7 @@ public class PhotoPickerFragment extends Fragment {
             });
 
             // choosing from WP media requires a site and should be hidden in gutenberg picker
-            View wpMedia = mBottomBar.findViewById(R.id.icon_wpmedia);
+            View wpMedia = mMediaSourceBottomBar.findViewById(R.id.icon_wpmedia);
             if (mSite == null || mBrowserType.isGutenbergPicker()) {
                 wpMedia.setVisibility(View.GONE);
             } else {
@@ -217,7 +217,7 @@ public class PhotoPickerFragment extends Fragment {
         return view;
     }
 
-    private boolean canShowBottomBar() {
+    private boolean canShowMediaSourceBottomBar() {
         if (mBrowserType == MediaBrowserType.AZTEC_EDITOR_PICKER && DisplayUtils.isLandscape(getActivity())) {
             return true;
         } else if (mBrowserType == MediaBrowserType.AZTEC_EDITOR_PICKER) {
@@ -357,15 +357,15 @@ public class PhotoPickerFragment extends Fragment {
         mListener = listener;
     }
 
-    private void showBottomBar() {
-        if (!isBottomBarShowing() && canShowBottomBar()) {
-            AniUtils.animateBottomBar(mBottomBar, true);
+    private void showMediaSourceBottomBar() {
+        if (!isBottomBarShowing() && canShowMediaSourceBottomBar()) {
+            AniUtils.animateBottomBar(mMediaSourceBottomBar, true);
         }
     }
 
-    private void hideBottomBar() {
-        if (isBottomBarShowing() && canShowBottomBar()) {
-            AniUtils.animateBottomBar(mBottomBar, false);
+    private void hideMediaSourceBottomBar() {
+        if (isBottomBarShowing() && canShowMediaSourceBottomBar()) {
+            AniUtils.animateBottomBar(mMediaSourceBottomBar, false);
         }
     }
 
@@ -382,7 +382,7 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private boolean isBottomBarShowing() {
-        return mBottomBar.getVisibility() == View.VISIBLE;
+        return mMediaSourceBottomBar.getVisibility() == View.VISIBLE;
     }
 
     private boolean isInsertPreviewBottomBarShowing() {
@@ -506,7 +506,7 @@ public class PhotoPickerFragment extends Fragment {
                 MenuInflater inflater = actionMode.getMenuInflater();
                 inflater.inflate(R.menu.photo_picker_action_mode, menu);
             }
-            hideBottomBar();
+            hideMediaSourceBottomBar();
             return true;
         }
 
@@ -528,7 +528,7 @@ public class PhotoPickerFragment extends Fragment {
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
-            showBottomBar();
+            showMediaSourceBottomBar();
             hideInsertPreviewBottomBar();
             getAdapter().clearSelection();
         }
@@ -645,10 +645,10 @@ public class PhotoPickerFragment extends Fragment {
             });
 
             mSoftAskView.setVisibility(View.VISIBLE);
-            hideBottomBar();
+            hideMediaSourceBottomBar();
         } else if (mSoftAskView.getVisibility() == View.VISIBLE) {
             AniUtils.fadeOut(mSoftAskView, AniUtils.Duration.MEDIUM);
-            showBottomBar();
+            showMediaSourceBottomBar();
         }
     }
 

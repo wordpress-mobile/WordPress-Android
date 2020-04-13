@@ -10,7 +10,7 @@
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_bar"
+        android:layout_above="@+id/container_media_source_bar"
         android:fadeScrollbars="true"
         android:scrollbars="vertical" />
 
@@ -18,7 +18,7 @@
         android:id="@+id/actionable_empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_bar"
+        android:layout_above="@+id/container_media_source_bar"
         android:visibility="gone"
         app:aevImage="@drawable/img_illustration_media_105dp"
         app:aevTitle="@string/media_empty_list"
@@ -36,7 +36,7 @@
 
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottom_bar"
+        android:id="@+id/container_media_source_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
