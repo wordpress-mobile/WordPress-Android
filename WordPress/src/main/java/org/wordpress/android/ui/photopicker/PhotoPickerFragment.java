@@ -358,7 +358,7 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void showMediaSourceBottomBar() {
-        if (!isBottomBarShowing() && canShowMediaSourceBottomBar()) {
+        if (!isBottomBarShowing()) {
             AniUtils.animateBottomBar(mMediaSourceBottomBar, true);
         }
     }
@@ -370,7 +370,7 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void showInsertPreviewBottomBar() {
-        if (!isInsertPreviewBottomBarShowing() && canShowInsertPreviewBottomBar()) {
+        if (!isInsertPreviewBottomBarShowing()) {
             AniUtils.animateBottomBar(mInsertPreviewBottomBar, true);
         }
     }
@@ -528,7 +528,9 @@ public class PhotoPickerFragment extends Fragment {
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
-            showMediaSourceBottomBar();
+            if (canShowMediaSourceBottomBar()) {
+                showMediaSourceBottomBar();
+            }
             hideInsertPreviewBottomBar();
             getAdapter().clearSelection();
         }
@@ -648,7 +650,9 @@ public class PhotoPickerFragment extends Fragment {
             hideMediaSourceBottomBar();
         } else if (mSoftAskView.getVisibility() == View.VISIBLE) {
             AniUtils.fadeOut(mSoftAskView, AniUtils.Duration.MEDIUM);
-            showMediaSourceBottomBar();
+            if (canShowMediaSourceBottomBar()) {
+                showMediaSourceBottomBar();
+            }
         }
     }
 
