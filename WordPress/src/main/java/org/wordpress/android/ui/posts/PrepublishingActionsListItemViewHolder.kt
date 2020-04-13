@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -15,6 +16,7 @@ class PrepublishingActionsListItemViewHolder(internal val parent: ViewGroup, val
 ) {
     private val actionType: TextView = itemView.findViewById(R.id.action_type)
     private val actionResult: TextView = itemView.findViewById(R.id.action_result)
+    private val actionLayout: View = itemView.findViewById(R.id.action_layout)
 
     fun bind(uiState: PrepublishingActionItemUiState) {
         uiState as PrepublishingActionUiState
@@ -22,6 +24,9 @@ class PrepublishingActionsListItemViewHolder(internal val parent: ViewGroup, val
         actionType.text = uiHelpers.getTextOfUiString(itemView.context, uiState.actionType.textRes)
         uiState.actionResult?.let { resultText ->
             actionResult.text = uiHelpers.getTextOfUiString(itemView.context, resultText)
+        }
+        actionLayout.setOnClickListener {
+            uiState.onActionClicked.invoke(uiState.actionType)
         }
     }
 }
