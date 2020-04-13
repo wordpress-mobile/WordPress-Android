@@ -26,7 +26,7 @@ enum class PrepublishingScreen {
 data class ActionsState(val currentScreen: PrepublishingScreen = HOME, val tagsActionState: TagsActionState) :
         Parcelable
 
-sealed class ActionState() : Parcelable {
+sealed class ActionState : Parcelable {
     @Parcelize
     data class TagsActionState(val tags: String?) : ActionState()
 }

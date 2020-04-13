@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -31,6 +32,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireNotNull(activity).application as WordPress).component().inject(this)
+        site = arguments?.getSerializable(SITE) as SiteModel
     }
 
     override fun onCreateView(
@@ -127,10 +129,13 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
+        const val SITE = "prepublishing_bottom_sheet_site_model"
 
         @JvmStatic
-        fun newInstance(): PrepublishingBottomSheetFragment {
-            return PrepublishingBottomSheetFragment()
+        fun newInstance(@NonNull site: SiteModel) = PrepublishingBottomSheetFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(SITE, site)
+            }
         }
     }
 }
