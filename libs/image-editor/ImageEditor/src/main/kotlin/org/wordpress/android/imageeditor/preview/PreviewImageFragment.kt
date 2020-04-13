@@ -90,6 +90,7 @@ class PreviewImageFragment : Fragment() {
     )
 
     companion object {
+        private const val PAGER_CURRENT_ITEM_INDEX = "pager_current_item_index"
         const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
         const val ARG_HIGH_RES_IMAGE_URL = "arg_high_res_image_url"
         const val ARG_OUTPUT_FILE_EXTENSION = "arg_output_file_extension"
@@ -107,20 +108,26 @@ class PreviewImageFragment : Fragment() {
 
         val nonNullIntent = checkNotNull(requireActivity().intent)
         initializeViewModels(nonNullIntent)
-        initializeViews()
+        initializeViews(savedInstanceState)
     }
 
-    private fun initializeViews() {
-        initializeViewPager()
+    private fun initializeViews(savedInstanceState: Bundle?) {
+        initializeViewPager(savedInstanceState)
     }
 
-    private fun initializeViewPager() {
+    private fun initializeViewPager(savedInstanceState: Bundle?) {
         val previewImageAdapter = PreviewImageAdapter(
             loadIntoImageViewWithResultListener = { imageData, imageView, position ->
                 loadIntoImageViewWithResultListener(imageData, imageView, position)
             }
         )
         previewImageViewPager.adapter = previewImageAdapter
+
+        if (savedInstanceState != null) {
+            previewImageViewPager.post{
+                previewImageViewPager.setCurrentItem(savedInstanceState.getInt(PAGER_CURRENT_ITEM_INDEX, 0), false)
+            }
+        }
 
         val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
             if (tab.customView == null) {
@@ -221,6 +228,11 @@ class PreviewImageFragment : Fragment() {
 //        findNavController().navigate(
 //            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
 //        )
+    }
+
+    override fun onSaveInstanceState(bundle: Bundle) {
+        super.onSaveInstanceState(bundle)
+        bundle.putInt(PAGER_CURRENT_ITEM_INDEX, previewImageViewPager.currentItem)
     }
 
     override fun onDestroyView() {
