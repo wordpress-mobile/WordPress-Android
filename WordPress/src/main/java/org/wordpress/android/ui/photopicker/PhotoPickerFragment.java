@@ -357,22 +357,6 @@ public class PhotoPickerFragment extends Fragment {
         mListener = listener;
     }
 
-    private void showMediaSourceBottomBar() {
-        showBottomBar(mMediaSourceBottomBar);
-    }
-
-    private void hideMediaSourceBottomBar() {
-        hideBottomBar(mMediaSourceBottomBar);
-    }
-
-    private void showInsertPreviewBottomBar() {
-        showBottomBar(mInsertPreviewBottomBar);
-    }
-
-    private void hideInsertPreviewBottomBar() {
-        hideBottomBar(mInsertPreviewBottomBar);
-    }
-
     private void showBottomBar(View bottomBar) {
         if (!isBottomBarShowing(bottomBar)) {
             AniUtils.animateBottomBar(bottomBar, true);
@@ -501,12 +485,12 @@ public class PhotoPickerFragment extends Fragment {
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
             if (canShowInsertPreviewBottomBar()) {
-                showInsertPreviewBottomBar();
+                showBottomBar(mInsertPreviewBottomBar);
             } else {
                 MenuInflater inflater = actionMode.getMenuInflater();
                 inflater.inflate(R.menu.photo_picker_action_mode, menu);
             }
-            hideMediaSourceBottomBar();
+            hideBottomBar(mMediaSourceBottomBar);
             return true;
         }
 
@@ -529,9 +513,9 @@ public class PhotoPickerFragment extends Fragment {
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
             if (canShowMediaSourceBottomBar()) {
-                showMediaSourceBottomBar();
+                showBottomBar(mMediaSourceBottomBar);
             }
-            hideInsertPreviewBottomBar();
+            hideBottomBar(mInsertPreviewBottomBar);
             getAdapter().clearSelection();
         }
     }
@@ -647,11 +631,11 @@ public class PhotoPickerFragment extends Fragment {
             });
 
             mSoftAskView.setVisibility(View.VISIBLE);
-            hideMediaSourceBottomBar();
+            hideBottomBar(mMediaSourceBottomBar);
         } else if (mSoftAskView.getVisibility() == View.VISIBLE) {
             AniUtils.fadeOut(mSoftAskView, AniUtils.Duration.MEDIUM);
             if (canShowMediaSourceBottomBar()) {
-                showMediaSourceBottomBar();
+                showBottomBar(mMediaSourceBottomBar);
             }
         }
     }
