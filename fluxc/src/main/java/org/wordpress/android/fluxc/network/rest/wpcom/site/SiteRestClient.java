@@ -947,9 +947,10 @@ public class SiteRestClient extends BaseWPComRestClient {
                                             new FetchedPrivateAtomicCookiePayload(site, response)));
                         } else {
                             AppLog.e(T.API, "Failed to fetch private atomic cookie for " + site.getUrl());
-                            FetchedPrivateAtomicCookiePayload payload = new FetchedPrivateAtomicCookiePayload(site, null);
-                            payload.error =
-                                    new PrivateAtomicCookieError(AccessCookieErrorType.INVALID_RESPONSE, "Empty response");
+                            FetchedPrivateAtomicCookiePayload payload = new FetchedPrivateAtomicCookiePayload(
+                                    site, null);
+                            payload.error = new PrivateAtomicCookieError(
+                                    AccessCookieErrorType.INVALID_RESPONSE, "Empty response");
                             mDispatcher.dispatch(SiteActionBuilder.newFetchedPrivateAtomicCookieAction(payload));
                         }
                     }
