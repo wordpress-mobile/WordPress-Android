@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD_COMPACT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -44,7 +45,7 @@ fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postDat
         BUTTON_SYNC -> "sync"
         BUTTON_MORE -> "more"
         BUTTON_MOVE_TO_DRAFT -> "move_to_draft"
-        BUTTON_CANCEL_PENDING_AUTO_UPLOAD -> "cancel_pending_auto_upload"
+        BUTTON_CANCEL_PENDING_AUTO_UPLOAD, BUTTON_CANCEL_PENDING_AUTO_UPLOAD_COMPACT -> "cancel_pending_auto_upload"
     }
 
     AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)
