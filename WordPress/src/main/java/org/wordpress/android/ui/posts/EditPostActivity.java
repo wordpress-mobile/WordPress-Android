@@ -19,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.CookieManager;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
@@ -578,12 +577,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (PrivateAtCookieRefreshProgressDialog.Companion.isShowing(getSupportFragmentManager())) {
             setupViewPager();
         }
-
         PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
-        // we will try to set the cookie even if it arrives after user cancels the dialog
-        if (!event.isError()) {
-            CookieManager.getInstance().setCookie(mPrivateAtomicCookie.getDomain(),
-                    mPrivateAtomicCookie.getCookieContent());
+        if (event.isError()) {
+            AppLog.e(AppLog.T.STATS,
+                    "Failed to load private AT cookie. " + event.error.type + " - " + event.error.message);
+            WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+                      .show();
         }
     }
 
@@ -2722,8 +2721,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.exists() && WPUrlUtils
                 .safeToAddPrivateAtCookie(url, mPrivateAtomicCookie.getDomain())) {
-            authHeaders.put(AuthenticationUtils.COOKIE_HEADER_NAME,
-                    mPrivateAtomicCookie.getName() + '=' + mPrivateAtomicCookie.getValue());
+            authHeaders.put(AuthenticationUtils.COOKIE_HEADER_NAME, mPrivateAtomicCookie.getCookieContent());
         }
         return authHeaders;
     }

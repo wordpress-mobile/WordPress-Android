@@ -102,6 +102,7 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.READER
+import org.wordpress.android.util.AppLog.T.STATS
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
@@ -1146,13 +1147,25 @@ class ReaderPostDetailFragment : Fragment(),
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPrivateAtomicCookieFetched(event: OnPrivateAtomicCookieFetched?) {
+    fun onPrivateAtomicCookieFetched(event: OnPrivateAtomicCookieFetched) {
+        if (!isAdded) {
+            return
+        }
         PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(fragmentManager)
-        if (!event!!.isError) {
+        if (!event.isError) {
             CookieManager.getInstance().setCookie(
-                    privateAtomicCookie.getDomain(),
-                    privateAtomicCookie.getName() + "=" + privateAtomicCookie.getValue()
+                    privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
             )
+        } else {
+            AppLog.e(
+                    STATS,
+                    "Failed to load private AT cookie. $event.error.type - $event.error.message"
+            )
+            WPSnackbar.make(
+                    view!!,
+                    string.media_accessing_failed,
+                    Snackbar.LENGTH_LONG
+            ).show()
         }
         if (renderer != null) {
             renderer!!.beginRender()
@@ -1160,14 +1173,15 @@ class ReaderPostDetailFragment : Fragment(),
     }
 
     override fun onCookieProgressDialogCancelled() {
-        if (!isAdded) return
+         if (!isAdded) {
+            return
+        }
 
         WPSnackbar.make(
                 view!!,
                 string.media_accessing_failed,
                 Snackbar.LENGTH_LONG
-        )
-                .show()
+        ).show()
         if (renderer != null) {
             renderer!!.beginRender()
         }
