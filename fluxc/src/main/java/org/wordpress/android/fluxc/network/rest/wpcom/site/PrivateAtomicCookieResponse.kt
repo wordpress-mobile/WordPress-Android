@@ -1,11 +1,11 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.site
 
-class SiteCookieResponse(
+class PrivateAtomicCookieResponse(
     val url: String,
-    val cookies: List<SiteCookie>
+    val cookies: List<AtomicCookie>
 )
 
-class SiteCookie(
+class AtomicCookie(
     val expires: String,
     val path: String,
     val domain: String,

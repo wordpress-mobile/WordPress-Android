@@ -14,7 +14,7 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie.Companion.PRIVATE_ATOMIC_COOKIE_PREF_KEY
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteCookie
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AtomicCookie
 import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
@@ -24,7 +24,7 @@ class PrivateAtomicCookieTest {
     @Mock lateinit var preferenceUtilsWrapper: PreferenceUtilsWrapper
     private lateinit var privateAtomicCookie: PrivateAtomicCookie
 
-    private var testCookie = SiteCookie("1586725400", "/", "wordrpess.org", "cookie_name", "cookie_value")
+    private var testCookie = AtomicCookie("1586725400", "/", "wordrpess.org", "cookie_name", "cookie_value")
     private val testCookieAsJsonString = "{\"expires\":\"1586725400\",\"path\":\"/\",\"domain\":\"wordrpess.org\"," +
             "\"name\":\"cookie_name\",\"value\":\"cookie_value\"}"
 
@@ -119,8 +119,8 @@ class PrivateAtomicCookieTest {
         assertThat(privateAtomicCookie.getCookieContent()).isEqualTo("cookie_name=cookie_value")
     }
 
-    private fun getCookieWithSpecificExpirationTime(expirationTime: Long): SiteCookie {
-        return SiteCookie(
+    private fun getCookieWithSpecificExpirationTime(expirationTime: Long): AtomicCookie {
+        return AtomicCookie(
                 expirationTime.toString(),
                 testCookie.path,
                 testCookie.domain,
