@@ -73,7 +73,13 @@ class MediaUploadCompletionProcessorTest {
 
     @Test
     fun `processPost works for image blocks nested within a cover block`() {
-        val processedBlock = processor.processContent(TestContent.oldImageBlockNestedInCoverBlock)
-        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newImageBlockNestedInCoverBlock)
+        val processedContent = processor.processContent(TestContent.oldImageBlockNestedInCoverBlock)
+        Assertions.assertThat(processedContent).isEqualTo(TestContent.newImageBlockNestedInCoverBlock)
+    }
+
+    @Test
+    fun `processPost leaves malformed cover block unchanged`() {
+        val processedContent = processor.processContent(TestContent.malformedCoverBlock)
+        Assertions.assertThat(processedContent).isEqualTo(TestContent.malformedCoverBlock)
     }
 }
