@@ -52,24 +52,13 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                 }
             })
             setOnFocusChangeListener { _ , hasFocus ->
-                if (hasFocus && adapter != null) {
-                    forceFiltering(text)
-                }
+                post { showDropDown() }
             }
-
-            // Override the enoughToFilter check to always return true so that we always show any available results.
-            // Must do this before setting the initial "@" text in order to display all available results
-            // immediately when the view loads
-            setEnoughToFilterCheck { true }
 
             setText("@")
             setSelection(1)
 
-            post {
-                // Requesting focus after the UI loads insures that all available results display
-                // immediately when the view loads
-                requestFocus()
-            }
+            post { requestFocus() }
         }
 
         removeTopWindowInset()
