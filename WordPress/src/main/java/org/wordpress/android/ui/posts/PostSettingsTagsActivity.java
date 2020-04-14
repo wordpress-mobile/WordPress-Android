@@ -51,7 +51,7 @@ public class PostSettingsTagsActivity extends LocaleAwareActivity implements Tag
         showPostSettingsTagsFragment();
     }
 
-    public void showPostSettingsTagsFragment() {
+    private void showPostSettingsTagsFragment() {
         PostSettingsTagsFragment postSettingsTagsFragment = PostSettingsTagsFragment.newInstance(mSite, mTags);
 
         getSupportFragmentManager()
