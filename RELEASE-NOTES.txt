@@ -1,6 +1,7 @@
 14.7
 -----
- 
+* Block editor: "Choose media from device" now opens our built-in media picker instead of the OS default media picker.
+
 14.6
 -----
 * Block editor: You can now crop, zoom in/out and rotate images that are already inserted in a post.
