@@ -24,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.util.Consumer;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -44,14 +43,9 @@ import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
-import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
@@ -344,34 +338,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         });
                     }
                 },
-                new OnEditorAutosaveListener() {
-                    @Override public void onEditorAutosave() {
-                        mTextWatcher.postTextChanged();
-                    }
-                },
-                new OnAuthHeaderRequestedListener() {
-                    @Override public Map<String, String> onAuthHeaderRequested(String url) {
-                        return mEditorFragmentListener.onAuthHeaderRequested(url);
-                    }
-                },
-                new RequestExecutor() {
-                    @Override public void performRequest(String path,
-                                                         Consumer<String> onResult,
-                                                         Consumer<Bundle> onError) {
-                        mEditorFragmentListener.onPerformFetch(path, onResult, onError);
-                    }
-                },
-                new OnImageFullscreenPreviewListener() {
-                    @Override public void onImageFullscreenPreviewClicked(String mediaUrl) {
-                        mEditorImagePreviewListener.onImagePreviewRequested(mediaUrl);
-                    }
-                },
-                new OnMediaEditorListener() {
-                    @Override public void onMediaEditorClicked(String mediaUrl) {
-                        // Show Media Editor
-                        mEditorEditMediaListener.onMediaEditorRequested(mediaUrl);
-                    }
-                },
+                mTextWatcher::postTextChanged,
+                mEditorFragmentListener::onAuthHeaderRequested,
+                mEditorFragmentListener::onPerformFetch,
+                mEditorImagePreviewListener::onImagePreviewRequested,
+                mEditorEditMediaListener::onMediaEditorRequested,
                 new OnLogGutenbergUserEventListener() {
                     @Override
                     public void onGutenbergUserEvent(GutenbergUserEvent event, Map<String, Object> properties) {
@@ -386,7 +357,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                 break;
                         }
                     }
-                }, isDarkMode());
+                },
+                mEditorFragmentListener::getMention,
+                isDarkMode());
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {

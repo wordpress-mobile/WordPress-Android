@@ -480,6 +480,13 @@
             android:screenOrientation="landscape"
             android:theme="@style/ReaderMediaViewerTheme" />
 
+        <!-- Gutenberg activities -->
+        <activity
+            android:name=".ui.SuggestUsersActivity"
+            android:theme="@style/WordPressNoDisplay"
+            android:windowSoftInputMode="adjustResize"
+            />
+
         <!-- Other activities -->
         <activity
             android:name=".ui.publicize.PublicizeListActivity"
