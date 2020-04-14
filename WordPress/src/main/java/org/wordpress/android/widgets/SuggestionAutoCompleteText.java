@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
+import androidx.core.util.Supplier;
 
 import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
 import org.wordpress.android.util.DeviceUtils;
@@ -19,6 +20,7 @@ import org.wordpress.persistentedittext.PersistentEditTextHelper;
 public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextView {
     PersistentEditTextHelper mPersistentEditTextHelper;
     private OnEditTextBackListener mBackListener;
+    private Supplier<Boolean> mEnoughToFilterCheck;
 
     public interface OnEditTextBackListener {
         void onEditTextBack();
@@ -45,6 +47,22 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
         mPersistentEditTextHelper = new PersistentEditTextHelper(context);
         // When TYPE_TEXT_FLAG_AUTO_COMPLETE is set, autocorrection is disabled.
         setRawInputType(getInputType() & ~EditorInfo.TYPE_TEXT_FLAG_AUTO_COMPLETE);
+
+        // Use the superclass implementation by default
+        setEnoughToFilterCheck(super::enoughToFilter);
+    }
+
+    public void setEnoughToFilterCheck(Supplier<Boolean> enoughToFilterCheck) {
+        this.mEnoughToFilterCheck = enoughToFilterCheck;
+    }
+
+    @Override
+    public boolean enoughToFilter() {
+        return mEnoughToFilterCheck.get();
+    }
+
+    public void forceFiltering(CharSequence text) {
+        performFiltering(text, 0);
     }
 
     public PersistentEditTextHelper getAutoSaveTextHelper() {

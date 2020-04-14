@@ -30,31 +30,46 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.suggestion_activity)
 
-
-        autocompleteText.setText("@")
         (intent.getSerializableExtra(WordPress.SITE) as? SiteModel)?.let {
             siteId = it.siteId
-            setupSuggestionServiceAndAdapter(it)
+            initializeSuggestionAdapter(it)
         }
 
         autocompleteText.apply {
             setOnItemClickListener { _, _, position, _ ->
-                val suggestion = suggestionAdapter?.getItem(position)
-                finishWithId(suggestion?.userLogin)
+                val suggestionUserId = suggestionAdapter?.getItem(position)?.userLogin
+                finishWithId(suggestionUserId)
             }
-
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun afterTextChanged(s: Editable?) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    // Insure the text always starts with an "@"
                     if (s?.startsWith("@") == false) {
                         autocompleteText.setText(resources.getString(R.string.at_username, s))
                         autocompleteText.setSelection(1)
                     }
                 }
             })
+            setOnFocusChangeListener { _ , hasFocus ->
+                if (hasFocus && adapter != null) {
+                    forceFiltering(text)
+                }
+            }
 
-            requestFocus()
+            // Override the enoughToFilter check to always return true so that we always show any available results.
+            // Must do this before setting the initial "@" text in order to display all available results
+            // immediately when the view loads
+            setEnoughToFilterCheck { true }
+
+            setText("@")
+            setSelection(1)
+
+            post {
+                // Requesting focus after the UI loads insures that all available results display
+                // immediately when the view loads
+                requestFocus()
+            }
         }
 
         removeTopWindowInset()
@@ -92,21 +107,16 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         finish()
     }
 
-    private fun setupSuggestionServiceAndAdapter(site: SiteModel) {
+    private fun initializeSuggestionAdapter(site: SiteModel) {
         if (!SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.d(AppLog.T.EDITOR, "Cannot setup user suggestions for non-WPCom site")
         } else {
-            suggestionServiceConnectionManager = SuggestionServiceConnectionManager(
-                    this,
-                    site.siteId
-            )
+            val connectionManager = SuggestionServiceConnectionManager(this, site.siteId)
+            val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager)
+            autocompleteText.setAdapter(adapter)
 
-            suggestionAdapter = SuggestionUtils.setupSuggestions(
-                    site,
-                    this,
-                    suggestionServiceConnectionManager
-            )
-            suggestionAdapter?.let { autocompleteText.setAdapter(it) }
+            suggestionServiceConnectionManager = connectionManager
+            suggestionAdapter = adapter
         }
     }
 
