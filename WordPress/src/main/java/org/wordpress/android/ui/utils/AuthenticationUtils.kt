@@ -20,7 +20,7 @@ class AuthenticationUtils
         headers["User-Agent"] = userAgent.userAgent
         if (WPUrlUtils.safeToAddWordPressComAuthToken(url)) {
             if (accessToken.exists()) {
-                headers["Authorization"] = "Bearer " + accessToken.get()
+                headers[AUTHORIZATION_HEADER_NAME] = "Bearer " + accessToken.get()
             }
         } else {
             // Check if we had HTTP Auth credentials for the root url
@@ -28,9 +28,13 @@ class AuthenticationUtils
             if (httpAuthModel != null) {
                 val creds = String.format("%s:%s", httpAuthModel.username, httpAuthModel.password)
                 val auth = "Basic " + Base64.encodeToString(creds.toByteArray(), Base64.NO_WRAP)
-                headers["Authorization"] = auth
+                headers[AUTHORIZATION_HEADER_NAME] = auth
             }
         }
         return headers
+    }
+
+    companion object {
+        const val AUTHORIZATION_HEADER_NAME = "Authorization"
     }
 }

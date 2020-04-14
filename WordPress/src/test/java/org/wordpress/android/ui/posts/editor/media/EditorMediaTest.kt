@@ -121,7 +121,7 @@ class EditorMediaTest : BaseUnitTest() {
     }
 
     @Test
-    fun `addMediaFromGiphyToPostAsync invokes addLocalMediaToEditorAsync with all media`() = test {
+    fun `addGifMediaToPostAsync invokes addLocalMediaToEditorAsync with all media`() = test {
         // Arrange
         val localIdArray = listOf(1, 2, 3).toIntArray()
         val addLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase()
@@ -130,7 +130,7 @@ class EditorMediaTest : BaseUnitTest() {
         createEditorMedia(
                 addLocalMediaToPostUseCase = addLocalMediaToPostUseCase
         )
-                .addMediaFromGiphyToPostAsync(localIdArray)
+                .addGifMediaToPostAsync(localIdArray)
         // Assert
         verify(addLocalMediaToPostUseCase).addLocalMediaToEditorAsync(
                 eq(localIdArray.toList()),

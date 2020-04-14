@@ -502,11 +502,6 @@ Language: zh_CN
     <string name="stats_no_data_for_period">没有此时间段的数据</string>
     <string name="preference_strip_image_location">从媒体删除位置信息</string>
     <string name="stats_cannot_be_started">我们现在无法打开统计信息。请稍后重试</string>
-    <string name="giphy_powered_by_giphy">由 GIPHY 提供支持</string>
-    <string name="giphy_picker_endless_scroll_network_error">由于网络错误，无法加载某些媒体。</string>
-    <string name="giphy_picker_empty_search_list">没有与您的搜索匹配的媒体</string>
-    <string name="giphy_picker_initial_empty_text">搜索查找要添加到您的媒体库中的 GIF！</string>
-    <string name="giphy_picker_search_hint">搜索 Giphy</string>
     <string name="stats_author_views_label">浏览量</string>
     <string name="stats_author_label">作者</string>
     <string name="stats_authors">作者</string>

@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.giphy
+package org.wordpress.android.viewmodel.gif
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,27 +19,29 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 /**
- * Holds the data for [org.wordpress.android.ui.giphy.GiphyPickerActivity]
+ * Holds the data for [org.wordpress.android.ui.gif.GifPickerActivity]
  *
  * This creates a [PagedList] which can be bound to by a [PagedListAdapter] and also manages the logic of the
- * selected media. That includes but not limited to keeping the [GiphyMediaViewModel.selectionNumber] continuous.
+ * selected media. That includes but not limited to keeping the [GifMediaViewModel.selectionNumber] continuous.
  *
  * Calling [setup] is required before using this ViewModel.
  */
-class GiphyPickerViewModel @Inject constructor(
+class GifPickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
-    private val mediaFetcher: GiphyMediaFetcher,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val mediaFetcher: GifMediaFetcher,
     /**
-     * The [GiphyPickerDataSourceFactory] to use
+     * The [GifPickerDataSourceFactory] to use
      *
      * This is only available in the constructor to allow mocking in tests.
      */
-    private val dataSourceFactory: GiphyPickerDataSourceFactory
+    private val dataSourceFactory: GifPickerDataSourceFactory
 ) : CoroutineScopedViewModel() {
     /**
      * A result of [downloadSelected] observed using the [downloadResult] LiveData
@@ -95,7 +97,7 @@ class GiphyPickerViewModel @Inject constructor(
     /**
      * Errors that happened during page loads.
      *
-     * @see [GiphyPickerDataSource.rangeLoadErrorEvent]
+     * @see [GifPickerDataSource.rangeLoadErrorEvent]
      */
     val rangeLoadErrorEvent: LiveData<Throwable> = dataSourceFactory.rangeLoadErrorEvent
 
@@ -113,13 +115,13 @@ class GiphyPickerViewModel @Inject constructor(
      */
     val downloadResult: LiveData<DownloadResult> = _downloadResult
 
-    private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
+    private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GifMediaViewModel>>()
     /**
-     * A [Map] of the [GiphyMediaViewModel]s that were selected by the user
+     * A [Map] of the [GifMediaViewModel]s that were selected by the user
      *
-     * This map is sorted in the order that the user picked them. The [String] is the value of [GiphyMediaViewModel.id].
+     * This map is sorted in the order that the user picked them. The [String] is the value of [GifMediaViewModel.id].
      */
-    val selectedMediaViewModelList: LiveData<LinkedHashMap<String, GiphyMediaViewModel>> = _selectedMediaViewModelList
+    val selectedMediaViewModelList: LiveData<LinkedHashMap<String, GifMediaViewModel>> = _selectedMediaViewModelList
 
     /**
      * Returns `true` if the selection bar (UI) should be shown
@@ -140,15 +142,22 @@ class GiphyPickerViewModel @Inject constructor(
     /**
      * The [PagedList] that should be displayed in the RecyclerView
      */
-    val mediaViewModelPagedList: LiveData<PagedList<GiphyMediaViewModel>> by lazy {
-        val pagedListConfig = PagedList.Config.Builder().setEnablePlaceholders(true).setPageSize(30).build()
-        LivePagedListBuilder(dataSourceFactory, pagedListConfig).setBoundaryCallback(pagedListBoundaryCallback).build()
+    val mediaViewModelPagedList: LiveData<PagedList<GifMediaViewModel>> by lazy {
+        val pagedListConfig = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(DEFAULT_INITIAL_LOAD_SIZE_HINT)
+                .setPageSize(DEFAULT_PAGE_SIZE)
+                .build()
+
+        LivePagedListBuilder(dataSourceFactory, pagedListConfig)
+                .setBoundaryCallback(pagedListBoundaryCallback)
+                .build()
     }
 
     /**
      * Update the [emptyDisplayMode] depending on the number of API search results or whether there was an error.
      */
-    private val pagedListBoundaryCallback = object : BoundaryCallback<GiphyMediaViewModel>() {
+    private val pagedListBoundaryCallback = object : BoundaryCallback<GifMediaViewModel>() {
         override fun onZeroItemsLoaded() {
             _isPerformingInitialLoad.postValue(false)
 
@@ -161,7 +170,7 @@ class GiphyPickerViewModel @Inject constructor(
             super.onZeroItemsLoaded()
         }
 
-        override fun onItemAtFrontLoaded(itemAtFront: GiphyMediaViewModel) {
+        override fun onItemAtFrontLoaded(itemAtFront: GifMediaViewModel) {
             _isPerformingInitialLoad.postValue(false)
             _emptyDisplayMode.postValue(EmptyDisplayMode.HIDDEN)
             super.onItemAtFrontLoaded(itemAtFront)
@@ -199,7 +208,7 @@ class GiphyPickerViewModel @Inject constructor(
      * when, presumably, the user has stopped typing.
      *
      * This also clears the [selectedMediaViewModelList]. This makes sense because the user will not be seeing the
-     * currently selected [GiphyMediaViewModel] if the new search query results are different.
+     * currently selected [GifMediaViewModel] if the new search query results are different.
      *
      * Searching is disabled if downloading or the [query] is the same as the last one.
      *
@@ -224,14 +233,14 @@ class GiphyPickerViewModel @Inject constructor(
 
             dataSourceFactory.searchQuery = query
 
-            AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_SEARCHED)
+            analyticsTrackerWrapper.track(AnalyticsTracker.Stat.GIF_PICKER_SEARCHED)
         } else {
             searchQueryChannel.send(query)
         }
     }
 
     /**
-     * Downloads all the selected [GiphyMediaViewModel]
+     * Downloads all the selected [GifMediaViewModel]
      *
      * When the process is finished, the results will be posted to [downloadResult].
      *
@@ -260,8 +269,8 @@ class GiphyPickerViewModel @Inject constructor(
         _state.postValue(State.DOWNLOADING)
 
         val result = try {
-            val giphyMediaViewModels = _selectedMediaViewModelList.value?.values?.toList() ?: emptyList()
-            val mediaModels = mediaFetcher.fetchAndSave(giphyMediaViewModels, site)
+            val gifMediaViewModels = _selectedMediaViewModelList.value?.values?.toList() ?: emptyList()
+            val mediaModels = mediaFetcher.fetchAndSave(gifMediaViewModels, site)
             DownloadResult(mediaModels = mediaModels)
         } catch (e: CancellationException) {
             // We don't need to handle coroutine cancellations. The UI should just do nothing.
@@ -276,17 +285,17 @@ class GiphyPickerViewModel @Inject constructor(
     }
 
     /**
-     * Toggles a [GiphyMediaViewModel]'s `isSelected` property between true and false
+     * Toggles a [GifMediaViewModel]'s `isSelected` property between true and false
      *
-     * This also updates the [GiphyMediaViewModel.selectionNumber] of all the objects in [selectedMediaViewModelList].
+     * This also updates the [GifMediaViewModel.selectionNumber] of all the objects in [selectedMediaViewModelList].
      */
-    fun toggleSelected(mediaViewModel: GiphyMediaViewModel) {
+    fun toggleSelected(mediaViewModel: GifMediaViewModel) {
         if (_state.value != State.IDLE) {
             return
         }
 
-        assert(mediaViewModel is MutableGiphyMediaViewModel)
-        mediaViewModel as MutableGiphyMediaViewModel
+        assert(mediaViewModel is MutableGifMediaViewModel)
+        mediaViewModel as MutableGifMediaViewModel
 
         val isSelected = !(mediaViewModel.isSelected.value ?: false)
 
@@ -308,14 +317,14 @@ class GiphyPickerViewModel @Inject constructor(
     }
 
     /**
-     * Update the [GiphyMediaViewModel.selectionNumber] values so that they are continuous
+     * Update the [GifMediaViewModel.selectionNumber] values so that they are continuous
      *
-     * For example, if the selection numbers are [1, 2, 3, 4, 5] and the 2nd [GiphyMediaViewModel] was removed, we
+     * For example, if the selection numbers are [1, 2, 3, 4, 5] and the 2nd [GifMediaViewModel] was removed, we
      * want the selection numbers to be updated to [1, 2, 3, 4] instead of leaving it as [1, 3, 4, 5].
      */
-    private fun rebuildSelectionNumbers(mediaList: LinkedHashMap<String, GiphyMediaViewModel>) {
+    private fun rebuildSelectionNumbers(mediaList: LinkedHashMap<String, GifMediaViewModel>) {
         mediaList.values.forEachIndexed { index, mediaViewModel ->
-            (mediaViewModel as MutableGiphyMediaViewModel).postSelectionNumber(index + 1)
+            (mediaViewModel as MutableGifMediaViewModel).postSelectionNumber(index + 1)
         }
     }
 
@@ -341,7 +350,12 @@ class GiphyPickerViewModel @Inject constructor(
     /**
      * Retries all previously failed page loads.
      *
-     * @see [GiphyPickerDataSource.retryAllFailedRangeLoads]
+     * @see [GifPickerDataSource.retryAllFailedRangeLoads]
      */
     fun retryAllFailedRangeLoads() = dataSourceFactory.retryAllFailedRangeLoads()
+
+    companion object {
+        private const val DEFAULT_INITIAL_LOAD_SIZE_HINT = 42
+        private const val DEFAULT_PAGE_SIZE = 21
+    }
 }
