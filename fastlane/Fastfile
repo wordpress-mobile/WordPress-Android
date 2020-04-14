@@ -325,7 +325,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     if (options[:auto_commit]) then
        sh("cd .. && git add #{main_strings_path}")
        sh("git commit -m 'Update strings for translation'")
-       sh("git push") 
+       sh("git push origin HEAD") 
     else
       UI.important("Your #{main_strings_path} has changed.")
       UI.input("Please, review the changes, commit them and press return to continue.")
