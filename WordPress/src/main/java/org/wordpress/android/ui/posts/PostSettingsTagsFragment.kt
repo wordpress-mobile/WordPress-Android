@@ -2,12 +2,12 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.os.Bundle
-import org.wordpress.android.R.layout
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 
 class PostSettingsTagsFragment : TagsFragment() {
-    override fun getContentLayout() = layout.fragment_post_settings_tags
+    override fun getContentLayout() = R.layout.fragment_post_settings_tags
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
