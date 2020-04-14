@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -63,13 +62,13 @@ class ItemPopupMenuHandler
                                     Stat.STATS_INSIGHTS_TYPE_MOVED_UP,
                                     statsType
                             )
-                            launch(bgDispatcher) {
+                            coroutineScope.launch {
                                 statsStore.moveTypeUp(statsSiteProvider.siteModel, type)
                                 mutableTypeMoved.postValue(Event(type))
                             }
                         }
                         DOWN -> {
-                            launch(bgDispatcher) {
+                            coroutineScope.launch {
                                 analyticsTrackerWrapper.trackWithType(
                                         Stat.STATS_INSIGHTS_TYPE_MOVED_DOWN,
                                         statsType
@@ -79,7 +78,7 @@ class ItemPopupMenuHandler
                             }
                         }
                         REMOVE -> {
-                            launch(bgDispatcher) {
+                            coroutineScope.launch {
                                 analyticsTrackerWrapper.trackWithType(
                                         Stat.STATS_INSIGHTS_TYPE_REMOVED,
                                         statsType
