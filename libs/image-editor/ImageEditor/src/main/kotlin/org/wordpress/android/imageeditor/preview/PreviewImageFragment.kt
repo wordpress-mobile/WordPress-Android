@@ -4,6 +4,9 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -25,6 +28,7 @@ class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
     private var pagerAdapterObserver: PagerAdapterObserver? = null
+    private var cropActionMenu: MenuItem? = null
 
     private val imageDataList = listOf(
         ImageData(
@@ -94,6 +98,11 @@ class PreviewImageFragment : Fragment() {
         const val ARG_HIGH_RES_IMAGE_URL = "arg_high_res_image_url"
         const val ARG_OUTPUT_FILE_EXTENSION = "arg_output_file_extension"
         const val PREVIEW_IMAGE_REDUCED_SIZE_FACTOR = 0.1
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -227,6 +236,19 @@ class PreviewImageFragment : Fragment() {
 //        findNavController().navigate(
 //            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
 //        )
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_preview_fragment, menu)
+        cropActionMenu = menu.findItem(R.id.menu_crop)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_crop) {
+        viewModel.onCropMenuClicked(previewImageViewPager.currentItem)
+        true
+    } else {
+        super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

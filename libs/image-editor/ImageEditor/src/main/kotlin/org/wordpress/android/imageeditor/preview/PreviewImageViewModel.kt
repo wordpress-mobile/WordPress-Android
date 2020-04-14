@@ -65,6 +65,9 @@ class PreviewImageViewModel : ViewModel() {
         updateLoadIntoFileState(ImageLoadToFileFailedState)
     }*/
 
+    fun onCropMenuClicked(currentPosition: Int) {
+    }
+
     private fun onLoadIntoImageViewRetry(currentUrl: String, currentPosition: Int) {
         val newImageUiStates = updateViewPagerItemsUiStates(
             currentUrl = currentUrl,
