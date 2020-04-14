@@ -46,7 +46,7 @@ class MinifiedWidgetUpdater
     private val widgetUtils: WidgetUtils,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : WidgetUpdater {
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
     override fun updateAppWidget(
         context: Context,
         appWidgetId: Int,
