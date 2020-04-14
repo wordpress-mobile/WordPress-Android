@@ -35,7 +35,7 @@ public class MediaUploadCompletionProcessor {
     public String processContent(String content) {
         Matcher headerMatcher = PATTERN_BLOCK_HEADER.matcher(content);
 
-        int positionBlockStart, positionBlockEnd = 0;
+        int positionBlockStart, positionBlockEnd = content.length();
 
         if (headerMatcher.find()) {
             positionBlockStart = headerMatcher.start();
