@@ -161,21 +161,26 @@ public class PhotoPickerFragment extends Fragment {
         if (!canShowBottomBar()) {
             mBottomBar.setVisibility(View.GONE);
         } else {
-            mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mBrowserType.isImagePicker() && mBrowserType.isVideoPicker()) {
-                        showCameraPopupMenu(v);
-                    } else if (mBrowserType.isImagePicker()) {
-                        doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
-                    } else if (mBrowserType.isVideoPicker()) {
-                        doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
-                    } else {
-                        AppLog.e(T.MEDIA, "This code should be unreachable. If you see this message one of "
-                                          + "the MediaBrowserTypes isn't setup correctly.");
+            View camera = mBottomBar.findViewById(R.id.icon_camera);
+            if (mBrowserType.isGutenbergPicker()) {
+                camera.setVisibility(View.GONE);
+            } else {
+                camera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mBrowserType.isImagePicker() && mBrowserType.isVideoPicker()) {
+                            showCameraPopupMenu(v);
+                        } else if (mBrowserType.isImagePicker()) {
+                            doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+                        } else if (mBrowserType.isVideoPicker()) {
+                            doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
+                        } else {
+                            AppLog.e(T.MEDIA, "This code should be unreachable. If you see this message one of "
+                                              + "the MediaBrowserTypes isn't setup correctly.");
+                        }
                     }
-                }
-            });
+                });
+            }
             mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
