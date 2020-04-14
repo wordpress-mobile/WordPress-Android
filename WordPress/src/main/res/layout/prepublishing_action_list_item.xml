@@ -11,13 +11,13 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@id/action_type"
+        app:layout_constraintBottom_toTopOf="@id/toolbar_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/action_type"
+        android:id="@+id/toolbar_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_large"
@@ -44,7 +44,7 @@
         android:textColor="?attr/wpColorOnSurfaceMedium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/action_type"
+        app:layout_constraintStart_toEndOf="@id/toolbar_title"
         app:layout_constraintTop_toBottomOf="@id/top_divider"
         tools:text="Action result" />
 </androidx.constraintlayout.widget.ConstraintLayout>

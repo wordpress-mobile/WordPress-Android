@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -94,8 +93,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
             PrepublishingScreen.PUBLISH -> TODO()
             PrepublishingScreen.VISIBILITY -> TODO()
             PrepublishingScreen.TAGS -> Pair(
-                    PostSettingsTagsFragment.newInstance(site, actionState.tagsActionState.tags),
-                    PostSettingsTagsFragment.TAG
+                    PrepublishingTagsFragment.newInstance(site, actionState.tagsActionState.tags),
+                    PrepublishingTagsFragment.TAG
             )
         }
 
