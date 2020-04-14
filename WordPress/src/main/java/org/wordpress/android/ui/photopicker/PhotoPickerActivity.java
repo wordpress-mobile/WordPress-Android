@@ -50,6 +50,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     public static final String EXTRA_MEDIA_URIS = "media_uris";
     public static final String EXTRA_MEDIA_ID = "media_id";
     public static final String EXTRA_MEDIA_QUEUED = "media_queued";
+    public static final String CHILD_REQUEST_CODE = "child_request_code";
 
     // the enum name of the source will be returned as a string in EXTRA_MEDIA_SOURCE
     public static final String EXTRA_MEDIA_SOURCE = "media_source";
@@ -173,14 +174,17 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         switch (requestCode) {
             // user chose a photo from the device library
             case RequestCodes.PICTURE_LIBRARY:
+            case RequestCodes.VIDEO_LIBRARY:
                 if (data != null) {
-                    Uri imageUri = data.getData();
-                    if (imageUri != null) {
-                        doMediaUrisSelected(Collections.singletonList(imageUri), PhotoPickerMediaSource.ANDROID_PICKER);
-                    }
+                    doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), PhotoPickerMediaSource.ANDROID_PICKER);
                 }
                 break;
             // user took a photo with the device camera
+            case RequestCodes.TAKE_VIDEO:
+                data.putExtra(CHILD_REQUEST_CODE, RequestCodes.TAKE_VIDEO);
+                setResult(RESULT_OK, data);
+                finish();
+                break;
             case RequestCodes.TAKE_PHOTO:
                 try {
                     WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
@@ -211,18 +215,21 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         }
     }
 
-    private void launchCamera() {
+    private void launchCameraForImage() {
         WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
-                                  new WPMediaUtils.LaunchCameraCallback() {
-                                      @Override
-                                      public void onMediaCapturePathReady(String mediaCapturePath) {
-                                          mMediaCapturePath = mediaCapturePath;
-                                      }
-                                  });
+                mediaCapturePath -> mMediaCapturePath = mediaCapturePath);
     }
 
-    private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this, false);
+    private void launchCameraForVideo() {
+        WPMediaUtils.launchVideoCamera(this);
+    }
+
+    private void launchPictureLibrary(boolean multiSelect) {
+        WPMediaUtils.launchPictureLibrary(this, multiSelect);
+    }
+
+    private void launchVideoLibrary(boolean multiSelect) {
+        WPMediaUtils.launchVideoLibrary(this, multiSelect);
     }
 
     private void launchWPMediaLibrary() {
@@ -320,10 +327,16 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerFragment.PhotoPickerIcon icon, boolean multiple) {
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
-                launchCamera();
+                launchCameraForImage();
                 break;
             case ANDROID_CHOOSE_PHOTO:
-                launchPictureLibrary();
+                launchPictureLibrary(multiple);
+                break;
+            case ANDROID_CAPTURE_VIDEO:
+                launchCameraForVideo();
+                break;
+            case ANDROID_CHOOSE_VIDEO:
+                launchVideoLibrary(multiple);
                 break;
             case WP_MEDIA:
                 launchWPMediaLibrary();

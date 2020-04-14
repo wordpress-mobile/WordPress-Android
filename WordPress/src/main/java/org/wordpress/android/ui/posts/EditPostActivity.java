@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -2231,11 +2230,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         List<Uri> uris = convertStringArrayIntoUrisList(
                                 data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS));
                         mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
+                    } else if (data.getIntExtra(PhotoPickerActivity.CHILD_REQUEST_CODE, -1)
+                               == RequestCodes.TAKE_VIDEO) {
+                        mEditorMedia.addFreshlyTakenVideoToEditor();
                     }
                     break;
                 case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
-                    mEditorMedia.advertiseImageOptimisationAndAddMedia(retrieveMediaUris(data));
+                    mEditorMedia.advertiseImageOptimisationAndAddMedia(WPMediaUtils.retrieveMediaUris(data));
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
@@ -2245,7 +2247,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
-                    mEditorMedia.addNewMediaItemsToEditorAsync(retrieveMediaUris(data), false);
+                    mEditorMedia.addNewMediaItemsToEditorAsync(WPMediaUtils.retrieveMediaUris(data), false);
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     mEditorMedia.addFreshlyTakenVideoToEditor();
@@ -2286,20 +2288,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
             }
         }
-    }
-
-    private List<Uri> retrieveMediaUris(Intent data) {
-        ClipData clipData = data.getClipData();
-        ArrayList<Uri> uriList = new ArrayList<>();
-        if (clipData != null) {
-            for (int i = 0; i < clipData.getItemCount(); i++) {
-                ClipData.Item item = clipData.getItemAt(i);
-                uriList.add(item.getUri());
-            }
-        } else {
-            uriList.add(data.getData());
-        }
-        return uriList;
     }
 
     private List<Uri> convertStringArrayIntoUrisList(String[] stringArray) {
