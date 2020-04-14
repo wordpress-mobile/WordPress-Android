@@ -265,11 +265,11 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
 
     private void loadAvatar(String injectFilePath) {
         final boolean newAvatarUploaded = injectFilePath != null && !injectFilePath.isEmpty();
-        final String rawAvatarUrl = mAccountStore.getAccount().getAvatarUrl();
+        final String avatarUrl = mMeGravatarLoader.constructGravatarUrl(mAccountStore.getAccount().getAvatarUrl());
 
         mMeGravatarLoader.load(
                 newAvatarUploaded,
-                rawAvatarUrl,
+                avatarUrl,
                 injectFilePath,
                 mAvatarImageView,
                 ImageType.AVATAR_WITHOUT_BACKGROUND,
@@ -297,7 +297,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
                             // create a copy since the original bitmap may by automatically recycled
                             bitmap = bitmap.copy(bitmap.getConfig(), true);
                             WordPress.getBitmapCache().put(
-                                    mMeGravatarLoader.constructGravatarUrl(rawAvatarUrl),
+                                    avatarUrl,
                                     bitmap
                             );
                         }
