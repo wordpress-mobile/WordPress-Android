@@ -5,7 +5,9 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -13,7 +15,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
@@ -50,6 +51,7 @@ private const val LOCAL_SITE_ID = 2
 private val SITE_CREATION_STATE = SiteCreationState(1, URL)
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SitePreviewViewModelTest {
     @Rule
@@ -70,6 +72,7 @@ class SitePreviewViewModelTest {
     @Mock private lateinit var preloadPreviewObserver: Observer<String>
 
     private lateinit var viewModel: SitePreviewViewModel
+    private val coroutineDispatcher = TestCoroutineDispatcher()
 
     @Before
     fun setUp() {
@@ -80,8 +83,8 @@ class SitePreviewViewModelTest {
                 networkUtils,
                 urlUtils,
                 tracker,
-                TEST_DISPATCHER,
-                TEST_DISPATCHER
+                coroutineDispatcher,
+                coroutineDispatcher
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.startCreateSiteService.observeForever(startServiceObserver)
@@ -121,15 +124,37 @@ class SitePreviewViewModelTest {
     }
 
     @Test
+    fun `ProgressUiState's animate field is false only for first emitted event`() = test {
+        initViewModel()
+        assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).animate).isFalse()
+        for (i in 1..100) {
+            coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
+            assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).animate).isTrue()
+        }
+    }
+
+    @Test
+    fun `ProgressUiState's text changes every LOADING_STATE_TEXT_ANIMATION_DELAY seconds`() {
+        initViewModel()
+        for (i in 1..100) {
+            val lastTextId = (viewModel.uiState.value as SitePreviewFullscreenProgressUiState).loadingTextResId
+            coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
+            assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).loadingTextResId)
+                    .isNotEqualTo(lastTextId)
+        }
+    }
+
+    @Test
     fun `service started on start`() = test {
         initViewModel()
         assertThat(viewModel.startCreateSiteService.value).isNotNull
     }
 
     @Test
-    fun `error shown on start when internet access not available`() = test {
+    fun `error shown on start when internet access not available`() {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
         initViewModel()
+        coroutineDispatcher.advanceUntilIdle() // skip delays
         assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewConnectionErrorUiState::class.java)
     }
 
@@ -138,6 +163,16 @@ class SitePreviewViewModelTest {
         initViewModel()
         viewModel.onSiteCreationServiceStateUpdated(createServiceFailureState())
         assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewGenericErrorUiState::class.java)
+    }
+
+    @Test
+    fun `displaying error screen cancels the progress animation job`() {
+        initViewModel()
+        viewModel.onSiteCreationServiceStateUpdated(createServiceFailureState())
+        for (i in 1..100) {
+            coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
+            assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewGenericErrorUiState::class.java)
+        }
     }
 
     @Test
@@ -178,6 +213,16 @@ class SitePreviewViewModelTest {
         initViewModel()
         viewModel.onUrlLoaded()
         assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewContentUiState::class.java)
+    }
+
+    @Test
+    fun `displaying content cancels the progress animation job`() {
+        initViewModel()
+        viewModel.onUrlLoaded()
+        for (i in 1..100) {
+            coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
+            assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewContentUiState::class.java)
+        }
     }
 
     @Test
