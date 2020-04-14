@@ -1304,7 +1304,7 @@ class ReaderPostDetailFragment : Fragment(),
             renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils)
 
             // if the post if from private atomic site postpone render until we have a special access cookie
-            if (post!!.isPrivate && post!!.isAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
+            if (post!!.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
                 PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this@ReaderPostDetailFragment)
                 dispatcher.dispatch(
                         SiteActionBuilder.newFetchPrivateAtomicCookieAction(

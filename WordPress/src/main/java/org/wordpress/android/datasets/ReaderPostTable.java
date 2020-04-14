@@ -80,7 +80,7 @@ public class ReaderPostTable {
             + "card_type," // 44
             + "use_excerpt," // 45
             + "is_bookmarked," // 46
-            + "is_atomic"; // 47
+            + "is_private_atomic"; // 47
 
     // used when querying multiple rows and skipping text column
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -129,7 +129,7 @@ public class ReaderPostTable {
             + "card_type," // 43
             + "use_excerpt," // 44
             + "is_bookmarked," // 45
-            + "is_atomic"; // 46
+            + "is_private_atomic"; // 46
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -179,7 +179,7 @@ public class ReaderPostTable {
                    + " card_type TEXT,"
                    + " use_excerpt INTEGER DEFAULT 0,"
                    + " is_bookmarked INTEGER DEFAULT 0,"
-                   + " is_atomic INTEGER DEFAULT 0,"
+                   + " is_private_atomic INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                    + ")");
 
@@ -856,7 +856,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(44, ReaderCardType.toString(post.getCardType()));
                 stmtPosts.bindLong(45, SqlUtils.boolToSql(post.useExcerpt));
                 stmtPosts.bindLong(46, SqlUtils.boolToSql(post.isBookmarked));
-                stmtPosts.bindLong(47, SqlUtils.boolToSql(post.isAtomic));
+                stmtPosts.bindLong(47, SqlUtils.boolToSql(post.isPrivateAtomic));
                 stmtPosts.execute();
             }
 
@@ -1065,7 +1065,7 @@ public class ReaderPostTable {
         post.isCommentsOpen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_comments_open")));
         post.isExternal = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_external")));
         post.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
-        post.isAtomic = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_atomic")));
+        post.isPrivateAtomic = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private_atomic")));
         post.isVideoPress = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_videopress")));
         post.isJetpack = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_jetpack")));
         post.isBookmarked = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_bookmarked")));

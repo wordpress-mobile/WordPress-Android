@@ -309,7 +309,7 @@ public class ReaderPostRenderer {
                 mResourceVars.mFullSizeImageWidthPx,
                 mResourceVars.mFeaturedImageHeightPx,
                 mPost.isPrivate,
-                mPost.isAtomic);
+                mPost.isPrivateAtomic);
 
         return "<img class='size-full' src='" + imageUrl + "'/>";
     }

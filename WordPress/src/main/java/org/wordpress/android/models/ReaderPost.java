@@ -60,7 +60,7 @@ public class ReaderPost {
     public boolean isCommentsOpen;
     public boolean isExternal;
     public boolean isPrivate;
-    public boolean isAtomic;
+    public boolean isPrivateAtomic;
     public boolean isVideoPress;
     public boolean isJetpack;
     public boolean useExcerpt;
@@ -108,7 +108,7 @@ public class ReaderPost {
         post.isFollowedByCurrentUser = JSONUtils.getBool(json, "is_following");
         post.isExternal = JSONUtils.getBool(json, "is_external");
         post.isPrivate = JSONUtils.getBool(json, "site_is_private");
-        post.isAtomic = JSONUtils.getBool(json, "site_is_atomic");
+        post.isPrivateAtomic = JSONUtils.getBool(json, "site_is_atomic");
         post.isJetpack = JSONUtils.getBool(json, "is_jetpack");
         post.useExcerpt = JSONUtils.getBool(json, "use_excerpt");
 
@@ -725,7 +725,7 @@ public class ReaderPost {
                 mFeaturedImageForDisplay = "";
             } else {
                 mFeaturedImageForDisplay = ReaderUtils.getResizedImageUrl(
-                        mFeaturedImage, width, height, isPrivate, isPrivate && isAtomic);
+                        mFeaturedImage, width, height, isPrivate, isPrivateAtomic);
             }
         }
         return mFeaturedImageForDisplay;

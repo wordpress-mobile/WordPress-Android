@@ -93,7 +93,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 135 - added tbl_blog_info.is_notifications_enabled in ReaderBlogTable
      * 136 - added tbl_posts.is_bookmarked
      * 137 - added support for migration scripts
-     * 138 - added tbl_posts.is_atomic
+     * 138 - added tbl_posts.is_private_atomic
      */
 
     /*
@@ -184,7 +184,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 // no-op
                 currentVersion++;
             case 137:
-                db.execSQL("ALTER TABLE tbl_posts ADD is_atomic BOOLEAN;");
+                db.execSQL("ALTER TABLE tbl_posts ADD is_private_atomic BOOLEAN;");
                 currentVersion++;
         }
         if (currentVersion != newVersion) {
