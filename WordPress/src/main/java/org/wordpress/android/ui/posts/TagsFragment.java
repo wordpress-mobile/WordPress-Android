@@ -98,6 +98,7 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
             mTagsEditText.setText(mTags);
             mTagsEditText.setSelection(mTagsEditText.length());
         }
+        filterListForCurrentText();
     }
 
     @Override
