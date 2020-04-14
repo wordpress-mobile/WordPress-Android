@@ -16,12 +16,14 @@ import android.widget.ImageView.ScaleType.CENTER_CROP
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import java.io.File
 
 class PreviewImageFragment : Fragment() {
@@ -182,15 +184,15 @@ class PreviewImageFragment : Fragment() {
             cropActionMenu?.isEnabled = state.editActionsEnabled
         })
 
-        /*viewModel.loadIntoFile.observe(this, Observer { fileState ->
+        viewModel.loadIntoFile.observe(this, Observer { fileState ->
             if (fileState is ImageStartLoadingToFileState) {
-                loadIntoFile(fileState.imageUrl)
+                loadIntoFile(fileState.imageUrl, fileState.position)
             }
         })
 
         viewModel.navigateToCropScreenWithFileInfo.observe(this, Observer { filePath ->
             navigateToCropScreenWithInputFilePath(filePath)
-        })*/
+        })
     }
 
     private fun loadIntoImageView(url: String, imageView: ImageView) {
@@ -215,28 +217,27 @@ class PreviewImageFragment : Fragment() {
         )
     }
 
-    private fun loadIntoFile(url: String) {
+    private fun loadIntoFile(url: String, position: Int) {
         ImageEditor.instance.loadIntoFileWithResultListener(
             url,
             object : RequestListener<File> {
                 override fun onResourceReady(resource: File, url: String) {
-//                    viewModel.onLoadIntoFileSuccess(resource.path)
+                    viewModel.onLoadIntoFileSuccess(resource.path, position)
                 }
 
                 override fun onLoadFailed(e: Exception?, url: String) {
-//                    viewModel.onLoadIntoFileFailed()
+                    viewModel.onLoadIntoFileFailed()
                 }
             }
         )
     }
 
     private fun navigateToCropScreenWithInputFilePath(fileInfo: Pair<String, String?>) {
-        // TODO: temporarily stop navigation to next screen
-//        val inputFilePath = fileInfo.first
-//        val outputFileExtension = fileInfo.second
-//        findNavController().navigate(
-//            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
-//        )
+        val inputFilePath = fileInfo.first
+        val outputFileExtension = fileInfo.second
+        findNavController().navigate(
+            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
