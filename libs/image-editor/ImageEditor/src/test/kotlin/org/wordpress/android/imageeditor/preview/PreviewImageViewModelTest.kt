@@ -15,7 +15,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
 // private const val TEST_FILE_PATH = "/file/path"
-private const val TEST_OUTPUT_FILE_EXTENSION = ".jpg"
+private const val TEST_OUTPUT_FILE_EXTENSION = ".png"
 private const val FIRST_ITEM_POSITION = 0
 
 class PreviewImageViewModelTest {
@@ -26,6 +26,10 @@ class PreviewImageViewModelTest {
     private lateinit var viewModel: PreviewImageViewModel
 
     private lateinit var imageData: List<ImageData>
+
+    private val testImageDataList = listOf(
+        ImageData(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, TEST_OUTPUT_FILE_EXTENSION)
+    )
 
     @Before
     fun setUp() {
@@ -265,7 +269,27 @@ class PreviewImageViewModelTest {
                 .progressBarVisible).isEqualTo(false)
     }
 
-    private fun initViewModel() = viewModel.onCreateView(
-        listOf(ImageData(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, TEST_OUTPUT_FILE_EXTENSION))
-    )
+    @Test
+    fun `edit actions enabled if high res image loaded at given item position`() {
+        initViewModel()
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+
+        assertThat(requireNotNull(viewModel.uiState.value).editActionsEnabled).isEqualTo(true)
+    }
+
+    @Test
+    fun `edit actions not enabled if high res image not loaded at given item position`() {
+        initViewModel()
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+
+        assertThat(requireNotNull(viewModel.uiState.value).editActionsEnabled).isEqualTo(false)
+    }
+
+    private fun initViewModel(
+        imageDataList: List<ImageData> = testImageDataList
+    ) = viewModel.onCreateView(imageDataList)
 }

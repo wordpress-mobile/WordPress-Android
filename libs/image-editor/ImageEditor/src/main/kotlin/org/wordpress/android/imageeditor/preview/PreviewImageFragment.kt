@@ -179,6 +179,7 @@ class PreviewImageFragment : Fragment() {
     private fun setupObservers() {
         viewModel.uiState.observe(this, Observer { state ->
             (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
+            cropActionMenu?.isEnabled = state.editActionsEnabled
         })
 
         /*viewModel.loadIntoFile.observe(this, Observer { fileState ->

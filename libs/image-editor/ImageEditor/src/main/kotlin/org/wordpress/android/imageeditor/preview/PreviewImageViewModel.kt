@@ -41,8 +41,13 @@ class PreviewImageViewModel : ViewModel() {
 //        if (highResImageJustLoadedIntoView && imageNotLoadedIntoFile) {
 //            updateLoadIntoFileState(ImageStartLoadingToFileState(currentUrl))
 //        }
+        val currentImageState = newImageUiStates[currentPosition]
         val currentUiState = uiState.value as UiState
-        updateUiState(currentUiState.copy(viewPagerItemsStates = newImageUiStates))
+        updateUiState(currentUiState.copy(
+                viewPagerItemsStates = newImageUiStates,
+                editActionsEnabled = shouldEnableEditActionsForImageState(currentImageState)
+            )
+        )
     }
 
     fun onLoadIntoImageViewFailed(currentUrl: String, currentPosition: Int) {
@@ -152,9 +157,13 @@ class PreviewImageViewModel : ViewModel() {
         _loadIntoFile.value = fileState
     }*/
 
+    private fun shouldEnableEditActionsForImageState(currentImageState: ImageUiState): Boolean {
+        return currentImageState is ImageInHighResLoadSuccessUiState
+    }
+
     data class ImageData(val lowResImageUrl: String, val highResImageUrl: String, val outputFileExtension: String)
 
-    data class UiState(val viewPagerItemsStates: List<ImageUiState>)
+    data class UiState(val viewPagerItemsStates: List<ImageUiState>, val editActionsEnabled: Boolean = false)
 
     sealed class ImageUiState(
         val data: ImageData,
