@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Html
@@ -22,6 +24,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
@@ -90,6 +93,8 @@ import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClick
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.AppLog.T.READER
+import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
@@ -1094,6 +1099,20 @@ class ReaderPostDetailFragment : Fragment(),
 
         val txtError = view!!.findViewById<TextView>(R.id.text_error)
         txtError.text = errorMessage
+
+        context?.let {
+            val icon: Drawable? = try {
+                ContextCompat.getDrawable(it, R.drawable.ic_notice_48dp)
+            } catch (e: Resources.NotFoundException) {
+                AppLog.e(READER, e)
+                CrashLoggingUtils.logException(e, READER, "Drawable not found. See issue #11576")
+                null
+            }
+            icon?.let {
+                txtError.setCompoundDrawablesRelativeWithIntrinsicBounds(null, icon, null, null)
+            }
+        }
+
         if (errorMessage == null) {
             txtError.visibility = View.GONE
         } else if (txtError.visibility != View.VISIBLE) {

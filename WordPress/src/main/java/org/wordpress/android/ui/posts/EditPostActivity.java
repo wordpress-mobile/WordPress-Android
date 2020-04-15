@@ -101,6 +101,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
+import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -141,6 +142,7 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
+import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
@@ -919,6 +921,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case STOCK_MEDIA:
                     ActivityLauncher.showStockMediaPickerForResult(
                             this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
+                    break;
+                case GIF:
+                    ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER);
                     break;
             }
         } else {
@@ -2259,6 +2264,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
                     }
                     break;
+                case RequestCodes.GIF_PICKER:
+                    if (data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                        int[] localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                        mEditorMedia.addGifMediaToPostAsync(localIds);
+                    }
+                    break;
                 case RequestCodes.HISTORY_DETAIL:
                     if (data.hasExtra(KEY_REVISION)) {
                         mViewPager.setCurrentItem(PAGE_CONTENT);
@@ -2661,14 +2672,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public String onAuthHeaderRequested(String url) {
-        String authHeader = "";
+    public Map<String, String> onAuthHeaderRequested(String url) {
+        Map<String, String> authHeaders = new HashMap<>();
+
         String token = mAccountStore.getAccessToken();
         if (mSite.isPrivate() && WPUrlUtils.safeToAddWordPressComAuthToken(url)
             && !TextUtils.isEmpty(token)) {
-            authHeader = "Bearer " + token;
+            authHeaders.put(AuthenticationUtils.AUTHORIZATION_HEADER_NAME, "Bearer " + token);
         }
-        return authHeader;
+        return authHeaders;
     }
 
     @Override

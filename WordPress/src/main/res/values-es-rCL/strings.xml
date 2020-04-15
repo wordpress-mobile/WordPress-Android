@@ -118,15 +118,7 @@ Language: es_CL
     <string name="new_site_creation_empty_domain_list_message">No hay direcciones disponibles que coincidan con tu búsqueda</string>
     <string name="site_creation_error_generic_subtitle">Error al comunicarse con el servidor, inténtalo de nuevo</string>
     <string name="site_creation_error_generic_title">Hubo un problema</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Categoría personalizada</string>
-    <string name="new_site_creation_button_skip">Omitir</string>
-    <string name="new_site_creation_tag_line_description">El eslogan es una línea corta de texto que se muestra justo debajo del título.</string>
-    <string name="new_site_creation_tag_line_hint">Descripción corta</string>
-    <string name="new_site_creation_site_title_hint">Título del Sitio</string>
-    <string name="new_site_creation_site_info_header_subtitle">Cuéntenos más sobre el sitio que estás creando.</string>
-    <string name="new_site_creation_site_info_header_title">Información básica</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Hubo un problema</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Sin conexión</string>
     <string name="site_creation_segments_subtitle">Esto nos ayuda a hacer recomendaciones. Pero nunca estás encerrado — ¡todos los sitios evolucionan!</string>
     <string name="site_creation_segments_title">Dinos qué tipo de sitio te gustaría hacer</string>
     <string name="new_site_creation_preview_title">¡Tu sitio ha sido creado!</string>
@@ -149,11 +141,6 @@ Language: es_CL
     <string name="stats_no_data_for_period">No hay datos para este período</string>
     <string name="preference_strip_image_location">Quita la ubicación de los medios</string>
     <string name="stats_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor inténtalo de nuevo más tarde</string>
-    <string name="giphy_powered_by_giphy">Desarrollado por GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Algunos medios no pudieron cargarse debido a un error de red.</string>
-    <string name="giphy_picker_empty_search_list">No hay medios que coincidan con tu búsqueda</string>
-    <string name="giphy_picker_initial_empty_text">¡Busca para encontrar GIFs para añadirlos a tu Biblioteca de Medios!</string>
-    <string name="giphy_picker_search_hint">Buscar en Giphy</string>
     <string name="stats_author_views_label">Vistas</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>
@@ -327,7 +314,6 @@ Language: es_CL
     <string name="people_empty_list_filtered_email_followers">Aún no hay seguidores de correo electrónico</string>
     <string name="people_empty_list_filtered_followers">Aún sin seguidores</string>
     <string name="people_empty_list_filtered_users">Aún sin usuarios</string>
-    <string name="connection_service_facebook_notice">A partir del 1 de agosto de 2018, Facebook ya no permite compartir directamente los mensajes en los perfiles de Facebook. Las conexiones a las páginas de Facebook permanecen inalteradas.</string>
     <string name="reader_empty_posts_liked_description">Los posts que te gusten aparecerán aquí</string>
     <string name="reader_empty_posts_liked_title">Aún no te gusta algo</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir a siguiendo</string>
@@ -900,7 +886,6 @@ Language: es_CL
     <string name="post_settings_more_options">Más opciones</string>
     <string name="post_settings_categories_and_tags">Categorías y Etiquetas</string>
     <string name="post_settings_status">Estado</string>
-    <string name="notifications_tab_title_unread">No leído</string>
     <string name="notifications_tab_title_all">Todo</string>
     <string name="top_level_category_name">Nivel superior</string>
     <string name="category_parent">Categoría de padre (opcional):</string>
@@ -1597,8 +1582,6 @@ Language: es_CL
     <string name="saving_changes">Guardando cambios</string>
     <string name="hint_comment_content">Comentario</string>
     <string name="trash">Papelera</string>
-    <string name="trash_no">No enviar a la papelera</string>
-    <string name="trash_yes">Enviar a la papelera</string>
     <string name="dlg_confirm_trash_comments">¿Enviar a la papelera?</string>
     <string name="dlg_trashing_comments">Enviando a la papelera</string>
     <string name="dlg_spamming_comments">Marcando como spam</string>

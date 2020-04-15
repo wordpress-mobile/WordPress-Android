@@ -1,4 +1,0 @@
-14.4 :
-Une petite correction : Cette version corrige un problème qui provoquait le téléversement d'images avec des URL bancales, ce qui les rendait inaccessibles sur votre site web.
-
-Lavez-vous les mains et restez en sécurité, tout le monde.
