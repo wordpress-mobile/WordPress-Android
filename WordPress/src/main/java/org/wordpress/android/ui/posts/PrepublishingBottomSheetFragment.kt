@@ -87,7 +87,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     private fun navigateToScreen(navigationState: PrepublishingNavigationState) {
-        val result = when (navigationState.prepublishingScreen) {
+        val (fragment, tag) = when (navigationState.prepublishingScreen) {
             HOME -> Pair(
                     PrepublishingActionsFragment.newInstance((navigationState.screenState as HomeState)),
                     PrepublishingActionsFragment.TAG
@@ -103,17 +103,24 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             )
         }
 
-        slideInFragment(result.first, result.second)
+        slideInFragment(fragment, tag, tag != PrepublishingActionsFragment.TAG)
     }
 
-    private fun slideInFragment(fragment: Fragment, tag: String) {
+    private fun slideInFragment(fragment: Fragment, tag: String, slideIn: Boolean) {
         childFragmentManager.let { fragmentManager ->
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
-                fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                        R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right,
-                        R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-                )
+                if (slideIn) {
+                    fragmentTransaction.addToBackStack(null).setCustomAnimations(
+                            R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
+                    )
+                } else {
+                    fragmentTransaction.addToBackStack(null).setCustomAnimations(
+                            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right,
+                            R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left
+                    )
+                }
             }
             fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)
             fragmentTransaction.commit()
