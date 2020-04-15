@@ -31,7 +31,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.WordPress_BottomSheetDialogTheme)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.WordPress_PrepublishingNudges_BottomSheetDialogTheme)
         (requireNotNull(activity).application as WordPress).component().inject(this)
         site = arguments?.getSerializable(SITE) as SiteModel
     }
