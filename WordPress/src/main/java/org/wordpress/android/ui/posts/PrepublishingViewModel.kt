@@ -64,7 +64,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun navigateToScreen(prepublishingScreen: PrepublishingScreen) {
+    private fun navigateToScreen(prepublishingScreen: PrepublishingScreen) {
         when (prepublishingScreen) {
             HOME -> updateNavigationState(PrepublishingNavigationState(site, HOME, HomeState(tagsActionState?.tags)))
             TAGS -> updateNavigationState(
@@ -75,6 +75,10 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
                     )
             )
         }
+    }
+
+    fun navigateHome() {
+        navigateToScreen(HOME)
     }
 
     private fun updateNavigationState(state: PrepublishingNavigationState) {

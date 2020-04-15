@@ -49,7 +49,7 @@ class PrepublishingActionsFragment : Fragment() {
             (actions_recycler_view.adapter as PrepublishingActionsAdapter).update(uiState)
         })
 
-        viewModel.start()
+        viewModel.start(arguments?.getParcelable(DATA))
     }
 
     companion object {

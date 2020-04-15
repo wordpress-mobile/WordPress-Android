@@ -8,22 +8,22 @@ import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingActionUiState
+import org.wordpress.android.ui.posts.PrepublishingActionState.HomeState
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
-    private var isStarted = false
-
     private val _uiState = MutableLiveData<List<PrepublishingActionItemUiState>>()
     val uiState: LiveData<List<PrepublishingActionItemUiState>> = _uiState
 
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
 
-    fun start() {
-        if (isStarted) return
-        isStarted = true
+    private var homeState: HomeState? = null
+
+    fun start(homeState: HomeState?) {
+        this.homeState = homeState
         loadActionsUiState()
     }
 
@@ -34,11 +34,17 @@ class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
                         actionType = PUBLISH,
                         actionResult = UiStringText("Immediately"),
                         onActionClicked = ::onActionClicked
-                ), PrepublishingActionUiState(
-                actionType = VISIBILITY,
-                actionResult = UiStringText("Public"),
-                onActionClicked = ::onActionClicked
-        ), PrepublishingActionUiState(actionType = TAGS, onActionClicked = ::onActionClicked)
+                ),
+                PrepublishingActionUiState(
+                        actionType = VISIBILITY,
+                        actionResult = UiStringText("Public"),
+                        onActionClicked = ::onActionClicked
+                ),
+                PrepublishingActionUiState(
+                        actionType = TAGS,
+                        actionResult = homeState?.tags?.let { UiStringText(it) },
+                        onActionClicked = ::onActionClicked
+                )
         )
 
         _uiState.postValue(prepublishingActionsUiStateList)

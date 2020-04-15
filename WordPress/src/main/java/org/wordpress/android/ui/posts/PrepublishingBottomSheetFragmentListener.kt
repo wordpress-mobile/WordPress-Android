@@ -22,7 +22,9 @@ import org.wordpress.android.ui.posts.PrepublishingActionState.TagsActionState
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import javax.inject.Inject
 
-class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSelectedListener {
+class PrepublishingBottomSheetFragmentListener : WPBottomSheetDialogFragment(),
+        TagsSelectedListener,
+        PrepublishingScreenClosedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var prepublishingViewModel: PrepublishingViewModel
@@ -109,7 +111,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
                 fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                        R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                        R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right,
                         R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
                 )
             }
@@ -128,7 +130,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
         const val SITE = "prepublishing_bottom_sheet_site_model"
 
         @JvmStatic
-        fun newInstance(@NonNull site: SiteModel) = PrepublishingBottomSheetFragment().apply {
+        fun newInstance(@NonNull site: SiteModel) = PrepublishingBottomSheetFragmentListener().apply {
             arguments = Bundle().apply {
                 putSerializable(SITE, site)
             }
@@ -137,5 +139,13 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
 
     override fun onTagsSelected(selectedTags: String) {
         prepublishingViewModel.updateTagsActionState(selectedTags)
+    }
+
+    override fun onCloseClicked() {
+        dismiss()
+    }
+
+    override fun onBackClicked() {
+        prepublishingViewModel.navigateHome()
     }
 }

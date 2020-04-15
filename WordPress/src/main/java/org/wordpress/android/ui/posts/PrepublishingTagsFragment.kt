@@ -9,11 +9,14 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 
 class PrepublishingTagsFragment : TagsFragment() {
+    private lateinit var closeListener: PrepublishingScreenClosedListener
+
     override fun getContentLayout() = R.layout.fragment_prepublishing_tags
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mTagsSelectedListener = parentFragment as TagsSelectedListener
+        closeListener = parentFragment as PrepublishingScreenClosedListener
     }
 
     companion object {
@@ -33,7 +36,7 @@ class PrepublishingTagsFragment : TagsFragment() {
         val closeButton = view.findViewById<ImageView>(R.id.close_button)
         val backButton = view.findViewById<ImageView>(R.id.back_button)
 
-        closeButton.setOnClickListener {}
-        backButton.setOnClickListener {}
+        closeButton.setOnClickListener { closeListener.onCloseClicked() }
+        backButton.setOnClickListener { closeListener.onBackClicked() }
     }
 }
