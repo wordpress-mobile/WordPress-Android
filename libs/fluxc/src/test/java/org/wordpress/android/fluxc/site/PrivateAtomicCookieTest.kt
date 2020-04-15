@@ -73,7 +73,7 @@ class PrivateAtomicCookieTest {
     }
 
     @Test
-    fun `cookie expires if it's expiration time is before current time`() {
+    fun `cookie expires if its expiration time is before current time`() {
         val currentTime = System.currentTimeMillis() / 1000
         val cookieExpirationTime = currentTime - 3600 // cookie expired one hour ago
 
@@ -83,7 +83,7 @@ class PrivateAtomicCookieTest {
     }
 
     @Test
-    fun `cookie is not expired if it's expiration time if after current time`() {
+    fun `cookie is not expired if its expiration time if after current time`() {
         val currentTime = System.currentTimeMillis() / 1000
         val cookieExpirationTime = currentTime + 3600 // cookie expires in one hour
 
@@ -93,7 +93,7 @@ class PrivateAtomicCookieTest {
     }
 
     @Test
-    fun `cookie expires soon if it's expiration time is within 6 hours from now`() {
+    fun `cookie expires soon if its expiration time is within 6 hours from now`() {
         val currentTime = System.currentTimeMillis() / 1000
         val cookieExpirationTime = currentTime + 3600 * 6 // cookie will expire in 6 hours
 
@@ -104,7 +104,7 @@ class PrivateAtomicCookieTest {
     }
 
     @Test
-    fun `cookie is not expiring soon if it's expiration time is more than 6 hours from now`() {
+    fun `cookie is not expiring soon if its expiration time is more than 6 hours from now`() {
         val currentTime = System.currentTimeMillis() / 1000
         val cookieExpirationTime = currentTime + 3600 * 7 // cookie will expire in 7 hours
 
@@ -115,7 +115,7 @@ class PrivateAtomicCookieTest {
     }
 
     @Test
-    fun `cookie content is it's name and value separated by =`() {
+    fun `cookie content is its name and value separated by =`() {
         privateAtomicCookie.set(testCookie)
         assertThat(privateAtomicCookie.getCookieContent()).isEqualTo("cookie_name=cookie_value")
     }
