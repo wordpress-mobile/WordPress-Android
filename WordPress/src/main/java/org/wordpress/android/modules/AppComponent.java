@@ -94,7 +94,7 @@ import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PrepublishingActionsAdapter;
 import org.wordpress.android.ui.posts.PrepublishingActionsFragment;
-import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragmentListener;
+import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.TagsFragment;
@@ -489,7 +489,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(PageParentSearchFragment object);
 
-    void inject(PrepublishingBottomSheetFragmentListener object);
+    void inject(PrepublishingBottomSheetFragment object);
 
     void inject(PrepublishingActionsFragment object);
 

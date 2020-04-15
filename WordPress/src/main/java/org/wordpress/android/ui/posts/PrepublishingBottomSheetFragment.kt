@@ -22,7 +22,7 @@ import org.wordpress.android.ui.posts.PrepublishingActionState.TagsActionState
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import javax.inject.Inject
 
-class PrepublishingBottomSheetFragmentListener : WPBottomSheetDialogFragment(),
+class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         TagsSelectedListener,
         PrepublishingScreenClosedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -130,7 +130,7 @@ class PrepublishingBottomSheetFragmentListener : WPBottomSheetDialogFragment(),
         const val SITE = "prepublishing_bottom_sheet_site_model"
 
         @JvmStatic
-        fun newInstance(@NonNull site: SiteModel) = PrepublishingBottomSheetFragmentListener().apply {
+        fun newInstance(@NonNull site: SiteModel) = PrepublishingBottomSheetFragment().apply {
             arguments = Bundle().apply {
                 putSerializable(SITE, site)
             }
