@@ -4,8 +4,13 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Before
 import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertNull
 import org.junit.Rule
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageDataStartLoadingUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
@@ -14,8 +19,11 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
-// private const val TEST_FILE_PATH = "/file/path"
 private const val TEST_OUTPUT_FILE_EXTENSION = ".png"
+private const val TEST2_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image2.jpg"
+private const val TEST2_HIGH_RES_IMAGE_URL = "https://wordpress.com/image2.jpg"
+private const val TEST2_OUTPUT_FILE_EXTENSION = ".jpg"
+private const val TEST_FILE_PATH = "/file/path"
 private const val FIRST_ITEM_POSITION = 0
 
 class PreviewImageViewModelTest {
@@ -25,30 +33,42 @@ class PreviewImageViewModelTest {
     // Class under test
     private lateinit var viewModel: PreviewImageViewModel
 
-    private lateinit var imageData: List<ImageData>
-
     private val testImageDataList = listOf(
-        ImageData(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, TEST_OUTPUT_FILE_EXTENSION)
+        ImageData(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, TEST_OUTPUT_FILE_EXTENSION),
+        ImageData(TEST2_LOW_RES_IMAGE_URL, TEST2_HIGH_RES_IMAGE_URL, TEST2_OUTPUT_FILE_EXTENSION)
     )
 
     @Before
     fun setUp() {
         viewModel = PreviewImageViewModel()
-        imageData = listOf(ImageData(TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, TEST_OUTPUT_FILE_EXTENSION))
     }
 
     @Test
     fun `first item data loading started on view create`() {
         initViewModel()
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates.first())
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates.first())
                 .isInstanceOf(ImageDataStartLoadingUiState::class.java)
     }
 
     @Test
     fun `first item progress bar shown on view create`() {
         initViewModel()
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates.first()
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates.first()
                 .progressBarVisible).isEqualTo(true)
+    }
+
+    @Test
+    fun `thumbnails tab layout not visible if single img available`() {
+        initViewModel(testImageDataList.subList(0, 1))
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().thumbnailsTabLayoutVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `thumbnails tab layout visible if multiple images available`() {
+        initViewModel()
+
+        assertThat(testImageDataList.size).isGreaterThan(1)
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().thumbnailsTabLayoutVisible).isEqualTo(true)
     }
 
     @Test
@@ -57,7 +77,7 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition]
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .progressBarVisible).isEqualTo(true)
     }
 
@@ -67,7 +87,7 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition]
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .progressBarVisible).isEqualTo(true)
     }
 
@@ -77,7 +97,7 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition])
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
                 .isInstanceOf(ImageInLowResLoadSuccessUiState::class.java)
     }
 
@@ -87,7 +107,7 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition])
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
                 .isInstanceOf(ImageInLowResLoadFailedUiState::class.java)
     }
 
@@ -97,7 +117,7 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition]
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .progressBarVisible).isEqualTo(false)
     }
 
@@ -107,7 +127,7 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition]
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .progressBarVisible).isEqualTo(false)
     }
 
@@ -117,7 +137,7 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition])
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
                 .isInstanceOf(ImageInHighResLoadSuccessUiState::class.java)
     }
 
@@ -127,7 +147,7 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition])
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
                 .isInstanceOf(ImageInHighResLoadFailedUiState::class.java)
     }
 
@@ -138,70 +158,128 @@ class PreviewImageViewModelTest {
         viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
         viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition])
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
                 .isInstanceOf(ImageInHighResLoadSuccessUiState::class.java)
     }
 
-    /*@Test
-    fun `high res image file loading started when high res image shown`() {
+    @Test
+    fun `high res image auto file loading not started when high res image shown and multiple images available`() {
         initViewModel()
-        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, imageData)
-        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
+
+        assertThat(testImageDataList.size).isGreaterThan(1)
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, itemPosition)
+
+        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(ImageLoadToFileIdleState)
     }
 
     @Test
-    fun `high res image file loading started when low res image shown after high res image`() {
-        initViewModel()
-        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, imageData)
-        viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL, imageData)
-        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
+    fun `high res image auto file loading started when high res image shown and single img available`() {
+        initViewModel(testImageDataList.subList(0, 1))
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, itemPosition)
+
+        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(
+            ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL, itemPosition)
+        )
     }
 
     @Test
-    fun `high res image file loading not started when low res image shown but high res image show failed`() {
-        initViewModel()
-        viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL, imageData)
-        viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL)
-        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageLoadToFileIdleState)
+    fun `high res img auto file loading started when low res img shown after high res img and single img available`() {
+        initViewModel(testImageDataList.subList(0, 1))
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, itemPosition)
+        viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL, itemPosition)
+
+        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(ImageStartLoadingToFileState(
+            TEST_HIGH_RES_IMAGE_URL, itemPosition)
+        )
     }
 
     @Test
-    fun `high res image file loading started when low res image show failed but high res image shown`() {
-        initViewModel()
-        viewModel.onLoadIntoImageViewFailed(TEST_LOW_RES_IMAGE_URL)
-        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, imageData)
-        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL))
+    fun `high res img file load not started when low res img shown, high res img show failed and single img avail`() {
+        initViewModel(testImageDataList.subList(0, 1))
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL, itemPosition)
+        viewModel.onLoadIntoImageViewFailed(TEST_HIGH_RES_IMAGE_URL, itemPosition)
+
+        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(ImageLoadToFileIdleState)
     }
 
     @Test
-    fun `load image to file success state triggered for the loaded image file on image loaded`() {
+    fun `high res img file loading started when low res img show failed, high res img shown and single img avail`() {
+        initViewModel(testImageDataList.subList(0, 1))
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoImageViewFailed(TEST_LOW_RES_IMAGE_URL, itemPosition)
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, itemPosition)
+
+        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(
+            ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL, itemPosition)
+        )
+    }
+
+    @Test
+    fun `load image to file success state triggered for the loaded img file on image loaded`() {
         initViewModel()
-        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
-        assertThat(viewModel.loadIntoFile.value).isEqualTo(ImageLoadToFileSuccessState(TEST_FILE_PATH))
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH, itemPosition)
+
+        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent())
+                .isEqualTo(ImageLoadToFileSuccessState(TEST_FILE_PATH, itemPosition))
     }
 
     @Test
     fun `load image to file success state triggered on image load to file success`() {
         initViewModel()
-        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
-        assertThat(viewModel.loadIntoFile.value).isInstanceOf(ImageLoadToFileSuccessState::class.java)
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH, itemPosition)
+
+        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent())
+                .isInstanceOf(ImageLoadToFileSuccessState::class.java)
     }
 
     @Test
     fun `load image to file failed state triggered on image load to file failure`() {
         initViewModel()
         viewModel.onLoadIntoFileFailed()
-        assertThat(viewModel.loadIntoFile.value).isInstanceOf(ImageLoadToFileFailedState::class.java)
+        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent())
+                .isInstanceOf(ImageLoadToFileFailedState::class.java)
     }
 
     @Test
-    fun `navigated to crop screen with file info on image load to file success`() {
+    fun `navigated to crop screen with file info on image load to file success and multiple imgs available`() {
         initViewModel()
-        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH)
-        assertThat(requireNotNull(viewModel.navigateToCropScreenWithFileInfo.value).first)
-                .isEqualTo(TEST_FILE_PATH)
-        assertThat(requireNotNull(viewModel.navigateToCropScreenWithFileInfo.value).second)
-                .isEqualTo(TEST_OUTPUT_FILE_EXTENSION)
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH, itemPosition)
+
+        val (inputFile, fileExtn, shouldReturnToPreviewScreen) =
+                requireNotNull(viewModel.navigateToCropScreenWithFileInfo.value).peekContent()
+
+        assertThat(inputFile).isEqualTo(TEST_FILE_PATH)
+        assertThat(fileExtn).isEqualTo(TEST_OUTPUT_FILE_EXTENSION)
+        assertThat(shouldReturnToPreviewScreen).isEqualTo(true)
+    }
+
+    @Test
+    fun `navigated to crop screen with file info on image load to file success and single img available`() {
+        initViewModel(testImageDataList.subList(0, 1))
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH, itemPosition)
+
+        val (inputFile, fileExtn, shouldReturnToPreviewScreen) =
+                requireNotNull(viewModel.navigateToCropScreenWithFileInfo.value).peekContent()
+        assertThat(inputFile).isEqualTo(TEST_FILE_PATH)
+        assertThat(fileExtn).isEqualTo(TEST_OUTPUT_FILE_EXTENSION)
+        assertThat(shouldReturnToPreviewScreen).isEqualTo(false)
     }
 
     @Test
@@ -209,7 +287,7 @@ class PreviewImageViewModelTest {
         initViewModel()
         viewModel.onLoadIntoFileFailed()
         assertNull(viewModel.navigateToCropScreenWithFileInfo.value)
-    }*/
+    }
 
     @Test
     fun `retry layout shown on high res image load failed at given item position`() {
@@ -217,7 +295,7 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition]
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .retryLayoutVisible).isEqualTo(true)
     }
 
@@ -228,7 +306,7 @@ class PreviewImageViewModelTest {
         viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
         viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition]
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .retryLayoutVisible).isEqualTo(true)
     }
 
@@ -239,7 +317,7 @@ class PreviewImageViewModelTest {
         viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
         viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition]
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .retryLayoutVisible).isEqualTo(false)
     }
 
@@ -248,9 +326,9 @@ class PreviewImageViewModelTest {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
-        requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition].onItemTapped?.invoke()
+        requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition].onItemTapped?.invoke()
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition])
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
                 .isInstanceOf(ImageDataStartLoadingUiState::class.java)
     }
 
@@ -260,12 +338,12 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition]
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .retryLayoutVisible).isEqualTo(true)
 
         viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[itemPosition]
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .progressBarVisible).isEqualTo(false)
     }
 
@@ -276,7 +354,7 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).editActionsEnabled).isEqualTo(true)
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().editActionsEnabled).isEqualTo(true)
     }
 
     @Test
@@ -286,7 +364,23 @@ class PreviewImageViewModelTest {
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
 
-        assertThat(requireNotNull(viewModel.uiState.value).editActionsEnabled).isEqualTo(false)
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().editActionsEnabled).isEqualTo(false)
+    }
+
+    @Test
+    fun `high res image file loading started when edit actions enabled and crop action triggered`() {
+        initViewModel()
+
+        val itemPosition = FIRST_ITEM_POSITION
+        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, itemPosition)
+
+        assertThat(requireNotNull(viewModel.uiState.value).peekContent().editActionsEnabled).isEqualTo(true)
+
+        viewModel.onCropMenuClicked(itemPosition)
+
+        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(
+            ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL, itemPosition)
+        )
     }
 
     private fun initViewModel(
