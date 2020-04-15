@@ -1,7 +1,12 @@
+14.7
+-----
+* Added user Gravatar to the Me menu in My Site.
+
 14.6
 -----
 * Block editor: You can now crop, zoom in/out and rotate images that are already inserted in a post.
 * Fix a deeplinking issue that could lead to the app not being open after clicking on some special "wordpress://" URLs.
+* Site Creation: Improved look of the loading screen while the site is being created
 * Block editor: New block: Cover
 * Block editor: Improve icon on the "Take a Video" media option
 * Block editor: Removed the dimming effect on unselected blocks

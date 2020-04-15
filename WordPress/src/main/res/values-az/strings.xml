@@ -176,8 +176,6 @@ Language: az
     <string name="dlg_spamming_comments">Spam olaraq işarələnir</string>
     <string name="dlg_trashing_comments">Zibil qutusuna göndərilir</string>
     <string name="dlg_confirm_trash_comments">Zibil qutusuna göndərilsinmi?</string>
-    <string name="trash_yes">Zibil</string>
-    <string name="trash_no">Zibil deyil</string>
     <string name="trash">Zibil</string>
     <string name="page_settings">Səhifə parametrləri</string>
     <string name="local_draft">Yerli qaralama</string>

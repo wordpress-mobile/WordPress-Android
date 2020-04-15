@@ -261,10 +261,8 @@ Language: hi_IN
     <string name="wordpress_blog">वर्डप्रेस ब्लॉग</string>
     <string name="view_in_browser">ब्राउज़र में देखें</string>
     <string name="mnu_comment_trash">कचरा पेटी</string>
-    <string name="trash_yes">कचरा पेटी</string>
     <string name="trash">कचरा पेटी</string>
     <string name="comment_status_trash">कचरा पेटी में डाला गया</string>
-    <string name="trash_no">कचरा पेटी में नहीं डाले</string>
     <string name="reader_toast_err_add_tag">इस टैग को जोड़ने में असमर्थ</string>
     <string name="reader_toast_err_remove_tag">इस टैग को हटाने में असमर्थ</string>
     <string name="mnu_comment_unapprove">अस्वीकृत</string>

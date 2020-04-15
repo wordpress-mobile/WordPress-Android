@@ -1,4 +1,0 @@
-14.4:
-En liten rättelse: denna utgåva korrigerar en problem som gjorde att bilder laddades upp med konstiga URL:er, något som sedan gjorde att de inte kunde nås på din webbplats.
-
-Tvätta händerna ofta och var försiktiga.

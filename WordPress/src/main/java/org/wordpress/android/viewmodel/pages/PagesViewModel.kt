@@ -48,7 +48,6 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -69,15 +68,12 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRAS
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
 
 private const val ACTION_DELAY = 100L
 private const val SEARCH_DELAY = 200L
 private const val SCROLL_DELAY = 200L
 private const val SNACKBAR_DELAY = 500L
 private const val SEARCH_COLLAPSE_DELAY = 500L
-private const val PAGE_UPLOAD_TIMEOUT = 5000L
 
 typealias LoadAutoSaveRevision = Boolean
 
@@ -178,7 +174,6 @@ class PagesViewModel
         get() = _lastSearchQuery
 
     private var searchJob: Job? = null
-    private var pageUpdateContinuations: MutableMap<Long, Continuation<Unit>> = mutableMapOf()
     private var currentPageType = PUBLISHED
 
     private lateinit var pageListEventListener: PageListEventListener
@@ -209,10 +204,8 @@ class PagesViewModel
                 postStore = postStore,
                 eventBusWrapper = eventBusWrapper,
                 site = site,
-                handlePageUpdated = this::handlePageUpdated,
                 invalidateUploadStatus = this::handleInvalidateUploadStatus,
                 handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
-                handlePostUploadedStarted = this::postUploadStarted,
                 handlePostUploadFinished = this::postUploadedFinished
         )
     }
@@ -267,14 +260,6 @@ class PagesViewModel
                 }
             }
         }
-    }
-
-    private suspend fun waitForPageUpdate(remotePageId: Long) {
-        _arePageActionsEnabled = false
-        suspendCoroutineWithTimeout<Unit>(PAGE_UPLOAD_TIMEOUT) { cont ->
-            pageUpdateContinuations[remotePageId] = cont
-        }
-        _arePageActionsEnabled = true
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -763,18 +748,6 @@ class PagesViewModel
     private fun hasRemoteAutoSavePreviewError() = _previewState.value != null &&
             _previewState.value == PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
 
-    fun handlePageUpdated(remotePostId: RemoteId) {
-        var id = 0L
-        if (!pageUpdateContinuations.contains(id)) {
-            id = remotePostId.value
-        }
-
-        pageUpdateContinuations[id]?.let { cont ->
-            pageUpdateContinuations.remove(id)
-            cont.resume(Unit)
-        }
-    }
-
     private fun handleRemoveAutoSaveEvent(pageId: LocalId, isError: Boolean) {
         val post = postStore.getPostByLocalPostId(pageId.value)
 
@@ -787,14 +760,6 @@ class PagesViewModel
         launch {
             _invalidateUploadStatus.value = ids
             refreshPages()
-        }
-    }
-
-    fun postUploadStarted(remoteId: RemoteId) {
-        launch {
-            performIfNetworkAvailableAsync {
-                waitForPageUpdate(remoteId.value)
-            }
         }
     }
 
