@@ -16,6 +16,7 @@ import android.widget.ImageView.ScaleType.CENTER_CROP
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.preview_image_fragment.*
@@ -168,7 +169,7 @@ class PreviewImageFragment : Fragment() {
         // Set adapter data before the ViewPager2.restorePendingState gets called
         // to avoid manual handling of the ViewPager2 state restoration.
         viewModel.uiState.value?.let {
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.viewPagerItemsStates)
+            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.peekContent().viewPagerItemsStates)
         }
     }
 
@@ -180,20 +181,26 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(this, Observer { state ->
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
-            cropActionMenu?.isEnabled = state.editActionsEnabled
-            UiHelpers.updateVisibility(thumbnailsTabLayout, state.thumbnailsTabLayoutVisible)
-        })
-
-        viewModel.loadIntoFile.observe(this, Observer { fileState ->
-            if (fileState is ImageStartLoadingToFileState) {
-                loadIntoFile(fileState.imageUrl, fileState.position)
+        viewModel.uiState.observe(this, Observer { uiStateEvent ->
+            uiStateEvent?.getContentIfNotHandled()?.let { state ->
+                (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
+                cropActionMenu?.isEnabled = state.editActionsEnabled
+                UiHelpers.updateVisibility(thumbnailsTabLayout, state.thumbnailsTabLayoutVisible)
             }
         })
 
-        viewModel.navigateToCropScreenWithFileInfo.observe(this, Observer { filePath ->
-            navigateToCropScreenWithInputFilePath(filePath)
+        viewModel.loadIntoFile.observe(this, Observer { fileStateEvent ->
+            fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
+                if (fileState is ImageStartLoadingToFileState) {
+                    loadIntoFile(fileState.imageUrl, fileState.position)
+                }
+            }
+        })
+
+        viewModel.navigateToCropScreenWithFileInfo.observe(this, Observer { fileInfoEvent ->
+            fileInfoEvent?.getContentIfNotHandled()?.let { fileInfo ->
+                navigateToCropScreenWithFileInfo(fileInfo)
+            }
         })
     }
 
@@ -234,11 +241,29 @@ class PreviewImageFragment : Fragment() {
         )
     }
 
-    private fun navigateToCropScreenWithInputFilePath(fileInfo: Pair<String, String?>) {
-        val (inputFilePath, outputFileExtension) = fileInfo
-        findNavController().navigate(
-            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
-        )
+    private fun navigateToCropScreenWithFileInfo(fileInfo: Triple<String, String?, Boolean>) {
+        val (inputFilePath, outputFileExtension, shouldReturnToPreviewScreen) = fileInfo
+
+        val navOptions = if (!shouldReturnToPreviewScreen) {
+            NavOptions.Builder().setPopUpTo(R.id.preview_dest, true).build()
+        } else {
+            null
+        }
+
+        val navController = findNavController()
+
+        // TODO: Temporarily added if check to fix this occasional crash
+        // https://stackoverflow.com/q/51060762/193545
+        if (navController.currentDestination?.id == R.id.preview_dest) {
+            navController.navigate(
+                PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(
+                    inputFilePath,
+                    outputFileExtension,
+                    shouldReturnToPreviewScreen
+                ),
+                navOptions
+            )
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
