@@ -475,7 +475,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
     public static void openJetpackBlogPostPreview(Context context, String url, String shareableUrl, String shareSubject,
                                                   String frameNonce, boolean allowPreviewModeSelection,
-                                                  boolean startPreviewForResult) {
+                                                  boolean startPreviewForResult, long privateSiteId) {
         if (!TextUtils.isEmpty(frameNonce)) {
             url += "&frame-nonce=" + UrlUtils.urlEncode(frameNonce);
         }
@@ -488,6 +488,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
         if (!TextUtils.isEmpty(shareSubject)) {
             intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
+        }
+        if (privateSiteId > 0) {
+            intent.putExtra(WPWebViewActivity.PRIVATE_AT_SITE_ID, privateSiteId);
         }
         if (startPreviewForResult) {
             intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, WPWebViewUsageCategory.REMOTE_PREVIEWING.getValue());
