@@ -9,7 +9,8 @@ import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class CoroutineEngine
+// The class is open for testing
+open class CoroutineEngine
 @Inject constructor(
     private val context: CoroutineContext,
     private val appLog: AppLogWrapper
