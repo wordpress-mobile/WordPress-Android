@@ -17,6 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
+import org.wordpress.android.ui.posts.PrepublishingActionState.HomeState
 import org.wordpress.android.ui.posts.PrepublishingActionState.TagsActionState
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import javax.inject.Inject
@@ -84,14 +85,17 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
     }
 
     private fun navigateToScreen(navigationState: PrepublishingNavigationState) {
-        val result = when (navigationState.screenState.prepublishingScreen) {
-            HOME -> Pair(PrepublishingActionsFragment.newInstance(), PrepublishingActionsFragment.TAG)
+        val result = when (navigationState.prepublishingScreen) {
+            HOME -> Pair(
+                    PrepublishingActionsFragment.newInstance((navigationState.screenState as HomeState)),
+                    PrepublishingActionsFragment.TAG
+            )
             PrepublishingScreen.PUBLISH -> TODO()
             PrepublishingScreen.VISIBILITY -> TODO()
             PrepublishingScreen.TAGS -> Pair(
                     PrepublishingTagsFragment.newInstance(
                             navigationState.site,
-                            (navigationState.screenState as TagsActionState).tags
+                            (navigationState.screenState as? TagsActionState)?.tags
                     ),
                     PrepublishingTagsFragment.TAG
             )

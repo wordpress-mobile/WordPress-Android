@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.post_prepublishing_actions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.posts.PrepublishingActionState.HomeState
 import javax.inject.Inject
 
 class PrepublishingActionsFragment : Fragment() {
@@ -53,10 +54,14 @@ class PrepublishingActionsFragment : Fragment() {
 
     companion object {
         const val TAG = "prepublishing_actions_fragment_tag"
+        const val DATA = "prepublishing_actions_data"
 
-        @JvmStatic
-        fun newInstance(): PrepublishingActionsFragment {
-            return PrepublishingActionsFragment()
+        fun newInstance(homeState: HomeState? = null): PrepublishingActionsFragment {
+            return PrepublishingActionsFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(DATA, homeState)
+                }
+            }
         }
     }
 }

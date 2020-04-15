@@ -29,15 +29,20 @@ sealed class PrepublishingActionState(val prepublishingScreen: PrepublishingScre
     data class TagsActionState(val tags: String? = null) : PrepublishingActionState(TAGS)
 
     @Parcelize
-    object HomeState : PrepublishingActionState(HOME)
+    data class HomeState(val tags: String? = null) : PrepublishingActionState(HOME)
 }
 
-data class PrepublishingNavigationState(val site: SiteModel, val screenState: PrepublishingActionState)
+data class PrepublishingNavigationState(
+    val site: SiteModel,
+    val prepublishingScreen: PrepublishingScreen,
+    val screenState: PrepublishingActionState?
+)
 
 class PrepublishingViewModel @Inject constructor() : ViewModel() {
     private var isStarted = false
     private lateinit var site: SiteModel
-    private var prepublishingActionState: PrepublishingActionState? = null
+    private var tagsActionState: TagsActionState? = null
+    private var currentActionState: PrepublishingActionState? = null
     private val _navigationState = MutableLiveData<Event<PrepublishingNavigationState>>()
     val navigationState: LiveData<Event<PrepublishingNavigationState>> = _navigationState
 
@@ -45,36 +50,50 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         if (isStarted) return
         isStarted = true
 
-        this.prepublishingActionState = prepublishingActionState
         this.site = site
 
-        navigateToScreen()
+        prepublishingActionState?.let {
+            updateActionState(prepublishingActionState)
+            navigateToScreen(prepublishingActionState.prepublishingScreen)
+        } ?: run { navigateToScreen(HOME) }
     }
 
-    private fun navigateToScreen() {
-        if (prepublishingActionState != null) {
-            updateNavigationState(prepublishingActionState as PrepublishingActionState)
-        } else {
-            updateNavigationState(HomeState)
+    private fun updateActionState(prepublishingActionState: PrepublishingActionState) {
+        when (prepublishingActionState) {
+            is TagsActionState -> tagsActionState = prepublishingActionState
         }
     }
 
-    fun updateNavigationState(state: PrepublishingActionState) {
-        _navigationState.postValue(Event(PrepublishingNavigationState(site, state)))
+    fun navigateToScreen(prepublishingScreen: PrepublishingScreen) {
+        when (prepublishingScreen) {
+            HOME -> updateNavigationState(PrepublishingNavigationState(site, HOME, HomeState(tagsActionState?.tags)))
+            TAGS -> updateNavigationState(
+                    PrepublishingNavigationState(
+                            site,
+                            prepublishingScreen,
+                            tagsActionState
+                    )
+            )
+        }
+    }
+
+    private fun updateNavigationState(state: PrepublishingNavigationState) {
+        _navigationState.postValue(Event(state))
     }
 
     fun writeToBundle(outState: Bundle) {
-        outState.putParcelable(KEY_TAGS_ACTION_STATE, prepublishingActionState)
+        outState.putParcelable(KEY_TAGS_ACTION_STATE, currentActionState)
     }
 
     fun onActionClicked(actionType: ActionType) {
         when (actionType) {
-            ActionType.TAGS -> updateNavigationState(TagsActionState())
+            ActionType.TAGS -> navigateToScreen(TAGS)
             else -> TODO()
         }
     }
 
     fun updateTagsActionState(tags: String) {
-        prepublishingActionState = TagsActionState(tags)
+        tagsActionState = TagsActionState(tags)
+        currentActionState = tagsActionState
     }
 }
