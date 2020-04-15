@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts
 
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,14 +86,14 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
     }
 
     private fun navigateToScreen(navigationState: PrepublishingNavigationState) {
-        val result = when (navigationState.prepublishingActionState.prepublishingScreen) {
+        val result = when (navigationState.screenState.prepublishingScreen) {
             HOME -> Pair(PrepublishingActionsFragment.newInstance(), PrepublishingActionsFragment.TAG)
             PrepublishingScreen.PUBLISH -> TODO()
             PrepublishingScreen.VISIBILITY -> TODO()
             PrepublishingScreen.TAGS -> Pair(
                     PrepublishingTagsFragment.newInstance(
                             navigationState.site,
-                            (navigationState.prepublishingActionState as TagsActionState).tags
+                            (navigationState.screenState as TagsActionState).tags
                     ),
                     PrepublishingTagsFragment.TAG
             )
@@ -114,6 +116,11 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        prepublishingViewModel.writeToBundle(outState)
+    }
+
     companion object {
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
         const val SITE = "prepublishing_bottom_sheet_site_model"
@@ -127,6 +134,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
     }
 
     override fun onTagsSelected(selectedTags: String) {
-        prepublishingViewModel.updateTags(selectedTags)
+        prepublishingViewModel.updateTagsActionState(selectedTags)
     }
 }
