@@ -2,7 +2,6 @@ package org.wordpress.android.ui
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -35,57 +34,40 @@ class SuggestUsersActivity : LocaleAwareActivity() {
             initializeSuggestionAdapter(it)
         }
 
+        // The previous activity is visible behind this Activity on account of the transparent rootView
+        // if the list is empty or does not fill the entire screen, so allow the user touch the still-visible
+        // previous activity to close this Activity and return to the previous Activity.
+        rootView.setOnClickListener {
+            finish()
+        }
+
         autocompleteText.apply {
             setOnItemClickListener { _, _, position, _ ->
                 val suggestionUserId = suggestionAdapter?.getItem(position)?.userLogin
                 finishWithId(suggestionUserId)
             }
+            setOnFocusChangeListener { _ , hasFocus ->
+                // The purpose of this Activity is to allow the user to select a user, so we want
+                // the dropdown to always be visible.
+                post { showDropDown() }
+            }
+
+            // Insure the text always starts with an "@"
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun afterTextChanged(s: Editable?) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    // Insure the text always starts with an "@"
                     if (s?.startsWith("@") == false) {
                         autocompleteText.setText(resources.getString(R.string.at_username, s))
                         autocompleteText.setSelection(1)
+                        showDropDown()
                     }
                 }
             })
-            setOnFocusChangeListener { _ , hasFocus ->
-                post { showDropDown() }
-            }
-
             setText("@")
             setSelection(1)
 
             post { requestFocus() }
-        }
-
-        removeTopWindowInset()
-    }
-
-    /*
-     * Having a translucent status bar with this activity's theme prevents windowSoftInputMode of adjustResize
-     * from properly adjusting the window size when the  keyboard is presented. Setting fitsSystemWindows
-     * to be true on the root view in this layout fixes that problem, but has the side effect of increasing the
-     * top inset on that view in order to prevent the view's content from appearing underneath the status bar.
-     * We don't need to worry about that since this rootView is attached to the bottom of the screen, so we
-     * can safely remove that top inset.
-     *
-     * See
-     * https://stackoverflow.com/questions/21092888/windowsoftinputmode-adjustresize-not-working-with-translucent-action-navbar
-     * for additional context.
-     */
-    private fun removeTopWindowInset() {
-        rootView.setOnApplyWindowInsetsListener { v, insets ->
-            val newFrame = Rect(
-                    insets.stableInsetLeft,
-                    0,
-                    insets.systemWindowInsetRight,
-                    insets.systemWindowInsetBottom
-            )
-            val newInsets = insets.replaceSystemWindowInsets(newFrame)
-            v.onApplyWindowInsets(newInsets)
         }
     }
 
