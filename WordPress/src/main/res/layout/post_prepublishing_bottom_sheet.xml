@@ -13,16 +13,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_min="@dimen/prepublishing_bottom_sheet_min_height"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle" />
-
-    <include
-        android:id="@+id/bottom_sheet_handle"
-        layout="@layout/bottom_sheet_handle_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_small"
-        app:layout_constraintBottom_toTopOf="@id/prepublishing_content_fragment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
