@@ -42,8 +42,8 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
         }
 
         fun showIfNecessary(fragmentManager: FragmentManager?, targetFragment: Fragment?) {
-            fragmentManager.let {
-                val thisFragment = fragmentManager!!.findFragmentByTag(TAG)
+            fragmentManager?.let {
+                val thisFragment = fragmentManager.findFragmentByTag(TAG)
                 if (thisFragment == null ||
                         (thisFragment is PrivateAtCookieRefreshProgressDialog && !thisFragment.isDialogVisible())) {
                     val progressFragment = PrivateAtCookieRefreshProgressDialog()
@@ -54,8 +54,8 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
         }
 
         fun dismissIfNecessary(fragmentManager: FragmentManager?) {
-            fragmentManager.let {
-                val thisFragment = fragmentManager!!.findFragmentByTag(TAG)
+            fragmentManager?.let {
+                val thisFragment = fragmentManager.findFragmentByTag(TAG)
                 if (thisFragment is PrivateAtCookieRefreshProgressDialog) {
                     thisFragment.dismiss()
                 }
@@ -63,10 +63,11 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
         }
 
         fun isShowing(fragmentManager: FragmentManager?): Boolean {
-            fragmentManager.let {
-                val thisFragment = fragmentManager!!.findFragmentByTag(TAG)
+            fragmentManager?.let {
+                val thisFragment = fragmentManager.findFragmentByTag(TAG)
                 return thisFragment is PrivateAtCookieRefreshProgressDialog && thisFragment.isDialogVisible()
             }
+            return false
         }
     }
 }
