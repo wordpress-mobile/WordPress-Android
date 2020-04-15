@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
-import org.wordpress.android.ui.posts.PrepublishingActionState.InitialState
+import org.wordpress.android.ui.posts.PrepublishingActionState.HomeState
 import org.wordpress.android.ui.posts.PrepublishingActionState.TagsActionState
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
@@ -29,10 +29,10 @@ sealed class PrepublishingActionState(val prepublishingScreen: PrepublishingScre
     data class TagsActionState(val tags: String? = null) : PrepublishingActionState(TAGS)
 
     @Parcelize
-    object InitialState : PrepublishingActionState(HOME)
+    object HomeState : PrepublishingActionState(HOME)
 }
 
-data class PrepublishingNavigationState(val site: SiteModel, val prepublishingActionState: PrepublishingActionState)
+data class PrepublishingNavigationState(val site: SiteModel, val screenState: PrepublishingActionState)
 
 class PrepublishingViewModel @Inject constructor() : ViewModel() {
     private var isStarted = false
@@ -55,15 +55,13 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         if (prepublishingActionState != null) {
             updateNavigationState(prepublishingActionState as PrepublishingActionState)
         } else {
-            updateNavigationState(InitialState)
+            updateNavigationState(HomeState)
         }
     }
 
     fun updateNavigationState(state: PrepublishingActionState) {
         _navigationState.postValue(Event(PrepublishingNavigationState(site, state)))
     }
-
-    private
 
     fun writeToBundle(outState: Bundle) {
         outState.putParcelable(KEY_TAGS_ACTION_STATE, prepublishingActionState)
@@ -76,7 +74,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun updateTags(tags: String) {
-
+    fun updateTagsActionState(tags: String) {
+        prepublishingActionState = TagsActionState(tags)
     }
 }
