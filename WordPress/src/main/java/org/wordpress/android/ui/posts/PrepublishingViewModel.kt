@@ -75,4 +75,8 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
             else -> TODO()
         }
     }
+
+    fun updateTags(tags: String) {
+
+    }
 }

@@ -127,6 +127,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
     }
 
     override fun onTagsSelected(selectedTags: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        prepublishingViewModel.updateTags(selectedTags)
     }
 }
