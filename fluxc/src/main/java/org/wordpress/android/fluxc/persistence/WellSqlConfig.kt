@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 99
+        return 100
     }
 
     override fun getDbName(): String {
@@ -1062,6 +1062,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 98 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS PostSummaryModel")
+                }
+                99 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD WP_API_REST_URL TEXT")
                 }
             }
         }
