@@ -46,7 +46,7 @@ class PrepublishingActionsViewModelTest {
         publishAction?.onActionClicked?.invoke(expectedActionType)
 
         // assert
-        assertThat(requireNotNull(viewModel.prepublishingActionType.value).peekContent()).isEqualTo(expectedActionType)
+        assertThat(requireNotNull(viewModel.onActionClicked.value).peekContent()).isEqualTo(expectedActionType)
     }
 
     @Test
@@ -59,7 +59,7 @@ class PrepublishingActionsViewModelTest {
         visibilityAction?.onActionClicked?.invoke(expectedActionType)
 
         // assert
-        assertThat(requireNotNull(viewModel.prepublishingActionType.value).peekContent()).isEqualTo(expectedActionType)
+        assertThat(requireNotNull(viewModel.onActionClicked.value).peekContent()).isEqualTo(expectedActionType)
     }
 
     @Test
@@ -72,7 +72,7 @@ class PrepublishingActionsViewModelTest {
         tagsAction?.onActionClicked?.invoke(expectedActionType)
 
         // assert
-        assertThat(requireNotNull(viewModel.prepublishingActionType.value).peekContent()).isEqualTo(expectedActionType)
+        assertThat(requireNotNull(viewModel.onActionClicked.value).peekContent()).isEqualTo(expectedActionType)
     }
 
     private fun getActionUiState(actionType: ActionType): PrepublishingActionUiState? {

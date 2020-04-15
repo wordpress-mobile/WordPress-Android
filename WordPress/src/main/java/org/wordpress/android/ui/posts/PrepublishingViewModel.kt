@@ -6,8 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
-import org.wordpress.android.ui.posts.ActionState.TagsActionState
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingActionState.InitialState
+import org.wordpress.android.ui.posts.PrepublishingActionState.TagsActionState
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
 import org.wordpress.android.viewmodel.Event
@@ -22,39 +23,54 @@ enum class PrepublishingScreen {
     TAGS
 }
 
-@Parcelize
-data class ActionsState(val currentScreen: PrepublishingScreen = HOME, val tagsActionState: TagsActionState) :
-        Parcelable
-
-sealed class ActionState : Parcelable {
+sealed class PrepublishingActionState(val prepublishingScreen: PrepublishingScreen) : Parcelable {
     @Parcelize
-    data class TagsActionState(val tags: String?) : ActionState()
+    data class TagsActionState(val tags: String? = null) : PrepublishingActionState(TAGS)
+
+    @Parcelize
+    object InitialState : PrepublishingActionState(HOME)
 }
+
+data class PrepublishingNavigationState(val prepublishingActionState: PrepublishingActionState)
 
 class PrepublishingViewModel @Inject constructor() : ViewModel() {
     private var isStarted = false
 
-    private lateinit var actionsState: ActionsState
-    private val _currentActionsState = MutableLiveData<Event<ActionsState>>()
-    val currentActionsState: LiveData<Event<ActionsState>> = _currentActionsState
+    private var prepublishingActionState: PrepublishingActionState? = null
+    private val _navigationState = MutableLiveData<Event<PrepublishingNavigationState>>()
+    val navigationState: LiveData<Event<PrepublishingNavigationState>> = _navigationState
 
-    fun start(actionsState: ActionsState) {
+    fun start(prepublishingActionState: PrepublishingActionState?) {
         if (isStarted) return
         isStarted = true
-        this.actionsState = actionsState
-        updateState()
+
+        this.prepublishingActionState = prepublishingActionState
+
+        navigateToScreen()
     }
 
-    private fun updateState() {
-        _currentActionsState.postValue(Event(actionsState))
+    private fun navigateToScreen() {
+        if (prepublishingActionState != null) {
+            updateNavigationState(prepublishingActionState as PrepublishingActionState)
+        } else {
+            updateNavigationState(InitialState)
+        }
     }
 
-    fun updateCurrentActionTypeState(actionType: ActionType) {
-        actionsState = actionsState.copy(currentScreen = TAGS)
-        updateState()
+    fun updateNavigationState(state: PrepublishingActionState) {
+        _navigationState.postValue(Event(PrepublishingNavigationState(state)))
     }
+
+    private
 
     fun writeToBundle(outState: Bundle) {
-        outState.putParcelable(KEY_TAGS_ACTION_STATE, actionsState)
+        outState.putParcelable(KEY_TAGS_ACTION_STATE, prepublishingActionState)
+    }
+
+    fun onActionClicked(actionType: ActionType) {
+        when (actionType) {
+            ActionType.TAGS -> updateNavigationState(TagsActionState())
+            else -> TODO()
+        }
     }
 }

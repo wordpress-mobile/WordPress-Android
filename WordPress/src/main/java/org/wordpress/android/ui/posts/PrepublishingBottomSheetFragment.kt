@@ -17,7 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
-import org.wordpress.android.ui.posts.ActionState.TagsActionState
+import org.wordpress.android.ui.posts.PrepublishingActionState.TagsActionState
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import javax.inject.Inject
 
@@ -68,32 +68,30 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
         prepublishingActionsViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingActionsViewModel::class.java)
 
-        prepublishingActionsViewModel.prepublishingActionType.observe(this, Observer { event ->
+        prepublishingActionsViewModel.onActionClicked.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { actionType ->
-                prepublishingViewModel.updateCurrentActionTypeState(actionType)
+                prepublishingViewModel.onActionClicked(actionType)
             }
         })
 
-        prepublishingViewModel.currentActionsState.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let { actionState ->
-                navigateToScreen(actionState)
+        prepublishingViewModel.navigationState.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { uiState ->
+                navigateToScreen(uiState.prepublishingActionState)
             }
         })
 
-        var actionsState = arguments?.getParcelable<ActionsState>(KEY_TAGS_ACTION_STATE)
-        if (actionsState == null) {
-            actionsState = ActionsState(tagsActionState = TagsActionState(tags = null))
-        }
-        prepublishingViewModel.start(actionsState)
+        val prepublishingActionState = arguments?.getParcelable<PrepublishingActionState>(KEY_TAGS_ACTION_STATE)
+
+        prepublishingViewModel.start(prepublishingActionState)
     }
 
-    private fun navigateToScreen(actionState: ActionsState) {
-        val result = when (actionState.currentScreen) {
+    private fun navigateToScreen(actionState: PrepublishingActionState) {
+        val result = when (actionState.prepublishingScreen) {
             HOME -> Pair(PrepublishingActionsFragment.newInstance(), PrepublishingActionsFragment.TAG)
             PrepublishingScreen.PUBLISH -> TODO()
             PrepublishingScreen.VISIBILITY -> TODO()
             PrepublishingScreen.TAGS -> Pair(
-                    PrepublishingTagsFragment.newInstance(site, actionState.tagsActionState.tags),
+                    PrepublishingTagsFragment.newInstance(site, (actionState as TagsActionState).tags),
                     PrepublishingTagsFragment.TAG
             )
         }
