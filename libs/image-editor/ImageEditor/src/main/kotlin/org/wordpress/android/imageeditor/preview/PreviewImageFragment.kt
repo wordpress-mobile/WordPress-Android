@@ -24,6 +24,7 @@ import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
+import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
 class PreviewImageFragment : Fragment() {
@@ -182,6 +183,7 @@ class PreviewImageFragment : Fragment() {
         viewModel.uiState.observe(this, Observer { state ->
             (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
             cropActionMenu?.isEnabled = state.editActionsEnabled
+            UiHelpers.updateVisibility(thumbnailsTabLayout, state.thumbnailsTabLayoutVisible)
         })
 
         viewModel.loadIntoFile.observe(this, Observer { fileState ->
@@ -233,8 +235,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun navigateToCropScreenWithInputFilePath(fileInfo: Pair<String, String?>) {
-        val inputFilePath = fileInfo.first
-        val outputFileExtension = fileInfo.second
+        val (inputFilePath, outputFileExtension) = fileInfo
         findNavController().navigate(
             PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
         )

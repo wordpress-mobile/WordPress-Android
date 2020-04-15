@@ -26,8 +26,9 @@ class PreviewImageViewModel : ViewModel() {
     fun onCreateView(imageDataList: List<ImageData>) {
         if (uiState.value == null) {
             val newImageUiStates = createViewPagerItemsInitialUiStates(imageDataList)
-            val currentUiState = uiState.value?.copy(viewPagerItemsStates = newImageUiStates) ?: UiState(
-                newImageUiStates
+            val currentUiState = UiState(
+                newImageUiStates,
+                thumbnailsTabLayoutVisible = !newImageUiStates.hasSingleElement()
             )
             updateUiState(currentUiState)
         }
@@ -44,7 +45,7 @@ class PreviewImageViewModel : ViewModel() {
         val currentUiState = uiState.value as UiState
         val currentImageState = currentUiState.viewPagerItemsStates[currentPosition]
 
-        if (isSingleImageInUiState(currentUiState) && canLoadToFile(newImageState)) {
+        if (currentUiState.viewPagerItemsStates.hasSingleElement() && canLoadToFile(newImageState)) {
             updateLoadIntoFileState(
                 ImageStartLoadingToFileState(
                     imageUrl = currentImageState.data.highResImageUrl,
@@ -173,15 +174,21 @@ class PreviewImageViewModel : ViewModel() {
         _loadIntoFile.value = fileState
     }
 
-    private fun shouldEnableEditActionsForImageState(currentImageState: ImageUiState) = canLoadToFile(currentImageState)
+    private fun shouldEnableEditActionsForImageState(currentImageState: ImageUiState) =
+            currentImageState is ImageInHighResLoadSuccessUiState
 
+    // TODO: revisit
     private fun canLoadToFile(currentImageState: ImageUiState) = currentImageState is ImageInHighResLoadSuccessUiState
 
-    private fun isSingleImageInUiState(currentUiState: UiState) = currentUiState.viewPagerItemsStates.size == 1
+    private fun List<ImageUiState>.hasSingleElement() = this.size == 1
 
     data class ImageData(val lowResImageUrl: String, val highResImageUrl: String, val outputFileExtension: String)
 
-    data class UiState(val viewPagerItemsStates: List<ImageUiState>, val editActionsEnabled: Boolean = false)
+    data class UiState(
+        val viewPagerItemsStates: List<ImageUiState>,
+        val editActionsEnabled: Boolean = false,
+        val thumbnailsTabLayoutVisible: Boolean = true
+    )
 
     sealed class ImageUiState(
         val data: ImageData,
