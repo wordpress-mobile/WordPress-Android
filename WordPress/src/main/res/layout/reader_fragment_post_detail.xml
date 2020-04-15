@@ -110,7 +110,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:drawablePadding="@dimen/margin_small"
-        android:drawableTop="@drawable/ic_notice_48dp"
         android:gravity="center"
         android:textColor="@color/neutral_30"
         android:textSize="@dimen/text_sz_extra_large"

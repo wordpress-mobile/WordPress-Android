@@ -1,4 +1,0 @@
-14.4:
-Una pequeña corrección: esta versión se ocupa de un problema que hace que las imágenes se carguen con URL inestables, lo que las hace inaccesibles en tu web.
-
-Lávate las manos y mantén a salvo a todos.

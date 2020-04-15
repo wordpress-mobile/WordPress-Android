@@ -1,11 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-11 17:29:21+0000
+Translation-Revision-Date: 2020-04-05 07:19:21+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">Ce spune lumea</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Oferim o serie de servicii care te ajută să obții rezultatele pe care le cauți. Nu știi sigur de ce ai nevoie sau cât costă? Îți putem explica care servicii sunt potrivite pentru tine și îți spunem mai multe despre costurile care le implică.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Suntem o mică echipă de profesioniști talentați, cu calificare și experiență. Ne place ceea ce facem și o facem cu pasiune. Abia așteptăm să lucrăm cu tine.</string>
+    <string name="gutenberg_native_warning_message">Mesaj de avertizare</string>
+    <string name="gutenberg_native_want_to_work_with_us">Vrei să lucrezi cu noi?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Vizitatorii vor dori să știe cine se află în spatele paginii. Folosește acest spațiu pentru a scrie despre tine, situl tău, afacerea ta sau orice altceva vrei. Folosește testimonialele de mai jos pentru a-i cita pe alții, referitor la aceleași lucruri - cu propriile lor cuvinte.</string>
+    <string name="gutenberg_native_usa">S.U.A.</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Acesta este un exemplu de conținut, inclus în șablon, pentru a ilustra funcționalitățile. Înlătură-l sau înlocuiește-l cu propriile cuvinte și elemente media.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">Modul de a începe este să renunți la vorbărie și să începi să faci ceva.</string>
+    <string name="gutenberg_native_team">Echipă</string>
+    <string name="gutenberg_native_success_message">Mesaj de succes</string>
+    <string name="gutenberg_native_strategy">Strategie</string>
+    <string name="gutenberg_native_show_post_content">Arată conținutul articolului</string>
+    <string name="gutenberg_native_services">Servicii</string>
+    <string name="gutenberg_native_samuel_the_dog">Samuel the Dog</string>
+    <string name="gutenberg_native_sally_smith">Sally Smith</string>
+    <string name="gutenberg_native_project_name">Nume proiect</string>
+    <string name="gutenberg_native_position_or_job_title">Poziția sau funcția</string>
+    <string name="gutenberg_native_portfolio">Portofoliu</string>
+    <string name="gutenberg_native_only_show_excerpt">Arată numai rezumatul</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portofoliul meu prezintă diferite proiecte create de-a lungul carierei mele. Vezi informațiile mele de contact de mai jos și intrăm în legătură.</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">Înălțime minimă, în pixeli</string>
+    <string name="gutenberg_native_link_to">Legătură la</string>
+    <string name="gutenberg_native_link_settings">Setări legătură</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hai să vorbim 👋 Nu ezita să mă contactezi, ai mai jos informațiile mele de contact, sau să-mi trimiți un mesaj folosind formularul.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Hai să construim ceva împreună.</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Hai să construim ceva împreună</string>
+    <string name="gutenberg_native_let_s_build_something_together">Hai să construim ceva împreună</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Sunt alegerile noastre Harry, care arată ceea ce suntem cu adevărat, cu mult mai mult decât abilitățile noastre.</string>
+    <string name="gutenberg_native_inspiration">Inspirație</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">Intră în contact!</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">Intră în contact!</string>
+    <string name="gutenberg_native_get_in_touch">Intră în contact</string>
+    <string name="gutenberg_native_excerpt_length_words">Lungime rezumat (cuvinte)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Trimite-mi un email la: &lt;a href=\"mailto:mail@example.com\">mail@exemplu.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">Editează elementul media pentru copertă</string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Nu plânge pentru că s-a terminat, zâmbește pentru că s-a întâmplat.</string>
+    <string name="gutenberg_native_customize">PERSONALIZEAZĂ</string>
+    <string name="gutenberg_native_city_10100">City, 10100</string>
+    <string name="gutenberg_native_button_link_url">URL legătură buton</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">Setările pentru culoarea butoanelor vor fi disponibile în curând.</string>
+    <string name="gutenberg_native_border_settings">Setări chenar</string>
+    <string name="gutenberg_native_border_radius">Rotunjire chenar</string>
+    <string name="gutenberg_native_background_opacity">Opacitate fundal</string>
+    <string name="gutenberg_native_add_paragraph_block">Adaugă un bloc Paragraf</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">O scurtă descriere a serviciilor pe care le oferi.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">O biografie scurtă, ca un istoric personal, realizări importante sau fapte interesante.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@exemplu.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">O descriere a proiectului și a lucrărilor prezentate.</string>
+    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
+    <string name="gutenberg_native_10_street_road">10 Street Road</string>
+    <string name="create_post_page_fab_tooltip_contributors">Creează un articol</string>
+    <string name="post_list_tab_trashed_posts">Aruncate la gunoi</string>
+    <string name="post_list_tab_scheduled_posts">Programate</string>
+    <string name="post_list_tab_published_posts">Publicate</string>
+    <string name="sharing_facebook_account_must_have_pages">Conexiunea Facebook nu găsește nicio pagină. Publicitatea nu se poate conecta la profilurile Facebook, ci numai la pagini Facebook publicate.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Neconectat</string>
+    <string name="my_site_select_domains_page_title">Adresă sit</string>
+    <string name="notifications_tab_title_likes">Aprecieri</string>
+    <string name="notifications_tab_title_follows">Urmăriri</string>
+    <string name="notifications_tab_title_comments">Comentarii</string>
+    <string name="notifications_tab_title_unread_notifications">Necitite</string>
+    <string name="dlg_cancel_action_dont_trash">Nu-l arunca</string>
+    <string name="dlg_confirm_action_trash">Aruncă la gunoi</string>
     <string name="stats_insights_management_activity">Activitate</string>
     <string name="stats_insights_management_posts_and_pages">Articole și pagini</string>
     <string name="stats_insights_management_general">Generale</string>
@@ -282,7 +350,6 @@ Language: ro
     <string name="enter_wordpress_site">Situl web de la această adresă nu este un sit WordPress. Pentru a-l putea conecta, situl trebuie să aibă instalat WordPress.</string>
     <string name="login_invalid_site_url">Te rog introdu adresa completă a sitului web, cum ar fi exemplu.com.</string>
     <string name="enter_email_for_site">Autentifică-te cu WordPress.com pentru a te conecta la %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">Nu s-a putut face conexiunea la Facebook deoarece acest cont nu are acces la nicio pagină. Facebook acceptă partajarea conexiunilor la paginile Facebook, dar nu acceptă partajarea la profilurile Facebook.</string>
     <string name="stats_post_views_label">Vizualizări</string>
     <string name="stats_post_label">Articol</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -379,8 +446,7 @@ Language: ro
     <string name="editor_failed_to_insert_media_tap_to_retry">Inserarea elementului media a eșuat.\nTe rog atinge pentru a reîncerca.</string>
     <string name="editor_uploading_draft">Ciorna ta se încarcă acum</string>
     <string name="post_uploading_draft">Încarc ciorna</string>
-    <string name="post_list_drafts">Ciorne</string>
-    <string name="post_list_published">Publicat</string>
+    <string name="post_list_tab_drafts">Ciorne</string>
     <string name="post_list_author_everyone">Toată lumea</string>
     <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">A apărut o eroare la restaurarea articolului</string>
@@ -525,15 +591,7 @@ Language: ro
     <string name="new_site_creation_empty_domain_list_message">Nu se potrivește nicio adresă disponibilă cu căutarea ta</string>
     <string name="site_creation_error_generic_subtitle">Eroare de comunicare cu serverul, te rog încercă din nou</string>
     <string name="site_creation_error_generic_title">A fost o problemă</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Categorie personalizată</string>
-    <string name="new_site_creation_button_skip">Sari</string>
-    <string name="new_site_creation_tag_line_description">Sloganul este un text scurt afișat chiar sub titlu.</string>
-    <string name="new_site_creation_tag_line_hint">Slogan</string>
-    <string name="new_site_creation_site_title_hint">Titlu sit</string>
-    <string name="new_site_creation_site_info_header_subtitle">Spune-ne mai multe despre situl pe care îl creezi.</string>
-    <string name="new_site_creation_site_info_header_title">Informații de bază</string>
     <string name="site_creation_fetch_suggestions_error_unknown">A fost o problemă</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Nicio conexiune</string>
     <string name="site_creation_segments_subtitle">Acest lucru ne ajută să facem recomandări. Dar nu trebuie să te limitezi la ele - toate siturile evoluează!</string>
     <string name="site_creation_segments_title">Spune-ne ce fel de sit vrei să creezi</string>
     <string name="new_site_creation_preview_title">Situl tău a fost creat!</string>
@@ -556,11 +614,6 @@ Language: ro
     <string name="stats_no_data_for_period">Nu există date pentru această perioadă</string>
     <string name="preference_strip_image_location">Înlătură locația din Media</string>
     <string name="stats_cannot_be_started">Pentru moment, nu putem deschide statisticile. Te rog reîncearcă mai târziu</string>
-    <string name="giphy_powered_by_giphy">Propulsat de GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Unele elemente media au eșuat la încărcare din cauza unei erori de rețea.</string>
-    <string name="giphy_picker_empty_search_list">Nu s-a potrivit niciun element media cu căutarea ta</string>
-    <string name="giphy_picker_initial_empty_text">Caută pentru a găsi imagini GIF pe care să le adaugi în Biblioteca ta media!</string>
-    <string name="giphy_picker_search_hint">Caută cu Giphy</string>
     <string name="stats_author_views_label">Vizualizări</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autori</string>
@@ -739,7 +792,6 @@ Language: ro
     <string name="people_empty_list_filtered_email_followers">Niciun urmăritor prin email până acum</string>
     <string name="people_empty_list_filtered_followers">Niciun urmăritor până acum</string>
     <string name="people_empty_list_filtered_users">Niciun utilizator până acum</string>
-    <string name="connection_service_facebook_notice">Începând cu 1 august 2018, Facebook nu mai permite partajarea directă a articolelor în profilurile Facebook. Conexiunile la paginile Facebook rămân neschimbate.</string>
     <string name="reader_empty_posts_liked_description">Articolele pe care le apreciezi vor apărea aici</string>
     <string name="reader_empty_posts_liked_title">Nu ai apreciat nimic până acum</string>
     <string name="reader_empty_followed_blogs_button_followed">Du-te la urmărire</string>
@@ -1296,8 +1348,6 @@ Language: ro
     <string name="editor_dropped_text_error">A apărut o eroare în timpul plasării textului</string>
     <string name="editor_dropped_html_images_not_allowed">Plasarea imaginilor în modul HTML nu este permisă</string>
     <string name="editor_content_hint">Partajează-ți povestea aici…</string>
-    <string name="post_list_trashed">Aruncat la gunoi</string>
-    <string name="post_list_scheduled">Programat</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Ciornă</string>
     <string name="post_status_pending_review">Revizie în așteptare</string>
@@ -1318,7 +1368,6 @@ Language: ro
     <string name="post_settings_more_options">Mai multe opțiuni</string>
     <string name="post_settings_categories_and_tags">Categorii și etichete</string>
     <string name="post_settings_status">Stare</string>
-    <string name="notifications_tab_title_unread">Necitite</string>
     <string name="notifications_tab_title_all">Toate</string>
     <string name="top_level_category_name">Nivel superior</string>
     <string name="category_parent">Categorie părinte (opțional):</string>
@@ -1363,7 +1412,7 @@ Language: ro
     <string name="sharing_more_description">Un buton „Mai mult” conține o listă derulantă care afișează butoanele de partajare</string>
     <string name="sharing_sharing_buttons_description">Selectează care butoane sunt arătate sub articolele tale</string>
     <string name="twitter_username">Nume utilizator Twitter</string>
-    <string name="sharing_comment_likes">Aprecieri comentariu</string>
+    <string name="sharing_comment_likes">Aprecieri la comentarii</string>
     <string name="button_style">Stil buton</string>
     <string name="label">Etichetă</string>
     <string name="sharing_buttons">Butoane de partajare</string>
@@ -2016,8 +2065,6 @@ Language: ro
     <string name="saving_changes">Salvează schimbările</string>
     <string name="hint_comment_content">Comentariu</string>
     <string name="trash">Coș de gunoi</string>
-    <string name="trash_no">Nu-l arunca</string>
-    <string name="trash_yes">Coș de gunoi</string>
     <string name="dlg_confirm_trash_comments">Trimit la coșul de gunoi?</string>
     <string name="dlg_trashing_comments">Trimis la coșul de gunoi</string>
     <string name="dlg_spamming_comments">Marcare ca spam</string>

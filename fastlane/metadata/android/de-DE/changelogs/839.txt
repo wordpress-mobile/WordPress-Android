@@ -1,4 +1,0 @@
-14.4:
-Eine kleine Korrektur: Diese Version kümmert sich um ein Problem, das dazu führte, dass Bilder mit URLs hochgeladen wurden, die nicht in Ordnung waren, wodurch die Bilder auf deiner Website nicht mehr zugänglich waren.
-
-Wascht eure Hände und bleibt alle gesund.

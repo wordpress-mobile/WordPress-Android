@@ -1,11 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-14 08:07:34+0000
+Translation-Revision-Date: 2020-04-03 19:48:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">Ç’thonë Njerëzit</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Ofrojmë një gamë shërbimesh për t’ju ndihmuar të arrini përfundimet që kërkoni. S’jeni i sigurt se ç’ju nevojitet, ose sa kushton? Mund t’ju shpjegojmë cilat shërbime ju bëjnë punë dhe t’ju tregojmë më tepër rreth tarifave tona. Lidhuni me ne, nga më poshtë.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Jemi një ekip i vogël profesionistësh me një gamë të gjerë aftësish dhe përvoje. E duam atë që bëjmë dhe e bëjmë me pasion. Presim të punojmë me ju.</string>
+    <string name="gutenberg_native_warning_message">Mesazh Sinjalizimi</string>
+    <string name="gutenberg_native_want_to_work_with_us">Doni të punoni me ne?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Vizitorët do të duan të njohin cili është në anën tjetër të faqes. Përdoreni këtë hapësirë për të shkruar diçka mbi veten, sajtin tuaj, biznesin, ç’të doni. Përdorini përshtypjet më poshtë për të cituar të tjerët, që flasin për të njëjtën gjë – me fjalët e tyre.</string>
+    <string name="gutenberg_native_usa">ShBA</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Ky është një shembull lënde, i përfshirë me gjedhen për ilustrim të veçorive të saj. Hiqeni ose zëvendësojeni me fjalët dhe median tuaj.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">Rruga se si t’ia fillohet është të lihen llafet dhe t’i hyhet punës.</string>
+    <string name="gutenberg_native_team">Ekip</string>
+    <string name="gutenberg_native_success_message">Mesazh Suksesi</string>
+    <string name="gutenberg_native_strategy">Strategji</string>
+    <string name="gutenberg_native_show_post_content">Shfaq lëndë postimi</string>
+    <string name="gutenberg_native_services">Shërbime</string>
+    <string name="gutenberg_native_samuel_the_dog">Qeni Samuel</string>
+    <string name="gutenberg_native_sally_smith">Sally Smith</string>
+    <string name="gutenberg_native_project_name">Emër Projekti</string>
+    <string name="gutenberg_native_position_or_job_title">Pozicion ose Emër Vendi Pune</string>
+    <string name="gutenberg_native_portfolio">Portofol</string>
+    <string name="gutenberg_native_only_show_excerpt">Shfaq vetëm copëz</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portofoli im paraqet projekte të ndryshme të krijuar përgjatë karrierës time. Shihni të dhëna kontakti më poshtë dhe lidhuni me mua.</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">Lartësi minimum në piksel</string>
+    <string name="gutenberg_native_link_to">Lidhje Te</string>
+    <string name="gutenberg_native_link_settings">Rregullime Lidhjesh</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Ta bisedojmë 👋 Mos ngurroni të lidheni me ne përmes të dhënave të kontaktit më poshtë, ose dërgoni një mesazh duke përdorur formularin.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Le të ngremë diçka bashkë</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Le të Ngremë Diçka Bashkë</string>
+    <string name="gutenberg_native_let_s_build_something_together">Le të ngremë diçka bashkë</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Harri, janë zgjedhjet tona ato që tregojnë vërtet se ç’jemi, shumë më tepër se aftësitë tona.</string>
+    <string name="gutenberg_native_inspiration">Frymëzim</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">Lidhuni!</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">Lidhuni!</string>
+    <string name="gutenberg_native_get_in_touch">Lidhuni</string>
+    <string name="gutenberg_native_excerpt_length_words">Gjatësi copëzash (fjalë)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Dërgomëni email: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">Përpunoni media mbulesë</string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Mos qa pse mbaroi, qesh pse ndodhi.</string>
+    <string name="gutenberg_native_customize">PËRSHTATENI</string>
+    <string name="gutenberg_native_city_10100">Qytet, 10100</string>
+    <string name="gutenberg_native_button_link_url">URL Lidhjeje Butoni</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">Rregullimet për ngjyrë butoni vijnë së shpejti.</string>
+    <string name="gutenberg_native_border_settings">Rregullime Anësh</string>
+    <string name="gutenberg_native_border_radius">Rreze Anësh</string>
+    <string name="gutenberg_native_background_opacity">Patejdukshmëri Sfondi</string>
+    <string name="gutenberg_native_add_paragraph_block">Shtoni bllok paragraf</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Një përshkrim i shkurtër i shërbimeve që ofroni.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Një jetëshkrim i shkurtër me historik personal, arritjet kryesore, ose një fakt interesant.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Një përshkrim i projektit dhe punët e paraqitura.</string>
+    <string name="gutenberg_native_555_555_1234">(555)555–1234</string>
+    <string name="gutenberg_native_10_street_road">10 Street Road</string>
+    <string name="create_post_page_fab_tooltip_contributors">Krijoni një postim</string>
+    <string name="post_list_tab_trashed_posts">Shpënë te hedhurinat</string>
+    <string name="post_list_tab_scheduled_posts">Vënë në plan</string>
+    <string name="post_list_tab_published_posts">Botuar</string>
+    <string name="sharing_facebook_account_must_have_pages">Lidhja Facebook s’gjen dot ndonjë Faqe. Publicize s’mund të lidhet me Profile Facebook, vetëm me Faqe të botuara.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">I palidhur</string>
+    <string name="my_site_select_domains_page_title">Adresë Sajti</string>
+    <string name="notifications_tab_title_likes">Pëlqime</string>
+    <string name="notifications_tab_title_follows">Ndjekje</string>
+    <string name="notifications_tab_title_comments">Komente</string>
+    <string name="notifications_tab_title_unread_notifications">Të palexuar</string>
+    <string name="dlg_cancel_action_dont_trash">Mos e hidh te hedhurinat</string>
+    <string name="dlg_confirm_action_trash">Shpjere te hedhurinat</string>
     <string name="stats_insights_management_activity">Veprimtari</string>
     <string name="stats_insights_management_posts_and_pages">Postime dhe Faqe</string>
     <string name="stats_insights_management_general">Të përgjithshme</string>
@@ -281,7 +349,6 @@ Language: sq_AL
     <string name="login_need_help_finding_connected_email">Ju duhet ndihmë për të gjetur email-in me të cilin e lidhët?</string>
     <string name="enter_wordpress_site">Sajti te kjo adresë s’është sajt WordPress. Që të lidhemi me të, sajti duhet të ketë të instaluar WordPress-in.</string>
     <string name="login_invalid_site_url">Ju lutemi, jepni një adresë të plotë sajti, bie fjala, example.com.</string>
-    <string name="sharing_facebook_account_must_have_pages">S’u bë dot lidhja me Facebook-un, ngaqë kjo llogari nuk ka hyrje në ndonjë faqe. Facebook-u mbulon ndarje lidhjesh me Faqe Facebook, por jo me Profile Facebook.</string>
     <string name="stats_post_views_label">Pamje</string>
     <string name="stats_post_label">Postim</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -379,8 +446,7 @@ Language: sq_AL
     <string name="editor_failed_to_insert_media_tap_to_retry">S’u arrit të futej media.\nJu lutemi, prekeni që të riprovohet.</string>
     <string name="editor_uploading_draft">Skica juaj po ngarkohet</string>
     <string name="post_uploading_draft">Po ngarkohet skicë</string>
-    <string name="post_list_drafts">Skica</string>
-    <string name="post_list_published">Të botuar</string>
+    <string name="post_list_tab_drafts">Skica</string>
     <string name="post_list_author_everyone">Cilido</string>
     <string name="post_list_author_me">Unë</string>
     <string name="error_restoring_post">Ndodhi një gabim gjatë rikthimit të postimit</string>
@@ -525,15 +591,7 @@ Language: sq_AL
     <string name="new_site_creation_empty_domain_list_message">S’ka adresa me përputhje me kërkimin tuaj</string>
     <string name="site_creation_error_generic_subtitle">Gabim gjatë komunikimit me shërbyesin, ju lutemi, riprovoni</string>
     <string name="site_creation_error_generic_title">Pati një problem</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Kategori vetjake</string>
-    <string name="new_site_creation_button_skip">Anashkaloje</string>
-    <string name="new_site_creation_tag_line_description">Motoja është një rresht i shkurtër teksti, i shfaqur fill nën titullin.</string>
-    <string name="new_site_creation_tag_line_hint">Përmbledhtas</string>
-    <string name="new_site_creation_site_title_hint">Titull Sajti</string>
-    <string name="new_site_creation_site_info_header_subtitle">Na tregoni më tepër rreth sajtit që po krijoni.</string>
-    <string name="new_site_creation_site_info_header_title">Të dhëna Bazë</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Pati një problem</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">S\'ka lidhje</string>
     <string name="site_creation_segments_subtitle">Kjo na ndihmon të bëjmë rekomandime. Por s’jeni kurrë të kyçur në to - krejt sajtet evoluojnë!</string>
     <string name="site_creation_segments_title">Tregonani se ç’lloj sajti do të donit të bënit</string>
     <string name="new_site_creation_preview_title">Sajti juaj u krijua!</string>
@@ -556,11 +614,6 @@ Language: sq_AL
     <string name="stats_no_data_for_period">S’ka të dhëna për këtë periudhë</string>
     <string name="preference_strip_image_location">Hiqe vendndodhjen prej mediash</string>
     <string name="stats_cannot_be_started">S’i hapim dot statistikat tani. Ju lutemi, riprovoni më vonë</string>
-    <string name="giphy_powered_by_giphy">Bazuar në Giphy</string>
-    <string name="giphy_picker_endless_scroll_network_error">Dështoi ngarkimi për ca media, për shkak të një gabimi rrjeti.</string>
-    <string name="giphy_picker_empty_search_list">S’ka media që përputhet me kërkimin tuaj</string>
-    <string name="giphy_picker_initial_empty_text">Kërkoni për të gjetur GIF-e që t’i shtoni te Mediateka juaj!</string>
-    <string name="giphy_picker_search_hint">Kërkoni në Giphy</string>
     <string name="stats_author_views_label">Parje</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autorë</string>
@@ -740,7 +793,6 @@ Language: sq_AL
     <string name="people_empty_list_filtered_followers">Ende pa ndjekës</string>
     <string name="people_empty_list_filtered_users">Ende pa përdorues</string>
     <string name="reader_empty_posts_liked_description">Postimet që pëlqeni do të shfaqen këtu</string>
-    <string name="connection_service_facebook_notice">Nga 1 gushti i 2018-s, Facebook-u nuk lejon më ndarje të drejtpërdrejtë të postimeve në Profile Facebook. Lidhjet me Faqe Facebook mbesin të pandryshuara.</string>
     <string name="reader_empty_posts_liked_title">Ende pa pëlqyer gjë</string>
     <string name="reader_empty_followed_blogs_button_discover">Zbuloni sajte</string>
     <string name="reader_empty_followed_blogs_description">S’ndiqni ndonjë sajt ende. Pse të mos ndiqni një që tani?</string>
@@ -1299,8 +1351,6 @@ Language: sq_AL
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Skicë</string>
     <string name="post_status_pending_review">Në pritje të shqyrtimit</string>
-    <string name="post_list_trashed">I shpënë te hedhurinat</string>
-    <string name="post_list_scheduled">I planifikuar për botim</string>
     <string name="post_status_publish_post">Botojeni</string>
     <string name="change_location">Ndryshoni Vendndodhje</string>
     <string name="remove_location">Hiqe Vendndodhjen</string>
@@ -1318,7 +1368,6 @@ Language: sq_AL
     <string name="post_settings_more_options">Më Tepër Mundësi</string>
     <string name="post_settings_categories_and_tags">Kategori &amp; Etiketa</string>
     <string name="post_settings_status">Gjendje</string>
-    <string name="notifications_tab_title_unread">Të palexuar</string>
     <string name="notifications_tab_title_all">Krejt</string>
     <string name="top_level_category_name">Shkalla e epërme</string>
     <string name="category_parent">Kategori mëmë (opsional):</string>
@@ -2011,8 +2060,6 @@ Language: sq_AL
     <string name="dlg_spamming_comments">Po shënohet si i padëshiruar</string>
     <string name="dlg_trashing_comments">Po kalohet te hedhurinat</string>
     <string name="dlg_confirm_trash_comments">Të kalohet te hedhurinat?</string>
-    <string name="trash_yes">Hidhe te hedhurinat</string>
-    <string name="trash_no">Mos e hidh te hedhurinat</string>
     <string name="trash">Hedhurina</string>
     <string name="hint_comment_content">Koment</string>
     <string name="saving_changes">Po ruhen ndryshimet</string>
