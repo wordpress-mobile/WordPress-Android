@@ -1958,7 +1958,7 @@ public class SiteStore extends Store {
             return;
         }
 
-        if (!site.isWPComAtomic()) {
+        if (!site.isPrivateWPComAtomic()) {
             PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(
                     AccessCookieErrorType.NON_PRIVATE_AT_SITE,
                     "Cookie can only be requested for private atomic site.");
