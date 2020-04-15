@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingActionState.InitialState
 import org.wordpress.android.ui.posts.PrepublishingActionState.TagsActionState
@@ -31,20 +32,21 @@ sealed class PrepublishingActionState(val prepublishingScreen: PrepublishingScre
     object InitialState : PrepublishingActionState(HOME)
 }
 
-data class PrepublishingNavigationState(val prepublishingActionState: PrepublishingActionState)
+data class PrepublishingNavigationState(val site: SiteModel, val prepublishingActionState: PrepublishingActionState)
 
 class PrepublishingViewModel @Inject constructor() : ViewModel() {
     private var isStarted = false
-
+    private lateinit var site: SiteModel
     private var prepublishingActionState: PrepublishingActionState? = null
     private val _navigationState = MutableLiveData<Event<PrepublishingNavigationState>>()
     val navigationState: LiveData<Event<PrepublishingNavigationState>> = _navigationState
 
-    fun start(prepublishingActionState: PrepublishingActionState?) {
+    fun start(site: SiteModel, prepublishingActionState: PrepublishingActionState?) {
         if (isStarted) return
         isStarted = true
 
         this.prepublishingActionState = prepublishingActionState
+        this.site = site
 
         navigateToScreen()
     }
@@ -58,7 +60,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     }
 
     fun updateNavigationState(state: PrepublishingActionState) {
-        _navigationState.postValue(Event(PrepublishingNavigationState(state)))
+        _navigationState.postValue(Event(PrepublishingNavigationState(site, state)))
     }
 
     private

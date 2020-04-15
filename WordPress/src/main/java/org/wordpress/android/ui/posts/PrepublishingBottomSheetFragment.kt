@@ -27,13 +27,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
     private lateinit var prepublishingViewModel: PrepublishingViewModel
     private lateinit var prepublishingActionsViewModel: PrepublishingActionsViewModel
 
-    private lateinit var site: SiteModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.WordPress_PrepublishingNudges_BottomSheetDialogTheme)
         (requireNotNull(activity).application as WordPress).component().inject(this)
-        site = arguments?.getSerializable(SITE) as SiteModel
     }
 
     override fun onCreateView(
@@ -75,23 +72,27 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(), TagsSele
         })
 
         prepublishingViewModel.navigationState.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let { uiState ->
-                navigateToScreen(uiState.prepublishingActionState)
+            event.getContentIfNotHandled()?.let { navigationState ->
+                navigateToScreen(navigationState)
             }
         })
 
         val prepublishingActionState = arguments?.getParcelable<PrepublishingActionState>(KEY_TAGS_ACTION_STATE)
+        val site = arguments?.getSerializable(SITE) as SiteModel
 
-        prepublishingViewModel.start(prepublishingActionState)
+        prepublishingViewModel.start(site, prepublishingActionState)
     }
 
-    private fun navigateToScreen(actionState: PrepublishingActionState) {
-        val result = when (actionState.prepublishingScreen) {
+    private fun navigateToScreen(navigationState: PrepublishingNavigationState) {
+        val result = when (navigationState.prepublishingActionState.prepublishingScreen) {
             HOME -> Pair(PrepublishingActionsFragment.newInstance(), PrepublishingActionsFragment.TAG)
             PrepublishingScreen.PUBLISH -> TODO()
             PrepublishingScreen.VISIBILITY -> TODO()
             PrepublishingScreen.TAGS -> Pair(
-                    PrepublishingTagsFragment.newInstance(site, (actionState as TagsActionState).tags),
+                    PrepublishingTagsFragment.newInstance(
+                            navigationState.site,
+                            (navigationState.prepublishingActionState as TagsActionState).tags
+                    ),
                     PrepublishingTagsFragment.TAG
             )
         }
