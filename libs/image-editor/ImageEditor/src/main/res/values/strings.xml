@@ -7,7 +7,7 @@
     <string name="failed_to_load_image_tap_to_retry">Failed to load image.\nPlease tap to retry.</string>
 
     <!--crop screen-->
-    <string name="crop">Crop</string>
+    <string name="crop">crop</string>
     <string name="done">done</string>
     <string name="error_failed_to_crop_and_save_image">Failed to crop and save image, please try again.</string>
 
