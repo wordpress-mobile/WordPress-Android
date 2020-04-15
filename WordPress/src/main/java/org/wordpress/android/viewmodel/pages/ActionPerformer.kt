@@ -9,7 +9,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType
