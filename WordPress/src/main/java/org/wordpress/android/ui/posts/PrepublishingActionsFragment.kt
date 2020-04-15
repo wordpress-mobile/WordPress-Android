@@ -44,7 +44,7 @@ class PrepublishingActionsFragment : Fragment() {
         viewModel = ViewModelProviders.of(this.requireParentFragment(), viewModelFactory)
                 .get(PrepublishingActionsViewModel::class.java)
 
-        viewModel.prepublishingActionsUiState.observe(this, Observer { uiState ->
+        viewModel.uiState.observe(this, Observer { uiState ->
             (actions_recycler_view.adapter as PrepublishingActionsAdapter).update(uiState)
         })
 

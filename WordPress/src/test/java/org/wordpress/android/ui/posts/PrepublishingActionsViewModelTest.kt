@@ -33,7 +33,7 @@ class PrepublishingActionsViewModelTest {
         // act - viewModel is already started
 
         // assert
-        assertThat(viewModel.prepublishingActionsUiState.value?.size).isEqualTo(expectedActionsAmount)
+        assertThat(viewModel.uiState.value?.size).isEqualTo(expectedActionsAmount)
     }
 
     @Test
@@ -76,7 +76,7 @@ class PrepublishingActionsViewModelTest {
     }
 
     private fun getActionUiState(actionType: ActionType): PrepublishingActionUiState? {
-        val actions = viewModel.prepublishingActionsUiState.value
+        val actions = viewModel.uiState.value
                 ?.filterIsInstance(PrepublishingActionUiState::class.java)
         return actions?.find { it.actionType == actionType }
     }

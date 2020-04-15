@@ -15,8 +15,8 @@ import javax.inject.Inject
 class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
     private var isStarted = false
 
-    private val _prepublishingActionsUiState = MutableLiveData<List<PrepublishingActionItemUiState>>()
-    val prepublishingActionsUiState: LiveData<List<PrepublishingActionItemUiState>> = _prepublishingActionsUiState
+    private val _uiState = MutableLiveData<List<PrepublishingActionItemUiState>>()
+    val uiState: LiveData<List<PrepublishingActionItemUiState>> = _uiState
 
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
@@ -41,7 +41,7 @@ class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
         ), PrepublishingActionUiState(actionType = TAGS, onActionClicked = ::onActionClicked)
         )
 
-        _prepublishingActionsUiState.postValue(prepublishingActionsUiStateList)
+        _uiState.postValue(prepublishingActionsUiStateList)
     }
 
     private fun onActionClicked(actionType: ActionType) {
