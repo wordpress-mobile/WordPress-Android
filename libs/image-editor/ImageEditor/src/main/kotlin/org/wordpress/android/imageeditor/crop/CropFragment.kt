@@ -57,7 +57,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     private fun initializeViewModels() {
         viewModel = ViewModelProvider(this).get(CropViewModel::class.java)
         setupObservers()
-        viewModel.start(navArgs.inputFilePath, navArgs.outputFileExtension, requireContext().cacheDir)
+        viewModel.start(navArgs.inputFilePath, navArgs.outputFileExtension)
     }
 
     private fun setupObservers() {
@@ -148,7 +148,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
     private fun navigateBackWithCropResult(cropResult: CropResult) {
         if (navArgs.shouldReturnToPreviewScreen) {
-            // TODO: Pass crop result to preview screen
+            findNavController().popBackStack()
         } else {
             activity?.let {
                 it.setResult(cropResult.resultCode, cropResult.data)

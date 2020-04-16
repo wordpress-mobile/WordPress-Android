@@ -58,20 +58,16 @@ class CropViewModel : ViewModel() {
         Bundle().also {
             with(it) {
                 putParcelable(UCrop.EXTRA_INPUT_URI, Uri.fromFile(File(inputFilePath)))
-                putParcelable(UCrop.EXTRA_OUTPUT_URI, Uri.fromFile(
-                            File(cacheDir,
-                            "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME.$outputFileExtension"
-                        )))
+                putParcelable(UCrop.EXTRA_OUTPUT_URI, Uri.fromFile(File(inputFilePath)))
                 putAll(cropOptions.optionBundle)
             }
         }
     }
 
-    fun start(inputFilePath: String, outputFileExtension: String?, cacheDir: File) {
+    fun start(inputFilePath: String, outputFileExtension: String?) {
         if (isStarted) {
             return
         }
-        this.cacheDir = cacheDir
         this.inputFilePath = inputFilePath
         this.outputFileExtension = outputFileExtension ?: DEFAULT_FILE_EXTENSION
 
@@ -135,7 +131,6 @@ class CropViewModel : ViewModel() {
     }
 
     companion object {
-        private const val IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME = "image_editor_output_image"
         private const val DEFAULT_FILE_EXTENSION = "jpg"
         private const val COMPRESS_QUALITY_100 = 100
         private const val PNG = "png"
