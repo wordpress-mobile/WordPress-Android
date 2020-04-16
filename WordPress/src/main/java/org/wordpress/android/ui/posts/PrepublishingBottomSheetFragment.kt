@@ -68,7 +68,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModels()
+        initViewModels(savedInstanceState)
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
 
@@ -83,7 +83,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         }
     }
 
-    private fun initViewModels() {
+    private fun initViewModels(savedInstanceState: Bundle?) {
         prepublishingViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingViewModel::class.java)
 
@@ -106,7 +106,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             event.applyIfNotHandled { dismiss() }
         })
 
-        val prepublishingScreenState = arguments?.getParcelable<PrepublishingScreenState>(KEY_SCREEN_STATE)
+        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreenState>(KEY_SCREEN_STATE)
         val site = arguments?.getSerializable(SITE) as SiteModel
 
         prepublishingViewModel.start(getPostRepository(), site, prepublishingScreenState)
