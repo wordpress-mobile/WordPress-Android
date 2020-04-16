@@ -330,7 +330,6 @@ class FeaturedImageHelperTest {
 
         val media: MediaModel = mock()
         whenever(media.thumbnailUrl).thenReturn("https://testing.com/thumbnail.jpg")
-        whenever(media.url).thenReturn("https://testing.com/url.jpg")
         whenever(mediaStore.getSiteMediaWithId(anyOrNull(), anyLong())).thenReturn(media)
 
         val site = createSiteModel().apply {
