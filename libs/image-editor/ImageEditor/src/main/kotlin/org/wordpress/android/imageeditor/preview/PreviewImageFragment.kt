@@ -192,7 +192,7 @@ class PreviewImageFragment : Fragment() {
         viewModel.loadIntoFile.observe(this, Observer { fileStateEvent ->
             fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
                 if (fileState is ImageStartLoadingToFileState) {
-                    loadIntoFile(fileState.imageUrl, fileState.position)
+                    loadIntoFile(fileState.imageUrlAtPosition, fileState.position)
                 }
             }
         })
