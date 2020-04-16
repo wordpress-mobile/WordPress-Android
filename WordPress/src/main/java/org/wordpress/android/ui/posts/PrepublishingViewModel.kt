@@ -92,6 +92,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         when (screenState) {
             is TagsState -> tagsState = screenState
         }
+        // TODO all the other screens that can be persisted.
     }
 
     private fun navigateToScreen(prepublishingScreen: PrepublishingScreen) {
@@ -129,7 +130,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     fun onCloseClicked() {
         currentScreenState?.let { (screen, state) ->
             when (screen) {
-                TAGS -> updateTags((state as TagsState).tags)
+                TAGS -> updateTagsAndState((state as TagsState).tags)
                 HOME -> TODO()
                 PUBLISH -> TODO()
                 VISIBILITY -> TODO()
@@ -159,7 +160,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         navigateToScreen(screen)
     }
 
-    fun updateTagsState(tags: String) {
+    fun updateTagsStateAndSetToCurrent(tags: String) {
         tagsState = TagsState(tags)
         currentScreenState = Pair(TAGS, tagsState)
     }
@@ -167,7 +168,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     /**
      * This function updates the tags within the repository.
      */
-    private fun updateTags(selectedTags: String?) {
+    private fun updateTagsAndState(selectedTags: String?) {
         postRepository?.updateAsync({ postModel ->
             if (selectedTags != null && !TextUtils.isEmpty(selectedTags)) {
                 val tags: String = selectedTags.replace("\n", " ")
