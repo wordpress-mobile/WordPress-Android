@@ -18,7 +18,7 @@
             android:layout_height="@dimen/reader_detail_header_blavatar"
             android:layout_gravity="top|start"
             android:contentDescription="@null"
-            tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
+            tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
         <ImageView
             android:id="@+id/image_header_avatar"
@@ -28,7 +28,7 @@
             android:background="@drawable/bg_oval_neutral_0_stroke_white"
             android:contentDescription="@null"
             android:padding="2dp"
-            tools:src="@drawable/bg_rectangle_neutral_10_user_32dp" />
+            tools:src="@drawable/bg_rectangle_placeholder_user_32dp" />
     </FrameLayout>
 
 

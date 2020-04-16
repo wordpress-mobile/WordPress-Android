@@ -13,7 +13,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_large"
         android:contentDescription="@null"
-        tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
+        tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
     <View
         android:id="@+id/divider"

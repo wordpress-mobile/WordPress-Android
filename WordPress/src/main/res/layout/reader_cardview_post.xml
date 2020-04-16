@@ -32,7 +32,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/reader_card_avatar_margin_end"
                 android:importantForAccessibility="no"
-                android:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
+                android:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
             <org.wordpress.android.ui.reader.views.ReaderFollowButton
                 android:id="@+id/follow_button"
@@ -169,7 +169,7 @@
                 android:layout_marginEnd="@dimen/margin_large"
                 android:background="?android:selectableItemBackground"
                 android:importantForAccessibility="no"
-                android:src="@drawable/bg_rectangle_neutral_10_user_32dp" />
+                android:src="@drawable/bg_rectangle_placeholder_user_32dp" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_discover"

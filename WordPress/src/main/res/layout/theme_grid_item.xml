@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/theme_image_desc"
-                    tools:src="@drawable/bg_rectangle_neutral_10_themes_100dp" />
+                    tools:src="@drawable/bg_rectangle_placeholder_themes_100dp" />
 
             </FrameLayout>
 

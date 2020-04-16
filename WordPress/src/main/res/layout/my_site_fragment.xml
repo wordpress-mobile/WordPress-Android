@@ -64,7 +64,7 @@
                             android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"
                             tools:ignore="UnusedAttribute"
-                            tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
+                            tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
                     </com.google.android.material.card.MaterialCardView>
 
                 </com.google.android.material.card.MaterialCardView>

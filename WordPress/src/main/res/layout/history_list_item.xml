@@ -19,7 +19,7 @@
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/activity_log_icon_margin"
         android:contentDescription="@string/description_user"
-        android:src="@drawable/bg_oval_neutral_30_user_32dp" />
+        android:src="@drawable/bg_oval_placeholder_user_32dp" />
 
     <LinearLayout
         android:id="@+id/diff_layout"

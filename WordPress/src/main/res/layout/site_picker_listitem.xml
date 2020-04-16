@@ -18,11 +18,11 @@
             android:layout_height="@dimen/blavatar_sz"
             android:layout_marginStart="@dimen/site_picker_blavatar_margin_left"
             android:layout_marginEnd="@dimen/site_picker_blavatar_margin_right"
-            android:background="@android:color/white"
+            android:background="@color/placeholder"
             android:contentDescription="@string/blavatar_desc"
             android:gravity="center_vertical"
             android:padding="1dp"
-            android:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
+            android:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
         <LinearLayout
             android:id="@+id/metadata_container"
