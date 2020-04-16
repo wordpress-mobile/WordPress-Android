@@ -57,7 +57,7 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
 
         if (getArguments() != null) {
             mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-            mTags = requireActivity().getIntent().getStringExtra(KEY_TAGS);
+            mTags = getArguments().getString(KEY_TAGS);
 
             if (mSite == null) {
                 throw new IllegalStateException("Required argument mSite is missing.");
