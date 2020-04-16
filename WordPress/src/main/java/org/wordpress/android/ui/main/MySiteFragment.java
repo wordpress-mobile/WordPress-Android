@@ -1067,7 +1067,8 @@ public class MySiteFragment extends Fragment implements
                 if (event.mediaModelList.size() > 0) {
                     MediaModel media = event.mediaModelList.get(0);
                     mImageManager.load(mBlavatarImageView, ImageType.BLAVATAR, PhotonUtils
-                            .getPhotonImageUrl(media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH));
+                            .getPhotonImageUrl(media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH,
+                                    site.isPrivateWPComAtomic()));
                     updateSiteIconMediaId((int) media.getMediaId());
                 } else {
                     AppLog.w(T.MAIN, "Site icon upload completed, but mediaList is empty.");

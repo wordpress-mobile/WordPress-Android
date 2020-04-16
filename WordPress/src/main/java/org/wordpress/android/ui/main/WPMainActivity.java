@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -190,6 +191,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject GCMMessageHandler mGCMMessageHandler;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject PrivateAtomicCookie mPrivateAtomicCookie;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -917,6 +919,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
                 setSite(data);
                 showQuickStartDialog();
+                mPrivateAtomicCookie.clearCookie();
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -944,6 +947,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
                         AppPrefs.setQuickStartNoticeRequired(false);
+                        mPrivateAtomicCookie.clearCookie();
                     }
 
                     setSite(data);
