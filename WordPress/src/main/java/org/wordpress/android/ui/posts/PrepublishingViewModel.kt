@@ -14,7 +14,9 @@ import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreenState.HomeState
 import org.wordpress.android.ui.posts.PrepublishingScreenState.TagsState
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
+import org.wordpress.android.ui.posts.PrepublishingScreen.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
+import org.wordpress.android.ui.posts.PrepublishingScreen.VISIBILITY
 import org.wordpress.android.viewmodel.Event
 import java.lang.IllegalArgumentException
 import java.util.ArrayList
@@ -101,6 +103,8 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
                             tagsState
                     )
             )
+            PUBLISH -> TODO()
+            VISIBILITY -> TODO()
         }
     }
 
@@ -125,9 +129,11 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         screenState?.let { (screen, state) ->
             when (screen) {
                 TAGS -> updateTags((state as TagsState).tags)
+                HOME -> TODO()
+                PUBLISH -> TODO()
+                VISIBILITY -> TODO()
             }
         }
-        // TODO add other states
 
         navigateToScreen(HOME)
     }
@@ -146,7 +152,8 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
                 screenState = Pair(TAGS, null)
                 TAGS
             }
-            else -> TODO()
+            ActionType.PUBLISH -> TODO()
+            ActionType.VISIBILITY -> TODO()
         }
         navigateToScreen(screen)
     }
