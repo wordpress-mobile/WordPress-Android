@@ -22,7 +22,7 @@ import java.lang.IllegalArgumentException
 import java.util.ArrayList
 import javax.inject.Inject
 
-const val KEY_TAGS_ACTION_STATE = "key_tags_action_state"
+const val KEY_SCREEN_STATE = "key_screen_state"
 
 enum class PrepublishingScreen {
     HOME,
@@ -148,7 +148,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     }
 
     fun writeToBundle(outState: Bundle) {
-        outState.putParcelable(KEY_TAGS_ACTION_STATE, currentScreenState?.second)
+        outState.putParcelable(KEY_SCREEN_STATE, currentScreenState?.second)
     }
 
     fun onActionClicked(actionType: ActionType) {

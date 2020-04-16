@@ -81,10 +81,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
         })
 
-        val prepublishingActionState = arguments?.getParcelable<PrepublishingScreenState>(KEY_TAGS_ACTION_STATE)
+        val prepublishingScreenState = arguments?.getParcelable<PrepublishingScreenState>(KEY_SCREEN_STATE)
         val site = arguments?.getSerializable(SITE) as SiteModel
 
-        prepublishingViewModel.start(getPostRepository(), site, prepublishingActionState)
+        prepublishingViewModel.start(getPostRepository(), site, prepublishingScreenState)
     }
 
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
