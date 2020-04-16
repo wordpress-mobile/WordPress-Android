@@ -8,7 +8,7 @@
             android:shape="oval">
 
             <solid
-                android:color="@color/neutral_30" >
+                android:color="@color/placeholder" >
             </solid>
 
         </shape>
@@ -16,7 +16,7 @@
     </item>
 
     <item
-        android:drawable="@drawable/ic_user_white_24dp"
+        android:drawable="@drawable/ic_plans_white_24dp"
         android:bottom="4dp"
         android:left="4dp"
         android:right="4dp"

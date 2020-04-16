@@ -9,7 +9,7 @@
             android:shape="rectangle" >
 
             <solid
-                android:color="@color/neutral_10" >
+                android:color="@color/placeholder" >
             </solid>
 
             <size
