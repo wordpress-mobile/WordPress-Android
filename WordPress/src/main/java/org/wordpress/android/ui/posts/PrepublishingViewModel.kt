@@ -9,16 +9,14 @@ import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
-import org.wordpress.android.ui.posts.PrepublishingScreenState.HomeState
-import org.wordpress.android.ui.posts.PrepublishingScreenState.TagsState
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.PrepublishingScreen.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
 import org.wordpress.android.ui.posts.PrepublishingScreen.VISIBILITY
+import org.wordpress.android.ui.posts.PrepublishingScreenState.HomeState
+import org.wordpress.android.ui.posts.PrepublishingScreenState.TagsState
 import org.wordpress.android.viewmodel.Event
-import java.lang.IllegalArgumentException
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -170,6 +168,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
      * This function updates the tags within the repository.
      */
     private fun updateTagsAndState(selectedTags: String?) {
+        tagsState = TagsState(selectedTags)
         postRepository?.updateAsync({ postModel ->
             if (selectedTags != null && !TextUtils.isEmpty(selectedTags)) {
                 val tags: String = selectedTags.replace("\n", " ")
@@ -178,10 +177,6 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
                 postModel.setTagNameList(ArrayList())
             }
             true
-        }, onCompleted = { postModel, result ->
-            if (result == UpdatePostResult.Updated) {
-                tagsState = TagsState(formatTags(postModel.tagNameList))
-            }
         })
     }
 
