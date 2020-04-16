@@ -90,7 +90,6 @@ import org.wordpress.android.ui.posts.HistoryListFragment;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
 import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment;
-import org.wordpress.android.ui.posts.PostSettingsTagsActivity;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PrepublishingActionsAdapter;
