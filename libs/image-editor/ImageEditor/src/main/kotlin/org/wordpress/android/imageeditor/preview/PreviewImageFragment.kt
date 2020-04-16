@@ -18,6 +18,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
@@ -32,6 +34,8 @@ class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
     private var pagerAdapterObserver: PagerAdapterObserver? = null
+    private lateinit var pageChangeCallback: OnPageChangeCallback
+
     private var cropActionMenu: MenuItem? = null
 
     private val imageDataList = listOf(
@@ -134,6 +138,13 @@ class PreviewImageFragment : Fragment() {
             }
         )
         previewImageViewPager.adapter = previewImageAdapter
+        pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                viewModel.onPageSelected(position)
+            }
+        }
+        previewImageViewPager.registerOnPageChangeCallback(pageChangeCallback)
 
         val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
             if (tab.customView == null) {
@@ -170,6 +181,8 @@ class PreviewImageFragment : Fragment() {
         // to avoid manual handling of the ViewPager2 state restoration.
         viewModel.uiState.value?.let {
             (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.peekContent().viewPagerItemsStates)
+            cropActionMenu?.isEnabled = it.peekContent().editActionsEnabled
+            UiHelpers.updateVisibility(thumbnailsTabLayout, it.peekContent().thumbnailsTabLayoutVisible)
         }
     }
 
@@ -192,7 +205,7 @@ class PreviewImageFragment : Fragment() {
         viewModel.loadIntoFile.observe(this, Observer { fileStateEvent ->
             fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
                 if (fileState is ImageStartLoadingToFileState) {
-                    loadIntoFile(fileState.imageUrl, fileState.position)
+                    loadIntoFile(fileState.imageUrlAtPosition, fileState.position)
                 }
             }
         })
@@ -286,5 +299,6 @@ class PreviewImageFragment : Fragment() {
         }
         pagerAdapterObserver = null
         tabLayoutMediator.detach()
+        previewImageViewPager.unregisterOnPageChangeCallback(pageChangeCallback)
     }
 }
