@@ -156,13 +156,15 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
      *
      * Unless you necessarily need to react on the request result, preferred way is to use one of the load(...) methods.
      */
+    @JvmOverloads
     fun loadWithResultListener(
         imageView: ImageView,
         imageType: ImageType,
         imgUrl: String,
         scaleType: ScaleType = CENTER,
         thumbnailUrl: String? = null,
-        requestListener: RequestListener<Drawable>
+        requestListener: RequestListener<Drawable>,
+        skipMemoryCache: Boolean = false
     ) {
         val context = imageView.context
         if (!context.isAvailable()) return
@@ -172,6 +174,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .addPlaceholder(imageType)
                 .addThumbnail(context, thumbnailUrl, requestListener)
                 .applyScaleType(scaleType)
+                .skipMemoryCache(skipMemoryCache)
                 .attachRequestListener(requestListener)
                 .into(imageView)
                 .clearOnDetach()
