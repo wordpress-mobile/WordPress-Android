@@ -168,6 +168,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     override fun onBackClicked() {
-        prepublishingViewModel.onCloseClicked()
+        prepublishingViewModel.onBackClicked()
     }
 }

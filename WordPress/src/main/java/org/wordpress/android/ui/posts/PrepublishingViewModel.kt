@@ -75,7 +75,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
          * Restores the specific state if it was persisted.
          */
         screenState?.let {
-            restoreCurrentScreenState(screenState)
+            restoreSavedScreenState(screenState)
             updateScreenStatesFromPostRepository()
             navigateToScreen(screenState.prepublishingScreen)
         } ?: run {
@@ -88,7 +88,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
      * This exists because any specific screen could be in the process of making changes to a value and process death
      * occurs. So this is to restore the specific screen state that is impacted by this process.
      */
-    private fun restoreCurrentScreenState(screenState: PrepublishingScreenState) {
+    private fun restoreSavedScreenState(screenState: PrepublishingScreenState) {
         when (screenState) {
             is TagsState -> tagsState = screenState
         }
@@ -127,10 +127,13 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         // TODO add other states
     }
 
-    fun onCloseClicked() {
+    /**
+     * Clicking back triggers the save operation.
+     */
+    fun onBackClicked() {
         currentScreenState?.let { (screen, state) ->
             when (screen) {
-                TAGS -> updateTagsAndState((state as TagsState).tags)
+                TAGS -> updateTagsAndState((state as? TagsState)?.tags)
                 HOME -> TODO()
                 PUBLISH -> TODO()
                 VISIBILITY -> TODO()
@@ -149,15 +152,13 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onActionClicked(actionType: ActionType) {
-        val screen = when (actionType) {
-            ActionType.TAGS -> {
-                currentScreenState = Pair(TAGS, null)
-                TAGS
-            }
-            ActionType.PUBLISH -> TODO()
-            ActionType.VISIBILITY -> TODO()
-        }
+        val screen = PrepublishingScreen.valueOf(actionType.name)
+        clearCurrentStateAndTrackCurrentScreen(screen)
         navigateToScreen(screen)
+    }
+
+    private fun clearCurrentStateAndTrackCurrentScreen(prepublishingScreen: PrepublishingScreen) {
+        currentScreenState = Pair(prepublishingScreen, null)
     }
 
     fun updateTagsStateAndSetToCurrent(tags: String) {
