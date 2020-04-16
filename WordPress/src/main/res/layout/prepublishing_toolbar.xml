@@ -58,7 +58,6 @@
         android:layout_height="0dp"
         android:gravity="center_horizontal"
         android:paddingTop="@dimen/margin_small"
-        android:text="Add Tags"
         android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/back_button"

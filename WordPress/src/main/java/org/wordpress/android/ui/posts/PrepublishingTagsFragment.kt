@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -36,6 +37,9 @@ class PrepublishingTagsFragment : TagsFragment() {
 
         val closeButton = view.findViewById<ImageView>(R.id.close_button)
         val backButton = view.findViewById<ImageView>(R.id.back_button)
+        val toolbarTitle = view.findViewById<TextView>(R.id.toolbar_title)
+
+        toolbarTitle.text = context?.getString(R.string.prepublishing_nudges_toolbar_title_tags)
 
         closeButton.setOnClickListener { closeListener.onCloseClicked() }
         backButton.setOnClickListener {
