@@ -179,8 +179,10 @@ class PreviewImageFragment : Fragment() {
 
         // Set adapter data before the ViewPager2.restorePendingState gets called
         // to avoid manual handling of the ViewPager2 state restoration.
-        viewModel.uiState.value?.getContentIfNotHandled()?.let {
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.viewPagerItemsStates)
+        viewModel.uiState.value?.let {
+            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.peekContent().viewPagerItemsStates)
+            cropActionMenu?.isEnabled = it.peekContent().editActionsEnabled
+            UiHelpers.updateVisibility(thumbnailsTabLayout, it.peekContent().thumbnailsTabLayoutVisible)
         }
     }
 
