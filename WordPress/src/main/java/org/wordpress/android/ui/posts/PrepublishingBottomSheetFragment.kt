@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.posts
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.NonNull
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -18,9 +20,9 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.PrepublishingScreenState.HomeState
 import org.wordpress.android.ui.posts.PrepublishingScreenState.TagsState
-import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
@@ -43,6 +45,26 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.post_prepublishing_bottom_sheet, container)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        /**
+         * The back button normally closes the bottom sheet so now instead of doing that it goes back to
+         * the home screen with the actions and only if pressed again will it close the bottom sheet.
+         */
+        dialog?.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (event.action != KeyEvent.ACTION_DOWN) true else {
+                    if (this@PrepublishingBottomSheetFragment::prepublishingViewModel.isInitialized) {
+                        prepublishingViewModel.onBackClicked()
+                        true
+                    } else {
+                        false
+                    }
+                }
+            } else false
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,6 +101,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             event.getContentIfNotHandled()?.let { navigationState ->
                 navigateToScreen(navigationState)
             }
+        })
+
+        prepublishingViewModel.dismissBottomSheet.observe(this, Observer { event ->
+            event.applyIfNotHandled { dismiss() }
         })
 
         val prepublishingScreenState = arguments?.getParcelable<PrepublishingScreenState>(KEY_SCREEN_STATE)

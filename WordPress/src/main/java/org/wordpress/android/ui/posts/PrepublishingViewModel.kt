@@ -58,6 +58,9 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     private val _navigationTarget = MutableLiveData<Event<PrepublishingNavigationTarget>>()
     val navigationTarget: LiveData<Event<PrepublishingNavigationTarget>> = _navigationTarget
 
+    private val _dismissBottomSheet = MutableLiveData<Event<Unit>>()
+    val dismissBottomSheet: LiveData<Event<Unit>> = _dismissBottomSheet
+
     fun start(
         postRepository: EditPostRepository?,
         site: SiteModel,
@@ -136,9 +139,11 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
                 PUBLISH -> TODO()
                 VISIBILITY -> TODO()
             }
+            clearCurrentScreenState()
+            navigateToScreen(HOME)
+        } ?: run {
+            _dismissBottomSheet.postValue(Event(Unit))
         }
-
-        navigateToScreen(HOME)
     }
 
     private fun updateNavigationTarget(target: PrepublishingNavigationTarget) {
@@ -153,6 +158,13 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         val screen = PrepublishingScreen.valueOf(actionType.name)
         clearCurrentStateAndTrackCurrentScreen(screen)
         navigateToScreen(screen)
+    }
+
+    /**
+     * clear the current screen state since we are back at the home screen.
+     */
+    private fun clearCurrentScreenState() {
+        currentScreenState = null
     }
 
     private fun clearCurrentStateAndTrackCurrentScreen(prepublishingScreen: PrepublishingScreen) {
