@@ -10,6 +10,8 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Suggestion;
@@ -18,6 +20,7 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,6 +43,11 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
 
     public void setSuggestionList(List<Suggestion> suggestionList) {
         mOrigSuggestionList = suggestionList;
+    }
+
+    @NonNull
+    public List<Suggestion> getFilteredSuggestions() {
+        return mSuggestionList != null ? mSuggestionList : Collections.emptyList();
     }
 
     @Override

@@ -5,7 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import kotlinx.android.synthetic.main.suggestion_activity.*
+import android.view.inputmethod.EditorInfo
+import androidx.annotation.VisibleForTesting
+import kotlinx.android.synthetic.main.suggest_users_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -19,6 +21,7 @@ import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManag
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.ToastUtils
 
 class SuggestUsersActivity : LocaleAwareActivity() {
     private var suggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
@@ -27,17 +30,17 @@ class SuggestUsersActivity : LocaleAwareActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.suggestion_activity)
+        setContentView(R.layout.suggest_users_activity)
 
         (intent.getSerializableExtra(WordPress.SITE) as? SiteModel)?.let {
             siteId = it.siteId
             initializeSuggestionAdapter(it)
         }
 
-        // The previous activity is visible behind this Activity on account of the transparent rootView
-        // if the list is empty or does not fill the entire screen, so allow the user touch the still-visible
-        // previous activity to close this Activity and return to the previous Activity.
         rootView.setOnClickListener {
+            // The previous activity is visible "behind" this Activity if the list of Suggestions does not fill
+            // the entire screen. If the user taps a part of the screen showing the still-visible previous
+            // Activity, then finish this Activity and return the user to the previous Activity.
             finish()
         }
 
@@ -46,7 +49,26 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                 val suggestionUserId = suggestionAdapter?.getItem(position)?.userLogin
                 finishWithId(suggestionUserId)
             }
-            setOnFocusChangeListener { _ , hasFocus ->
+
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    val filteredSuggestions = suggestionAdapter?.filteredSuggestions
+                    val onlySuggestion = getOnlyElement(filteredSuggestions)
+                    if (onlySuggestion != null) {
+                        finishWithId(onlySuggestion.userLogin)
+                    } else {
+                        // If there is not exactly 1 suggestion, notify that entered text is not a valid user
+                        val message = getString(R.string.suggestion_invalid_user, text)
+                        ToastUtils.showToast(this@SuggestUsersActivity, message)
+                    }
+
+                    true
+                } else {
+                    false
+                }
+            }
+
+            setOnFocusChangeListener { _ , _ ->
                 // The purpose of this Activity is to allow the user to select a user, so we want
                 // the dropdown to always be visible.
                 post { showDropDown() }
@@ -117,5 +139,20 @@ class SuggestUsersActivity : LocaleAwareActivity() {
 
     companion object {
         const val SELECTED_USER_ID = "SELECTED_USER_ID"
+
+        /**
+         * @return If [list] has one element, returns that element. Otherwise returns null.
+         */
+        @VisibleForTesting
+        internal fun <T> getOnlyElement(list: List<T>?): T? =
+                if (list?.size == 1) {
+                    // Using firstOrNull() instead of first() because all lists are mutable and it is possible for
+                    // the list's single element to be removed from another thread between the size check and the
+                    // retrieval of the first element. Admittedly, that is unlikely, but we're being cautious to
+                    // avoid any risk of first() throwing a NoSuchElementException.
+                    list.firstOrNull()
+                } else {
+                    null
+                }
     }
 }

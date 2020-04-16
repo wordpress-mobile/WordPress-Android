@@ -12,6 +12,8 @@
         android:padding="@dimen/margin_extra_large"
         android:layout_gravity="bottom"
         android:dropDownWidth="match_parent"
+        android:imeOptions="actionDone"
+        android:inputType="text"
         android:background="?attr/colorBackgroundFloating"
         android:textAppearance="?attr/textAppearanceBody1"
         android:dropDownVerticalOffset="0dp"
