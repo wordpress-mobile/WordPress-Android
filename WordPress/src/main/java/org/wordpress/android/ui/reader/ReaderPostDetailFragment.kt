@@ -1311,6 +1311,12 @@ class ReaderPostDetailFragment : Fragment(),
                                 FetchPrivateAtomicCookiePayload(post!!.blogId)
                         )
                 )
+            } else if (post!!.isPrivateAtomic && privateAtomicCookie.exists()) {
+                // make sure we add cookie to the cookie manager if it exists before starting render
+                CookieManager.getInstance().setCookie(
+                        privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
+                )
+                renderer!!.beginRender()
             } else {
                 renderer!!.beginRender()
             }

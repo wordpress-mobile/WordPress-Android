@@ -754,6 +754,11 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             mDispatcher.dispatch(SiteActionBuilder.newFetchPrivateAtomicCookieAction(
                     new FetchPrivateAtomicCookiePayload(privateAtSiteId)));
             return;
+        } else if (privateAtSiteId > 0 && mPrivateAtomicCookie.exists()) {
+            // make sure we add cookie to the cookie manager if it exists
+            CookieManager.getInstance().setCookie(
+                    mPrivateAtomicCookie.getDomain(), mPrivateAtomicCookie.getCookieContent()
+            );
         }
 
         loadWebContent();
