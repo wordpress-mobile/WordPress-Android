@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.mock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -22,7 +23,7 @@ class PrepublishingActionsViewModelTest {
     @Before
     fun setUp() {
         viewModel = PrepublishingActionsViewModel()
-        viewModel.start()
+        viewModel.start(mock())
     }
 
     @Test
