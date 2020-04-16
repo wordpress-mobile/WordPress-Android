@@ -7,6 +7,7 @@ import android.widget.ImageView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.ActivityUtils
 
 class PrepublishingTagsFragment : TagsFragment() {
     private lateinit var closeListener: PrepublishingScreenClosedListener
@@ -37,6 +38,9 @@ class PrepublishingTagsFragment : TagsFragment() {
         val backButton = view.findViewById<ImageView>(R.id.back_button)
 
         closeButton.setOnClickListener { closeListener.onCloseClicked() }
-        backButton.setOnClickListener { closeListener.onBackClicked() }
+        backButton.setOnClickListener {
+            ActivityUtils.hideKeyboard(requireActivity())
+            closeListener.onBackClicked()
+        }
     }
 }
