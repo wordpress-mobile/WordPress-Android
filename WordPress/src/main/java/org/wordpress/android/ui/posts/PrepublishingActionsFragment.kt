@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.post_prepublishing_actions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.posts.PrepublishingActionState.HomeState
+import org.wordpress.android.ui.posts.PrepublishingScreenState.HomeState
 import javax.inject.Inject
 
 class PrepublishingActionsFragment : Fragment() {

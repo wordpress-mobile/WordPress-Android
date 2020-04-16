@@ -17,8 +17,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
-import org.wordpress.android.ui.posts.PrepublishingActionState.HomeState
-import org.wordpress.android.ui.posts.PrepublishingActionState.TagsActionState
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.PrepublishingScreenState.HomeState
+import org.wordpress.android.ui.posts.PrepublishingScreenState.TagsState
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import javax.inject.Inject
 
@@ -74,30 +75,30 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
         })
 
-        prepublishingViewModel.navigationState.observe(this, Observer { event ->
+        prepublishingViewModel.navigationTarget.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { navigationState ->
                 navigateToScreen(navigationState)
             }
         })
 
-        val prepublishingActionState = arguments?.getParcelable<PrepublishingActionState>(KEY_TAGS_ACTION_STATE)
+        val prepublishingActionState = arguments?.getParcelable<PrepublishingScreenState>(KEY_TAGS_ACTION_STATE)
         val site = arguments?.getSerializable(SITE) as SiteModel
 
-        prepublishingViewModel.start(site, prepublishingActionState)
+        prepublishingViewModel.start(getPostRepository(), site, prepublishingActionState)
     }
 
-    private fun navigateToScreen(navigationState: PrepublishingNavigationState) {
-        val (fragment, tag) = when (navigationState.prepublishingScreen) {
+    private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
+        val (fragment, tag) = when (navigationTarget.targetScreen) {
             HOME -> Pair(
-                    PrepublishingActionsFragment.newInstance((navigationState.screenState as HomeState)),
+                    PrepublishingActionsFragment.newInstance((navigationTarget.screenState as HomeState)),
                     PrepublishingActionsFragment.TAG
             )
             PrepublishingScreen.PUBLISH -> TODO()
             PrepublishingScreen.VISIBILITY -> TODO()
             PrepublishingScreen.TAGS -> Pair(
                     PrepublishingTagsFragment.newInstance(
-                            navigationState.site,
-                            (navigationState.screenState as? TagsActionState)?.tags
+                            navigationTarget.site,
+                            (navigationTarget.screenState as? TagsState)?.tags
                     ),
                     PrepublishingTagsFragment.TAG
             )
@@ -144,6 +145,20 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         }
     }
 
+    private fun getPostRepository(): EditPostRepository? {
+        return getEditPostActivityHook()?.editPostRepository
+    }
+
+    private fun getEditPostActivityHook(): EditPostActivityHook? {
+        val activity = activity ?: return null
+
+        return if (activity is EditPostActivityHook) {
+            activity
+        } else {
+            throw RuntimeException("$activity must implement EditPostActivityHook")
+        }
+    }
+
     override fun onTagsSelected(selectedTags: String) {
         prepublishingViewModel.updateTagsActionState(selectedTags)
     }
@@ -153,6 +168,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     override fun onBackClicked() {
-        prepublishingViewModel.navigateHome()
+        prepublishingViewModel.onCloseClicked()
     }
 }
