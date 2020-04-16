@@ -1696,7 +1696,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
 
     @Override public void onImagePreviewRequested(String mediaUrl) {
-        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+        MediaPreviewActivity.showPreview(this, mSite, mediaUrl);
     }
 
     @Override public void onMediaEditorRequested(String mediaUrl) {
