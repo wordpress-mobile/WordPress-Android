@@ -31,6 +31,9 @@ public class PhotonUtils {
         LOW
     }
 
+    public static final String ATOMIC_MEDIA_PROXY_URL_PREFIX = "https://public-api.wordpress.com/wpcom/v2/sites/";
+    public static final String ATOMIC_MEDIA_PROXY_URL_SUFFIX = "/atomic-auth-proxy/file";
+
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
         return getPhotonImageUrl(imageUrl, width, height, Quality.MEDIUM);
     }
@@ -102,8 +105,8 @@ public class PhotonUtils {
                 URL url = new URL(imageUrl);
                 String slug = url.getHost();
                 String path = url.getPath();
-                return "https://public-api.wordpress.com/wpcom/v2/sites/" + slug + "/atomic-auth-proxy/file?path="
-                       + path + "&" + query;
+                return ATOMIC_MEDIA_PROXY_URL_PREFIX + slug + ATOMIC_MEDIA_PROXY_URL_SUFFIX
+                       + "?path=" + path + "&" + query;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return "";
