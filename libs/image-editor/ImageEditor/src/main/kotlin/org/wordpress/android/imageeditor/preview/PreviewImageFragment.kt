@@ -18,6 +18,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
@@ -32,6 +34,8 @@ class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
     private var pagerAdapterObserver: PagerAdapterObserver? = null
+    private lateinit var pageChangeCallback: OnPageChangeCallback
+
     private var cropActionMenu: MenuItem? = null
 
     private val imageDataList = listOf(
@@ -134,6 +138,13 @@ class PreviewImageFragment : Fragment() {
             }
         )
         previewImageViewPager.adapter = previewImageAdapter
+        pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                viewModel.onPageSelected(position)
+            }
+        }
+        previewImageViewPager.registerOnPageChangeCallback(pageChangeCallback)
 
         val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
             if (tab.customView == null) {
@@ -168,8 +179,8 @@ class PreviewImageFragment : Fragment() {
 
         // Set adapter data before the ViewPager2.restorePendingState gets called
         // to avoid manual handling of the ViewPager2 state restoration.
-        viewModel.uiState.value?.let {
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.peekContent().viewPagerItemsStates)
+        viewModel.uiState.value?.getContentIfNotHandled()?.let {
+            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.viewPagerItemsStates)
         }
     }
 
@@ -286,5 +297,6 @@ class PreviewImageFragment : Fragment() {
         }
         pagerAdapterObserver = null
         tabLayoutMediator.detach()
+        previewImageViewPager.unregisterOnPageChangeCallback(pageChangeCallback)
     }
 }

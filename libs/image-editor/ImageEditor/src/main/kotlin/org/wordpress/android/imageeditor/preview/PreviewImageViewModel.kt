@@ -25,6 +25,8 @@ class PreviewImageViewModel : ViewModel() {
     val navigateToCropScreenWithFileInfo: LiveData<Event<Triple<String, String?, Boolean>>> =
             _navigateToCropScreenWithFileInfo
 
+    private var selectedPosition: Int = 0
+
     fun onCreateView(imageDataList: List<ImageData>) {
         if (uiState.value == null) {
             val newImageUiStates = createViewPagerItemsInitialUiStates(imageDataList)
@@ -55,9 +57,16 @@ class PreviewImageViewModel : ViewModel() {
                 )
             )
         }
+
+        val enableEditActions = if (position == selectedPosition) {
+            shouldEnableEditActionsForImageState(newImageState)
+        } else {
+            currentUiState.editActionsEnabled
+        }
+
         updateUiState(currentUiState.copy(
                 viewPagerItemsStates = newImageUiStates,
-                editActionsEnabled = shouldEnableEditActionsForImageState(newImageState)
+                editActionsEnabled = enableEditActions
             )
         )
     }
@@ -99,6 +108,17 @@ class PreviewImageViewModel : ViewModel() {
             ImageStartLoadingToFileState(
                 imageUrlAtPosition = selectedImageState.data.highResImageUrl,
                 position = selectedPosition
+            )
+        )
+    }
+
+    fun onPageSelected(selectedPosition: Int) {
+        this.selectedPosition = selectedPosition
+        val currentUiState = uiState.value?.peekContent() as UiState
+        val imageStateAtPosition = currentUiState.viewPagerItemsStates[selectedPosition]
+
+        updateUiState(currentUiState.copy(
+                editActionsEnabled = shouldEnableEditActionsForImageState(imageStateAtPosition)
             )
         )
     }
