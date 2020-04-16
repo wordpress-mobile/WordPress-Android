@@ -25,6 +25,7 @@ private const val TEST2_HIGH_RES_IMAGE_URL = "https://wordpress.com/image2.jpg"
 private const val TEST2_OUTPUT_FILE_EXTENSION = ".jpg"
 private const val TEST_FILE_PATH = "/file/path"
 private const val FIRST_ITEM_POSITION = 0
+private const val SECOND_ITEM_POSITION = 1
 
 class PreviewImageViewModelTest {
     @Rule
@@ -75,7 +76,7 @@ class PreviewImageViewModelTest {
     fun `progress bar shown on low res image load success at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewSuccess(imageUrlAtPosition = TEST_LOW_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .progressBarVisible).isEqualTo(true)
@@ -85,7 +86,7 @@ class PreviewImageViewModelTest {
     fun `progress bar shown on low res image load failed at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewFailed(imageUrlAtPosition = TEST_LOW_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .progressBarVisible).isEqualTo(true)
@@ -95,7 +96,7 @@ class PreviewImageViewModelTest {
     fun `low res image success ui shown on low res image load success at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewSuccess(imageUrlAtPosition = TEST_LOW_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
                 .isInstanceOf(ImageInLowResLoadSuccessUiState::class.java)
@@ -105,7 +106,7 @@ class PreviewImageViewModelTest {
     fun `low res image failed ui shown on low res image load failed at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewFailed(imageUrlAtPosition = TEST_LOW_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
                 .isInstanceOf(ImageInLowResLoadFailedUiState::class.java)
@@ -115,7 +116,7 @@ class PreviewImageViewModelTest {
     fun `progress bar hidden on high res image load success at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewSuccess(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .progressBarVisible).isEqualTo(false)
@@ -125,7 +126,7 @@ class PreviewImageViewModelTest {
     fun `progress bar hidden on high res image load failed at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewFailed(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .progressBarVisible).isEqualTo(false)
@@ -135,7 +136,7 @@ class PreviewImageViewModelTest {
     fun `high res image success ui shown on high res image load success at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewSuccess(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
                 .isInstanceOf(ImageInHighResLoadSuccessUiState::class.java)
@@ -145,7 +146,7 @@ class PreviewImageViewModelTest {
     fun `high res image failed ui shown on high res image load failed at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewFailed(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
                 .isInstanceOf(ImageInHighResLoadFailedUiState::class.java)
@@ -155,8 +156,8 @@ class PreviewImageViewModelTest {
     fun `high res image success ui shown when low res image loads after high res image at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
-        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewSuccess(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = itemPosition)
+        viewModel.onLoadIntoImageViewSuccess(imageUrlAtPosition = TEST_LOW_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
                 .isInstanceOf(ImageInHighResLoadSuccessUiState::class.java)
@@ -293,7 +294,7 @@ class PreviewImageViewModelTest {
     fun `retry layout shown on high res image load failed at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewFailed(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .retryLayoutVisible).isEqualTo(true)
@@ -303,8 +304,8 @@ class PreviewImageViewModelTest {
     fun `retry layout shown when low res image load succeeded but high res image load failed at given item pos`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
-        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewSuccess(imageUrlAtPosition = TEST_LOW_RES_IMAGE_URL, position = itemPosition)
+        viewModel.onLoadIntoImageViewFailed(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .retryLayoutVisible).isEqualTo(true)
@@ -314,8 +315,8 @@ class PreviewImageViewModelTest {
     fun `retry layout hidden when low res image load failed but high res image shown at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
-        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewFailed(imageUrlAtPosition = TEST_LOW_RES_IMAGE_URL, position = itemPosition)
+        viewModel.onLoadIntoImageViewSuccess(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .retryLayoutVisible).isEqualTo(false)
@@ -325,7 +326,7 @@ class PreviewImageViewModelTest {
     fun `data loading start triggered on retry at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewFailed(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = itemPosition)
         requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition].onItemTapped?.invoke()
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition])
@@ -336,33 +337,39 @@ class PreviewImageViewModelTest {
     fun `progress bar not visible when retry layout is visible and low res image loaded at given item position`() {
         initViewModel()
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewFailed(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .retryLayoutVisible).isEqualTo(true)
 
-        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_LOW_RES_IMAGE_URL, currentPosition = itemPosition)
+        viewModel.onLoadIntoImageViewSuccess(imageUrlAtPosition = TEST_LOW_RES_IMAGE_URL, position = itemPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().viewPagerItemsStates[itemPosition]
                 .progressBarVisible).isEqualTo(false)
     }
 
     @Test
-    fun `edit actions enabled if high res image loaded at given item position`() {
+    fun `edit actions enabled if high res image loaded at selected page position`() {
         initViewModel()
 
-        val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewSuccess(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+        val selectedPosition = SECOND_ITEM_POSITION
+
+        viewModel.onPageSelected(selectedPosition)
+        viewModel.onLoadIntoImageViewSuccess(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = selectedPosition)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().editActionsEnabled).isEqualTo(true)
     }
 
     @Test
-    fun `edit actions not enabled if high res image not loaded at given item position`() {
+    fun `edit actions not enabled if high res image not loaded at selected page pos but loaded at another pos`() {
         initViewModel()
 
-        val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewFailed(currentUrl = TEST_HIGH_RES_IMAGE_URL, currentPosition = itemPosition)
+        val selectedPosition = FIRST_ITEM_POSITION
+
+        viewModel.onPageSelected(selectedPosition)
+        viewModel.onLoadIntoImageViewFailed(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL, position = selectedPosition)
+        viewModel.onLoadIntoImageViewSuccess(imageUrlAtPosition = TEST_HIGH_RES_IMAGE_URL,
+                position = SECOND_ITEM_POSITION)
 
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().editActionsEnabled).isEqualTo(false)
     }
@@ -371,15 +378,16 @@ class PreviewImageViewModelTest {
     fun `high res image file loading started when edit actions enabled and crop action triggered`() {
         initViewModel()
 
-        val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, itemPosition)
+        val selectedPosition = SECOND_ITEM_POSITION
 
+        viewModel.onPageSelected(selectedPosition)
+        viewModel.onLoadIntoImageViewSuccess(TEST2_HIGH_RES_IMAGE_URL, selectedPosition)
         assertThat(requireNotNull(viewModel.uiState.value).peekContent().editActionsEnabled).isEqualTo(true)
 
-        viewModel.onCropMenuClicked(itemPosition)
+        viewModel.onCropMenuClicked(selectedPosition)
 
         assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(
-            ImageStartLoadingToFileState(TEST_HIGH_RES_IMAGE_URL, itemPosition)
+            ImageStartLoadingToFileState(TEST2_HIGH_RES_IMAGE_URL, selectedPosition)
         )
     }
 
