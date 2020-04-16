@@ -132,11 +132,11 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         slideInFragment(fragment, tag, tag != PrepublishingActionsFragment.TAG)
     }
 
-    private fun slideInFragment(fragment: Fragment, tag: String, slideIn: Boolean) {
+    private fun slideInFragment(fragment: Fragment, tag: String, slideBack: Boolean) {
         childFragmentManager.let { fragmentManager ->
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
-                if (slideIn) {
+                if (slideBack) {
                     fragmentTransaction.addToBackStack(null).setCustomAnimations(
                             R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
                             R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
