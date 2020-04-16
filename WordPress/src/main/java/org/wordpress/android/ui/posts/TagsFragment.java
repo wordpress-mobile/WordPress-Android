@@ -46,7 +46,6 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
     TagsSelectedListener mTagsSelectedListener;
 
     public TagsFragment() {
-        // Required empty public constructor
     }
 
     protected abstract @LayoutRes int getContentLayout();

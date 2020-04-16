@@ -133,8 +133,7 @@
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
 
-    <style name="NoDisplay" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowNoTitle">true</item>
+    <style name="NoDisplay" parent="WordPress.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -259,17 +258,8 @@
         <item name="android:textColor">@color/neutral_40</item>
     </style>
 
-    <style name="WordPress.Button" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">?attr/colorOnPrimarySurface</item>
-    </style>
-
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/secondary_disabled_selector</item>
-    </style>
-
-    <style name="WordPress.Button.Grey" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/neutral_0</item>
-        <item name="android:textColor">@color/primary_50</item>
     </style>
 
     <!-- NUX Styles -->
