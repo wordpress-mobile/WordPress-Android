@@ -17,6 +17,9 @@
         @color/primary_on_surface_disabled_selector
     </color>
 
+    <!-- Switch to attribute after dropping support for api 21-23 -->
+    <color name="placeholder">#1AFFFFFF</color>
+
     <!-- Stats -->
 
     <color name="stats_activity_very_low">@color/gray_80</color>
