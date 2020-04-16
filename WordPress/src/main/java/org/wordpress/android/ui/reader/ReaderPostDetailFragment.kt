@@ -1154,7 +1154,7 @@ class ReaderPostDetailFragment : Fragment(),
 
         if (event.isError) {
             AppLog.e(
-                    STATS,
+                    READER,
                     "Failed to load private AT cookie. $event.error.type - $event.error.message"
             )
             WPSnackbar.make(
@@ -1303,7 +1303,7 @@ class ReaderPostDetailFragment : Fragment(),
             // render the post in the webView
             renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils)
 
-            // if the post if from private atomic site postpone render until we have a special access cookie
+            // if the post is from private atomic site postpone render until we have a special access cookie
             if (post!!.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
                 PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this@ReaderPostDetailFragment)
                 dispatcher.dispatch(

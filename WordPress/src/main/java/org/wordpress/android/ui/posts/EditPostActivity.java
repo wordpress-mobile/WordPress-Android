@@ -579,7 +579,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
         }
         if (event.isError()) {
-            AppLog.e(AppLog.T.STATS,
+            AppLog.e(AppLog.T.EDITOR,
                     "Failed to load private AT cookie. " + event.error.type + " - " + event.error.message);
             WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
                       .show();
