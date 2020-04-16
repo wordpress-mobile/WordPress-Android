@@ -55,7 +55,8 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     private lateinit var site: SiteModel
     private var postRepository: EditPostRepository? = null
     private var tagsState: TagsState? = null
-    private var screenState: Pair<PrepublishingScreen, PrepublishingScreenState?>? = null
+    private var currentScreenState: Pair<PrepublishingScreen, PrepublishingScreenState?>? = null
+
     private val _navigationTarget = MutableLiveData<Event<PrepublishingNavigationTarget>>()
     val navigationTarget: LiveData<Event<PrepublishingNavigationTarget>> = _navigationTarget
 
@@ -118,7 +119,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
             val formattedTags = tags?.let {
                 return@let formatTags(tags)
             } ?: run {
-                throw IllegalArgumentException("Tags can't be null.")
+                throw IllegalArgumentException("Post or PostRepository can't be null.")
             }
             tagsState = TagsState(formattedTags)
         }
@@ -126,7 +127,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onCloseClicked() {
-        screenState?.let { (screen, state) ->
+        currentScreenState?.let { (screen, state) ->
             when (screen) {
                 TAGS -> updateTags((state as TagsState).tags)
                 HOME -> TODO()
@@ -143,13 +144,13 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     }
 
     fun writeToBundle(outState: Bundle) {
-        outState.putParcelable(KEY_TAGS_ACTION_STATE, screenState?.second)
+        outState.putParcelable(KEY_TAGS_ACTION_STATE, currentScreenState?.second)
     }
 
     fun onActionClicked(actionType: ActionType) {
         val screen = when (actionType) {
             ActionType.TAGS -> {
-                screenState = Pair(TAGS, null)
+                currentScreenState = Pair(TAGS, null)
                 TAGS
             }
             ActionType.PUBLISH -> TODO()
@@ -158,9 +159,9 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         navigateToScreen(screen)
     }
 
-    fun updateTagsActionState(tags: String) {
+    fun updateTagsState(tags: String) {
         tagsState = TagsState(tags)
-        screenState = Pair(TAGS, tagsState)
+        currentScreenState = Pair(TAGS, tagsState)
     }
 
     /**

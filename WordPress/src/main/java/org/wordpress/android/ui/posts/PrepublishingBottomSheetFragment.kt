@@ -160,7 +160,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     override fun onTagsSelected(selectedTags: String) {
-        prepublishingViewModel.updateTagsActionState(selectedTags)
+        prepublishingViewModel.updateTagsState(selectedTags)
     }
 
     override fun onCloseClicked() {
