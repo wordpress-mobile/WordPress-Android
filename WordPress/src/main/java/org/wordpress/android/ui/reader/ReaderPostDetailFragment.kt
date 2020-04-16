@@ -102,7 +102,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.AppLog.T.STATS
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
