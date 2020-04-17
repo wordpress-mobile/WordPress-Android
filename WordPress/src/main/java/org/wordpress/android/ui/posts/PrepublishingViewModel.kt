@@ -22,13 +22,6 @@ import javax.inject.Inject
 
 const val KEY_SCREEN_STATE = "key_screen_state"
 
-enum class PrepublishingScreen {
-    HOME,
-    PUBLISH,
-    VISIBILITY,
-    TAGS
-}
-
 /**
  * Stores the data state of each of these screens so that they can be saved in onSavedInstanceState & can be passed as
  * an argument if necessary.
@@ -200,4 +193,11 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         val formattedTags = TextUtils.join(",", tags)
         return StringEscapeUtils.unescapeHtml4(formattedTags)
     }
+}
+
+enum class PrepublishingScreen {
+    HOME,
+    PUBLISH,
+    VISIBILITY,
+    TAGS
 }
