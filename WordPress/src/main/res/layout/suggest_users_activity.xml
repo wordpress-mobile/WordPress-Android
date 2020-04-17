@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="bottom"
     >
+
+    <!-- If the SuggestionAutoCompleteText shows any Suggestions, they will cover this View -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_medium"
+        android:gravity="center"
+        android:background="?attr/colorBackgroundFloating"
+        android:elevation="4dp"
+        android:textColor="?attr/wpColorText"
+        android:textSize="@dimen/text_sz_medium"
+        android:text="@string/suggestion_no_matching_users"
+        />
 
     <org.wordpress.android.widgets.SuggestionAutoCompleteText
         android:id="@+id/autocompleteText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_extra_large"
-        android:layout_gravity="bottom"
         android:dropDownWidth="match_parent"
         android:imeOptions="actionDone"
         android:inputType="text"
@@ -21,4 +35,4 @@
     <!--Setting a 0dp dropDownVerticalOffset avoids a small (~15px) gap between the top of the
         SuggestionAutoCompleteText and the dropdown-->
 
-</FrameLayout>
+</LinearLayout>

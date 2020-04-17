@@ -2229,6 +2229,7 @@
     <string name="tap_to_try_again">Tap to try again!</string>
     <string name="add_media_progress">Adding media</string>
     <string name="suggestion_invalid_user">"%s is not a valid user"</string>
+    <string name="suggestion_no_matching_users">"No matching users available."</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
 

@@ -32,10 +32,19 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.suggest_users_activity)
 
-        (intent.getSerializableExtra(WordPress.SITE) as? SiteModel)?.let {
-            siteId = it.siteId
-            initializeSuggestionAdapter(it)
+        val siteModel = intent.getSerializableExtra(WordPress.SITE) as? SiteModel
+        if (siteModel == null) {
+            val message = "${this.javaClass.simpleName} started without ${WordPress.SITE}. Finishing Activity."
+            AppLog.e(AppLog.T.EDITOR, message)
+            finish()
+        } else {
+            initializeActivity(siteModel)
         }
+    }
+
+    private fun initializeActivity(siteModel: SiteModel) {
+        siteId = siteModel.siteId
+        initializeSuggestionAdapter(siteModel)
 
         rootView.setOnClickListener {
             // The previous activity is visible "behind" this Activity if the list of Suggestions does not fill
@@ -68,7 +77,7 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                 }
             }
 
-            setOnFocusChangeListener { _ , _ ->
+            setOnFocusChangeListener { _, _ ->
                 // The purpose of this Activity is to allow the user to select a user, so we want
                 // the dropdown to always be visible.
                 post { showDropDown() }
