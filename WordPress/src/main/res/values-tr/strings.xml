@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-06 01:54:10+0000
+Translation-Revision-Date: 2020-03-25 10:09:17+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">Bir yazı oluştur</string>
+    <string name="post_list_tab_trashed_posts">Çöpe taşındı</string>
+    <string name="post_list_tab_scheduled_posts">Zamanlandı</string>
+    <string name="post_list_tab_published_posts">Yayımlandı</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook bağlantısı hiçbir sayfa bulamıyor. Duyuru, Facebook profillerine bağlanamaz, yalnızca yayınlanan sayfalara bağlanabilir.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Bağlı değil</string>
+    <string name="my_site_select_domains_page_title">Site adresi</string>
+    <string name="notifications_tab_title_likes">Beğeniler</string>
+    <string name="notifications_tab_title_follows">Takipçiler</string>
+    <string name="notifications_tab_title_comments">Yorumlar</string>
+    <string name="notifications_tab_title_unread_notifications">Okunmamış</string>
+    <string name="dlg_cancel_action_dont_trash">Çöpe taşıma</string>
+    <string name="dlg_confirm_action_trash">Çöpe taşı</string>
+    <string name="stats_insights_management_activity">Etkinlik</string>
+    <string name="stats_insights_management_posts_and_pages">Yazılar ve sayfalar</string>
+    <string name="stats_insights_management_general">Genel</string>
+    <string name="stats_management_screen_title">Yeni kart ekle</string>
+    <string name="stats_management_add_new_stats_card">Yeni istatistik kartı ekle</string>
     <string name="reader_self_hosted_select_filter">Belirli konular hakkında yazılar bulmak için filtre düğmesini kullanın</string>
     <string name="reader_bottom_sheet_content_description">Etiket veya Site Seçin, Açılır Pencere</string>
     <string name="reader_btn_selected_filter_tick_content_description">Seçilen</string>
@@ -277,7 +295,6 @@ Language: tr
     <string name="enter_wordpress_site">Bu adresteki web sitesi bir WordPress sitesi değil. Siteyle bağlantı kurabilmemiz için sitede WordPress yüklü olmalıdır.</string>
     <string name="login_invalid_site_url">Lütfen example.com gibi eksiksiz bir web sitesi adresi girin.</string>
     <string name="enter_email_for_site">%1$s ile bağlanmak için WordPress.com hesabınıza giriş yapın</string>
-    <string name="sharing_facebook_account_must_have_pages">Hesabın herhangi bir sayfaya erişimi olmadığı için Facebook bağlantısı gerçekleştirilemedi. Facebook, Facebook Sayfalarına yapılan paylaşım bağlantılarını destekler fakat Facebook Profillerine yapılan bağlantıları desteklemez.</string>
     <string name="stats_post_views_label">Görüntülemeler</string>
     <string name="stats_post_label">Gönder</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -366,7 +383,6 @@ Language: tr
     <string name="domain_registration_contact_form_input_error">Lütfen geçerli bir %s girin</string>
     <string name="domains_suggestions_choose_domain">Alan adını seç</string>
     <string name="stats_management_new">Yeni</string>
-    <string name="stats_management_edit">Düzenle</string>
     <string name="stats_management_dismiss_insights_news_card">Kapat</string>
     <string name="stats_management_try_it_now">Şimdi deneyin</string>
     <string name="stats_management_news_card_message">Hangi istatistikleri göreceğinizi seçin ve en çok önem verdiğiniz verilere odaklanın. İstatistiklerinizi özelleştirmek için \"Yönelimler\" altındaki %1$s öğesine dokunun.</string>
@@ -375,14 +391,11 @@ Language: tr
     <string name="editor_failed_to_insert_media_tap_to_retry">Ortam eklenemedi.\nTekrar denemek için lütfen dokunun.</string>
     <string name="editor_uploading_draft">Taslağınız karşıya yükleniyor</string>
     <string name="post_uploading_draft">Taslak karşıya yükleniyor</string>
-    <string name="post_list_drafts">Taslaklar</string>
-    <string name="post_list_published">Yayımlanmış</string>
+    <string name="post_list_tab_drafts">Taslaklar</string>
     <string name="post_list_author_everyone">Herkes</string>
     <string name="post_list_author_me">Ben</string>
     <string name="error_restoring_post">Yazı geri yüklenirken bir hata oluştu</string>
     <string name="backdated_for">Geriye dönüldü: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Yukarıda gösterilen öğeler yönelim adlı sekmenizde gösterilecektir. Kişiselleştirmek için sürükleyip bırakın.</string>
-    <string name="stats_insights_add_insights_header">Yönelime ekle</string>
     <string name="stats_insights_management_title">Sadece en çok ilgili olan istatistikleri görün. Yönelimleri aşağıya ekleyin ve düzenleyin.</string>
     <string name="stats_insights_social">Sosyal</string>
     <string name="stats_insights_annual_site_stats">Yıllık site istatistikleri</string>
@@ -523,15 +536,7 @@ Language: tr
     <string name="new_site_creation_empty_domain_list_message">Aramanızla eşleşen hiçbir adres bulunamadı</string>
     <string name="site_creation_error_generic_subtitle">Sunucu ile iletişim kurulurken hata oluştu, lütfen tekrar deneyin</string>
     <string name="site_creation_error_generic_title">Bir hata oluştu</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Özel kategori</string>
-    <string name="new_site_creation_button_skip">Atla</string>
-    <string name="new_site_creation_tag_line_description">Etiket satırı, başlığın hemen altında gösterilen kısa bir metin satırıdır</string>
-    <string name="new_site_creation_tag_line_hint">Etiket Satırı</string>
-    <string name="new_site_creation_site_title_hint">Site Başlığı</string>
-    <string name="new_site_creation_site_info_header_subtitle">Bize oluşturduğunuz site hakkında daha fazla bilgi verin.</string>
-    <string name="new_site_creation_site_info_header_title">Temel Bilgiler</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Bir hata oluştu</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Bağlantı yok</string>
     <string name="site_creation_segments_subtitle">Bu, öneriler sunmamıza yardımcı olur. Ancak bu sizi asla kısıtlamaz çünkü tüm siteler değişir!</string>
     <string name="site_creation_segments_title">Ne tür bir site oluşturmak istediğinizi bize söyleyin</string>
     <string name="new_site_creation_preview_title">Siteniz oluşturuldu!</string>
@@ -554,11 +559,6 @@ Language: tr
     <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
     <string name="preference_strip_image_location">Ortam dosyasından konum bilgisini kaldır</string>
     <string name="stats_cannot_be_started">Şu anda istatistikleri açamıyoruz. Lütfen daha sonra tekrar deneyiniz.</string>
-    <string name="giphy_powered_by_giphy">GIPHY tarafından sağlanır</string>
-    <string name="giphy_picker_endless_scroll_network_error">Ağ hatası nedeniyle bazı ortam dosyaları yüklenemedi.</string>
-    <string name="giphy_picker_empty_search_list">Aramanızla eşleşen bir ortam yok</string>
-    <string name="giphy_picker_initial_empty_text">Ortam kütüphanenize GIF bulup eklemek için arayın!</string>
-    <string name="giphy_picker_search_hint">Giphy\'de ara</string>
     <string name="stats_author_views_label">Görüntülemeler</string>
     <string name="stats_author_label">Yazar</string>
     <string name="stats_authors">Yazarlar</string>
@@ -737,7 +737,6 @@ Language: tr
     <string name="people_empty_list_filtered_email_followers">Henüz e-posta takipçisi yok</string>
     <string name="people_empty_list_filtered_followers">Henüz takipçi yok</string>
     <string name="people_empty_list_filtered_users">Henüz kullanıcı yok</string>
-    <string name="connection_service_facebook_notice">1 Ağustos 2018 tarihi itibarıyla Facebook, Facebook Profillerinde doğrudan gönderi paylaşımını durdurdu. Facebook Sayfaları ile olan bağlantılarınızda herhangi bir değişiklik olmayacak.</string>
     <string name="reader_empty_posts_liked_description">Beğendiğiniz yazılar burada yer alacak</string>
     <string name="reader_empty_posts_liked_title">Henüz herhangi bir şey beğenilmedi</string>
     <string name="reader_empty_followed_blogs_button_followed">Takip edilenlere git</string>
@@ -1294,8 +1293,6 @@ Language: tr
     <string name="editor_dropped_text_error">Metin bırakılırken hata oluştu</string>
     <string name="editor_dropped_html_images_not_allowed">HTML modunda görsel bırakmaya izin verilmiyor</string>
     <string name="editor_content_hint">Hikayenizi burada paylaşın…</string>
-    <string name="post_list_trashed">Çöp</string>
-    <string name="post_list_scheduled">Zamanlanmış</string>
     <string name="post_status_post_private">Özel</string>
     <string name="post_status_draft">Taslak</string>
     <string name="post_status_pending_review">İnceleme bekliyor</string>
@@ -1316,7 +1313,6 @@ Language: tr
     <string name="post_settings_more_options">Daha fazla seçenek</string>
     <string name="post_settings_categories_and_tags">Kategoriler ve etiketler</string>
     <string name="post_settings_status">Durum</string>
-    <string name="notifications_tab_title_unread">Okunmamış</string>
     <string name="notifications_tab_title_all">Tümü</string>
     <string name="top_level_category_name">Üst seviye</string>
     <string name="category_parent">Üst kategori (tercihe bağlı):</string>
@@ -2014,8 +2010,6 @@ Language: tr
     <string name="saving_changes">Değişiklikler kaydediliyor</string>
     <string name="hint_comment_content">Yorum</string>
     <string name="trash">Çöp</string>
-    <string name="trash_no">Çöp değil</string>
-    <string name="trash_yes">Çöp</string>
     <string name="dlg_confirm_trash_comments">Çöpe gönderilsin mi?</string>
     <string name="dlg_trashing_comments">Çöpe gönderiliyor</string>
     <string name="dlg_spamming_comments">Gereksiz olarak işaretleniyor</string>

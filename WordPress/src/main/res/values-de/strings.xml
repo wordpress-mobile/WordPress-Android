@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-25 14:39:53+0000
+Translation-Revision-Date: 2020-03-25 12:44:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">Erstelle einen Beitrag</string>
+    <string name="post_list_tab_trashed_posts">Im Papierkorb</string>
+    <string name="post_list_tab_scheduled_posts">Geplant</string>
+    <string name="post_list_tab_published_posts">Veröffentlicht</string>
+    <string name="sharing_facebook_account_must_have_pages">Die Facebook-Verbindung findet keine Seiten. Publicize kann keine Verbindung zu Facebook-Profilen herstellen, nur zu öffentlichen Seiten.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Nicht verbunden</string>
+    <string name="my_site_select_domains_page_title">Website-Adresse</string>
+    <string name="notifications_tab_title_likes">Likes</string>
+    <string name="notifications_tab_title_follows">Follows</string>
+    <string name="notifications_tab_title_comments">Kommentare</string>
+    <string name="notifications_tab_title_unread_notifications">Ungelesen</string>
+    <string name="dlg_cancel_action_dont_trash">Nicht löschen</string>
+    <string name="dlg_confirm_action_trash">Papierkorb</string>
+    <string name="stats_insights_management_activity">Aktivität</string>
+    <string name="stats_insights_management_posts_and_pages">Beiträge und Seiten</string>
+    <string name="stats_insights_management_general">Allgemein</string>
+    <string name="stats_management_screen_title">Neue Karte hinzufügen</string>
+    <string name="stats_management_add_new_stats_card">Neue Statistikkarte hinzufügen</string>
     <string name="reader_self_hosted_select_filter">Verwende den Filter-Button, um Beiträge zu einem bestimmten Thema zu finden</string>
     <string name="reader_bottom_sheet_content_description">Wähle ein Schlagwort oder eine Website, ein Popup-Fenster aus</string>
     <string name="reader_btn_selected_filter_tick_content_description">Ausgewählt</string>
@@ -277,7 +295,6 @@ Language: de
     <string name="enter_wordpress_site">Die Website unter dieser Adresse ist keine WordPress-Site. Damit wir uns damit verbinden können, muss auf der Website WordPress installiert sein.</string>
     <string name="login_invalid_site_url">Bitte gib eine vollständige Website-Adresse ein, wie z.&amp;nbsp;B. example.com.</string>
     <string name="enter_email_for_site">Meld dich mit WordPress.com an, um dich mit %1$s zu verbinden.</string>
-    <string name="sharing_facebook_account_must_have_pages">Die Facebook-Verbindung konnte nicht hergestellt werden, da dieses Konto keinen Zugriff auf Seiten hat. Facebook unterstützt die Freigabe von Verbindungen zu Facebook-Seiten, nicht aber zu Facebook-Profilen.</string>
     <string name="stats_post_views_label">Aufrufe</string>
     <string name="stats_post_label">Beitrag</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -366,7 +383,6 @@ Language: de
     <string name="domain_registration_contact_form_input_error">Bitte gib eine gültige %s ein</string>
     <string name="domains_suggestions_choose_domain">Domain auswählen</string>
     <string name="stats_management_new">Neu</string>
-    <string name="stats_management_edit">Bearbeiten</string>
     <string name="stats_management_dismiss_insights_news_card">Verwerfen</string>
     <string name="stats_management_try_it_now">Jetzt ausprobieren</string>
     <string name="stats_management_news_card_message">Wähle aus, welche Statistiken du sehen möchtest, und konzentriere dich auf die Daten, die für dich am Wichtigsten sind. Tippe unten in Einsichten auf %1$s, um deine Statistiken anzupassen.</string>
@@ -375,14 +391,11 @@ Language: de
     <string name="editor_failed_to_insert_media_tap_to_retry">Medien einfügen fehlgeschlagen.\nBitte tippen für neuen Versuch.</string>
     <string name="editor_uploading_draft">Dein Entwurf wird hochgeladen</string>
     <string name="post_uploading_draft">Entwurf wird hochgeladen</string>
-    <string name="post_list_drafts">Entwürfe</string>
-    <string name="post_list_published">Veröffentlicht</string>
+    <string name="post_list_tab_drafts">Entwürfe</string>
     <string name="post_list_author_everyone">Jeder</string>
     <string name="post_list_author_me">Ich</string>
     <string name="error_restoring_post">Beim Wiederherstellen des Beitrags ist ein Fehler aufgetreten.</string>
     <string name="backdated_for">Zurückdatiert auf: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Die oben angezeigten Elemente werden auf deinem Tab „Einsichten“ angezeigt. Per Drag-and-drop kannst du sie individuell anpassen.</string>
-    <string name="stats_insights_add_insights_header">Einsichten hinzufügen</string>
     <string name="stats_insights_management_title">Zeige nur die relevantesten Statistiken an. Füge deine Einsichten unten hinzu und organisiere sie.</string>
     <string name="stats_insights_social">Social Media</string>
     <string name="stats_insights_annual_site_stats">Jährliche Website-Statistiken</string>
@@ -523,15 +536,7 @@ Language: de
     <string name="new_site_creation_empty_domain_list_message">Keine verfügbaren Adressen, die deiner Suche entsprechen.</string>
     <string name="site_creation_error_generic_subtitle">Fehler bei der Kommunikation mit dem Server, bitte versuche es erneut.</string>
     <string name="site_creation_error_generic_title">Es gab ein Problem</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Individuelle Kategorie</string>
-    <string name="new_site_creation_button_skip">Überspringen</string>
-    <string name="new_site_creation_tag_line_description">Der Untertitel ist eine kurze Textzeile, die direkt unter dem Titel angezeigt wird.</string>
-    <string name="new_site_creation_tag_line_hint">Untertitel</string>
-    <string name="new_site_creation_site_title_hint">Titel der Website</string>
-    <string name="new_site_creation_site_info_header_subtitle">Erzähl uns mehr über die Website, die du erstellst.</string>
-    <string name="new_site_creation_site_info_header_title">Grundlegende Informationen</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Ein Problem ist aufgetreten</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Keine Verbindung</string>
     <string name="site_creation_segments_subtitle">Dies hilft uns, Empfehlungen zu geben. Aber du bist nie gebunden - alle Seiten entwickeln sich weiter!</string>
     <string name="site_creation_segments_title">Sag uns, welche Art von Website du erstellen möchtest.</string>
     <string name="new_site_creation_preview_title">Deine Website wurde erstellt!</string>
@@ -729,7 +734,7 @@ Language: de
     <string name="site_settings_tags_empty_title_search">Keine Schlagwörter entsprechen deiner Suche</string>
     <string name="site_settings_tags_empty_title">Du hast keine Schlagwörter</string>
     <string name="site_settings_tags_empty_subtitle">Füge deine häufig verwendeten Schlagwörter hier hinzu, sodass du sie beim Markieren deiner Beiträge schnell auswählen kannst</string>
-    <string name="site_settings_tags_empty_button">Schlagwort erstellen</string>
+    <string name="site_settings_tags_empty_button">Ein Schlagwort erstellen</string>
     <string name="media_empty_search_list">Keine Medien entsprechen deiner Suche</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Von WordPress abmelden?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Es wurden Änderungen an Beiträgen vorgenommen, die nicht auf deine Website hochgeladen wurden. Diese Änderungen gehen verloren, wenn du dich jetzt von deinem Gerät abmeldest. Möchtest du dich trotzdem abmelden?</string>
@@ -737,7 +742,6 @@ Language: de
     <string name="people_empty_list_filtered_email_followers">Noch keine E-Mail-Follower</string>
     <string name="people_empty_list_filtered_followers">Noch keine Follower</string>
     <string name="people_empty_list_filtered_users">Noch keine Benutzer</string>
-    <string name="connection_service_facebook_notice">Ab 1. August 2018 lässt Facebook das direkte Teilen von Beiträgen auf Facebook-Profilen nicht mehr zu. Die Verknüpfungen zu Facebook-Seiten bleiben unverändert.</string>
     <string name="reader_empty_posts_liked_description">Beiträge, die dir gefallen, werden hier angezeigt</string>
     <string name="reader_empty_posts_liked_title">Noch nichts mit „Gefällt mir“ markiert</string>
     <string name="reader_empty_followed_blogs_button_followed">Zu „Du folgst“ wechseln</string>
@@ -1236,7 +1240,7 @@ Language: de
     <string name="error_upload_page_media_param">Es gab einen Fehler beim Hochladen der Medien auf dieser Seite: %s.</string>
     <string name="error_upload_page_param">Es gab einen Fehler beim Hochladen dieser Seite: %s.</string>
     <string name="editor_uploading_post">Dein Beitrag wird hochgeladen</string>
-    <string name="uploading_media">Medien werden hochgeladen …</string>
+    <string name="uploading_media">Medien werden hochgeladen…</string>
     <string name="page_scheduled">Seite geplant</string>
     <string name="post_scheduled">Beitrag geplant</string>
     <string name="button_retry">Erneut versuchen</string>
@@ -1294,8 +1298,6 @@ Language: de
     <string name="editor_dropped_text_error">Beim Ablegen des Textes ist ein Fehler aufgetreten</string>
     <string name="editor_dropped_html_images_not_allowed">Im HTML-Modus können keine Bilder abgelegt werden</string>
     <string name="editor_content_hint">Erzähle deine Geschichte hier …</string>
-    <string name="post_list_trashed">Im Papierkorb</string>
-    <string name="post_list_scheduled">Geplant</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Entwurf</string>
     <string name="post_status_pending_review">Ausstehender Review</string>
@@ -1316,7 +1318,6 @@ Language: de
     <string name="post_settings_more_options">Weitere Optionen</string>
     <string name="post_settings_categories_and_tags">Kategorien &amp; Schlagwörter</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Ungelesen</string>
     <string name="notifications_tab_title_all">Alle</string>
     <string name="top_level_category_name">Oberste Ebene</string>
     <string name="category_parent">Übergeordnete Kategorie (optional):</string>
@@ -1860,7 +1861,7 @@ Language: de
     <string name="site_picker_cant_hide_current_site">„%s“ wurde nicht ausgeblendet, denn es ist die aktuelle Website</string>
     <string name="me_btn_support">Hilfe &amp; Support</string>
     <string name="account_settings">Konto-Einstellungen</string>
-    <string name="site_picker_create_wpcom">WordPress.com Website erstellen</string>
+    <string name="site_picker_create_wpcom">WordPress.com-Website erstellen</string>
     <string name="site_picker_edit_visibility">Websites anzeigen/ausblenden</string>
     <string name="site_picker_add_self_hosted">Selbstgehostete Website hinzufügen</string>
     <string name="site_picker_add_site">Website hinzufügen</string>
@@ -2014,8 +2015,6 @@ Language: de
     <string name="saving_changes">Änderungen speichern</string>
     <string name="hint_comment_content">Kommentar</string>
     <string name="trash">Papierkorb</string>
-    <string name="trash_no">Nicht löschen</string>
-    <string name="trash_yes">Papierkorb</string>
     <string name="dlg_confirm_trash_comments">In Papierkorb verschieben?</string>
     <string name="dlg_trashing_comments">Verschiebe in Papierkorb</string>
     <string name="dlg_spamming_comments">Als Spam markieren</string>

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,7 +10,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -33,6 +31,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -41,7 +40,6 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
@@ -49,7 +47,7 @@ import javax.inject.Inject;
 /*
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
  */
-public class ReaderPostListActivity extends AppCompatActivity {
+public class ReaderPostListActivity extends LocaleAwareActivity {
     private ReaderPostListType mPostListType;
     private long mSiteId;
 
@@ -60,18 +58,13 @@ public class ReaderPostListActivity extends AppCompatActivity {
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.reader_activity_post_list);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

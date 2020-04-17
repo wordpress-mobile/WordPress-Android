@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-05 01:54:13+0000
+Translation-Revision-Date: 2020-04-02 00:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">Een bericht maken</string>
+    <string name="post_list_tab_trashed_posts">Verwijderd</string>
+    <string name="post_list_tab_scheduled_posts">Gepland</string>
+    <string name="post_list_tab_published_posts">Gepubliceerd</string>
+    <string name="sharing_facebook_account_must_have_pages">De Facebook-verbinding kan geen pagina\'s vinden. Publicize kan geen verbinding maken met Facebook-profielen, alleen met gepubliceerde pagina\'s.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Niet verbonden</string>
+    <string name="my_site_select_domains_page_title">Websiteadres</string>
+    <string name="notifications_tab_title_likes">Waarderingen</string>
+    <string name="notifications_tab_title_follows">Volgt</string>
+    <string name="notifications_tab_title_comments">Commentaar</string>
+    <string name="notifications_tab_title_unread_notifications">Ongelezen</string>
+    <string name="dlg_cancel_action_dont_trash">Niet naar de prullenbak verplaatsen</string>
+    <string name="dlg_confirm_action_trash">Prullenbak</string>
+    <string name="stats_insights_management_activity">Activiteit</string>
+    <string name="stats_insights_management_posts_and_pages">Berichten en pagina\'s</string>
+    <string name="stats_insights_management_general">Algemeen</string>
+    <string name="stats_management_screen_title">Nieuwe kaart toevoegen</string>
+    <string name="stats_management_add_new_stats_card">Nieuwe statistiekenkaart toevoegen</string>
     <string name="reader_self_hosted_select_filter">Gebruik de filterknop om berichten over specifieke onderwerpen te vinden</string>
     <string name="reader_bottom_sheet_content_description">Selecteer een tag of site, pop-upvenster</string>
     <string name="reader_btn_selected_filter_tick_content_description">Geselecteerd</string>
@@ -277,7 +295,6 @@ Language: nl
     <string name="enter_wordpress_site">De website op dit adres is geen WordPress-site. Om er verbinding mee te kunnen maken, moet WordPress geïnstalleerd zijn.</string>
     <string name="login_invalid_site_url">Voer een compleet websiteadres in, zoals example.com.</string>
     <string name="enter_email_for_site">Log in met WordPress.com om verbinding te maken met %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">Er kon geen Facebook-koppeling tot stand worden gebracht, omdat dit account geen toegang heeft tot pagina\'s. Facebook ondersteunt deelkoppelingen via Facebook-pagina\'s, maar niet via Facebook-profielen.</string>
     <string name="stats_post_views_label">Weergaven</string>
     <string name="stats_post_label">Bericht</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -351,7 +368,6 @@ Language: nl
     <string name="domain_registration_contact_form_input_error">Voer een geldige %s in</string>
     <string name="domains_suggestions_choose_domain">Ander domein kiezen</string>
     <string name="stats_management_new">Nieuw</string>
-    <string name="stats_management_edit">Bewerken</string>
     <string name="stats_management_dismiss_insights_news_card">Negeren</string>
     <string name="stats_management_try_it_now">Probeer het nu</string>
     <string name="stats_management_news_card_message">Kies welke statistieken je wilt bekijken en richt je op de gegevens die voor jou het belangrijkst zijn. Tik op %1$s onderaan Inzichten om je statistieken te personaliseren.</string>
@@ -360,14 +376,10 @@ Language: nl
     <string name="editor_failed_to_insert_media_tap_to_retry">Invoegen van media mislukt.\nTik om het opnieuw te proberen.</string>
     <string name="editor_uploading_draft">Je concept wordt geüpload</string>
     <string name="post_uploading_draft">Bezig met uploaden concept</string>
-    <string name="post_list_drafts">Concepten</string>
-    <string name="post_list_published">Gepubliceerd</string>
     <string name="post_list_author_everyone">Iedereen</string>
     <string name="post_list_author_me">Ik</string>
     <string name="error_restoring_post">Er is een fout opgetreden tijdens het herstellen van het bericht</string>
     <string name="backdated_for">Van datum voorzien voor: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Items die hierboven getoond worden, worden op het tabblad Inzichten weergegeven. Sleep items hierheen om ze aan te passen.</string>
-    <string name="stats_insights_add_insights_header">Inzichten toevoegen</string>
     <string name="stats_insights_management_title">Bekijk alleen de meest relevante statistieken. Voeg je inzichten hieronder toe en sorteer ze.</string>
     <string name="stats_insights_social">Sociaal</string>
     <string name="stats_insights_annual_site_stats">Jaarlijkse sitestatistieken</string>
@@ -495,17 +507,11 @@ Language: nl
     <string name="new_site_creation_create_site_button">Maak een site</string>
     <string name="new_site_creation_search_domain_input_hint">Domeinen zoeken</string>
     <string name="new_site_creation_domain_header_title">Kies een domeinnaam voor je site</string>
-    <string name="new_site_creation_button_skip">Overslaan</string>
-    <string name="new_site_creation_tag_line_hint">Ondertitel</string>
-    <string name="new_site_creation_site_info_header_title">Basis informatie</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Er was een probleem</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Geen verbinding</string>
     <string name="site_creation_segments_subtitle">Hiermee kunnen aanbevelingen maken. Maar je zit nergens aan vast - alle sites blijven zich ontwikkelen!</string>
     <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
     <string name="preference_strip_image_location">Locatie van media verwijderen</string>
     <string name="stats_cannot_be_started">We kunnen de statistieken momenteel niet openen. Probeer het later opnieuw</string>
-    <string name="giphy_powered_by_giphy">Mogelijk gemaakt door GIPHY</string>
-    <string name="giphy_picker_search_hint">Zoek op Giphy</string>
     <string name="stats_author_label">Auteur</string>
     <string name="stats_authors">Auteurs</string>
     <string name="stats_search_terms_label">Zoekterm</string>
@@ -659,7 +665,6 @@ Language: nl
     <string name="people_empty_list_filtered_email_followers">Nog geen e-mailvolgers</string>
     <string name="people_empty_list_filtered_followers">Nog geen volgers</string>
     <string name="people_empty_list_filtered_users">Nog geen gebruikers</string>
-    <string name="connection_service_facebook_notice">Vanaf 1 augustus 2018 kunnen berichten niet meer direct op Facebook-profielen worden gedeeld. Koppelingen aan Facebook-pagina\'s blijven ongewijzigd.</string>
     <string name="reader_empty_posts_liked_description">Berichten die je liket, verschijnen hier</string>
     <string name="reader_empty_posts_liked_title">Nog niets geliket</string>
     <string name="reader_empty_followed_blogs_button_followed">Ga naar gevolgde site</string>
@@ -1190,8 +1195,6 @@ Language: nl
     <string name="editor_dropped_text_error">Fout opgetreden bij het verslepen van tekst</string>
     <string name="editor_dropped_html_images_not_allowed">Afbeeldingen in HTML-modus slepen, is niet toegestaan</string>
     <string name="editor_content_hint">Deel hier je verhaal…</string>
-    <string name="post_list_trashed">Verwijderd</string>
-    <string name="post_list_scheduled">Gepland</string>
     <string name="post_status_post_private">Privé</string>
     <string name="post_status_draft">Concept</string>
     <string name="post_status_pending_review">Beoordeling in behandeling</string>
@@ -1212,7 +1215,6 @@ Language: nl
     <string name="post_settings_more_options">Meer opties</string>
     <string name="post_settings_categories_and_tags">Categorieën &amp; tags</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Ongelezen</string>
     <string name="notifications_tab_title_all">Alles</string>
     <string name="top_level_category_name">Bovenste niveau</string>
     <string name="category_parent">Overkoepelende categorie (optioneel):</string>
@@ -1898,8 +1900,6 @@ Language: nl
     <string name="saving_changes">Wijzigingen aan het opslaan</string>
     <string name="hint_comment_content">Reactie</string>
     <string name="trash">Prullenbak</string>
-    <string name="trash_no">Niet verwijderen</string>
-    <string name="trash_yes">Verwijderen</string>
     <string name="dlg_confirm_trash_comments">Verplaatsen naar de prullenbak?</string>
     <string name="dlg_trashing_comments">Aan het verplaatsen naar de prullenbak</string>
     <string name="dlg_spamming_comments">Aan het markeren als spam</string>

@@ -2,13 +2,13 @@ package org.wordpress.android.ui.main;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -44,6 +43,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -72,6 +72,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ShortcutsNavigator;
@@ -110,7 +111,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
@@ -138,7 +138,7 @@ import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 /**
  * Main activity which hosts sites, reader, me and notifications pages
  */
-public class WPMainActivity extends AppCompatActivity implements
+public class WPMainActivity extends LocaleAwareActivity implements
         OnPageListener,
         BottomNavController,
         BasicDialogPositiveClickInterface,
@@ -192,6 +192,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject GCMMessageHandler mGCMMessageHandler;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject PrivateAtomicCookie mPrivateAtomicCookie;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -207,11 +208,6 @@ public class WPMainActivity extends AppCompatActivity implements
      */
     public interface OnActivityBackPressedListener {
         boolean onActivityBackPressed();
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     @Override
@@ -937,6 +933,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
                 setSite(data);
                 showQuickStartDialog();
+                mPrivateAtomicCookie.clearCookie();
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -964,6 +961,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
                         AppPrefs.setQuickStartNoticeRequired(false);
+                        mPrivateAtomicCookie.clearCookie();
                     }
 
                     setSite(data);
@@ -1030,7 +1028,9 @@ public class WPMainActivity extends AppCompatActivity implements
 
     private void appLanguageChanged() {
         // Recreate this activity (much like a configuration change)
-        recreate();
+        // We need to post this call to UI thread, since it's called from onActivityResult and the call interferes with
+        // onResume that is called right afterwards.
+        new Handler(Looper.getMainLooper()).post(this::recreate);
 
         // When language changed we need to reset the shared prefs reader tag since if we have it stored
         // it's fields can be in a different language and we can get odd behaviors since we will generally fail

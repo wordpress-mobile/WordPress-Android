@@ -16,6 +16,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtils
 import javax.inject.Inject
 import android.graphics.Point
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 
 class UiHelpers @Inject constructor() {
     fun getPxOfUiDimen(context: Context, uiDimen: UiDimen): Int =
@@ -28,6 +29,15 @@ class UiHelpers @Inject constructor() {
             when (uiString) {
                 is UiStringRes -> context.getString(uiString.stringRes)
                 is UiStringText -> uiString.text
+                is UiStringResWithParams -> context.getString(
+                        uiString.stringRes,
+                        *uiString.params.map { value ->
+                            getTextOfUiString(
+                                    context,
+                                    value
+                            )
+                        }.toTypedArray()
+                )
             }
 
     fun updateVisibility(view: View, visible: Boolean) {

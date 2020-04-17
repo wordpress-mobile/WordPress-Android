@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/neutral_5"
     android:orientation="vertical">
 
     <include
         layout="@layout/site_creation_error_with_retry"
-        tools:visibility="gone"/>
+        tools:visibility="gone" />
 
     <include
-        layout="@layout/progress_layout"
+        layout="@layout/site_creation_progress_creating_site"
         tools:visibility="gone"/>
 
     <RelativeLayout
@@ -25,24 +23,24 @@
             android:id="@+id/sitePreviewTitleAndButtonContainer"
             android:layout_width="@dimen/site_creation_preview_landscape_title_and_button_container_width"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:clipToPadding="false"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/margin_large"
-            android:paddingStart="@dimen/margin_large">
+            android:paddingStart="@dimen/margin_large"
+            android:paddingEnd="@dimen/margin_large">
 
-            <include layout="@layout/site_creation_preview_header_item"/>
+            <include layout="@layout/site_creation_preview_header_item" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/okButton"
+                style="@style/WordPress.Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:text="@string/dialog_button_ok"
-                android:theme="@style/WordPress.Button.Primary"
-                tools:ignore="InconsistentLayout"/>
+                tools:ignore="InconsistentLayout" />
         </LinearLayout>
 
         <include
@@ -50,10 +48,10 @@
             layout="@layout/site_creation_preview_web_view_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/margin_large"
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_extra_medium_large"
-            android:layout_toStartOf="@+id/sitePreviewTitleAndButtonContainer"/>
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_toStartOf="@+id/sitePreviewTitleAndButtonContainer" />
     </RelativeLayout>
 </RelativeLayout>
 

@@ -26,7 +26,6 @@ Language: vi_VN
     <string name="domain_contact_information_country_hint">Quốc gia</string>
     <string name="domain_contact_information_country_code_hint">Mã Quốc gia</string>
     <string name="domain_contact_information_phone_number_hint">Điện thoại</string>
-    <string name="stats_management_edit">Sửa</string>
     <string name="stats_management_dismiss_insights_news_card">Hủy</string>
     <string name="quick_start_focus_point_description">nhấp ở đây</string>
     <string name="quick_start_list_create_site_title">Tạo site của bạn</string>
@@ -554,8 +553,6 @@ Language: vi_VN
     <string name="saving_changes">Đang lưu các thay đổi</string>
     <string name="hint_comment_content">Bình luận</string>
     <string name="trash">Thùng rác</string>
-    <string name="trash_no">Không đưa vào thùng rác </string>
-    <string name="trash_yes">Thùng rác</string>
     <string name="dlg_confirm_trash_comments">Đưa vào thùng rác?</string>
     <string name="dlg_trashing_comments">Đưa vào thùng rác</string>
     <string name="dlg_spamming_comments">Đánh dấu là spam</string>

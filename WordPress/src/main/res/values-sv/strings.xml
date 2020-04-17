@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-25 00:19:45+0000
+Translation-Revision-Date: 2020-04-03 17:31:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">Så här säger andra personer</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Vi erbjuder en rad tjänster som hjälper dig att uppnå dina mål. Vet du inte vad du behöver, eller undrar du hur mycket det kostar? Vi förklarar gärna mer om våra tjänster och berättar om våra priser. Hör av dig till oss här nedan.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Vi är ett litet team med proffsiga specialister och täcker många olika områden och erfarenheter. Vi älskar vårt jobb och arbetar därför passionerat. Vi ser fram emot att arbeta även med dig.</string>
+    <string name="gutenberg_native_warning_message">Varningsmeddelande</string>
+    <string name="gutenberg_native_want_to_work_with_us">Vill du arbeta hos oss?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Dina besökare vill veta mer om vem som står bakom webbplatsen. Här kan du berätta om dig själv, din webbplats, ditt företag eller om vad som helst. Med hjälp av recensionerna nedan kan du citera andra, som berättar om samma sak med sina egna ord.</string>
+    <string name="gutenberg_native_usa">USA</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Detta är exempelinnehåll som medföljer mallen för att visa upp dess olika funktioner. Ta bort innehållet eller ersätt det med din egen text och dina egna mediafiler.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">För att komma igång måste man sluta prata och börja göra något.</string>
+    <string name="gutenberg_native_team">Team</string>
+    <string name="gutenberg_native_success_message">Framgångsmeddelande</string>
+    <string name="gutenberg_native_strategy">Strategi</string>
+    <string name="gutenberg_native_show_post_content">Visa inläggsinnehåll</string>
+    <string name="gutenberg_native_services">Tjänster</string>
+    <string name="gutenberg_native_samuel_the_dog">Samuel the Dog</string>
+    <string name="gutenberg_native_sally_smith">Sally Smith</string>
+    <string name="gutenberg_native_project_name">Projektnamn</string>
+    <string name="gutenberg_native_position_or_job_title">Titel</string>
+    <string name="gutenberg_native_portfolio">Portfölj</string>
+    <string name="gutenberg_native_only_show_excerpt">Visa endast utdrag</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Min portfölj demonstrerar olika projekt jag skapat under min karriär. Mina kontaktuppgifter finns här nedan. Hör av dig.</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">Minsta höjd i pixlar</string>
+    <string name="gutenberg_native_link_to">Länk till</string>
+    <string name="gutenberg_native_link_settings">Länkalternativ</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Låt oss prata 👋 Hör görna av dig med hjälp av nedanstående kontaktuppgifter eller skicka ett meddelande med hjälp av formuläret.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Låt oss skapa något tillsammans.</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Låt oss skapa något tillsammans</string>
+    <string name="gutenberg_native_let_s_build_something_together">Låt oss skapa något tillsammans</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Harry, det är dina val som visar vilka vi egentligen är, i långt högre grad än våra förmågor.</string>
+    <string name="gutenberg_native_inspiration">Inspiration</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">Hör av dig!</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">Hör av dig!</string>
+    <string name="gutenberg_native_get_in_touch">Hör av dig</string>
+    <string name="gutenberg_native_excerpt_length_words">Utdragets längd (antal ord)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Skicka e-post: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">Redigera omslagsmedia</string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Gråt inte över att det är slut. Le för att du var med om det.</string>
+    <string name="gutenberg_native_customize">ANPASSA</string>
+    <string name="gutenberg_native_city_10100">Staden, 10100</string>
+    <string name="gutenberg_native_button_link_url">URL för knapp-länk</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">Inställningar för knappfärger kommer att läggas till snart.</string>
+    <string name="gutenberg_native_border_settings">Kantinställningar</string>
+    <string name="gutenberg_native_border_radius">Kantradie</string>
+    <string name="gutenberg_native_background_opacity">Bakgrundens opacitet</string>
+    <string name="gutenberg_native_add_paragraph_block">Lägg till ett block med ett textstycke</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">En kort beskrivning av de tjänster du erbjuder.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">En kort biografi med din personliga berättelse, största framgångar eller intressant information.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">En beskrivning av projektet och dess slutresultat.</string>
+    <string name="gutenberg_native_555_555_1234">+1&#8211;(555)555&#8211;1234</string>
+    <string name="gutenberg_native_10_street_road">10 Street Road</string>
+    <string name="create_post_page_fab_tooltip_contributors">Skapa ett inlägg</string>
+    <string name="post_list_tab_trashed_posts">Borttagna</string>
+    <string name="post_list_tab_scheduled_posts">Tidsinställda</string>
+    <string name="post_list_tab_published_posts">Publicerade</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook-kopplingen hittar inga sidor. Publicize kan inte kopplas till Facebook-profiler, utan endast till publicerade sidor.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Inte ansluten</string>
+    <string name="my_site_select_domains_page_title">Webbplatsadress</string>
+    <string name="notifications_tab_title_likes">Gillamarkeringar</string>
+    <string name="notifications_tab_title_follows">Följer</string>
+    <string name="notifications_tab_title_comments">Kommentarer</string>
+    <string name="notifications_tab_title_unread_notifications">Olästa</string>
+    <string name="dlg_cancel_action_dont_trash">Kasta inte</string>
+    <string name="dlg_confirm_action_trash">Ta bort</string>
+    <string name="stats_insights_management_activity">Aktivitet</string>
+    <string name="stats_insights_management_posts_and_pages">Inlägg och sidor</string>
+    <string name="stats_insights_management_general">Allmänt</string>
+    <string name="stats_management_screen_title">Lägg till nytt kort</string>
+    <string name="stats_management_add_new_stats_card">Lägg till nytt kort med statistik</string>
     <string name="reader_self_hosted_select_filter">Använd filtreringsknappen för att hitta inlägg om specifika ämnen</string>
     <string name="reader_bottom_sheet_content_description">Välj en etikett eller en webbplats, popup-fönster</string>
     <string name="reader_btn_selected_filter_tick_content_description">Valt</string>
@@ -277,7 +350,6 @@ Language: sv_SE
     <string name="enter_wordpress_site">Webbplatsen på den angivna adressen använder inte WordPress. För att vi ska kunna ansluta till webbplatsen måste WordPress vara installerat.</string>
     <string name="login_invalid_site_url">Skriv in den fullständiga adressen till en webbplats, såsom example.com.</string>
     <string name="enter_email_for_site">Logga in med WordPress.com för ansluta till %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">Det gick inte att koppla till Facebook eftersom detta konto inte verkar ha åtkomst till någon sida. Facebook stöder delningskopplingar till Facebook-sidor, men inte till Facebook-profiler.</string>
     <string name="stats_post_views_label">Visningar</string>
     <string name="stats_post_label">Inlägg</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -366,7 +438,6 @@ Language: sv_SE
     <string name="domain_registration_contact_form_input_error">Ange en giltig %s</string>
     <string name="domains_suggestions_choose_domain">Välj domän</string>
     <string name="stats_management_new">Nytt</string>
-    <string name="stats_management_edit">Redigera</string>
     <string name="stats_management_dismiss_insights_news_card">Avfärda</string>
     <string name="stats_management_try_it_now">Prova det nu</string>
     <string name="stats_management_news_card_message">Välj vilken statistik du vill se och fokusera på de data du bryr dig mest om. Knacka på %1$s under insikterna för att anpassa visningen av din statistik.</string>
@@ -375,14 +446,11 @@ Language: sv_SE
     <string name="editor_failed_to_insert_media_tap_to_retry">Det gick inte att lägga in media.\nKnacka här för att försöka igen.</string>
     <string name="editor_uploading_draft">Ditt utkast laddas upp</string>
     <string name="post_uploading_draft">Laddar upp utkast</string>
-    <string name="post_list_drafts">Utkast</string>
-    <string name="post_list_published">Publicerat</string>
+    <string name="post_list_tab_drafts">Utkast</string>
     <string name="post_list_author_everyone">Alla</string>
     <string name="post_list_author_me">Jag</string>
     <string name="error_restoring_post">Ett fel inträffade när inlägget skulle återställas</string>
     <string name="backdated_for">Backdaterad: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Objekt som visas ovan kommer att vara synliga under fliken Insikter. Dra och släpp för att anpassa.</string>
-    <string name="stats_insights_add_insights_header">Lägg till Insikter</string>
     <string name="stats_insights_management_title">Visa endast den mest relevanta statistiken. Lägg till och organisera dina insikter nedan.</string>
     <string name="stats_insights_social">Socialt</string>
     <string name="stats_insights_annual_site_stats">Årlig webbplatsstatistik</string>
@@ -523,15 +591,7 @@ Language: sv_SE
     <string name="new_site_creation_empty_domain_list_message">Det inns ingen adress som matchar din sökning</string>
     <string name="site_creation_error_generic_subtitle">Kommunikationen med servern fungerar inte. Försök igen</string>
     <string name="site_creation_error_generic_title">Ett fel har inträffat</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Anpassad kategori</string>
-    <string name="new_site_creation_button_skip">Hoppa över</string>
-    <string name="new_site_creation_tag_line_description">Webbplatsens slogan är en kort textrad som visas direkt under webbplatsens namn.</string>
-    <string name="new_site_creation_tag_line_hint">Slogan</string>
-    <string name="new_site_creation_site_title_hint">Webbplatsnamn</string>
-    <string name="new_site_creation_site_info_header_subtitle">Berätta lite mer om webbplatsen du håller på att skapa.</string>
-    <string name="new_site_creation_site_info_header_title">Grundläggande information</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Ett fel har inträffat</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Ingen förbindelse</string>
     <string name="site_creation_segments_subtitle">Detta hjälper oss att ge dig rekommentationer. Men du är aldrig låst till detta – alla webbplatser fortsätter att utvecklas!</string>
     <string name="site_creation_segments_title">Berätta vilken typ av webbplats du vill skapa</string>
     <string name="new_site_creation_preview_title">Din webbplats har skapats!</string>
@@ -554,11 +614,6 @@ Language: sv_SE
     <string name="stats_no_data_for_period">Inga uppgifter för denna tidsperiod</string>
     <string name="preference_strip_image_location">Avlägsna position från media</string>
     <string name="stats_cannot_be_started">Just nu går det inte att öppna statistiken. Försök igen senare</string>
-    <string name="giphy_powered_by_giphy">Drivs med hjälp av GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Vissa mediefiler kunde inte laddas på grund av nätverksproblem.</string>
-    <string name="giphy_picker_empty_search_list">Inga media matchar din sökning</string>
-    <string name="giphy_picker_initial_empty_text">Leta efter GIF-filer du kan lägga till i ditt mediebibliotek!</string>
-    <string name="giphy_picker_search_hint">Sök i Giphy</string>
     <string name="stats_author_views_label">Visningar</string>
     <string name="stats_author_label">Författare</string>
     <string name="stats_authors">Författare</string>
@@ -737,7 +792,6 @@ Language: sv_SE
     <string name="people_empty_list_filtered_email_followers">Inga e-postföljare än</string>
     <string name="people_empty_list_filtered_followers">Inga följare än</string>
     <string name="people_empty_list_filtered_users">Inga användare än</string>
-    <string name="connection_service_facebook_notice">Sedan 1 augusti tillåter Facebook inte längre automatisk delning av inlägg till en profil på Facebook. Kopplingar till Facebook-sidor fungerar fortfarande.</string>
     <string name="reader_empty_posts_liked_description">Inlägg som du gillar kommer att visas här</string>
     <string name="reader_empty_posts_liked_title">Ingenting gillat än</string>
     <string name="reader_empty_followed_blogs_button_followed">Gå till följda webbplatser</string>
@@ -1294,8 +1348,6 @@ Language: sv_SE
     <string name="editor_dropped_text_error">Ett fel inträffade när text skulle dras in</string>
     <string name="editor_dropped_html_images_not_allowed">Det är inte tillåtet att dra in bilder när du befinner dig i HTML-läge</string>
     <string name="editor_content_hint">Berätta din historia här …</string>
-    <string name="post_list_trashed">I papperskorgen</string>
-    <string name="post_list_scheduled">Schemalagt</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Utkast</string>
     <string name="post_status_pending_review">Väntar på granskning</string>
@@ -1316,7 +1368,6 @@ Language: sv_SE
     <string name="post_settings_more_options">Ytterligare alternativ</string>
     <string name="post_settings_categories_and_tags">Kategorier och etiketter</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Oläst</string>
     <string name="notifications_tab_title_all">Allt</string>
     <string name="top_level_category_name">Högsta nivån</string>
     <string name="category_parent">Överordnad kategori (valfritt)</string>
@@ -2014,8 +2065,6 @@ Language: sv_SE
     <string name="saving_changes">Spara ändringarna</string>
     <string name="hint_comment_content">Kommentar</string>
     <string name="trash">Kasta bort</string>
-    <string name="trash_no">Kasta inte</string>
-    <string name="trash_yes">Kasta</string>
     <string name="dlg_confirm_trash_comments">Kasta?</string>
     <string name="dlg_trashing_comments">Skicka till papperskorg</string>
     <string name="dlg_spamming_comments">Markera som skräppost</string>

@@ -1,123 +1,126 @@
 <ar>
-14.3:
-- إضافات مُحرِّر المكوِّن: تمت إضافة مكوِّنات الأزرار والمجموعات، ودعم مزيد من الخيارات في إعدادات مكوِّن الصور والمعرض.
-- تحسينات مُحرِّر المكوِّن: تمت إضافة دعم التمرير داخل منتقي المكوِّن وإعداداته، وتم إدخال شريط أدوات عائم لتسهيل التنقل بين المكوِّنات.
-- إصلاحات مُحرِّر المكوِّن: تم إصلاح المشكلات المتعلقة بصور العنصر النائب في أثناء رفع الصور، ورموز المشاعر في عناوين المقالات، والتفاف النص في مكوِّنات الأكواد القصيرة.
-
+14.5:
+محرِّر المكوِّنات: تمت إضافة مكوِّن أحدث المقالات، وتم إصلاح العطل الناتج عن لصق محتوى HTML مع الصور المضمَّنة
+قوالب الصفحة: تمت إضافة قوالب مستندة إلى المكوِّنات لإنشاء الصفحات بشكل أسرع.
+إنشاء موقع: تمت إزالة بعض الخطوات للإعداد بشكل أسرع — حدِّد نوع الموقع، وأدخل اسم النطاق، وهذا كل شيء.
+إصلاح الأخطاء: تم إصلاح المشكلة التي تتسبَّب في إعادة محاولة عمليات رفع المقالات الفاشلة إلى أجل غير مسمى.
 </ar>
 <de-DE>
-14.3:
-- Neu im Block-Editor: Die Blöcke „Button“ und „Gruppe“ wurden hinzugefügt. Darüber hinaus werden jetzt weitere Optionen in den Bild- und Galerieblockeinstellungen.
-- Verbesserungen am Block-Editor: Support für den Bildlauf in der Blockauswahl und in den Blockeinstellungen und neue unverankerte Toolbar für einfaches Wechseln zwischen Blöcken.
-
+14.5:
+Block-Editor: „Neueste Beiträge“-Block hinzugefügt
+Seiten-Templates: Block basierte Templates zur schnelleren Seitenerstellung hinzugefügt.
+Website-Erstellung: Einige Schritte wurden zugunsten einer schnelleren Einrichtung entfernt – Art der Website auswählen, Domainnamen eingeben, fertig.
+Fehlerbehebung: Ein Problem wurde behoben, das dazu führte, dass fehlgeschlagene Uploads von Beiträgen auf unbestimmte Zeit wiederholt wurden.
 </de-DE>
 <en-US>
-14.3:
-- Block editor additions: Added Button and Group blocks, and support for more options in Image and Gallery block settings.
-- Block editor enhancements: Added scroll support inside block picker and block settings, and introduced a floating toolbar to make navigating blocks easier.
-- Block editor fixes: Fixed issues around placeholder images during image upload, emojis in post titles, and text-wrapping in Shortcode blocks.
-- Reader: Added tab filtering for better sites/tag navigation.
-
+14.5:
+Block editor: Added Latest Posts block, fixed crash caused by pasting HTML content with embedded images
+Page Templates: Added a block-based templates for quicker page creation.
+Site Creation: removed a few steps for faster setup — select the kind of site, enter the domain name, done.
+Bug fix: fixed an issue causing failed post uploads to be retried indefinitely.
 </en-US>
 <es-ES>
-14.3:
-- Añadidos bloques al editor: Añadidos bloques de grupo y de botón, y compatibilidad con más opciones en los ajustes de los bloques de imagen y de galería.
-- Mejoras en el editor de bloques: Añadida compatibilidad con scroll dentro del selector de bloques y ajustes de los bloques, y se ha introducido una barra de herramientas flotante para hacer más sencilla la navegación por los bloques.
+14.5:
+Editor de bloques: Añadido el bloque «Últimas entradas»
+Plantillas de página: Añadidas plantillas basadas en bloques para una creación de páginas más rápida.
+Creación del sitio: Eliminados algunos pasos para una configuración más rápida — seleccionar el tipo de sitio, introducir el nombre de dominio y listo.
+Correción de fallos: Corregido un problema que causaba que las subidas de entradas fallidas se volvieran a intentar indefinidamente.
 </es-ES>
 <fr-CA>
-14.3 :
-- Ajouts de l'éditeur de blocs : blocs Bouton et Groupe ajoutés, + d’options dans les réglages de bloc Image et Galerie.
-- Améliorations de l'éditeur de blocs : défilement ajouté dans le sélecteur et réglages de bloc, nouvelle barre d'outils flottante pour mieux naviguer dans les blocs.
-- Résolutions de l'éditeur de blocs : images de texte indicatif lors du chargement d’images, émojis des titres d'article et habillage du texte de blocs de code abrégé résolus.
-
+14.5 :
+Éditeur de blocs : Ajout d’un bloc « Derniers articles »
+Modèles de pages :  Ajout de modèles basé sur les blocs pour une création de page plus rapide.
+Création de site : suppression de quelques étapes pour une configuration plus rapide. Sélectionnez le type de site, saisissez le domaine et voilà !
+Correction de bug : correction d’une problème qui causait un échec de téléversement d’article qui recommençait indéfiniment.
 </fr-CA>
 <fr-FR>
-14.3 :
-- Ajouts de l'éditeur de blocs : blocs Bouton et Groupe ajoutés, + d’options dans les réglages de bloc Image et Galerie.
-- Améliorations de l'éditeur de blocs : défilement ajouté dans le sélecteur et réglages de bloc, nouvelle barre d'outils flottante pour mieux naviguer dans les blocs.
-- Résolutions de l'éditeur de blocs : images de texte indicatif lors du chargement d’images, émojis des titres d'article et habillage du texte de blocs de code abrégé résolus.
-
+14.5 :
+Éditeur de blocs : Ajout d’un bloc « Derniers articles »
+Modèles de pages :  Ajout de modèles basé sur les blocs pour une création de page plus rapide.
+Création de site : suppression de quelques étapes pour une configuration plus rapide. Sélectionnez le type de site, saisissez le domaine et voilà !
+Correction de bug : correction d’une problème qui causait un échec de téléversement d’article qui recommençait indéfiniment.
 </fr-FR>
 <iw-IL>
-14.3:
-- הוספות לעורך הבלוקים: הוספנו בלוק כפתור ובלוק קבוצה ותמיכה באפשרויות נוספות בהגדרות הבלוקים של תמונה וגלריה.
-- שיפורים לעורך הבלוקים: הוספנו תמיכה בגלילה בתוך בורר הבלוקים ובהגדרות הבלוק. כמו כן, הוספנו סרגל כלים צף כדי לאפשר ניווט קל יותר בבלוקים.
-- תיקונים לעורך הבלוקים: תיקנו כמה בעיות בתמונות של מצייני המיקום שהופיעו בשלב העלאת תמונות, בסמלי Emoji בכותרות הפוסטים ובגלישת הטקסט בבלוקים של שורטקוד.
-- Reader: הוספנו לשונית לסינון כדי לאפשר ניווט יעיל יותר באתרים/בתגיות.
-
+14.5:
+עורך הבלוקים: הוספנו בלוק פוסטים אחרונים, תיקנו קריסה שהתרחשה בהדבקה של תוכן HTML בתמונות מוטבעות
+תבניות עמודים: הוספנו תבניות מבוססות-בלוק ליצירת עמודים מהירה יותר.
+יצירת אתר: הסרנו מספר שלבים להגדרה מהירה יותר – ניתן לבחור אתר מכל סוג, להזין את הדומיין וסיימת.
+תיקון באג: תיקנו בעיה שגרמה לניסיונות בלתי פוסקים בהעלאה חוזרת של פוסטים שנכשלו.
 </iw-IL>
 <id>
-14.3:
-- Tambahan penyunting blok: Menambahkan blok Tombol dan Kelompok, dan mendukung lebih banyak opsi di pengaturan blok Gambar dan Galeri.
-- Peningkatan pada penyunting blok: Menambahkan dukungan gulir di dalam pemilih blok dan pengaturan blok, dan memperkenalkan bilah peralatan mengambang untuk mempermudah navigasi blok.
-- Perbaikan pada penyunting blok: Memperbaiki masalah seputar gambar placeholder selama pengunggahan gambar, emoji di judul pos, dan text-wrapping di blok Shortcode.
-
+14.5:
+Penyunting blok: Menambahkan blok Pos Terbaru, memperbaiki crash yang disebabkan karena konten HTML yang ditempel dengan gambar tersemat
+Template Halaman: Menambahkan template berbasis blok agar proses pembuatan halaman lebih cepat.
+Pembuatan Situs: menghapus beberapa langkah agar proses penyiapan lebih cepat — pilih jenis situs, masukkan nama domain, selesai.
+Perbaikan bug: memperbaiki masalah penyebab unggahan pos yang gagal dicoba ulang tanpa batas.
 </id>
 <it-IT>
-14.3:
-- Aggiunte all'editor a blocchi: blocchi Pulsante e Gruppo e opzioni nelle impostazioni di Immagine e Galleria.
-- Miglioramenti all'editor a blocchi: aggiunta dello scorrimento nel selezionatore e nelle impostazioni e di una barra mobile per la navigazione.
-- Correzioni all'editor a blocchi: correzione del caricamento di immagini segnaposto, degli emoji nei titoli degli articoli e del ritorno a capo nei blocchi Shortcode.
-
+14.5:
+Editor a blocchi: aggiunto il blocco Ultimi articoli
+Modelli di pagina: aggiunti modelli basati su un blocco per la creazione più rapida delle pagine.
+Creazione del sito: rimosse alcuni fasi per un'impostazione più veloce: selezione del tipo di sito, inserimento del nome di dominio, completamento dell'operazione.
+Correzione di bug: risolto un problema che impediva di ritentare indefinitamente i caricamenti non riusciti degli articoli.
 </it-IT>
 <ja-JP>
-14.3:
-- ブロックエディターの追加機能 :「ボタン」ブロックと「Group」ブロックが追加され、画像ブロックとギャラリーブロックの設定で使用できるオプションが増えました。
-ブロックエディターの機能強化 :ブロックピッカー内とブロック設定内で、スクロール機能が使えるようになりました。ブロック操作を簡単にする移動式ツールバーも導入されました。
-- ブロックエディターの修正 :画像アップロード中のプレースホルダー画像、投稿名の絵文字、ショートコードブロックでのワードラップ機能で発生していた問題を修正しました。
-- Reader:サイトやタグへのナビゲーションを向上するタブのフィルタリング機能を追加しました。
-
+14.5:
+ブロックエディター :最新の投稿ブロックを追加し、画像が埋め込まれた HTML コンテンツを貼り付けることで発生するクラッシュを修正しました。
+ページテンプレート :ブロックベースのテンプレートを追加し、ページをすばやく作成できるようにしました。
+サイト作成 :いくつかの手順を削除し、すばやく設定できるようにしました。サイトの種類を選択し、ドメイン名を入力すると完了します。
+バグ修正 :失敗した投稿のアップロードが繰り返し再試行される問題を修正しました。
 </ja-JP>
 <ko-KR>
-14.3:
-- 블록 편집기 추가 기능: 버튼 및 그룹 블록, 이미지 및 갤러리 블록 설정의 더 많은 옵션을 위한 지원을 추가했습니다.
-- 블록 편집기의 향상된 기능: 블록 선택기 및 블록 설정 내부에 스크롤 지원을 추가하고 블록을 보다 쉽게 탐색할 수 있는 플로팅 도구 모음을 도입했습니다.
-- 블록 편집기 수정 사항: 이미지 업로드 중 자리 표시자 이미지, 글 제목의 이모티콘 및 쇼트코드 블록의 텍스트 줄 바꿈 문제를 수정했습니다.
-- 리더: 더 효과적인 사이트/태그 탐색을 위해 탭 필터링을 추가했습니다.
-
+14.5:
+블록 편집기: 최신 글 블록이 추가되었습니다. 이미지가 포함된 HTML 콘텐츠를 붙여넣을 때 발생하는 충돌이 수정되었습니다.
+페이지 템플릿: 보다 빠른 페이지 생성을 위해 블록 기반 템플릿을 추가했습니다.
+사이트 생성: 빠른 설치를 위해 몇 단계를 없앴습니다. 사이트 종류를 선택하고 도메인 네임을 입력하기만 하면 됩니다.
+- 버그 수정: 글 업로드가 실패하여 무한대로 재시도해야 하는 문제를 수정했습니다.
 </ko-KR>
 <nl-NL>
-14.3:
-- Aanvullingen op de blokeditor: de knop- en groepblokken zijn toegevoegd en er wordt ondersteuning voor meer opties geboden in de instellingen van het afbeeldings- en galerijblok.
-- Verbeteringen aan de blokeditor: ondersteuning voor scrollen toegevoegd aan de blokkiezer en blokinstellingen en een zwevende werkbalk geïntroduceerd om het navigeren in blokken eenvoudiger te maken.
-
+14.5:
+Blokeditor: Blok Nieuwste berichten toegevoegd, crash veroorzaakt door het plakken van HTML-content met ingesloten afbeeldingen opgelost
+Paginasjablonen: Op blokken gebaseerde sjablonen toegevoegd om pagina's sneller te kunnen aanmaken.
+Site-ontwerp: een aantal stappen verwijderd voor een snellere configuratie: selecteer het soort site, voer de domeinnaam in en klaar is Kees.
+Bugfix: een probleem verholpen dat zorgde dat de mislukte upload van berichten oneindig werd herhaald.
 </nl-NL>
+<pt-BR>
+14.5:
+Editor de blocos: Adição do bloco "Posts recentes" e correção de travamentos ao colar conteúdo HTML com imagens.
+Modelos de página: Adição de modelos baseados em blocos para agilizar a criação de páginas.
+Criação de site: Remoção de alguns passos para tornar o processo mais rápido. Selecione o tipo de site, adicione um nome de domínio e pronto.
+Correção de erros: Correção de um erro que tentava reenviar posts diversas vezes.
+</pt-BR>
 <ru-RU>
-14.3:
-- Добавления к редактору блоков: Блоки кнопка и группа, поддержка большего количества настроек для блоков изображений и галереи.
-- Улучшения редактора блоков: поддержка прокрутки при выборе блоков и в настройках, плавающая панель инструментов для навигации по блокам.
-- Исправления редактора блоков: проблемы с изображениями-заменителями во время загрузки, эмодзи в названиях записей, перенос текста в блоках шорткодов. 
-- Чтиво: фильтрация вкладок для улучшенной навигации по меткам/сайтам.
-
+14.5:
+Редактор блоков: добавлен блок последних записей, исправлено падение в обработке HTML с встроенными изображениями.
+Шаблоны страниц: добавлены шаблоны с блоками для быстрого создания.
+Создание сайта: убраны пара шагов, теперь надо просто выбрать тип сайта и ввести домен.
+Исправлена ошибка с загрузкой неудачных записей, больше не откладывается на неопределенное время.
 </ru-RU>
 <sv-SE>
-14.3:
-- I blockredigeraren: Nya block för knapp och grupp, fler inställningar i bild- och galleriblock.
-- Förbättringar av blockredigeraren: Rullist i blockväljare och blockinställningar, ny flytande verktygslist för enklare blocknavigering.
-- Rättelser i blockredigeraren: Löst problem med platshållare i samband med bilduppladdning, användning av emoji i inläggsrubriker och radbrytning i kordkodsblock.
-- Läsaren: Lagt till flikfiltrering för bättre navigaton mellan webbplatser och etiketter.
-
+14.5:
+Blockredigeraren: Nytt block för senaste inläggen, rättat krasch vid inklistring av HTML-innehåll med inbäddade bilder
+Sidmallar: Nya blockbaserade mallar för att kunna skapa sidor snabbare.
+Skapa webbplats: Tagit bort några steg för att snabbare process – Välj typ av webbplats, ange domännamnet, klart!.
+Felrättelse: Löst ett problem som kunde försöka göra om misslyckade uppladdningar av inlägg i evighet.
 </sv-SE>
 <tr-TR>
-14.3:
-- Blok düzenleyici eklemeleri: Düğme ve Grup bloklarının yanı sıra, Görsel ve Galeri bloku ayarlarına daha fazla seçenek desteği eklendi.
-- Blok düzenleyici geliştirmeleri: Blok seçici ve blok ayarlarına kaydırma desteği ve bloklarda gezinmeyi kolaylaştırmak için kayan bir araç çubuğu eklendi.
-- Blok düzenleyici düzeltmeleri: Görsel karşıya yüklemesi sırasında yer tutucu görselleri, yazı başlığındaki emojiler ve Kısa Kod bloklarında yazı kaydırma ile ilgili sorunlar düzeltildi.
-
+14.5:
+Blok düzenleyici: Güncel yazılar bloğu eklendi, gömülü görsel içerek HTML içeriğin yapıştırılması sırasındaki çökme düzeltildi
+Sayfa şablonları: Hızlı sayfa oluşturma için blok-tabanlı şablonlar eklendi.
+Site oluşturma: Hızlı kurulum için bir kaç adım kaldırıldı — sitenin tipini seçin, alan adını girin, her şey tamam.
+Hata ayıklama: Başarısız olan yazı yüklemelerinin sonsuz döngüde tekrarlanması problemi giderildi.
 </tr-TR>
 <zh-CN>
-14.3：
-- 区块编辑器新增内容：添加了“按钮”和“组”区块，并且在“图片”和“图库”区块设置中支持更多选项。
-- 区块编辑器增强功能：在区块选择器和区块设置中添加了滚动支持，同时引入了浮动工具栏，使得区块间导航变得更加轻松。
-- 区块编辑器修复：修复了图片上传过程中的占位符图片相关问题、文章标题中的表情符号问题以及短代码区块中的文字环绕问题。
-- 阅读器：添加了选项卡过滤功能，以便在站点/标签间更方便地进行导航。
-
+14.5：
+区块编辑器：添加了“最新文章”区块，修正了粘贴包含嵌入图片的 HTML 内容时所导致的崩溃
+页面模板：添加了基于区块的模板，以提高页面创建速度。
+站点创建：删除了几个步骤，以提高创建速度。您只需选择站点类型，输入域名即可。
+错误修复：修正了导致上传失败，需要多次重试的问题。
 </zh-CN>
 <zh-TW>
-14.3：
-- 區塊編輯器新增功能：新增「按鈕」和「群組」區塊，並在「圖片」和「圖庫」區塊設定中支援更多選項。
-- 區塊編輯器增強功能：在區塊挑選器和區塊設定旁新增捲動功能支援，並推出讓區塊瀏覽更輕鬆的浮動工具列。
-- 區塊編輯器修正：修正圖片上傳時預留位置圖片的問題、文章標題的表情符號問題，以及短代碼區塊中的文繞圖問題。
-- 讀取器：新增分頁篩選功能，改善網站/標籤瀏覽體驗。
-
+14.5：
+區塊編輯器：新增「最新文章」區塊，修復複製包含內嵌圖片的 HTML 內容會導致當機的問題
+頁面範本︰新增區塊式範本，讓你更快建立頁面。
+網站建立︰移除幾個步驟以加快設定速度︰選取網站類型，輸入網域名稱，即可完成設定。
+錯誤修正：修正導致文章上傳失敗時無限重複的問題。
 </zh-TW>

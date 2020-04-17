@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -15,6 +16,7 @@ import android.webkit.WebViewClient;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.ui.WPWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -30,7 +32,7 @@ import javax.inject.Inject;
  * WebView descendant used by ReaderPostDetailFragment - handles
  * displaying fullscreen video and detecting url/image clicks
  */
-public class ReaderWebView extends WebView {
+public class ReaderWebView extends WPWebView {
     public interface ReaderWebViewUrlClickListener {
         @SuppressWarnings("SameReturnValue")
         boolean onUrlClick(String url);
@@ -89,7 +91,7 @@ public class ReaderWebView extends WebView {
     @SuppressLint("NewApi")
     private void init(Context context) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
-
+        setBackgroundColor(Color.TRANSPARENT);
         if (!isInEditMode()) {
             mToken = mAccountStore.getAccessToken();
 
@@ -259,8 +261,8 @@ public class ReaderWebView extends WebView {
                     conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
                     conn.setRequestProperty("Connection", "Keep-Alive");
                     return new WebResourceResponse(conn.getContentType(),
-                                                   conn.getContentEncoding(),
-                                                   conn.getInputStream());
+                            conn.getContentEncoding(),
+                            conn.getInputStream());
                 } catch (IOException e) {
                     AppLog.e(AppLog.T.READER, e);
                 }

@@ -13,7 +13,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,6 +40,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -127,6 +128,7 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -978,8 +980,13 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
-        mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
+        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
+        int elevatedAppBarColor = elevationOverlayProvider
+                .compositeOverlayIfNeeded(
+                        ContextExtensionsKt.getColorFromAttribute(mRecyclerView.getContext(), R.attr.wpColorAppBar),
+                        appbarElevation);
+        mRecyclerView.setToolbarBackgroundColor(elevatedAppBarColor);
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
 
         if (mIsTopLevel) {
@@ -1023,6 +1030,9 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mSubFilterComponent = inflater.inflate(R.layout.subfilter_component, rootView, false);
+        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
+        int elevatedCardColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(cardElevation);
+        mSubFilterComponent.setBackgroundColor(elevatedCardColor);
 
         if (mIsTopLevel) {
             mRecyclerView.getAppBarLayout().addView(mSubFilterComponent);
@@ -1064,7 +1074,7 @@ public class ReaderPostListFragment extends Fragment
         if (mIsTopLevel) {
             mSettingsMenuItem.setVisible(false);
         } else {
-           mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     showSettings();
@@ -1157,19 +1167,19 @@ public class ReaderPostListFragment extends Fragment
         });
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    submitSearchQuery(query);
-                    return true;
-                }
+                                               @Override
+                                               public boolean onQueryTextSubmit(String query) {
+                                                   submitSearchQuery(query);
+                                                   return true;
+                                               }
 
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    populateSearchSuggestions(newText);
-                    showSearchMessageOrSuggestions();
-                    return true;
-                    }
-                }
+                                               @Override
+                                               public boolean onQueryTextChange(String newText) {
+                                                   populateSearchSuggestions(newText);
+                                                   showSearchMessageOrSuggestions();
+                                                   return true;
+                                               }
+                                           }
         );
     }
 
@@ -1514,7 +1524,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void showClearSearchSuggestionsConfirmationDialog(final Context context) {
-        new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Calypso_Dialog_Alert))
+        new MaterialAlertDialogBuilder(context)
                 .setMessage(R.string.dlg_confirm_clear_search_history)
                 .setCancelable(true)
                 .setNegativeButton(R.string.no, null)
@@ -1645,8 +1655,8 @@ public class ReaderPostListFragment extends Fragment
             }
         };
         WPSnackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, undoListener)
-                .show();
+                  .setAction(R.string.undo, undoListener)
+                  .show();
     }
 
     /*
@@ -1966,7 +1976,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void showBookmarksSavedLocallyDialog() {
-        mBookmarksSavedLocallyDialog = new AlertDialog.Builder(getActivity())
+        mBookmarksSavedLocallyDialog = new MaterialAlertDialogBuilder(getActivity())
                 .setTitle(getString(R.string.reader_save_posts_locally_dialog_title))
                 .setMessage(getString(R.string.reader_save_posts_locally_dialog_message))
                 .setPositiveButton(R.string.dialog_button_ok, new OnClickListener() {
@@ -1990,18 +2000,18 @@ public class ReaderPostListFragment extends Fragment
         }
 
         WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
-                .setAction(R.string.reader_bookmark_snack_btn,
-                    new View.OnClickListener() {
-                        @Override public void onClick(View view) {
-                            AnalyticsTracker
-                                    .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
-                            ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                            if (getActivity() instanceof WPMainActivity) {
-                                getActivity().overridePendingTransition(0, 0);
-                            }
-                        }
-                    })
-                .show();
+                  .setAction(R.string.reader_bookmark_snack_btn,
+                          new View.OnClickListener() {
+                              @Override public void onClick(View view) {
+                                  AnalyticsTracker
+                                          .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
+                                  ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                                  if (getActivity() instanceof WPMainActivity) {
+                                      getActivity().overridePendingTransition(0, 0);
+                                  }
+                              }
+                          })
+                  .show();
     }
 
     /*
@@ -2178,14 +2188,14 @@ public class ReaderPostListFragment extends Fragment
                 mViewModel.onSubfilterReselected();
             } else {
                 changeReaderMode(new ReaderModeInfo(
-                        tag,
-                        ReaderPostListType.TAG_FOLLOWED,
-                        0,
-                        0,
-                        false,
-                        null,
-                        false,
-                         mRemoveFilterButton.getVisibility() == View.VISIBLE),
+                                tag,
+                                ReaderPostListType.TAG_FOLLOWED,
+                                0,
+                                0,
+                                false,
+                                null,
+                                false,
+                                mRemoveFilterButton.getVisibility() == View.VISIBLE),
                         false
                 );
             }
@@ -2764,17 +2774,18 @@ public class ReaderPostListFragment extends Fragment
 
         WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
                 "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.reader_followed_blog_notifications_action),
-                        new View.OnClickListener() {
-                            @Override public void onClick(View view) {
-                                AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
-                                AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
-                                        String.valueOf(blogId), SubscriptionAction.NEW);
-                                mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
-                                ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
-                            }
-                        })
-                .show();
+                  .setAction(getString(R.string.reader_followed_blog_notifications_action),
+                          new View.OnClickListener() {
+                              @Override public void onClick(View view) {
+                                  AnalyticsUtils
+                                          .trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
+                                  AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
+                                          String.valueOf(blogId), SubscriptionAction.NEW);
+                                  mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                                  ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
+                              }
+                          })
+                  .show();
     }
 
     @Override

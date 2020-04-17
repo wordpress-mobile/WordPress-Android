@@ -231,7 +231,7 @@ public class SiteUtils {
      * @return true if the site is WPCom or Jetpack and is not private
      */
     public static boolean isPhotonCapable(SiteModel site) {
-        return SiteUtils.isAccessedViaWPComRest(site) && !site.isPrivate();
+        return SiteUtils.isAccessedViaWPComRest(site) && (!site.isPrivate() || site.isWPComAtomic());
     }
 
     public static boolean isAccessedViaWPComRest(SiteModel site) {
@@ -239,7 +239,8 @@ public class SiteUtils {
     }
 
     public static String getSiteIconUrl(SiteModel site, int size) {
-        return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH);
+        return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH,
+                site.isPrivateWPComAtomic());
     }
 
     public static ArrayList<Integer> getCurrentSiteIds(SiteStore siteStore, boolean selfhostedOnly) {
@@ -268,6 +269,11 @@ public class SiteUtils {
                 if (index > 0) {
                     jetpackVersion = jetpackVersion.substring(0, index);
                 }
+                // Jetpack version field is sometimes "false" instead of a number on self-hosted sites that are no
+                // longer active.
+                if (jetpackVersion.equals("false")) {
+                    return false;
+                }
                 Version siteJetpackVersion = new Version(jetpackVersion);
                 Version minVersion = new Version(limitVersion);
                 return siteJetpackVersion.compareTo(minVersion) >= 0;
@@ -275,7 +281,7 @@ public class SiteUtils {
                 String errorStr = "Invalid site jetpack version " + jetpackVersion + ", expected " + limitVersion;
                 AppLog.e(AppLog.T.UTILS, errorStr, e);
                 CrashLoggingUtils.logException(e, AppLog.T.UTILS, errorStr);
-                return true;
+                return false;
             }
         }
         return false;

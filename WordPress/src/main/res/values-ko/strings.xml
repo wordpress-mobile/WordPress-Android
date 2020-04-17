@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-05 00:54:14+0000
+Translation-Revision-Date: 2020-04-02 00:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">게시물 작성</string>
+    <string name="post_list_tab_trashed_posts">삭제된</string>
+    <string name="post_list_tab_scheduled_posts">예약됨</string>
+    <string name="post_list_tab_published_posts">게시됨</string>
+    <string name="sharing_facebook_account_must_have_pages">페이스북 연결에서 페이지를 찾을 수 없습니다. 배포 기능은 페이스북 프로필에 연결할 수 없으며 게시된 페이지에만 연결할 수 있습니다.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">연결되지 않음</string>
+    <string name="my_site_select_domains_page_title">사이트 주소</string>
+    <string name="notifications_tab_title_likes">좋아요</string>
+    <string name="notifications_tab_title_follows">팔로우</string>
+    <string name="notifications_tab_title_comments">댓글</string>
+    <string name="notifications_tab_title_unread_notifications">읽지 않음</string>
+    <string name="dlg_cancel_action_dont_trash">휴지통에 버리지 마세요.</string>
+    <string name="dlg_confirm_action_trash">휴지통</string>
     <string name="reader_self_hosted_select_filter">필터 버튼을 사용하여 특정 주제에 대한 글을 찾습니다.</string>
     <string name="reader_bottom_sheet_content_description">태그 또는 사이트, 팝업 창을 선택합니다.</string>
     <string name="reader_btn_selected_filter_tick_content_description">선택되었습니다.</string>
@@ -15,6 +28,18 @@ Language: ko_KR
     <string name="reader_filter_self_hosted_empty_sites_tags_action">워드프레스닷컴에 로그인</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">워드프레스닷컴에 로그인하여 내가 팔로우하는 태그의 최신 글을 확인하세요.</string>
     <string name="reader_filter_self_hosted_empty_sites_list">워드프레스닷컴에 로그인하여 내가 팔로우하는 사이트의 최신 글을 확인하세요.</string>
+    <string name="gutenberg_native_template_preview">템플릿 미리보기</string>
+    <string name="gutenberg_native_replace_current_block">현재 블록 대체하기</string>
+    <string name="gutenberg_native_add_to_end">끝에 추가하기</string>
+    <string name="gutenberg_native_add_to_beginning">처음에 추가하기</string>
+    <string name="gutenberg_native_add_block_before">이전에 블록 추가</string>
+    <string name="gutenberg_native_add_block_after">다음에 블록 추가</string>
+    <string name="reader_filter_empty_tags_action">태그 추가</string>
+    <string name="reader_filter_empty_sites_action">사이트 팔로우</string>
+    <string name="reader_filter_empty_tags_list">태그를 추가하여 특정 주제의 게시물을 팔로우할 수 있습니다</string>
+    <string name="reader_filter_empty_sites_list">팔로우하고 있는 사이트의 최신 글을 보십시오</string>
+    <string name="reader_filter_main_title">팔로우 중</string>
+    <string name="reader_filter_cta">필터</string>
     <string name="gutenberg_native_video_caption_s">비디오 캡션. %s</string>
     <string name="gutenberg_native_edit_video">비디오 편집</string>
     <string name="gutenberg_native_edit_media">미디어 편집</string>
@@ -167,8 +192,8 @@ Language: ko_KR
     <string name="notifications_tab_dialog_master_hint_on">이 사이트의 알림 탭에서 알림 표시 사용 안 함</string>
     <string name="notifications_tab_dialog_master_status_off">이 사이트의 알림</string>
     <string name="notifications_tab_dialog_master_status_on">이 사이트의 알림</string>
-    <string name="dialog_gutenberg_informative_description_page">이제 새 페이지의 블록 편집기를 사용하고 있습니다. u2014 잘하셨습니다! 구 버전 편집기로 변경하려면 \'내 사이트\'> \'사이트 설정\'으로 이동하세요.</string>
-    <string name="dialog_gutenberg_informative_description_post">이제 새 글의 블록 편집기를 사용하고 있습니다. u2014 잘하셨습니다! 구 버전 편집기로 변경하려면 \'내 사이트\'> \'사이트 설정\'으로 이동하세요.</string>
+    <string name="dialog_gutenberg_informative_description_page">이제 새 페이지의 블록 편집기를 사용하고 있습니다. \u2014 잘하셨습니다! 구 버전 편집기로 변경하려면 \'내 사이트\'> \'사이트 설정\'으로 이동하세요.</string>
+    <string name="dialog_gutenberg_informative_description_post">이제 새 글의 블록 편집기를 사용하고 있습니다. \u2014 잘하셨습니다! 구 버전 편집기로 변경하려면 \'내 사이트\'> \'사이트 설정\'으로 이동하세요.</string>
     <string name="pick_media">이미지 또는 비디오 추가</string>
     <string name="error_post_not_submitted_retrying">리뷰를 위해 이 글을 제출하지 못했지만 나중에 다시 시도하겠습니다. </string>
     <string name="error_post_not_scheduled_retrying">이 글을 예약하지 못했지만 나중에 다시 시도하겠습니다.</string>
@@ -265,7 +290,6 @@ Language: ko_KR
     <string name="enter_wordpress_site">이 주소의 웹사이트는 워드프레스 사이트가 아닙니다. 워드프레스에서 연결하려면 사이트에 워드프레스가 설치되어 있어야 합니다.</string>
     <string name="login_invalid_site_url">example.com과 같은 완전한 웹사이트 주소를 입력하세요.</string>
     <string name="enter_email_for_site">%1$s에 연결하려면 워드프레스닷컴에 로그인하세요.</string>
-    <string name="sharing_facebook_account_must_have_pages">이 계정은 페이지에 액세스할 수 없으므로 페이스북에 연결하지 못했습니다. 페이스북 페이지에 대해서는 공유 연결이 지원되지만, 페이스북 프로필에 대해서는 지원되지 않습니다.</string>
     <string name="stats_post_views_label">조회수</string>
     <string name="stats_post_label">글</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -354,7 +378,6 @@ Language: ko_KR
     <string name="domain_registration_contact_form_input_error">유효한 %s(을)를 입력하세요.</string>
     <string name="domains_suggestions_choose_domain">도메인 선택</string>
     <string name="stats_management_new">신규</string>
-    <string name="stats_management_edit">편집</string>
     <string name="stats_management_dismiss_insights_news_card">해제</string>
     <string name="stats_management_try_it_now">지금 사용해 보기</string>
     <string name="stats_management_news_card_message">확인하려는 통계를 선택하고 중요한 데이터에 집중하세요. 인사이트 하단의 %1$s을(를) 눌러 통계를 사용자 정의하세요.</string>
@@ -363,14 +386,10 @@ Language: ko_KR
     <string name="editor_failed_to_insert_media_tap_to_retry">미디어를 삽입하지 못했습니다.\n눌러서 다시 시도하세요.</string>
     <string name="editor_uploading_draft">임시글을 업로드하고 있습니다.</string>
     <string name="post_uploading_draft">임시글 업로드 중</string>
-    <string name="post_list_drafts">임시글</string>
-    <string name="post_list_published">게시됨</string>
     <string name="post_list_author_everyone">모두 볼 수 있음</string>
     <string name="post_list_author_me">나</string>
     <string name="error_restoring_post">글을 복원하는 중 오류 발생</string>
     <string name="backdated_for">소급 적용: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">위에 표시된 항목이 인사이트 탭에 표시됩니다. 끌어서 놓아 사용자 정의할 수 있습니다.</string>
-    <string name="stats_insights_add_insights_header">인사이트 추가</string>
     <string name="stats_insights_management_title">가장 관련성 높은 통계만 확인하세요. 아래 인사이트를 추가 및 구성하세요.</string>
     <string name="stats_insights_social">소셜</string>
     <string name="stats_insights_annual_site_stats">연간 사이트 통계</string>
@@ -511,15 +530,7 @@ Language: ko_KR
     <string name="new_site_creation_empty_domain_list_message">검색 내용과 일치하는 주소가 없습니다.</string>
     <string name="site_creation_error_generic_subtitle">서버와 통신하는 동안 오류가 발생했습니다. 다시 시도하세요.</string>
     <string name="site_creation_error_generic_title">문제가 발생했습니다.</string>
-    <string name="new_site_creation_verticals_custom_subtitle">사용자 정의 카테고리</string>
-    <string name="new_site_creation_button_skip">건너뛰기</string>
-    <string name="new_site_creation_tag_line_description">태그라인은 제목 바로 아래에 표시되는 짧은 텍스트 행입니다.</string>
-    <string name="new_site_creation_tag_line_hint">태그라인</string>
-    <string name="new_site_creation_site_title_hint">사이트 제목</string>
-    <string name="new_site_creation_site_info_header_subtitle">만들고 있는 사이트에 대한 정보를 알려주세요.</string>
-    <string name="new_site_creation_site_info_header_title">기본 정보</string>
     <string name="site_creation_fetch_suggestions_error_unknown">문제가 발생했습니다.</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">연결 없음</string>
     <string name="site_creation_segments_subtitle">추천 사항을 제안하는 데 도움이 됩니다. 절대 고정된 것은 아닙니다. 모든 사이트는 진화합니다.</string>
     <string name="site_creation_segments_title">어떤 종류의 사이트를 만들고 싶으신가요?</string>
     <string name="new_site_creation_preview_title">사이트가 생성되었습니다!</string>
@@ -542,11 +553,6 @@ Language: ko_KR
     <string name="stats_no_data_for_period">이 기간에 데이터 없음</string>
     <string name="preference_strip_image_location">미디어에서 위치 제거</string>
     <string name="stats_cannot_be_started">지금은 통계를 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
-    <string name="giphy_powered_by_giphy">GIPHY 제공</string>
-    <string name="giphy_picker_endless_scroll_network_error">네트워크 오류로 인해 일부 미디어를 로드하지 못했습니다.</string>
-    <string name="giphy_picker_empty_search_list">검색과 일치하는 미디어 없음</string>
-    <string name="giphy_picker_initial_empty_text">GIF를 검색하여 미디어 라이브러리에 추가하세요!</string>
-    <string name="giphy_picker_search_hint">Giphy 검색</string>
     <string name="stats_author_views_label">조회수</string>
     <string name="stats_author_label">글쓴이</string>
     <string name="stats_authors">글쓴이</string>
@@ -725,7 +731,6 @@ Language: ko_KR
     <string name="people_empty_list_filtered_email_followers">아직 이메일 팔로워 없음</string>
     <string name="people_empty_list_filtered_followers">아직 팔로워 없음</string>
     <string name="people_empty_list_filtered_users">아직 사용자 없음</string>
-    <string name="connection_service_facebook_notice">2018년 8월 1일 현재, 페이스북은 더 이상 페이스북 프로필에 직접 글 공유를 허용하지 않습니다. 페이스북 페이지에 대한 연결은 그대로 유지됩니다.</string>
     <string name="reader_empty_posts_liked_description">좋아요를 누른 글이 여기에 표시됩니다.</string>
     <string name="reader_empty_posts_liked_title">좋아요 없음</string>
     <string name="reader_empty_followed_blogs_button_followed">팔로우로 이동</string>
@@ -1282,8 +1287,6 @@ Language: ko_KR
     <string name="editor_dropped_text_error">텍스트를 삭제하는 동안 오류가 발생했습니다</string>
     <string name="editor_dropped_html_images_not_allowed">HTML 모드에 있는 동안 이미지를 삭제할 수 없습니다</string>
     <string name="editor_content_hint">여기서 스토리 공유…</string>
-    <string name="post_list_trashed">삭제된</string>
-    <string name="post_list_scheduled">예약됨</string>
     <string name="post_status_post_private">비공개</string>
     <string name="post_status_draft">임시글</string>
     <string name="post_status_pending_review">검토 대기 중</string>
@@ -1304,7 +1307,6 @@ Language: ko_KR
     <string name="post_settings_more_options">추가 옵션</string>
     <string name="post_settings_categories_and_tags">카테고리 및 태그</string>
     <string name="post_settings_status">상태</string>
-    <string name="notifications_tab_title_unread">읽지 않음</string>
     <string name="notifications_tab_title_all">모두</string>
     <string name="top_level_category_name">최상위</string>
     <string name="category_parent">상위 카테고리(선택사항):</string>
@@ -2002,8 +2004,6 @@ Language: ko_KR
     <string name="saving_changes">변경 사항을 저장 중</string>
     <string name="hint_comment_content">코멘트</string>
     <string name="trash">휴지통</string>
-    <string name="trash_no">휴지통에 버리지 마세요.</string>
-    <string name="trash_yes">휴지통</string>
     <string name="dlg_confirm_trash_comments">휴지통에 보내겠습니까?</string>
     <string name="dlg_trashing_comments">휴지통으로 이동</string>
     <string name="dlg_spamming_comments">스팸으로 표시</string>

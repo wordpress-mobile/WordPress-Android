@@ -3,8 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -14,21 +12,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
@@ -41,7 +38,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.yalantis.ucrop.UCrop;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,6 +52,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.AztecEditorFragment;
+import org.wordpress.android.editor.EditorEditMediaListener;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
@@ -70,6 +70,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
@@ -79,6 +80,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -92,13 +94,19 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
+import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -132,12 +140,14 @@ import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
+import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
@@ -146,6 +156,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -158,6 +169,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -189,16 +201,18 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
-public class EditPostActivity extends AppCompatActivity implements
+public class EditPostActivity extends LocaleAwareActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
         EditorImagePreviewListener,
+        EditorEditMediaListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
         OnRequestPermissionsResultCallback,
@@ -210,8 +224,9 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         HistoryListFragment.HistoryItemClickInterface,
-        EditPostSettingsCallback {
-    public static final String ACTION_REBLOG = "reblogAction";
+        EditPostSettingsCallback,
+        PrivateAtCookieProgressDialogOnDismissListener {
+    public static final String ACTION_REBLOG = "reblogAction";		
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
@@ -328,7 +343,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject EditorActionsProvider mEditorActionsProvider;
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject ReblogUtils mReblogUtils;
+    @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
+    @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
+    @Inject ReblogUtils mReblogUtils;	
 
     private StorePostViewModel mViewModel;
 
@@ -338,11 +355,6 @@ public class EditPostActivity extends AppCompatActivity implements
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
                && RestartEditorOptions.valueOf(data.getStringExtra(EditPostActivity.EXTRA_RESTART_EDITOR))
                   != RestartEditorOptions.NO_RESTART;
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     private void newPostSetup() {
@@ -410,12 +422,14 @@ public class EditPostActivity extends AppCompatActivity implements
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
             View overlay = findViewById(R.id.view_overlay);
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) overlay.getLayoutParams();
+            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) overlay.getLayoutParams();
             layoutParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.aztec_format_bar_height);
             overlay.setLayoutParams(layoutParams);
         }
 
         // Set up the action bar.
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -551,6 +565,41 @@ public class EditPostActivity extends AppCompatActivity implements
         setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
+        // we need to make sure AT cookie is available when trying to edit post on private AT site
+        if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.isCookieRefreshRequired()) {
+            PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary(fragmentManager);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchPrivateAtomicCookieAction(
+                    new FetchPrivateAtomicCookiePayload(mSite.getSiteId())));
+        } else {
+            setupViewPager();
+        }
+        ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPrivateAtomicCookieFetched(OnPrivateAtomicCookieFetched event) {
+        // if the dialog is not showing by the time cookie fetched it means that it was dismissed and content was loaded
+        if (PrivateAtCookieRefreshProgressDialog.Companion.isShowing(getSupportFragmentManager())) {
+            setupViewPager();
+            PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
+        }
+        if (event.isError()) {
+            AppLog.e(AppLog.T.EDITOR,
+                    "Failed to load private AT cookie. " + event.error.type + " - " + event.error.message);
+            WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+                      .show();
+        }
+    }
+
+    @Override
+    public void onCookieProgressDialogCancelled() {
+        WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+                  .show();
+        setupViewPager();
+    }
+
+    private void setupViewPager() {
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -578,8 +627,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         });
-
-        ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
     private void startObserving() {
@@ -917,6 +964,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 case STOCK_MEDIA:
                     ActivityLauncher.showStockMediaPickerForResult(
                             this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
+                    break;
+                case GIF:
+                    ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER);
                     break;
             }
         } else {
@@ -1652,7 +1702,34 @@ public class EditPostActivity extends AppCompatActivity implements
 
 
     @Override public void onImagePreviewRequested(String mediaUrl) {
-        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+        MediaPreviewActivity.showPreview(this, mSite, mediaUrl);
+    }
+
+    @Override public void onMediaEditorRequested(String mediaUrl) {
+        String imageUrl = UrlUtils.removeQuery(StringUtils.notNullStr(mediaUrl));
+
+        // We're using a separate cache in WPAndroid and RN's Gutenberg editor so we need to reload the image
+        // in the preview screen using WPAndroid's image loader. We create a resized url using Photon service and
+        // device's max width to display a smaller image that can load faster and act as a placeholder.
+        int displayWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getBaseContext()),
+                DisplayUtils.getDisplayPixelHeight(getBaseContext()));
+
+        int margin = getResources().getDimensionPixelSize(R.dimen.preview_image_view_margin);
+        int maxWidth = displayWidth - (margin * 2);
+
+        int reducedSizeWidth = (int) (maxWidth * PREVIEW_IMAGE_REDUCED_SIZE_FACTOR);
+        String resizedImageUrl = mReaderUtilsWrapper.getResizedImageUrl(
+                mediaUrl,
+                reducedSizeWidth,
+                0,
+                !SiteUtils.isPhotonCapable(mSite),
+                mSite.isWPComAtomic()
+        );
+
+        String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
+
+        AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN);
+        ActivityLauncher.openImageEditor(this, resizedImageUrl, imageUrl, outputFileExtension);
     }
 
     @Override
@@ -1772,8 +1849,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
                                     account.getEmail());
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
+            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
                    .setMessage(message)
                    .setPositiveButton(android.R.string.ok,
@@ -2229,11 +2305,18 @@ public class EditPostActivity extends AppCompatActivity implements
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.refreshViews();
                         }
+                    } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+                        List<Uri> uris = convertStringArrayIntoUrisList(
+                                data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS));
+                        mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
+                    } else if (data.getIntExtra(PhotoPickerActivity.CHILD_REQUEST_CODE, -1)
+                               == RequestCodes.TAKE_VIDEO) {
+                        mEditorMedia.addFreshlyTakenVideoToEditor();
                     }
                     break;
                 case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
-                    mEditorMedia.advertiseImageOptimisationAndAddMedia(retrieveMediaUris(data));
+                    mEditorMedia.advertiseImageOptimisationAndAddMedia(WPMediaUtils.retrieveMediaUris(data));
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
@@ -2243,7 +2326,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
-                    mEditorMedia.addNewMediaItemsToEditorAsync(retrieveMediaUris(data), false);
+                    mEditorMedia.addNewMediaItemsToEditorAsync(WPMediaUtils.retrieveMediaUris(data), false);
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     mEditorMedia.addFreshlyTakenVideoToEditor();
@@ -2261,6 +2344,12 @@ public class EditPostActivity extends AppCompatActivity implements
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
                     }
                     break;
+                case RequestCodes.GIF_PICKER:
+                    if (data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                        int[] localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                        mEditorMedia.addGifMediaToPostAsync(localIds);
+                    }
+                    break;
                 case RequestCodes.HISTORY_DETAIL:
                     if (data.hasExtra(KEY_REVISION)) {
                         mViewPager.setCurrentItem(PAGE_CONTENT);
@@ -2270,22 +2359,28 @@ public class EditPostActivity extends AppCompatActivity implements
                                 getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
                     }
                     break;
+                case RequestCodes.IMAGE_EDITOR_EDIT_IMAGE:
+                    if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
+                        Uri imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
+                        if (imageUri != null) {
+                            Map<String, String> properties = new HashMap<>();
+                            properties.put("actions", "crop");
+                            AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, properties);
+
+                            mEditorMedia.addNewMediaToEditorAsync(imageUri, true);
+                        }
+                    }
+                    break;
             }
         }
     }
 
-    private List<Uri> retrieveMediaUris(Intent data) {
-        ClipData clipData = data.getClipData();
-        ArrayList<Uri> uriList = new ArrayList<>();
-        if (clipData != null) {
-            for (int i = 0; i < clipData.getItemCount(); i++) {
-                ClipData.Item item = clipData.getItemAt(i);
-                uriList.add(item.getUri());
-            }
-        } else {
-            uriList.add(data.getData());
+    private List<Uri> convertStringArrayIntoUrisList(String[] stringArray) {
+        List<Uri> uris = new ArrayList<>(stringArray.length);
+        for (String stringUri : stringArray) {
+            uris.add(Uri.parse(stringUri));
         }
-        return uriList;
+        return uris;
     }
 
     private void addLastTakenPicture() {
@@ -2462,7 +2557,13 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO, allowMultipleSelection);
+        if (allowMultipleSelection) {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_IMAGE_PICKER, mSite,
+                    mEditPostRepository.getId());
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER, mSite,
+                    mEditPostRepository.getId());
+        }
     }
 
     @Override
@@ -2472,12 +2573,24 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddVideoClicked(boolean allowMultipleSelection) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO, allowMultipleSelection);
+        if (allowMultipleSelection) {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_VIDEO_PICKER, mSite,
+                    mEditPostRepository.getId());
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER, mSite,
+                    mEditPostRepository.getId());
+        }
     }
 
     @Override
     public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO, allowMultipleSelection);
+        if (allowMultipleSelection) {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_MEDIA_PICKER, mSite,
+                    mEditPostRepository.getId());
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER, mSite,
+                    mEditPostRepository.getId());
+        }
     }
 
     @Override
@@ -2539,8 +2652,7 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
-            AlertDialog.Builder builder = new AlertDialog.Builder(
-                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
+            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
             builder.setTitle(getString(R.string.cannot_retry_deleted_media_item));
             builder.setPositiveButton(R.string.yes, (dialog, id) -> {
                 runOnUiThread(() -> mEditorFragment.removeMedia(mediaId));
@@ -2652,14 +2764,20 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public String onAuthHeaderRequested(String url) {
-        String authHeader = "";
+    public Map<String, String> onAuthHeaderRequested(String url) {
+        Map<String, String> authHeaders = new HashMap<>();
+
         String token = mAccountStore.getAccessToken();
         if (mSite.isPrivate() && WPUrlUtils.safeToAddWordPressComAuthToken(url)
             && !TextUtils.isEmpty(token)) {
-            authHeader = "Bearer " + token;
+            authHeaders.put(AuthenticationUtils.AUTHORIZATION_HEADER_NAME, "Bearer " + token);
         }
-        return authHeader;
+
+        if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.exists() && WPUrlUtils
+                .safeToAddPrivateAtCookie(url, mPrivateAtomicCookie.getDomain())) {
+            authHeaders.put(AuthenticationUtils.COOKIE_HEADER_NAME, mPrivateAtomicCookie.getCookieContent());
+        }
+        return authHeaders;
     }
 
     @Override

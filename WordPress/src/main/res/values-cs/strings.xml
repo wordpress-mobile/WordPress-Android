@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-15 19:06:01+0000
+Translation-Revision-Date: 2020-03-31 06:52:54+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -26,12 +26,10 @@ Language: cs_CZ
     <string name="domain_contact_information_organization_hint">Organizace (volitelné)</string>
     <string name="stats_management_try_it_now">Vyzkoušet</string>
     <string name="stats_management_new">Nový</string>
-    <string name="stats_management_edit">Upravit</string>
     <string name="stats_management_dismiss_insights_news_card">Skrýt</string>
-    <string name="post_list_drafts">Koncepty</string>
-    <string name="post_list_published">Publikováno</string>
     <string name="post_list_author_everyone">Všichni</string>
     <string name="post_list_author_me">Já</string>
+    <string name="post_list_tab_drafts">Koncepty</string>
     <string name="stats_insights_this_year_site_stats">Tento rok</string>
     <string name="stats_insights_posts">Příspěvky</string>
     <string name="stats_insights_year">Rok</string>
@@ -78,9 +76,6 @@ Language: cs_CZ
     <string name="new_site_creation_create_site_button">Vytvořit stránku</string>
     <string name="new_site_creation_search_domain_input_hint">Prohledat domény</string>
     <string name="new_site_creation_clear_all_content_description">Vyčistit</string>
-    <string name="new_site_creation_site_title_hint">Název stránky</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Vlastní rubrika</string>
-    <string name="new_site_creation_button_skip">Přeskočit</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
     <string name="new_site_creation_screen_title_general">Vytvořit webovou stránku</string>
     <string name="preference_strip_image_location">Odstranit polohu z médií</string>
@@ -793,8 +788,6 @@ Language: cs_CZ
     <string name="editor_dropped_html_images_not_allowed">Odstraňování obrázků v režimu HTML není povoleno</string>
     <string name="editor_content_hint">Sdílejte svůj příběh zde…</string>
     <string name="post_status_draft">Koncept</string>
-    <string name="post_list_trashed">Smazáno</string>
-    <string name="post_list_scheduled">Naplánovat</string>
     <string name="post_status_post_private">Soukromé</string>
     <string name="post_status_pending_review">Čeká na schválení</string>
     <string name="change_location">Změnit polohu</string>
@@ -815,7 +808,6 @@ Language: cs_CZ
     <string name="post_settings_not_set">Nenastaveno</string>
     <string name="notifications_tab_title_all">Vše</string>
     <string name="post_settings_status">Stav</string>
-    <string name="notifications_tab_title_unread">Nepřečtené</string>
     <string name="top_level_category_name">Nejvyšší úroveň</string>
     <string name="category_parent">Nadřazená rubrika (volitelné):</string>
     <string name="media_empty_audio_list">Nemáte žádný zvuk</string>
@@ -1533,8 +1525,6 @@ Language: cs_CZ
     <string name="notifications_empty_all">Doposud nejsou k dispozici žádná oznámení.</string>
     <string name="error_blog_hidden">Tento web je skrytý a proto nemohl být načten. Zpřístupněte jej v nastavení a zkuste to znovu.</string>
     <string name="file_error_create">Nepodařilo se vytvořit soubor temp pro nahrávání. Ujistěte se, že máte na svém zařízení dostatek volného místa.</string>
-    <string name="trash_yes">Odstranit</string>
-    <string name="trash_no">Ponechat</string>
     <string name="wordpress_blog">WordPress web</string>
     <string name="select_categories">Vyberte rubriku</string>
     <string name="invalid_site_url_message">Zkontrolujte platnost URL adresy stránky</string>

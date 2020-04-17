@@ -16,11 +16,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import org.wordpress.android.login.R;
 
 public class WPBottomSheetDialogFragment extends BottomSheetDialogFragment {
-    @Override
-    public int getTheme() {
-        return R.style.LoginTheme_BottomSheetDialogStyle;
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

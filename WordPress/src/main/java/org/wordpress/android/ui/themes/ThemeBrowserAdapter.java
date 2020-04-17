@@ -2,7 +2,6 @@ package org.wordpress.android.ui.themes;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,13 +21,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
+
+import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.HeaderGridView;
@@ -49,6 +51,8 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private int mViewWidth;
     private String mQuery;
 
+    private int mElevatedSurfaceColor;
+
     private final List<ThemeModel> mAllThemes = new ArrayList<>();
     private final List<ThemeModel> mFilteredThemes = new ArrayList<>();
 
@@ -60,6 +64,11 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         mCallback = callback;
         mViewWidth = AppPrefs.getThemeImageSizeWidth();
         mImageManager = imageManager;
+
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mContext);
+        float cardElevation = mContext.getResources().getDimension(R.dimen.card_elevation);
+        mElevatedSurfaceColor =
+                elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(cardElevation);
     }
 
     private static class ThemeViewHolder {
@@ -162,21 +171,27 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
 
     @SuppressWarnings("deprecation")
     private void configureCardView(ThemeViewHolder themeViewHolder, boolean isCurrent) {
-        Resources resources = mContext.getResources();
         if (isCurrent) {
-            ColorStateList color = ColorStateList.valueOf(ContextCompat.getColor(mContext, android.R.color.white));
-            themeViewHolder.mDetailsView.setBackgroundColor(resources.getColor(R.color.primary_50));
+            ColorStateList color =
+                    ContextExtensionsKt.getColorStateListFromAttribute(mContext, R.attr.colorOnPrimarySurface);
+            themeViewHolder.mDetailsView
+                    .setBackgroundColor(
+                            ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorPrimary));
             themeViewHolder.mNameView.setTextColor(color);
             themeViewHolder.mActiveView.setVisibility(View.VISIBLE);
-            themeViewHolder.mCardView.setCardBackgroundColor(resources.getColor(R.color.primary_50));
-            themeViewHolder.mImageButton.setImageTintList(color);
+            themeViewHolder.mCardView
+                    .setCardBackgroundColor(
+                            ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorPrimary));
+            ImageViewCompat.setImageTintList(themeViewHolder.mImageButton, color);
         } else {
-            ColorStateList color = ColorStateList.valueOf(ContextCompat.getColor(mContext, android.R.color.black));
-            themeViewHolder.mDetailsView.setBackgroundColor(resources.getColor(android.R.color.white));
+            ColorStateList color = ContextExtensionsKt.getColorStateListFromAttribute(mContext, R.attr.colorOnSurface);
+            themeViewHolder.mDetailsView
+                    .setBackgroundColor(mElevatedSurfaceColor);
             themeViewHolder.mNameView.setTextColor(color);
             themeViewHolder.mActiveView.setVisibility(View.GONE);
-            themeViewHolder.mCardView.setCardBackgroundColor(resources.getColor(android.R.color.white));
-            themeViewHolder.mImageButton.setImageTintList(color);
+            themeViewHolder.mCardView
+                    .setCardBackgroundColor(mElevatedSurfaceColor);
+            ImageViewCompat.setImageTintList(themeViewHolder.mImageButton, color);
         }
     }
 

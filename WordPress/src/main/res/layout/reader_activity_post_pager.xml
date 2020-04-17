@@ -13,7 +13,7 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar_main" />
 
     <ProgressBar
         android:id="@+id/progress_loading"

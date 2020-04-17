@@ -7,7 +7,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -20,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -44,9 +45,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import dagger.android.support.AndroidSupportInjection;
-
 import static android.content.Context.CLIPBOARD_SERVICE;
+
+import dagger.android.support.AndroidSupportInjection;
 
 public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
@@ -396,7 +397,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     private void showErrorDialog(String message) {
-        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+        AlertDialog dialog = new MaterialAlertDialogBuilder(getActivity())
                 .setMessage(message)
                 .setPositiveButton(R.string.login_error_button, null)
                 .create();

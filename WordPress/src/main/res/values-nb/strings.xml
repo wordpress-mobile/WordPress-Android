@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-17 19:46:43+0000
+Translation-Revision-Date: 2020-04-03 18:22:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">Hva folk sier</string>
+    <string name="gutenberg_native_warning_message">Advarselsmelding</string>
+    <string name="gutenberg_native_want_to_work_with_us">Vil du arbeide for oss?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_usa">USA</string>
+    <string name="gutenberg_native_success_message">Vellykketmelding</string>
+    <string name="gutenberg_native_strategy">Strategi</string>
+    <string name="gutenberg_native_show_post_content">Vis innhold av innlegg</string>
+    <string name="gutenberg_native_services">Tjenester</string>
+    <string name="gutenberg_native_samuel_the_dog">Samuel the Dog</string>
+    <string name="gutenberg_native_sally_smith">Sally Smith</string>
+    <string name="gutenberg_native_project_name">Prosjektnavn</string>
+    <string name="gutenberg_native_portfolio">Portefølje</string>
+    <string name="gutenberg_native_only_show_excerpt">Vis bare utdrag</string>
+    <string name="gutenberg_native_link_to">Lenke til</string>
+    <string name="gutenberg_native_link_settings">Lenkeinnstillinger</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">La oss bygge noe sammen.</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">La oss bygge noe sammen</string>
+    <string name="gutenberg_native_let_s_build_something_together">La oss bygge noe sammen</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_inspiration">Inspirasjon</string>
+    <string name="gutenberg_native_excerpt_length_words">Lengde på utdrag (ord)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Send meg e-post: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_555_555_1234">98765432</string>
+    <string name="gutenberg_native_10_street_road">Gateveien 10</string>
+    <string name="create_post_page_fab_tooltip_contributors">Opprett et innlegg</string>
+    <string name="post_list_tab_trashed_posts">Kastet</string>
+    <string name="post_list_tab_scheduled_posts">Planlagt</string>
+    <string name="post_list_tab_published_posts">Publisert</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Ikke tilkoblet</string>
+    <string name="my_site_select_domains_page_title">Nettstedsadresse</string>
+    <string name="notifications_tab_title_likes">Likinger</string>
+    <string name="notifications_tab_title_follows">Følger</string>
+    <string name="notifications_tab_title_comments">Kommentarer</string>
+    <string name="notifications_tab_title_unread_notifications">Ulest</string>
+    <string name="dlg_cancel_action_dont_trash">Ikke kast</string>
+    <string name="dlg_confirm_action_trash">Kast</string>
+    <string name="stats_insights_management_activity">Aktivitet</string>
+    <string name="stats_insights_management_posts_and_pages">Innlegg og sider</string>
+    <string name="stats_insights_management_general">Generelt</string>
+    <string name="stats_management_screen_title">Legg til nytt kort</string>
+    <string name="stats_management_add_new_stats_card">Legg til nytt statistikkort</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Valgt</string>
+    <string name="reader_btn_select_filter_content_description">Velg nettsted eller nøkkelord for å filtrere innlegg</string>
+    <string name="reader_btn_remove_filter_content_description">Fjern nåværende filter</string>
+    <string name="reader_title_subs">Behandle nøkkelord og nettsteder</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Logge inn på WordPress.com?</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Logg inn på WordPress.com for å se de siste innleggene fra nøkkelord du følger</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Logg inn på WordPress.com for å se siste innlegg fra nettsteder du følger</string>
     <string name="gutenberg_native_template_preview">Forhåndsvisning av mal</string>
     <string name="gutenberg_native_replace_current_block">Erstatt nåværende blokk</string>
     <string name="gutenberg_native_add_to_end">Legg til på slutten</string>
@@ -14,6 +66,8 @@ Language: nb_NO
     <string name="gutenberg_native_add_block_after">Legg til blokk etter</string>
     <string name="reader_filter_empty_tags_action">Legg til et stikkord</string>
     <string name="reader_filter_empty_sites_action">Følg et nettsted</string>
+    <string name="reader_filter_empty_tags_list">Du kan følge innlegg om et spesifikt emne ved å legge til et nøkkelord</string>
+    <string name="reader_filter_empty_sites_list">Se de siste innleggene fra nettsteder du følger</string>
     <string name="reader_filter_main_title">Følger</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_edit_video">Rediger video</string>
@@ -48,6 +102,7 @@ Language: nb_NO
     <string name="dialog_confirm_scheduled_post_sync_yes">Synkroniser nå</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Dette innlegget vil synkroniseres straks.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Klar til å synkronisere?</string>
+    <string name="new_site_creation_unavailable_domain">Dette domenet er ikke tilgengelig</string>
     <string name="login_promo_viewpager_content_description">Introduksjon</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Vi klarte ikke å få tilgang til nettstedet ditt. Du må kontakte din nettvert for å løse dette.</string>
@@ -101,6 +156,13 @@ Language: nb_NO
     <string name="gutenberg_native_image_caption_s">Bildetekst. %s</string>
     <string name="gutenberg_native_hide_keyboard">Skjul tastatur</string>
     <string name="gutenberg_native_help_icon">Hjelpeikon</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block">Dobbelttrykk for å legge til en blokk</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Dobbelttrykk og hold for å redigere</string>
+    <string name="gutenberg_native_current_value_is_s">Nåværende verdi er %s</string>
+    <string name="gutenberg_native_content">Innhold…</string>
+    <string name="gutenberg_native_clear_all_settings">Fjern alle innstillinger</string>
+    <string name="gutenberg_native_choose_from_device">Velg fra enhet</string>
+    <string name="gutenberg_native_alt_text">Alt-tekst</string>
     <string name="notifications_tab_dialog_switch_desc">Varsler</string>
     <string name="master_switch_default_title_off">Av</string>
     <string name="master_switch_default_title_on">På</string>
@@ -208,7 +270,6 @@ Language: nb_NO
     <string name="enter_wordpress_site">Nettstedet på denne adressen er ikke et WordPress-nettsted. For at vi skal kunne koble til det må det ha WordPress installert.</string>
     <string name="login_invalid_site_url">Vennligst oppgi en fullstendig nettstedsadresse, f.eks example.com.</string>
     <string name="enter_email_for_site">Logg inn med WordPress.com for å koble til %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">Tilkoblingen til Facebook kunne ikke opprettes fordi denne kontoen ikke har tilgang til noen sider. Facebook støtter deling til Facebook-sider, men ikke til Facebook-profiler.</string>
     <string name="stats_post_views_label">Visninger</string>
     <string name="stats_post_label">Innlegg</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -295,7 +356,6 @@ Language: nb_NO
     <string name="domain_registration_contact_form_input_error">Vennligst oppi en gyldig %s</string>
     <string name="domains_suggestions_choose_domain">Velg domene</string>
     <string name="stats_management_new">Ny</string>
-    <string name="stats_management_edit">Rediger</string>
     <string name="stats_management_dismiss_insights_news_card">Avvis</string>
     <string name="stats_management_try_it_now">Prøv det nå</string>
     <string name="stats_management_news_card_message">Vekg hvilken statistikk å se og fokuser på de data du bryr deg mest om. Trykk %1$s i bunnen av innsikter for å tilpasse din statistikk.</string>
@@ -304,14 +364,11 @@ Language: nb_NO
     <string name="editor_failed_to_insert_media_tap_to_retry">Mislyktes i å sette inn media.\nVennligst trykk for å prøve igjen.</string>
     <string name="editor_uploading_draft">Din kladd lastes opp</string>
     <string name="post_uploading_draft">Laster opp kladd</string>
-    <string name="post_list_drafts">Kladder</string>
-    <string name="post_list_published">Publiserte</string>
+    <string name="post_list_tab_drafts">Kladder</string>
     <string name="post_list_author_everyone">Alle</string>
     <string name="post_list_author_me">Meg</string>
     <string name="error_restoring_post">Det oppsto en feil ved gjenoppretting av innlegget</string>
     <string name="backdated_for">Tilbakedatert til: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Elementer som vises på din fane for innsikter. Dra og slipp for å tilpasse.</string>
-    <string name="stats_insights_add_insights_header">Legg til innsikter</string>
     <string name="stats_insights_management_title">Se bare den mest relevante statistikken. Legg til og organiser innsikter nedenfor.</string>
     <string name="stats_insights_social">Sosialt</string>
     <string name="stats_insights_annual_site_stats">Årlig nettstedsstatistikk</string>
@@ -450,15 +507,7 @@ Language: nb_NO
     <string name="new_site_creation_empty_domain_list_message">Ingen tilgjengelige adresser passet til ditt søk</string>
     <string name="site_creation_error_generic_subtitle">Feil ved kommunkasjonen med server, vennligst prøv igjen</string>
     <string name="site_creation_error_generic_title">Det oppsto et problem</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Tilpasset kategori</string>
-    <string name="new_site_creation_button_skip">Hopp over</string>
-    <string name="new_site_creation_tag_line_description">Slagordet er en kort tekst som vises rett under nettstedtittelen</string>
-    <string name="new_site_creation_tag_line_hint">Slagord</string>
-    <string name="new_site_creation_site_title_hint">Tittel på nettstedet</string>
-    <string name="new_site_creation_site_info_header_subtitle">Fortell oss mer om nettstedet du lager.</string>
-    <string name="new_site_creation_site_info_header_title">Grunnleggende informasjon</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Det oppsto et problem</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Ingen forbindelse</string>
     <string name="site_creation_segments_subtitle">Dette hjelper oss å komme med anbefalinger, men du er blir aldri låst — alle nettsteder utvikler seg!</string>
     <string name="site_creation_segments_title">Fortell oss hva slags nettsted du ønsker å lage</string>
     <string name="new_site_creation_preview_title">Ditt nettsted er laget!</string>
@@ -481,11 +530,6 @@ Language: nb_NO
     <string name="stats_no_data_for_period">Ingen data for denne perioden</string>
     <string name="preference_strip_image_location">Fjern dette stedet fra media</string>
     <string name="stats_cannot_be_started">Vi kan ikke åpne statistikken i øyeblikket. Vennligst prøv igjen senere</string>
-    <string name="giphy_powered_by_giphy">Drevet av GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Noe media kunne ikke lastes på grunn av en nettverksfeil.</string>
-    <string name="giphy_picker_empty_search_list">Ingen media passet ditt søk</string>
-    <string name="giphy_picker_initial_empty_text">Søk for å finne GIF-er å legge til i ditt mediebibliotek!</string>
-    <string name="giphy_picker_search_hint">Søk Giphy</string>
     <string name="stats_author_views_label">Visninger</string>
     <string name="stats_author_label">Forfatter</string>
     <string name="stats_authors">Forfattere</string>
@@ -1196,8 +1240,6 @@ Language: nb_NO
     <string name="editor_dropped_text_error">En feil oppstod under slipping av tekst</string>
     <string name="editor_dropped_html_images_not_allowed">Å slippe bilder når du er i HTML-modus, er ikke tillatt</string>
     <string name="editor_content_hint">Del historien din her …</string>
-    <string name="post_list_trashed">Kastet</string>
-    <string name="post_list_scheduled">Planlagt</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Utkast</string>
     <string name="post_status_pending_review">Avventer gjennomgang</string>
@@ -1218,7 +1260,6 @@ Language: nb_NO
     <string name="post_settings_more_options">Flere innstillinger</string>
     <string name="post_settings_categories_and_tags">Kategorier og stikkord</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Ulest</string>
     <string name="notifications_tab_title_all">Alle</string>
     <string name="top_level_category_name">Toppnivå</string>
     <string name="category_parent">Overkategori (valgfritt):</string>
@@ -1916,8 +1957,6 @@ Language: nb_NO
     <string name="saving_changes">Lagrer endringer</string>
     <string name="hint_comment_content">Kommentar</string>
     <string name="trash">Papirkurv</string>
-    <string name="trash_no">Ikke slett</string>
-    <string name="trash_yes">Slett</string>
     <string name="dlg_confirm_trash_comments">Send til papirkurv?</string>
     <string name="dlg_trashing_comments">Sender til papirkurven</string>
     <string name="dlg_spamming_comments">Marker som useriøs</string>

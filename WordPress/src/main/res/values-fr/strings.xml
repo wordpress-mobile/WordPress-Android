@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-05 01:54:10+0000
+Translation-Revision-Date: 2020-04-06 07:01:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">Ce que disent les gens</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Nous offrons une gamme de services pour vous aider à obtenir les résultats que vous recherchez. Vous ne savez pas ce dont vous avez besoin, ou ce que cela coûte ? Nous pouvons vous expliquer quels services sont bons pour vous et vous en dire plus à propos de nos tarifs. Contactez-nous ci-dessous.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Nous sommes une petite équipe de professionnels talentueux avec un large éventail de compétences et d’expérience. Nous aimons ce que nous faisons et nous le faisons avec passion. Nous sommes impatients de travailler avec vous.</string>
+    <string name="gutenberg_native_warning_message">Message d’avertissement</string>
+    <string name="gutenberg_native_want_to_work_with_us">Vous voulez travailler avec nous ?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Les visiteurs veulent savoir qui est de l’autre côté de la page. Servez-vous de cet espace pour écrire à propos de vous, de votre site, de votre entreprise ou de ce que vous voulez. Utilisez les témoignages ci-dessous pour citer les autres, en parlant de la même chose, avec leurs propres mots.</string>
+    <string name="gutenberg_native_usa">États-Unis</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Ceci est du contenu exemple inclus dans le modèle pour illustrer ses fonctionnalités. Retirez-les ou remplacez-les par vos propres mots et médias.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">La meilleure manière de commencer est d’arrêter de discuter et de commencer à faire.</string>
+    <string name="gutenberg_native_team">Équipe</string>
+    <string name="gutenberg_native_success_message">Message envoyé</string>
+    <string name="gutenberg_native_strategy">Stratégie</string>
+    <string name="gutenberg_native_show_post_content">Afficher le contenu de l’article</string>
+    <string name="gutenberg_native_services">Services</string>
+    <string name="gutenberg_native_samuel_the_dog">Samuel le chien</string>
+    <string name="gutenberg_native_sally_smith">Sally Smith</string>
+    <string name="gutenberg_native_project_name">Nom du projet</string>
+    <string name="gutenberg_native_position_or_job_title">Titre du poste ou intitulé</string>
+    <string name="gutenberg_native_portfolio">Portfolio</string>
+    <string name="gutenberg_native_only_show_excerpt">N’afficher que l’extrait</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Mon portfolio présente des projets variés créés tout au long de ma carrière. Mes coordonnées sont plus bas. Contactez-moi !</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">Hauteur minimale en pixels</string>
+    <string name="gutenberg_native_link_to">Lier à</string>
+    <string name="gutenberg_native_link_settings">Réglages de lien</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Parlons-en ! 👋 N’hésitez pas à communiquer en utilisant les coordonnées ci-dessous ou utiliser le formulaire.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Construisons quelque chose ensemble !</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Construisons quelque chose ensemble !</string>
+    <string name="gutenberg_native_let_s_build_something_together">Construisons quelque chose ensemble !</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Ce sont nos choix, Harry, qui montrent ce que nous sommes vraiment, bien plus que nos capacités.</string>
+    <string name="gutenberg_native_inspiration">Inspiration</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">Contactez-nous !</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">Contactez-nous !</string>
+    <string name="gutenberg_native_get_in_touch">Contactez-nous !</string>
+    <string name="gutenberg_native_excerpt_length_words">Longueur de l’extrait (mots)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Écrivez-nous : &lt;a href=\"mailto:mail@example.com\">mail@exemple.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">Modifier l\'image de couverture</string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Ne pleurez pas parce que c’est fini, souriez parce que c’est arrivé.</string>
+    <string name="gutenberg_native_customize">PERSONNALISER</string>
+    <string name="gutenberg_native_city_10100">Bordeaux, 33000</string>
+    <string name="gutenberg_native_button_link_url">URL du lien du bouton</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">Les réglages de couleur de bouton arrivent bientôt.</string>
+    <string name="gutenberg_native_border_settings">Réglages de la bordure</string>
+    <string name="gutenberg_native_border_radius">Arrondit de bordure</string>
+    <string name="gutenberg_native_background_opacity">Opacité de l’arrière-plan</string>
+    <string name="gutenberg_native_add_paragraph_block">Ajouter un bloc paragraphe</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Une courte description des services que vous offrez.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Une courte bio avec votre histoire personnelle, vos principales réalisations ou d’autres choses intéressantes.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Une description de votre projet ou des travaux présentés.</string>
+    <string name="gutenberg_native_555_555_1234">05 01 02 03 04</string>
+    <string name="gutenberg_native_10_street_road">1 rue Sainte Catherine</string>
+    <string name="create_post_page_fab_tooltip_contributors">Créer un article</string>
+    <string name="post_list_tab_trashed_posts">Mis à la corbeille</string>
+    <string name="post_list_tab_scheduled_posts">Planifié</string>
+    <string name="post_list_tab_published_posts">Publié</string>
+    <string name="sharing_facebook_account_must_have_pages">La connexion à Facebook ne trouve aucune page. Publicize ne peut pas se connecter aux profils, seulement aux pages publiées.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Non connecté</string>
+    <string name="my_site_select_domains_page_title">Adresse du site</string>
+    <string name="notifications_tab_title_likes">J’aime</string>
+    <string name="notifications_tab_title_follows">Abonnements</string>
+    <string name="notifications_tab_title_comments">Commentaires</string>
+    <string name="notifications_tab_title_unread_notifications">Non lu</string>
+    <string name="dlg_cancel_action_dont_trash">Ne pas supprimer</string>
+    <string name="dlg_confirm_action_trash">Mettre à la corbeille</string>
+    <string name="stats_insights_management_activity">Activité</string>
+    <string name="stats_insights_management_posts_and_pages">Articles et pages</string>
+    <string name="stats_insights_management_general">Général</string>
+    <string name="stats_management_screen_title">Ajouter une nouvelle carte</string>
+    <string name="stats_management_add_new_stats_card">Ajouter une nouvelle carte de statistiques</string>
     <string name="reader_self_hosted_select_filter">Utiliser le bouton de filtre pour trouver des articles sur des sujets spécifiques</string>
     <string name="reader_bottom_sheet_content_description">Sélectionner une étiquette ou un site, fenêtre contextuelle</string>
     <string name="reader_btn_selected_filter_tick_content_description">Sélectionné</string>
@@ -80,6 +153,7 @@ Language: fr
     <string name="enter_site_credentials_instead">Connexion avec les identifiants au site</string>
     <string name="enter_credentials_for_site">Connexion avec vos identifiants au site %1$s</string>
     <string name="send_verification_email">Envoyer l\'e-mail de vérification</string>
+    <string name="my_site_bottom_sheet_add_page">Page du site</string>
     <string name="reader_following_display_name">Abonné</string>
     <string name="posts_cannot_be_started">Nous ne pouvons pas ouvrir les articles pour le moment. Réessayez ultérieurement.</string>
     <string name="suffix_1_000">%s mille</string>
@@ -94,6 +168,7 @@ Language: fr
     <string name="reader_discover_display_name">Découvrez</string>
     <string name="reader_my_likes_display_name">J\'aime</string>
     <string name="site_cannot_be_loaded">Nous ne pouvons pas charger les données de votre site pour le moment. Réessayez ultérieurement.</string>
+    <string name="gutenberg_native_wordpress_media_library">Bibliothèque des médias WordPress</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Nous travaillons dur pour ajouter des blocs supplémentaires avec chaque nouvelle version. En attendant, vous pouvez également éditer cet article sur le Web.</string>
     <string name="gutenberg_native_ungroup">Dissocier</string>
     <string name="gutenberg_native_translate">Traduire</string>
@@ -177,7 +252,7 @@ Language: fr
     <string name="notifications_tab_dialog_master_hint_on">Désactiver l\'affichage des notifications sur l\'onglet des notifications pour ce site</string>
     <string name="notifications_tab_dialog_master_status_off">Notifications pour ce site</string>
     <string name="notifications_tab_dialog_master_status_on">Notifications pour ce site</string>
-    <string name="dialog_gutenberg_informative_description_page">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouvelles pages u2014 c’est super ! Si vous revenir à l’éditeur classique, allez à « Mon site » > « Réglages du site ».</string>
+    <string name="dialog_gutenberg_informative_description_page">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouvelles pages u2014 − c’est super ! Si vous revenir à l’éditeur classique, allez sur « Mon site » > « Réglages du site ».</string>
     <string name="dialog_gutenberg_informative_description_post">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouveaux articles u2014  – c’est super ! Si vous revenir à l’éditeur classique, allez à « Mon site » > « Réglages du site ».</string>
     <string name="pick_media">Ajouter une image ou une vidéo</string>
     <string name="error_post_not_submitted_retrying">Nous n\'avons pas pu soumettre cet article pour révision, mais nous réessayerons plus tard. </string>
@@ -275,7 +350,6 @@ Language: fr
     <string name="enter_wordpress_site">Le site Web à cette adresse n\'est pas un site WordPress. WordPress doit être installé sur le site pour que nous puissions nous y connecter.</string>
     <string name="login_invalid_site_url">Veuillez entrer une adresse de site Web complète, telle que exemple.com.</string>
     <string name="enter_email_for_site">Connectez-vous à WordPress.com pour accéder à %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">Impossible d\'établir la connexion Facebook, car ce compte n\'a accès à aucune page. Facebook prend en charge les associations de partage aux pages Facebook, mais pas aux profils Facebook.</string>
     <string name="stats_post_views_label">Vues</string>
     <string name="stats_post_label">Article</string>
     <string name="stats_list_item_description">%1$s : %2$s, %3$s: %4$s</string>
@@ -364,7 +438,6 @@ Language: fr
     <string name="domain_registration_contact_form_input_error">Veuillez saisir un(e) %s valide</string>
     <string name="domains_suggestions_choose_domain">Choisir le domaine</string>
     <string name="stats_management_new">Nouvelles</string>
-    <string name="stats_management_edit">Modifier</string>
     <string name="stats_management_dismiss_insights_news_card">Ignorer</string>
     <string name="stats_management_try_it_now">Essayer maintenant</string>
     <string name="stats_management_news_card_message">Choisissez les statistiques à consulter et concentrez-vous sur les données les plus importantes à vos yeux. Appuyez sur %1$s au bas des Tendances pour personnaliser vos statistiques.</string>
@@ -373,14 +446,11 @@ Language: fr
     <string name="editor_failed_to_insert_media_tap_to_retry">L’insertion du média a échoué.\nVeuillez appuyer pour réessayer.</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="post_uploading_draft">Uploading draft</string>
-    <string name="post_list_drafts">Brouillons</string>
-    <string name="post_list_published">Publiés</string>
+    <string name="post_list_tab_drafts">Brouillons</string>
     <string name="post_list_author_everyone">Tout le monde</string>
     <string name="post_list_author_me">Moi</string>
     <string name="error_restoring_post">Une erreur est survenue pendant la restauration de la publication</string>
     <string name="backdated_for">Antidaté pour : %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Les éléments présentés ci-dessus apparaîtront dans votre onglet Tendances. Glissez-déposez pour personnaliser.</string>
-    <string name="stats_insights_add_insights_header">Ajouter des tendances</string>
     <string name="stats_insights_management_title">N\'affichez que les statistiques les plus pertinentes. Ajoutez et organisez vos tendances ci-après.</string>
     <string name="stats_insights_social">Réseaux sociaux</string>
     <string name="stats_insights_annual_site_stats">Statistiques annuelles du site</string>
@@ -521,15 +591,7 @@ Language: fr
     <string name="new_site_creation_empty_domain_list_message">Aucune adresse ne correspond à votre recherche</string>
     <string name="site_creation_error_generic_subtitle">Erreur de communication avec le serveur, veuillez essayer à nouveau.</string>
     <string name="site_creation_error_generic_title">Un problème est survenu</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Catégorie personnalisée</string>
-    <string name="new_site_creation_button_skip">Ignorer</string>
-    <string name="new_site_creation_tag_line_description">La description est une ligne de texte courte située sous le titre.</string>
-    <string name="new_site_creation_tag_line_hint">Description</string>
-    <string name="new_site_creation_site_title_hint">Titre du site</string>
-    <string name="new_site_creation_site_info_header_subtitle">Dites-nous en plus à propos du site que vous créez.</string>
-    <string name="new_site_creation_site_info_header_title">Informations de base</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Un problème est survenu</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Pas de connexion</string>
     <string name="site_creation_segments_subtitle">Cela nous aide à faire des recommandations. Vous pourrez modifier ce paramètre ultérieurement : tous les sites évoluent !</string>
     <string name="site_creation_segments_title">Dites-nous quel type de site vous aimeriez créer</string>
     <string name="new_site_creation_preview_title">Votre site a été créé.</string>
@@ -735,7 +797,6 @@ Language: fr
     <string name="people_empty_list_filtered_email_followers">Pas encore d\'abonnés par e-mail</string>
     <string name="people_empty_list_filtered_followers">Pas encore d\'abonnés</string>
     <string name="people_empty_list_filtered_users">Pas encore d\'utilisateurs</string>
-    <string name="connection_service_facebook_notice">Depuis le 1er Août 2018 Facebook n’autorise plus le partage direct des articles sur les profils Facebook. Les connexions aux pages Facebook demeurent inchangées. </string>
     <string name="reader_empty_posts_liked_description">Les articles que vous aimez apparaîtront ici</string>
     <string name="reader_empty_posts_liked_title">Aucune mention J\'aime</string>
     <string name="reader_empty_followed_blogs_button_followed">Accéder à la page des abonnés</string>
@@ -801,7 +862,7 @@ Language: fr
     <string name="reader_remove_bookmark">Supprimer des articles enregistrés</string>
     <string name="reader_add_bookmark">Ajouter aux articles enregistrés</string>
     <string name="reader_save_for_later_title">Articles enregistrés</string>
-    <string name="removed">Supprimé</string>
+    <string name="removed">Supprimés</string>
     <string name="my_site_icon_content_description">Modifier l\'icône du site</string>
     <string name="my_site_icon_dialog_cancel_button">Annuler</string>
     <string name="my_site_icon_dialog_remove_button">Supprimer</string>
@@ -1292,8 +1353,6 @@ Language: fr
     <string name="editor_dropped_text_error">Erreur survenue pendant le glisser-déposer du texte</string>
     <string name="editor_dropped_html_images_not_allowed">Il n\'est pas permis de glisser des images en mode HTML</string>
     <string name="editor_content_hint">Partagez votre histoire ici…</string>
-    <string name="post_list_trashed">Supprimé</string>
-    <string name="post_list_scheduled">Planifié</string>
     <string name="post_status_post_private">Privé</string>
     <string name="post_status_draft">Brouillon</string>
     <string name="post_status_pending_review">En attente de relecture</string>
@@ -1314,7 +1373,6 @@ Language: fr
     <string name="post_settings_more_options">Plus d’options</string>
     <string name="post_settings_categories_and_tags">Catégories et étiquettes</string>
     <string name="post_settings_status">État</string>
-    <string name="notifications_tab_title_unread">Non lu</string>
     <string name="notifications_tab_title_all">Tous</string>
     <string name="top_level_category_name">Niveau le plus haut</string>
     <string name="category_parent">Catégorie parente (facultative) :</string>
@@ -1899,7 +1957,7 @@ Language: fr
     <string name="stats_visitors">Visiteurs</string>
     <string name="stats_views">Visites</string>
     <string name="stats_timeframe_years">Années</string>
-    <string name="stats_likes">Aime</string>
+    <string name="stats_likes">Aimés</string>
     <string name="stats_view_countries">Pays</string>
     <string name="stats_view_followers">Abonnés</string>
     <string name="stats_view_publicize">Publicize</string>
@@ -2012,8 +2070,6 @@ Language: fr
     <string name="saving_changes">Enregistrement des modifications</string>
     <string name="hint_comment_content">Commentaire</string>
     <string name="trash">Corbeille</string>
-    <string name="trash_no">Ne pas supprimer</string>
-    <string name="trash_yes">Supprimer</string>
     <string name="dlg_confirm_trash_comments">Mettre à la corbeille ?</string>
     <string name="dlg_trashing_comments">Envoie à la corbeille</string>
     <string name="dlg_spamming_comments">Marquage comme indésirable</string>
@@ -2096,7 +2152,7 @@ Language: fr
     <string name="manage">Organiser</string>
     <string name="more_notifications">et %d autres.</string>
     <string name="new_notifications">%d nouvelles notifications</string>
-    <string name="follows">Suit</string>
+    <string name="follows">Suivis</string>
     <string name="note_reply_successful">Réponse envoyée</string>
     <string name="sign_in">Se connecter</string>
     <string name="loading">Chargement…</string>

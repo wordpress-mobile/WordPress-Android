@@ -48,7 +48,6 @@ public class NoteBlock {
     private boolean mIsBadge;
     private boolean mIsPingback;
     private boolean mHasAnimatedBadge;
-    private int mBackgroundColor;
 
     public interface OnNoteBlockTextClickListener {
         void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan);
@@ -114,9 +113,6 @@ public class NoteBlock {
         mIsBadge = true;
     }
 
-    public void setBackgroundColor(int backgroundColor) {
-        mBackgroundColor = backgroundColor;
-    }
 
     public int getLayoutResourceId() {
         return R.layout.note_block_basic;
@@ -243,9 +239,6 @@ public class NoteBlock {
         } else {
             noteBlockHolder.getTextView().setVisibility(View.GONE);
         }
-
-
-        view.setBackgroundColor(mBackgroundColor);
 
         return view;
     }

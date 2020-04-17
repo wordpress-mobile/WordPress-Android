@@ -40,7 +40,6 @@ Language: ku_TR
     <string name="enter_wordpress_site">Malpera di vê adrêsê de ne malpereke WordPressê ye. Ji bo ku em karibin pê re têkiliyê deynin divê ser malperê WordPress sazkirî be.</string>
     <string name="login_invalid_site_url">Xêra xwe temamiya adrêsa malperê têkeve, mîna \"example.com\".</string>
     <string name="enter_email_for_site">Bi WordPressê têkeve, ji bo girêdana %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">Girêdana Facebookê bi ser neket, ji ber ku gihîneke vê ajimerê yê ji bo rûpelan tine. Facebook piştgiriyê dide bo parvekirina girêdanan yê ji bo Rûpelên Facebookê, lê piştgiriyê nade parvekirina girêdanên bo Profîlên Facebookê.</string>
     <string name="stats_post_views_label">Dîtin</string>
     <string name="stats_post_label">Şandî</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -128,7 +127,6 @@ Language: ku_TR
     <string name="domain_registration_contact_form_input_error">Ji kerema xwe %s yeka derbasdar têxîne</string>
     <string name="domains_suggestions_choose_domain">Navper Bibijêre</string>
     <string name="stats_management_new">Nû</string>
-    <string name="stats_management_edit">Serast bike</string>
     <string name="stats_management_dismiss_insights_news_card">Veşêre</string>
     <string name="stats_management_try_it_now">Aniha biceribîne</string>
     <string name="stats_management_news_card_message">Rêjejimarên(statîstîkên) ku dixwazî bibînî bibijêre û bala xwe bide agahiyên bi kêrî te tên. Ji bo rêjejimaran(statîstîkan) xwemalî bikî, bitepîne %1$s di binê \"Kûrbînî\"yê de.</string>
@@ -137,14 +135,10 @@ Language: ku_TR
     <string name="editor_failed_to_insert_media_tap_to_retry">Tevlîkirina medyayê bi serneket.\nJi bo ceribandineke din, bitepîne.</string>
     <string name="editor_uploading_draft">Reşnivîsa te tê hilxistin</string>
     <string name="post_uploading_draft">Reşnivîs tê hilxistin</string>
-    <string name="post_list_drafts">Reşnivîs</string>
-    <string name="post_list_published">Weşandî</string>
     <string name="post_list_author_everyone">Her kes</string>
     <string name="post_list_author_me">Min</string>
     <string name="error_restoring_post">Di vegerandina şandiyê de çewtiyek pêk hat</string>
     <string name="backdated_for">Vegeriya ser: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Hêmanên ku li jor tê nîşandan dê li hilpekîna te ya kûrbînê were nîşandan. Ji bo kesanekirinê bikşîne û berde.</string>
-    <string name="stats_insights_add_insights_header">Kûrbîn Tevlî Bike</string>
     <string name="stats_insights_management_title">Tenê rêjejimarên herî pêwendîdar bibîne. Kûrbînên xwe tevlî jêr bike û serast bike.</string>
     <string name="stats_insights_social">Civakî</string>
     <string name="stats_insights_annual_site_stats">Rêjejimarên Salane ya Malperê</string>
@@ -285,15 +279,7 @@ Language: ku_TR
     <string name="new_site_creation_empty_domain_list_message">Tu navnîşana derbasdar û lêgerîna te li hev nayên</string>
     <string name="site_creation_error_generic_subtitle">Şaşiyeke di ragihandina rajekarê de pêk hat, ji kerema xwe dîsa biceribîne</string>
     <string name="site_creation_error_generic_title">Pirsgirêkek hebû</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Kategoriya taybet</string>
-    <string name="new_site_creation_button_skip">Derbas bibe</string>
-    <string name="new_site_creation_tag_line_description">Rêza etîketê rêzeke kin e ku li biniya serikê tê nîşandan.</string>
-    <string name="new_site_creation_tag_line_hint">Rêza Etîketê</string>
-    <string name="new_site_creation_site_title_hint">Sernava Malperê</string>
-    <string name="new_site_creation_site_info_header_subtitle">Di derbarê malpera xwe ya ku te afirandiye de ji me re bêhtir tiştan bibêje.</string>
-    <string name="new_site_creation_site_info_header_title">Agahiya Binyadî</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Pirsgirêkek hebû</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Girêdan tune</string>
     <string name="site_creation_segments_subtitle">Ev ê ji bo pêşniyardayînê alîkariya me bike. Lê, tê qet sînordar nebe  — wiha dê hemû malper pêşkevin!</string>
     <string name="site_creation_segments_title">Tu dixwazî malpereke çawa çê bike ji mere bibêje</string>
     <string name="new_site_creation_preview_title">malpera te hat afirandin!</string>
@@ -316,11 +302,6 @@ Language: ku_TR
     <string name="stats_no_data_for_period">Ji bo vê heyamê dane tune</string>
     <string name="preference_strip_image_location">Ji medyayê cih rake</string>
     <string name="stats_cannot_be_started">Rêjejimar vêga nayên vekirin. Paştre dîsa biceribîne.</string>
-    <string name="giphy_powered_by_giphy">Bi piştevaniya GIPHYê</string>
-    <string name="giphy_picker_endless_scroll_network_error">Ji ber çewtiya girêdanê barkirina hinek medyayan biserneket.</string>
-    <string name="giphy_picker_empty_search_list">Lêgerîna te bi ti medyayan re hevber nebû</string>
-    <string name="giphy_picker_initial_empty_text">Ji bo tu GIFan tevlî PirtukxaneyaMedyayê bike, bigere!</string>
-    <string name="giphy_picker_search_hint">Li ser Giphyê bigere</string>
     <string name="stats_author_views_label">Dîtin</string>
     <string name="stats_author_label">Nivîskar</string>
     <string name="stats_authors">Nivîskar</string>
@@ -499,7 +480,6 @@ Language: ku_TR
     <string name="people_empty_list_filtered_email_followers">Hîna şopînerên epeyamê tune ne</string>
     <string name="people_empty_list_filtered_followers">Hîna şopîner tune</string>
     <string name="people_empty_list_filtered_users">Hîna bikarhêner tune</string>
-    <string name="connection_service_facebook_notice">Ji 1ê Tebaxa 2018an ve, Facebook êdî destûrê nade parvekirinên yekser ên nivîsên te li profîlên Facebookê. Girêdanên rûpelên Facebookê bêguhertin dimîne.</string>
     <string name="reader_empty_posts_liked_description">Şandiyên te ecibandî dê li vir xuya bibe</string>
     <string name="reader_empty_posts_liked_title">Hîn ti tişt nehatiye ecibandin</string>
     <string name="reader_empty_followed_blogs_button_followed">Here şopandinên xwe</string>
@@ -1055,8 +1035,6 @@ Language: ku_TR
     <string name="editor_dropped_text_error">Çewtiyeke derket holê gava danîna nivîsê</string>
     <string name="editor_dropped_html_images_not_allowed">Di moda HTMLê de destûra hiştina wêneyan nayê dayîn</string>
     <string name="editor_content_hint">Çîroka xwe li vir parve bike…</string>
-    <string name="post_list_trashed">Jêbirî</string>
-    <string name="post_list_scheduled">Demsazkirî</string>
     <string name="post_status_post_private">Taybet</string>
     <string name="post_status_draft">Reşnivîs</string>
     <string name="post_status_pending_review">Li benda kontrolê ye</string>
@@ -1077,7 +1055,6 @@ Language: ku_TR
     <string name="post_settings_more_options">Vebijêrkên Bêhtir</string>
     <string name="post_settings_categories_and_tags">Beş û Nîşank</string>
     <string name="post_settings_status">Rewş</string>
-    <string name="notifications_tab_title_unread">Nexwendî</string>
     <string name="notifications_tab_title_all">Hemû</string>
     <string name="top_level_category_name">Asta jor</string>
     <string name="category_parent">Beşa esasî (gor daxwazê):</string>
@@ -1775,8 +1752,6 @@ Language: ku_TR
     <string name="saving_changes">Guherîn tê tomarkirin</string>
     <string name="hint_comment_content">Şîrove</string>
     <string name="trash">Jêbirdank</string>
-    <string name="trash_no">Neşîne jêbirdankê</string>
-    <string name="trash_yes">Bişîne jêbirdankê</string>
     <string name="dlg_confirm_trash_comments">Bila bişîne jêbirdankê?</string>
     <string name="dlg_trashing_comments">Dişîne jêbirdankê</string>
     <string name="dlg_spamming_comments">Wekî nexwestî tê nîşankirin</string>

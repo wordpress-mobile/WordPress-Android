@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
+import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.networking.SSLCertsViewActivity;
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
+import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -94,6 +96,9 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_HIGH_RES_IMAGE_URL;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_LOW_RES_IMAGE_URL;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_OUTPUT_FILE_EXTENSION;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
@@ -200,6 +205,16 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(StockMediaPickerActivity.KEY_REQUEST_CODE, requestCode);
 
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static void showGifPickerForResult(Activity activity, @NonNull SiteModel site, int requestCode) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("from", activity.getClass().getSimpleName());
+        AnalyticsTracker.track(Stat.GIF_PICKER_ACCESSED, properties);
+
+        Intent intent = new Intent(activity, GifPickerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -557,7 +572,7 @@ public class ActivityLauncher {
             } else {
                 // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
                 // connected through REST API.
-                WPWebViewActivity.openURL(context, siteUrl, true);
+                WPWebViewActivity.openURL(context, siteUrl, true, site.isPrivateWPComAtomic() ? site.getSiteId() : 0);
             }
         }
     }
@@ -628,15 +643,20 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void editPageForResult(@NonNull Fragment fragment, @NonNull PageModel page) {
+    public static void editPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
+                                         int pageLocalId, boolean loadAutoSaveRevision) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        editPageForResult(intent, fragment, page.getSite(), page.getPageId());
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, pageLocalId);
+        intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
+        fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void editPageForResult(Intent intent, @NonNull Fragment fragment, @NonNull SiteModel site,
-                                         int pageLocalId) {
+                                         int pageLocalId, boolean loadAutoSaveRevision) {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, pageLocalId);
+        intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -725,7 +745,8 @@ public class ActivityLauncher {
                             shareSubject,
                             site.getFrameNonce(),
                             true,
-                            startPreviewForResult);
+                            startPreviewForResult,
+                            site.isPrivateWPComAtomic() ? site.getSiteId() : 0);
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
@@ -975,5 +996,18 @@ public class ActivityLauncher {
         } else if (url.startsWith("https") || url.startsWith("http")) {
             WPWebViewActivity.openURL(context, url);
         }
+    }
+
+    public static void openImageEditor(
+        Activity activity,
+        String loResImageUrl,
+        String hiResImageUrl,
+        String outputFileExtension
+    ) {
+        Intent intent = new Intent(activity, EditImageActivity.class);
+        intent.putExtra(ARG_LOW_RES_IMAGE_URL, loResImageUrl);
+        intent.putExtra(ARG_HIGH_RES_IMAGE_URL, hiResImageUrl);
+        intent.putExtra(ARG_OUTPUT_FILE_EXTENSION, outputFileExtension);
+        activity.startActivityForResult(intent, RequestCodes.IMAGE_EDITOR_EDIT_IMAGE);
     }
 }

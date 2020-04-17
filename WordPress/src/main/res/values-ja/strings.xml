@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-25 08:10:40+0000
+Translation-Revision-Date: 2020-04-03 00:54:58+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="create_post_page_fab_tooltip_contributors">投稿を作成</string>
+    <string name="post_list_tab_trashed_posts">ゴミ箱に移動済み</string>
+    <string name="post_list_tab_scheduled_posts">予約済み</string>
+    <string name="post_list_tab_published_posts">公開済み</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook との連携でページが見つかりません。パブリサイズで Facebook のプロフィールに連携できません。連携できるのは公開されているページのみです。</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">接続されていません</string>
+    <string name="my_site_select_domains_page_title">サイトのアドレス</string>
+    <string name="notifications_tab_title_likes">いいね</string>
+    <string name="notifications_tab_title_follows">フォロー</string>
+    <string name="notifications_tab_title_comments">コメント</string>
+    <string name="notifications_tab_title_unread_notifications">未読</string>
+    <string name="dlg_cancel_action_dont_trash">ゴミ箱に移動しない</string>
+    <string name="dlg_confirm_action_trash">ゴミ箱</string>
+    <string name="stats_insights_management_activity">アクティビティ</string>
+    <string name="stats_insights_management_posts_and_pages">投稿とページ</string>
+    <string name="stats_insights_management_general">全般</string>
+    <string name="stats_management_screen_title">新しいカードを追加</string>
+    <string name="stats_management_add_new_stats_card">新しい統計カードを追加</string>
     <string name="reader_self_hosted_select_filter">フィルターボタンを使って指定トピックの投稿を検索</string>
     <string name="reader_bottom_sheet_content_description">タグまたはサイトを選択 (ポップアップウィンドウ)</string>
     <string name="reader_btn_selected_filter_tick_content_description">選択済</string>
@@ -277,7 +295,6 @@ Language: ja_JP
     <string name="enter_wordpress_site">このアドレスのサイトは WordPress のサイトではありません。接続するには、接続先のサイトに WordPress がインストールされている必要があります。</string>
     <string name="login_invalid_site_url">ウェブサイトの完全なアドレス (例 : example.com) を入力してください。</string>
     <string name="enter_email_for_site">WordPress.com でログインして、%1$s に接続してください</string>
-    <string name="sharing_facebook_account_must_have_pages">このアカウントはページへのアクセス権を持っていないため、Facebook との連携を確立できませんでした。Facebook は、Facebook ページへの共有接続をサポートしていますが、Facebook プロフィールへの共有接続はサポートしていません。</string>
     <string name="stats_post_views_label">表示回数</string>
     <string name="stats_post_label">投稿</string>
     <string name="stats_list_item_description">%1$s:%2$s、%3$s:%4$s</string>
@@ -366,7 +383,6 @@ Language: ja_JP
     <string name="domain_registration_contact_form_input_error">有効な%sを入力してください</string>
     <string name="domains_suggestions_choose_domain">ドメインを選択</string>
     <string name="stats_management_new">新規</string>
-    <string name="stats_management_edit">編集</string>
     <string name="stats_management_dismiss_insights_news_card">非表示</string>
     <string name="stats_management_try_it_now">今すぐお試しください</string>
     <string name="stats_management_news_card_message">表示する統計を選択し、最も重要視するデータに集中します。「統計概要」の下部にある%1$sをタップして、統計をカスタマイズします。</string>
@@ -375,14 +391,10 @@ Language: ja_JP
     <string name="editor_failed_to_insert_media_tap_to_retry">メディアを挿入できませんでした。\nタップして再試行してください。</string>
     <string name="editor_uploading_draft">下書きをアップロードしています</string>
     <string name="post_uploading_draft">下書きをアップロードしています</string>
-    <string name="post_list_drafts">下書き</string>
-    <string name="post_list_published">公開済み</string>
     <string name="post_list_author_everyone">すべてのユーザー</string>
     <string name="post_list_author_me">自分</string>
     <string name="error_restoring_post">投稿を復元する際にエラーが発生しました</string>
     <string name="backdated_for">遡及日 :%s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">上記のアイテムは「統計概要」タブに表示されます。ドラッグ &amp; ドロップしてカスタマイズします。</string>
-    <string name="stats_insights_add_insights_header">統計概要を追加</string>
     <string name="stats_insights_management_title">最も関連の深い統計情報のみを表示します。以下に統計概要を追加し整理します。</string>
     <string name="stats_insights_social">ソーシャル</string>
     <string name="stats_insights_annual_site_stats">年間サイト統計情報</string>
@@ -523,15 +535,7 @@ Language: ja_JP
     <string name="new_site_creation_empty_domain_list_message">検索条件一致する利用可能なアドレスはありません</string>
     <string name="site_creation_error_generic_subtitle">サーバーエラーです。もう一度お試しください</string>
     <string name="site_creation_error_generic_title">問題が発生しました</string>
-    <string name="new_site_creation_verticals_custom_subtitle">カスタムカテゴリー</string>
-    <string name="new_site_creation_button_skip">スキップ</string>
-    <string name="new_site_creation_tag_line_description">タグラインとは、タイトルのすぐ下に表示される短いテキストです</string>
-    <string name="new_site_creation_tag_line_hint">キャッチフレーズ</string>
-    <string name="new_site_creation_site_title_hint">サイトのタイトル</string>
-    <string name="new_site_creation_site_info_header_subtitle">作成するサイトについて詳しく教えてください。</string>
-    <string name="new_site_creation_site_info_header_title">基本情報</string>
     <string name="site_creation_fetch_suggestions_error_unknown">問題が発生しました</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">接続できません</string>
     <string name="site_creation_segments_subtitle">それに基づいて提案させていただきます。ただしそれに縛られることはありません。サイトはすべて進化するものですから。</string>
     <string name="site_creation_segments_title">どのようなサイトを作りたいか教えてください</string>
     <string name="new_site_creation_preview_title">サイトが作成されました。</string>
@@ -554,11 +558,6 @@ Language: ja_JP
     <string name="stats_no_data_for_period">この期間のデータがありません</string>
     <string name="preference_strip_image_location">メディアから位置情報を削除する</string>
     <string name="stats_cannot_be_started">現在統計を開けません。後ほど、もう一度お試しください</string>
-    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">ネットワークエラーにより一部のメディアが読み込めませんでした。</string>
-    <string name="giphy_picker_empty_search_list">検索と一致するメディアがありません</string>
-    <string name="giphy_picker_initial_empty_text">GIF を検索して、メディアライブラリに追加してください。</string>
-    <string name="giphy_picker_search_hint">Giphy を検索する</string>
     <string name="stats_author_views_label">表示回数</string>
     <string name="stats_author_label">投稿者</string>
     <string name="stats_authors">投稿者</string>
@@ -737,7 +736,6 @@ Language: ja_JP
     <string name="people_empty_list_filtered_email_followers">メールフォロワーはまだいません</string>
     <string name="people_empty_list_filtered_followers">フォロワーはまだいません</string>
     <string name="people_empty_list_filtered_users">ユーザーはまだいません</string>
-    <string name="connection_service_facebook_notice">2018年8月1日以降、Facebook では Facebook プロフィールとの間で直接投稿を共有することを許可しなくなります。Facebook ページとの連携については変更ありません。</string>
     <string name="reader_empty_posts_liked_description">お気に入りの投稿はここに表示されます</string>
     <string name="reader_empty_posts_liked_title">「いいね」がつけられているものはまだありません</string>
     <string name="reader_empty_followed_blogs_button_followed">次に移動</string>
@@ -1294,8 +1292,6 @@ Language: ja_JP
     <string name="editor_dropped_text_error">テキストをドロップする際にエラーが発生しました</string>
     <string name="editor_dropped_html_images_not_allowed">HTML モードで画像をドロップすることはできません</string>
     <string name="editor_content_hint">あなたのストーリーをお聞かせください…</string>
-    <string name="post_list_trashed">ゴミ箱に移動済み</string>
-    <string name="post_list_scheduled">予約済み</string>
     <string name="post_status_post_private">非公開</string>
     <string name="post_status_draft">下書き</string>
     <string name="post_status_pending_review">レビュー待ち</string>
@@ -1316,7 +1312,6 @@ Language: ja_JP
     <string name="post_settings_more_options">追加オプション</string>
     <string name="post_settings_categories_and_tags">カテゴリーとタグ</string>
     <string name="post_settings_status">ステータス</string>
-    <string name="notifications_tab_title_unread">未読</string>
     <string name="notifications_tab_title_all">すべて</string>
     <string name="top_level_category_name">トップレベル</string>
     <string name="category_parent">親カテゴリー (オプション):</string>
@@ -2014,8 +2009,6 @@ Language: ja_JP
     <string name="saving_changes">変更を保存中</string>
     <string name="hint_comment_content">コメント</string>
     <string name="trash">ゴミ箱</string>
-    <string name="trash_no">ゴミ箱に移動しない</string>
-    <string name="trash_yes">ゴミ箱に移動</string>
     <string name="dlg_confirm_trash_comments">ゴミ箱に移動しますか ?</string>
     <string name="dlg_trashing_comments">ゴミ箱に移動中</string>
     <string name="dlg_spamming_comments">スパムとしてマーク中</string>

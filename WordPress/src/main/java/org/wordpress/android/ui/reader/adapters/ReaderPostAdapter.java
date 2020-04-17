@@ -18,7 +18,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -60,6 +60,7 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
@@ -134,7 +135,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * cross-post
      */
     private class ReaderXPostViewHolder extends RecyclerView.ViewHolder {
-        private final CardView mCardView;
         private final ImageView mImgAvatar;
         private final ImageView mImgBlavatar;
         private final TextView mTxtTitle;
@@ -142,13 +142,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         ReaderXPostViewHolder(View itemView) {
             super(itemView);
-            mCardView = itemView.findViewById(R.id.card_view);
+            View postContainer = itemView.findViewById(R.id.post_container);
             mImgAvatar = itemView.findViewById(R.id.image_avatar);
             mImgBlavatar = itemView.findViewById(R.id.image_blavatar);
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtSubtitle = itemView.findViewById(R.id.text_subtitle);
 
-            mCardView.setOnClickListener(new View.OnClickListener() {
+            postContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
@@ -162,7 +162,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private class ReaderRemovedPostViewHolder extends RecyclerView.ViewHolder {
-        final CardView mCardView;
+        final View mPostContainer;
 
         private final ViewGroup mRemovedPostContainer;
         private final TextView mTxtRemovedPostTitle;
@@ -170,17 +170,18 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         ReaderRemovedPostViewHolder(View itemView) {
             super(itemView);
-            mCardView = itemView.findViewById(R.id.card_view);
+            mPostContainer = itemView.findViewById(R.id.post_container);
             mTxtRemovedPostTitle = itemView.findViewById(R.id.removed_post_title);
             mRemovedPostContainer = itemView.findViewById(R.id.removed_item_container);
             mUndoRemoveAction = itemView.findViewById(R.id.undo_remove);
         }
     }
+
     /*
      * full post
      */
     private class ReaderPostViewHolder extends RecyclerView.ViewHolder {
-        final CardView mCardView;
+        final View mPostContainer;
 
         private final TextView mTxtTitle;
         private final TextView mTxtText;
@@ -214,7 +215,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderPostViewHolder(View itemView) {
             super(itemView);
 
-            mCardView = itemView.findViewById(R.id.card_view);
+            mPostContainer = itemView.findViewById(R.id.post_container);
 
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtText = itemView.findViewById(R.id.text_excerpt);
@@ -265,7 +266,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // show author/blog link as disabled if we're previewing a blog, otherwise show
             // blog preview when the post header is clicked
             if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
-                int color = ContextExtensionsKt.getColorFromAttribute(itemView.getContext(), R.attr.wpColorText);
+                int color = ContextExtensionsKt.getColorFromAttribute(itemView.getContext(), R.attr.colorOnSurface);
                 mTxtAuthorAndBlogName.setTextColor(color);
                 // remove the ripple background
                 postHeaderView.setBackground(null);
@@ -432,9 +433,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
         Drawable drawable =
-                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp, R.color.primary_40);
+                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
+                        ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-        holder.mCardView.setOnClickListener(new View.OnClickListener() {
+        holder.mPostContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 undoPostUnbookmarked(post, position);
@@ -463,10 +465,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzMedium);
             mImageManager.loadIntoCircle(holder.mImgAvatarOrBlavatar,
                     ImageType.AVATAR, imageUrl);
+            holder.mImgAvatarOrBlavatar.setBackgroundColor(0);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else if (post.hasBlogImageUrl()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzMedium);
             mImageManager.load(holder.mImgAvatarOrBlavatar, ImageType.BLAVATAR, imageUrl);
+            holder.mImgAvatarOrBlavatar
+                    .setBackgroundColor(
+                            ContextCompat.getColor(holder.mImgAvatarOrBlavatar.getContext(), android.R.color.white));
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else {
             mImageManager.cancelRequestAndClearImageView(holder.mImgAvatarOrBlavatar);
@@ -596,7 +602,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mLayoutDiscover.setVisibility(View.GONE);
         }
 
-        holder.mCardView.setOnClickListener(new OnClickListener() {
+        holder.mPostContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mPostSelectedListener != null) {
@@ -855,6 +861,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             arrayPos--;
         }
 
+        if (mPosts.size() <= arrayPos) {
+            AppLog.d(T.READER, "Trying to read an element out of bounds of the posts list");
+            return null;
+        }
+
         return mPosts.get(arrayPos);
     }
 
@@ -923,7 +934,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mLikeCount.setCount(post.numLikes);
             holder.mLikeCount.setSelected(post.isLikedByCurrentUser);
             holder.mLikeCount.setVisibility(View.VISIBLE);
-            holder.mLikeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.mCardView.getContext(),
+            holder.mLikeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.mPostContainer.getContext(),
                     post.numLikes,
                     post.isLikedByCurrentUser));
             // can't like when logged out

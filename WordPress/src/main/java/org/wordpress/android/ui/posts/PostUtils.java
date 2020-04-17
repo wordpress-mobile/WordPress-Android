@@ -38,6 +38,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.text.BreakIterator;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -432,11 +433,28 @@ public class PostUtils {
 
     public static boolean isMediaInGutenbergPostBody(@NonNull String postContent,
                                             String localMediaId) {
-        // check if media is in Gutenberg Post
-        String imgBlockHeaderToSearchFor =
-                String.format("<!-- wp:image \\{[^\\}]*\"id\":%s[^\\}]*\\} -->", localMediaId);
-        Pattern pattern = Pattern.compile(imgBlockHeaderToSearchFor);
-        Matcher matcher = pattern.matcher(postContent);
+        List<String> patterns = new ArrayList<>();
+        // Regex for Image and Video blocks
+        patterns.add("<!-- wp:(?:image|video){1} \\{[^\\}]*\"id\":%s([^\\d\\}][^\\}]*)*\\} -->");
+        // Regex for Media&Text block
+        patterns.add("<!-- wp:media-text \\{[^\\}]*\"mediaId\":%s([^\\d\\}][^\\}]*)*\\} -->");
+        // Regex for Gallery block
+        patterns.add("<!-- wp:gallery \\{[^\\}]*\"ids\":\\[(?:\\d*,)*%s(?:,\\d*)*\\][^\\}]*\\} -->");
+
+        StringBuilder sb = new StringBuilder();
+        // Merge the patterns into one so we don't need to go over the post content multiple times
+        for (int i = 0; i < patterns.size(); i++) {
+            sb.append("(?:")
+              // insert the media id
+              .append(String.format(patterns.get(i), localMediaId))
+              .append(")");
+            boolean notLast = i != patterns.size() - 1;
+            if (notLast) {
+                sb.append("|");
+            }
+        }
+
+        Matcher matcher = Pattern.compile(sb.toString()).matcher(postContent);
         return matcher.find();
     }
 
@@ -473,7 +491,8 @@ public class PostUtils {
 
     public static UiStringText getCustomStringForAutosaveRevisionDialog(PostModel post) {
         Context context = WordPress.getContext();
-        String firstPart = context.getString(R.string.dialog_confirm_autosave_body_first_part);
+        String firstPart = post.isPage() ? context.getString(R.string.dialog_confirm_autosave_body_first_part_for_page)
+                : context.getString(R.string.dialog_confirm_autosave_body_first_part);
 
         String lastModified =
                 TextUtils.isEmpty(post.getDateLocallyChanged()) ? post.getLastModified() : post.getDateLocallyChanged();

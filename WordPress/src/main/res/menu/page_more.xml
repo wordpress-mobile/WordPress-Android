@@ -8,6 +8,11 @@
         android:title="@string/pages_view"
         app:showAsAction="never"/>
     <item
+        android:id="@+id/cancel_auto_upload"
+        android:orderInCategory="100"
+        android:title="@string/pages_and_posts_cancel_auto_upload"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/set_parent"
         android:orderInCategory="100"
         android:title="@string/pages_set_parent"

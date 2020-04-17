@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,28 +10,24 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
+import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
@@ -41,17 +38,19 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostInfoType
 import org.wordpress.android.ui.posts.PostListRemotePreviewState
+import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
-import org.wordpress.android.ui.uploads.PostEvents
+import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPDATE
@@ -66,18 +65,17 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAF
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
-import java.util.Date
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
 
 private const val ACTION_DELAY = 100L
 private const val SEARCH_DELAY = 200L
+private const val SCROLL_DELAY = 200L
 private const val SNACKBAR_DELAY = 500L
 private const val SEARCH_COLLAPSE_DELAY = 500L
-private const val PAGE_UPLOAD_TIMEOUT = 5000L
+
+typealias LoadAutoSaveRevision = Boolean
 
 class PagesViewModel
 @Inject constructor(
@@ -88,6 +86,11 @@ class PagesViewModel
     private val networkUtils: NetworkUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     private val previewStateHelper: PreviewStateHelper,
+    private val uploadStarter: UploadStarter,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val autoSaveConflictResolver: AutoSaveConflictResolver,
+    val uploadStatusTracker: PostModelUploadStatusTracker,
+    private val pageListEventListenerFactory: PageListEventListener.Factory,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -96,9 +99,6 @@ class PagesViewModel
 
     private val _listState = MutableLiveData<PageListState>()
     val listState: LiveData<PageListState> = _listState
-
-    private val _displayDeleteDialog = SingleLiveEvent<Page>()
-    val displayDeleteDialog: LiveData<Page> = _displayDeleteDialog
 
     private val _isNewPageButtonVisible = MutableLiveData<Boolean>()
     val isNewPageButtonVisible: LiveData<Boolean> = _isNewPageButtonVisible
@@ -112,8 +112,8 @@ class PagesViewModel
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
 
-    private val _editPage = SingleLiveEvent<PageModel?>()
-    val editPage: LiveData<PageModel?> = _editPage
+    private val _editPage = SingleLiveEvent<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>>()
+    val editPage: LiveData<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>> = _editPage
 
     private val _previewPage = SingleLiveEvent<PostModel?>()
     val previewPage: LiveData<PostModel?> = _previewPage
@@ -129,6 +129,18 @@ class PagesViewModel
 
     private val _scrollToPage = SingleLiveEvent<PageModel>()
     val scrollToPage: LiveData<PageModel?> = _scrollToPage
+
+    private val _invalidateUploadStatus = MutableLiveData<List<LocalId>>()
+    val invalidateUploadStatus: LiveData<List<LocalId>> = _invalidateUploadStatus
+
+    private val _postUploadAction = SingleLiveEvent<Triple<PostModel, SiteModel, Intent>>()
+    val postUploadAction: LiveData<Triple<PostModel, SiteModel, Intent>> = _postUploadAction
+
+    private val _uploadFinishedAction = SingleLiveEvent<Pair<PageModel, Boolean>>()
+    val uploadFinishedAction: LiveData<Pair<PageModel, Boolean>> = _uploadFinishedAction
+
+    private val _publishAction = SingleLiveEvent<PageModel>()
+    val publishAction = _publishAction
 
     private var isInitialized = false
     private var scrollToPageId: Long? = null
@@ -146,6 +158,9 @@ class PagesViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
+    private val _dialogAction = SingleLiveEvent<DialogHolder>()
+    val dialogAction: LiveData<DialogHolder> = _dialogAction
+
     private var _site: SiteModel? = null
     val site: SiteModel
         get() = checkNotNull(_site) { "Trying to access unitialized site" }
@@ -159,34 +174,45 @@ class PagesViewModel
         get() = _lastSearchQuery
 
     private var searchJob: Job? = null
-    private var pageUpdateContinuations: MutableMap<Long, Continuation<Unit>> = mutableMapOf()
     private var currentPageType = PUBLISHED
+
+    private lateinit var pageListEventListener: PageListEventListener
+
+    private val pageListDialogHelper: PageListDialogHelper by lazy {
+        PageListDialogHelper(
+                showDialog = { _dialogAction.postValue(it) },
+                analyticsTracker = analyticsTracker
+        )
+    }
 
     data class BrowsePreview(
         val post: PostModel,
         val previewType: RemotePreviewType
     )
-
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
         if (_site == null) {
             _site = site
 
-            eventBusWrapper.register(this)
-
             loadPagesAsync()
+            uploadStarter.queueUploadFromSite(site)
         }
-    }
 
-    init {
-        dispatcher.register(this)
+        pageListEventListener = pageListEventListenerFactory.createAndStartListening(
+                dispatcher = dispatcher,
+                bgDispatcher = defaultDispatcher,
+                postStore = postStore,
+                eventBusWrapper = eventBusWrapper,
+                site = site,
+                invalidateUploadStatus = this::handleInvalidateUploadStatus,
+                handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
+                handlePostUploadFinished = this::postUploadedFinished
+        )
     }
 
     override fun onCleared() {
-        dispatcher.unregister(this)
-        eventBusWrapper.unregister(this)
-
         actionPerfomer.onCleanup()
+        pageListEventListener.onDestroy()
     }
 
     private fun loadPagesAsync() = launch(defaultDispatcher) {
@@ -224,18 +250,16 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
-    fun onPageEditFinished() {
+    fun onPageEditFinished(localPageId: Int, data: Intent) {
         launch {
             refreshPages() // show local changes immediately
+            withContext(defaultDispatcher) {
+                pageStore.getPageByLocalId(pageId = localPageId, site = site)?.let {
+                    _scrollToPage.postOnUi(it)
+                    _postUploadAction.postValue(Triple(it.post, it.site, data))
+                }
+            }
         }
-    }
-
-    private suspend fun waitForPageUpdate(remotePageId: Long) {
-        _arePageActionsEnabled = false
-        suspendCoroutineWithTimeout<Unit>(PAGE_UPLOAD_TIMEOUT) { cont ->
-            pageUpdateContinuations[remotePageId] = cont
-        }
-        _arePageActionsEnabled = true
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -365,32 +389,39 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
-            MOVE_TO_DRAFT -> changePageStatus(page.id, PageStatus.DRAFT)
-            MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
-            PUBLISH_NOW -> publishPageNow(page.id)
+            MOVE_TO_DRAFT -> changePageStatus(page.remoteId, PageStatus.DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(page.remoteId, PageStatus.TRASHED)
+            PUBLISH_NOW -> publishPageNow(page.remoteId)
             DELETE_PERMANENTLY -> deletePage(page)
+            CANCEL_AUTO_UPLOAD -> cancelPendingAutoUpload(LocalId(page.localId))
         }
         return true
     }
 
     private fun deletePage(page: Page) {
         performIfNetworkAvailable {
-            _displayDeleteDialog.postValue(page)
+            pageListDialogHelper.showDeletePageConfirmationDialog(RemoteId(page.remoteId), page.title)
         }
+    }
+
+    private fun cancelPendingAutoUpload(pageId: LocalId) {
+        val page = postStore.getPostByLocalPostId(pageId.value)
+        val msgRes = UploadUtils.cancelPendingAutoUpload(page, dispatcher)
+        _showSnackbarMessage.postValue(SnackbarMessageHolder(msgRes))
     }
 
     private fun setParent(page: Page) {
         performIfNetworkAvailable {
             trackMenuSelectionEvent(SET_PARENT)
 
-            _setPageParent.postValue(pageMap[page.id])
+            _setPageParent.postValue(pageMap[page.remoteId])
         }
     }
 
     private fun previewPage(page: Page) {
         launch(defaultDispatcher) {
             trackMenuSelectionEvent(VIEW_PAGE)
-            val pageModel = pageMap[page.id]
+            val pageModel = pageMap[page.remoteId]
             val post = if (pageModel != null) postStore.getPostByLocalPostId(pageModel.pageId) else null
             _previewPage.postValue(post)
         }
@@ -429,9 +460,12 @@ class PagesViewModel
     }
 
     private fun publishPageNow(remoteId: Long) {
-        performIfNetworkAvailable {
-            pageMap[remoteId]?.date = Date()
-            changePageStatus(remoteId, PageStatus.PUBLISHED)
+        _publishAction.value = pageMap[remoteId]
+        launch(uiDispatcher) {
+            delay(SCROLL_DELAY)
+            pageMap[remoteId]?.let {
+                _scrollToPage.postValue(it)
+            }
         }
     }
 
@@ -441,14 +475,15 @@ class PagesViewModel
         }
     }
 
-    fun onDeleteConfirmed(remoteId: Long) {
-        launch(defaultDispatcher) {
-            pageMap[remoteId]?.let { deletePage(it) }
-        }
-    }
-
     fun onItemTapped(pageItem: Page) {
-        _editPage.postValue(pageMap[pageItem.id])
+        pageMap[pageItem.remoteId]?.let {
+            if (autoSaveConflictResolver.hasUnhandledAutoSave(it.post)) {
+                pageListDialogHelper.showAutoSaveRevisionDialog(it.post)
+                return
+            }
+
+            editPage(RemoteId(it.remoteId))
+        }
     }
 
     fun onNewPageButtonTapped() {
@@ -458,6 +493,7 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
+        uploadStarter.queueUploadFromSite(site)
         launch {
             reloadPages(FETCHING)
         }
@@ -573,8 +609,8 @@ class PagesViewModel
                     PageAction(remoteId, UPLOAD) {
                         val updatedPage = updatePageStatus(page, status)
                         pageStore.updatePageInDb(updatedPage)
-
                         refreshPages()
+                        _scrollToPage.postOnUi(updatedPage)
                         pageStore.uploadPageToServer(updatedPage)
                     }
                 } else {
@@ -582,8 +618,8 @@ class PagesViewModel
                     PageAction(remoteId, UPDATE) {
                         val updatedPage = updatePageStatus(page, status)
                         pageStore.updatePageInDb(updatedPage)
-
                         refreshPages()
+                        _scrollToPage.postOnUi(updatedPage)
                     }
                 }
 
@@ -600,7 +636,6 @@ class PagesViewModel
                 action.onSuccess = {
                     launch(defaultDispatcher) {
                         delay(ACTION_DELAY)
-                        reloadPages()
 
                         val message = prepareStatusChangeSnackbar(status, action.undo)
                         showSnackbar(message)
@@ -674,58 +709,63 @@ class PagesViewModel
         }
     }
 
+    // BasicFragmentDialog Events
+
+    fun onPositiveClickedForBasicDialog(instanceTag: String) {
+        pageListDialogHelper.onPositiveClickedForBasicDialog(
+                instanceTag = instanceTag,
+                editPage = this::editPage,
+                deletePage = this::onDeleteConfirmed
+        )
+    }
+
+    fun onNegativeClickedForBasicDialog(instanceTag: String) {
+        pageListDialogHelper.onNegativeClickedForBasicDialog(
+                instanceTag = instanceTag,
+                editPage = this::editPage
+        )
+    }
+
+    private fun onDeleteConfirmed(pageId: RemoteId) {
+        launch(defaultDispatcher) {
+            pageMap[pageId.value]?.let { deletePage(it) }
+        }
+    }
+
+    private fun editPage(pageId: RemoteId, loadAutoSaveRevision: LoadAutoSaveRevision = false) {
+        val page = pageMap.getValue(pageId.value)
+        val result = if (page.post.isLocalDraft) {
+            postStore.getPostByLocalPostId(page.pageId)
+        } else {
+            postStore.getPostByRemotePostId(page.remoteId, site)
+        }
+        _editPage.postValue(Triple(site, result, loadAutoSaveRevision))
+    }
+
     private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&
             _previewState.value != PostListRemotePreviewState.NONE
 
     private fun hasRemoteAutoSavePreviewError() = _previewState.value != null &&
             _previewState.value == PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
-    fun onPostUploaded(event: OnPostUploaded) {
-        var id = 0L
-        if (!pageUpdateContinuations.contains(id)) {
-            id = event.post.remotePostId
-        }
+    private fun handleRemoveAutoSaveEvent(pageId: LocalId, isError: Boolean) {
+        val post = postStore.getPostByLocalPostId(pageId.value)
 
-        pageUpdateContinuations[id]?.let { cont ->
-            pageUpdateContinuations.remove(id)
-            cont.resume(Unit)
+        if (isRemotePreviewingFromPostsList()) {
+            handleRemoteAutoSave(post, isError)
         }
     }
 
-    @Suppress("unused")
-    @Subscribe(threadMode = BACKGROUND)
-    fun onPostChanged(event: OnPostChanged) {
-        when (event.causeOfChange) {
-            // Fetched post list event will be handled by OnListChanged
-            is CauseOfOnPostChanged.RemoteAutoSavePost -> {
-                val post = postStore.getPostByLocalPostId((event.causeOfChange as RemoteAutoSavePost).localPostId)
-                if (event.isError) {
-                    AppLog.d(
-                            T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
-                            event.error.type + " - " + event.error.message
-                    )
-                }
-                if (isRemotePreviewingFromPostsList()) {
-                    handleRemoteAutoSave(post, event.isError)
-                }
-            }
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
-    fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
-        if (!event.post.isPage) {
-            return
-        }
-
+    private fun handleInvalidateUploadStatus(ids: List<LocalId>) {
         launch {
-            performIfNetworkAvailableAsync {
-                waitForPageUpdate(event.post.remotePostId)
-                reloadPages()
-            }
+            _invalidateUploadStatus.value = ids
+            refreshPages()
+        }
+    }
+
+    private fun postUploadedFinished(remoteId: RemoteId, isError: Boolean) {
+        pageMap[remoteId.value]?.let {
+            _uploadFinishedAction.postValue(Pair(it, isError))
         }
     }
 

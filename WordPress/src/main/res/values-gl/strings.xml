@@ -19,14 +19,10 @@ Language: gl_ES
     <string name="editor_failed_to_insert_media_tap_to_retry">Fallo ao insertar os medios.\nPor favor, toca para volver a intentalo.</string>
     <string name="editor_uploading_draft">O teu borrador estase subindo</string>
     <string name="post_uploading_draft">Subindo borrador</string>
-    <string name="post_list_drafts">Borradores</string>
-    <string name="post_list_published">Publicados</string>
     <string name="post_list_author_everyone">Todos</string>
     <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">Ocurriu un erro mentres se restauraba a entrada</string>
     <string name="backdated_for">Retroceder a: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Os elementos que se ven abaixo mostrarán a túa pestana de detalles. Arrastra e solta para personalizala.</string>
-    <string name="stats_insights_add_insights_header">Engadir detalles</string>
     <string name="stats_insights_management_title">Só ves as estatísticas máis relevantes. Engade e organiza os teus detalles abaixo.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estatísticas anuais do sitio</string>
@@ -148,10 +144,7 @@ Language: gl_ES
     <string name="my_site_btn_site_pages">Páxinas do sitio</string>
     <string name="login_epilogue_mysites_one">O meu sitio</string>
     <string name="login_epilogue_mysites_other">Os meus sitios</string>
-    <string name="post_list_scheduled">Programados</string>
-    <string name="post_list_trashed">No lixo</string>
     <string name="notifications_tab_title_all">Todas</string>
-    <string name="notifications_tab_title_unread">Non lidas</string>
     <string name="likes">Gústame</string>
     <string name="media_encoder_quality_100">Máxima</string>
     <string name="media_encoder_quality_95">Moi alta</string>
@@ -730,8 +723,6 @@ Language: gl_ES
     <string name="dlg_spamming_comments">Sinalando como spam</string>
     <string name="dlg_trashing_comments">Enviando ao lixo</string>
     <string name="dlg_confirm_trash_comments">Botar ao lixo?</string>
-    <string name="trash_yes">Botalo ao lixo</string>
-    <string name="trash_no">Non botalo ao lixo</string>
     <string name="trash">Lixo</string>
     <string name="sure_to_cancel_edit_comment">Cancelar a edición deste comentario?</string>
     <string name="reader_toast_err_remove_tag">Non foi posible borrar esta etiqueta</string>
