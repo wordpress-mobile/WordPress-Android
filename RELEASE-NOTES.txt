@@ -16,6 +16,8 @@
 * Added user Gravatar to the Me menu in My Site.
 * Updated site details screen title to "My site", to avoid duplicating the title of the current site which is displayed in the screen's header area. 
 
+* @-mention suggestions are now presented immediately after typing "@"
+ 
 14.6
 -----
 * Block editor: You can now crop, zoom in/out and rotate images that are already inserted in a post.
