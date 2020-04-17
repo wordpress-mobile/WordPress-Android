@@ -156,7 +156,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             View avatarContainerView = view.findViewById(R.id.avatar_container);
 
             LayoutParams lp = avatarContainerView.getLayoutParams();
-            lp.width = getContext().getResources().getDimensionPixelSize(R.dimen.magic_link_sent_illustration_sz);
+            lp.width = LayoutParams.WRAP_CONTENT;
             lp.height = getContext().getResources().getDimensionPixelSize(R.dimen.magic_link_sent_illustration_sz);
             avatarContainerView.setLayoutParams(lp);
 
