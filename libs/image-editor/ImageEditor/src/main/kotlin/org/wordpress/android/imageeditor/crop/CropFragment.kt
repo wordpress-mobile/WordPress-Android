@@ -25,7 +25,6 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedStat
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.utils.ToastUtils
 import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
-import java.io.File
 
 /**
  * Container fragment for displaying third party crop fragment and done menu item.
@@ -62,7 +61,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         viewModel.start(
             navArgs.inputFilePath,
             navArgs.outputFileExtension,
-            File(requireContext().cacheDir, "media_editing")
+            requireContext().cacheDir
         )
     }
 

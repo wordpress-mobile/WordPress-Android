@@ -83,9 +83,10 @@ class CropViewModel : ViewModel() {
         isStarted = true
     }
 
-    private fun initMediaEditingDirectory(directory: File) {
+    private fun initMediaEditingDirectory(cacheDir: File) {
+        val directory = File(cacheDir, MEDIA_EDITING)
         if (directory.mkdir()) {
-            Log.d("CropViewModel", "Cache directory created for media editing")
+            Log.d(TAG, "Cache directory created for media editing")
         }
     }
 
@@ -145,10 +146,12 @@ class CropViewModel : ViewModel() {
     }
 
     companion object {
+        private val TAG = CropViewModel::class.java.simpleName
         private const val IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME = "image_editor_output_image"
         private const val DEFAULT_FILE_EXTENSION = "jpg"
         private const val COMPRESS_QUALITY_100 = 100
         private const val PNG = "png"
         private const val WEBP = "webp"
+        private const val MEDIA_EDITING = "media_editing"
     }
 }
