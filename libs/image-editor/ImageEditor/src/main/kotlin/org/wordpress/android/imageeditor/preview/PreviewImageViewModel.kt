@@ -13,6 +13,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
 import org.wordpress.android.imageeditor.viewmodel.Event
+import java.util.UUID
 
 class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
@@ -144,7 +145,7 @@ class PreviewImageViewModel : ViewModel() {
             lowResImageUrl = outputFilePath,
             highResImageUrl = outputFilePath
         )
-        val newImageUiState = ImageInHighResLoadSuccessUiState(newImageData)
+        val newImageUiState = ImageDataStartLoadingUiState(newImageData)
         val newImageUiStates = updateViewPagerItemsUiStates(newImageUiState, selectedPosition)
 
         val currentUiState = uiState.value as UiState
@@ -239,7 +240,12 @@ class PreviewImageViewModel : ViewModel() {
 
     private fun List<ImageUiState>.hasSingleElement() = this.size == 1
 
-    data class ImageData(val lowResImageUrl: String, val highResImageUrl: String, val outputFileExtension: String)
+    data class ImageData(
+        val id: Long = UUID.randomUUID().hashCode().toLong(),
+        val lowResImageUrl: String,
+        val highResImageUrl: String,
+        val outputFileExtension: String
+    )
 
     data class UiState(
         val viewPagerItemsStates: List<ImageUiState>,

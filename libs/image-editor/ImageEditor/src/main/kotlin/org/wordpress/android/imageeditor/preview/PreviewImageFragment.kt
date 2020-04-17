@@ -143,7 +143,9 @@ class PreviewImageFragment : Fragment() {
                 loadIntoImageViewWithResultListener(imageData, imageView, position)
             }
         )
+        previewImageAdapter.setHasStableIds(true)
         previewImageViewPager.adapter = previewImageAdapter
+
         pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)

@@ -20,11 +20,16 @@ class PreviewImageAdapter(
         val uiState = getItem(position)
         (holder as PreviewImageViewHolder).onBind(uiState)
     }
+
+    override fun getItemId(position: Int): Long {
+        val uiState = getItem(position)
+        return uiState.data.id
+    }
 }
 
 private class PreviewImageDiffCallback : DiffUtil.ItemCallback<ImageUiState>() {
     override fun areItemsTheSame(oldItem: ImageUiState, newItem: ImageUiState): Boolean {
-        return oldItem.data.lowResImageUrl == newItem.data.lowResImageUrl
+        return oldItem.data.id == newItem.data.id
     }
 
     override fun areContentsTheSame(oldItem: ImageUiState, newItem: ImageUiState): Boolean {
