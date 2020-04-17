@@ -318,12 +318,13 @@ class FeaturedImageHelperTest {
                 eq("https://testing.com/url.jpg"),
                 anyInt(),
                 anyInt(),
+                anyBoolean(),
                 anyBoolean()
         )
     }
 
     @Test
-    fun `createCurrent-State returns uses thumbnailUrl is not empty`() {
+    fun `createCurrent-State uses thumbnailUrl if it is not empty`() {
         // Arrange
         val post: PostImmutableModel = mock()
         whenever(post.hasFeaturedImage()).thenReturn(true)
@@ -343,6 +344,7 @@ class FeaturedImageHelperTest {
                 "https://testing.com/thumbnail.jpg"),
                 anyInt(),
                 anyInt(),
+                anyBoolean(),
                 anyBoolean()
         )
     }
