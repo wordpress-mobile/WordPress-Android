@@ -3,6 +3,7 @@ package org.wordpress.android.imageeditor.preview
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -25,6 +26,7 @@ import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
+import org.wordpress.android.imageeditor.R.string
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.utils.UiHelpers
@@ -129,6 +131,7 @@ class PreviewImageFragment : Fragment() {
 
     private fun initializeViews() {
         initializeViewPager()
+        initializeInsertButton()
     }
 
     private fun initializeViewPager() {
@@ -183,6 +186,13 @@ class PreviewImageFragment : Fragment() {
             (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.peekContent().viewPagerItemsStates)
             cropActionMenu?.isEnabled = it.peekContent().editActionsEnabled
             UiHelpers.updateVisibility(thumbnailsTabLayout, it.peekContent().thumbnailsTabLayoutVisible)
+        }
+    }
+
+    private fun initializeInsertButton() {
+        insertButton.text = getString(string.insert_label_with_count, imageDataList.size)
+        insertButton.setOnClickListener {
+            Log.d("PreviewImageFragment", "Insert button clicked")
         }
     }
 

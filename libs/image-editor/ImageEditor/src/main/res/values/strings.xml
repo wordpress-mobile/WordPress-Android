@@ -5,6 +5,7 @@
     <string name="preview_image_thumbnail_description">Preview Image Thumbnail</string>
     <string name="retry">Retry</string>
     <string name="failed_to_load_image_tap_to_retry">Failed to load image.\nPlease tap to retry.</string>
+    <string name="insert_label_with_count">Insert %d</string>
 
     <!--crop screen-->
     <string name="crop">crop</string>
