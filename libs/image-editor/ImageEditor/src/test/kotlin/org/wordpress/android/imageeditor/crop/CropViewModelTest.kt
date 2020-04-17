@@ -94,5 +94,5 @@ class CropViewModelTest {
                 .isInstanceOf(ImageCropAndSaveFailedState::class.java)
     }
 
-    private fun initViewModel() = viewModel.start(TEST_INPUT_IMAGE_PATH, TEST_OUTPUT_FILE_EXTENSION)
+    private fun initViewModel() = viewModel.start(TEST_INPUT_IMAGE_PATH, TEST_OUTPUT_FILE_EXTENSION, cacheDir)
 }
