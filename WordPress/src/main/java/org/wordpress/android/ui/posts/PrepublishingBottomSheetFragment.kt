@@ -55,12 +55,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         dialog?.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 if (event.action != KeyEvent.ACTION_DOWN) true else {
-                    if (this@PrepublishingBottomSheetFragment::viewModel.isInitialized) {
-                        viewModel.onBackClicked()
-                        true
-                    } else {
-                        false
-                    }
+                    viewModel.onBackClicked()
+                    true
                 }
             } else false
         }
