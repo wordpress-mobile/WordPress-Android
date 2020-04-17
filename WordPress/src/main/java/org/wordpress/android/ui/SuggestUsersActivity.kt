@@ -86,8 +86,10 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                     }
                 }
             })
-            setText("@")
-            setSelection(1)
+            if (text.isEmpty()) {
+                setText("@")
+                setSelection(1)
+            }
 
             post { requestFocus() }
         }
