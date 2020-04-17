@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: PrepublishingViewModel
+    private lateinit var editPostRepository: EditPostRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +46,15 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.post_prepublishing_bottom_sheet, container)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (activity is EditPostActivityHook) {
+            editPostRepository = (activity as EditPostActivityHook).editPostRepository
+        } else {
+            throw RuntimeException("$activity must implement EditPostActivityHook")
+        }
     }
 
     override fun onResume() {
@@ -96,7 +107,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreenState>(KEY_SCREEN_STATE)
         val site = arguments?.getSerializable(SITE) as SiteModel
 
-        viewModel.start(getPostRepository(), site, prepublishingScreenState)
+        viewModel.start(editPostRepository, site, prepublishingScreenState)
     }
 
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
@@ -154,20 +165,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             arguments = Bundle().apply {
                 putSerializable(SITE, site)
             }
-        }
-    }
-
-    private fun getPostRepository(): EditPostRepository? {
-        return getEditPostActivityHook()?.editPostRepository
-    }
-
-    private fun getEditPostActivityHook(): EditPostActivityHook? {
-        val activity = activity ?: return null
-
-        return if (activity is EditPostActivityHook) {
-            activity
-        } else {
-            throw RuntimeException("$activity must implement EditPostActivityHook")
         }
     }
 
