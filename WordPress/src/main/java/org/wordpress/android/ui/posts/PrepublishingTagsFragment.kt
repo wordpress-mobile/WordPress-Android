@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.ActivityUtils
 
 class PrepublishingTagsFragment : TagsFragment() {
-    private lateinit var closeListener: PrepublishingScreenClosedListener
+    private var closeListener: PrepublishingScreenClosedListener? = null
 
     override fun getContentLayout() = R.layout.fragment_prepublishing_tags
 
@@ -19,6 +19,12 @@ class PrepublishingTagsFragment : TagsFragment() {
         super.onAttach(context)
         mTagsSelectedListener = parentFragment as TagsSelectedListener
         closeListener = parentFragment as PrepublishingScreenClosedListener
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        closeListener = null
+        mTagsSelectedListener = null
     }
 
     companion object {
@@ -41,10 +47,10 @@ class PrepublishingTagsFragment : TagsFragment() {
 
         toolbarTitle.text = context?.getString(R.string.prepublishing_nudges_toolbar_title_tags)
 
-        closeButton.setOnClickListener { closeListener.onCloseClicked() }
+        closeButton.setOnClickListener { closeListener?.onCloseClicked() }
         backButton.setOnClickListener {
             ActivityUtils.hideKeyboard(requireActivity())
-            closeListener.onBackClicked()
+            closeListener?.onBackClicked()
         }
     }
 }

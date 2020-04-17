@@ -20,7 +20,7 @@ class PrepublishingActionsFragment : Fragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingActionsViewModel
 
-    private lateinit var actionClickedListener: PrepublishingActionClickedListener
+    private var actionClickedListener: PrepublishingActionClickedListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +30,11 @@ class PrepublishingActionsFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         actionClickedListener = parentFragment as PrepublishingActionClickedListener
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        actionClickedListener = null
     }
 
     override fun onCreateView(
@@ -59,7 +64,7 @@ class PrepublishingActionsFragment : Fragment() {
 
         viewModel.onActionClicked.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { actionType ->
-                actionClickedListener.onActionClicked(actionType)
+                actionClickedListener?.onActionClicked(actionType)
             }
         })
 

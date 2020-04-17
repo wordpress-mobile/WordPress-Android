@@ -18,6 +18,11 @@ class PostSettingsTagsFragment : TagsFragment() {
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        mTagsSelectedListener = null
+    }
+
     companion object {
         const val TAG = "post_settings_tags_fragment_tag"
         @JvmStatic fun newInstance(site: SiteModel, tags: String?): PostSettingsTagsFragment {
