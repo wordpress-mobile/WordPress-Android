@@ -1,7 +1,7 @@
-14.6
+14.8
 -----
- 
 * Added reblog functionality
+
 14.7
 -----
 * Block editor: Disable ripple effect for Slider control
