@@ -30,7 +30,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var prepublishingViewModel: PrepublishingViewModel
+    private lateinit var viewModel: PrepublishingViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +55,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         dialog?.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 if (event.action != KeyEvent.ACTION_DOWN) true else {
-                    if (this@PrepublishingBottomSheetFragment::prepublishingViewModel.isInitialized) {
-                        prepublishingViewModel.onBackClicked()
+                    if (this@PrepublishingBottomSheetFragment::viewModel.isInitialized) {
+                        viewModel.onBackClicked()
                         true
                     } else {
                         false
@@ -68,7 +68,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModels(savedInstanceState)
+        initViewModel(savedInstanceState)
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
 
@@ -83,24 +83,24 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         }
     }
 
-    private fun initViewModels(savedInstanceState: Bundle?) {
-        prepublishingViewModel = ViewModelProviders.of(this, viewModelFactory)
+    private fun initViewModel(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingViewModel::class.java)
 
-        prepublishingViewModel.navigationTarget.observe(this, Observer { event ->
+        viewModel.navigationTarget.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { navigationState ->
                 navigateToScreen(navigationState)
             }
         })
 
-        prepublishingViewModel.dismissBottomSheet.observe(this, Observer { event ->
+        viewModel.dismissBottomSheet.observe(this, Observer { event ->
             event.applyIfNotHandled { dismiss() }
         })
 
         val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreenState>(KEY_SCREEN_STATE)
         val site = arguments?.getSerializable(SITE) as SiteModel
 
-        prepublishingViewModel.start(getPostRepository(), site, prepublishingScreenState)
+        viewModel.start(getPostRepository(), site, prepublishingScreenState)
     }
 
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
@@ -146,7 +146,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        prepublishingViewModel.writeToBundle(outState)
+        viewModel.writeToBundle(outState)
     }
 
     companion object {
@@ -176,7 +176,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     override fun onTagsSelected(selectedTags: String) {
-        prepublishingViewModel.updateTagsStateAndSetToCurrent(selectedTags)
+        viewModel.updateTagsStateAndSetToCurrent(selectedTags)
     }
 
     override fun onCloseClicked() {
@@ -184,10 +184,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     override fun onBackClicked() {
-        prepublishingViewModel.onBackClicked()
+        viewModel.onBackClicked()
     }
 
     override fun onActionClicked(actionType: ActionType) {
-        prepublishingViewModel.onActionClicked(actionType)
+        viewModel.onActionClicked(actionType)
     }
 }
