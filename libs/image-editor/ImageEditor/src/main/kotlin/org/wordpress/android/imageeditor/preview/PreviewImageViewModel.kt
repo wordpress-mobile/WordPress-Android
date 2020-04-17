@@ -13,10 +13,11 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
 import org.wordpress.android.imageeditor.viewmodel.Event
+import java.util.UUID
 
 class PreviewImageViewModel : ViewModel() {
-    private val _uiState: MutableLiveData<Event<UiState>> = MutableLiveData()
-    val uiState: LiveData<Event<UiState>> = _uiState
+    private val _uiState: MutableLiveData<UiState> = MutableLiveData()
+    val uiState: LiveData<UiState> = _uiState
 
     private val _loadIntoFile = MutableLiveData<Event<ImageLoadToFileState>>(Event(ImageLoadToFileIdleState))
     val loadIntoFile: LiveData<Event<ImageLoadToFileState>> = _loadIntoFile
@@ -39,17 +40,13 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     fun onLoadIntoImageViewSuccess(imageUrlAtPosition: String, position: Int) {
-        val newImageUiStates = updateViewPagerItemsUiStates(
-            imageUrlAtPosition = imageUrlAtPosition,
-            position = position,
-            loadSuccess = true
-        )
-        val newImageState = newImageUiStates[position]
+        val newImageUiState = createNewImageUiState(imageUrlAtPosition, position, loadSuccess = true)
+        val newImageUiStates = updateViewPagerItemsUiStates(newImageUiState, position)
 
-        val currentUiState = uiState.value?.peekContent() as UiState
+        val currentUiState = uiState.value as UiState
         val imageStateAtPosition = currentUiState.viewPagerItemsStates[position]
 
-        if (currentUiState.viewPagerItemsStates.hasSingleElement() && canLoadToFile(newImageState)) {
+        if (currentUiState.viewPagerItemsStates.hasSingleElement() && canLoadToFile(newImageUiState)) {
             updateLoadIntoFileState(
                 ImageStartLoadingToFileState(
                     imageUrlAtPosition = imageStateAtPosition.data.highResImageUrl,
@@ -59,7 +56,7 @@ class PreviewImageViewModel : ViewModel() {
         }
 
         val enableEditActions = if (position == selectedPosition) {
-            shouldEnableEditActionsForImageState(newImageState)
+            shouldEnableEditActionsForImageState(newImageUiState)
         } else {
             currentUiState.editActionsEnabled
         }
@@ -72,22 +69,20 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     fun onLoadIntoImageViewFailed(imageUrlAtPosition: String, position: Int) {
-        val newImageUiStates = updateViewPagerItemsUiStates(
-            imageUrlAtPosition = imageUrlAtPosition,
-            position = position,
-            loadSuccess = false
-        )
-        val currentUiState = uiState.value?.peekContent() as UiState
+        val newImageUiState = createNewImageUiState(imageUrlAtPosition, position, loadSuccess = false)
+        val newImageUiStates = updateViewPagerItemsUiStates(newImageUiState, position)
+
+        val currentUiState = uiState.value as UiState
         updateUiState(currentUiState.copy(viewPagerItemsStates = newImageUiStates))
     }
 
     fun onLoadIntoFileSuccess(inputFilePathAtPosition: String, position: Int) {
-        val imageStateAtPosition = (uiState.value?.peekContent() as UiState).viewPagerItemsStates[position]
+        val imageStateAtPosition = (uiState.value as UiState).viewPagerItemsStates[position]
         val outputFileExtension = imageStateAtPosition.data.outputFileExtension
 
         updateLoadIntoFileState(ImageLoadToFileSuccessState(inputFilePathAtPosition, position))
 
-        val currentUiState = uiState.value?.peekContent() as UiState
+        val currentUiState = uiState.value as UiState
         _navigateToCropScreenWithFileInfo.value = Event(
             Triple(
                 inputFilePathAtPosition,
@@ -103,7 +98,7 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     fun onCropMenuClicked(selectedPosition: Int) {
-        val selectedImageState = (uiState.value?.peekContent() as UiState).viewPagerItemsStates[selectedPosition]
+        val selectedImageState = (uiState.value as UiState).viewPagerItemsStates[selectedPosition]
         updateLoadIntoFileState(
             ImageStartLoadingToFileState(
                 imageUrlAtPosition = selectedImageState.data.highResImageUrl,
@@ -114,7 +109,7 @@ class PreviewImageViewModel : ViewModel() {
 
     fun onPageSelected(selectedPosition: Int) {
         this.selectedPosition = selectedPosition
-        val currentUiState = uiState.value?.peekContent() as UiState
+        val currentUiState = uiState.value as UiState
         val imageStateAtPosition = currentUiState.viewPagerItemsStates[selectedPosition]
 
         updateUiState(currentUiState.copy(
@@ -124,13 +119,30 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     private fun onLoadIntoImageViewRetry(selectedImageUrl: String, selectedPosition: Int) {
-        val newImageUiStates = updateViewPagerItemsUiStates(
+        val newImageUiState = createNewImageUiState(
             imageUrlAtPosition = selectedImageUrl,
             position = selectedPosition,
             loadSuccess = false,
             retry = true
         )
-        val currentUiState = uiState.value?.peekContent() as UiState
+        val newImageUiStates = updateViewPagerItemsUiStates(newImageUiState, selectedPosition)
+
+        val currentUiState = uiState.value as UiState
+        updateUiState(currentUiState.copy(viewPagerItemsStates = newImageUiStates))
+    }
+
+    fun onCropResult(outputFilePath: String) {
+        val imageStateAtPosition = (uiState.value as UiState).viewPagerItemsStates[selectedPosition]
+
+        // Update urls with cache file path
+        val newImageData = imageStateAtPosition.data.copy(
+            lowResImageUrl = outputFilePath,
+            highResImageUrl = outputFilePath
+        )
+        val newImageUiState = ImageDataStartLoadingUiState(newImageData)
+        val newImageUiStates = updateViewPagerItemsUiStates(newImageUiState, selectedPosition)
+
+        val currentUiState = uiState.value as UiState
         updateUiState(currentUiState.copy(viewPagerItemsStates = newImageUiStates))
     }
 
@@ -139,22 +151,29 @@ class PreviewImageViewModel : ViewModel() {
     ): List<ImageUiState> = data.map { createImageLoadStartUiState(it) }
 
     private fun updateViewPagerItemsUiStates(
+        newImageUiState: ImageUiState,
+        position: Int
+    ): List<ImageUiState> {
+        val currentUiState = uiState.value as UiState
+        val items = currentUiState.viewPagerItemsStates.toMutableList()
+        items[position] = newImageUiState
+        return items
+    }
+
+    private fun createNewImageUiState(
         imageUrlAtPosition: String,
         position: Int,
         loadSuccess: Boolean,
         retry: Boolean = false
-    ): List<ImageUiState> {
-        val currentUiState = uiState.value?.peekContent() as UiState
+    ): ImageUiState {
+        val currentUiState = uiState.value as UiState
         val imageStateAtPosition = currentUiState.viewPagerItemsStates[position]
         val imageDataAtPosition = imageStateAtPosition.data
-
-        val items = currentUiState.viewPagerItemsStates.toMutableList()
-        items[position] = when {
+        return when {
             loadSuccess -> createImageLoadSuccessUiState(imageUrlAtPosition, imageDataAtPosition, imageStateAtPosition)
             retry -> createImageLoadStartUiState(imageDataAtPosition)
             else -> createImageLoadFailedUiState(imageUrlAtPosition, imageDataAtPosition, position)
         }
-        return items
     }
 
     private fun createImageLoadStartUiState(
@@ -200,7 +219,7 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     private fun updateUiState(state: UiState) {
-        _uiState.value = Event(state)
+        _uiState.value = state
     }
 
     private fun updateLoadIntoFileState(fileState: ImageLoadToFileState) {
@@ -215,7 +234,12 @@ class PreviewImageViewModel : ViewModel() {
 
     private fun List<ImageUiState>.hasSingleElement() = this.size == 1
 
-    data class ImageData(val lowResImageUrl: String, val highResImageUrl: String, val outputFileExtension: String)
+    data class ImageData(
+        val id: Long = UUID.randomUUID().hashCode().toLong(),
+        val lowResImageUrl: String,
+        val highResImageUrl: String,
+        val outputFileExtension: String
+    )
 
     data class UiState(
         val viewPagerItemsStates: List<ImageUiState>,
