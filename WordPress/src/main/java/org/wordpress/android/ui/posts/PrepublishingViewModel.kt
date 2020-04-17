@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
 import org.apache.commons.text.StringEscapeUtils
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
@@ -48,7 +50,7 @@ data class PrepublishingNavigationTarget(
     val screenState: PrepublishingScreenState?
 )
 
-class PrepublishingViewModel @Inject constructor() : ViewModel() {
+class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatcher) : ViewModel() {
     private var isStarted = false
     private lateinit var site: SiteModel
     private var postRepository: EditPostRepository? = null
@@ -71,6 +73,8 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
 
         this.site = site
         this.postRepository = postRepository
+
+        fetchTags()
 
         /**
          * Restores the specific state if it was persisted.
@@ -195,5 +199,12 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
     private fun formatTags(tags: List<String>): String {
         val formattedTags = TextUtils.join(",", tags)
         return StringEscapeUtils.unescapeHtml4(formattedTags)
+    }
+
+    /**
+     * Fetches the tags so that they will be available when the Tags action is clicked
+     */
+    private fun fetchTags() {
+        dispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(site))
     }
 }
