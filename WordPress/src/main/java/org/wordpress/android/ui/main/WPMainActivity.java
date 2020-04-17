@@ -808,10 +808,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
     }
 
-    private void updateTitle() {
-        updateTitle(mBottomNav.getCurrentSelectedPage());
-    }
-
     private void updateTitle(PageType pageType) {
         ((MainToolbarFragment) mBottomNav.getActiveFragment())
                 .setTitle(mBottomNav.getTitleForPageType(pageType).toString());
