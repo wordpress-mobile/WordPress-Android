@@ -18,14 +18,16 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
 
 private const val TEST_ID_1 = 1L
-private const val TEST_ID_2 = 2L
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
 private const val TEST_OUTPUT_FILE_EXTENSION = ".png"
+private const val TEST_INPUT_FILE_PATH_TO_CROP = "/file/path/to/crop"
+
+private const val TEST2_ID_2 = 2L
 private const val TEST2_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image2.jpg"
 private const val TEST2_HIGH_RES_IMAGE_URL = "https://wordpress.com/image2.jpg"
 private const val TEST2_OUTPUT_FILE_EXTENSION = ".jpg"
-private const val TEST_FILE_PATH = "/file/path"
+private const val TEST2_OUTPUT_FILE_PATH_FROM_CROP = "/file/path/from/crop/2"
 private const val FIRST_ITEM_POSITION = 0
 private const val SECOND_ITEM_POSITION = 1
 
@@ -38,7 +40,7 @@ class PreviewImageViewModelTest {
 
     private val testImageDataList = listOf(
         ImageData(TEST_ID_1, TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, TEST_OUTPUT_FILE_EXTENSION),
-        ImageData(TEST_ID_2, TEST2_LOW_RES_IMAGE_URL, TEST2_HIGH_RES_IMAGE_URL, TEST2_OUTPUT_FILE_EXTENSION)
+        ImageData(TEST2_ID_2, TEST2_LOW_RES_IMAGE_URL, TEST2_HIGH_RES_IMAGE_URL, TEST2_OUTPUT_FILE_EXTENSION)
     )
 
     @Before
@@ -231,10 +233,10 @@ class PreviewImageViewModelTest {
         initViewModel()
 
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH, itemPosition)
+        viewModel.onLoadIntoFileSuccess(TEST_INPUT_FILE_PATH_TO_CROP, itemPosition)
 
         assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent())
-                .isEqualTo(ImageLoadToFileSuccessState(TEST_FILE_PATH, itemPosition))
+                .isEqualTo(ImageLoadToFileSuccessState(TEST_INPUT_FILE_PATH_TO_CROP, itemPosition))
     }
 
     @Test
@@ -242,7 +244,7 @@ class PreviewImageViewModelTest {
         initViewModel()
 
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH, itemPosition)
+        viewModel.onLoadIntoFileSuccess(TEST_INPUT_FILE_PATH_TO_CROP, itemPosition)
 
         assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent())
                 .isInstanceOf(ImageLoadToFileSuccessState::class.java)
@@ -261,12 +263,12 @@ class PreviewImageViewModelTest {
         initViewModel()
 
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH, itemPosition)
+        viewModel.onLoadIntoFileSuccess(TEST_INPUT_FILE_PATH_TO_CROP, itemPosition)
 
         val (inputFile, fileExtn, shouldReturnToPreviewScreen) =
                 requireNotNull(viewModel.navigateToCropScreenWithFileInfo.value).peekContent()
 
-        assertThat(inputFile).isEqualTo(TEST_FILE_PATH)
+        assertThat(inputFile).isEqualTo(TEST_INPUT_FILE_PATH_TO_CROP)
         assertThat(fileExtn).isEqualTo(TEST_OUTPUT_FILE_EXTENSION)
         assertThat(shouldReturnToPreviewScreen).isEqualTo(true)
     }
@@ -276,11 +278,11 @@ class PreviewImageViewModelTest {
         initViewModel(testImageDataList.subList(0, 1))
 
         val itemPosition = FIRST_ITEM_POSITION
-        viewModel.onLoadIntoFileSuccess(TEST_FILE_PATH, itemPosition)
+        viewModel.onLoadIntoFileSuccess(TEST_INPUT_FILE_PATH_TO_CROP, itemPosition)
 
         val (inputFile, fileExtn, shouldReturnToPreviewScreen) =
                 requireNotNull(viewModel.navigateToCropScreenWithFileInfo.value).peekContent()
-        assertThat(inputFile).isEqualTo(TEST_FILE_PATH)
+        assertThat(inputFile).isEqualTo(TEST_INPUT_FILE_PATH_TO_CROP)
         assertThat(fileExtn).isEqualTo(TEST_OUTPUT_FILE_EXTENSION)
         assertThat(shouldReturnToPreviewScreen).isEqualTo(false)
     }
@@ -390,6 +392,29 @@ class PreviewImageViewModelTest {
 
         assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(
             ImageStartLoadingToFileState(TEST2_HIGH_RES_IMAGE_URL, selectedPosition)
+        )
+    }
+
+    @Test
+    fun `thumbnail and preview image view loading starts with cropped file path on crop result`() {
+        // when - selected position is set in the viewmodel
+        initViewModel()
+        val selectedPosition = SECOND_ITEM_POSITION
+        viewModel.onPageSelected(selectedPosition)
+
+        // crop result obtained with outfile file at selected position
+        viewModel.onCropResult(TEST2_OUTPUT_FILE_PATH_FROM_CROP)
+
+        // assert that thumbnail and preview image urls are replaced with the output file path for the cropped image
+        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[selectedPosition]).isEqualTo(
+            ImageDataStartLoadingUiState(
+                ImageData(
+                    TEST2_ID_2,
+                    TEST2_OUTPUT_FILE_PATH_FROM_CROP,
+                    TEST2_OUTPUT_FILE_PATH_FROM_CROP,
+                    TEST2_OUTPUT_FILE_EXTENSION
+                )
+            )
         )
     }
 
