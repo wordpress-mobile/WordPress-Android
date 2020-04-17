@@ -813,12 +813,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void updateTitle(PageType pageType) {
-        if (pageType == PageType.MY_SITE && mSelectedSite != null) {
-            ((MainToolbarFragment) mBottomNav.getActiveFragment()).setTitle(mSelectedSite.getName());
-        } else {
-            ((MainToolbarFragment) mBottomNav.getActiveFragment())
-                    .setTitle(mBottomNav.getTitleForPageType(pageType).toString());
-        }
+        ((MainToolbarFragment) mBottomNav.getActiveFragment())
+                .setTitle(mBottomNav.getTitleForPageType(pageType).toString());
     }
 
     private void trackLastVisiblePage(PageType pageType, boolean trackAnalytics) {
@@ -1192,8 +1188,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // Make selected site visible
         selectedSite.setIsVisible(true);
         AppPrefs.setSelectedSite(selectedSite.getId());
-
-        updateTitle();
     }
 
     /**
@@ -1209,7 +1203,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             mSelectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
             // If saved site exist, then return, else (site has been removed?) try to select another site
             if (mSelectedSite != null) {
-                updateTitle();
                 return;
             }
         }
