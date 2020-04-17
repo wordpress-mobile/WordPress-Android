@@ -27,20 +27,22 @@ import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class LoginFlow {
-    private void chooseLogin() {
+    public LoginFlow chooseLogin() {
         // Login Prologue – We want to log in, not sign up
         // See LoginPrologueFragment
         clickOn(R.id.login_button);
+        return this;
     }
 
-    private void enterEmailAddress() {
+    public LoginFlow enterEmailAddress() {
         // Email Address Screen – Fill it in and click "Next"
         // See LoginEmailFragment
         populateTextField(R.id.input, E2E_WP_COM_USER_EMAIL);
         clickOn(R.id.primary_button);
+        return this;
     }
 
-    private void enterPassword() {
+    public LoginFlow enterPassword() {
         // Receive Magic Link or Enter Password Screen – Choose "Enter Password"
         // See LoginMagicLinkRequestFragment
         clickOn(R.id.login_enter_password);
@@ -49,9 +51,11 @@ public class LoginFlow {
         // See LoginEmailPasswordFragment
         populateTextField(R.id.input, E2E_WP_COM_USER_PASSWORD);
         clickOn(R.id.primary_button);
+
+        return this;
     }
 
-    private void confirmLogin() {
+    public void confirmLogin() {
         // If we get bumped to the "enter your username and password" screen, fill it in
         if (atLeastOneElementWithIdIsDisplayed(R.id.login_password_row)) {
             enterUsernameAndPassword(E2E_WP_COM_USER_USERNAME, E2E_WP_COM_USER_PASSWORD);
@@ -65,7 +69,7 @@ public class LoginFlow {
         waitForElementToBeDisplayed(R.id.nav_sites);
     }
 
-    private void chooseMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
+    public LoginFlow chooseMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
         // Receive Magic Link or Enter Password Screen – Choose "Send Link"
         // See LoginMagicLinkRequestFragment
         clickOn(R.id.login_request_magic_link);
@@ -78,9 +82,11 @@ public class LoginFlow {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("wordpress://magic-login?token=valid_token"))
                 .setPackage(getApplicationContext().getPackageName());
         magicLinkActivityTestRule.launchActivity(intent);
+
+        return this;
     }
 
-    private void enterUsernameAndPassword(String username, String password) {
+    public LoginFlow enterUsernameAndPassword(String username, String password) {
         ViewInteraction usernameElement = onView(allOf(isDescendantOfA(withId(R.id.login_username_row)),
                 Matchers.<View>instanceOf(EditText.class)));
         ViewInteraction passwordElement = onView(allOf(isDescendantOfA(withId(R.id.login_password_row)),
@@ -88,32 +94,13 @@ public class LoginFlow {
         populateTextField(usernameElement, username + "\n");
         populateTextField(passwordElement, password + "\n");
         clickOn(R.id.primary_button);
+        return this;
     }
 
-    private void chooseAndEnterSiteAddress(String siteAddress) {
+    public LoginFlow chooseAndEnterSiteAddress(String siteAddress) {
         clickOn(onView(withText(R.string.enter_site_address_instead)));
         populateTextField(R.id.input, siteAddress);
         clickOn(R.id.primary_button);
-    }
-
-    public void loginEmailPassword() {
-        chooseLogin();
-        enterEmailAddress();
-        enterPassword();
-        confirmLogin();
-    }
-
-    public void loginMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
-        chooseLogin();
-        enterEmailAddress();
-        chooseMagicLink(magicLinkActivityTestRule);
-        confirmLogin();
-    }
-
-    public void loginSiteAddress(String siteAddress, String username, String password) {
-        chooseLogin();
-        chooseAndEnterSiteAddress(siteAddress);
-        enterUsernameAndPassword(username, password);
-        confirmLogin();
+        return this;
     }
 }
