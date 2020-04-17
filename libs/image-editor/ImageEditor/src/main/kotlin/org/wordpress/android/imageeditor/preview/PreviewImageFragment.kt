@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -25,6 +26,7 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import com.yalantis.ucrop.UCrop
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
@@ -44,75 +46,24 @@ class PreviewImageFragment : Fragment() {
     private lateinit var pageChangeCallback: OnPageChangeCallback
 
     private var cropActionMenu: MenuItem? = null
-
-    private val imageDataList = listOf(
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/10/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/10/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/20/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/20/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/30/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/30/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/40/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/40/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/50/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/50/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/60/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/60/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/70/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/70/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/80/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/80/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/90/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/90/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/100/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/100/400/400.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/110/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/110/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/120/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/120/400/400.jpg",
-            outputFileExtension = "jpg"
-        )
-    )
+    // TODO We might want to move this into the VM
+    private var numberOfImages = 0
 
     companion object {
-        const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
-        const val ARG_HIGH_RES_IMAGE_URL = "arg_high_res_image_url"
-        const val ARG_OUTPUT_FILE_EXTENSION = "arg_output_file_extension"
+        const val ARG_EDIT_IMAGE_DATA = "arg_edit_image_data"
         const val PREVIEW_IMAGE_REDUCED_SIZE_FACTOR = 0.1
+
+        sealed class EditImageData : Parcelable {
+            @Parcelize
+            data class InputData(
+                val highResImgUrl: String,
+                val lowResImgUrl: String,
+                val outputFileExtension: String
+            ) : EditImageData()
+
+            @Parcelize
+            data class OutputData(val outputFilePath: String) : EditImageData()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -197,7 +148,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun initializeInsertButton() {
-        insertButton.text = getString(string.insert_label_with_count, imageDataList.size)
+        insertButton.text = getString(string.insert_label_with_count, numberOfImages)
         insertButton.setOnClickListener {
             Log.d("PreviewImageFragment", "Insert button clicked")
         }
@@ -206,8 +157,10 @@ class PreviewImageFragment : Fragment() {
     private fun initializeViewModels(nonNullIntent: Intent) {
         viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
         setupObservers()
-        // TODO: replace dummy list
-        viewModel.onCreateView(imageDataList)
+        val inputData = nonNullIntent.getParcelableArrayListExtra<EditImageData.InputData>(ARG_EDIT_IMAGE_DATA)
+        numberOfImages = inputData.size
+
+        viewModel.onCreateView(inputData)
     }
 
     private fun setupObservers() {

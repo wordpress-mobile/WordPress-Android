@@ -94,6 +94,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -1684,7 +1686,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
 
         AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN);
-        ActivityLauncher.openImageEditor(this, resizedImageUrl, imageUrl, outputFileExtension);
+        ArrayList<EditImageData.InputData> inputData = new ArrayList<>(1);
+        inputData.add(new EditImageData.InputData(
+                imageUrl,
+                StringUtils.notNullStr(resizedImageUrl),
+                outputFileExtension
+        ));
+        ActivityLauncher.openImageEditor(this, inputData);
     }
 
     @Override

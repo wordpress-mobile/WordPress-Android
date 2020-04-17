@@ -3,6 +3,7 @@ package org.wordpress.android.imageeditor.preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
@@ -28,15 +29,28 @@ class PreviewImageViewModel : ViewModel() {
 
     private var selectedPosition: Int = 0
 
-    fun onCreateView(imageDataList: List<ImageData>) {
+    fun onCreateView(imageDataList: List<InputData>) {
         if (uiState.value == null) {
-            val newImageUiStates = createViewPagerItemsInitialUiStates(imageDataList)
+            val newImageUiStates = createViewPagerItemsInitialUiStates(
+                    convertInputDataToImageData(imageDataList)
+            )
             val currentUiState = UiState(
                 newImageUiStates,
                 thumbnailsTabLayoutVisible = !newImageUiStates.hasSingleElement()
             )
             updateUiState(currentUiState)
         }
+    }
+
+    private fun convertInputDataToImageData(imageDataList: List<InputData>): List<ImageData> {
+        return imageDataList
+                .map { (highRes, lowRes, extension) ->
+                    ImageData(
+                            highResImageUrl = highRes,
+                            lowResImageUrl = lowRes,
+                            outputFileExtension = extension
+                    )
+                }
     }
 
     fun onLoadIntoImageViewSuccess(imageUrlAtPosition: String, position: Int) {

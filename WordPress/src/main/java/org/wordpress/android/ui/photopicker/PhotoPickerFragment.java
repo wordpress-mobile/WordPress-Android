@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
@@ -29,7 +30,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.ActionableEmptyView;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
@@ -208,7 +211,9 @@ public class PhotoPickerFragment extends Fragment {
 
         if (canShowInsertPreviewBottomBar()) {
             mInsertPreviewBottomBar.findViewById(R.id.text_preview).setOnClickListener(v -> {
-                // TODO Open ImageEditor
+                ArrayList<EditImageData.InputData> inputData =
+                        createListOfEditImageInputData(getAdapter().getSelectedURIs());
+                ActivityLauncher.openImageEditor(getActivity(), inputData);
             });
 
             mInsertPreviewBottomBar.findViewById(R.id.text_insert).setOnClickListener(v -> performInsertAction());
@@ -678,5 +683,16 @@ public class PhotoPickerFragment extends Fragment {
         Map<String, Object> properties = new HashMap<>();
         properties.put("is_video", isVideo);
         AnalyticsTracker.track(stat, properties);
+    }
+
+    private ArrayList<EditImageData.InputData> createListOfEditImageInputData(List<Uri> uris) {
+        ArrayList<EditImageData.InputData> inputData = new ArrayList<>(uris.size());
+        for (Uri uri : uris) {
+            String stringUri = uri.toString();
+            String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(stringUri);
+            // TODO Add support for nullable lowResImgUrl
+            inputData.add(new EditImageData.InputData(stringUri, "", outputFileExtension));
+        }
+        return inputData;
     }
 }
