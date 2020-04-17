@@ -82,13 +82,7 @@ class PreviewImageViewModel : ViewModel() {
 
         updateLoadIntoFileState(ImageLoadToFileSuccessState(inputFilePathAtPosition, position))
 
-//        // Update thumbnail url with cache file path
-//        val newImageData = imageStateAtPosition.data.copy(lowResImageUrl = inputFilePathAtPosition)
-//        val newImageUiState = createImageLoadSuccessUiState(inputFilePathAtPosition, newImageData, imageStateAtPosition)
-//        val newImageUiStates = updateViewPagerItemsUiStates(newImageUiState, position)
-
         val currentUiState = uiState.value as UiState
-//        updateUiState(currentUiState.copy(viewPagerItemsStates = newImageUiStates))
         _navigateToCropScreenWithFileInfo.value = Event(
             Triple(
                 inputFilePathAtPosition,
