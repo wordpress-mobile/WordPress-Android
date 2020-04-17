@@ -36,8 +36,7 @@ class ImageEditorInitializer {
                             override fun onLoadFailed(e: Exception?, model: Any?) = onLoadFailed(model, listener, e)
                             override fun onResourceReady(resource: Drawable, model: Any?) =
                                 onResourceReady(model, listener, resource)
-                        },
-                        skipMemoryCache = true
+                        }
                     )
                 }
 
