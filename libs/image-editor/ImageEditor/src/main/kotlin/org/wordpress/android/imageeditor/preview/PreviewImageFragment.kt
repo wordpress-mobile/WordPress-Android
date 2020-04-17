@@ -186,9 +186,9 @@ class PreviewImageFragment : Fragment() {
         // Set adapter data before the ViewPager2.restorePendingState gets called
         // to avoid manual handling of the ViewPager2 state restoration.
         viewModel.uiState.value?.let {
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.peekContent().viewPagerItemsStates)
-            cropActionMenu?.isEnabled = it.peekContent().editActionsEnabled
-            UiHelpers.updateVisibility(thumbnailsTabLayout, it.peekContent().thumbnailsTabLayoutVisible)
+            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.viewPagerItemsStates)
+            cropActionMenu?.isEnabled = it.editActionsEnabled
+            UiHelpers.updateVisibility(thumbnailsTabLayout, it.thumbnailsTabLayoutVisible)
         }
     }
 
@@ -200,12 +200,10 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiStateEvent ->
-            uiStateEvent?.getContentIfNotHandled()?.let { state ->
-                (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
-                cropActionMenu?.isEnabled = state.editActionsEnabled
-                UiHelpers.updateVisibility(thumbnailsTabLayout, state.thumbnailsTabLayoutVisible)
-            }
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { state ->
+            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
+            cropActionMenu?.isEnabled = state.editActionsEnabled
+            UiHelpers.updateVisibility(thumbnailsTabLayout, state.thumbnailsTabLayoutVisible)
         })
 
         viewModel.loadIntoFile.observe(viewLifecycleOwner, Observer { fileStateEvent ->
