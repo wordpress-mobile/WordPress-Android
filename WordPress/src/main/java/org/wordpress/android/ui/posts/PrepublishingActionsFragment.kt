@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,9 +20,16 @@ class PrepublishingActionsFragment : Fragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingActionsViewModel
 
+    private lateinit var actionClickedListener: PrepublishingActionClickedListener
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireNotNull(activity).application as WordPress).component().inject(this)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        actionClickedListener = parentFragment as PrepublishingActionClickedListener
     }
 
     override fun onCreateView(
@@ -42,11 +50,17 @@ class PrepublishingActionsFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this.requireParentFragment(), viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingActionsViewModel::class.java)
 
         viewModel.uiState.observe(this, Observer { uiState ->
             (actions_recycler_view.adapter as PrepublishingActionsAdapter).update(uiState)
+        })
+
+        viewModel.onActionClicked.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { actionType ->
+                actionClickedListener.onActionClicked(actionType)
+            }
         })
 
         viewModel.start(arguments?.getParcelable(DATA))

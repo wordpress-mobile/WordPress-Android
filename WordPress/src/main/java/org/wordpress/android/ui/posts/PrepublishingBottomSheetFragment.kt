@@ -19,6 +19,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.PrepublishingScreenState.ActionsState
 import org.wordpress.android.ui.posts.PrepublishingScreenState.TagsState
@@ -26,11 +27,10 @@ import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         TagsSelectedListener,
-        PrepublishingScreenClosedListener {
+        PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var prepublishingViewModel: PrepublishingViewModel
-    private lateinit var prepublishingActionsViewModel: PrepublishingActionsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,15 +86,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     private fun initViewModels(savedInstanceState: Bundle?) {
         prepublishingViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingViewModel::class.java)
-
-        prepublishingActionsViewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(PrepublishingActionsViewModel::class.java)
-
-        prepublishingActionsViewModel.onActionClicked.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let { actionType ->
-                prepublishingViewModel.onActionClicked(actionType)
-            }
-        })
 
         prepublishingViewModel.navigationTarget.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { navigationState ->
@@ -194,5 +185,9 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onBackClicked() {
         prepublishingViewModel.onBackClicked()
+    }
+
+    override fun onActionClicked(actionType: ActionType) {
+        prepublishingViewModel.onActionClicked(actionType)
     }
 }
