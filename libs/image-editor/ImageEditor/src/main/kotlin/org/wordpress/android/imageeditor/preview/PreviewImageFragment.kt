@@ -1,8 +1,11 @@
 package org.wordpress.android.imageeditor.preview
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -21,10 +24,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
+import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
+import org.wordpress.android.imageeditor.crop.CropFragment
+import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.utils.UiHelpers
@@ -194,7 +200,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(this, Observer { uiStateEvent ->
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiStateEvent ->
             uiStateEvent?.getContentIfNotHandled()?.let { state ->
                 (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
                 cropActionMenu?.isEnabled = state.editActionsEnabled
@@ -202,7 +208,7 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        viewModel.loadIntoFile.observe(this, Observer { fileStateEvent ->
+        viewModel.loadIntoFile.observe(viewLifecycleOwner, Observer { fileStateEvent ->
             fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
                 if (fileState is ImageStartLoadingToFileState) {
                     loadIntoFile(fileState.imageUrlAtPosition, fileState.position)
@@ -210,9 +216,24 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        viewModel.navigateToCropScreenWithFileInfo.observe(this, Observer { fileInfoEvent ->
+        viewModel.navigateToCropScreenWithFileInfo.observe(viewLifecycleOwner, Observer { fileInfoEvent ->
             fileInfoEvent?.getContentIfNotHandled()?.let { fileInfo ->
                 navigateToCropScreenWithFileInfo(fileInfo)
+            }
+        })
+
+        findNavController().currentBackStackEntry?.savedStateHandle
+                ?.getLiveData<CropResult>(CropFragment.CROP_RESULT)?.observe(
+                viewLifecycleOwner, Observer { result ->
+            Log.d(PreviewImageFragment::javaClass.name, "result")
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent = result.data
+                if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
+                    val imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI) as? Uri
+                    imageUri?.let {
+                        viewModel.onCropResult(it.toString())
+                    }
+                }
             }
         })
     }

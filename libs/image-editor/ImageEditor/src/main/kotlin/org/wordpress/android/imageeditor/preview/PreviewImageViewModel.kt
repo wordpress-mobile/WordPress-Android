@@ -134,6 +134,9 @@ class PreviewImageViewModel : ViewModel() {
         updateUiState(currentUiState.copy(viewPagerItemsStates = newImageUiStates))
     }
 
+    fun onCropResult(outputFilePath: String) {
+    }
+
     private fun createViewPagerItemsInitialUiStates(
         data: List<ImageData>
     ): List<ImageUiState> = data.map { createImageLoadStartUiState(it) }
