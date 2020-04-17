@@ -14,7 +14,7 @@ import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.PrepublishingScreen.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
 import org.wordpress.android.ui.posts.PrepublishingScreen.VISIBILITY
-import org.wordpress.android.ui.posts.PrepublishingScreenState.HomeState
+import org.wordpress.android.ui.posts.PrepublishingScreenState.ActionsState
 import org.wordpress.android.ui.posts.PrepublishingScreenState.TagsState
 import org.wordpress.android.viewmodel.Event
 import java.util.ArrayList
@@ -39,7 +39,7 @@ sealed class PrepublishingScreenState(val prepublishingScreen: PrepublishingScre
 
     // TODO add the other values for this state object.
     @Parcelize
-    data class HomeState(val tags: String? = null) : PrepublishingScreenState(HOME)
+    data class ActionsState(val tags: String? = null) : PrepublishingScreenState(HOME)
 }
 
 data class PrepublishingNavigationTarget(
@@ -98,7 +98,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
 
     private fun navigateToScreen(prepublishingScreen: PrepublishingScreen) {
         when (prepublishingScreen) {
-            HOME -> updateNavigationTarget(PrepublishingNavigationTarget(site, HOME, HomeState(tagsState?.tags)))
+            HOME -> updateNavigationTarget(PrepublishingNavigationTarget(site, HOME, ActionsState(tagsState?.tags)))
             TAGS -> updateNavigationTarget(
                     PrepublishingNavigationTarget(
                             site,

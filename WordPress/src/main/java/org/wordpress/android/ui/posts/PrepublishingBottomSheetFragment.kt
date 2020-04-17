@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
-import org.wordpress.android.ui.posts.PrepublishingScreenState.HomeState
+import org.wordpress.android.ui.posts.PrepublishingScreenState.ActionsState
 import org.wordpress.android.ui.posts.PrepublishingScreenState.TagsState
 import javax.inject.Inject
 
@@ -115,7 +115,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
         val (fragment, tag) = when (navigationTarget.targetScreen) {
             HOME -> Pair(
-                    PrepublishingActionsFragment.newInstance((navigationTarget.screenState as HomeState)),
+                    PrepublishingActionsFragment.newInstance((navigationTarget.screenState as ActionsState)),
                     PrepublishingActionsFragment.TAG
             )
             PrepublishingScreen.PUBLISH -> TODO()
