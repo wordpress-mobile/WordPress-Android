@@ -146,6 +146,10 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun onCloseClicked() {
+        _dismissBottomSheet.postValue(Event(Unit))
+    }
+
     private fun updateNavigationTarget(target: PrepublishingNavigationTarget) {
         _navigationTarget.postValue(Event(target))
     }
