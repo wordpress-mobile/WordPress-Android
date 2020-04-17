@@ -19,6 +19,7 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveStat
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveSuccessState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
+import java.io.Serializable
 
 class CropViewModel : ViewModel() {
     private val _uiState = MutableLiveData<UiState>()
@@ -128,7 +129,7 @@ class CropViewModel : ViewModel() {
 
     private fun getCropError(resultData: Intent): String? = UCrop.getError(resultData)?.message
 
-    data class CropResult(val resultCode: Int, val data: Intent)
+    data class CropResult(val resultCode: Int, val data: Intent) : Serializable
 
     sealed class UiState(
         val doneMenuVisible: Boolean = false
