@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -225,7 +224,6 @@ class PreviewImageFragment : Fragment() {
         findNavController().currentBackStackEntry?.savedStateHandle
                 ?.getLiveData<CropResult>(CropFragment.CROP_RESULT)?.observe(
                 viewLifecycleOwner, Observer { result ->
-            Log.d(PreviewImageFragment::javaClass.name, "result")
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent = result.data
                 if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
