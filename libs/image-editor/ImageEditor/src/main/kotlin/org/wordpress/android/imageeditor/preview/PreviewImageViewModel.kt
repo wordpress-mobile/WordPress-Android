@@ -169,7 +169,7 @@ class PreviewImageViewModel : ViewModel() {
         val currentUiState = uiState.value as UiState
         val imageStateAtPosition = currentUiState.viewPagerItemsStates[position]
         val imageDataAtPosition = imageStateAtPosition.data
-        return  when {
+        return when {
             loadSuccess -> createImageLoadSuccessUiState(imageUrlAtPosition, imageDataAtPosition, imageStateAtPosition)
             retry -> createImageLoadStartUiState(imageDataAtPosition)
             else -> createImageLoadFailedUiState(imageUrlAtPosition, imageDataAtPosition, position)
