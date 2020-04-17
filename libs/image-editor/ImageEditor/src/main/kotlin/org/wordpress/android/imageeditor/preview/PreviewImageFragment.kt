@@ -4,6 +4,9 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -13,18 +16,27 @@ import android.widget.ImageView.ScaleType.CENTER_CROP
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
+import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
 class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
     private var pagerAdapterObserver: PagerAdapterObserver? = null
+    private lateinit var pageChangeCallback: OnPageChangeCallback
+
+    private var cropActionMenu: MenuItem? = null
 
     private val imageDataList = listOf(
         ImageData(
@@ -96,6 +108,11 @@ class PreviewImageFragment : Fragment() {
         const val PREVIEW_IMAGE_REDUCED_SIZE_FACTOR = 0.1
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -121,6 +138,13 @@ class PreviewImageFragment : Fragment() {
             }
         )
         previewImageViewPager.adapter = previewImageAdapter
+        pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                viewModel.onPageSelected(position)
+            }
+        }
+        previewImageViewPager.registerOnPageChangeCallback(pageChangeCallback)
 
         val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
             if (tab.customView == null) {
@@ -156,7 +180,9 @@ class PreviewImageFragment : Fragment() {
         // Set adapter data before the ViewPager2.restorePendingState gets called
         // to avoid manual handling of the ViewPager2 state restoration.
         viewModel.uiState.value?.let {
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.viewPagerItemsStates)
+            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.peekContent().viewPagerItemsStates)
+            cropActionMenu?.isEnabled = it.peekContent().editActionsEnabled
+            UiHelpers.updateVisibility(thumbnailsTabLayout, it.peekContent().thumbnailsTabLayoutVisible)
         }
     }
 
@@ -168,19 +194,27 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(this, Observer { state ->
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
-        })
-
-        /*viewModel.loadIntoFile.observe(this, Observer { fileState ->
-            if (fileState is ImageStartLoadingToFileState) {
-                loadIntoFile(fileState.imageUrl)
+        viewModel.uiState.observe(this, Observer { uiStateEvent ->
+            uiStateEvent?.getContentIfNotHandled()?.let { state ->
+                (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
+                cropActionMenu?.isEnabled = state.editActionsEnabled
+                UiHelpers.updateVisibility(thumbnailsTabLayout, state.thumbnailsTabLayoutVisible)
             }
         })
 
-        viewModel.navigateToCropScreenWithFileInfo.observe(this, Observer { filePath ->
-            navigateToCropScreenWithInputFilePath(filePath)
-        })*/
+        viewModel.loadIntoFile.observe(this, Observer { fileStateEvent ->
+            fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
+                if (fileState is ImageStartLoadingToFileState) {
+                    loadIntoFile(fileState.imageUrlAtPosition, fileState.position)
+                }
+            }
+        })
+
+        viewModel.navigateToCropScreenWithFileInfo.observe(this, Observer { fileInfoEvent ->
+            fileInfoEvent?.getContentIfNotHandled()?.let { fileInfo ->
+                navigateToCropScreenWithFileInfo(fileInfo)
+            }
+        })
     }
 
     private fun loadIntoImageView(url: String, imageView: ImageView) {
@@ -205,28 +239,57 @@ class PreviewImageFragment : Fragment() {
         )
     }
 
-    private fun loadIntoFile(url: String) {
+    private fun loadIntoFile(url: String, position: Int) {
         ImageEditor.instance.loadIntoFileWithResultListener(
             url,
             object : RequestListener<File> {
                 override fun onResourceReady(resource: File, url: String) {
-//                    viewModel.onLoadIntoFileSuccess(resource.path)
+                    viewModel.onLoadIntoFileSuccess(resource.path, position)
                 }
 
                 override fun onLoadFailed(e: Exception?, url: String) {
-//                    viewModel.onLoadIntoFileFailed()
+                    viewModel.onLoadIntoFileFailed()
                 }
             }
         )
     }
 
-    private fun navigateToCropScreenWithInputFilePath(fileInfo: Pair<String, String?>) {
-        // TODO: temporarily stop navigation to next screen
-//        val inputFilePath = fileInfo.first
-//        val outputFileExtension = fileInfo.second
-//        findNavController().navigate(
-//            PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(inputFilePath, outputFileExtension)
-//        )
+    private fun navigateToCropScreenWithFileInfo(fileInfo: Triple<String, String?, Boolean>) {
+        val (inputFilePath, outputFileExtension, shouldReturnToPreviewScreen) = fileInfo
+
+        val navOptions = if (!shouldReturnToPreviewScreen) {
+            NavOptions.Builder().setPopUpTo(R.id.preview_dest, true).build()
+        } else {
+            null
+        }
+
+        val navController = findNavController()
+
+        // TODO: Temporarily added if check to fix this occasional crash
+        // https://stackoverflow.com/q/51060762/193545
+        if (navController.currentDestination?.id == R.id.preview_dest) {
+            navController.navigate(
+                PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(
+                    inputFilePath,
+                    outputFileExtension,
+                    shouldReturnToPreviewScreen
+                ),
+                navOptions
+            )
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_preview_fragment, menu)
+        cropActionMenu = menu.findItem(R.id.menu_crop)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_crop) {
+        viewModel.onCropMenuClicked(previewImageViewPager.currentItem)
+        true
+    } else {
+        super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {
@@ -236,5 +299,6 @@ class PreviewImageFragment : Fragment() {
         }
         pagerAdapterObserver = null
         tabLayoutMediator.detach()
+        previewImageViewPager.unregisterOnPageChangeCallback(pageChangeCallback)
     }
 }

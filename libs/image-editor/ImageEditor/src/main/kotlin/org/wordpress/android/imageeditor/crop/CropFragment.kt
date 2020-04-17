@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.wordpress.android.imageeditor.R
 import com.yalantis.ucrop.UCropFragment
@@ -106,6 +107,13 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
         viewModel.onDoneMenuClicked()
         true
+    } else if (item.itemId == android.R.id.home) {
+        if (navArgs.shouldReturnToPreviewScreen) {
+            findNavController().popBackStack()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     } else {
         super.onOptionsItemSelected(item)
     }
@@ -139,9 +147,13 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun navigateBackWithCropResult(cropResult: CropResult) {
-        activity?.let {
-            it.setResult(cropResult.resultCode, cropResult.data)
-            it.finish()
+        if (navArgs.shouldReturnToPreviewScreen) {
+            // TODO: Pass crop result to preview screen
+        } else {
+            activity?.let {
+                it.setResult(cropResult.resultCode, cropResult.data)
+                it.finish()
+            }
         }
     }
 }
