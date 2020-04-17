@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -58,21 +59,33 @@ class CropViewModel : ViewModel() {
         Bundle().also {
             with(it) {
                 putParcelable(UCrop.EXTRA_INPUT_URI, Uri.fromFile(File(inputFilePath)))
-                putParcelable(UCrop.EXTRA_OUTPUT_URI, Uri.fromFile(File(inputFilePath)))
+
+                putParcelable(UCrop.EXTRA_OUTPUT_URI, Uri.fromFile(
+                        File(cacheDir,
+                                "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME${inputFilePath.hashCode()}.$outputFileExtension"
+                        )))
                 putAll(cropOptions.optionBundle)
             }
         }
     }
 
-    fun start(inputFilePath: String, outputFileExtension: String?) {
+    fun start(inputFilePath: String, outputFileExtension: String?, cacheDir: File) {
         if (isStarted) {
             return
         }
+        this.cacheDir = cacheDir
+        initMediaEditingDirectory(cacheDir)
         this.inputFilePath = inputFilePath
         this.outputFileExtension = outputFileExtension ?: DEFAULT_FILE_EXTENSION
 
         updateUiState(UiStartLoadingWithBundleState(cropOptionsBundleWithFilesInfo))
         isStarted = true
+    }
+
+    private fun initMediaEditingDirectory(directory: File) {
+        if (directory.mkdir()) {
+            Log.d("CropViewModel", "Cache directory created for media editing")
+        }
     }
 
     fun onLoadingProgress(loading: Boolean) {
@@ -131,6 +144,7 @@ class CropViewModel : ViewModel() {
     }
 
     companion object {
+        private const val IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME = "image_editor_output_image"
         private const val DEFAULT_FILE_EXTENSION = "jpg"
         private const val COMPRESS_QUALITY_100 = 100
         private const val PNG = "png"
