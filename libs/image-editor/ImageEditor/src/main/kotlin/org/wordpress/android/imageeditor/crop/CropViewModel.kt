@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,7 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveStat
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveSuccessState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
+import java.io.Serializable
 
 class CropViewModel : ViewModel() {
     private val _uiState = MutableLiveData<UiState>()
@@ -58,9 +60,10 @@ class CropViewModel : ViewModel() {
         Bundle().also {
             with(it) {
                 putParcelable(UCrop.EXTRA_INPUT_URI, Uri.fromFile(File(inputFilePath)))
+
                 putParcelable(UCrop.EXTRA_OUTPUT_URI, Uri.fromFile(
-                            File(cacheDir,
-                            "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME.$outputFileExtension"
+                        File(cacheDir,
+                                "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME${inputFilePath.hashCode()}.$outputFileExtension"
                         )))
                 putAll(cropOptions.optionBundle)
             }
@@ -72,11 +75,18 @@ class CropViewModel : ViewModel() {
             return
         }
         this.cacheDir = cacheDir
+        initMediaEditingDirectory(cacheDir)
         this.inputFilePath = inputFilePath
         this.outputFileExtension = outputFileExtension ?: DEFAULT_FILE_EXTENSION
 
         updateUiState(UiStartLoadingWithBundleState(cropOptionsBundleWithFilesInfo))
         isStarted = true
+    }
+
+    private fun initMediaEditingDirectory(directory: File) {
+        if (directory.mkdir()) {
+            Log.d("CropViewModel", "Cache directory created for media editing")
+        }
     }
 
     fun onLoadingProgress(loading: Boolean) {
@@ -119,7 +129,7 @@ class CropViewModel : ViewModel() {
 
     private fun getCropError(resultData: Intent): String? = UCrop.getError(resultData)?.message
 
-    data class CropResult(val resultCode: Int, val data: Intent)
+    data class CropResult(val resultCode: Int, val data: Intent) : Serializable
 
     sealed class UiState(
         val doneMenuVisible: Boolean = false

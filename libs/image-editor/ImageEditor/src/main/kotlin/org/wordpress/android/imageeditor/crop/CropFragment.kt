@@ -25,6 +25,7 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedStat
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.utils.ToastUtils
 import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
+import java.io.File
 
 /**
  * Container fragment for displaying third party crop fragment and done menu item.
@@ -36,6 +37,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
     companion object {
         private val TAG = CropFragment::class.java.simpleName
+        const val CROP_RESULT = "crop_result"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,11 +59,15 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     private fun initializeViewModels() {
         viewModel = ViewModelProvider(this).get(CropViewModel::class.java)
         setupObservers()
-        viewModel.start(navArgs.inputFilePath, navArgs.outputFileExtension, requireContext().cacheDir)
+        viewModel.start(
+            navArgs.inputFilePath,
+            navArgs.outputFileExtension,
+            File(requireContext().cacheDir, "media_editing")
+        )
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(this, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             when (uiState) {
                 is UiStartLoadingWithBundleState -> {
                     showThirdPartyCropFragmentWithBundle(uiState.bundle)
@@ -72,7 +78,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
             doneMenu?.isVisible = uiState.doneMenuVisible
         })
 
-        viewModel.cropAndSaveImageStateEvent.observe(this, Observer { stateEvent ->
+        viewModel.cropAndSaveImageStateEvent.observe(viewLifecycleOwner, Observer { stateEvent ->
             stateEvent?.getContentIfNotHandled()?.let { state ->
                 when (state) {
                     is ImageCropAndSaveStartState -> {
@@ -93,7 +99,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
             }
         })
 
-        viewModel.navigateBackWithCropResult.observe(this, Observer { cropResult ->
+        viewModel.navigateBackWithCropResult.observe(viewLifecycleOwner, Observer { cropResult ->
             navigateBackWithCropResult(cropResult)
         })
     }
@@ -148,7 +154,12 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
     private fun navigateBackWithCropResult(cropResult: CropResult) {
         if (navArgs.shouldReturnToPreviewScreen) {
-            // TODO: Pass crop result to preview screen
+            val navController = findNavController()
+
+            val saveStateHandle = navController.previousBackStackEntry?.savedStateHandle
+            saveStateHandle?.set(CROP_RESULT, cropResult)
+
+            navController.popBackStack()
         } else {
             activity?.let {
                 it.setResult(cropResult.resultCode, cropResult.data)
