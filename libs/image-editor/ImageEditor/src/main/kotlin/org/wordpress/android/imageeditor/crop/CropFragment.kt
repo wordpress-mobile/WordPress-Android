@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.wordpress.android.imageeditor.R
 import com.yalantis.ucrop.UCropFragment
@@ -46,7 +47,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_crop_image, container, false)
+    ): View? = inflater.inflate(R.layout.crop_image_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -97,15 +98,22 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.menu_crop_fragment, menu)
-        doneMenu = menu?.findItem(R.id.menu_done)
+        inflater.inflate(R.menu.menu_crop_fragment, menu)
+        doneMenu = menu.findItem(R.id.menu_done)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
         viewModel.onDoneMenuClicked()
         true
+    } else if (item.itemId == android.R.id.home) {
+        if (navArgs.shouldReturnToPreviewScreen) {
+            findNavController().popBackStack()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     } else {
         super.onOptionsItemSelected(item)
     }
@@ -139,9 +147,13 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun navigateBackWithCropResult(cropResult: CropResult) {
-        activity?.let {
-            it.setResult(cropResult.resultCode, cropResult.data)
-            it.finish()
+        if (navArgs.shouldReturnToPreviewScreen) {
+            // TODO: Pass crop result to preview screen
+        } else {
+            activity?.let {
+                it.setResult(cropResult.resultCode, cropResult.data)
+                it.finish()
+            }
         }
     }
 }

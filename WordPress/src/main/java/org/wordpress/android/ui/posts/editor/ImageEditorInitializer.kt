@@ -17,7 +17,8 @@ class ImageEditorInitializer {
         fun init(imageManager: ImageManager) {
             ImageEditor.init(
                 loadIntoImageViewWithResultListener(imageManager),
-                loadIntoFileWithResultListener(imageManager)
+                loadIntoFileWithResultListener(imageManager),
+                loadIntoImageView(imageManager)
             )
         }
 
@@ -49,6 +50,11 @@ class ImageEditorInitializer {
                         onResourceReady(model, listener, resource)
                 }
             )
+        }
+
+        private fun loadIntoImageView(imageManager: ImageManager):
+            (String, ImageView, ScaleType) -> Unit = { imageUrl, imageView, scaleType ->
+            imageManager.load(imageView, IMAGE, imageUrl, scaleType)
         }
 
         private fun <T : Any> onResourceReady(model: Any?, listener: ImageEditor.RequestListener<T>, resource: T) =

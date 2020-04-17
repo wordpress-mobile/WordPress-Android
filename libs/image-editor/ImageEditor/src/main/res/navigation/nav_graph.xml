@@ -7,12 +7,10 @@
     <fragment
         android:id="@+id/preview_dest"
         android:name="org.wordpress.android.imageeditor.preview.PreviewImageFragment"
-        tools:layout="@layout/fragment_preview_image">
+        tools:layout="@layout/preview_image_fragment">
         <action
             android:id="@+id/action_previewFragment_to_cropFragment"
-            app:destination="@id/crop_dest"
-            app:popUpTo="@id/preview_dest"
-            app:popUpToInclusive="true">
+            app:destination="@id/crop_dest">
             <argument
                 android:name="inputFilePath"
                 app:argType="string"
@@ -21,6 +19,10 @@
                 android:name="outputFileExtension"
                 app:argType="string"
                 app:nullable="true"/>
+            <argument
+                android:name="shouldReturnToPreviewScreen"
+                app:argType="boolean"
+                android:defaultValue='false'/>
         </action>
     </fragment>
     <fragment
@@ -34,5 +36,9 @@
             android:name="outputFileExtension"
             app:argType="string"
             app:nullable="true"/>
+        <argument
+            android:name="shouldReturnToPreviewScreen"
+            app:argType="boolean"
+            android:defaultValue='false'/>
     </fragment>
 </navigation>

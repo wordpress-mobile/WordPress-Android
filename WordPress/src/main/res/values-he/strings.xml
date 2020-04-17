@@ -557,11 +557,6 @@ Language: he_IL
     <string name="stats_no_data_for_period">אין נתונים לתקופה זו</string>
     <string name="preference_strip_image_location">הסרת מיקום ממדיה</string>
     <string name="stats_cannot_be_started">אין לנו אפשרות לפתוח את הנתונים הסטטיסטיים כעת. יש לנסות שוב מאוחר יותר</string>
-    <string name="giphy_powered_by_giphy">מופעל באמצעות GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">הטעינה של חלק מקובצי המדיה נכשלה עקב שגיאת רשת.</string>
-    <string name="giphy_picker_empty_search_list">לא נמצאו פרטי מדיה שמתאימים לחיפוש שלך</string>
-    <string name="giphy_picker_initial_empty_text">חיפוש קובצי GIF שניתן להוסיף לספריית מדיה שלך!</string>
-    <string name="giphy_picker_search_hint">חיפוש ב-Giphy</string>
     <string name="stats_author_views_label">צפיות</string>
     <string name="stats_author_label">מחבר</string>
     <string name="stats_authors">מחברים</string>

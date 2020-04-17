@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.giphy
+package org.wordpress.android.ui.gif
 
 import android.app.Activity
 import android.content.Intent
@@ -19,39 +19,39 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.ui.gif.GifMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.ui.LocaleAwareActivity
-import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ViewModelFactory
-import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
-import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
-import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
-import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
+import org.wordpress.android.viewmodel.gif.GifMediaViewModel
+import org.wordpress.android.viewmodel.gif.GifPickerViewModel
+import org.wordpress.android.viewmodel.gif.GifPickerViewModel.EmptyDisplayMode
+import org.wordpress.android.viewmodel.gif.GifPickerViewModel.State
 import javax.inject.Inject
 
 /**
- * Allows searching of gifs from Giphy
- *
- * Important: Giphy is currently disabled everywhere. We are planning to replace it with a different service provider.
+ * Allows searching of gifs from a giving provider
  */
-class GiphyPickerActivity : LocaleAwareActivity() {
+class GifPickerActivity : LocaleAwareActivity() {
     /**
-     * Used for loading images in [GiphyMediaViewHolder]
+     * Used for loading images in [GifMediaViewHolder]
      */
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
-    private lateinit var viewModel: GiphyPickerViewModel
+    private lateinit var viewModel: GifPickerViewModel
 
     private val gridColumnCount: Int by lazy { if (DisplayUtils.isLandscape(this)) 4 else 3 }
 
     /**
-     * Passed to the [GiphyMediaViewHolder] which will be used as its dimensions
+     * Passed to the [GifMediaViewHolder] which will be used as its dimensions
      */
     private val thumbnailViewDimensions: ThumbnailViewDimensions by lazy {
         val width = DisplayUtils.getDisplayPixelWidth(this) / gridColumnCount
@@ -64,7 +64,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
 
         val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GiphyPickerViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GifPickerViewModel::class.java)
         viewModel.setup(site)
 
         // We are intentionally reusing this layout since the UI is very similar.
@@ -91,10 +91,10 @@ class GiphyPickerActivity : LocaleAwareActivity() {
     }
 
     /**
-     * Configure the RecyclerView to use [GiphyPickerPagedListAdapter] and display the items in a grid
+     * Configure the RecyclerView to use [GifPickerPagedListAdapter] and display the items in a grid
      */
     private fun initializeRecyclerView() {
-        val pagedListAdapter = GiphyPickerPagedListAdapter(
+        val pagedListAdapter = GifPickerPagedListAdapter(
                 imageManager = imageManager,
                 thumbnailViewDimensions = thumbnailViewDimensions,
                 onMediaViewClickListener = { mediaViewModel ->
@@ -110,7 +110,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
         )
 
         recycler.apply {
-            layoutManager = GridLayoutManager(this@GiphyPickerActivity, gridColumnCount)
+            layoutManager = GridLayoutManager(this@GifPickerActivity, gridColumnCount)
             adapter = pagedListAdapter
         }
 
@@ -124,7 +124,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
      * Configure the search view to execute search when the keyboard's Done button is pressed.
      */
     private fun initializeSearchView() {
-        search_view.queryHint = getString(R.string.giphy_picker_search_hint)
+        search_view.queryHint = getString(R.string.gif_picker_search_hint)
 
         search_view.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -150,7 +150,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
     }
 
     /**
-     * Configure the selection bar and its labels when the [GiphyPickerViewModel] selected items change
+     * Configure the selection bar and its labels when the [GifPickerViewModel] selected items change
      */
     private fun initializeSelectionBar() {
         viewModel.selectionBarIsVisible.observe(this, Observer {
@@ -200,8 +200,8 @@ class GiphyPickerActivity : LocaleAwareActivity() {
         val emptyView: ActionableEmptyView = actionable_empty_view
         emptyView.run {
             image.setImageResource(R.drawable.img_illustration_media_105dp)
-            bottomImage.setImageResource(R.drawable.img_giphy_100dp)
-            bottomImage.contentDescription = getString(R.string.giphy_powered_by_giphy)
+            bottomImage.setImageResource(R.drawable.img_tenor_100dp)
+            bottomImage.contentDescription = getString(R.string.gif_powered_by_tenor)
         }
 
         viewModel.emptyDisplayMode.getDistinct().observe(this, Observer { emptyDisplayMode ->
@@ -214,7 +214,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
                         updateLayoutForSearch(isSearching = true, topMargin = 0)
 
                         visibility = View.VISIBLE
-                        title.setText(R.string.giphy_picker_empty_search_list)
+                        title.setText(R.string.gif_picker_empty_search_list)
                         image.visibility = View.GONE
                         bottomImage.visibility = View.GONE
                     }
@@ -224,7 +224,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
                         updateLayoutForSearch(isSearching = false, topMargin = 0)
 
                         visibility = View.VISIBLE
-                        title.setText(R.string.giphy_picker_initial_empty_text)
+                        title.setText(R.string.gif_picker_initial_empty_text)
                         image.visibility = View.VISIBLE
                         bottomImage.visibility = View.VISIBLE
                     }
@@ -251,8 +251,8 @@ class GiphyPickerActivity : LocaleAwareActivity() {
             event ?: return@Observer
 
             ToastUtils.showToast(
-                    this@GiphyPickerActivity,
-                    R.string.giphy_picker_endless_scroll_network_error,
+                    this@GifPickerActivity,
+                    R.string.gif_picker_endless_scroll_network_error,
                     ToastUtils.Duration.LONG
             )
         })
@@ -275,7 +275,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
      *
      * @param mediaViewModels A non-empty list
      */
-    private fun showPreview(mediaViewModels: List<GiphyMediaViewModel>) {
+    private fun showPreview(mediaViewModels: List<GifMediaViewModel>) {
         check(mediaViewModels.isNotEmpty())
 
         val uris = mediaViewModels.map { it.previewImageUri.toString() }
@@ -299,7 +299,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
                 finish()
             } else if (result?.errorMessageStringResId != null) {
                 ToastUtils.showToast(
-                        this@GiphyPickerActivity,
+                        this@GifPickerActivity,
                         result.errorMessageStringResId,
                         ToastUtils.Duration.SHORT
                 )
@@ -308,7 +308,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
     }
 
     /**
-     * Set up enabling/disabling of controls depending on the current [GiphyPickerViewModel.State]:
+     * Set up enabling/disabling of controls depending on the current [GifPickerViewModel.State]:
      *
      * - [State.IDLE]: All normal functions are allowed
      * - [State.DOWNLOADING] or [State.FINISHED]: "Add", "Preview", searching, and selecting are disabled
@@ -346,7 +346,7 @@ class GiphyPickerActivity : LocaleAwareActivity() {
         }
 
         val properties = mapOf("number_of_media_selected" to mediaLocalIds.size)
-        AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_DOWNLOADED, properties)
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.GIF_PICKER_DOWNLOADED, properties)
     }
 
     /**

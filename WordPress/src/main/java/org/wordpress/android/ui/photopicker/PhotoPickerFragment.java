@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -61,7 +62,8 @@ public class PhotoPickerFragment extends Fragment {
         ANDROID_CAPTURE_VIDEO(true),
         ANDROID_CHOOSE_PHOTO_OR_VIDEO(true),
         WP_MEDIA(false),
-        STOCK_MEDIA(true);
+        STOCK_MEDIA(true),
+        GIF(true);
 
         private boolean mRequiresUploadPermission;
 
@@ -278,6 +280,8 @@ public class PhotoPickerFragment extends Fragment {
                 break;
             case STOCK_MEDIA:
                 break;
+            case GIF:
+                break;
         }
 
         if (mListener != null) {
@@ -319,6 +323,14 @@ public class PhotoPickerFragment extends Fragment {
                     return true;
                 }
             });
+
+            if (BuildConfig.TENOR_AVAILABLE) {
+                MenuItem itemGif = popup.getMenu().add(R.string.photo_picker_gif);
+                itemGif.setOnMenuItemClickListener(item -> {
+                    doIconClicked(PhotoPickerIcon.GIF);
+                    return true;
+                });
+            }
         }
 
         // if the menu has a single item, perform the action right away
@@ -604,7 +616,7 @@ public class PhotoPickerFragment extends Fragment {
             if (isAlwaysDenied) {
                 String permissionName = "<strong>"
                                         + WPPermissionUtils.getPermissionName(getActivity(),
-                                                permission.WRITE_EXTERNAL_STORAGE)
+                        permission.WRITE_EXTERNAL_STORAGE)
                                         + "</strong>";
                 label = String.format(getString(R.string.photo_picker_soft_ask_permissions_denied), appName,
                         permissionName);

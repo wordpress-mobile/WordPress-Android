@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="@dimen/retry_text_view_top_margin"
-        android:text="@string/failed_to_insert_image_tap_to_retry"
+        android:text="@string/failed_to_load_image_tap_to_retry"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

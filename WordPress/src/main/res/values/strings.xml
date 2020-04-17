@@ -371,8 +371,8 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">You\’re now using the block editor for new posts \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_page">You\’re now using the block editor for new pages \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">You\’re now using the block editor for new posts, great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_page">You\’re now using the block editor for new pages, great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
     <string name="dialog_gutenberg_informative_description_v2">We made big improvements to the block editor and think it\'s worth a try! We enabled it for new posts and pages but if you\'d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
 
     <!-- reload drop down -->
@@ -680,6 +680,14 @@
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
     <string name="site_settings_optimize_video_summary">Enable to resize and compress videos</string>
 
+    <string name="weekday_sunday">Sunday</string>
+    <string name="weekday_monday">Monday</string>
+    <string name="weekday_tuesday">Tuesday</string>
+    <string name="weekday_wednesday">Wednesday</string>
+    <string name="weekday_thursday">Thursday</string>
+    <string name="weekday_friday">Friday</string>
+    <string name="weekday_saturday">Saturday</string>
+
     <string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
     <string name="detail_approve_auto_if_previously_approved">Automatically approve if the user has a previously approved comment</string>
     <string name="detail_approve_auto">Automatically approve everyone\'s comments.</string>
@@ -828,7 +836,7 @@
     <string name="app_theme_entry_value_dark" translatable="false">dark</string>
     <string name="app_theme_entry_value_default" translatable="false">default</string>
     <string name="app_theme_entry_value_default_key" translatable="false">@string/app_theme_entry_value_light</string>
-    <string-array name="app_theme_entries" tools:ignore="InconsistentArrays">
+    <string-array name="app_theme_entries" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/app_theme_light</item>
         <item>@string/app_theme_dark</item>
     </string-array>
@@ -1487,7 +1495,7 @@
     <!-- Remote Post&Page has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
     <string name="local_post_autosave_revision_available">You\'ve made unsaved changes to this post</string>
-    <string name="local_page_is_conflicted">@string/local_post_is_conflicted</string>
+    <string name="local_page_is_conflicted" translatable="false">@string/local_post_is_conflicted</string>
     <string name="local_page_autosave_revision_available">You\'ve made unsaved changes to this page</string>
 
     <!-- Post Remote Preview -->
@@ -2241,6 +2249,7 @@
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
+    <string name="photo_picker_gif">Choose from Tenor</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
@@ -2254,11 +2263,13 @@
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
 
-    <string name="giphy_picker_search_hint">Search Giphy</string>
-    <string name="giphy_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
-    <string name="giphy_picker_empty_search_list">No media matching your search</string>
-    <string name="giphy_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
-    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
+    <!-- GIFs -->
+    <string name="gif_picker_search_hint">Search Tenor</string>
+    <string name="gif_powered_by_tenor">Powered by Tenor</string>
+    <string name="gif_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
+    <string name="gif_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
+    <string name="gif_picker_empty_search_list" tools:ignore="UnusedResources">No media matching your search</string>
+    <string name="gif_list_search_returned_unknown_error" tools:ignore="UnusedResources">There was a problem handling the request</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -2607,6 +2618,7 @@
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_open_page_error">The selected page is not available</string>
+    <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
 
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
@@ -2659,7 +2671,6 @@
     <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 
-
     <!-- Web Preview -->
     <string name="web_preview_default">Default</string>
     <string name="web_preview_desktop">Desktop</string>
@@ -2702,6 +2713,14 @@
     <string name="notification_new_site_creation_title">Create Site</string>
     <string name="notification_new_site_creation_failed">There was a problem</string>
     <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
+
+    <string name="new_site_creation_creating_site_loading_title">Hooray!\nAlmost done</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Your site will be ready shortly</string>
+    <string name="new_site_creation_creating_site_loading_1">Grabbing site URL</string>
+    <string name="new_site_creation_creating_site_loading_2">Adding site features</string>
+    <string name="new_site_creation_creating_site_loading_3">Setting up theme</string>
+    <string name="new_site_creation_creating_site_loading_4">Creating dashboard</string>
+
     <string name="cancel_new_site_wizard_content_description">Cancel Site Creation Wizard</string>
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
@@ -2719,9 +2738,10 @@
     <string name="description_expand">Expand</string>
 
     <string name="preview_image_description">Preview Image</string>
-    <string name="failed_to_insert_image_tap_to_retry">Failed to insert image.\nPlease tap to retry.</string>
+    <string name="failed_to_load_image_tap_to_retry">Failed to load image.\nPlease tap to retry.</string>
     <string name="done">done</string>
     <string name="error_failed_to_crop_and_save_image">Failed to crop and save image, please try again.</string>
+    <string name="crop">crop</string>
 
     <!--Autogenerated:Gutenberg Native-->
     <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->

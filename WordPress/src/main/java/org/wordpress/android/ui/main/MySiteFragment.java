@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -207,11 +209,11 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void refreshMeGravatar() {
-        String rawGravatarUrl = mMeGravatarLoader.constructGravatarUrl(mAccountStore.getAccount().getAvatarUrl());
+        String avatarUrl = mMeGravatarLoader.constructGravatarUrl(mAccountStore.getAccount().getAvatarUrl());
 
         mMeGravatarLoader.load(
                 false,
-                rawGravatarUrl,
+                avatarUrl,
                 null,
                 mAvatarImageView,
                 ImageType.USER,
@@ -378,11 +380,14 @@ public class MySiteFragment extends Fragment implements
         mToolbar.setTitle(mToolbarTitle);
 
         mToolbar.inflateMenu(R.menu.my_site_menu);
-        View actionView = mToolbar.getMenu().findItem(R.id.me_item).getActionView();
+
+        MenuItem meMenu = mToolbar.getMenu().findItem(R.id.me_item);
+        View actionView = meMenu.getActionView();
         mAvatarImageView = actionView.findViewById(R.id.avatar);
-        actionView.setOnClickListener(item -> {
-                ActivityLauncher.viewMeActivityForResult(getActivity());
-        });
+
+        actionView.setOnClickListener(item -> ActivityLauncher.viewMeActivityForResult(getActivity()));
+
+        TooltipCompat.setTooltipText(actionView, meMenu.getTitle());
 
         return rootView;
     }

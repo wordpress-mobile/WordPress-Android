@@ -549,11 +549,6 @@ Language: zh_TW
     <string name="stats_no_data_for_period">此期間沒有資料</string>
     <string name="preference_strip_image_location">從媒體移除位置資訊</string>
     <string name="stats_cannot_be_started">目前我們無法開啟統計資料。請稍後再試一次</string>
-    <string name="giphy_powered_by_giphy">由 GIPHY 建置</string>
-    <string name="giphy_picker_endless_scroll_network_error">網路發生錯誤，導致部份媒體載入失敗。</string>
-    <string name="giphy_picker_empty_search_list">沒有符合你搜尋條件的媒體</string>
-    <string name="giphy_picker_initial_empty_text">搜尋免費 GIF 以新增至你的媒體庫！</string>
-    <string name="giphy_picker_search_hint">搜尋 Giphy</string>
     <string name="stats_author_views_label">瀏覽數</string>
     <string name="stats_author_label">作者</string>
     <string name="stats_authors">作者</string>
