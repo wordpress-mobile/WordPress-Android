@@ -377,7 +377,7 @@ public class MySiteFragment extends Fragment implements
         setupClickListeners(rootView);
 
         mToolbar = rootView.findViewById(R.id.toolbar_main);
-        mToolbar.setTitle(mToolbarTitle);
+        mToolbar.setTitle(R.string.my_site_section_screen_title);
 
         mToolbar.inflateMenu(R.menu.my_site_menu);
 
@@ -955,9 +955,6 @@ public class MySiteFragment extends Fragment implements
         } else {
             mQuickActionButtonsContainer.setWeightSum(75f);
         }
-
-        // Refresh the title
-        setTitle(site.getName());
     }
 
     private void toggleAdminVisibility(@Nullable final SiteModel site) {
@@ -1009,12 +1006,9 @@ public class MySiteFragment extends Fragment implements
 
     @Override
     public void setTitle(@NonNull final String title) {
-        if (isAdded()) {
-            mToolbarTitle = (title.isEmpty()) ? getString(R.string.wordpress) : title;
-
-            if (mToolbar != null) {
-                mToolbar.setTitle(mToolbarTitle);
-            }
+        mToolbarTitle = title;
+        if (mToolbar != null) {
+            mToolbar.setTitle(title);
         }
     }
 
