@@ -162,7 +162,6 @@ Language: az
     <string name="category_name">Kateqoriya adı</string>
     <string name="file_error_create">Müvəqqəti media faylı yaradıla bilmir. Cihazınızda yetərli böş sahə olduğundan əmin olun.</string>
     <string name="open_source_licenses">Açıq mənbə lisenziyaları</string>
-    <string name="hint_comment_content">Şərh</string>
     <string name="saving_changes">Dəyişikliklər qeyd edilir</string>
     <string name="sure_to_cancel_edit_comment">Şərhin redaktəsi ləğv edilsinmi?</string>
     <string name="content_required">Şərh vacibdir</string>
@@ -260,7 +259,6 @@ Language: az
     <string name="no_network_title">Şəbəkə əlçatan deyil</string>
     <string name="pages">Səhifələr</string>
     <string name="ok">OK</string>
-    <string name="blogusername">bloqistifadəçiadı</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Versiya</string>
     <string name="app_title">Android üçün WordPress</string>
@@ -272,7 +270,6 @@ Language: az
     <string name="immediately">Həmən</string>
     <string name="quickpress_add_alert_title">Qısa yol ismi təyin et</string>
     <string name="settings">Parametrlər</string>
-    <string name="quickpress_window_title">QuickPress qısa yolu üçün bloq seçin</string>
     <string name="quickpress_add_error">Qısa yol ismi boş ola bilməz</string>
     <string name="categories">Kateqoriyalar</string>
     <string name="title">Başlıq</string>

@@ -693,7 +693,6 @@ Language: gl_ES
     <string name="file_error_create">Non foi posible crear o ficheiro temporal para a carga. Asegúrate de que haxa espazo libre suficiente no dispositivo.</string>
     <string name="invalid_site_url_message">Comproba se a URL introducida é válida</string>
     <string name="http_authorization_required">Necesítase autorización</string>
-    <string name="hint_comment_content">Comentario</string>
     <string name="saving_changes">Gardando os cambios</string>
     <string name="remove_account">Borrar o sitio</string>
     <string name="view_in_browser">Ver no navegador</string>
@@ -804,7 +803,6 @@ Language: gl_ES
     <string name="posts">Artigos</string>
     <string name="anonymous">Anónimo</string>
     <string name="no_network_title">Non hai rede dispoñible</string>
-    <string name="blogusername">usuario</string>
     <string name="ok">Vale</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Versión</string>
@@ -817,7 +815,6 @@ Language: gl_ES
     <string name="immediately">Inmediatamente</string>
     <string name="quickpress_add_alert_title">Establecer o nome do atallo</string>
     <string name="settings">Configuración</string>
-    <string name="quickpress_window_title">Seleccionar un blogue para o atallo de QuickPress</string>
     <string name="quickpress_add_error">O nome do atallo non pode estar baleiro</string>
     <string name="pages_private">Privado</string>
     <string name="title">Título</string>

@@ -1831,7 +1831,6 @@ Language: en_AU
     <string name="content_required">Comment is required</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
     <string name="saving_changes">Saving changes</string>
-    <string name="hint_comment_content">Comment</string>
     <string name="trash">Trash</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
     <string name="dlg_trashing_comments">Sending to trash</string>
@@ -1933,7 +1932,6 @@ Language: en_AU
     <string name="pages">Pages</string>
     <string name="no_network_title">No network available</string>
     <string name="ok">OK</string>
-    <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">Terms of Service</string>
@@ -1946,7 +1944,6 @@ Language: en_AU
     <string name="quickpress_add_alert_title">Set shortcut name</string>
     <string name="settings">Settings</string>
     <string name="quickpress_add_error">Shortcut name can\'t be empty</string>
-    <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
     <string name="pages_private">Private</string>
     <string name="categories">Categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
