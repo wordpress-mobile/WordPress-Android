@@ -22,12 +22,10 @@ import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
-import org.wordpress.android.ui.posts.PrepublishingScreenState.ActionsState
-import org.wordpress.android.ui.posts.PrepublishingScreenState.TagsState
+
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
-        TagsSelectedListener,
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -108,26 +106,22 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             event.applyIfNotHandled { dismiss() }
         })
 
-        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreenState>(KEY_SCREEN_STATE)
+        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(KEY_SCREEN_STATE)
         val site = arguments?.getSerializable(SITE) as SiteModel
 
-        viewModel.start(editPostRepository, site, prepublishingScreenState)
+        viewModel.start(site, prepublishingScreenState)
     }
 
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
         val (fragment, tag) = when (navigationTarget.targetScreen) {
             HOME -> Pair(
-                    PrepublishingActionsFragment.newInstance((navigationTarget.screenState as ActionsState)),
+                    PrepublishingActionsFragment.newInstance(),
                     PrepublishingActionsFragment.TAG
             )
             PrepublishingScreen.PUBLISH -> TODO()
             PrepublishingScreen.VISIBILITY -> TODO()
             PrepublishingScreen.TAGS -> Pair(
-                    PrepublishingTagsFragment.newInstance(
-                            navigationTarget.site,
-                            (navigationTarget.screenState as? TagsState)?.tags
-                    ),
-                    PrepublishingTagsFragment.TAG
+                    PrepublishingTagsFragment.newInstance(navigationTarget.site), PrepublishingTagsFragment.TAG
             )
         }
 
@@ -170,10 +164,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 putSerializable(SITE, site)
             }
         }
-    }
-
-    override fun onTagsSelected(selectedTags: String) {
-        viewModel.updateTagsStateAndSetToCurrent(selectedTags)
     }
 
     override fun onCloseClicked() {
