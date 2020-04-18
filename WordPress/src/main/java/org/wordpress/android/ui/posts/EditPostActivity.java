@@ -196,6 +196,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
@@ -2294,14 +2295,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.IMAGE_EDITOR_EDIT_IMAGE:
-                    if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
-                        Uri imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
-                        if (imageUri != null) {
+                    if (data.hasExtra(ARG_EDIT_IMAGE_DATA)) {
+                        ArrayList<EditImageData.OutputData> outputData =
+                                data.getParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA);
+                        if (outputData != null && outputData.size() > 0) {
                             Map<String, String> properties = new HashMap<>();
                             properties.put("actions", "crop");
                             AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, properties);
-
-                            mEditorMedia.addNewMediaToEditorAsync(imageUri, true);
+                            List<Uri> uris = new ArrayList<>(outputData.size());
+                            for (EditImageData.OutputData item : outputData) {
+                                uris.add(Uri.parse(item.getOutputFilePath()));
+                            }
+                            mEditorMedia.addNewMediaItemsToEditorAsync(uris, true);
                         }
                     }
                     break;

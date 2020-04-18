@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
@@ -26,6 +27,9 @@ class PreviewImageViewModel : ViewModel() {
     private val _navigateToCropScreenWithFileInfo = MutableLiveData<Event<Triple<String, String?, Boolean>>>()
     val navigateToCropScreenWithFileInfo: LiveData<Event<Triple<String, String?, Boolean>>> =
             _navigateToCropScreenWithFileInfo
+
+    private val _finishAction = MutableLiveData<Event<List<OutputData>>>()
+    val finishAction: LiveData<Event<List<OutputData>>> = _finishAction
 
     private var selectedPosition: Int = 0
 

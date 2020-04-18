@@ -1,6 +1,7 @@
 package org.wordpress.android.imageeditor.preview
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -195,6 +196,14 @@ class PreviewImageFragment : Fragment() {
                         viewModel.onCropResult(it.toString())
                     }
                 }
+            }
+        })
+
+        viewModel.finishAction.observe(viewLifecycleOwner,Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                val intent = Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, ArrayList(it)) }
+                requireActivity().setResult(RESULT_OK, intent)
+                requireActivity().finish()
             }
         })
     }
