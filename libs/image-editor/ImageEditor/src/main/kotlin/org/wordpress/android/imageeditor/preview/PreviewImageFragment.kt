@@ -36,6 +36,7 @@ import org.wordpress.android.imageeditor.crop.CropFragment
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
@@ -139,11 +140,7 @@ class PreviewImageFragment : Fragment() {
 
         // Set adapter data before the ViewPager2.restorePendingState gets called
         // to avoid manual handling of the ViewPager2 state restoration.
-        viewModel.uiState.value?.let {
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.viewPagerItemsStates)
-            cropActionMenu?.isEnabled = it.editActionsEnabled
-            UiHelpers.updateVisibility(thumbnailsTabLayout, it.thumbnailsTabLayoutVisible)
-        }
+        viewModel.uiState.value?.let { updateUiState(it) }
     }
 
     private fun initializeInsertButton() {
@@ -163,11 +160,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { state ->
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
-            cropActionMenu?.isEnabled = state.editActionsEnabled
-            UiHelpers.updateVisibility(thumbnailsTabLayout, state.thumbnailsTabLayoutVisible)
-        })
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { state -> updateUiState(state) })
 
         viewModel.loadIntoFile.observe(viewLifecycleOwner, Observer { fileStateEvent ->
             fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
@@ -197,13 +190,20 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        viewModel.finishAction.observe(viewLifecycleOwner,Observer { event ->
+        viewModel.finishAction.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 val intent = Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, ArrayList(it)) }
                 requireActivity().setResult(RESULT_OK, intent)
                 requireActivity().finish()
             }
         })
+    }
+
+    private fun updateUiState(state: UiState) {
+        (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
+        cropActionMenu?.isEnabled = state.editActionsEnabled
+        UiHelpers.updateVisibility(thumbnailsTabLayout, state.thumbnailsTabLayoutVisible)
+        UiHelpers.updateVisibility(insertButton, state.thumbnailsTabLayoutVisible)
     }
 
     private fun loadIntoImageView(url: String, imageView: ImageView) {

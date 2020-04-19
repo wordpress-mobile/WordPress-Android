@@ -95,7 +95,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
-import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -196,7 +195,6 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
-import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
@@ -2292,6 +2290,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         mRevision = data.getParcelableExtra(KEY_REVISION);
                         new Handler().postDelayed(this::loadRevision,
                                 getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
+                    }
+                    break;
+                case RequestCodes.IMAGE_EDITOR_EDIT_IMAGE:
+                    List<Uri> uris = WPMediaUtils.retrieveImageEditorResultAndTrackEvent(data);
+                    for (Uri item : uris) {
+                        mEditorMedia.addNewMediaToEditorAsync(item, true);
                     }
                     break;
             }

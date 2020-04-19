@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
-import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
@@ -217,9 +216,8 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 break;
             case IMAGE_EDITOR_EDIT_IMAGE:
                 if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
-                    List<Uri> uris = convertEditImageOutputToListOfUris(data.getParcelableArrayListExtra(
-                            PreviewImageFragment.ARG_EDIT_IMAGE_DATA));
-                    doMediaUrisSelected(uris, PhotoPickerMediaSource.APP_PICKER);
+                    doMediaUrisSelected(WPMediaUtils.retrieveImageEditorResultAndTrackEvent(data),
+                            PhotoPickerMediaSource.APP_PICKER);
                 }
                 break;
         }
@@ -355,14 +353,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 launchStockMediaPicker();
                 break;
         }
-    }
-
-    private List<Uri> convertEditImageOutputToListOfUris(List<EditImageData.OutputData> data) {
-        List<Uri> uris = new ArrayList<>(data.size());
-        for (EditImageData.OutputData item : data) {
-            uris.add(Uri.parse(item.getOutputFilePath()));
-        }
-        return uris;
     }
 
     private String[] convertUrisListToStringArray(List<Uri> uris) {
