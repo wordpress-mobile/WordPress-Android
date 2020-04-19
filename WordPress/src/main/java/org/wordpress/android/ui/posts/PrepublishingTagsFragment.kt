@@ -12,10 +12,11 @@ import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityH
 import org.wordpress.android.util.ActivityUtils
 import javax.inject.Inject
 
-class PrepublishingTagsFragment : TagsFragment() {
+class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     private var closeListener: PrepublishingScreenClosedListener? = null
 
     @Inject lateinit var getPostTagsUseCase: GetPostTagsUseCase
+    @Inject lateinit var updatePostTagsUseCase: UpdatePostTagsUseCase
     private lateinit var editPostRepository: EditPostRepository
 
     override fun getContentLayout() = R.layout.fragment_prepublishing_tags
@@ -28,6 +29,7 @@ class PrepublishingTagsFragment : TagsFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         closeListener = parentFragment as PrepublishingScreenClosedListener
+        mTagsSelectedListener = this
 
         if (activity is EditPostActivityHook) {
             editPostRepository = (activity as EditPostActivityHook).editPostRepository
@@ -41,7 +43,7 @@ class PrepublishingTagsFragment : TagsFragment() {
         closeListener = null
     }
 
-    override fun getTagsFromEditPostRepositoryOrArguments()= getPostTagsUseCase.getTags(editPostRepository)
+    override fun getTagsFromEditPostRepositoryOrArguments() = getPostTagsUseCase.getTags(editPostRepository)
 
     companion object {
         const val TAG = "prepublishing_tags_fragment_tag"
@@ -67,5 +69,9 @@ class PrepublishingTagsFragment : TagsFragment() {
             ActivityUtils.hideKeyboard(requireActivity())
             closeListener?.onBackClicked()
         }
+    }
+
+    override fun onTagsSelected(selectedTags: String) {
+        updatePostTagsUseCase.updateTags(selectedTags, editPostRepository)
     }
 }
