@@ -14,7 +14,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val THROTTLE_DELAY = 2000L
+private const val THROTTLE_DELAY = 500L
 
 class PrepublishingTagsViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
