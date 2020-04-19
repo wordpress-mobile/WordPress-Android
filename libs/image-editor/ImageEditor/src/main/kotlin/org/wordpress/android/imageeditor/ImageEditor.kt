@@ -1,6 +1,7 @@
 package org.wordpress.android.imageeditor
 
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import java.io.File
@@ -9,7 +10,7 @@ class ImageEditor private constructor(
     private val loadIntoImageViewWithResultListener: (
         (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
     ),
-    private val loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit),
+    private val loadIntoFileWithResultListener: ((Uri, RequestListener<File>) -> Unit),
     private val loadIntoImageView: ((String, ImageView, ScaleType) -> Unit)
 ) {
     interface RequestListener<T> {
@@ -41,10 +42,10 @@ class ImageEditor private constructor(
     }
 
     fun loadIntoFileWithResultListener(
-        imageUrl: String,
+        imageUri: Uri,
         listener: RequestListener<File>
     ) {
-        loadIntoFileWithResultListener.invoke(imageUrl, listener)
+        loadIntoFileWithResultListener.invoke(imageUri, listener)
     }
 
     fun loadIntoImageView(imageUrl: String, imageView: ImageView, scaleType: ScaleType) {
@@ -60,7 +61,7 @@ class ImageEditor private constructor(
             loadIntoImageViewWithResultListener: (
                 (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
             ),
-            loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit),
+            loadIntoFileWithResultListener: ((Uri, RequestListener<File>) -> Unit),
             loadIntoImageView: ((String, ImageView, ScaleType) -> Unit)
         ) {
             INSTANCE = ImageEditor(

@@ -246,7 +246,7 @@ class PreviewImageFragment : Fragment() {
 
     private fun loadIntoFile(url: String, position: Int) {
         ImageEditor.instance.loadIntoFileWithResultListener(
-            url,
+            Uri.parse(url),
             object : RequestListener<File> {
                 override fun onResourceReady(resource: File, url: String) {
                     viewModel.onLoadIntoFileSuccess(resource.path, position)
