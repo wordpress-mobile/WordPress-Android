@@ -9,6 +9,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 class PostSettingsTagsFragment : TagsFragment() {
     override fun getContentLayout() = R.layout.fragment_post_settings_tags
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().application as WordPress).component().inject(this)
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mTagsSelectedListener = if (context is PostSettingsTagsActivity) {
@@ -22,6 +27,8 @@ class PostSettingsTagsFragment : TagsFragment() {
         super.onDetach()
         mTagsSelectedListener = null
     }
+
+    override fun getTagsFromEditPostRepositoryOrArguments() = arguments?.getString(PostSettingsTagsActivity.KEY_TAGS)
 
     companion object {
         const val TAG = "post_settings_tags_fragment_tag"

@@ -8,31 +8,46 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.util.ActivityUtils
+import javax.inject.Inject
 
 class PrepublishingTagsFragment : TagsFragment() {
     private var closeListener: PrepublishingScreenClosedListener? = null
 
+    @Inject lateinit var getPostTagsUseCase: GetPostTagsUseCase
+    private lateinit var editPostRepository: EditPostRepository
+
     override fun getContentLayout() = R.layout.fragment_prepublishing_tags
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().application as WordPress).component().inject(this)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mTagsSelectedListener = parentFragment as TagsSelectedListener
         closeListener = parentFragment as PrepublishingScreenClosedListener
+
+        if (activity is EditPostActivityHook) {
+            editPostRepository = (activity as EditPostActivityHook).editPostRepository
+        } else {
+            throw RuntimeException("$activity must implement EditPostActivityHook")
+        }
     }
 
     override fun onDetach() {
         super.onDetach()
         closeListener = null
-        mTagsSelectedListener = null
     }
+
+    override fun getTagsFromEditPostRepositoryOrArguments()= getPostTagsUseCase.getTags(editPostRepository)
 
     companion object {
         const val TAG = "prepublishing_tags_fragment_tag"
-        @JvmStatic fun newInstance(site: SiteModel, tags: String?): PrepublishingTagsFragment {
+        @JvmStatic fun newInstance(site: SiteModel): PrepublishingTagsFragment {
             val bundle = Bundle().apply {
                 putSerializable(WordPress.SITE, site)
-                putString(PostSettingsTagsActivity.KEY_TAGS, tags)
             }
             return PrepublishingTagsFragment().apply { arguments = bundle }
         }
