@@ -1,5 +1,6 @@
 package org.wordpress.android.imageeditor.preview
 
+import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -251,6 +252,21 @@ class PreviewImageViewModel : ViewModel() {
     private fun canLoadToFile(imageState: ImageUiState) = imageState is ImageInHighResLoadSuccessUiState
 
     private fun List<ImageUiState>.hasSingleElement() = this.size == 1
+
+    fun onInsertClicked() {
+        val outputData = uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
+                ?: emptyList()
+        _finishAction.value = Event(outputData)
+    }
+
+    fun getThumbnailImageUrl(position: Int): String {
+        return uiState.value?.viewPagerItemsStates?.get(position)?.data?.let { imageData ->
+            return if (TextUtils.isEmpty(imageData.lowResImageUrl))
+                imageData.highResImageUrl
+            else
+                imageData.lowResImageUrl
+        } ?: ""
+    }
 
     data class ImageData(
         val id: Long = UUID.randomUUID().hashCode().toLong(),

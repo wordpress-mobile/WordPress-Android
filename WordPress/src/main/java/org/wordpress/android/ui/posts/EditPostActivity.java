@@ -2294,22 +2294,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
                     }
                     break;
-                case RequestCodes.IMAGE_EDITOR_EDIT_IMAGE:
-                    if (data.hasExtra(ARG_EDIT_IMAGE_DATA)) {
-                        ArrayList<EditImageData.OutputData> outputData =
-                                data.getParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA);
-                        if (outputData != null && outputData.size() > 0) {
-                            Map<String, String> properties = new HashMap<>();
-                            properties.put("actions", "crop");
-                            AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, properties);
-                            List<Uri> uris = new ArrayList<>(outputData.size());
-                            for (EditImageData.OutputData item : outputData) {
-                                uris.add(Uri.parse(item.getOutputFilePath()));
-                            }
-                            mEditorMedia.addNewMediaItemsToEditorAsync(uris, true);
-                        }
-                    }
-                    break;
             }
         }
     }

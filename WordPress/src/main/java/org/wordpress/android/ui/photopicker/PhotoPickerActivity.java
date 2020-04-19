@@ -21,6 +21,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
@@ -40,6 +42,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE;
 import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_POST_ID;
 
 public class PhotoPickerActivity extends LocaleAwareActivity
@@ -212,6 +215,13 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                     doMediaIdSelected(mediaId, PhotoPickerMediaSource.STOCK_MEDIA_PICKER);
                 }
                 break;
+            case IMAGE_EDITOR_EDIT_IMAGE:
+                if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
+                    List<Uri> uris = convertEditImageOutputToListOfUris(data.getParcelableArrayListExtra(
+                            PreviewImageFragment.ARG_EDIT_IMAGE_DATA));
+                    doMediaUrisSelected(uris, PhotoPickerMediaSource.APP_PICKER);
+                }
+                break;
         }
     }
 
@@ -345,6 +355,14 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 launchStockMediaPicker();
                 break;
         }
+    }
+
+    private List<Uri> convertEditImageOutputToListOfUris(List<EditImageData.OutputData> data) {
+        List<Uri> uris = new ArrayList<>(data.size());
+        for (EditImageData.OutputData item : data) {
+            uris.add(Uri.parse(item.getOutputFilePath()));
+        }
+        return uris;
     }
 
     private String[] convertUrisListToStringArray(List<Uri> uris) {

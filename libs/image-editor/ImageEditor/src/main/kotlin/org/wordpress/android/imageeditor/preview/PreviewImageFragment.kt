@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -115,8 +114,7 @@ class PreviewImageFragment : Fragment() {
                 tab.customView = customView
             }
             val imageView = (tab.customView as FrameLayout).findViewById<ImageView>(R.id.thumbnailImageView)
-            val imageData = previewImageAdapter.currentList[position].data
-            loadIntoImageView(imageData.lowResImageUrl, imageView)
+            loadIntoImageView(viewModel.getThumbnailImageUrl(position), imageView)
         }
 
         tabLayoutMediator = TabLayoutMediator(
@@ -151,7 +149,7 @@ class PreviewImageFragment : Fragment() {
     private fun initializeInsertButton() {
         insertButton.text = getString(string.insert_label_with_count, numberOfImages)
         insertButton.setOnClickListener {
-            Log.d("PreviewImageFragment", "Insert button clicked")
+            viewModel.onInsertClicked()
         }
     }
 
