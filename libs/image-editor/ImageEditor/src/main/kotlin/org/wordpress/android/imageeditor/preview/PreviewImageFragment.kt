@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -35,8 +36,13 @@ import org.wordpress.android.imageeditor.R.string
 import org.wordpress.android.imageeditor.crop.CropFragment
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState
+import org.wordpress.android.imageeditor.utils.ToastUtils
+import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
@@ -51,6 +57,7 @@ class PreviewImageFragment : Fragment() {
     private var numberOfImages = 0
 
     companion object {
+        private val TAG = PreviewImageFragment::class.java.simpleName
         const val ARG_EDIT_IMAGE_DATA = "arg_edit_image_data"
         const val PREVIEW_IMAGE_REDUCED_SIZE_FACTOR = 0.1
 
@@ -164,8 +171,17 @@ class PreviewImageFragment : Fragment() {
 
         viewModel.loadIntoFile.observe(viewLifecycleOwner, Observer { fileStateEvent ->
             fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
-                if (fileState is ImageStartLoadingToFileState) {
-                    loadIntoFile(fileState.imageUrlAtPosition, fileState.position)
+                when (fileState) {
+                    is ImageLoadToFileIdleState -> { // Do nothing
+                    }
+                    is ImageStartLoadingToFileState -> {
+                        loadIntoFile(fileState.imageUrlAtPosition, fileState.position)
+                    }
+                    is ImageLoadToFileFailedState -> {
+                        showFileLoadError(fileState.errorMsg, fileState.errorResId)
+                    }
+                    is ImageLoadToFileSuccessState -> { // Do nothing
+                    }
                 }
             }
         })
@@ -237,10 +253,15 @@ class PreviewImageFragment : Fragment() {
                 }
 
                 override fun onLoadFailed(e: Exception?, url: String) {
-                    viewModel.onLoadIntoFileFailed()
+                    viewModel.onLoadIntoFileFailed(e)
                 }
             }
         )
+    }
+
+    private fun showFileLoadError(errorMsg: String?, errorResId: Int) {
+        Log.e(TAG, "Failed to load into file: $errorMsg")
+        ToastUtils.showToast(context, getString(errorResId), Duration.LONG)
     }
 
     private fun navigateToCropScreenWithFileInfo(fileInfo: Triple<String, String?, Boolean>) {

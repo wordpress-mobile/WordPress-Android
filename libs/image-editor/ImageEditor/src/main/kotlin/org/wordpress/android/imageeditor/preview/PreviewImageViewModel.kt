@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
@@ -111,9 +112,11 @@ class PreviewImageViewModel : ViewModel() {
         )
     }
 
-    fun onLoadIntoFileFailed() {
-        // TODO: Do we need to display any error message to the user?
-        updateLoadIntoFileState(ImageLoadToFileFailedState)
+    fun onLoadIntoFileFailed(exception: Exception?) {
+        updateLoadIntoFileState(ImageLoadToFileFailedState(
+            exception?.message,
+            R.string.error_failed_to_load_into_file)
+        )
     }
 
     fun onCropMenuClicked(selectedPosition: Int) {
@@ -323,6 +326,7 @@ class PreviewImageViewModel : ViewModel() {
                 ImageLoadToFileState()
         data class ImageLoadToFileSuccessState(val filePathAtPosition: String, val position: Int) :
                 ImageLoadToFileState()
-        object ImageLoadToFileFailedState : ImageLoadToFileState()
+        data class ImageLoadToFileFailedState(val errorMsg: String?, val errorResId: Int) :
+                ImageLoadToFileState()
     }
 }
