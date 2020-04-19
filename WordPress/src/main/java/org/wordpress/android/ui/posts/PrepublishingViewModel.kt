@@ -81,6 +81,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
 
     fun onActionClicked(actionType: ActionType) {
         val screen = PrepublishingScreen.valueOf(actionType.name)
+        currentScreen = screen
         navigateToScreen(screen)
     }
 }
