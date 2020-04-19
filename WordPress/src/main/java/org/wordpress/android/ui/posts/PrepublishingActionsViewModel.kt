@@ -13,6 +13,8 @@ import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class PrepublishingActionsViewModel @Inject constructor(private val getPostTagsUseCase: GetPostTagsUseCase) : ViewModel() {
+    private var isStarted = false
+
     private val _uiState = MutableLiveData<List<PrepublishingActionItemUiState>>()
     val uiState: LiveData<List<PrepublishingActionItemUiState>> = _uiState
 
@@ -20,6 +22,9 @@ class PrepublishingActionsViewModel @Inject constructor(private val getPostTagsU
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
 
     fun start(editPostRepository: EditPostRepository) {
+        if (isStarted) return
+        isStarted = true
+
         loadActionsUiState(editPostRepository)
     }
 
