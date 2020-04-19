@@ -89,7 +89,8 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
 
         mTagsEditText = (EditText) view.findViewById(R.id.tags_edit_text);
         mTagsEditText.setOnKeyListener(this);
-        mTagsEditText.addTextChangedListener(this);
+        mTagsEditText.post(() -> mTagsEditText.addTextChangedListener(TagsFragment.this));
+        
         if (!TextUtils.isEmpty(mTags)) {
             // add a , at the end so the user can start typing a new tag
             mTags += ",";
