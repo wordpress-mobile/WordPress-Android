@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.post_prepublishing_actions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import javax.inject.Inject
 
 class PrepublishingActionsFragment : Fragment() {
+    private lateinit var editPostRepository: EditPostRepository
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingActionsViewModel
 
@@ -29,6 +31,12 @@ class PrepublishingActionsFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         actionClickedListener = parentFragment as PrepublishingActionClickedListener
+
+        if (activity is EditPostActivityHook) {
+            editPostRepository = (activity as EditPostActivityHook).editPostRepository
+        } else {
+            throw RuntimeException("$activity must implement EditPostActivityHook")
+        }
     }
 
     override fun onDetach() {
@@ -67,7 +75,7 @@ class PrepublishingActionsFragment : Fragment() {
             }
         })
 
-        viewModel.start()
+        viewModel.start(editPostRepository)
     }
 
     companion object {

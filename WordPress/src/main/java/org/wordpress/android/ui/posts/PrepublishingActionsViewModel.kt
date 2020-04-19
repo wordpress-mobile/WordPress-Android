@@ -12,19 +12,19 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
-class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
+class PrepublishingActionsViewModel @Inject constructor(private val getPostTagsUseCase: GetPostTagsUseCase) : ViewModel() {
     private val _uiState = MutableLiveData<List<PrepublishingActionItemUiState>>()
     val uiState: LiveData<List<PrepublishingActionItemUiState>> = _uiState
 
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
 
-    fun start() {
-        loadActionsUiState()
+    fun start(editPostRepository: EditPostRepository) {
+        loadActionsUiState(editPostRepository)
     }
 
     // TODO remove hardcoded Immediately & Public with live data from the EditPostRepository / user changes.
-    private fun loadActionsUiState() {
+    private fun loadActionsUiState(editPostRepository: EditPostRepository) {
         val prepublishingActionsUiStateList = listOf(
                 PrepublishingActionUiState(
                         actionType = PUBLISH,
@@ -38,6 +38,7 @@ class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
                 ),
                 PrepublishingActionUiState(
                         actionType = TAGS,
+                        actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) },
                         onActionClicked = ::onActionClicked
                 )
         )
