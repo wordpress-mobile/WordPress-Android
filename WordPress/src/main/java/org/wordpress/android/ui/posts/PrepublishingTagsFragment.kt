@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Observer
@@ -17,6 +18,7 @@ import org.wordpress.android.util.ActivityUtils
 import javax.inject.Inject
 
 class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
+    private lateinit var tagsEditText: EditText
     private lateinit var toolbarTitle: TextView
     private var closeListener: PrepublishingScreenClosedListener? = null
 
@@ -63,17 +65,14 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initViewModel()
-
         val closeButton = view.findViewById<ImageView>(R.id.close_button)
         val backButton = view.findViewById<ImageView>(R.id.back_button)
         toolbarTitle = view.findViewById(R.id.toolbar_title)
+        tagsEditText = view.findViewById(R.id.tags_edit_text)
 
         closeButton.setOnClickListener { viewModel.onCloseButtonClicked() }
-        backButton.setOnClickListener {
-            viewModel.onBackButtonClicked()
-        }
-
+        backButton.setOnClickListener { viewModel.onBackButtonClicked() }
+        initViewModel()
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -87,9 +86,14 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
             }
         })
 
+        viewModel.dismissKeyboard.observe(this, Observer { event ->
+            event?.applyIfNotHandled {
+                ActivityUtils.hideKeyboardForced(tagsEditText)
+            }
+        })
+
         viewModel.navigateToHomeScreen.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                ActivityUtils.hideKeyboard(requireActivity())
                 closeListener?.onBackClicked()
             }
         })

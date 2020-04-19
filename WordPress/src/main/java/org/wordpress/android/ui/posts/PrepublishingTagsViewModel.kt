@@ -30,6 +30,9 @@ class PrepublishingTagsViewModel @Inject constructor(
     private val _dismissBottomSheet = MutableLiveData<Event<Unit>>()
     val dismissBottomSheet: LiveData<Event<Unit>> = _dismissBottomSheet
 
+    private val _dismissKeyboard = MutableLiveData<Event<Unit>>()
+    val dismissKeyboard: LiveData<Event<Unit>> = _dismissKeyboard
+
     private val _updateToolbarTitle = MutableLiveData<UiString>()
     val updateToolbarTitle: LiveData<UiString> = _updateToolbarTitle
 
@@ -54,7 +57,10 @@ class PrepublishingTagsViewModel @Inject constructor(
 
     fun onCloseButtonClicked() = _dismissBottomSheet.postValue(Event(Unit))
 
-    fun onBackButtonClicked() = _navigateToHomeScreen.postValue(Event(Unit))
+    fun onBackButtonClicked() {
+        _dismissKeyboard.postValue(Event(Unit))
+        _navigateToHomeScreen.postValue(Event(Unit))
+    }
 
     fun getPostTags() = getPostTagsUseCase.getTags(editPostRepository)
 }
