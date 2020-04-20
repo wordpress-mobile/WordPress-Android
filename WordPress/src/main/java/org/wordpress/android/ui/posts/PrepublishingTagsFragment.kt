@@ -99,8 +99,8 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     private fun getEditPostRepository(): EditPostRepository {
-        val editPostActivityHook = requireNotNull(getEditPostActivityHook())
-        { "This is possibly null because it's called during config changes." }
+        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) { "This is possibly null because it's " +
+                "called during config changes." }
 
         return editPostActivityHook.editPostRepository
     }
