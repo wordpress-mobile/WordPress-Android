@@ -4,9 +4,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import org.wordpress.android.WordPress
 import org.wordpress.android.imageeditor.ImageEditor
-import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.IMAGE
@@ -60,22 +58,17 @@ class ImageEditorInitializer {
         }
 
         private fun <T : Any> onResourceReady(model: Any?, listener: ImageEditor.RequestListener<T>, resource: T) =
-                listener.onResourceReady(resource, getResourcePath(model))
-
-        private fun <T : Any> onLoadFailed(model: Any?, listener: ImageEditor.RequestListener<T>, e: Exception?) =
-                listener.onLoadFailed(e, getResourcePath(model))
-
-        private fun getResourcePath(model: Any?): String {
             if (model != null && (model is String || model is Uri)) {
-                return if (model is Uri) {
-                    val context = WordPress.getContext()
-                    MediaUtils.getRealPathFromURI(context, model)
-                } else {
-                    model as String
-                }
+                listener.onResourceReady(resource, model.toString())
             } else {
                 throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
             }
-        }
+
+        private fun <T : Any> onLoadFailed(model: Any?, listener: ImageEditor.RequestListener<T>, e: Exception?) =
+            if (model != null && (model is String || model is Uri)) {
+                listener.onLoadFailed(e, model.toString())
+            } else {
+                throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
+            }
     }
 }
