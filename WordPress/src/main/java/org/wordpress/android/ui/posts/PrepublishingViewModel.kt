@@ -41,9 +41,6 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         this.site = site
         this.currentScreen = currentScreenFromSavedState
 
-        /**
-         * Restores the specific state if it was persisted.
-         */
         currentScreen?.let { screen ->
             navigateToScreen(screen)
         } ?: run {
@@ -55,9 +52,6 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         updateNavigationTarget(PrepublishingNavigationTarget(site, prepublishingScreen))
     }
 
-    /**
-     * Clicking back triggers the save operation.
-     */
     fun onBackClicked() {
         if (currentScreen != HOME) {
             currentScreen = HOME
