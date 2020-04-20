@@ -288,8 +288,6 @@ Language: he_IL
     <string name="notifications_tab_dialog_master_hint_on">השבתת הצגת הודעות בלשונית \'הודעות\' של אתר זה</string>
     <string name="notifications_tab_dialog_master_status_off">הודעות עבור אתר זה</string>
     <string name="notifications_tab_dialog_master_status_on">הודעות עבור אתר זה</string>
-    <string name="dialog_gutenberg_informative_description_page">התחלת להשתמש בעורך הבלוקים עבור עמודים חדשים u2014 מעולה! כדי לחזור לעורך הקלאסי, יש לעבור אל \'האתר שלי\' > \'הגדרות אתר\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">התחלת להשתמש בעורך הבלוקים עבור פוסטים חדשים u2014 מעולה! כדי לחזור לעורך הקלאסי, יש לעבור אל \'האתר שלי\' > \'הגדרות אתר\'.</string>
     <string name="pick_media">להוסיף תמונה או וידאו</string>
     <string name="error_post_not_submitted_retrying">לא הצלחנו לשלוח את הפוסט לבדיקה אבל ננסה שוב מאוחר יותר. </string>
     <string name="error_post_not_scheduled_retrying">לא הצלחנו לתזמן את הפוסט אבל ננסה שוב מאוחר יותר.</string>

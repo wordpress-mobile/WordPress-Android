@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-10 00:54:10+0000
+Translation-Revision-Date: 2020-04-18 00:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="error_failed_to_crop_and_save_image">無法裁剪和儲存圖片，請再試一次。</string>
+    <string name="failed_to_insert_image_tap_to_retry">無法插入圖片。\n請點選以重試。</string>
+    <string name="preview_image_description">預覽圖片</string>
+    <string name="error_unknown_page_type">不明的頁面格式</string>
+    <string name="error_page_not_submitted">我們無法完成此動作，因此未將此頁面提交送審。</string>
+    <string name="error_page_not_scheduled">我們無法完成此動作，因此未排程此頁面。</string>
+    <string name="error_page_not_published_private">我們無法完成此動作，因此未發表這篇私密文章。</string>
+    <string name="error_page_not_published">我們無法完成此動作，因此未發表此頁面。</string>
+    <string name="error_page_not_submitted_retrying">我們無法將此頁面提交送審，但稍後會再試一次。</string>
+    <string name="error_page_not_scheduled_retrying">我們無法排程此頁面，但稍後會再試一次。</string>
+    <string name="error_page_not_published_retrying_private">我們無法發表此私密頁面，但稍後會再試一次。</string>
+    <string name="error_page_not_published_retrying">我們無法發表此私密頁面，但稍後會再試一次。</string>
+    <string name="error_media_recover_page_not_submitted">我們無法上傳此媒體，因此未將此頁面提交送審。</string>
+    <string name="error_media_recover_page_not_scheduled">我們無法上傳此媒體，因此未排程此頁面。</string>
+    <string name="error_media_recover_page_not_published_private">我們無法上傳此媒體，因此未發表此私密頁面。</string>
+    <string name="error_media_recover_page_not_published">我們無法上傳此媒體，因此未發表此頁面。</string>
+    <string name="page_waiting_for_connection_draft">我們會在裝置重新上線後儲存你的草稿</string>
+    <string name="page_waiting_for_connection_private">我們會在裝置重新上線後發表你的私密頁面。</string>
+    <string name="page_waiting_for_connection_scheduled">我們會在裝置重新上線後排程你的頁面。</string>
+    <string name="page_waiting_for_connection_pending">我們會在裝置重新上線後將你的頁面提交送審。</string>
+    <string name="page_waiting_for_connection_publish">我們會在裝置重新上線後發表此頁面。</string>
+    <string name="page_queued">已排入佇列的頁面</string>
+    <string name="page_uploading">正在上傳頁面</string>
+    <string name="error_publish_page_no_network">裝置已離線。頁面已儲存在本機。</string>
+    <string name="local_page_autosave_revision_available">這個頁面有未儲存的變更</string>
+    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
+    <string name="editor_uploading_page">你的頁面正在上傳中</string>
+    <string name="editor_page_saved_locally_failed_media">此頁面的媒體上傳作業失敗，但已儲存到本機</string>
+    <string name="editor_page_saved_locally">頁面已儲存到裝置</string>
+    <string name="editor_page_saved_online">頁面已儲存到線上</string>
+    <string name="quickpress_shortcut_activity_label">選擇用於 QuickPress 捷徑的網誌</string>
+    <string name="app_theme_default">由省電模式設定</string>
+    <string name="app_theme_dark">深色系</string>
+    <string name="app_theme_light">淡色系</string>
+    <string name="app_theme">外觀</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">你最近變更了這個頁面，但沒有儲存這些變更。選擇要載入的版本：\n\n</string>
     <string name="gutenberg_native_what_people_say">使用者評價</string>
     <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">我們提供一系列服務，可協助你達到期望的成果。不確定自己需要什麼，或所需內容的費用嗎？我們可以說明有哪些符合你需求的服務，並提供相關費用的詳細資訊。請於下方與我們聯絡。</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">我們是由一群才華橫溢的專業人士組成的小團隊，具備廣泛的技能和經驗。我們熱愛自己的工作，對旅遊產業充滿熱情。期待能與你合作。</string>
@@ -250,8 +286,6 @@ Language: zh_TW
     <string name="notifications_tab_dialog_master_hint_on">停用此網站通知分頁的通知顯示</string>
     <string name="notifications_tab_dialog_master_status_off">此網站的通知</string>
     <string name="notifications_tab_dialog_master_status_on">此網站的通知</string>
-    <string name="dialog_gutenberg_informative_description_page">你正在使用區塊編輯器編輯新頁面，太棒了！若你想改用傳統編輯器，請前往「我的網站」>「網站設定」。</string>
-    <string name="dialog_gutenberg_informative_description_post">你正在使用區塊編輯器編輯新文章，太棒了！若你想改用傳統編輯器，請前往「我的網站」>「網站設定」。</string>
     <string name="pick_media">新增圖片或視訊</string>
     <string name="error_post_not_submitted_retrying">我們無法將這篇文章提交送審，但稍後會再試一次。</string>
     <string name="error_post_not_scheduled_retrying">我們無法排程這篇文章，但稍後會再試一次。</string>
@@ -2147,6 +2181,7 @@ Language: zh_TW
     <string name="pages">頁面</string>
     <string name="no_network_title">沒有網路連線</string>
     <string name="ok">OK</string>
+    <string name="done">完成</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">服務條款</string>
@@ -2180,4 +2215,8 @@ Language: zh_TW
     <string name="save">儲存</string>
     <string name="cancel">取消</string>
     <string name="error">錯誤</string>
+    <string-array name="app_theme_entries">
+        <item>\@string/app_theme_light</item>
+        <item>\@string/app_theme_dark</item>
+    </string-array>
 </resources>

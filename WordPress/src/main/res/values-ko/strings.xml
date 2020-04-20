@@ -247,8 +247,6 @@ Language: ko_KR
     <string name="notifications_tab_dialog_master_hint_on">이 사이트의 알림 탭에서 알림 표시 사용 안 함</string>
     <string name="notifications_tab_dialog_master_status_off">이 사이트의 알림</string>
     <string name="notifications_tab_dialog_master_status_on">이 사이트의 알림</string>
-    <string name="dialog_gutenberg_informative_description_page">이제 새 페이지의 블록 편집기를 사용하고 있습니다. \u2014 잘하셨습니다! 구 버전 편집기로 변경하려면 \'내 사이트\'> \'사이트 설정\'으로 이동하세요.</string>
-    <string name="dialog_gutenberg_informative_description_post">이제 새 글의 블록 편집기를 사용하고 있습니다. \u2014 잘하셨습니다! 구 버전 편집기로 변경하려면 \'내 사이트\'> \'사이트 설정\'으로 이동하세요.</string>
     <string name="pick_media">이미지 또는 비디오 추가</string>
     <string name="error_post_not_submitted_retrying">리뷰를 위해 이 글을 제출하지 못했지만 나중에 다시 시도하겠습니다. </string>
     <string name="error_post_not_scheduled_retrying">이 글을 예약하지 못했지만 나중에 다시 시도하겠습니다.</string>

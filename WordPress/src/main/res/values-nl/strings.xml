@@ -288,8 +288,6 @@ Language: nl
     <string name="notifications_tab_dialog_master_hint_on">Weergave van meldingen op het meldingentabblad van deze site uitschakelen</string>
     <string name="notifications_tab_dialog_master_status_off">Meldingen voor deze site</string>
     <string name="notifications_tab_dialog_master_status_on">Meldingen voor deze site</string>
-    <string name="dialog_gutenberg_informative_description_page">Je gebruikt nu de blokeditor voor nieuwe pagina\'s. Geweldig! Als je toch liever de klassieke editor gebruikt, ga dan naar \'Mijn site\' > \'Site-instellingen\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">Je gebruikt nu de blokeditor voor nieuwe berichten. Geweldig! Als je toch liever de klassieke editor gebruikt, ga dan naar \'Mijn site\' > \'Site-instellingen\'.</string>
     <string name="pick_media">Afbeelding of video toevoegen</string>
     <string name="error_post_not_submitted_retrying">We konden dit bericht niet inzenden voor beoordeling, maar we proberen het later nog eens. </string>
     <string name="error_post_not_scheduled_retrying">We konden dit bericht niet inplannen, maar we proberen het later nog eens.</string>

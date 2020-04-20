@@ -288,8 +288,6 @@ Language: es_VE
     <string name="notifications_tab_dialog_master_hint_on">Desactivar los avisos mostrados en la pestaña de avisos de este sitio</string>
     <string name="notifications_tab_dialog_master_status_off">Avisos para este sitio</string>
     <string name="notifications_tab_dialog_master_status_on">Avisos para este sitio</string>
-    <string name="dialog_gutenberg_informative_description_page">Ahora estás usando el editor de bloques para las nuevas páginas — ¡Genial! Si quieres cambiar al editor clásico, ve a «Mi sitio > Ajustes del sitio».</string>
-    <string name="dialog_gutenberg_informative_description_post">Ahora estás usando el editor de bloques para las nuevas entradas — ¡Genial! Si quieres cambiar al editor clásico, ve a «Mi sitio > Ajustes del sitio».</string>
     <string name="pick_media">Añadir imagen o video</string>
     <string name="error_post_not_submitted_retrying">No hemos podido enviar esta entrada a revisión, pero lo intentaremos de nuevo más tarde. </string>
     <string name="error_post_not_scheduled_retrying">No hemos podido programar esta entrada, pero lo intentaremos de nuevo más tarde.</string>

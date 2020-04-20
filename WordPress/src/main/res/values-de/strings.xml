@@ -288,8 +288,6 @@ Language: de
     <string name="notifications_tab_dialog_master_off_title">Aktiviere die Benachrichtigungen für diese Website, um Benachrichtigungen auf dem Tab „Benachrichtigungen“ zu sehen.</string>
     <string name="notifications_tab_dialog_master_hint_off">Benachrichtigungsanzeige auf dem Tab „Benachrichtigungen“ für diese Website aktivieren</string>
     <string name="notifications_tab_dialog_master_hint_on">Benachrichtigungsanzeige auf dem Tab „Benachrichtigungen“ für diese Website deaktivieren</string>
-    <string name="dialog_gutenberg_informative_description_page">Großartig! Du nutzt jetzt den Block-Editor für neue Seiten! Wenn du zum klassischen Editor wechseln möchtest, gehe zu „Meine Website“ > „Website-Einstellungen“.</string>
-    <string name="dialog_gutenberg_informative_description_post">Großartig! Du nutzt jetzt den Block-Editor für neue Beiträge! Wenn du zum klassischen Editor wechseln möchtest, gehe zu „Meine Website“ > „Website-Einstellungen“.</string>
     <string name="pick_media">Bild oder Video hinzufügen</string>
     <string name="error_post_not_submitted_retrying">Wir konnten diesen Beitrag nicht zur Überprüfung einreichen, aber wir werden es später erneut versuchen.</string>
     <string name="error_post_not_published_retrying_private">Wir konnten diesen privaten Beitrag nicht veröffentlichen, aber wir werden es später erneut versuchen.</string>

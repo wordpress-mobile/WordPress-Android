@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-16 01:55:03+0000
+Translation-Revision-Date: 2020-04-20 06:34:18+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
@@ -288,8 +288,8 @@ Language: fr
     <string name="notifications_tab_dialog_master_hint_on">Désactiver l\'affichage des notifications sur l\'onglet des notifications pour ce site</string>
     <string name="notifications_tab_dialog_master_status_off">Notifications pour ce site</string>
     <string name="notifications_tab_dialog_master_status_on">Notifications pour ce site</string>
-    <string name="dialog_gutenberg_informative_description_page">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouvelles pages u2014 − c’est super ! Si vous revenir à l’éditeur classique, allez sur « Mon site » > « Réglages du site ».</string>
-    <string name="dialog_gutenberg_informative_description_post">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouveaux articles u2014  – c’est super ! Si vous revenir à l’éditeur classique, allez à « Mon site » > « Réglages du site ».</string>
+    <string name="dialog_gutenberg_informative_description_page">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouvelles pages. C’est super ! Si vous souhaitez revenir à l’éditeur classique, allez sur « Mon site » > « Réglages du site ».</string>
+    <string name="dialog_gutenberg_informative_description_post">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouveaux articles. C’est super ! Si vous souhaitez revenir à l’éditeur classique, allez à « Mon site » > « Réglages du site ».</string>
     <string name="pick_media">Ajouter une image ou une vidéo</string>
     <string name="error_post_not_submitted_retrying">Nous n\'avons pas pu soumettre cet article pour révision, mais nous réessayerons plus tard. </string>
     <string name="error_post_not_scheduled_retrying">Nous n\'avons pas pu planifier la publication de cet article, mais nous réessayerons plus tard.</string>

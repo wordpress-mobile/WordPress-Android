@@ -288,8 +288,6 @@ Language: tr
     <string name="notifications_tab_dialog_master_hint_on">Bu site için bildirimler sekmesinde bildirim gösterimini etkisizleştir</string>
     <string name="notifications_tab_dialog_master_status_off">Bu site için bildirimler</string>
     <string name="notifications_tab_dialog_master_status_on">Bu site için bildirimler</string>
-    <string name="dialog_gutenberg_informative_description_page">Şimdi yeni sayfalar için blok düzenleyiciyi kullanıyorsunuz, u2014 harika! Klasik düzenleyicide değişiklik yapmak istiyorsanız, Sitem > Site Ayarları\'na gidin.</string>
-    <string name="dialog_gutenberg_informative_description_post">Şimdi yeni yazılar için blok düzenleyiciyi kullanıyorsunuz, u2014 harika! Klasik düzenleyicide değişiklik yapmak istiyorsanız, Sitem > Site Ayarları\'na gidin.</string>
     <string name="pick_media">Görsel veya video ekle.</string>
     <string name="error_post_not_submitted_retrying">Bu yazıyı inceleme için gönderemedik ama daha sonra tekrar deneyeceğiz.</string>
     <string name="error_post_not_scheduled_retrying">Bu yazıyı planlayamadık ama daha sonra tekrar deneyeceğiz.</string>

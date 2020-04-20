@@ -197,8 +197,6 @@ Language: pt_BR
     <string name="notifications_tab_dialog_master_hint_on">Desativar a exibição de notificações deste site na aba notificações</string>
     <string name="notifications_tab_dialog_master_status_off">Notificações para esse site</string>
     <string name="notifications_tab_dialog_master_status_on">Notificações para esse site</string>
-    <string name="dialog_gutenberg_informative_description_page">Agora você está usando o editor de blocos para novas páginas u2014  ótimo! Se você quiser mudar para o editar clássico, acesse \'Meu site\' > \'Configurações do site\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">Agora você está usando o editor de blocos para novos posts u2014  ótimo! Se você quiser mudar para o editar clássico, acesse \'Meu site\' > \'Configurações do site\'.</string>
     <string name="pick_media">Adicionar imagem ou vídeo</string>
     <string name="error_post_not_submitted_retrying">Não foi possível enviar este post para revisão, mas tentaremos novamente mais tarde.</string>
     <string name="error_post_not_scheduled_retrying">Não foi possível agendar esse post, mas tentaremos novamente mais tarde.</string>

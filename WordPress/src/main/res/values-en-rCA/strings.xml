@@ -112,8 +112,6 @@ Language: en_CA
     <string name="notifications_tab_dialog_master_hint_on">Disable notifications display on notifications tab for this site</string>
     <string name="notifications_tab_dialog_master_status_off">Notifications for this site</string>
     <string name="notifications_tab_dialog_master_status_on">Notifications for this site</string>
-    <string name="dialog_gutenberg_informative_description_page">You’re now using the block editor for new pages u2014 great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">You’re now using the block editor for new posts u2014 great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
     <string name="pick_media">Add image or video</string>
     <string name="error_post_not_submitted_retrying">We couldn\'t submit this post for review, but we\'ll try again later. </string>
     <string name="error_post_not_scheduled_retrying">We couldn\'t schedule this post, but we\'ll try again later.</string>

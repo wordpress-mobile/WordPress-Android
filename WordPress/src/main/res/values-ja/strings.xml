@@ -288,8 +288,6 @@ Language: ja_JP
     <string name="notifications_tab_dialog_master_hint_on">このサイトの通知タブで通知表示を無効にする</string>
     <string name="notifications_tab_dialog_master_status_off">このサイトの通知</string>
     <string name="notifications_tab_dialog_master_status_on">このサイトの通知</string>
-    <string name="dialog_gutenberg_informative_description_page">新しいページにブロックエディターを使用できるようになりました。旧エディターに変更する場合は、「参加サイト」 > 「サイト設定」に移動します。</string>
-    <string name="dialog_gutenberg_informative_description_post">新しい投稿にブロックエディターを使用できるようになりました。旧エディターに変更する場合は、「参加サイト」 > 「サイト設定」に移動します。</string>
     <string name="pick_media">画像または動画を追加</string>
     <string name="error_post_not_submitted_retrying">このレビュー投稿を送信できませんでした。後ほど再度実行します。</string>
     <string name="error_post_not_scheduled_retrying">この投稿を予約投稿にできませんでした。後ほど再度実行します。</string>

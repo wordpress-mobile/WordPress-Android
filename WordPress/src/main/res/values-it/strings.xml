@@ -272,8 +272,6 @@ Language: it
     <string name="notifications_tab_dialog_master_hint_on">Disabilita la visualizzazione delle notifiche sulla scheda delle notifiche per questo sito</string>
     <string name="notifications_tab_dialog_master_status_off">Notifiche per questo sito</string>
     <string name="notifications_tab_dialog_master_status_on">Notifiche per questo sito</string>
-    <string name="dialog_gutenberg_informative_description_page">Ora stai usando l\'editor dei blocchi per le nuove pagine, u2014 fantastico. Se desideri passare all\'editor classico, vai a \"Il mio sito\" > \"Impostazioni del sito\".</string>
-    <string name="dialog_gutenberg_informative_description_post">Ora stai usando l\'editor dei blocchi per i nuovi articoli, u2014 fantastico. Se desideri passare all\'editor classico, vai a \"Il mio sito\" > \"Impostazioni del sito\".</string>
     <string name="pick_media">Aggiungi immagine o video</string>
     <string name="error_post_not_submitted_retrying">Impossibile inviare questo articolo per la revisione, riproveremo più tardi. </string>
     <string name="error_post_not_scheduled_retrying">Impossibile pianificare questo articolo, riproveremo più tardi.</string>

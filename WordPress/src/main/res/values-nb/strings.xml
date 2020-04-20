@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-03 18:22:30+0000
+Translation-Revision-Date: 2020-04-19 19:40:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
@@ -172,8 +172,6 @@ Language: nb_NO
     <string name="notifications_tab_dialog_master_hint_on">Deaktiver visning av varslinger  på varslingsfanen for dette nettstedet.</string>
     <string name="notifications_tab_dialog_master_status_off">Varslinger for dette nettstedet</string>
     <string name="notifications_tab_dialog_master_status_on">Varslinger for dette nettstedet</string>
-    <string name="dialog_gutenberg_informative_description_page">Du bruker nå blokkredigering for nye sider u2014 flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">Du bruker nå blokkredigering for nye innlegg u2014 flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
     <string name="pick_media">Legg til bilde eller video</string>
     <string name="error_post_not_submitted_retrying">Vi kunne ikke sende dette innlegget til gjennomgang, men vi vil prøve igjen senere.</string>
     <string name="error_post_not_scheduled_retrying">Vi kunne ikke planlegge dette innlegget, men vi vil prøve igjen senere.</string>
@@ -2060,6 +2058,7 @@ Language: nb_NO
     <string name="pages">Sider</string>
     <string name="no_network_title">Ingen nettverk tilgjengelige</string>
     <string name="ok">OK</string>
+    <string name="done">fullført</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">Lisens</string>

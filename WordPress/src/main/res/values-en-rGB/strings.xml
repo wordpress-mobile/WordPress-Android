@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-07 15:22:09+0000
+Translation-Revision-Date: 2020-04-20 07:38:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
@@ -288,8 +288,8 @@ Language: en_GB
     <string name="notifications_tab_dialog_master_hint_on">Disable notifications display on notifications tab for this site</string>
     <string name="notifications_tab_dialog_master_status_off">Notifications for this site</string>
     <string name="notifications_tab_dialog_master_status_on">Notifications for this site</string>
-    <string name="dialog_gutenberg_informative_description_page">You’re now using the block editor for new pages - great! If you’d like to change to the classic editor, go to \'My site\' > \'Site settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">You’re now using the block editor for new posts - great! If you’d like to change to the classic editor, go to \'My site\' > \'Site settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_page">You’re now using the block editor for new pages \u2014 great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">You’re now using the block editor for new posts \u2014 great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
     <string name="pick_media">Add image or video</string>
     <string name="error_post_not_submitted_retrying">We couldn\'t submit this post for review, but we\'ll try again later. </string>
     <string name="error_post_not_scheduled_retrying">We couldn\'t schedule this post, but we\'ll try again later.</string>

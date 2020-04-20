@@ -288,8 +288,6 @@ Language: ar
     <string name="notifications_tab_dialog_master_hint_on">تعطيل التنبيهات المعروضة في علامة تبويب \"التنبيهات\" في هذا الموقع</string>
     <string name="notifications_tab_dialog_master_status_off">التنبيهات لهذا الموقع</string>
     <string name="notifications_tab_dialog_master_status_on">التنبيهات لهذا الموقع</string>
-    <string name="dialog_gutenberg_informative_description_page">أنت الآن تستخدم محرِّر المكوّنات للصفحات الجديدة، رائع! إذا كنت ترغب في التغيير إلى المحرِّر التقليدي، فانتقل إلى \"موقعي\" > \"إعدادات الموقع\".</string>
-    <string name="dialog_gutenberg_informative_description_post">أنت الآن تستخدم محرِّر المكوّنات للمقالات الجديدة، رائع! إذا كنت ترغب في التغيير إلى المحرِّر التقليدي، فانتقل إلى \"موقعي\" > \"إعدادات الموقع\".</string>
     <string name="pick_media">إضافة صورة أو فيديو</string>
     <string name="error_post_not_submitted_retrying">لم نتمكن من إرسال هذه المقالة للمراجعة، ولكننا سنحاول مرة أخرى لاحقًا. </string>
     <string name="error_post_not_scheduled_retrying">لم نتمكن من جدولة هذه المقالة، ولكننا سنحاول مرة أخرى لاحقًا.</string>

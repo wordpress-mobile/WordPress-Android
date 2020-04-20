@@ -284,8 +284,6 @@ Language: pl
     <string name="notifications_tab_dialog_master_hint_on">Wyłącz ekran powiadomień na zakładce powiadomień dla tej witryny</string>
     <string name="notifications_tab_dialog_master_status_off">Powiadomienia dla tej witryny</string>
     <string name="notifications_tab_dialog_master_status_on">Powiadomienia dla tej witryny</string>
-    <string name="dialog_gutenberg_informative_description_page">Dla nowych stron używasz aktualnie edytora blokowego - super! Jeśli chciał(a)byś zmienić na edytor klasysczny przejdź do ekranu \"Moja Witryna\' > \'Ustawienia witryny\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">Dla nowych wpisów używasz aktualnie edytora blokowego - super! Jeśli chciał(a)byś zmienić na edytor klasysczny przejdź do ekranu \"Moja Witryna\' > \'Ustawienia witryny\'.</string>
     <string name="pick_media">Dodaj zdjęcie lub film</string>
     <string name="error_post_not_submitted_retrying">Nie można było przesłać tego wpisu do przeglądu, ale spróbujemy później</string>
     <string name="error_post_not_scheduled_retrying">Nie można było zaplanować daty opublikowania tego wpisu, ale spróbujemy później.</string>
