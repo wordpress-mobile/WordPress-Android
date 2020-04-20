@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -19,10 +18,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
-
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
@@ -30,7 +27,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: PrepublishingViewModel
-    private lateinit var editPostRepository: EditPostRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,15 +40,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.post_prepublishing_bottom_sheet, container)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (activity is EditPostActivityHook) {
-            editPostRepository = (activity as EditPostActivityHook).editPostRepository
-        } else {
-            throw RuntimeException("$activity must implement EditPostActivityHook")
-        }
     }
 
     override fun onResume() {
@@ -125,10 +112,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             )
         }
 
-        slideInFragment(fragment, tag, tag != PrepublishingHomeFragment.TAG)
+        slideInFragment(fragment, tag)
     }
 
-    private fun slideInFragment(fragment: Fragment, tag: String, slideBack: Boolean) {
+    private fun slideInFragment(fragment: Fragment, tag: String) {
         childFragmentManager.let { fragmentManager ->
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
