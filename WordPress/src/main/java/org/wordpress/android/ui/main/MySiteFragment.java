@@ -377,7 +377,7 @@ public class MySiteFragment extends Fragment implements
         setupClickListeners(rootView);
 
         mToolbar = rootView.findViewById(R.id.toolbar_main);
-        mToolbar.setTitle(mToolbarTitle);
+        mToolbar.setTitle(R.string.my_site_section_screen_title);
 
         mToolbar.inflateMenu(R.menu.my_site_menu);
 
@@ -730,8 +730,8 @@ public class MySiteFragment extends Fragment implements
                         showSiteIconProgressBar(true);
                         updateSiteIconMediaId(mediaId);
                     } else {
-                        String strMediaUri = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
-                        if (strMediaUri == null) {
+                        String[] mediaUriStringsArray = data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS);
+                        if (mediaUriStringsArray == null || mediaUriStringsArray.length == 0) {
                             AppLog.e(AppLog.T.UTILS, "Can't resolve picked or captured image");
                             return;
                         }
@@ -745,7 +745,7 @@ public class MySiteFragment extends Fragment implements
                                         : AnalyticsTracker.Stat.MY_SITE_ICON_GALLERY_PICKED;
                         AnalyticsTracker.track(stat);
 
-                        Uri imageUri = Uri.parse(strMediaUri);
+                        Uri imageUri = Uri.parse(mediaUriStringsArray[0]);
                         if (imageUri != null) {
                             boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
                                     uri -> {
@@ -955,9 +955,6 @@ public class MySiteFragment extends Fragment implements
         } else {
             mQuickActionButtonsContainer.setWeightSum(75f);
         }
-
-        // Refresh the title
-        setTitle(site.getName());
     }
 
     private void toggleAdminVisibility(@Nullable final SiteModel site) {
@@ -1009,12 +1006,9 @@ public class MySiteFragment extends Fragment implements
 
     @Override
     public void setTitle(@NonNull final String title) {
-        if (isAdded()) {
-            mToolbarTitle = (title.isEmpty()) ? getString(R.string.wordpress) : title;
-
-            if (mToolbar != null) {
-                mToolbar.setTitle(mToolbarTitle);
-            }
+        mToolbarTitle = title;
+        if (mToolbar != null) {
+            mToolbar.setTitle(title);
         }
     }
 
@@ -1067,7 +1061,8 @@ public class MySiteFragment extends Fragment implements
                 if (event.mediaModelList.size() > 0) {
                     MediaModel media = event.mediaModelList.get(0);
                     mImageManager.load(mBlavatarImageView, ImageType.BLAVATAR, PhotonUtils
-                            .getPhotonImageUrl(media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH));
+                            .getPhotonImageUrl(media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH,
+                                    site.isPrivateWPComAtomic()));
                     updateSiteIconMediaId((int) media.getMediaId());
                 } else {
                     AppLog.w(T.MAIN, "Site icon upload completed, but mediaList is empty.");
