@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -29,8 +30,10 @@ abstract class PublishSettingsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
      lateinit var viewModel: PublishSettingsViewModel
 
+    @LayoutRes protected abstract fun getContentLayout(): Int
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.edit_post_published_settings_fragment, container, false) as ViewGroup
+        val rootView = inflater.inflate(getContentLayout(), container, false) as ViewGroup
         val dateAndTime = rootView.findViewById<TextView>(R.id.publish_time_and_date)
         val dateAndTimeContainer = rootView.findViewById<LinearLayout>(R.id.publish_time_and_date_container)
         val publishNotification = rootView.findViewById<TextView>(R.id.publish_notification)

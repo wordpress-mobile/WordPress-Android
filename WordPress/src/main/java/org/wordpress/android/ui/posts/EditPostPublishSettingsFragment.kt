@@ -2,9 +2,12 @@ package org.wordpress.android.ui.posts
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 
-class EditPostPublishSettingsFragment: PublishSettingsFragment() {
+class EditPostPublishSettingsFragment : PublishSettingsFragment() {
+    override fun getContentLayout() = R.layout.edit_post_published_settings_fragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)
