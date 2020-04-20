@@ -197,9 +197,9 @@ class PreviewImageViewModel : ViewModel() {
         val imageStateAtPosition = currentUiState.viewPagerItemsStates[position]
         val imageDataAtPosition = imageStateAtPosition.data
         return when {
-            loadSuccess -> createImageLoadSuccessUiState(imageUrlAtPosition, imageDataAtPosition, imageStateAtPosition)
+            loadSuccess -> createImageLoadSuccessUiState(imageUrlAtPosition, imageStateAtPosition)
             retry -> createImageLoadStartUiState(imageDataAtPosition)
-            else -> createImageLoadFailedUiState(imageUrlAtPosition, imageDataAtPosition, position)
+            else -> createImageLoadFailedUiState(imageUrlAtPosition, imageStateAtPosition, position)
         }
     }
 
@@ -211,9 +211,9 @@ class PreviewImageViewModel : ViewModel() {
 
     private fun createImageLoadSuccessUiState(
         imageUrl: String,
-        imageData: ImageData,
         imageState: ImageUiState
     ): ImageUiState {
+        val imageData = imageState.data
         return if (imageData.hasValidLowResImageUrlEqualTo(imageUrl)) {
             val isHighResImageAlreadyLoaded = imageState is ImageInHighResLoadSuccessUiState
             if (!isHighResImageAlreadyLoaded) {
@@ -229,11 +229,13 @@ class PreviewImageViewModel : ViewModel() {
 
     private fun createImageLoadFailedUiState(
         imageUrlAtPosition: String,
-        imageDataAtPosition: ImageData,
+        imageStateAtPosition: ImageUiState,
         position: Int
     ): ImageUiState {
+        val imageDataAtPosition = imageStateAtPosition.data
         val imageUiState = if (imageDataAtPosition.hasValidLowResImageUrlEqualTo(imageUrlAtPosition)) {
-            ImageInLowResLoadFailedUiState(imageDataAtPosition)
+            val isRetryShown = imageStateAtPosition is ImageInHighResLoadFailedUiState
+            ImageInLowResLoadFailedUiState(imageDataAtPosition, isRetryShown)
         } else {
             ImageInHighResLoadFailedUiState(imageDataAtPosition)
         }
@@ -315,7 +317,8 @@ class PreviewImageViewModel : ViewModel() {
             progressBarVisible = !isRetryShown,
             retryLayoutVisible = isRetryShown
         )
-        data class ImageInLowResLoadFailedUiState(val imageData: ImageData) : ImageUiState(
+        data class ImageInLowResLoadFailedUiState(val imageData: ImageData, val isRetryShown: Boolean = false) :
+            ImageUiState(
             data = imageData,
             progressBarVisible = true,
             retryLayoutVisible = false
