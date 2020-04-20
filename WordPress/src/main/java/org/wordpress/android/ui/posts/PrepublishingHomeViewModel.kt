@@ -12,7 +12,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
-class PrepublishingHomeViewModel @Inject constructor(private val getPostTagsUseCase: GetPostTagsUseCase) : ViewModel() {
+class PrepublishingHomeViewModel @Inject constructor(private val getPostTagsUseCase: GetPostTagsUseCase, private val postSettingsUtils: PostSettingsUtils) : ViewModel() {
     private var isStarted = false
 
     private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
@@ -33,7 +33,11 @@ class PrepublishingHomeViewModel @Inject constructor(private val getPostTagsUseC
         val prepublishingHomeUiStateList = listOf(
                 PrepublishingHomeUiState(
                         actionType = PUBLISH,
-                        actionResult = UiStringText("Immediately"),
+                        actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
+                            UiStringText(
+                                    postSettingsUtils.getPublishDateLabel(postImmutableModel)
+                            )
+                        },
                         onActionClicked = ::onActionClicked
                 ),
                 PrepublishingHomeUiState(
