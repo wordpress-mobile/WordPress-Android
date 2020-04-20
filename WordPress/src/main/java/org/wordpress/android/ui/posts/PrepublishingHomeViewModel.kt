@@ -28,7 +28,7 @@ class PrepublishingHomeViewModel @Inject constructor(private val getPostTagsUseC
         setupHomeUiState(editPostRepository)
     }
 
-    // TODO remove hardcoded Immediately & Public with live data from the EditPostRepository / user changes.
+    // TODO remove hardcoded Public with live data from the EditPostRepository / user changes.
     private fun setupHomeUiState(editPostRepository: EditPostRepository) {
         val prepublishingHomeUiStateList = listOf(
                 PrepublishingHomeUiState(
