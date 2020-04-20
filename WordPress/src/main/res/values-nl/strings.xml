@@ -124,7 +124,7 @@ Language: nl
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Een korte bio met persoonlijke geschiedenis, belangrijke prestaties of een interessant weetje.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Een beschrijving van het project en het uiteindelijke resultaat.</string>
-    <string name="gutenberg_native_555_555_1234">012-3456789</string>
+    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
     <string name="gutenberg_native_10_street_road">Dorpsstraat 10</string>
     <string name="create_post_page_fab_tooltip_contributors">Een bericht maken</string>
     <string name="post_list_tab_trashed_posts">Verwijderd</string>

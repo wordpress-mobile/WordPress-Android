@@ -124,7 +124,7 @@ Language: ko_KR
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">개인사, 주요 성취, 흥미로운 점을 담은 간단한 소개입니다.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">프로젝트와 작품에 대한 설명이 표시됩니다.</string>
-    <string name="gutenberg_native_555_555_1234">(555) 555-1234</string>
+    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
     <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">게시물 작성</string>
     <string name="post_list_tab_trashed_posts">삭제된</string>

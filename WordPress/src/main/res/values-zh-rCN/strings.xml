@@ -124,7 +124,7 @@ Language: zh_CN
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">简短的个人简介，包括个人经历、主要成就或有趣的体验。</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">对展示的项目和作品的描述。</string>
-    <string name="gutenberg_native_555_555_1234">(555) 555-1234</string>
+    <string name="gutenberg_native_555_555_1234">(555) 555&#8211;1234</string>
     <string name="gutenberg_native_10_street_road">中关村北大街 1 号</string>
     <string name="create_post_page_fab_tooltip_contributors">撰写文章</string>
     <string name="post_list_tab_trashed_posts">已放入回收站</string>
