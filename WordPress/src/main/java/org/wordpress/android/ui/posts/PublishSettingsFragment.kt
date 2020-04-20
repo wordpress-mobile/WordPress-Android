@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 abstract class PublishSettingsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-     lateinit var viewModel: EditPostPublishSettingsViewModel
+     lateinit var viewModel: PublishSettingsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.edit_post_published_settings_fragment, container, false) as ViewGroup
