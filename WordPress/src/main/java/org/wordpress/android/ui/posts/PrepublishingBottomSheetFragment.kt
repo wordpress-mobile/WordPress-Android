@@ -53,7 +53,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 if (event.action != KeyEvent.ACTION_DOWN) {
                     true
                 } else {
-                    viewModel.onBackClicked()
+                    onBackClicked()
                     true
                 }
             } else {
