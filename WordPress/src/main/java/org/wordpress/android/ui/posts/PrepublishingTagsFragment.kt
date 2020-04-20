@@ -25,7 +25,6 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
 
-    private lateinit var editPostRepository: EditPostRepository
     private lateinit var viewModel: PrepublishingTagsViewModel
 
     override fun getContentLayout() = R.layout.prepublishing_tags_fragment
@@ -39,12 +38,6 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         super.onAttach(context)
         closeListener = parentFragment as PrepublishingScreenClosedListener
         mTagsSelectedListener = this
-
-        if (activity is EditPostActivityHook) {
-            editPostRepository = (activity as EditPostActivityHook).editPostRepository
-        } else {
-            throw RuntimeException("$activity must implement EditPostActivityHook")
-        }
     }
 
     override fun onDetach() {
@@ -102,7 +95,23 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
             toolbarTitle.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
-        viewModel.start(editPostRepository)
+        viewModel.start(getEditPostRepository())
+    }
+
+    private fun getEditPostRepository(): EditPostRepository {
+        val editPostActivityHook = requireNotNull(getEditPostActivityHook())
+        { "This is possibly null because it's called during config changes." }
+
+        return editPostActivityHook.editPostRepository
+    }
+
+    private fun getEditPostActivityHook(): EditPostActivityHook? {
+        val activity = activity ?: return null
+        return if (activity is EditPostActivityHook) {
+            activity
+        } else {
+            throw RuntimeException("$activity must implement EditPostActivityHook")
+        }
     }
 
     override fun onTagsSelected(selectedTags: String) {

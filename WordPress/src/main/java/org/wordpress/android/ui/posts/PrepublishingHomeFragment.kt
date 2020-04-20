@@ -17,7 +17,6 @@ import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityH
 import javax.inject.Inject
 
 class PrepublishingHomeFragment : Fragment() {
-    private lateinit var editPostRepository: EditPostRepository
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingHomeViewModel
 
@@ -31,12 +30,6 @@ class PrepublishingHomeFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         actionClickedListener = parentFragment as PrepublishingActionClickedListener
-
-        if (activity is EditPostActivityHook) {
-            editPostRepository = (activity as EditPostActivityHook).editPostRepository
-        } else {
-            throw RuntimeException("$activity must implement EditPostActivityHook")
-        }
     }
 
     override fun onDetach() {
@@ -75,7 +68,23 @@ class PrepublishingHomeFragment : Fragment() {
             }
         })
 
-        viewModel.start(editPostRepository)
+        viewModel.start(getEditPostRepository())
+    }
+
+    private fun getEditPostRepository(): EditPostRepository {
+        val editPostActivityHook = requireNotNull(getEditPostActivityHook())
+        { "This is possibly null because it's called during config changes." }
+
+        return editPostActivityHook.editPostRepository
+    }
+
+    private fun getEditPostActivityHook(): EditPostActivityHook? {
+        val activity = activity ?: return null
+        return if (activity is EditPostActivityHook) {
+            activity
+        } else {
+            throw RuntimeException("$activity must implement EditPostActivityHook")
+        }
     }
 
     companion object {
