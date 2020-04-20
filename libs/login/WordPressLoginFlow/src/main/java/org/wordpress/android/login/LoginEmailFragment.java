@@ -80,6 +80,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private String mRequestedEmail;
     private boolean mIsSocialLogin;
     private Integer mCurrentEmailErrorRes = null;
+    private boolean mIsSignupFromLoginEnabled = true;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -227,7 +228,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
+        // Show Sign-Up button if login mode is Jetpack and signup from login is not enabled
+        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS && !mIsSignupFromLoginEnabled) {
             secondaryButton.setText(Html.fromHtml(String.format(getResources().getString(
                     R.string.login_email_button_signup), "<u>", "</u>")));
             secondaryButton.setOnClickListener(new OnClickListener() {
@@ -458,9 +460,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         switch (event.type) {
             case EMAIL:
                 if (event.isAvailable) {
-                    // email address is available on wpcom, so apparently the user can't login with that one.
-                    ActivityUtils.hideKeyboardForced(mEmailInput);
-                    showEmailError(R.string.email_not_registered_wpcom);
+                    if (mIsSignupFromLoginEnabled) {
+                        mLoginListener.showSignupMagicLink(event.value);
+                    } else {
+                        // email address is available on wpcom, so apparently the user can't login with that one.
+                        ActivityUtils.hideKeyboardForced(mEmailInput);
+                        showEmailError(R.string.email_not_registered_wpcom);
+                    }
                 } else if (mLoginListener != null) {
                     ActivityUtils.hideKeyboardForced(mEmailInput);
                     mLoginListener.gotWpcomEmail(event.value, false);
