@@ -263,14 +263,6 @@ class PreviewImageViewModel : ViewModel() {
 
     private fun List<ImageUiState>.hasSingleElement() = this.size == 1
 
-    private fun ImageData.hasValidLowResImageUrlEqualTo(imageUrl: String): Boolean {
-        val hasValidLowResImageUrl = this.lowResImageUrl?.isNotEmpty() == true &&
-            this.lowResImageUrl != this.highResImageUrl
-        val isGivenUrlEqualToLowResImageUrl = imageUrl == this.lowResImageUrl
-
-        return hasValidLowResImageUrl && isGivenUrlEqualToLowResImageUrl
-    }
-
     fun onInsertClicked() {
         val outputData = uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
                 ?: emptyList()
@@ -291,7 +283,15 @@ class PreviewImageViewModel : ViewModel() {
         val lowResImageUrl: String?,
         val highResImageUrl: String,
         val outputFileExtension: String
-    )
+    ) {
+        fun hasValidLowResImageUrlEqualTo(imageUrl: String): Boolean {
+            val hasValidLowResImageUrl = this.lowResImageUrl?.isNotEmpty() == true &&
+                this.lowResImageUrl != this.highResImageUrl
+            val isGivenUrlEqualToLowResImageUrl = imageUrl == this.lowResImageUrl
+
+            return hasValidLowResImageUrl && isGivenUrlEqualToLowResImageUrl
+        }
+    }
 
     data class UiState(
         val viewPagerItemsStates: List<ImageUiState>,
