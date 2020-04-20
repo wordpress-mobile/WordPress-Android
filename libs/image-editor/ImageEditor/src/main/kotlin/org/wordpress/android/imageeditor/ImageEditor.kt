@@ -8,7 +8,7 @@ import java.io.File
 
 class ImageEditor private constructor(
     private val loadIntoImageViewWithResultListener: (
-        (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
+        (String, ImageView, ScaleType, String?, RequestListener<Drawable>) -> Unit
     ),
     private val loadIntoFileWithResultListener: ((Uri, RequestListener<File>) -> Unit),
     private val loadIntoImageView: ((String, ImageView, ScaleType) -> Unit)
@@ -35,7 +35,7 @@ class ImageEditor private constructor(
         imageUrl: String,
         imageView: ImageView,
         scaleType: ScaleType,
-        thumbUrl: String,
+        thumbUrl: String?,
         listener: RequestListener<Drawable>
     ) {
         loadIntoImageViewWithResultListener.invoke(imageUrl, imageView, scaleType, thumbUrl, listener)
@@ -59,7 +59,7 @@ class ImageEditor private constructor(
 
         fun init(
             loadIntoImageViewWithResultListener: (
-                (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
+                (String, ImageView, ScaleType, String?, RequestListener<Drawable>) -> Unit
             ),
             loadIntoFileWithResultListener: ((Uri, RequestListener<File>) -> Unit),
             loadIntoImageView: ((String, ImageView, ScaleType) -> Unit)

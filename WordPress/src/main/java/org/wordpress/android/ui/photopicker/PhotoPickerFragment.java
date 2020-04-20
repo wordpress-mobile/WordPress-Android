@@ -691,7 +691,7 @@ public class PhotoPickerFragment extends Fragment {
             String stringUri = uri.toString();
             String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(stringUri);
             // TODO Add support for nullable lowResImgUrl
-            inputData.add(new EditImageData.InputData(stringUri, "", outputFileExtension));
+            inputData.add(new EditImageData.InputData(stringUri, null, outputFileExtension));
         }
         return inputData;
     }

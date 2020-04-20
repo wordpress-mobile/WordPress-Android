@@ -214,7 +214,7 @@ class PreviewImageViewModel : ViewModel() {
         imageData: ImageData,
         imageState: ImageUiState
     ): ImageUiState {
-        return if (imageUrl == imageData.lowResImageUrl) {
+        return if (imageData.hasValidLowResImageUrlEqualTo(imageUrl)) {
             val isHighResImageAlreadyLoaded = imageState is ImageInHighResLoadSuccessUiState
             if (!isHighResImageAlreadyLoaded) {
                 val isRetryShown = imageState is ImageInHighResLoadFailedUiState
@@ -232,7 +232,7 @@ class PreviewImageViewModel : ViewModel() {
         imageDataAtPosition: ImageData,
         position: Int
     ): ImageUiState {
-        val imageUiState = if (imageUrlAtPosition == imageDataAtPosition.lowResImageUrl) {
+        val imageUiState = if (imageDataAtPosition.hasValidLowResImageUrlEqualTo(imageUrlAtPosition)) {
             ImageInLowResLoadFailedUiState(imageDataAtPosition)
         } else {
             ImageInHighResLoadFailedUiState(imageDataAtPosition)
@@ -261,6 +261,14 @@ class PreviewImageViewModel : ViewModel() {
 
     private fun List<ImageUiState>.hasSingleElement() = this.size == 1
 
+    private fun ImageData.hasValidLowResImageUrlEqualTo(imageUrl: String): Boolean {
+        val hasValidLowResImageUrl = this.lowResImageUrl?.isNotEmpty() == true &&
+            this.lowResImageUrl != this.highResImageUrl
+        val isGivenUrlEqualToLowResImageUrl = imageUrl == this.lowResImageUrl
+
+        return hasValidLowResImageUrl && isGivenUrlEqualToLowResImageUrl
+    }
+
     fun onInsertClicked() {
         val outputData = uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
                 ?: emptyList()
@@ -272,13 +280,13 @@ class PreviewImageViewModel : ViewModel() {
             return if (TextUtils.isEmpty(imageData.lowResImageUrl))
                 imageData.highResImageUrl
             else
-                imageData.lowResImageUrl
+                imageData.lowResImageUrl as String
         } ?: ""
     }
 
     data class ImageData(
         val id: Long = UUID.randomUUID().hashCode().toLong(),
-        val lowResImageUrl: String,
+        val lowResImageUrl: String?,
         val highResImageUrl: String,
         val outputFileExtension: String
     )

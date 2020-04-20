@@ -24,7 +24,7 @@ class ImageEditorInitializer {
 
         private fun loadIntoImageViewWithResultListener(
             imageManager: ImageManager
-        ): (String, ImageView, ScaleType, String, ImageEditor.RequestListener<Drawable>) -> Unit =
+        ): (String, ImageView, ScaleType, String?, ImageEditor.RequestListener<Drawable>) -> Unit =
                 { imageUrl, imageView, scaleType, thumbUrl, listener ->
                     imageManager.loadWithResultListener(
                         imageView,
