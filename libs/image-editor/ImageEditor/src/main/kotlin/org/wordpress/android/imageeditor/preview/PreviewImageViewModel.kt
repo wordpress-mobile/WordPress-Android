@@ -35,7 +35,12 @@ class PreviewImageViewModel : ViewModel() {
 
     private var selectedPosition: Int = 0
 
+    var numberOfImages = 0
+        private set
+
     fun onCreateView(imageDataList: List<InputData>) {
+        this.numberOfImages = imageDataList.size
+
         if (uiState.value == null) {
             val newImageUiStates = createViewPagerItemsInitialUiStates(
                     convertInputDataToImageData(imageDataList)

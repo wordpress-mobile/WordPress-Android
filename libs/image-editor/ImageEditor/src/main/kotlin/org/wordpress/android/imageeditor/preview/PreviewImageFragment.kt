@@ -53,8 +53,6 @@ class PreviewImageFragment : Fragment() {
     private lateinit var pageChangeCallback: OnPageChangeCallback
 
     private var cropActionMenu: MenuItem? = null
-    // TODO We might want to move this into the VM
-    private var numberOfImages = 0
 
     companion object {
         private val TAG = PreviewImageFragment::class.java.simpleName
@@ -151,7 +149,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun initializeInsertButton() {
-        insertButton.text = getString(string.insert_label_with_count, numberOfImages)
+        insertButton.text = getString(string.insert_label_with_count, viewModel.numberOfImages)
         insertButton.setOnClickListener {
             viewModel.onInsertClicked()
         }
@@ -161,7 +159,6 @@ class PreviewImageFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
         setupObservers()
         val inputData = nonNullIntent.getParcelableArrayListExtra<EditImageData.InputData>(ARG_EDIT_IMAGE_DATA)
-        numberOfImages = inputData.size
 
         viewModel.onCreateView(inputData)
     }
