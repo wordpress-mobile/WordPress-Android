@@ -116,7 +116,7 @@ class PreviewImageFragment : Fragment() {
         val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
             if (tab.customView == null) {
                 val customView = LayoutInflater.from(context)
-                        .inflate(R.layout.preview_image_thumbnail, thumbnailsTabLayout, false)
+                    .inflate(R.layout.preview_image_thumbnail, thumbnailsTabLayout, false)
                 tab.customView = customView
             }
             val imageView = (tab.customView as FrameLayout).findViewById<ImageView>(R.id.thumbnailImageView)
@@ -190,18 +190,18 @@ class PreviewImageFragment : Fragment() {
         })
 
         findNavController().currentBackStackEntry?.savedStateHandle
-                ?.getLiveData<CropResult>(CropFragment.CROP_RESULT)?.observe(
+            ?.getLiveData<CropResult>(CropFragment.CROP_RESULT)?.observe(
                 viewLifecycleOwner, Observer { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent = result.data
-                if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
-                    val imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI) as? Uri
-                    imageUri?.let {
-                        viewModel.onCropResult(it.toString())
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val data: Intent = result.data
+                    if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
+                        val imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI) as? Uri
+                        imageUri?.let {
+                            viewModel.onCropResult(it.toString())
+                        }
                     }
                 }
-            }
-        })
+            })
 
         viewModel.finishAction.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
