@@ -1406,9 +1406,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void copyCommentLinkAddress() {
         try {
             ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            /* TODO: This is a placeholder until I can determine where to extract the URL from */
-            String placeholder = "https://wordpress.com/comment/annmarietestdomain.blog/3";
-            clipboard.setPrimaryClip(ClipData.newPlainText("CommentLinkAddress", placeholder));
+            // TODO remove the placeholder url when the fluxC work is complete
+            // url = mComment.getUrl();
+            String url = "https://wordpress.com/comment/annmarietestdomain.blog/3";
+            clipboard.setPrimaryClip(ClipData.newPlainText("CommentLinkAddress", url));
             showSnackBar(getString(R.string.comment_q_action_copied_url));
         } catch (Exception e) {
             AppLog.e(T.UTILS, e);
@@ -1421,6 +1422,4 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                                         .setAnchorView(mSnackbarAnchor);
         snackBar.show();
     }
-
-
 }
