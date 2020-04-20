@@ -45,7 +45,7 @@ import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
-import org.wordpress.android.ui.main.SitePickerActivity.SitePickerMode;
+import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -132,7 +132,7 @@ public class ActivityLauncher {
      * @param site     the preselected site
      */
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
-        Intent intent = createSitePickerIntent(activity, site, SitePickerMode.NORMAL);
+        Intent intent = createSitePickerIntent(activity, site, SitePickerMode.DEFAULT_MODE);
         activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
@@ -159,7 +159,7 @@ public class ActivityLauncher {
     private static Intent createSitePickerIntent(Context context, SiteModel site, SitePickerMode mode) {
         Intent intent = new Intent(context, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
-        intent.putExtra(SitePickerActivity.SITE_PICKER_MODE, mode);
+        intent.putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, mode);
         return intent;
     }
 
