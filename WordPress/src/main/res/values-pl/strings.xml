@@ -644,11 +644,6 @@ Language: pl
     <string name="stats_no_data_for_period">Brak danych dla tego okresu</string>
     <string name="preference_strip_image_location">Usuń lokalizację GPS z plików mediów</string>
     <string name="stats_cannot_be_started">Nie możemy w tym momencie otworzyć statystyk. Spróbuj ponownie później</string>
-    <string name="giphy_powered_by_giphy">Wspierane przez GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Niektórych plików mediów nie udało się przesłać z powodu błędu sieci. </string>
-    <string name="giphy_picker_empty_search_list">Brak plików mediów dopasowanych do twojego zapytania</string>
-    <string name="giphy_picker_initial_empty_text">Przeszukaj aby znaleźć pliki GIF które możesz dodać do swojej biblioteki mediów!</string>
-    <string name="giphy_picker_search_hint">Przeszukaj Giphy</string>
     <string name="stats_author_views_label">Wyświetleń</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autorzy</string>

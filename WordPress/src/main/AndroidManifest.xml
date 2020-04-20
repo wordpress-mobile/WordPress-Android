@@ -529,7 +529,7 @@
             android:label=""
             android:theme="@style/WordPress.NoActionBar" />
         <activity
-            android:name=".ui.giphy.GiphyPickerActivity"
+            android:name=".ui.gif.GifPickerActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Notifications activities -->

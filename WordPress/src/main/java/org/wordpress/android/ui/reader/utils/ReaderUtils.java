@@ -33,20 +33,24 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ReaderUtils {
-    public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
-        return getResizedImageUrl(imageUrl, width, height, isPrivate, PhotonUtils.Quality.MEDIUM);
+    public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate,
+                                            boolean isPrivateAtomic) {
+        return getResizedImageUrl(imageUrl, width, height, isPrivate, isPrivateAtomic, PhotonUtils.Quality.MEDIUM);
     }
 
     public static String getResizedImageUrl(final String imageUrl,
                                             int width,
                                             int height,
                                             boolean isPrivate,
+                                            boolean isPrivateAtomic,
                                             PhotonUtils.Quality quality) {
         final String unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl);
-        if (isPrivate) {
+
+
+        if (isPrivate && !isPrivateAtomic) {
             return getPrivateImageForDisplay(unescapedUrl, width, height);
         } else {
-            return PhotonUtils.getPhotonImageUrl(unescapedUrl, width, height, quality);
+            return PhotonUtils.getPhotonImageUrl(unescapedUrl, width, height, quality, isPrivateAtomic);
         }
     }
 

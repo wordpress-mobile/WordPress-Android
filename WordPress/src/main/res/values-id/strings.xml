@@ -643,11 +643,6 @@ Language: id
     <string name="stats_no_data_for_period">Tidak ada data selama periode ini</string>
     <string name="preference_strip_image_location">Hapus lokasi dari media</string>
     <string name="stats_cannot_be_started">Saat ini kami tidak dapat membuka statistik. Harap coba lagi nanti</string>
-    <string name="giphy_powered_by_giphy">Didukung oleh GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Sebagian media gagal dimuat karena terdapat error jaringan.</string>
-    <string name="giphy_picker_empty_search_list">Tidak ada media yang cocok dengan pencarian Anda</string>
-    <string name="giphy_picker_initial_empty_text">Cari GIF untuk ditambahkan ke Pustaka Media Anda!</string>
-    <string name="giphy_picker_search_hint">Cari di Giphy</string>
     <string name="stats_author_views_label">Tampilan</string>
     <string name="stats_author_label">Penulis</string>
     <string name="stats_authors">Penulis</string>

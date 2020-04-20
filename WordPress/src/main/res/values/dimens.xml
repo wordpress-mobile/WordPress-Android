@@ -8,6 +8,7 @@
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
     <dimen name="tab_height">48dp</dimen>
+    <dimen name="me_menu_width">64dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>

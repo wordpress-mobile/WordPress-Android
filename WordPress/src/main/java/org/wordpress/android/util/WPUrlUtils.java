@@ -20,6 +20,10 @@ public class WPUrlUtils {
         return UrlUtils.isHttps(uri) && isWordPressCom(uri);
     }
 
+    public static boolean safeToAddPrivateAtCookie(String url, String cookieHost) {
+        return UrlUtils.getHost(url).equals(cookieHost);
+    }
+
     public static boolean isWordPressCom(String url) {
         return UrlUtils.getHost(url).endsWith(".wordpress.com") || UrlUtils.getHost(url).equals("wordpress.com");
     }

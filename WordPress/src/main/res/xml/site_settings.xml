@@ -141,8 +141,8 @@
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_week_starts"
-            android:entries="@array/weekdays"
-            android:entryValues="@array/weekday_values"
+            android:entries="@array/site_settings_weekdays"
+            android:entryValues="@array/site_settings_weekday_values"
             android:key="@string/pref_key_site_week_start"
             android:title="@string/site_settings_week_start_title" />
 
@@ -363,7 +363,7 @@
                     app:caption="@string/site_settings_learn_more_caption"
                     app:layout="@layout/learn_more_pref_old"
                     app:openInDialog="true"
-                    app:url="https://en.support.wordpress.com/settings/discussion-settings/#default-article-settings"
+                    app:url="https://wordpress.com/support/settings/discussion-settings/#default-article-settings"
                     app:useCustomJsFormatting="true" />
 
             </PreferenceCategory>

@@ -350,7 +350,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
                 new OnAuthHeaderRequestedListener() {
-                    @Override public String onAuthHeaderRequested(String url) {
+                    @Override public Map<String, String> onAuthHeaderRequested(String url) {
                         return mEditorFragmentListener.onAuthHeaderRequested(url);
                     }
                 },
@@ -833,7 +833,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             int mediaId = isNetworkUrl ? Integer.valueOf(mediaEntry.getValue().getMediaId())
                     : mediaEntry.getValue().getId();
             String url = isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey();
-            rnMediaList.add(createRNMediaUsingMimeType(mediaId, url, mediaEntry.getValue().getMimeType()));
+            rnMediaList.add(createRNMediaUsingMimeType(mediaId,
+                    url,
+                    mediaEntry.getValue().getMimeType(),
+                    mediaEntry.getValue().getCaption()));
         }
 
         getGutenbergContainerFragment().appendUploadMediaFiles(rnMediaList);
