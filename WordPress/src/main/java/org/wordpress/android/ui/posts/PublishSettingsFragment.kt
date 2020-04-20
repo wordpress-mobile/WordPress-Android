@@ -32,6 +32,11 @@ abstract class PublishSettingsFragment : Fragment() {
 
     @LayoutRes protected abstract fun getContentLayout(): Int
 
+    protected abstract fun setupContent(
+        rootView: ViewGroup,
+        viewModel: PublishSettingsViewModel
+    )
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(getContentLayout(), container, false) as ViewGroup
         val dateAndTime = rootView.findViewById<TextView>(R.id.publish_time_and_date)
@@ -46,6 +51,8 @@ abstract class PublishSettingsFragment : Fragment() {
         AccessibilityUtils.disableHintAnnouncement(publishNotification)
 
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
+
+        setupContent(rootView,viewModel)
 
         viewModel.onDatePicked.observe(this, Observer {
             it?.applyIfNotHandled {
