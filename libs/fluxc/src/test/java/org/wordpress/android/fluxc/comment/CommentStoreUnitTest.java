@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
@@ -234,6 +235,21 @@ public class CommentStoreUnitTest {
         commentModel.setRemoteCommentId(remoteId);
         commentModel.setStatus(status.toString());
         commentModel.setDatePublished(DateTimeUtils.iso8601FromTimestamp(new Random().nextInt()));
+        commentModel.setUrl("https://www.wordpress.com");
         CommentSqlUtils.insertOrUpdateComment(commentModel);
+    }
+
+    @Test
+    public void testGetCommentsIncludeURL() {
+        SiteModel siteModel = new SiteModel();
+        siteModel.setId(21);
+
+        insertTestComments(siteModel);
+
+        List<CommentModel> queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, SelectQuery.ORDER_ASCENDING,
+                CommentStatus.APPROVED, CommentStatus.SPAM, CommentStatus.UNAPPROVED);
+        for (CommentModel commentModel : queriedComments) {
+            assertNotNull(commentModel.getUrl());
+        }
     }
 }
