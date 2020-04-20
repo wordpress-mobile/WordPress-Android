@@ -70,6 +70,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final int EMAIL_CREDENTIALS_REQUEST_CODE = 25100;
 
     private static final String ARG_LOGIN_SITE_URL = "ARG_LOGIN_SITE_URL";
+    private static final String ARG_SIGNUP_FROM_LOGIN_ENABLED = "ARG_SIGNUP_FROM_LOGIN_ENABLED";
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
@@ -80,7 +81,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private String mRequestedEmail;
     private boolean mIsSocialLogin;
     private Integer mCurrentEmailErrorRes = null;
-    private boolean mIsSignupFromLoginEnabled = true;
+    private boolean mIsSignupFromLoginEnabled;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -91,6 +92,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putString(ARG_LOGIN_SITE_URL, url);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled) {
+        LoginEmailFragment fragment = new LoginEmailFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -286,6 +295,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         Bundle args = getArguments();
         if (args != null) {
             mLoginSiteUrl = args.getString(ARG_LOGIN_SITE_URL, "");
+            mIsSignupFromLoginEnabled = args.getBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, false);
         }
     }
 
