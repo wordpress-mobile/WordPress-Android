@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/PostSettingsCardViewInnerLayout">
+    <include layout="@layout/prepublishing_toolbar" />
 
     <LinearLayout
         android:id="@+id/publish_time_and_date_container"
@@ -43,7 +44,5 @@
             android:enabled="false"
             android:text="@string/post_settings_add_to_calendar" />
     </LinearLayout>
-
-    <include layout="@layout/prepublishing_toolbar" />
 </LinearLayout>
 
