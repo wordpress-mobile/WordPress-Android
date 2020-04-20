@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject

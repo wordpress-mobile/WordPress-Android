@@ -10,16 +10,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.post_prepublishing_actions_fragment.*
+import kotlinx.android.synthetic.main.post_prepublishing_home_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import javax.inject.Inject
 
-class PrepublishingActionsFragment : Fragment() {
+class PrepublishingHomeFragment : Fragment() {
     private lateinit var editPostRepository: EditPostRepository
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: PrepublishingActionsViewModel
+    private lateinit var viewModel: PrepublishingHomeViewModel
 
     private var actionClickedListener: PrepublishingActionClickedListener? = null
 
@@ -50,23 +50,23 @@ class PrepublishingActionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.post_prepublishing_actions_fragment, container, false)
+        return inflater.inflate(R.layout.post_prepublishing_home_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         actions_recycler_view.layoutManager = LinearLayoutManager(requireActivity())
-        actions_recycler_view.adapter = PrepublishingActionsAdapter(requireActivity())
+        actions_recycler_view.adapter = PrepublishingHomeAdapter(requireActivity())
 
         initViewModel()
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(PrepublishingActionsViewModel::class.java)
+                .get(PrepublishingHomeViewModel::class.java)
 
         viewModel.uiState.observe(this, Observer { uiState ->
-            (actions_recycler_view.adapter as PrepublishingActionsAdapter).update(uiState)
+            (actions_recycler_view.adapter as PrepublishingHomeAdapter).update(uiState)
         })
 
         viewModel.onActionClicked.observe(this, Observer { event ->
@@ -79,7 +79,7 @@ class PrepublishingActionsFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "prepublishing_actions_fragment_tag"
-        fun newInstance() = PrepublishingActionsFragment()
+        const val TAG = "prepublishing_home_fragment_tag"
+        fun newInstance() = PrepublishingHomeFragment()
     }
 }

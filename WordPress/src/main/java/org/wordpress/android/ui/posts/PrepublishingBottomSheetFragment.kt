@@ -20,7 +20,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 
 import javax.inject.Inject
@@ -115,8 +115,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
         val (fragment, tag) = when (navigationTarget.targetScreen) {
             HOME -> Pair(
-                    PrepublishingActionsFragment.newInstance(),
-                    PrepublishingActionsFragment.TAG
+                    PrepublishingHomeFragment.newInstance(),
+                    PrepublishingHomeFragment.TAG
             )
             PrepublishingScreen.PUBLISH -> TODO()
             PrepublishingScreen.VISIBILITY -> TODO()
@@ -125,7 +125,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             )
         }
 
-        slideInFragment(fragment, tag, tag != PrepublishingActionsFragment.TAG)
+        slideInFragment(fragment, tag, tag != PrepublishingHomeFragment.TAG)
     }
 
     private fun slideInFragment(fragment: Fragment, tag: String, slideBack: Boolean) {
