@@ -1,9 +1,0 @@
-14.2 :
-Nombreuses mises à jour de l'éditeur de blocs :
-
-*Ajout d'une icône à pression longue pour ajouter des blocs avant/après.
-*L'application tentera d'afficher les images lors d'un retour en ligne après une déconnexion.
-*Résolution d'un problème d'éditeur vierge lors de la création d'un article contenant des images ou des liens provenant d'une autre application.
-*Ajout d'options de taille d'image au bloc de galerie.
-*Résolution d'un bug empêchant la fusion des blocs de paragraphe.
-

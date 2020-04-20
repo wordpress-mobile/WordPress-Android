@@ -1,9 +1,0 @@
-14.2:
-Muchas actualizaciones para el editor de bloques:
-
-* Añadido un icono de pulsación larga para añadir bloques antes/después.
-* La aplicación intentará mostrar las imágenes cuando vuelva a estar online después de una desconexión.
-* Resuelto un problema con el editor en blanco al intentar crear una entrada con imágenes o enlaces de otra aplicación.
-* Añadidas opciones de tamaño de imagen al bloque de galería.
-* Corregido un error que impedía la combinación de los bloques de párrafos.
-

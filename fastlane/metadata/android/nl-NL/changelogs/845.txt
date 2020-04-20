@@ -1,5 +1,0 @@
-14.5:
-Blokeditor: Blok Nieuwste berichten toegevoegd, crash veroorzaakt door het plakken van HTML-content met ingesloten afbeeldingen opgelost
-Paginasjablonen: Op blokken gebaseerde sjablonen toegevoegd om pagina's sneller te kunnen aanmaken.
-Site-ontwerp: een aantal stappen verwijderd voor een snellere configuratie: selecteer het soort site, voer de domeinnaam in en klaar is Kees.
-Bugfix: een probleem verholpen dat zorgde dat de mislukte upload van berichten oneindig werd herhaald.

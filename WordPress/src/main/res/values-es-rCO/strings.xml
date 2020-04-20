@@ -821,7 +821,6 @@ Language: es_CO
     <string name="content_required">Comentario obligatorio</string>
     <string name="sure_to_cancel_edit_comment">¿Cancelar la edición de este comentario?</string>
     <string name="saving_changes">Guardando cambios</string>
-    <string name="hint_comment_content">Comentario</string>
     <string name="trash">Papelera</string>
     <string name="dlg_confirm_trash_comments">¿Enviar a la papelera?</string>
     <string name="dlg_trashing_comments">Enviando a la papelera</string>
@@ -918,7 +917,6 @@ Language: es_CO
     <string name="pages">Páginas</string>
     <string name="no_network_title">No hay red disponible</string>
     <string name="ok">OK</string>
-    <string name="blogusername">Usuario del blog</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress para Android</string>
     <string name="tos">Términos del servicio</string>
@@ -931,7 +929,6 @@ Language: es_CO
     <string name="quickpress_add_alert_title">Nombre del Acceso Directo</string>
     <string name="settings">Ajustes</string>
     <string name="quickpress_add_error">El nombre del acceso directo no puede ser vacío.</string>
-    <string name="quickpress_window_title">Selecciona un blog para el acceso directo a la Publicación Rápida</string>
     <string name="categories">Categorías</string>
     <string name="tags_separate_with_commas">Separa las etiquetas con comas</string>
     <string name="title">Título</string>
