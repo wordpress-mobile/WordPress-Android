@@ -132,17 +132,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         childFragmentManager.let { fragmentManager ->
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
-                if (slideBack) {
-                    fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                            R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-                    )
-                } else {
-                    fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right,
-                            R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left
-                    )
-                }
+                fragmentTransaction.addToBackStack(null).setCustomAnimations(
+                        R.anim.fade_in, R.anim.fade_out,
+                        R.anim.fade_in, R.anim.fade_out
+                )
             }
             fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)
             fragmentTransaction.commit()
