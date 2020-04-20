@@ -1070,7 +1070,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE SiteModel ADD IS_WPCOM_ATOMIC BOOLEAN")
                     db.execSQL("ALTER TABLE SiteModel ADD IS_COMING_SOON BOOLEAN")
                 }
-                102 -> migrate(version) {
+                101 -> migrate(version) {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
                 }
             }
