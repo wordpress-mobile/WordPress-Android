@@ -183,7 +183,6 @@ Language: sr_RS
     <string name="content_required">Коментар је неопходан</string>
     <string name="sure_to_cancel_edit_comment">Одустајете од уређивања овог коментара?</string>
     <string name="saving_changes">Чувам измене</string>
-    <string name="hint_comment_content">Коментар</string>
     <string name="trash">Отпад</string>
     <string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
     <string name="dlg_confirm_trash_comments">Помери на отпад?</string>
@@ -268,7 +267,6 @@ Language: sr_RS
     <string name="posts">Чланци</string>
     <string name="no_network_title">Нема доступне мреже</string>
     <string name="pages">Стране</string>
-    <string name="blogusername">korisnickoimebloga</string>
     <string name="ok">У реду</string>
     <string name="link_enter_url">URL</string>
     <string name="tos">Услови сервиса</string>
@@ -281,7 +279,6 @@ Language: sr_RS
     <string name="immediately">Одмах</string>
     <string name="quickpress_add_alert_title">Подеси име пречице</string>
     <string name="settings">Подешавања</string>
-    <string name="quickpress_window_title">Одаберите блог за QuickPress пречицу</string>
     <string name="quickpress_add_error">Име пречице не може бити празно</string>
     <string name="categories">Категорије</string>
     <string name="title">Наслов</string>

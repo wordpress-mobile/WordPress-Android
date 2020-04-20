@@ -239,7 +239,6 @@ Language: hi_IN
     <string name="error_moderate_comment">मध्यस्थता करते हुए त्रुटि हुई</string>
     <string name="sdcard_message">मीडिया अपलोड करने के लिए एक माउंटेड एसडी कार्ड की आवश्यकता है</string>
     <string name="add_new_category">नई श्रेणी जोड़ें</string>
-    <string name="hint_comment_content">टिप्पणी</string>
     <string name="content_required">टिप्पणी आवश्यक है</string>
     <string name="http_authorization_required">प्रमाणीकरण आवश्यक</string>
     <string name="edit_comment">टिप्पणी संपादित करें</string>
@@ -355,7 +354,6 @@ Language: hi_IN
     <string name="no_network_title">नेटवर्क उपलब्ध नहीं </string>
     <string name="pages">पृष्ठे</string>
     <string name="posts">पोस्ट</string>
-    <string name="blogusername">ब्लॉग उपयोगकर्ता नाम</string>
     <string name="ok">ओके</string>
     <string name="link_enter_url">यूआरएल</string>
     <string name="version">संस्करण</string>
@@ -369,7 +367,6 @@ Language: hi_IN
     <string name="quickpress_add_alert_title">शॉर्टकट नाम निर्धारित करें </string>
     <string name="settings">सेटिंग्स</string>
     <string name="quickpress_add_error">शॉर्टकट का नाम खाली नहीं हो सकता</string>
-    <string name="quickpress_window_title">QuickPress शॉर्टकट के लिए एक ब्लॉग चुने</string>
     <string name="categories">श्रेणिया</string>
     <string name="title">शीर्षक</string>
     <string name="tags_separate_with_commas">टैग को अल्पविराम से अलग करे \n</string>

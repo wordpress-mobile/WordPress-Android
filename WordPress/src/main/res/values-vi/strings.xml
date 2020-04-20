@@ -551,7 +551,6 @@ Language: vi_VN
     <string name="content_required">Bình luận là bắt buộc</string>
     <string name="sure_to_cancel_edit_comment">Hủy bỏ việc sửa bình luận này?</string>
     <string name="saving_changes">Đang lưu các thay đổi</string>
-    <string name="hint_comment_content">Bình luận</string>
     <string name="trash">Thùng rác</string>
     <string name="dlg_confirm_trash_comments">Đưa vào thùng rác?</string>
     <string name="dlg_trashing_comments">Đưa vào thùng rác</string>
@@ -652,7 +651,6 @@ Language: vi_VN
     <string name="pages">Trang</string>
     <string name="no_network_title">Không có mạng</string>
     <string name="ok">Đồng ý</string>
-    <string name="blogusername">tên người dùng blog</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress cho Android</string>
     <string name="tos">Điều khoản dịch vụ</string>
@@ -665,7 +663,6 @@ Language: vi_VN
     <string name="quickpress_add_alert_title">Đặt tên lối tắt</string>
     <string name="settings">Thiết đặt</string>
     <string name="quickpress_add_error">Tên lối tắt không thể để trống</string>
-    <string name="quickpress_window_title">Chọn blog cho lối tắt QuickPress</string>
     <string name="categories">Danh mục</string>
     <string name="title">Tiêu đề</string>
     <string name="dlg_deleting_comments">Xóa bình luận</string>
