@@ -1,5 +1,0 @@
-14.5 :
-Éditeur de blocs : Ajout d’un bloc « Derniers articles », correction d’un crash causé en collant un contenu HTML avec des images embarquées.
-Modèles de pages :  Ajout de modèles basé sur les blocs pour une création de page plus rapide.
-Création de site : suppression de quelques étapes pour une configuration plus rapide. Sélectionnez le type de site, saisissez le domaine et voilà !
-Correction de bug : correction d’une problème qui causait un échec de téléversement d’article qui recommençait indéfiniment.
