@@ -28,7 +28,7 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var viewModel: PrepublishingTagsViewModel
 
-    override fun getContentLayout() = R.layout.fragment_prepublishing_tags
+    override fun getContentLayout() = R.layout.prepublishing_tags_fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
