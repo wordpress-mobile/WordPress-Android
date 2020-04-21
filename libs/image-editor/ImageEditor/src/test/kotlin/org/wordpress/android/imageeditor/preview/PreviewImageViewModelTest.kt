@@ -6,8 +6,8 @@ import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
-import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
@@ -18,19 +18,19 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
 
-private const val TEST_ID_1 = 1L
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
 private const val TEST_OUTPUT_FILE_EXTENSION = ".png"
 private const val TEST_INPUT_FILE_PATH_TO_CROP = "/file/path/to/crop"
 
-private const val TEST2_ID_2 = 2L
 private const val TEST2_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image2.jpg"
 private const val TEST2_HIGH_RES_IMAGE_URL = "https://wordpress.com/image2.jpg"
 private const val TEST2_OUTPUT_FILE_EXTENSION = ".jpg"
 private const val TEST2_OUTPUT_FILE_PATH_FROM_CROP = "/file/path/from/crop/2"
 private const val FIRST_ITEM_POSITION = 0
 private const val SECOND_ITEM_POSITION = 1
+
+private const val TEST_ERROR = "Error"
 
 class PreviewImageViewModelTest {
     @Rule
@@ -254,9 +254,12 @@ class PreviewImageViewModelTest {
     @Test
     fun `load image to file failed state triggered on image load to file failure`() {
         initViewModel()
-        viewModel.onLoadIntoFileFailed()
-        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent())
-                .isInstanceOf(ImageLoadToFileFailedState::class.java)
+        val exception = Exception(TEST_ERROR)
+        viewModel.onLoadIntoFileFailed(exception)
+
+        val loadFileState = requireNotNull(viewModel.loadIntoFile.value).peekContent()
+        assertThat(loadFileState)
+                .isEqualTo(ImageLoadToFileFailedState(exception.message, R.string.error_failed_to_load_into_file))
     }
 
     @Test
@@ -291,7 +294,8 @@ class PreviewImageViewModelTest {
     @Test
     fun `not navigated to crop screen on image load to file failure`() {
         initViewModel()
-        viewModel.onLoadIntoFileFailed()
+        val exception = Exception(TEST_ERROR)
+        viewModel.onLoadIntoFileFailed(exception)
         assertNull(viewModel.navigateToCropScreenWithFileInfo.value)
     }
 
@@ -386,10 +390,13 @@ class PreviewImageViewModelTest {
         val selectedPosition = SECOND_ITEM_POSITION
 
         viewModel.onPageSelected(selectedPosition)
-        viewModel.onLoadIntoImageViewSuccess(TEST2_HIGH_RES_IMAGE_URL, selectedPosition)
+        viewModel.onLoadIntoImageViewSuccess(viewModel.getHighResImageUrl(selectedPosition), selectedPosition)
         assertThat(requireNotNull(viewModel.uiState.value).editActionsEnabled).isEqualTo(true)
 
-        viewModel.onCropMenuClicked(selectedPosition)
+        viewModel.onCropMenuClicked(
+            isFileUrl = false,
+            url = viewModel.getHighResImageUrl(selectedPosition)
+        )
 
         assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(
             ImageStartLoadingToFileState(TEST2_HIGH_RES_IMAGE_URL, selectedPosition)
@@ -407,16 +414,9 @@ class PreviewImageViewModelTest {
         viewModel.onCropResult(TEST2_OUTPUT_FILE_PATH_FROM_CROP)
 
         // assert that thumbnail and preview image urls are replaced with the output file path for the cropped image
-        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[selectedPosition]).isEqualTo(
-            ImageDataStartLoadingUiState(
-                ImageData(
-                    TEST2_ID_2,
-                    TEST2_OUTPUT_FILE_PATH_FROM_CROP,
-                    TEST2_OUTPUT_FILE_PATH_FROM_CROP,
-                    TEST2_OUTPUT_FILE_EXTENSION
-                )
-            )
-        )
+        val imageData = requireNotNull(viewModel.uiState.value).viewPagerItemsStates[selectedPosition].data
+        assertThat(imageData.highResImageUrl).isEqualTo(TEST2_OUTPUT_FILE_PATH_FROM_CROP)
+        assertThat(imageData.lowResImageUrl).isEqualTo(TEST2_OUTPUT_FILE_PATH_FROM_CROP)
     }
 
     private fun initViewModel(
