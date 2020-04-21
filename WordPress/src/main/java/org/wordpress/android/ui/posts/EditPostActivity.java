@@ -226,7 +226,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         HistoryListFragment.HistoryItemClickInterface,
         EditPostSettingsCallback,
         PrivateAtCookieProgressDialogOnDismissListener {
-    public static final String ACTION_REBLOG = "reblogAction";		
+    public static final String ACTION_REBLOG = "reblogAction";
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
@@ -345,7 +345,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
     @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
-    @Inject ReblogUtils mReblogUtils;	
+    @Inject ReblogUtils mReblogUtils;
 
     private StorePostViewModel mViewModel;
 

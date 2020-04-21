@@ -194,7 +194,8 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     private void updateMenuItemVisibility() {
-        if (mMenuAdd == null || mMenuEdit == null || mMenuSearch == null || mMenuContinue == null || mViewModel == null) {
+        if (mMenuAdd == null || mMenuEdit == null || mMenuSearch == null
+            || mMenuContinue == null || mViewModel == null) {
             return;
         }
 
