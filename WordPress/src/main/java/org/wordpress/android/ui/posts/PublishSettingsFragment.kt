@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
 import android.view.Gravity
@@ -18,6 +19,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
@@ -31,6 +33,8 @@ abstract class PublishSettingsFragment : Fragment() {
      lateinit var viewModel: PublishSettingsViewModel
 
     @LayoutRes protected abstract fun getContentLayout(): Int
+
+    protected abstract fun getPublishSettingsFragmentType(): PublishSettingsFragmentType
 
     protected abstract fun setupContent(
         rootView: ViewGroup,
@@ -156,7 +160,7 @@ abstract class PublishSettingsFragment : Fragment() {
             return
         }
 
-        val fragment = PostDatePickerDialogFragment.newInstance()
+        val fragment = PostDatePickerDialogFragment.newInstance(getPublishSettingsFragmentType())
         fragment.show(requireActivity().supportFragmentManager, PostDatePickerDialogFragment.TAG)
     }
 
@@ -165,7 +169,7 @@ abstract class PublishSettingsFragment : Fragment() {
             return
         }
 
-        val fragment = PostTimePickerDialogFragment.newInstance()
+        val fragment = PostTimePickerDialogFragment.newInstance(getPublishSettingsFragmentType())
         fragment.show(requireActivity().supportFragmentManager, PostTimePickerDialogFragment.TAG)
     }
 
@@ -191,4 +195,10 @@ abstract class PublishSettingsFragment : Fragment() {
             throw RuntimeException("$activity must implement EditPostActivityHook")
         }
     }
+}
+
+@Parcelize
+enum class PublishSettingsFragmentType : Parcelable {
+    EDIT_POST,
+    PREPUBLISHING_NUDGES
 }

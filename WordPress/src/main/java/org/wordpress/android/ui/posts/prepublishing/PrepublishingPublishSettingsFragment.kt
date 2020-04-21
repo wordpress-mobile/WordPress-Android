@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.PrepublishingScreenClosedListener
 import org.wordpress.android.ui.posts.PublishSettingsFragment
+import org.wordpress.android.ui.posts.PublishSettingsFragmentType.PREPUBLISHING_NUDGES
 import org.wordpress.android.ui.posts.PublishSettingsViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
     private var closeListener: PrepublishingScreenClosedListener? = null
 
     override fun getContentLayout() = R.layout.prepublishing_published_settings_fragment
+    override fun getPublishSettingsFragmentType() = PREPUBLISHING_NUDGES
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
