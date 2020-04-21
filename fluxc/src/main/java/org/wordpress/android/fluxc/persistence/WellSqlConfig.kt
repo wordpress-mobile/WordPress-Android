@@ -1074,7 +1074,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCProductModel ADD MENU_ORDER INTEGER")
                 }
                 102 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("ALTER TABLE WCProductModel ADD BUTTON_TEXT INTEGER")
+                    db.execSQL("ALTER TABLE WCProductModel ADD BUTTON_TEXT STRING")
                 }
             }
         }
