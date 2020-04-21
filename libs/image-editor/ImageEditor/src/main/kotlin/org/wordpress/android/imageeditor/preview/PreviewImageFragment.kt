@@ -14,6 +14,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER
@@ -280,9 +281,15 @@ class PreviewImageFragment : Fragment() {
         // TODO: Temporarily added if check to fix this occasional crash
         // https://stackoverflow.com/q/51060762/193545
         if (navController.currentDestination?.id == R.id.preview_dest) {
+            val finalInputFilePath = if (URLUtil.isFileUrl(inputFilePath)) {
+                Uri.parse(inputFilePath).path as String
+            } else {
+                inputFilePath
+            }
+
             navController.navigate(
                 PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(
-                    inputFilePath,
+                    finalInputFilePath,
                     outputFileExtension,
                     shouldReturnToPreviewScreen
                 ),
@@ -298,7 +305,17 @@ class PreviewImageFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_crop) {
-        viewModel.onCropMenuClicked(previewImageViewPager.currentItem)
+        val highResImageUrl = viewModel.getHighResImageUrl(viewModel.selectedPosition)
+        val isFileUrl = URLUtil.isFileUrl(highResImageUrl)
+
+        val finalImageUrl = if (isFileUrl) {
+            Uri.parse(highResImageUrl).path as String
+        } else {
+            highResImageUrl
+        }
+
+        viewModel.onCropMenuClicked(isFileUrl, finalImageUrl)
+
         true
     } else {
         super.onOptionsItemSelected(item)

@@ -33,7 +33,8 @@ class PreviewImageViewModel : ViewModel() {
     private val _finishAction = MutableLiveData<Event<List<OutputData>>>()
     val finishAction: LiveData<Event<List<OutputData>>> = _finishAction
 
-    private var selectedPosition: Int = 0
+    var selectedPosition: Int = 0
+        private set
 
     var numberOfImages = 0
         private set
@@ -127,14 +128,20 @@ class PreviewImageViewModel : ViewModel() {
         )
     }
 
-    fun onCropMenuClicked(selectedPosition: Int) {
-        val selectedImageState = (uiState.value as UiState).viewPagerItemsStates[selectedPosition]
-        updateLoadIntoFileState(
-            ImageStartLoadingToFileState(
-                imageUrlAtPosition = selectedImageState.data.highResImageUrl,
+    fun onCropMenuClicked(isFileUrl: Boolean, url: String) {
+        if (isFileUrl) {
+            onLoadIntoFileSuccess(
+                inputFilePathAtPosition = url,
                 position = selectedPosition
             )
-        )
+        } else {
+            updateLoadIntoFileState(
+                ImageStartLoadingToFileState(
+                    imageUrlAtPosition = url,
+                    position = selectedPosition
+                )
+            )
+        }
     }
 
     fun onPageSelected(selectedPosition: Int) {
@@ -281,6 +288,9 @@ class PreviewImageViewModel : ViewModel() {
                 imageData.lowResImageUrl as String
         } ?: ""
     }
+
+    fun getHighResImageUrl(position: Int): String =
+        uiState.value?.viewPagerItemsStates?.get(position)?.data?.highResImageUrl ?: ""
 
     data class ImageData(
         val id: Long = UUID.randomUUID().hashCode().toLong(),
