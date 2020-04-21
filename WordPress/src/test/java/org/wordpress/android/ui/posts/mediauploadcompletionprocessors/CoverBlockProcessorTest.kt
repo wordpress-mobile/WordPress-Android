@@ -54,4 +54,10 @@ class CoverBlockProcessorTest {
         val processedBlock = processor.processBlock(TestContent.oldCoverBlockDifferentStyleOrder)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newCoverBlockDifferentStyleOrder)
     }
+
+    @Test
+    fun `processBlock works with a space in inline styles`() {
+        val processedBlock = processor.processBlock(TestContent.oldCoverBlockStyleOrderWithSpace)
+        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newCoverBlockStyleOrderWithoutSpace)
+    }
 }
