@@ -64,7 +64,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     /**
-     * Represents the available modes to start SitePicker
+     * Represents the available SitePicker modes
      */
     public enum SitePickerMode {
         DEFAULT_MODE,
