@@ -75,4 +75,16 @@ class PrepublishingViewModelTest : BaseUnitTest() {
 
         assertThat(event).isNotNull
     }
+
+    @Test
+    fun `when onCloseClicked is pressed, dismiss bottom sheet`() {
+        var event: Event<Unit>? = null
+        viewModel.dismissBottomSheet.observeForever {
+            event = it
+        }
+
+        viewModel.onCloseClicked()
+
+        assertThat(event).isNotNull
+    }
 }
