@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -1416,6 +1417,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private void showSnackBar(String message) {
         WPSnackbar snackBar = WPSnackbar.make(getView(), message, Snackbar.LENGTH_LONG)
+                                        .setAction(getString(R.string.share_action),
+                                                v -> {
+                                                    try {
+                                                        Intent intent = new Intent(Intent.ACTION_SEND);
+                                                        intent.setType("text/plain");
+                                                        intent.putExtra(Intent.EXTRA_TEXT, mComment.getUrl());
+                                                        startActivity(Intent.createChooser(intent,
+                                                                getString(R.string.comment_share_link_via)));
+                                                    } catch (ActivityNotFoundException exception) {
+                                                        ToastUtils.showToast(getContext(),
+                                                                R.string.comment_toast_err_share_intent);
+                                                    }
+                                                })
                                         .setAnchorView(mSnackbarAnchor);
         snackBar.show();
     }
