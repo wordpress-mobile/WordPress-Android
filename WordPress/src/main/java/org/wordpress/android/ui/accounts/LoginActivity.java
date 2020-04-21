@@ -138,6 +138,9 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 case WPCOM_LOGIN_ONLY:
                     mIsSignupFromLoginEnabled = true;
                     showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
+                    if (mIsSignupFromLoginEnabled) {
+                        initSmartLockIfNotFinished(true);
+                    }
                     break;
                 case SELFHOSTED_ONLY:
                     showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
@@ -734,8 +737,9 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void onCredentialsUnavailable() {
         mSmartLockHelperState = SmartLockHelperState.FINISHED;
-
-        startLogin();
+        if (!mIsSignupFromLoginEnabled) {
+            startLogin();
+        }
     }
 
     @Override
