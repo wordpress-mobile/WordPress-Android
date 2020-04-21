@@ -5,9 +5,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingNavigationTarget
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
+import org.wordpress.android.ui.posts.PrepublishingScreen.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
+import org.wordpress.android.ui.posts.PrepublishingScreen.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingViewModel
 import org.wordpress.android.viewmodel.Event
 
@@ -85,5 +88,50 @@ class PrepublishingViewModelTest : BaseUnitTest() {
         viewModel.onCloseClicked()
 
         assertThat(event).isNotNull
+    }
+
+    @Test
+    fun `when onActionClicked is called with TAGS, navigate to TAGS screen`() {
+        val expectedScreen = TAGS
+
+        var event: Event<PrepublishingNavigationTarget>? = null
+        viewModel.navigationTarget.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), mock())
+        viewModel.onActionClicked(ActionType.TAGS)
+
+        assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
+    }
+
+    @Test
+    fun `when onActionClicked is called with PUBLISH, navigate to PUBLISH screen`() {
+        val expectedScreen = PUBLISH
+
+        var event: Event<PrepublishingNavigationTarget>? = null
+        viewModel.navigationTarget.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), mock())
+        viewModel.onActionClicked(ActionType.PUBLISH)
+
+        assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
+    }
+
+    @Test
+    fun `when onActionClicked is called with VISIBILITY, navigate to VISIBILITY screen`() {
+        val expectedScreen = VISIBILITY
+
+        var event: Event<PrepublishingNavigationTarget>? = null
+        viewModel.navigationTarget.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), mock())
+        viewModel.onActionClicked(ActionType.VISIBILITY)
+
+        assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
     }
 }
