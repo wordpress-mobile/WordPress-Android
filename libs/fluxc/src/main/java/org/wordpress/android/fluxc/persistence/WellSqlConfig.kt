@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 102
+        return 103
     }
 
     override fun getDbName(): String {
@@ -1072,6 +1072,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 101 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductModel ADD MENU_ORDER INTEGER")
+                }
+                102 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCProductModel ADD BUTTON_TEXT INTEGER")
                 }
             }
         }
