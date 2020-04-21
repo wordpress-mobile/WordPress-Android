@@ -1,5 +1,6 @@
 package org.wordpress.android.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 
@@ -27,13 +28,24 @@ public class LoginGoogleFragment extends GoogleFragment {
     private static final int REQUEST_LOGIN = 1001;
     private boolean mLoginRequested = false;
     private boolean mIsSignupFromLoginEnabled = true;
+    private ProgressDialog mProgressDialog;
 
     public static final String TAG = "login_google_fragment_tag";
 
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
+        if (mIsSignupFromLoginEnabled) {
+            mProgressDialog = ProgressDialog.show(
+                    getActivity(), null, getString(R.string.signin_with_google_progress), true, false, null);
+        }
         super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        dismissProgressDialog();
+        super.onDetach();
     }
 
     @Override
@@ -231,6 +243,12 @@ public class LoginGoogleFragment extends GoogleFragment {
             AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - success");
             mGoogleListener.onGoogleLoginFinished();
             finishFlow();
+        }
+    }
+
+    private void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 }
