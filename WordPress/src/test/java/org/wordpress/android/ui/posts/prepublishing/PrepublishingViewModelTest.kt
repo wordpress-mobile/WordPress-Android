@@ -6,7 +6,6 @@ import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.posts.PrepublishingNavigationTarget
-import org.wordpress.android.ui.posts.PrepublishingScreen
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
 import org.wordpress.android.ui.posts.PrepublishingViewModel
@@ -22,7 +21,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when viewModel start is called with a null currentScreen, navigateToScreen should be invoked with HOME`() {
-        val expectedScreen = PrepublishingScreen.HOME
+        val expectedScreen = HOME
 
         var event: Event<PrepublishingNavigationTarget>? = null
         viewModel.navigationTarget.observeForever {
@@ -36,7 +35,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when viewModel start is called with a currentScreen, navigateToScreen should be invoked with it`() {
-        val expectedScreen = PrepublishingScreen.TAGS
+        val expectedScreen = TAGS
 
         var event: Event<PrepublishingNavigationTarget>? = null
         viewModel.navigationTarget.observeForever {
@@ -50,7 +49,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when onBackClicked is pressed and currentScreen isn't HOME, navigate to HOME`() {
-        val expectedScreen = PrepublishingScreen.HOME
+        val expectedScreen = HOME
 
         var event: Event<PrepublishingNavigationTarget>? = null
         viewModel.navigationTarget.observeForever {
