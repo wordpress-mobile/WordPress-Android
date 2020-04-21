@@ -8,6 +8,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
@@ -427,10 +428,29 @@ class PreviewImageViewModelTest {
         // crop result obtained with outfile file at selected position
         viewModel.onCropResult(TEST2_OUTPUT_FILE_PATH_FROM_CROP)
 
-        // assert that thumbnail and preview image urls are replaced with the output file path for the cropped image
+        // assert that thumbnail and preview image start loading with the output file path for the cropped image
+        assertThat(requireNotNull(viewModel.uiState.value).viewPagerItemsStates[selectedPosition]).isInstanceOf(
+                ImageDataStartLoadingUiState::class.java)
+
         val imageData = requireNotNull(viewModel.uiState.value).viewPagerItemsStates[selectedPosition].data
         assertThat(imageData.highResImageUrl).isEqualTo(TEST2_OUTPUT_FILE_PATH_FROM_CROP)
         assertThat(imageData.lowResImageUrl).isEqualTo(TEST2_OUTPUT_FILE_PATH_FROM_CROP)
+    }
+
+    @Test
+    fun `output data list on insert click is a list of high res image urls mapped from input data list`() {
+        initViewModel(testInputDataList)
+        viewModel.onInsertClicked()
+
+        assertThat(requireNotNull(viewModel.finishAction.value).peekContent()).isEqualTo(
+            testInputDataList.map { OutputData(it.highResImgUrl) }
+        )
+    }
+
+    @Test
+    fun `number of images count is equal to input image list size`() {
+        initViewModel(testInputDataList)
+        assertThat(viewModel.numberOfImages).isEqualTo(testInputDataList.size)
     }
 
     private fun initViewModel(
