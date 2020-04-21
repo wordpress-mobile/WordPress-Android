@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 102
+        return 103
     }
 
     override fun getDbName(): String {
@@ -1070,7 +1070,10 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE SiteModel ADD IS_WPCOM_ATOMIC BOOLEAN")
                     db.execSQL("ALTER TABLE SiteModel ADD IS_COMING_SOON BOOLEAN")
                 }
-                101 -> migrate(version) {
+                101 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCProductModel ADD MENU_ORDER INTEGER")
+                }
+                102 -> migrate(version) {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
                 }
             }
