@@ -31,4 +31,18 @@ class PrepublishingViewModelTest : BaseUnitTest() {
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
     }
+
+    @Test
+    fun `when viewModel start is called with a currentScreen navigateToScreen should be invoked with it`(){
+        val expectedScreen = PrepublishingScreen.TAGS
+
+        var event: Event<PrepublishingNavigationTarget>? = null
+        viewModel.navigationTarget.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), expectedScreen)
+
+        assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
+    }
 }
