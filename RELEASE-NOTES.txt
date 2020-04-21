@@ -1,5 +1,6 @@
 14.7
 -----
+* Block editor: "Choose media from device" now opens our built-in media picker instead of the OS default media picker.
 * Added user Gravatar to the Me menu in My Site.
 
 14.6

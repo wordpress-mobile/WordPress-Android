@@ -4,10 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/white"
+    android:background="?android:selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     tools:ignore="UnusedAttribute">
 
     <ImageView
@@ -17,7 +16,7 @@
         android:layout_margin="@dimen/margin_extra_large"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_history_white_24dp"
-        app:tint="@color/neutral_60" />
+        app:tint="?attr/wpColorOnSurfaceMedium" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_suggestion"
@@ -27,10 +26,9 @@
         android:ellipsize="end"
         android:gravity="center_vertical|start"
         android:maxLines="1"
-        android:paddingStart="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        android:textColor="?attr/wpColorText"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:textAppearance="?attr/textAppearanceBody1"
         tools:text="Suggestion" />
 
     <ImageView
@@ -41,5 +39,5 @@
         android:background="?android:selectableItemBackground"
         android:contentDescription="@string/reader_list_item_suggestion_remove_desc"
         android:src="@drawable/ic_cross_white_24dp"
-        app:tint="@color/neutral_60" />
+        app:tint="?attr/wpColorOnSurfaceMedium" />
 </LinearLayout>

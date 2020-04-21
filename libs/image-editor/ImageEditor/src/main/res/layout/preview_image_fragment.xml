@@ -28,7 +28,17 @@
         app:tabMinWidth="@dimen/preview_image_thumbnail_size"
         app:tabMaxWidth="@dimen/preview_image_thumbnail_size"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/insertButton"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/insertButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/insert_layout_margin"
+        app:layout_constraintTop_toTopOf="@id/thumbnailsTabLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/InsertButtonStyle"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

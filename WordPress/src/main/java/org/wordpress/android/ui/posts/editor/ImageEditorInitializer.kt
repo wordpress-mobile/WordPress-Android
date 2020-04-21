@@ -24,7 +24,7 @@ class ImageEditorInitializer {
 
         private fun loadIntoImageViewWithResultListener(
             imageManager: ImageManager
-        ): (String, ImageView, ScaleType, String, ImageEditor.RequestListener<Drawable>) -> Unit =
+        ): (String, ImageView, ScaleType, String?, ImageEditor.RequestListener<Drawable>) -> Unit =
                 { imageUrl, imageView, scaleType, thumbUrl, listener ->
                     imageManager.loadWithResultListener(
                         imageView,
@@ -41,9 +41,9 @@ class ImageEditorInitializer {
                 }
 
         private fun loadIntoFileWithResultListener(imageManager: ImageManager):
-                (String, ImageEditor.RequestListener<File>) -> Unit = { imageUrl, listener ->
+                (Uri, ImageEditor.RequestListener<File>) -> Unit = { imageUri, listener ->
             imageManager.loadIntoFileWithResultListener(
-                imageUrl,
+                imageUri,
                 object : RequestListener<File> {
                     override fun onLoadFailed(e: Exception?, model: Any?) = onLoadFailed(model, listener, e)
                     override fun onResourceReady(resource: File, model: Any?) =
