@@ -92,7 +92,7 @@ class PageListFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.pages.observe(this, Observer { data ->
-            data?.let { setPages(data.first, data.second) }
+            data?.let { setPages(data.first, data.second, data.third) }
         })
 
         viewModel.scrollToPosition.observe(this, Observer { position ->
@@ -107,7 +107,7 @@ class PageListFragment : Fragment() {
         })
     }
 
-    private fun setPages(pages: List<PageItem>, isSitePhotonCapable: Boolean) {
+    private fun setPages(pages: List<PageItem>, isSitePhotonCapable: Boolean, isSitePrivateAt: Boolean) {
         val adapter: PageListAdapter
         if (recyclerView.adapter == null) {
             adapter = PageListAdapter(
@@ -115,6 +115,7 @@ class PageListFragment : Fragment() {
                     { page -> viewModel.onItemTapped(page) },
                     { viewModel.onEmptyListNewPageButtonTapped() },
                     isSitePhotonCapable,
+                    isSitePrivateAt,
                     imageManager,
                     uiHelper
             )

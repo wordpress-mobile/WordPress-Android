@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -71,6 +70,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
@@ -80,6 +80,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -93,12 +94,16 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.gif.GifPickerActivity;
@@ -218,7 +223,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         HistoryListFragment.HistoryItemClickInterface,
-        EditPostSettingsCallback {
+        EditPostSettingsCallback,
+        PrivateAtCookieProgressDialogOnDismissListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
@@ -332,6 +338,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
+    @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
 
     private StorePostViewModel mViewModel;
 
@@ -551,9 +558,38 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
-        setupViewPager();
-
+        // we need to make sure AT cookie is available when trying to edit post on private AT site
+        if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.isCookieRefreshRequired()) {
+            PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary(fragmentManager);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchPrivateAtomicCookieAction(
+                    new FetchPrivateAtomicCookiePayload(mSite.getSiteId())));
+        } else {
+            setupViewPager();
+        }
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPrivateAtomicCookieFetched(OnPrivateAtomicCookieFetched event) {
+        // if the dialog is not showing by the time cookie fetched it means that it was dismissed and content was loaded
+        if (PrivateAtCookieRefreshProgressDialog.Companion.isShowing(getSupportFragmentManager())) {
+            setupViewPager();
+            PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
+        }
+        if (event.isError()) {
+            AppLog.e(AppLog.T.EDITOR,
+                    "Failed to load private AT cookie. " + event.error.type + " - " + event.error.message);
+            WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+                      .show();
+        }
+    }
+
+    @Override
+    public void onCookieProgressDialogCancelled() {
+        WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+                  .show();
+        setupViewPager();
     }
 
     private void setupViewPager() {
@@ -1659,7 +1695,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
 
     @Override public void onImagePreviewRequested(String mediaUrl) {
-        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+        MediaPreviewActivity.showPreview(this, mSite, mediaUrl);
     }
 
     @Override public void onMediaEditorRequested(String mediaUrl) {
@@ -1676,10 +1712,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         int reducedSizeWidth = (int) (maxWidth * PREVIEW_IMAGE_REDUCED_SIZE_FACTOR);
         String resizedImageUrl = mReaderUtilsWrapper.getResizedImageUrl(
-            mediaUrl,
-            reducedSizeWidth,
-            0,
-            !SiteUtils.isPhotonCapable(mSite)
+                mediaUrl,
+                reducedSizeWidth,
+                0,
+                !SiteUtils.isPhotonCapable(mSite),
+                mSite.isWPComAtomic()
         );
 
         String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
@@ -2232,11 +2269,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.refreshViews();
                         }
+                    } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+                        List<Uri> uris = convertStringArrayIntoUrisList(
+                                data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS));
+                        mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
+                    } else if (data.getIntExtra(PhotoPickerActivity.CHILD_REQUEST_CODE, -1)
+                               == RequestCodes.TAKE_VIDEO) {
+                        mEditorMedia.addFreshlyTakenVideoToEditor();
                     }
                     break;
                 case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
-                    mEditorMedia.advertiseImageOptimisationAndAddMedia(retrieveMediaUris(data));
+                    mEditorMedia.advertiseImageOptimisationAndAddMedia(WPMediaUtils.retrieveMediaUris(data));
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
@@ -2246,7 +2290,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
-                    mEditorMedia.addNewMediaItemsToEditorAsync(retrieveMediaUris(data), false);
+                    mEditorMedia.addNewMediaItemsToEditorAsync(WPMediaUtils.retrieveMediaUris(data), false);
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     mEditorMedia.addFreshlyTakenVideoToEditor();
@@ -2295,18 +2339,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    private List<Uri> retrieveMediaUris(Intent data) {
-        ClipData clipData = data.getClipData();
-        ArrayList<Uri> uriList = new ArrayList<>();
-        if (clipData != null) {
-            for (int i = 0; i < clipData.getItemCount(); i++) {
-                ClipData.Item item = clipData.getItemAt(i);
-                uriList.add(item.getUri());
-            }
-        } else {
-            uriList.add(data.getData());
+    private List<Uri> convertStringArrayIntoUrisList(String[] stringArray) {
+        List<Uri> uris = new ArrayList<>(stringArray.length);
+        for (String stringUri : stringArray) {
+            uris.add(Uri.parse(stringUri));
         }
-        return uriList;
+        return uris;
     }
 
     private void addLastTakenPicture() {
@@ -2483,7 +2521,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO, allowMultipleSelection);
+        if (allowMultipleSelection) {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_IMAGE_PICKER, mSite,
+                    mEditPostRepository.getId());
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER, mSite,
+                    mEditPostRepository.getId());
+        }
     }
 
     @Override
@@ -2493,12 +2537,24 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onAddVideoClicked(boolean allowMultipleSelection) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO, allowMultipleSelection);
+        if (allowMultipleSelection) {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_VIDEO_PICKER, mSite,
+                    mEditPostRepository.getId());
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER, mSite,
+                    mEditPostRepository.getId());
+        }
     }
 
     @Override
     public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO, allowMultipleSelection);
+        if (allowMultipleSelection) {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_MEDIA_PICKER, mSite,
+                    mEditPostRepository.getId());
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER, mSite,
+                    mEditPostRepository.getId());
+        }
     }
 
     @Override
@@ -2679,6 +2735,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mSite.isPrivate() && WPUrlUtils.safeToAddWordPressComAuthToken(url)
             && !TextUtils.isEmpty(token)) {
             authHeaders.put(AuthenticationUtils.AUTHORIZATION_HEADER_NAME, "Bearer " + token);
+        }
+
+        if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.exists() && WPUrlUtils
+                .safeToAddPrivateAtCookie(url, mPrivateAtomicCookie.getDomain())) {
+            authHeaders.put(AuthenticationUtils.COOKIE_HEADER_NAME, mPrivateAtomicCookie.getCookieContent());
         }
         return authHeaders;
     }

@@ -1,5 +1,0 @@
-14.5:
-Block-Editor: „Neueste Beiträge“-Block hinzugefügt und Absturz behoben, der durch das Einfügen von HTML-Inhalten mit eingebetteten Bildern verursacht wurde.
-Seiten-Templates: Block basierte Templates zur schnelleren Seitenerstellung hinzugefügt.
-Website-Erstellung: Einige Schritte wurden zugunsten einer schnelleren Einrichtung entfernt – Art der Website auswählen, Domainnamen eingeben, fertig.
-Fehlerbehebung: Ein Problem wurde behoben, das dazu führte, dass fehlgeschlagene Uploads von Beiträgen auf unbestimmte Zeit wiederholt wurden.
