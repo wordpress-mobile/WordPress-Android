@@ -3,6 +3,7 @@ package org.wordpress.android.login;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -25,27 +26,45 @@ import static android.app.Activity.RESULT_OK;
 import dagger.android.support.AndroidSupportInjection;
 
 public class LoginGoogleFragment extends GoogleFragment {
+    private static final String ARG_SIGNUP_FROM_LOGIN_ENABLED = "ARG_SIGNUP_FROM_LOGIN_ENABLED";
     private static final int REQUEST_LOGIN = 1001;
     private boolean mLoginRequested = false;
-    private boolean mIsSignupFromLoginEnabled = true;
+    private boolean mIsSignupFromLoginEnabled;
     private ProgressDialog mProgressDialog;
 
     public static final String TAG = "login_google_fragment_tag";
 
+    public static LoginGoogleFragment newInstance(boolean isSignupFromLoginEnabled) {
+        LoginGoogleFragment fragment = new LoginGoogleFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+    }
+
+    @Override public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            mIsSignupFromLoginEnabled = args.getBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, false);
+        }
+
         if (mIsSignupFromLoginEnabled) {
             mProgressDialog = ProgressDialog.show(
                     getActivity(), null, getString(R.string.signin_with_google_progress), true, false, null);
         }
-        super.onAttach(context);
     }
 
-    @Override
-    public void onDetach() {
+    @Override public void onDestroy() {
         dismissProgressDialog();
-        super.onDetach();
+        super.onDestroy();
     }
 
     @Override
