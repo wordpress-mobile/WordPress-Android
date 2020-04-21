@@ -387,6 +387,12 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mSites.size() != 0 ? getItem(mSelectedItemPos).mLocalId : -1;
     }
 
+    public int getItemPosByLocalId(int localId) {
+        int positionInSitesArray = mSites.indexOfSiteId(localId);
+        
+        return mSites.size() != 0 && positionInSitesArray > -1 ? positionInSitesArray : -1;
+    }
+
     String getLastSearch() {
         return mLastSearch;
     }

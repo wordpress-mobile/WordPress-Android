@@ -401,6 +401,13 @@ public class SitePickerActivity extends LocaleAwareActivity
                     @Override
                     public void onAfterLoad() {
                         showProgress(false);
+                        if (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && !isInSearchMode) {
+                            mAdapter.findAndSelect(mCurrentLocalId);
+                            int scrollPos = mAdapter.getItemPosByLocalId(mCurrentLocalId);
+                            if (scrollPos > -1 && mRecycleView != null) {
+                                mRecycleView.scrollToPosition(scrollPos);
+                            }
+                        }
                     }
                 },
                 mSitePickerMode);
