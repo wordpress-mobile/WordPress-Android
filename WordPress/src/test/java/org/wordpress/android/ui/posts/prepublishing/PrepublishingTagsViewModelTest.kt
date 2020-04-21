@@ -66,7 +66,7 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when onTagsSelected is called updatePostTagsUseCase should be called`() = test {
+    fun `when onTagsSelected is called updatePostTagsUseCase's updateTags should be called`() = test {
         val expectedTags = "test, data"
         val captor = ArgumentCaptor.forClass(String::class.java)
         doNothing().whenever(updatePostTagsUseCase).updateTags(captor.capture(), any())
