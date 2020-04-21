@@ -1,11 +1,12 @@
 package org.wordpress.android.imageeditor.preview
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import org.junit.Before
-import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertNull
+import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
@@ -38,9 +39,9 @@ class PreviewImageViewModelTest {
     // Class under test
     private lateinit var viewModel: PreviewImageViewModel
 
-    private val testImageDataList = listOf(
-        ImageData(TEST_ID_1, TEST_LOW_RES_IMAGE_URL, TEST_HIGH_RES_IMAGE_URL, TEST_OUTPUT_FILE_EXTENSION),
-        ImageData(TEST2_ID_2, TEST2_LOW_RES_IMAGE_URL, TEST2_HIGH_RES_IMAGE_URL, TEST2_OUTPUT_FILE_EXTENSION)
+    private val testInputDataList = listOf(
+        InputData(TEST_HIGH_RES_IMAGE_URL, TEST_LOW_RES_IMAGE_URL, TEST_OUTPUT_FILE_EXTENSION),
+        InputData(TEST2_HIGH_RES_IMAGE_URL, TEST2_LOW_RES_IMAGE_URL, TEST2_OUTPUT_FILE_EXTENSION)
     )
 
     @Before
@@ -64,7 +65,7 @@ class PreviewImageViewModelTest {
 
     @Test
     fun `thumbnails tab layout not visible if single img available`() {
-        initViewModel(testImageDataList.subList(0, 1))
+        initViewModel(testInputDataList.subList(0, 1))
         assertThat(requireNotNull(viewModel.uiState.value).thumbnailsTabLayoutVisible).isEqualTo(false)
     }
 
@@ -72,7 +73,7 @@ class PreviewImageViewModelTest {
     fun `thumbnails tab layout visible if multiple images available`() {
         initViewModel()
 
-        assertThat(testImageDataList.size).isGreaterThan(1)
+        assertThat(testInputDataList.size).isGreaterThan(1)
         assertThat(requireNotNull(viewModel.uiState.value).thumbnailsTabLayoutVisible).isEqualTo(true)
     }
 
@@ -171,7 +172,7 @@ class PreviewImageViewModelTest {
     fun `high res image auto file loading not started when high res image shown and multiple images available`() {
         initViewModel()
 
-        assertThat(testImageDataList.size).isGreaterThan(1)
+        assertThat(testInputDataList.size).isGreaterThan(1)
 
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, itemPosition)
@@ -181,7 +182,7 @@ class PreviewImageViewModelTest {
 
     @Test
     fun `high res image auto file loading started when high res image shown and single img available`() {
-        initViewModel(testImageDataList.subList(0, 1))
+        initViewModel(testInputDataList.subList(0, 1))
 
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, itemPosition)
@@ -193,7 +194,7 @@ class PreviewImageViewModelTest {
 
     @Test
     fun `high res img auto file loading started when low res img shown after high res img and single img available`() {
-        initViewModel(testImageDataList.subList(0, 1))
+        initViewModel(testInputDataList.subList(0, 1))
 
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewSuccess(TEST_HIGH_RES_IMAGE_URL, itemPosition)
@@ -206,7 +207,7 @@ class PreviewImageViewModelTest {
 
     @Test
     fun `high res img file load not started when low res img shown, high res img show failed and single img avail`() {
-        initViewModel(testImageDataList.subList(0, 1))
+        initViewModel(testInputDataList.subList(0, 1))
 
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewSuccess(TEST_LOW_RES_IMAGE_URL, itemPosition)
@@ -217,7 +218,7 @@ class PreviewImageViewModelTest {
 
     @Test
     fun `high res img file loading started when low res img show failed, high res img shown and single img avail`() {
-        initViewModel(testImageDataList.subList(0, 1))
+        initViewModel(testInputDataList.subList(0, 1))
 
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoImageViewFailed(TEST_LOW_RES_IMAGE_URL, itemPosition)
@@ -275,7 +276,7 @@ class PreviewImageViewModelTest {
 
     @Test
     fun `navigated to crop screen with file info on image load to file success and single img available`() {
-        initViewModel(testImageDataList.subList(0, 1))
+        initViewModel(testInputDataList.subList(0, 1))
 
         val itemPosition = FIRST_ITEM_POSITION
         viewModel.onLoadIntoFileSuccess(TEST_INPUT_FILE_PATH_TO_CROP, itemPosition)
@@ -419,6 +420,6 @@ class PreviewImageViewModelTest {
     }
 
     private fun initViewModel(
-        imageDataList: List<ImageData> = testImageDataList
-    ) = viewModel.onCreateView(imageDataList)
+        inputDataList: List<InputData> = testInputDataList
+    ) = viewModel.onCreateView(inputDataList)
 }
