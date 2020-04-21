@@ -192,7 +192,7 @@ public class LoginGoogleFragment extends GoogleFragment {
             showError(getString(R.string.login_error_generic));
         } else if (event.createdAccount) {
             AppLog.d(T.MAIN,
-                    "GOOGLE SIGNUP: onAuthenticationChanged - new wordpress account created");
+                    "GOOGLE LOGIN: onAuthenticationChanged - new wordpress account created");
             mAnalyticsListener.trackCreatedAccount(event.userName, mGoogleEmail);
             mAnalyticsListener.trackAnalyticsSignIn(true);
             mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl, event.userName);
@@ -231,10 +231,12 @@ public class LoginGoogleFragment extends GoogleFragment {
                 case UNKNOWN_USER:
                     if (mIsSignupFromLoginEnabled) {
                         PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
-                        AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - dispatching SocialSignupAction");
+                        AppLog.d(T.MAIN,
+                                "GOOGLE LOGIN: onSocialChanged - wordpress account doesn't exist - dispatching "
+                                + "SocialSignupAction");
                         mDispatcher.dispatch(AccountActionBuilder.newPushSocialSignupAction(payload));
                     } else {
-                        AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - wordpress acount doesn't exist");
+                        AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - wordpress account doesn't exist");
                         mAnalyticsListener.trackSocialErrorUnknownUser();
                         showError(getString(R.string.login_error_email_not_found_v2));
                     }
