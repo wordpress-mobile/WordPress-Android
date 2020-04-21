@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.Schedul
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.ONE_HOUR
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.TEN_MINUTES
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.WHEN_PUBLISHED
-import org.wordpress.android.ui.posts.PostDatePickerDialogFragment.Companion
 import org.wordpress.android.ui.posts.PublishSettingsFragmentType.EDIT_POST
 import org.wordpress.android.ui.posts.PublishSettingsFragmentType.PREPUBLISHING_NUDGES
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel
@@ -27,7 +26,7 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val publishSettingsFragmentType = arguments?.getParcelable<PublishSettingsFragmentType>(
-                PostDatePickerDialogFragment.KEY_PUBLISH_SETTINGS_FRAGMENT_TYPE
+                ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
         )
 
         when (publishSettingsFragmentType) {
@@ -82,7 +81,7 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
     companion object {
         const val TAG = "post_notification_time_dialog_fragment"
         const val ARG_NOTIFICATION_SCHEDULE_TIME = "notification_schedule_time"
-        const val KEY_PUBLISH_SETTINGS_FRAGMENT_TYPE = "publish_settings_fragment_type"
+        private const val ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE = "publish_settings_fragment_type"
 
         fun newInstance(
             period: SchedulingReminderModel.Period?,
@@ -91,7 +90,7 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
             val fragment = PostNotificationScheduleTimeDialogFragment()
             val args = Bundle()
             args.putParcelable(
-                    KEY_PUBLISH_SETTINGS_FRAGMENT_TYPE,
+                    ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE,
                     publishSettingsFragmentType
             )
             period?.let {

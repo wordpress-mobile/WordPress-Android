@@ -22,7 +22,7 @@ class PostTimePickerDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val publishSettingsFragmentType = arguments?.getParcelable<PublishSettingsFragmentType>(
-                PostDatePickerDialogFragment.KEY_PUBLISH_SETTINGS_FRAGMENT_TYPE
+                ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
         )
 
         when (publishSettingsFragmentType) {
@@ -52,13 +52,13 @@ class PostTimePickerDialogFragment : DialogFragment() {
 
     companion object {
         const val TAG = "post_time_picker_dialog_fragment"
-        const val KEY_PUBLISH_SETTINGS_FRAGMENT_TYPE = "publish_settings_fragment_type"
+        const val ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE = "publish_settings_fragment_type"
 
         fun newInstance(publishSettingsFragmentType: PublishSettingsFragmentType): PostTimePickerDialogFragment {
             return PostTimePickerDialogFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(
-                            KEY_PUBLISH_SETTINGS_FRAGMENT_TYPE,
+                            ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE,
                             publishSettingsFragmentType
                     )
                 }
