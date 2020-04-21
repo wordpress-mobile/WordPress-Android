@@ -22,7 +22,7 @@ class PrepublishingHomeViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = PrepublishingHomeViewModel(mock())
+        viewModel = PrepublishingHomeViewModel(mock(), mock())
         viewModel.start(mock())
     }
 
