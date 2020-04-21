@@ -13,6 +13,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeUiState
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -22,10 +23,13 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingHomeViewModel
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
     @Mock lateinit var editPostRepository: EditPostRepository
+    @Mock lateinit var getPostTagsUseCase: GetPostTagsUseCase
 
     @Before
     fun setUp() {
-        viewModel = PrepublishingHomeViewModel(mock(), postSettingsUtils)
+        viewModel = PrepublishingHomeViewModel(getPostTagsUseCase, postSettingsUtils)
+        whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn("")
+        whenever(editPostRepository.getPost()).thenReturn(PostModel())
     }
 
     @Test
@@ -87,7 +91,6 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         // arrange
         val expectedLabel = "test data"
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn(expectedLabel)
-        whenever(editPostRepository.getPost()).thenReturn(PostModel())
 
         // act
         viewModel.start(editPostRepository)
@@ -95,6 +98,20 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // assert
         assertThat((publishAction?.actionResult as? UiStringText)?.text).isEqualTo(expectedLabel)
+    }
+
+    @Test
+    fun `verify that tags action result is propagated from getPostTagsUseCase`() {
+        // arrange
+        val expectedTags = "test, data"
+        whenever(getPostTagsUseCase.getTags(editPostRepository)).thenReturn(expectedTags)
+
+        // act
+        viewModel.start(editPostRepository)
+        val tagsAction = getHomeUiState(TAGS)
+
+        // assert
+        assertThat((tagsAction?.actionResult as? UiStringText)?.text).isEqualTo(expectedTags)
     }
 
     private fun getHomeUiState(actionType: ActionType): PrepublishingHomeUiState? {
