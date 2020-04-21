@@ -189,19 +189,24 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<CropResult>(CropFragment.CROP_RESULT)?.observe(
-                viewLifecycleOwner, Observer { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    val data: Intent = result.data
+        val saveStateHandle = findNavController().currentBackStackEntry?.savedStateHandle
+        saveStateHandle?.getLiveData<CropResult>(CropFragment.CROP_RESULT)?.observe(
+            viewLifecycleOwner, Observer { result ->
+            result?.let {
+                if (it.resultCode == Activity.RESULT_OK) {
+                    val data: Intent = it.data
                     if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
                         val imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI) as? Uri
-                        imageUri?.let {
-                            viewModel.onCropResult(it.toString())
+                        imageUri?.let { uri ->
+                            viewModel.onCropResult(uri.toString())
+                            // As the result is scoped to the NavBackStackEntry and lives as long as that destination
+                            // is on the back stack, clear the result to handle it only once
+                            saveStateHandle.remove<CropResult>(CropFragment.CROP_RESULT)
                         }
                     }
                 }
-            })
+            }
+        })
 
         viewModel.finishAction.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
