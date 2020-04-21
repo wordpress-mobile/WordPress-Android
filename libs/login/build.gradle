@@ -5,10 +5,14 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 repositories {
     google()
@@ -31,18 +35,21 @@ android {
 }
 
 dependencies {
-    implementation ('org.wordpress:utils:1.20.3') {
+    implementation ('org.wordpress:utils:1.22') {
         exclude group: "com.android.volley"
     }
 
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
-    implementation 'androidx.media:media:1.0.1'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
+    implementation 'androidx.media:media:1.1.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.google.android.material:material:1.1.0'
 
-    api 'com.google.android.gms:play-services-auth:15.0.1'
+    implementation "androidx.core:core-ktx:1.2.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    api 'com.google.android.gms:play-services-auth:18.0.0'
 
     // Share FluxC version from host project if defined, otherwise fallback to default
     if (project.hasProperty("fluxCVersion")) {
@@ -70,9 +77,9 @@ dependencies {
     lintChecks 'org.wordpress:lint:1.0.1'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.27.0'
-    testImplementation 'androidx.arch.core:core-testing:2.0.1'
-    testImplementation 'org.robolectric:robolectric:4.3'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'org.robolectric:robolectric:4.3.1'
     testImplementation 'org.assertj:assertj-core:3.11.1'
 }
 
