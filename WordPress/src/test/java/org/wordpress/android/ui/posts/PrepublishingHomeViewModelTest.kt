@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.posts
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -20,7 +18,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.Prepublishing
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @RunWith(MockitoJUnitRunner::class)
-class PrepublishingHomeViewModelTest: BaseUnitTest() {
+class PrepublishingHomeViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingHomeViewModel
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
     @Mock lateinit var editPostRepository: EditPostRepository
@@ -85,7 +83,7 @@ class PrepublishingHomeViewModelTest: BaseUnitTest() {
     }
 
     @Test
-    fun `verify that publish action result is propagated from postSettingsUtils`(){
+    fun `verify that publish action result is propagated from postSettingsUtils`() {
         // arrange
         val expectedLabel = "test data"
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn(expectedLabel)

@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 abstract class PublishSettingsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-     lateinit var viewModel: PublishSettingsViewModel
+    lateinit var viewModel: PublishSettingsViewModel
 
     @LayoutRes protected abstract fun getContentLayout(): Int
 
@@ -56,7 +56,7 @@ abstract class PublishSettingsFragment : Fragment() {
 
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
 
-        setupContent(rootView,viewModel)
+        setupContent(rootView, viewModel)
 
         viewModel.onDatePicked.observe(this, Observer {
             it?.applyIfNotHandled {
