@@ -161,7 +161,7 @@ abstract class PublishSettingsFragment : Fragment() {
         }
 
         val fragment = PostDatePickerDialogFragment.newInstance(getPublishSettingsFragmentType())
-        fragment.show(requireActivity().supportFragmentManager, PostDatePickerDialogFragment.TAG)
+        fragment.show(activity!!.supportFragmentManager, PostDatePickerDialogFragment.TAG)
     }
 
     private fun showPostTimeSelectionDialog() {
@@ -170,7 +170,7 @@ abstract class PublishSettingsFragment : Fragment() {
         }
 
         val fragment = PostTimePickerDialogFragment.newInstance(getPublishSettingsFragmentType())
-        fragment.show(requireActivity().supportFragmentManager, PostTimePickerDialogFragment.TAG)
+        fragment.show(activity!!.supportFragmentManager, PostTimePickerDialogFragment.TAG)
     }
 
     private fun showNotificationTimeSelectionDialog(schedulingReminderPeriod: SchedulingReminderModel.Period?) {
@@ -182,7 +182,7 @@ abstract class PublishSettingsFragment : Fragment() {
                 schedulingReminderPeriod,
                 getPublishSettingsFragmentType()
         )
-        fragment.show(requireActivity().supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
+        fragment.show(activity!!.supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
     }
 
     private fun getPostRepository(): EditPostRepository? {
