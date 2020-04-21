@@ -384,14 +384,11 @@ class PreviewImageViewModelTest {
     }
 
     @Test
-    fun `high res image file loading started when edit actions enabled and crop action triggered`() {
+    fun `high res image file loading started when crop action triggered and given url is not a file url`() {
         initViewModel()
 
         val selectedPosition = SECOND_ITEM_POSITION
-
         viewModel.onPageSelected(selectedPosition)
-        viewModel.onLoadIntoImageViewSuccess(viewModel.getHighResImageUrl(selectedPosition), selectedPosition)
-        assertThat(requireNotNull(viewModel.uiState.value).editActionsEnabled).isEqualTo(true)
 
         viewModel.onCropMenuClicked(
             isFileUrl = false,
@@ -399,7 +396,24 @@ class PreviewImageViewModelTest {
         )
 
         assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(
-            ImageStartLoadingToFileState(TEST2_HIGH_RES_IMAGE_URL, selectedPosition)
+            ImageStartLoadingToFileState(viewModel.getHighResImageUrl(selectedPosition), selectedPosition)
+        )
+    }
+
+    @Test
+    fun `high res image file loading started when crop action triggered and given url is a file url`() {
+        initViewModel()
+
+        val selectedPosition = SECOND_ITEM_POSITION
+        viewModel.onPageSelected(selectedPosition)
+
+        viewModel.onCropMenuClicked(
+                isFileUrl = true,
+                url = viewModel.getHighResImageUrl(selectedPosition)
+        )
+
+        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(
+            ImageLoadToFileSuccessState(viewModel.getHighResImageUrl(selectedPosition), selectedPosition)
         )
     }
 
