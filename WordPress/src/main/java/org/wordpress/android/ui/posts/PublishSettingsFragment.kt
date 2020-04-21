@@ -178,7 +178,10 @@ abstract class PublishSettingsFragment : Fragment() {
             return
         }
 
-        val fragment = PostNotificationScheduleTimeDialogFragment.newInstance(schedulingReminderPeriod)
+        val fragment = PostNotificationScheduleTimeDialogFragment.newInstance(
+                schedulingReminderPeriod,
+                getPublishSettingsFragmentType()
+        )
         fragment.show(requireActivity().supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
     }
 
