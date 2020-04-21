@@ -91,6 +91,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private static final String KEY_SIGNUP_SHEET_DISPLAYED = "KEY_SIGNUP_SHEET_DISPLAYED";
     private static final String KEY_SMARTLOCK_HELPER_STATE = "KEY_SMARTLOCK_HELPER_STATE";
+    private static final String KEY_SIGNUP_FROM_LOGIN_ENABLED = "KEY_SIGNUP_FROM_LOGIN_ENABLED";
 
     private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
 
@@ -107,6 +108,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private SmartLockHelperState mSmartLockHelperState = SmartLockHelperState.NOT_TRIGGERED;
     private JetpackConnectionSource mJetpackConnectSource;
     private boolean mIsJetpackConnect;
+
+    private boolean mIsSignupFromLoginEnabled;
 
     private LoginMode mLoginMode;
 
@@ -133,12 +136,16 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             switch (getLoginMode()) {
                 case FULL:
                 case WPCOM_LOGIN_ONLY:
+                    mIsSignupFromLoginEnabled = true;
                     showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
                     break;
                 case SELFHOSTED_ONLY:
                     showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
                     break;
                 case JETPACK_STATS:
+                    mIsSignupFromLoginEnabled = true;
+                    checkSmartLockPasswordAndStartLogin();
+                    break;
                 case WPCOM_LOGIN_DEEPLINK:
                 case WPCOM_REAUTHENTICATE:
                 case SHARE_INTENT:
@@ -153,6 +160,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 // reconnect SmartLockHelper
                 initSmartLockHelperConnection();
             }
+
+            mIsSignupFromLoginEnabled = savedInstanceState.getBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED);
         }
     }
 
@@ -161,6 +170,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
+        outState.putBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED, mIsSignupFromLoginEnabled);
     }
 
     private void showFragment(Fragment fragment, String tag) {
@@ -341,14 +351,14 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         if (getLoginPrologueFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
-            showFragment(new LoginEmailFragment(), LoginEmailFragment.TAG);
+            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), LoginEmailFragment.TAG);
 
             if (getLoginMode() == LoginMode.JETPACK_STATS) {
                 mIsJetpackConnect = true;
             }
         } else {
             // prologue fragment is shown so, slide in the email screen (and add to history)
-            slideInFragment(new LoginEmailFragment(), true, LoginEmailFragment.TAG);
+            slideInFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), true, LoginEmailFragment.TAG);
         }
     }
 
