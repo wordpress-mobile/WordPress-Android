@@ -29,7 +29,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
 
-    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.core:core-ktx:$kotlin_ktx_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     testImplementation 'junit:junit:4.12'
