@@ -1,14 +1,19 @@
 package org.wordpress.android.ui.posts.prepublishing
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doNothing
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.test
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.PrepublishingTagsViewModel
 import org.wordpress.android.ui.posts.UpdatePostTagsUseCase
@@ -16,7 +21,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
-class PrepublishingTagsViewModelTest: BaseUnitTest() {
+class PrepublishingTagsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingTagsViewModel
     @Mock lateinit var getPostTagsUseCase: GetPostTagsUseCase
     @Mock lateinit var updatePostTagsUseCase: UpdatePostTagsUseCase
@@ -35,7 +40,7 @@ class PrepublishingTagsViewModelTest: BaseUnitTest() {
 
         viewModel.start(mock())
 
-        Assertions.assertThat(title?.stringRes).isEqualTo(R.string.prepublishing_nudges_toolbar_title_tags)
+        assertThat(title?.stringRes).isEqualTo(R.string.prepublishing_nudges_toolbar_title_tags)
     }
 
     @Test
@@ -47,7 +52,7 @@ class PrepublishingTagsViewModelTest: BaseUnitTest() {
 
         viewModel.onBackButtonClicked()
 
-        Assertions.assertThat(event).isNotNull
+        assertThat(event).isNotNull
     }
 
     @Test
@@ -59,6 +64,18 @@ class PrepublishingTagsViewModelTest: BaseUnitTest() {
 
         viewModel.onCloseButtonClicked()
 
-        Assertions.assertThat(event).isNotNull
+        assertThat(event).isNotNull
+    }
+
+    @Test
+    fun `when onTagsSelected is called updatePostTagsUseCase should be called`() = test {
+        val expectedTags = "test, data"
+        val captor = ArgumentCaptor.forClass(String::class.java)
+        doNothing().whenever(updatePostTagsUseCase).updateTags(captor.capture(), any())
+
+        viewModel.start(mock())
+        viewModel.onTagsSelected(expectedTags)
+
+        assertThat(captor.value).isEqualTo(expectedTags)
     }
 }
