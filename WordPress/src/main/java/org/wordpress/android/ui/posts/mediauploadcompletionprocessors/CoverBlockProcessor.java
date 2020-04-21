@@ -21,7 +21,8 @@ public class CoverBlockProcessor extends BlockProcessor {
     /**
      * Pattern to match background-image url in cover block html content
      */
-    private static final Pattern PATTERN_BACKGROUND_IMAGE_URL = Pattern.compile("background-image:\\s*url\\([^\\)]+\\)");
+    private static final Pattern PATTERN_BACKGROUND_IMAGE_URL = Pattern.compile(
+            "background-image:\\s*url\\([^\\)]+\\)");
 
     private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
 
