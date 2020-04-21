@@ -7,6 +7,7 @@ import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.posts.PrepublishingNavigationTarget
 import org.wordpress.android.ui.posts.PrepublishingScreen
+import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
 import org.wordpress.android.ui.posts.PrepublishingViewModel
 import org.wordpress.android.viewmodel.Event
@@ -60,5 +61,18 @@ class PrepublishingViewModelTest : BaseUnitTest() {
         viewModel.onBackClicked()
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
+    }
+
+    @Test
+    fun `when onBackClicked is pressed and currentScreen is HOME, dismiss bottom sheet`() {
+        var event: Event<Unit>? = null
+        viewModel.dismissBottomSheet.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), HOME)
+        viewModel.onBackClicked()
+
+        assertThat(event).isNotNull
     }
 }
