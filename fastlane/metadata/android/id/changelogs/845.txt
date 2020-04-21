@@ -1,5 +1,0 @@
-14.5:
-Penyunting blok: Menambahkan blok Pos Terbaru, memperbaiki crash yang disebabkan karena konten HTML yang ditempel dengan gambar tersemat
-Template Halaman: Menambahkan template berbasis blok agar proses pembuatan halaman lebih cepat.
-Pembuatan Situs: menghapus beberapa langkah agar proses penyiapan lebih cepat — pilih jenis situs, masukkan nama domain, selesai.
-Perbaikan bug: memperbaiki masalah penyebab unggahan pos yang gagal dicoba ulang tanpa batas.

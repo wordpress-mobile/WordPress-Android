@@ -1,5 +1,0 @@
-14.5:
-Editor de bloques: Añadido el bloque «Últimas entradas», corregido el conflicto causado por pegar contenido HTML con imágenes incrustadas
-Plantillas de página: Añadidas plantillas basadas en bloques para una creación de páginas más rápida.
-Creación del sitio: Eliminados algunos pasos para una configuración más rápida — seleccionar el tipo de sitio, introducir el nombre de dominio y listo.
-Correción de fallos: Corregido un problema que causaba que las subidas de entradas fallidas se volvieran a intentar indefinidamente.

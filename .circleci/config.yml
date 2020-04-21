@@ -158,7 +158,7 @@ jobs:
       - android/save-gradle-cache
   strings-check:
     docker:
-      - image: circleci/ruby:2.5.5
+      - image: circleci/ruby:2.6.4
     steps:
       - git/shallow-checkout
       - run:

@@ -1,5 +1,0 @@
-14.5:
-Editor a blocchi: aggiunto il blocco Ultimi articoli, risolto un arresto anomalo che causava l'incollaggio dei contenuti HTML con immagini incorporate.
-Modelli di pagina: aggiunti modelli basati su un blocco per la creazione più rapida delle pagine.
-Creazione del sito: rimosse alcuni fasi per un'impostazione più veloce: selezione del tipo di sito, inserimento del nome di dominio, completamento dell'operazione.
-Correzione di bug: risolto un problema che impediva di ritentare indefinitamente i caricamenti non riusciti degli articoli.

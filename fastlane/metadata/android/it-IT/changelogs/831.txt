@@ -1,9 +1,0 @@
-14.2:
-Molti aggiornamenti per l'editor a blocchi:
-
-*Aggiunta un'icona a pressione prolungata per aggiungere blocchi prima/dopo.
-*L'app cercherà di visualizzare le immagini quando si ritorna online dopo una disconnessione.
-*Risolto un problema con l'editor vuoto quando si provava a creare un articolo con immagini o link da un'altra app.
-*Aggiunte le opzioni delle dimensioni dell'immagine dal blocco Galleria.
-*Risolto un bug che impediva l'unione dei blocchi Paragrafo.
-

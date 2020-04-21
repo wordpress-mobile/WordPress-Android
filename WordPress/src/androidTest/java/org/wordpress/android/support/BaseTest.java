@@ -95,7 +95,10 @@ public class BaseTest {
     }
     protected void wpLogin() {
         logoutIfNecessary();
-        new LoginFlow().loginEmailPassword();
+        new LoginFlow().chooseLogin()
+                       .enterEmailAddress()
+                       .enterPassword()
+                       .confirmLogin();
     }
 
     private void wpLogout() {
