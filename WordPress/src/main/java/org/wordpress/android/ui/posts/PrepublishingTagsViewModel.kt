@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -23,6 +24,7 @@ class PrepublishingTagsViewModel @Inject constructor(
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private lateinit var editPostRepository: EditPostRepository
+    private var updateTagsJob: Job? = null
 
     private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
     val navigateToHomeScreen: LiveData<Event<Unit>> = _navigateToHomeScreen
@@ -49,7 +51,8 @@ class PrepublishingTagsViewModel @Inject constructor(
     }
 
     fun onTagsSelected(selectedTags: String) {
-        launch(bgDispatcher) {
+        updateTagsJob?.cancel()
+        updateTagsJob = launch(bgDispatcher) {
             delay(THROTTLE_DELAY)
             updatePostTagsUseCase.updateTags(selectedTags, editPostRepository)
         }
@@ -63,4 +66,9 @@ class PrepublishingTagsViewModel @Inject constructor(
     }
 
     fun getPostTags() = getPostTagsUseCase.getTags(editPostRepository)
+
+    override fun onCleared() {
+        super.onCleared()
+        updateTagsJob?.cancel()
+    }
 }
