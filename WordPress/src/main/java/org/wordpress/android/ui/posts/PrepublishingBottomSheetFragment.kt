@@ -112,16 +112,16 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             )
         }
 
-        slideInFragment(fragment, tag)
+        fadeInFragment(fragment, tag)
     }
 
-    private fun slideInFragment(fragment: Fragment, tag: String) {
+    private fun fadeInFragment(fragment: Fragment, tag: String) {
         childFragmentManager.let { fragmentManager ->
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
                 fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                        R.anim.fade_in, R.anim.fade_out,
-                        R.anim.fade_in, R.anim.fade_out
+                        R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out,
+                        R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out
                 )
             }
             fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)
