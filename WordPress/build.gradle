@@ -57,7 +57,7 @@ android {
         } else {
             versionName "alpha-218"
         }
-        versionCode 854
+        versionCode 855
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -86,7 +86,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "14.7-rc-2"
             }
-            versionCode 855
+            versionCode 854
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
         }
