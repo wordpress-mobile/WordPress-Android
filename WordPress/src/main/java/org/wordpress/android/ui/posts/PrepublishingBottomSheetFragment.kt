@@ -18,15 +18,11 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
-import org.wordpress.android.ui.posts.PrepublishingScreenState.ActionsState
-import org.wordpress.android.ui.posts.PrepublishingScreenState.TagsState
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
-        TagsSelectedListener,
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -54,15 +50,15 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
          */
         dialog?.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK) {
-                if (event.action != KeyEvent.ACTION_DOWN) true else {
-                    if (this@PrepublishingBottomSheetFragment::viewModel.isInitialized) {
-                        viewModel.onBackClicked()
-                        true
-                    } else {
-                        false
-                    }
+                if (event.action != KeyEvent.ACTION_DOWN) {
+                    true
+                } else {
+                    onBackClicked()
+                    true
                 }
-            } else false
+            } else {
+                false
+            }
         }
     }
 
@@ -97,47 +93,36 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             event.applyIfNotHandled { dismiss() }
         })
 
-        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreenState>(KEY_SCREEN_STATE)
+        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(KEY_SCREEN_STATE)
         val site = arguments?.getSerializable(SITE) as SiteModel
 
-        viewModel.start(getPostRepository(), site, prepublishingScreenState)
+        viewModel.start(site, prepublishingScreenState)
     }
 
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
         val (fragment, tag) = when (navigationTarget.targetScreen) {
             HOME -> Pair(
-                    PrepublishingActionsFragment.newInstance((navigationTarget.screenState as ActionsState)),
-                    PrepublishingActionsFragment.TAG
+                    PrepublishingHomeFragment.newInstance(),
+                    PrepublishingHomeFragment.TAG
             )
             PrepublishingScreen.PUBLISH -> TODO()
             PrepublishingScreen.VISIBILITY -> TODO()
             PrepublishingScreen.TAGS -> Pair(
-                    PrepublishingTagsFragment.newInstance(
-                            navigationTarget.site,
-                            (navigationTarget.screenState as? TagsState)?.tags
-                    ),
-                    PrepublishingTagsFragment.TAG
+                    PrepublishingTagsFragment.newInstance(navigationTarget.site), PrepublishingTagsFragment.TAG
             )
         }
 
-        slideInFragment(fragment, tag, tag != PrepublishingActionsFragment.TAG)
+        fadeInFragment(fragment, tag)
     }
 
-    private fun slideInFragment(fragment: Fragment, tag: String, slideBack: Boolean) {
+    private fun fadeInFragment(fragment: Fragment, tag: String) {
         childFragmentManager.let { fragmentManager ->
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
-                if (slideBack) {
-                    fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                            R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-                    )
-                } else {
-                    fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right,
-                            R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left
-                    )
-                }
+                fragmentTransaction.addToBackStack(null).setCustomAnimations(
+                        R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out,
+                        R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out
+                )
             }
             fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)
             fragmentTransaction.commit()
@@ -161,26 +146,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         }
     }
 
-    private fun getPostRepository(): EditPostRepository? {
-        return getEditPostActivityHook()?.editPostRepository
-    }
-
-    private fun getEditPostActivityHook(): EditPostActivityHook? {
-        val activity = activity ?: return null
-
-        return if (activity is EditPostActivityHook) {
-            activity
-        } else {
-            throw RuntimeException("$activity must implement EditPostActivityHook")
-        }
-    }
-
-    override fun onTagsSelected(selectedTags: String) {
-        viewModel.updateTagsStateAndSetToCurrent(selectedTags)
-    }
-
     override fun onCloseClicked() {
-        dismiss()
+        viewModel.onCloseClicked()
     }
 
     override fun onBackClicked() {
