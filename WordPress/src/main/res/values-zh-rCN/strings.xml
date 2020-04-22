@@ -2155,8 +2155,4 @@ Language: zh_CN
     <string name="no">否</string>
     <string name="preview">预览</string>
     <string name="notification_settings">通知设置</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

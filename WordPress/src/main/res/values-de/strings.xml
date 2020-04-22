@@ -2237,8 +2237,4 @@ Language: de
     <string name="error">Fehler</string>
     <string name="category_refresh_error">Fehler beim Aktualisieren der Kategorien</string>
     <string name="notification_settings">Benachrichtigungs-Einstellungen</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>
