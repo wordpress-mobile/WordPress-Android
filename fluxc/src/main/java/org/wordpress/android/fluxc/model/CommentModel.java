@@ -34,6 +34,7 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     @Column private String mStatus;
     @Column private String mDatePublished;
     @Column private String mContent;
+    @Column private String mUrl;
 
     // WPCOM only
     @Column private boolean mILike; // current user likes this comment
@@ -158,5 +159,13 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
 
     public void setILike(boolean iLike) {
         mILike = iLike;
+    }
+
+    public String getUrl() {
+        return mUrl;
+    }
+
+    public void setUrl(String url) {
+        mUrl = url;
     }
 }
